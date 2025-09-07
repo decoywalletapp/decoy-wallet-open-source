@@ -1,0 +1,87 @@
+import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/index.dart';
+import 'phone_number_verification_v2_widget.dart'
+    show PhoneNumberVerificationV2Widget;
+import 'package:flutter/material.dart';
+
+class PhoneNumberVerificationV2Model
+    extends FlutterFlowModel<PhoneNumberVerificationV2Widget> {
+  ///  Local state fields for this page.
+  /// JoinUserVerificationCodeEntry
+  String joinedCode = '';
+
+  String d1 = '';
+
+  String d2 = '';
+
+  String d3 = '';
+
+  String d4 = '';
+
+  String d5 = '';
+
+  String d6 = '';
+
+  int? activeIndex = 1;
+
+  int? invalidcodeState = 0;
+
+  ///  State fields for stateful widgets in this page.
+
+  // State field(s) for FirstDigit widget.
+  FocusNode? firstDigitFocusNode;
+  TextEditingController? firstDigitTextController;
+  String? Function(BuildContext, String?)? firstDigitTextControllerValidator;
+  // State field(s) for SecondDigit widget.
+  FocusNode? secondDigitFocusNode;
+  TextEditingController? secondDigitTextController;
+  String? Function(BuildContext, String?)? secondDigitTextControllerValidator;
+  // State field(s) for ThirdDigit widget.
+  FocusNode? thirdDigitFocusNode;
+  TextEditingController? thirdDigitTextController;
+  String? Function(BuildContext, String?)? thirdDigitTextControllerValidator;
+  // State field(s) for FourthDigit widget.
+  FocusNode? fourthDigitFocusNode;
+  TextEditingController? fourthDigitTextController;
+  String? Function(BuildContext, String?)? fourthDigitTextControllerValidator;
+  // State field(s) for FifthDigit widget.
+  FocusNode? fifthDigitFocusNode;
+  TextEditingController? fifthDigitTextController;
+  String? Function(BuildContext, String?)? fifthDigitTextControllerValidator;
+  // State field(s) for SixthDigit widget.
+  FocusNode? sixthDigitFocusNode;
+  TextEditingController? sixthDigitTextController;
+  String? Function(BuildContext, String?)? sixthDigitTextControllerValidator;
+  // Stores action output result for [Backend Call - API (CheckVerificationCode)] action in SixthDigit widget.
+  ApiCallResponse? checkResCopy;
+  // Stores action output result for [Backend Call - Update Row(s)] action in SixthDigit widget.
+  List<DecoyWalletRow>? verifyUpdateCopy;
+  // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Text widget.
+  ApiCallResponse? sendRes;
+
+  @override
+  void initState(BuildContext context) {}
+
+  @override
+  void dispose() {
+    firstDigitFocusNode?.dispose();
+    firstDigitTextController?.dispose();
+
+    secondDigitFocusNode?.dispose();
+    secondDigitTextController?.dispose();
+
+    thirdDigitFocusNode?.dispose();
+    thirdDigitTextController?.dispose();
+
+    fourthDigitFocusNode?.dispose();
+    fourthDigitTextController?.dispose();
+
+    fifthDigitFocusNode?.dispose();
+    fifthDigitTextController?.dispose();
+
+    sixthDigitFocusNode?.dispose();
+    sixthDigitTextController?.dispose();
+  }
+}

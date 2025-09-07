@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "866378207353",
+    "project_id": "decoywallet-a283b",
+    "storage_bucket": "decoywallet-a283b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866378207353:android:074e76d4b54f11c914c4a8",
+        "android_client_info": {
+          "package_name": "com.decoywalletapp.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYto0GNh9EsPoMLHSJowBxrD9S0YYgG1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
