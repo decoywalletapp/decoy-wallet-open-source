@@ -161,7 +161,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                           .fontStyle,
                                     ),
                               ),
-                              custom_widgets.VerifyAnyLink(),
+                              custom_widgets.VerifyAnyLink(
+                                width: 1.0,
+                                height: 1.0,
+                              ),
                             ],
                           ),
                         ),
