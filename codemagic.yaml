@@ -1,18 +1,24 @@
 workflows:
   ios_release:
-    name: iOS Release
-    max_build_duration: 60
+    name: iOS release
+    max_build_duration: 120
+
     environment:
-      xcode: 16.4
-      cocoapods: default
+      groups:
+        - app_store_connect        # <-- imports the three secrets you created
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+      flutter: stable
+      xcode: 16.4
+      cocoapods: default
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
+
     scripts:
       - name: Clean & get packages
         script: |
@@ -21,16 +27,7 @@ workflows:
 
       - name: Install CocoaPods
         script: |
-          cd ios
-          pod install --repo-update
-          cd ..
-
-      - name: Fetch signing files from App Store Connect
-        script: |
-          # Uses your env vars: APP_STORE_CONNECT_PRIVATE_KEY / KEY_IDENTIFIER / ISSUER_ID
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
+          cd ios && pod install --repo-update && cd ..
 
       - name: Install signing files
         script: |
@@ -39,10 +36,11 @@ workflows:
 
       - name: Bump build number automatically
         script: |
-          # Keep iOS and pubspec in sync with Codemagic build id
+          # Keep iOS CFBundleVersion unique using Codemagic's build ID
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # Update the first 'version:' line in pubspec.yaml to 0.1.1+<CM_BUILD_ID>
-          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml || true
+          # Keep pubspec in sync (0.1.1+<build>)
+          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
 
       - name: Build IPA
         script: |
@@ -53,9 +51,9 @@ workflows:
 
     publishing:
       app_store_connect:
-        # IMPORTANT: use these exact field names
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # base64 of the .p8 contents
-        key_identifier: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        # USE API KEY AUTH (not Apple ID/password)
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # contents of the .p8
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER      # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID        # the long UUID
         submit_to_testflight: true
         cancel_previous_submissions: true
