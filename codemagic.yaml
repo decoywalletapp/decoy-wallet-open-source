@@ -5,8 +5,8 @@ workflows:
 
     environment:
       groups:
-        - app_store_connect      # uses APP_STORE_CONNECT_* vars (already created)
-        - signing_cert           # uses CM_CERTIFICATE & CM_CERTIFICATE_PASSWORD
+        - app_store_connect        # APP_STORE_CONNECT_PRIVATE_KEY, ..._KEY_IDENTIFIER, ..._ISSUER_ID
+        - signing_cert            # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -32,11 +32,26 @@ workflows:
 
       - name: Initialize keychain & import signing certificate
         script: |
-          # Create Codemagic keychain & unlock it
+          set -euo pipefail
+
+          # Create & unlock Codemagic keychain
           keychain initialize
-          # Decode the base64 .p12 from env and import with its password
-          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          keychain add-certificates --certificate /tmp/dist.p12 --password "$CM_CERTIFICATE_PASSWORD"
+
+          # Decode the base64-encoded .p12 from env into a temp file
+          P12=/tmp/dist.p12
+          echo "$CM_CERTIFICATE" | base64 --decode > "$P12"
+
+          # Get the actual default keychain path (strip quotes/whitespace)
+          KEYCHAIN_PATH=$(security default-keychain | tr -d '"' | xargs)
+
+          # Import the .p12 into that keychain using its password
+          security import "$P12" \
+            -k "$KEYCHAIN_PATH" \
+            -P "$CM_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+
+          # Allow codesign to access the key non-interactively
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN_PATH"
 
       - name: Fetch provisioning profile from App Store Connect
         script: |
@@ -46,14 +61,11 @@ workflows:
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
-          # Apply downloaded profiles to the Xcode project
           xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
-          # Keep iOS CFBundleVersion in sync with Codemagic build id
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # And set Flutter build number to the same
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml
 
@@ -70,6 +82,3 @@ workflows:
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
-        # If you later want App Store review submission, add:
-        # submit_to_app_store: true
-        # And only then you may use cancel_previous_submissions: true
