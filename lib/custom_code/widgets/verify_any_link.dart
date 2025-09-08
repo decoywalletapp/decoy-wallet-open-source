@@ -11,15 +11,16 @@ import 'package:flutter/material.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:app_links/app_links.dart';
-// If this import causes a compile error in your project, delete it —
-// FlutterFlow's flutter_flow_util.dart already extends BuildContext with goNamed/pushNamed.
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
-/// Listens for confirm-email deep links and verifies the Supabase OTP.
-/// No parameters — place once on the Login page.
+/// Listens for any incoming deep link and verifies the Supabase OTP.
+/// Accepts optional width/height so FlutterFlow's generated calls compile.
 class VerifyAnyLink extends StatefulWidget {
-  const VerifyAnyLink({Key? key}) : super(key: key);
+  final double? width;
+  final double? height;
+  const VerifyAnyLink({Key? key, this.width, this.height}) : super(key: key);
+
   @override
   State<VerifyAnyLink> createState() => _VerifyAnyLinkState();
 }
@@ -42,34 +43,21 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     try {
       final uri = await _appLinks!.getInitialLink();
       if (uri != null) _handleUri(uri);
-    } catch (e) {
-      debugPrint('getInitialLink error: $e');
-    }
+    } catch (_) {}
 
     // Handle links while the app is running.
     _sub = _appLinks!.uriLinkStream.listen(
       _handleUri,
-      onError: (e) => debugPrint('uriLinkStream error: $e'),
+      onError: (_) {},
     );
   }
 
   Future<void> _handleUri(Uri uri) async {
-    debugPrint('🔗 Incoming URI: $uri');
-
-    // Only react to your app scheme + confirm-email destination.
-    // Adjust these if your scheme/host/path differ.
-    if (uri.scheme != 'decoywalletapp') return;
-    final isConfirmHost = (uri.host == 'confirm-email');
-    final isConfirmPath = (uri.path == '/confirm-email');
-    if (!isConfirmHost && !isConfirmPath) return;
-
     final p = uri.queryParameters;
     final tokenHash = p['token_hash'] ?? p['tokenHash'];
     final t = (p['type'] ?? 'signup').toLowerCase();
-    if (t != 'signup') return; // only handle signup links
     if (tokenHash == null || tokenHash.isEmpty) return;
 
-    // Map the Supabase OTP type
     final typeMap = <String, OtpType>{
       'signup': OtpType.signup,
       'magiclink': OtpType.magiclink,
@@ -81,13 +69,11 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
 
     try {
       final client = Supabase.instance.client;
-      final res = await client.auth.verifyOTP(
-        type: otpType,
-        tokenHash: tokenHash,
-      );
+      final res =
+          await client.auth.verifyOTP(type: otpType, tokenHash: tokenHash);
 
-      // Give Supabase a beat to hydrate session for guarded routes.
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(
+          const Duration(milliseconds: 300)); // hydrate session
 
       final session = client.auth.currentSession ?? res.session;
       final ok = session != null || res.user != null;
@@ -95,17 +81,14 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
 
       if (ok) {
         _navigated = true;
-        debugPrint('✅ OTP verified; navigating to SubscriptionOptions');
-        // IMPORTANT: use the EXACT route key from FlutterFlow Routes (case-sensitive).
+        // IMPORTANT: must match your FF route key exactly
         context.goNamed('subscriptionOptions');
       } else {
-        debugPrint('❌ OTP verification failed');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Verification failed.')),
         );
       }
     } catch (e) {
-      debugPrint('⚠️ verifyOTP error: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
@@ -120,5 +103,12 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   }
 
   @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
+  Widget build(BuildContext context) {
+    // Keep it invisible but sized if FF passes width/height.
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: const SizedBox.shrink(),
+    );
+  }
 }
