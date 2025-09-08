@@ -12,7 +12,6 @@ workflows:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-      # 👇 Make sure both groups exist in Codemagic > Environment variables
       groups:
         - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
         - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD
@@ -37,46 +36,44 @@ workflows:
           pod install --repo-update
           cd ..
 
-      - name: Fetch provisioning profiles from App Store Connect
+      # 🔑 1) Initialize keychain and import your .p12 (private key)
+      - name: Initialize keychain & import signing certificate
         script: |
           set -euxo pipefail
-          # Create/Fetch profiles for App Store distribution
           keychain initialize
+          keychain add-certificates
+          # Quick visibility
+          security find-identity -v -p codesigning || true
+
+      # 📄 2) Now fetch/create the provisioning profile (private key is available)
+      - name: Fetch provisioning profile from App Store Connect
+        script: |
+          set -euxo pipefail
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
             --key-id $APP_STORE_CONNECT_KEY_IDENTIFIER \
             --issuer-id $APP_STORE_CONNECT_ISSUER_ID \
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
-
-      - name: Import signing certificate(s) and apply profiles
-        script: |
-          set -euxo pipefail
-          # Imports .p12 from the "signing_cert" group (or Code signing files UI)
-          keychain add-certificates
-          # Writes PROVISIONING_PROFILE_SPECIFIER, CODE_SIGNING settings to the project
+          # Apply the fetched profile to the Xcode project
           xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
           set -euxo pipefail
-          # Use Codemagic build ID for CFBundleVersion to avoid "already used"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # Keep Flutter's pubspec in sync (marketing version stays 0.1.1)
           sed -i '' -E '1,/^version:/s/^version:.*/version: 0.1.1+'"$CM_BUILD_ID"'/' pubspec.yaml
           grep -n '^version:' pubspec.yaml
           plutil -p ios/Runner/Info.plist | grep CFBundleVersion || true
 
-      # ---------- DEBUG HELP (safe to keep; remove if you want) ----------
+      # 🧪 Optional debug — keep it until we get one green build
       - name: Diagnose signing (debug)
         script: |
           set -euxo pipefail
-          security find-identity -v -p codesigning || true
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles || true
           xcodebuild -showBuildSettings \
             -workspace "$IOS_WORKSPACE" \
             -scheme "$XCODE_SCHEME" | grep -E "PRODUCT_BUNDLE_IDENTIFIER|PROVISIONING_PROFILE|CODE_SIGN" || true
-      # -------------------------------------------------------------------
 
       - name: Build IPA
         script: |
@@ -89,8 +86,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # full .p8 text incl. header/footer
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER      # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID        # the long UUID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
-        # (Do NOT set cancel_previous_submissions here—it's for App Store review, not TestFlight.)
