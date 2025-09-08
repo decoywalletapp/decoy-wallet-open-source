@@ -5,14 +5,13 @@ workflows:
     instance_type: mac_mini_m2
 
     environment:
-      # Use Codemagic’s Flutter stable & Xcode defaults unless you need specific versions
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
       groups:
-        - app_store_connect
-        - signing_cert
+        - app_store_connect        # APP_STORE_CONNECT_PRIVATE_KEY, _ISSUER_ID, _KEY_IDENTIFIER
+        - signing_cert             # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD
 
     cache:
       cache_paths:
@@ -29,26 +28,29 @@ workflows:
         script: |
           cd ios && pod install --repo-update && cd ..
 
-      # >>> THIS IS THE NEW/CHANGED STEP <<<
       - name: Initialize keychain & import signing certificate
         script: |
           set -euxo pipefail
 
-          # Create & select a private keychain for this build
+          # Create/select a private keychain for this build
           keychain initialize
 
-          # Decode your base64 .p12 from env and import into the selected keychain
-          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          # Decode the base64-encoded .p12 from env
+          printf %s "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
 
-          KEYCHAIN_PATH=$(security default-keychain | tr -d '"')
+          # Get the current default keychain and TRIM whitespace
+          KEYCHAIN_PATH="$(security default-keychain | tr -d '"' | xargs)"
+          echo "Using keychain: $KEYCHAIN_PATH"
+
+          # Import the .p12 into that keychain
           security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" \
             -P "$CM_CERTIFICATE_PASSWORD" \
             -T /usr/bin/codesign -T /usr/bin/security
 
-          # Allow codesign tools to access the key without UI prompts
-          security set-key-partition-list -S apple-tool:,apple: -k '' "$KEYCHAIN_PATH"
+          # Allow codesign tools to access the private key
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN_PATH"
 
-          # Debug: list code-signing identities (will not fail build)
+          # Debug (non-fatal): list available signing identities
           security find-identity -v -p codesigning || true
 
       - name: Fetch provisioning profile from App Store Connect
@@ -59,15 +61,11 @@ workflows:
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
 
-          # Apply the downloaded provisioning profile(s) to the Xcode project
           xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
-          # Keep iOS CFBundleVersion in sync with Codemagic build number
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-
-          # Also bump pubspec’s build number so Flutter and iOS match
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml
 
@@ -80,7 +78,6 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Use ASC API key auth (not Apple ID/password)
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
