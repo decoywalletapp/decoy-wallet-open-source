@@ -1,23 +1,18 @@
 workflows:
   ios_release:
     name: iOS Release (TestFlight)
-    max_build_duration: 120
     environment:
       groups:
-        - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - app_store_connect     # your APP_STORE_CONNECT_* vars
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-      flutter: stable
-      xcode: 16.4
-      cocoapods: default
-
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
-
     scripts:
       - name: Clean & get packages
         script: |
@@ -28,19 +23,26 @@ workflows:
         script: |
           cd ios && pod install --repo-update && cd ..
 
-      - name: Fetch & install signing files (creates if missing)
+      - name: Install signing certificate (.p12)
         script: |
-          # Uses your APP_STORE_CONNECT_* env vars
-          app-store-connect fetch-signing-files $BUNDLE_ID \
-            --type IOS_APP_STORE --create
-          keychain add-certificates
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          keychain add-certificates --certificate /tmp/dist.p12 --password "$CM_CERTIFICATE_PASSWORD"
+          security find-identity -v -p codesigning || true
+
+      - name: Fetch provisioning profile from App Store Connect
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --create
           xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
-          echo "pubspec version is now:" && grep -n '^version:' pubspec.yaml
+          grep -n '^version:' pubspec.yaml
 
       - name: Build IPA
         script: |
