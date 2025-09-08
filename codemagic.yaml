@@ -3,9 +3,8 @@ workflows:
     name: iOS Release (TestFlight)
     max_build_duration: 120
     environment:
-      # Import your Codemagic env var group that holds the three ASC vars
       groups:
-        - app_store_connect   # -> APP_STORE_CONNECT_PRIVATE_KEY / KEY_IDENTIFIER / ISSUER_ID
+        - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -29,17 +28,17 @@ workflows:
         script: |
           cd ios && pod install --repo-update && cd ..
 
-      - name: Install signing files
+      - name: Fetch & install signing files (creates if missing)
         script: |
-          # Use the certs/profiles you added in Codemagic UI
+          # Uses your APP_STORE_CONNECT_* env vars
+          app-store-connect fetch-signing-files $BUNDLE_ID \
+            --type IOS_APP_STORE --create
           keychain add-certificates
           xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
-          # Use Codemagic's build ID to avoid the “bundle version already used” error.
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # Keep Flutter and iOS in sync:
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           echo "pubspec version is now:" && grep -n '^version:' pubspec.yaml
 
@@ -52,9 +51,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Uses the variables from your app_store_connect group
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # base64 of .p8 file contents
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER    # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # long UUID
-        submit_to_testflight: true                   # Upload to TestFlight
-        # cancel_previous_submissions: true          # <-- REMOVE for TF-only
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
