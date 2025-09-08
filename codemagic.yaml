@@ -1,17 +1,18 @@
 workflows:
   ios_release:
     name: iOS Release (TestFlight)
-    max_build_duration: 60
     instance_type: mac_mini_m2
+    max_build_duration: 60
 
     environment:
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+        DEVELOPMENT_TEAM: 8Y7L4NZ5ZX         # your Team ID
       groups:
-        - app_store_connect        # APP_STORE_CONNECT_PRIVATE_KEY, _ISSUER_ID, _KEY_IDENTIFIER
-        - signing_cert             # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD
+        - app_store_connect                  # APP_STORE_CONNECT_PRIVATE_KEY, _ISSUER_ID, _KEY_IDENTIFIER
+        - signing_cert                       # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD
 
     cache:
       cache_paths:
@@ -31,36 +32,26 @@ workflows:
       - name: Initialize keychain & import signing certificate
         script: |
           set -euxo pipefail
-
-          # Create/select a private keychain for this build
           keychain initialize
-
-          # Decode the base64-encoded .p12 from env
+          # decode base64 .p12 from env
           printf %s "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-
-          # Get the current default keychain and TRIM whitespace
+          # trim quotes/whitespace from default keychain path
           KEYCHAIN_PATH="$(security default-keychain | tr -d '"' | xargs)"
           echo "Using keychain: $KEYCHAIN_PATH"
-
-          # Import the .p12 into that keychain
           security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" \
             -P "$CM_CERTIFICATE_PASSWORD" \
             -T /usr/bin/codesign -T /usr/bin/security
-
-          # Allow codesign tools to access the private key
           security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN_PATH"
-
-          # Debug (non-fatal): list available signing identities
           security find-identity -v -p codesigning || true
 
-      - name: Fetch provisioning profile from App Store Connect
+      - name: Fetch provisioning profile & apply to project
         script: |
           app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
-
+          # write the fetched profile(s) into the Xcode project (Manual signing)
           xcode-project use-profiles
 
       - name: Bump build number automatically
@@ -69,9 +60,18 @@ workflows:
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml
 
-      - name: Build IPA
+      # ---- The important change: build WITHOUT signing, then export/sign ----
+      - name: Build iOS app (no codesign)
         script: |
-          flutter build ipa --release
+          flutter build ios --release --no-codesign
+
+      - name: Export signed IPA (App Store)
+        script: |
+          xcode-project build-ipa \
+            --workspace "$IOS_WORKSPACE" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-configuration Release \
+            --export-options method=app-store,teamID=$DEVELOPMENT_TEAM
 
     artifacts:
       - build/ios/ipa/*.ipa
