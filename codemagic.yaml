@@ -1,14 +1,10 @@
 workflows:
   ios_release:
-    name: iOS Release (FlutterFlow)
+    name: iOS Release
     max_build_duration: 60
     environment:
-      flutter: stable
       xcode: 16.4
       cocoapods: default
-      groups:
-        - ios_signing          # (Codemagic group with your p12/profiles password if needed)
-        - app_store_connect    # (Codemagic group with ASC API credentials)
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -22,31 +18,44 @@ workflows:
         script: |
           flutter clean
           flutter pub get
+
       - name: Install CocoaPods
         script: |
-          cd ios && pod install --repo-update && cd ..
+          cd ios
+          pod install --repo-update
+          cd ..
+
+      - name: Fetch signing files from App Store Connect
+        script: |
+          # Uses your env vars: APP_STORE_CONNECT_PRIVATE_KEY / KEY_IDENTIFIER / ISSUER_ID
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+
       - name: Install signing files
         script: |
-          # Use certs/profiles already uploaded in Codemagic (Code signing files UI)
           keychain add-certificates
           xcode-project use-profiles
+
       - name: Bump build number automatically
         script: |
-          # Use Codemagic's incremental build id to avoid "bundle version already used"
+          # Keep iOS and pubspec in sync with Codemagic build id
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # Also bump pubspec build number (keeps Flutter & iOS in sync)
-          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
-          grep -n '^version:' pubspec.yaml
+          # Update the first 'version:' line in pubspec.yaml to 0.1.1+<CM_BUILD_ID>
+          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml || true
+
       - name: Build IPA
         script: |
           flutter build ipa --release
+
     artifacts:
       - build/ios/ipa/*.ipa
+
     publishing:
       app_store_connect:
-        apple_id: ""                  # optional (for App Store build metadata)
-        api_key: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        # IMPORTANT: use these exact field names
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # base64 of the .p8 contents
+        key_identifier: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
         cancel_previous_submissions: true
