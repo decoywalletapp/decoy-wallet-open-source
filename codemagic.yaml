@@ -1,11 +1,11 @@
 workflows:
   ios_release:
-    name: iOS release
+    name: iOS Release (TestFlight)
     max_build_duration: 120
-
     environment:
+      # Import your Codemagic env var group that holds the three ASC vars
       groups:
-        - app_store_connect        # <-- imports the three secrets you created
+        - app_store_connect   # -> APP_STORE_CONNECT_PRIVATE_KEY / KEY_IDENTIFIER / ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -31,16 +31,17 @@ workflows:
 
       - name: Install signing files
         script: |
+          # Use the certs/profiles you added in Codemagic UI
           keychain add-certificates
           xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
-          # Keep iOS CFBundleVersion unique using Codemagic's build ID
+          # Use Codemagic's build ID to avoid the “bundle version already used” error.
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # Keep pubspec in sync (0.1.1+<build>)
+          # Keep Flutter and iOS in sync:
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
-          grep -n '^version:' pubspec.yaml
+          echo "pubspec version is now:" && grep -n '^version:' pubspec.yaml
 
       - name: Build IPA
         script: |
@@ -51,9 +52,9 @@ workflows:
 
     publishing:
       app_store_connect:
-        # USE API KEY AUTH (not Apple ID/password)
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # contents of the .p8
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER      # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID        # the long UUID
-        submit_to_testflight: true
-        cancel_previous_submissions: true
+        # Uses the variables from your app_store_connect group
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # base64 of .p8 file contents
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER    # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # long UUID
+        submit_to_testflight: true                   # Upload to TestFlight
+        # cancel_previous_submissions: true          # <-- REMOVE for TF-only
