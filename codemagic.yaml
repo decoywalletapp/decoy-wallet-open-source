@@ -2,18 +2,24 @@ workflows:
   ios_release:
     name: iOS Release (TestFlight)
     environment:
-      groups:
-        - app_store_connect     # your APP_STORE_CONNECT_* vars
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+      flutter: stable
+      xcode: latest
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+      groups:
+        - app_store_connect
+        - signing_cert
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
     scripts:
+      - name: MARKER — YAML is running
+        script: |
+          echo ">>> RUNNING YAML WORKFLOW <<<"
+
       - name: Clean & get packages
         script: |
           flutter clean
@@ -23,15 +29,24 @@ workflows:
         script: |
           cd ios && pod install --repo-update && cd ..
 
-      - name: Install signing certificate (.p12)
+      - name: Create keychain & import .p12
         script: |
+          set -euxo pipefail
+          security create-keychain -p "" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          keychain add-certificates --certificate /tmp/dist.p12 --password "$CM_CERTIFICATE_PASSWORD"
+          security import /tmp/dist.p12 -k build.keychain -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+          echo "== Code signing identities =="
           security find-identity -v -p codesigning || true
 
       - name: Fetch provisioning profile from App Store Connect
         script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
+          set -euxo pipefail
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
@@ -42,10 +57,12 @@ workflows:
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          echo "pubspec version line:"
           grep -n '^version:' pubspec.yaml
 
       - name: Build IPA
         script: |
+          set -euxo pipefail
           flutter build ipa --release
 
     artifacts:
