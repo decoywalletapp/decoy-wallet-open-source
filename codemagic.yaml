@@ -3,7 +3,7 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert        # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        # Leave only what you actually use. This group holds your App Store Connect API key vars.
         - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
       vars:
         BUNDLE_ID: com.decoywalletapp.app
@@ -20,58 +20,42 @@ workflows:
     scripts:
       - name: Clean & get packages
         script: |
-          set -euxo pipefail
+          set -e
           flutter clean
           flutter pub get
-
-      - name: Install CocoaPods
-        script: |
-          set -euxo pipefail
-          cd ios && pod install --repo-update && cd ..
 
       - name: Initialize keychain & import signing certificate
         script: |
           set -euxo pipefail
-
-          # Create & use Codemagic keychain
+          # Create an ephemeral keychain and import ANY .p12 files you uploaded in
+          # Repository settings → Code signing files → iOS certificates.
           keychain initialize
-          keychain make-default
-          keychain unlock
+          keychain add-certificates
 
-          # Decode the base64 .p12 from env to disk
-          CERT_DIR="$HOME/Library/MobileDevice/Certificates"
-          CERT_PATH="$CERT_DIR/distribution.p12"
-          mkdir -p "$CERT_DIR"
-          echo "$CM_CERTIFICATE" | base64 --decode > "$CERT_PATH"
-
-          # Find the active default keychain path
-          KEYCHAIN_PATH=$(security default-keychain -d user | tr -d '"' | xargs)
-
-          # Import .p12 and allow codesign/security to read it
-          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" \
-            -T /usr/bin/codesign -T /usr/bin/security
-          security set-key-partition-list -S apple-tool:,apple: -k "$CM_CERTIFICATE_PASSWORD" "$KEYCHAIN_PATH"
-
-      - name: Fetch provisioning profile from App Store Connect
+      - name: Install CocoaPods
         script: |
-          set -euxo pipefail
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
-            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
+          set -e
+          cd ios
+          pod install --repo-update
+          cd ..
+
+      - name: Use provisioning profiles
+        script: |
+          set -e
+          # This installs ANY .mobileprovision you uploaded in Repository settings → Code signing files.
           xcode-project use-profiles
 
-      - name: Bump build number automatically
+      - name: Bump build numbers
         script: |
-          set -euxo pipefail
-          PLIST=ios/Runner/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" "$PLIST" || true
-          sed -i '' -E "s/^version: ([0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+/version: \1+$CM_BUILD_ID/" pubspec.yaml
-          grep -n '^version:' pubspec.yaml
+          set -e
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
+          # Keep Flutter & iOS in sync
+          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          grep -n "^version:" pubspec.yaml
 
       - name: Build IPA
         script: |
-          set -euxo pipefail
+          set -e
           flutter build ipa --release
 
     artifacts:
@@ -79,7 +63,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        # Uses your API key to upload to TestFlight (does NOT create signing files)
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # full .p8 contents with header/footer
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER    # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # the long UUID
         submit_to_testflight: true
