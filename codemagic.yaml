@@ -44,10 +44,10 @@ workflows:
           mkdir -p "$CERT_DIR"
           echo "$CM_CERTIFICATE" | base64 --decode > "$CERT_PATH"
 
-          # Determine the actual default keychain path
+          # Find the active default keychain path
           KEYCHAIN_PATH=$(security default-keychain -d user | tr -d '"' | xargs)
 
-          # Import the cert to that keychain and allow codesign usage
+          # Import .p12 and allow codesign/security to read it
           security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" \
             -T /usr/bin/codesign -T /usr/bin/security
           security set-key-partition-list -S apple-tool:,apple: -k "$CM_CERTIFICATE_PASSWORD" "$KEYCHAIN_PATH"
@@ -58,8 +58,7 @@ workflows:
           app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
-            --create
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
           xcode-project use-profiles
 
       - name: Bump build number automatically
