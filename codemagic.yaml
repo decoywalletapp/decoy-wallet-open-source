@@ -27,19 +27,27 @@ workflows:
         script: |
           cd ios && pod install --repo-update && cd ..
 
-      - name: Initialize keychain & import signing certificate
+      - name: Initialize keychain & import signing certificate (explicit)
         script: |
+          set -euo pipefail
           keychain initialize
-          keychain add-certificates   # imports your uploaded .p12 files
+          # write base64 certificate to a file
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          # import it into the current default keychain
+          DEFAULT_KC="$(security default-keychain | tr -d '"')"
+          security import /tmp/dist.p12 -k "$DEFAULT_KC" -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          # show imported identities (debug)
+          security find-identity -v -p codesigning || true
 
       - name: Apply provisioning profiles
         script: |
-          xcode-project use-profiles  # applies uploaded .mobileprovision (Release -> Distribution)
+          # Uses the .mobileprovision you uploaded in Teams → iOS provisioning profiles
+          xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          sed -i '' -E "1,/version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml
 
       - name: Build IPA
