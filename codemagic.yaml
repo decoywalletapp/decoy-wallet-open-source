@@ -20,41 +20,41 @@ workflows:
     scripts:
       - name: Clean & get packages
         script: |
+          set -euxo pipefail
           flutter clean
           flutter pub get
 
       - name: Install CocoaPods
         script: |
+          set -euxo pipefail
           cd ios && pod install --repo-update && cd ..
 
       - name: Initialize keychain & import signing certificate
         script: |
           set -euxo pipefail
 
-          # Prepare Codemagic keychain
+          # Create & use Codemagic keychain
           keychain initialize
-          keychain set-timeout 3600
           keychain make-default
           keychain unlock
 
-          # Write the distribution .p12 from env to disk
+          # Decode the base64 .p12 from env to disk
           CERT_DIR="$HOME/Library/MobileDevice/Certificates"
           CERT_PATH="$CERT_DIR/distribution.p12"
           mkdir -p "$CERT_DIR"
           echo "$CM_CERTIFICATE" | base64 --decode > "$CERT_PATH"
 
-          # Get actual default keychain path
+          # Determine the actual default keychain path
           KEYCHAIN_PATH=$(security default-keychain -d user | tr -d '"' | xargs)
 
-          # Import certificate
+          # Import the cert to that keychain and allow codesign usage
           security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" \
             -T /usr/bin/codesign -T /usr/bin/security
-
-          # Allow codesign & security to use the key non-interactively
           security set-key-partition-list -S apple-tool:,apple: -k "$CM_CERTIFICATE_PASSWORD" "$KEYCHAIN_PATH"
 
       - name: Fetch provisioning profile from App Store Connect
         script: |
+          set -euxo pipefail
           app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
@@ -64,6 +64,7 @@ workflows:
 
       - name: Bump build number automatically
         script: |
+          set -euxo pipefail
           PLIST=ios/Runner/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" "$PLIST" || true
           sed -i '' -E "s/^version: ([0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+/version: \1+$CM_BUILD_ID/" pubspec.yaml
@@ -71,6 +72,7 @@ workflows:
 
       - name: Build IPA
         script: |
+          set -euxo pipefail
           flutter build ipa --release
 
     artifacts:
@@ -82,4 +84,3 @@ workflows:
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
-        # cancel_previous_submissions: true  # <-- removed (only valid for App Store review submissions)
