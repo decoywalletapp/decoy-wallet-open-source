@@ -1,24 +1,20 @@
 workflows:
   ios_release:
     name: iOS Release (TestFlight)
-    max_build_duration: 60
     environment:
+      groups:
+        - signing_cert        # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
       flutter: stable
       xcode: latest
-      cocoapods: default
-      groups:
-        - signing_cert
-        - app_store_connect
-
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
-
     scripts:
       - name: Clean & get packages
         script: |
@@ -31,27 +27,45 @@ workflows:
 
       - name: Initialize keychain & import signing certificate
         script: |
-          # Get the active user keychain path and import the Distribution .p12 we stored in CM_CERTIFICATE
-          KEYCHAIN_PATH=$(security default-keychain -d user | tr -d '"')
-          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          set -euxo pipefail
+
+          # Create & select Codemagic keychain
+          keychain initialize
+          keychain set-timeout 3600
+          keychain make-default
+          keychain unlock
+
+          # Write the distribution .p12 from env to disk
+          CERT_DIR="$HOME/Library/MobileDevice/Certificates"
+          CERT_PATH="$CERT_DIR/distribution.p12"
+          mkdir -p "$CERT_DIR"
+          echo "$CM_CERTIFICATE" | base64 --decode > "$CERT_PATH"
+
+          # Get the real default keychain path (strip quotes/whitespace)
+          KEYCHAIN_PATH=$(security default-keychain -d user | tr -d '"' | xargs)
+
+          # Import the certificate into that keychain
+          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+
+          # Allow codesign/security to use the key without prompting
+          security set-key-partition-list -S apple-tool:,apple: -k "$CM_CERTIFICATE_PASSWORD" "$KEYCHAIN_PATH"
 
       - name: Fetch provisioning profile from App Store Connect
         script: |
-          # Creates or fetches an iOS App Store profile for your bundle id, then wires it into the Xcode project
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
           xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # Keep Flutter version in sync with iOS build number (optional)
-          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          PLIST=ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" "$PLIST" || true
+          # keep Flutter + iOS in sync (version x.y.z+build)
+          sed -i '' -E "s/^version: ([0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+/version: \1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml
 
       - name: Build IPA
@@ -67,3 +81,4 @@ workflows:
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
+        cancel_previous_submissions: true
