@@ -3,8 +3,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        # Leave only what you actually use. This group holds your App Store Connect API key vars.
-        - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -20,42 +20,30 @@ workflows:
     scripts:
       - name: Clean & get packages
         script: |
-          set -e
           flutter clean
           flutter pub get
 
-      - name: Initialize keychain & import signing certificate
-        script: |
-          set -euxo pipefail
-          # Create an ephemeral keychain and import ANY .p12 files you uploaded in
-          # Repository settings → Code signing files → iOS certificates.
-          keychain initialize
-          keychain add-certificates
-
       - name: Install CocoaPods
         script: |
-          set -e
-          cd ios
-          pod install --repo-update
-          cd ..
+          cd ios && pod install --repo-update && cd ..
 
-      - name: Use provisioning profiles
+      - name: Initialize keychain & import signing certificate
         script: |
-          set -e
-          # This installs ANY .mobileprovision you uploaded in Repository settings → Code signing files.
-          xcode-project use-profiles
+          keychain initialize
+          keychain add-certificates   # imports your uploaded .p12 files
 
-      - name: Bump build numbers
+      - name: Apply provisioning profiles
         script: |
-          set -e
+          xcode-project use-profiles  # applies uploaded .mobileprovision (Release -> Distribution)
+
+      - name: Bump build number automatically
+        script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
-          # Keep Flutter & iOS in sync
-          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
-          grep -n "^version:" pubspec.yaml
+          sed -i '' -E "1,/version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
 
       - name: Build IPA
         script: |
-          set -e
           flutter build ipa --release
 
     artifacts:
@@ -63,8 +51,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Uses your API key to upload to TestFlight (does NOT create signing files)
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # full .p8 contents with header/footer
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER    # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # the long UUID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
