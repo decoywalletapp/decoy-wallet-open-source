@@ -21,7 +21,6 @@ workflows:
       - name: Build iOS app (no codesign)
         script: |
           flutter build ios --release --no-codesign
-    # no artifacts on purpose; this is just a compile sanity check
 
   ios_release:
     name: iOS Release (TestFlight)
@@ -70,9 +69,9 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        # <-- flat syntax (what the validator wants)
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # full .p8 contents with headers
+        key_id:  $APP_STORE_CONNECT_KEY_IDENTIFIER     # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID        # the long UUID
         submit_to_testflight: true
         cancel_previous_submissions: false
