@@ -3,8 +3,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert        # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert
+        - app_store_connect
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -27,33 +27,19 @@ workflows:
         script: |
           cd ios && pod install --repo-update && cd ..
 
-      - name: Initialize keychain & import signing certificate
+      - name: Initialize keychain & import signing certificate (from env)
         script: |
-          # Create & unlock a temporary keychain for the build
           keychain initialize
+          keychain set-timeout 3600
+          # write the p12 from base64
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          # import into the current default keychain
+          KEYCHAIN_PATH=$(security default-keychain | tr -d '"')
+          security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
 
-          # Write the distribution .p12 to the location expected by 'keychain add-certificates'
-          mkdir -p "$HOME/Library/MobileDevice/Certificates"
-          echo "$CM_CERTIFICATE" | base64 --decode > "$HOME/Library/MobileDevice/Certificates/dist.p12"
-
-          # Import into the build keychain
-          keychain add-certificates
-
-          # If for any reason the helper didn't import, fallback to a direct security import
-          if ! security find-identity -p codesigning -v | grep -q "Apple Distribution"; then
-            KEYCHAIN_PATH=$(security default-keychain | tr -d '"' | xargs)   # trim quotes/whitespace
-            security import "$HOME/Library/MobileDevice/Certificates/dist.p12" \
-              -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" \
-              -T /usr/bin/codesign -T /usr/bin/security
-          fi
-
-          # Show what we have
-          security find-identity -p codesigning -v || true
-
-      - name: Apply provisioning profiles
+      - name: Fetch provisioning profile from App Store Connect
         script: |
-          # Uses the profiles you added in Teams -> iOS provisioning profiles
-          xcode-project use-profiles
+          app-store-connect list-profiles | head -n 1 >/dev/null
 
       - name: Bump build number automatically
         script: |
@@ -70,9 +56,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         cancel_previous_submissions: false
