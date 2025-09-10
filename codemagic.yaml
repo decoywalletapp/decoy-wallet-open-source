@@ -1,11 +1,16 @@
 workflows:
-  ios_compile_only:
-    name: iOS compile check (no codesign)
+  ios_compile_check:
+    name: iOS Compile Check (no codesign)
     environment:
+      groups:
+        - signing_cert           # not actually used here, but ok to keep
+        - app_store_connect      # not used here either
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+      flutter: stable
+      xcode: latest
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -21,17 +26,21 @@ workflows:
       - name: Build iOS app (no codesign)
         script: |
           flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/iphoneos/*.app
 
   ios_release:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
+        - signing_cert           # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect      # APP_STORE_CONNECT_* variables
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+      flutter: stable
+      xcode: latest
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -46,22 +55,28 @@ workflows:
           cd ios && pod install --repo-update && cd ..
       - name: Initialize keychain & import signing certificate
         script: |
+          # Create Codemagic keychain and make it default
           keychain initialize
-          KEYCHAIN_PATH=$(security default-keychain -d user | tr -d '"')
+          # Decode the base64-encoded .p12 from env var and import it with the password
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          KEYCHAIN_PATH=$(security default-keychain | tr -d '"' | xargs)
           security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN_PATH"
+          rm -f /tmp/dist.p12
       - name: Fetch provisioning profile from App Store Connect
         script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE \
-            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" --create
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --issuer-id $APP_STORE_CONNECT_ISSUER_ID \
+            --key-id $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --create
+          # Tell Xcode to use the fetched profiles
           xcode-project use-profiles
       - name: Bump build number automatically
         script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist || true
           sed -i '' -E "1,/version:/s/version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
       - name: Build IPA
         script: |
           flutter build ipa --release
@@ -69,9 +84,9 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        # <-- flat syntax (what the validator wants)
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # full .p8 contents with headers
-        key_id:  $APP_STORE_CONNECT_KEY_IDENTIFIER     # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID        # the long UUID
+        # flat syntax required by validator
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
-        cancel_previous_submissions: false
+        # DO NOT include cancel_previous_submissions here
