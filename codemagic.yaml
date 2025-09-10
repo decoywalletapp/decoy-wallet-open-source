@@ -1,10 +1,37 @@
 workflows:
+  ios_compile_check:
+    name: iOS Compile Check (no codesign)
+    environment:
+      vars:
+        IOS_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
+    flutter: stable
+    xcode: latest
+    scripts:
+      - name: Clean & get packages
+        script: |
+          set -euxo pipefail
+          flutter clean
+          flutter pub get
+          cd ios
+          rm -rf Pods Podfile.lock
+          pod repo update
+          pod install --repo-update
+          cd -
+      - name: Build iOS app (no codesign)
+        script: |
+          set -euxo pipefail
+          flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/iphoneos/*.app
+      - build/ios/ipa/*.ipa
+
   ios_release:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert           # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect      # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert        # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect   # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -32,17 +59,16 @@ workflows:
       - name: Initialize keychain & import signing certificate (manual)
         script: |
           set -euxo pipefail
-          # Create an isolated keychain
           keychain initialize
           keychain make-default
 
-          # Decode your Distribution .p12 from CM_CERTIFICATE
+          # Decode your Distribution .p12 from env variable CM_CERTIFICATE
           echo -n "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
 
-          # Get the default keychain path and trim quotes/whitespace
+          # Fix whitespace/quotes that sometimes appear in default-keychain output
           KEYCHAIN_PATH="$(security default-keychain -d user | tr -d '\"' | xargs)"
 
-          # Import the .p12 (Distribution) into the keychain
+          # Import the .p12 into the keychain
           security import /tmp/dist.p12 \
             -k "$KEYCHAIN_PATH" \
             -P "$CM_CERTIFICATE_PASSWORD" \
@@ -50,7 +76,8 @@ workflows:
 
       - name: Use provisioning profiles uploaded to Codemagic
         script: |
-          # This tells Xcode to use the .mobileprovision files you uploaded under Teams > iOS provisioning profiles
+          set -euxo pipefail
+          # Uses the profiles you added under Teams → iOS provisioning profiles
           xcode-project use-profiles
 
       - name: Bump build number automatically
@@ -61,6 +88,7 @@ workflows:
 
       - name: Build IPA
         script: |
+          set -euxo pipefail
           flutter build ipa --release
 
     artifacts:
