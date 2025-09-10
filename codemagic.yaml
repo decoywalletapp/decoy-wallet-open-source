@@ -32,8 +32,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - app_store_connect        # must exist with 3 vars
-        # (APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID)
+        - signing_cert              # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect         # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -82,7 +82,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY     # FULL .p8 value incl. BEGIN/END lines
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER   # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID     # UUID
+        api_key:
+          content: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8, with BEGIN/END lines
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER # e.g. 989Y382263
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID   # UUID
         submit_to_testflight: true
