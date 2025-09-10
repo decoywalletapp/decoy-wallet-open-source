@@ -5,8 +5,6 @@ workflows:
       vars:
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-      flutter: stable
-      xcode: latest
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -15,8 +13,9 @@ workflows:
       - name: Clean & get packages
         script: |
           flutter clean
+          rm -rf ios/Pods ios/Podfile.lock
           flutter pub get
-          cd ios && pod install --repo-update && cd ..
+          cd ios && pod install --repo-update && cd -
       - name: Build iOS app (no codesign)
         script: |
           flutter build ios --release --no-codesign
@@ -27,14 +26,12 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert        # CM_CERTIFICATE (BASE64), CM_CERTIFICATE_PASSWORD
-        - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, ...KEY_IDENTIFIER, ...ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-      flutter: stable
-      xcode: latest
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -43,29 +40,35 @@ workflows:
       - name: Clean & get packages
         script: |
           flutter clean
+          rm -rf ios/Pods ios/Podfile.lock
           flutter pub get
-          cd ios && pod install --repo-update && cd ..
+          cd ios && pod install --repo-update && cd -
       - name: Initialize keychain & import signing certificate
         script: |
+          set -euo pipefail
+          # Create and make default the ephemeral build keychain
           keychain initialize
-          # Try BASE64 decode; if value isn't BASE64, fall back to raw.
-          (echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12) || (echo "$CM_CERTIFICATE" > /tmp/dist.p12)
-          keychain import-certificate /tmp/dist.p12 -p "$CM_CERTIFICATE_PASSWORD"
-      - name: Fetch provisioning profile from App Store Connect
+          keychain set-timeout 3600
+          keychain make-default
+
+          # Decode your Base64-encoded .p12 from CM_CERTIFICATE
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+
+          # Import it into the active keychain with the password
+          KEYCHAIN_PATH="$(keychain get-default | tail -n1)"
+          security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" -A
+
+          # (Optional) show that a signing identity is now present
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
+      - name: Use provisioning profiles stored in Codemagic
         script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
-            --create
-      - name: Make Xcode use the fetched profiles
-        script: |
-          xcode-project use-profiles
+          # This maps the profiles you uploaded under Teams ➜ iOS provisioning profiles
+          xcode-project use-profiles --warn-only
       - name: Bump build number automatically
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
-          sed -i '' -E "1,/version:.*/s/version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
       - name: Build IPA
         script: |
           flutter build ipa --release
@@ -73,8 +76,8 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        # flat syntax the validator accepts
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8 contents WITH headers
         submit_to_testflight: true
