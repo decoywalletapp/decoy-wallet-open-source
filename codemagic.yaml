@@ -43,12 +43,14 @@ workflows:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
+
     scripts:
       - name: Initialize keychain & import certificates (Codemagic-managed)
         script: |
           set -euo pipefail
           keychain initialize
           keychain add-certificates
+
       - name: Fetch provisioning profile from App Store Connect
         script: |
           set -euo pipefail
@@ -58,24 +60,26 @@ workflows:
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
+
       - name: Use downloaded profiles
         script: |
           xcode-project use-profiles --warn-only
+
       - name: Bump build number automatically
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
+
       - name: Build IPA
         script: |
           set -euo pipefail
           flutter build ipa --release
+
     artifacts:
       - build/ios/ipa/*.ipa
+
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        api_key: $APP_STORE_CONNECT_API_KEY_JSON
         submit_to_testflight: true
