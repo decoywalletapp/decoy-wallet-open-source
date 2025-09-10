@@ -1,81 +1,70 @@
 workflows:
   ios_compile_check:
     name: iOS Compile Check (no codesign)
-    instance_type: mac_mini_m2
     environment:
       flutter: stable
       xcode: latest
-      cocoapods: default
       vars:
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - ios/Pods
     scripts:
       - name: Clean & get packages
         script: |
-          set -euxo pipefail
+          set -euo pipefail
           flutter clean
           flutter pub get
           cd ios
           rm -rf Pods Podfile.lock
           pod repo update
           pod install --repo-update
-          cd -
+          cd ..
       - name: Build iOS app (no codesign)
         script: |
-          set -euxo pipefail
           flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.app
-      - build/ios/ipa/*.ipa
 
   ios_release:
     name: iOS Release (TestFlight)
-    instance_type: mac_mini_m2
     environment:
+      groups:
+        - app_store_connect        # must exist with 3 vars
+        # (APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID)
       flutter: stable
       xcode: latest
-      cocoapods: default
-      groups:
-        - signing_cert        # has: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect   # has: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
 
     scripts:
-      - name: Clean & get packages
+      - name: Initialize keychain & import certificates (Codemagic-managed)
         script: |
-          set -euxo pipefail
-          flutter clean
-          flutter pub get
-          cd ios
-          rm -rf Pods Podfile.lock
-          pod repo update
-          pod install --repo-update
-          cd -
-
-      - name: Initialize keychain & import signing certificate (manual)
-        script: |
-          set -euxo pipefail
+          set -euo pipefail
           keychain initialize
-          keychain make-default
-          echo -n "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          KEYCHAIN_PATH="$(security default-keychain -d user | tr -d '"' | xargs)"
-          security import /tmp/dist.p12 \
-            -k "$KEYCHAIN_PATH" \
-            -P "$CM_CERTIFICATE_PASSWORD" \
-            -T /usr/bin/codesign -T /usr/bin/security
+          keychain add-certificates
 
-      - name: Use provisioning profiles uploaded to Codemagic
+      - name: Fetch provisioning profile from App Store Connect
         script: |
-          set -euxo pipefail
-          xcode-project use-profiles
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --create
+
+      - name: Use downloaded profiles
+        script: |
+          xcode-project use-profiles --warn-only
 
       - name: Bump build number automatically
         script: |
@@ -85,7 +74,7 @@ workflows:
 
       - name: Build IPA
         script: |
-          set -euxo pipefail
+          set -euo pipefail
           flutter build ipa --release
 
     artifacts:
@@ -93,8 +82,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY     # FULL .p8 value incl. BEGIN/END lines
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER   # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID     # UUID
         submit_to_testflight: true
