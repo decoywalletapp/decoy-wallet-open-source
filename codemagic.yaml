@@ -2,9 +2,8 @@ workflows:
   ios_compile_check:
     name: iOS Compile Check (no codesign)
     environment:
-      vars:
-        IOS_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
+      flutter: stable
+      xcode: latest
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -13,63 +12,73 @@ workflows:
       - name: Clean & get packages
         script: |
           flutter clean
-          rm -rf ios/Pods ios/Podfile.lock
           flutter pub get
-          cd ios && pod install --repo-update && cd -
       - name: Build iOS app (no codesign)
         script: |
           flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.app
+      - build/ios/ipa/*.ipa
 
   ios_release:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert           # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect      # APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect     # APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+      flutter: stable
+      xcode: latest
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
+
     scripts:
       - name: Clean & get packages
         script: |
           flutter clean
-          rm -rf ios/Pods ios/Podfile.lock
           flutter pub get
-          cd ios && pod install --repo-update && cd -
+
+      - name: Install CocoaPods
+        script: |
+          cd ios && pod install --repo-update && cd ..
+
       - name: Initialize keychain & import signing certificate
         script: |
-          set -euo pipefail
           keychain initialize
-          keychain set-timeout 3600
-          keychain make-default
-          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          KEYCHAIN_PATH="$(keychain get-default | tail -n1)"
-          security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" -A
-          security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
-      - name: Use provisioning profiles stored in Codemagic
+          keychain add-certificates   # pulls the .p12 you uploaded in Teams > iOS certificates
+
+      - name: Fetch provisioning profile from App Store Connect
         script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --issuer-id $APP_STORE_CONNECT_ISSUER_ID \
+            --key-id $APP_STORE_CONNECT_KEY_IDENTIFIER \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --create
           xcode-project use-profiles --warn-only
+
       - name: Bump build number automatically
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
-          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          sed -i '' -E "1,/^version:.*$/s//version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml
+
       - name: Build IPA
         script: |
           flutter build ipa --release
+
     artifacts:
       - build/ios/ipa/*.ipa
+
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8, with BEGIN/END lines
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY   # paste full .p8 (WITH BEGIN/END) into this env var
         submit_to_testflight: true
