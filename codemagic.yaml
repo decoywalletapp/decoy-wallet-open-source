@@ -32,14 +32,13 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert              # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect         # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
-      flutter: stable
-      xcode: latest
+        - app_store_connect         # must contain the three vars below
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+      flutter: stable
+      xcode: latest
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -83,7 +82,7 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          content: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8, with BEGIN/END lines
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER # e.g. 989Y382263
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID   # UUID
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
