@@ -3,7 +3,6 @@ workflows:
     name: iOS Compile Check (no codesign)
     environment:
       vars:
-        BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
       flutter: stable
@@ -17,24 +16,19 @@ workflows:
         script: |
           flutter clean
           flutter pub get
-      - name: Install CocoaPods
-        script: |
-          cd ios
-          rm -f Podfile.lock
-          pod install
-          cd ..
+          cd ios && pod install --repo-update && cd ..
       - name: Build iOS app (no codesign)
         script: |
           flutter build ios --release --no-codesign
     artifacts:
-      - build/ios/iphoneos/Runner.app
+      - build/ios/iphoneos/*.app
 
   ios_release:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert        # CM_CERTIFICATE (BASE64), CM_CERTIFICATE_PASSWORD
+        - app_store_connect   # APP_STORE_CONNECT_PRIVATE_KEY, ...KEY_IDENTIFIER, ...ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -50,41 +44,37 @@ workflows:
         script: |
           flutter clean
           flutter pub get
-
+          cd ios && pod install --repo-update && cd ..
       - name: Initialize keychain & import signing certificate
         script: |
-          # decode the p12 from env var and import it
-          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain initialize
-          keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
-
+          # Try BASE64 decode; if value isn't BASE64, fall back to raw.
+          (echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12) || (echo "$CM_CERTIFICATE" > /tmp/dist.p12)
+          keychain import-certificate /tmp/dist.p12 -p "$CM_CERTIFICATE_PASSWORD"
       - name: Fetch provisioning profile from App Store Connect
         script: |
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
-            --api-key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --api-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
+      - name: Make Xcode use the fetched profiles
+        script: |
           xcode-project use-profiles
-
       - name: Bump build number automatically
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
-          sed -i '' -E "1,/version:/s/version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
-          grep -n '^version:' pubspec.yaml
-
+          sed -i '' -E "1,/version:.*/s/version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
       - name: Build IPA
         script: |
           flutter build ipa --release
-
     artifacts:
       - build/ios/ipa/*.ipa
-
     publishing:
       app_store_connect:
-        # flat syntax the validator requires
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # whole .p8, WITH -----BEGIN/END----- lines
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER     # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID       # UUID
+        # flat syntax the validator accepts
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
