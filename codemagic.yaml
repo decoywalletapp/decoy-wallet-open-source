@@ -26,8 +26,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert
-        - app_store_connect
+        - signing_cert           # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect      # APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -71,5 +71,5 @@ workflows:
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8, with BEGIN/END lines
         submit_to_testflight: true
