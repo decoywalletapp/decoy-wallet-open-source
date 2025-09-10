@@ -1,12 +1,14 @@
 workflows:
   ios_compile_check:
     name: iOS Compile Check (no codesign)
+    instance_type: mac_mini_m2
     environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
       vars:
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-    flutter: stable
-    xcode: latest
     scripts:
       - name: Clean & get packages
         script: |
@@ -28,16 +30,18 @@ workflows:
 
   ios_release:
     name: iOS Release (TestFlight)
+    instance_type: mac_mini_m2
     environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
       groups:
-        - signing_cert        # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect   # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert        # has: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect   # has: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-    flutter: stable
-    xcode: latest
 
     cache:
       cache_paths:
@@ -61,14 +65,8 @@ workflows:
           set -euxo pipefail
           keychain initialize
           keychain make-default
-
-          # Decode your Distribution .p12 from env variable CM_CERTIFICATE
           echo -n "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-
-          # Fix whitespace/quotes that sometimes appear in default-keychain output
-          KEYCHAIN_PATH="$(security default-keychain -d user | tr -d '\"' | xargs)"
-
-          # Import the .p12 into the keychain
+          KEYCHAIN_PATH="$(security default-keychain -d user | tr -d '"' | xargs)"
           security import /tmp/dist.p12 \
             -k "$KEYCHAIN_PATH" \
             -P "$CM_CERTIFICATE_PASSWORD" \
@@ -77,7 +75,6 @@ workflows:
       - name: Use provisioning profiles uploaded to Codemagic
         script: |
           set -euxo pipefail
-          # Uses the profiles you added under Teams → iOS provisioning profiles
           xcode-project use-profiles
 
       - name: Bump build number automatically
