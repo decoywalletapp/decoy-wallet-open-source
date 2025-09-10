@@ -51,11 +51,8 @@ workflows:
       - name: Initialize keychain & import signing certificate
         script: |
           set -euxo pipefail
-
-          # Create a fresh build keychain and make it default
           keychain initialize
 
-          # Resolve certificate (supports either base64 string or secure-file path)
           CERT_PATH="/tmp/signing.p12"
           if [[ -n "${CM_CERTIFICATE:-}" && -f "$CM_CERTIFICATE" ]]; then
             CERT_PATH="$CM_CERTIFICATE"
@@ -63,25 +60,20 @@ workflows:
             echo "$CM_CERTIFICATE" | base64 --decode > "$CERT_PATH"
           fi
 
-          # Get default keychain path without quotes/whitespace
           KEYCHAIN_PATH="$(security default-keychain -d user | tr -d '\"' | xargs)"
-
-          # Ensure Xcode searches only our build keychain
           security list-keychains -d user -s "$KEYCHAIN_PATH"
 
-          # Import the P12
           security import "$CERT_PATH" \
             -k "$KEYCHAIN_PATH" \
             -P "$CM_CERTIFICATE_PASSWORD" \
             -T /usr/bin/codesign -T /usr/bin/security
 
-          # Allow codesign non-interactive access
           security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN_PATH"
 
-          # Show identities and hard-fail if none
+          echo "---- Codesign identities in build keychain ----"
           security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
           if ! security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -q 'Apple.*Distribution'; then
-            echo "ERROR: No Apple Distribution identity in keychain. Check CM_CERTIFICATE/CM_CERTIFICATE_PASSWORD."
+            echo "ERROR: No Apple Distribution identity in keychain. Check CM_CERTIFICATE / CM_CERTIFICATE_PASSWORD."
             exit 1
           fi
 
@@ -94,8 +86,8 @@ workflows:
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
 
-          # Write profile settings into the project (warn-only so the build still proceeds)
-          xcode-project use-profiles --warn-only
+          # APPLY the downloaded profile to the Xcode project (this was warn-only before)
+          xcode-project use-profiles
 
       - name: Bump build number automatically
         script: |
