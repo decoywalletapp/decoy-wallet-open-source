@@ -24,8 +24,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect     # APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
+        - signing_cert          # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect     # must contain: APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -50,8 +50,18 @@ workflows:
 
       - name: Initialize keychain & import signing certificate
         script: |
+          set -euxo pipefail
           keychain initialize
-          keychain add-certificates   # pulls the .p12 you uploaded in Teams > iOS certificates
+          # Resolve the certificate: works for either "secure file" (path) or base64 string
+          CERT_PATH="/tmp/dist.p12"
+          if [[ -f "${CM_CERTIFICATE:-}" ]]; then
+            CERT_PATH="$CM_CERTIFICATE"
+          else
+            echo "$CM_CERTIFICATE" | base64 --decode > "$CERT_PATH"
+          fi
+          KEYCHAIN_PATH=$(security default-keychain -d user | tr -d '"')
+          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
 
       - name: Fetch provisioning profile from App Store Connect
         script: |
@@ -80,5 +90,5 @@ workflows:
       app_store_connect:
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY   # paste full .p8 (WITH BEGIN/END) into this env var
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY   # paste the FULL .p8 (with BEGIN/END) into this env var
         submit_to_testflight: true
