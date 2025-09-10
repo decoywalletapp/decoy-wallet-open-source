@@ -26,8 +26,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert            # CM_CERTIFICATE (base64 of .p12), CM_CERTIFICATE_PASSWORD
+        - app_store_connect       # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
@@ -46,23 +46,16 @@ workflows:
       - name: Initialize keychain & import signing certificate
         script: |
           set -euo pipefail
-          # Create and make default the ephemeral build keychain
           keychain initialize
           keychain set-timeout 3600
           keychain make-default
 
-          # Decode your Base64-encoded .p12 from CM_CERTIFICATE
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-
-          # Import it into the active keychain with the password
           KEYCHAIN_PATH="$(keychain get-default | tail -n1)"
           security import /tmp/dist.p12 -k "$KEYCHAIN_PATH" -P "$CM_CERTIFICATE_PASSWORD" -A
-
-          # (Optional) show that a signing identity is now present
           security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
       - name: Use provisioning profiles stored in Codemagic
         script: |
-          # This maps the profiles you uploaded under Teams ➜ iOS provisioning profiles
           xcode-project use-profiles --warn-only
       - name: Bump build number automatically
         script: |
@@ -76,8 +69,8 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8 contents WITH headers
+        # FLAT syntax the validator requires
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        private_key: $APP_STORE_CONNECT_PRIVATE_KEY   # paste full .p8 WITH headers
         submit_to_testflight: true
