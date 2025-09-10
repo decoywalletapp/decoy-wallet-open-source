@@ -24,6 +24,7 @@ workflows:
           cd ..
       - name: Build iOS app (no codesign)
         script: |
+          set -euo pipefail
           flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.app
@@ -32,25 +33,32 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - app_store_connect
+        - signing_cert          # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect     # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+      flutter: stable
+      xcode: latest
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-      flutter: stable
-      xcode: latest
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
 
     scripts:
-      - name: Initialize keychain & import certificates (Codemagic-managed)
+      # 1) Create keychain and import your .p12 from env var
+      - name: Initialize keychain & import signing certificate
         script: |
           set -euo pipefail
           keychain initialize
-          keychain add-certificates
+          # Write base64 -> file
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          # Get the path to the current default keychain (trims quotes/newlines)
+          KC_PATH="$(keychain get-default | tr -d '"')"
+          security import /tmp/dist.p12 -k "$KC_PATH" -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
 
+      # 2) Fetch provisioning (App Store) using API key
       - name: Fetch provisioning profile from App Store Connect
         script: |
           set -euo pipefail
@@ -61,16 +69,21 @@ workflows:
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
 
+      # 3) Point Xcode to the downloaded profiles
       - name: Use downloaded profiles
         script: |
+          set -euo pipefail
           xcode-project use-profiles --warn-only
 
+      # 4) Bump build number in Info.plist + pubspec
       - name: Bump build number automatically
         script: |
+          set -euo pipefail
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
+      # 5) Build IPA (signed by the imported cert + fetched profile)
       - name: Build IPA
         script: |
           set -euo pipefail
@@ -81,5 +94,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_API_KEY_JSON
+        # IMPORTANT: keep this "flat"—not nested. Quote if the validator still nags.
+        api_key: "$APP_STORE_CONNECT_PRIVATE_KEY"
+        key_id: "$APP_STORE_CONNECT_KEY_IDENTIFIER"
+        issuer_id: "$APP_STORE_CONNECT_ISSUER_ID"
         submit_to_testflight: true
