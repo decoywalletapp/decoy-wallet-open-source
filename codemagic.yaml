@@ -33,7 +33,7 @@ workflows:
     environment:
       groups:
         # Must contain these 3 variables:
-        #  APP_STORE_CONNECT_PRIVATE_KEY  (full .p8 incl. BEGIN/END)
+        #  APP_STORE_CONNECT_PRIVATE_KEY  (full .p8 contents incl. BEGIN/END lines)
         #  APP_STORE_CONNECT_KEY_IDENTIFIER
         #  APP_STORE_CONNECT_ISSUER_ID
         - app_store_connect
@@ -54,7 +54,6 @@ workflows:
         script: |
           set -euo pipefail
           keychain initialize
-          # Imports any .p12 you uploaded under Account → Code signing identities
           keychain add-certificates
 
       - name: Fetch provisioning profile from App Store Connect
@@ -78,11 +77,6 @@ workflows:
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
-      - name: Show signing identities (debug)
-        script: |
-          set -euo pipefail
-          security find-identity -v -p codesigning || true
-
       - name: Build IPA
         script: |
           set -euo pipefail
@@ -93,8 +87,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8 with BEGIN/END
+        # *** FLAT SYNTAX REQUIRED BY THE VALIDATOR ***
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
