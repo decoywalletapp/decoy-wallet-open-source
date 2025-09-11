@@ -89,5 +89,5 @@ workflows:
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8 including BEGIN/END
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8, includes BEGIN/END lines
         submit_to_testflight: true
