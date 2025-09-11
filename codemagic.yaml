@@ -1,62 +1,29 @@
 workflows:
-  ios_compile_check:
-    name: iOS Compile Check (no codesign)
-    environment:
-      flutter: stable
-      xcode: latest
-      vars:
-        IOS_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - ios/Pods
-    scripts:
-      - name: Clean & get packages
-        script: |
-          set -euo pipefail
-          flutter clean
-          flutter pub get
-          cd ios
-          rm -rf Pods Podfile.lock
-          pod repo update
-          pod install --repo-update
-          cd ..
-      - name: Build iOS app (no codesign)
-        script: flutter build ios --release --no-codesign
-    artifacts:
-      - build/ios/iphoneos/*.app
-
   ios_release:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert
-        - app_store_connect
-      flutter: stable
-      xcode: latest
+        - signing_cert            # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect       # APP_STORE_CONNECT_PRIVATE_KEY, ...KEY_IDENTIFIER, ...ISSUER_ID
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+      flutter: stable
+      xcode: latest
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
+
     scripts:
-      - name: Initialize keychain & import p12
+      - name: Initialize keychain & import signing cert
         script: |
           set -euo pipefail
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
-
-      - name: "Debug: show available code signing identities"
-        script: |
-          set -euo pipefail
-          KEYCHAIN="$(security default-keychain -d user | tr -d '"')"
-          echo "Default keychain: $KEYCHAIN"
-          security find-identity -v -p codesigning "$KEYCHAIN" || true
 
       - name: Fetch provisioning profile from App Store Connect
         script: |
@@ -85,7 +52,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # full .p8 contents incl. BEGIN/END
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER    # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # UUID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
