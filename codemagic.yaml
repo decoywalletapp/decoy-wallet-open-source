@@ -17,7 +17,11 @@ workflows:
           set -euo pipefail
           flutter clean
           flutter pub get
-          cd ios && pod install --repo-update && cd ..
+          cd ios
+          rm -rf Pods Podfile.lock
+          pod repo update
+          pod install --repo-update
+          cd ..
       - name: Build iOS app (no codesign)
         script: |
           flutter build ios --release --no-codesign
@@ -28,28 +32,32 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        # Must contain these 3 variables:
+        #  APP_STORE_CONNECT_PRIVATE_KEY  (full .p8 incl. BEGIN/END)
+        #  APP_STORE_CONNECT_KEY_IDENTIFIER
+        #  APP_STORE_CONNECT_ISSUER_ID
+        - app_store_connect
       flutter: stable
       xcode: latest
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
 
     scripts:
-      - name: "Initialize keychain and import .p12"
+      - name: Initialize keychain & import certificates (Codemagic-managed)
         script: |
           set -euo pipefail
           keychain initialize
-          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          # Imports any .p12 you uploaded under Account → Code signing identities
+          keychain add-certificates
 
-      - name: "Fetch provisioning profile from App Store Connect"
+      - name: Fetch provisioning profile from App Store Connect
         script: |
           set -euo pipefail
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
@@ -59,17 +67,23 @@ workflows:
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
             --create
 
-      - name: "Use downloaded profiles"
+      - name: Use downloaded profiles
         script: |
+          set -euo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: "Bump build number"
+      - name: Bump build number
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
-      - name: "Build IPA"
+      - name: Show signing identities (debug)
+        script: |
+          set -euo pipefail
+          security find-identity -v -p codesigning || true
+
+      - name: Build IPA
         script: |
           set -euo pipefail
           flutter build ipa --release
@@ -82,5 +96,5 @@ workflows:
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8 including BEGIN/END
+          key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8 with BEGIN/END
         submit_to_testflight: true
