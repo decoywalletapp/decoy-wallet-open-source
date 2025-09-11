@@ -50,13 +50,12 @@ workflows:
           set -euo pipefail
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          # Import the distribution p12 + password into the default Codemagic keychain
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
-      - name: Debug: show available code signing identities
+      - name: "Debug: show available code signing identities"
         script: |
           set -euo pipefail
-          KEYCHAIN=$(security default-keychain -d user | tr -d '" ')
+          KEYCHAIN="$(security default-keychain -d user | tr -d '" ')"
           echo "Default keychain: $KEYCHAIN"
           security find-identity -v -p codesigning "$KEYCHAIN" || true
 
@@ -87,7 +86,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY       # full .p8 (BEGIN/END lines)
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER     # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID       # UUID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          key: $APP_STORE_CONNECT_PRIVATE_KEY   # full .p8 including BEGIN/END
         submit_to_testflight: true
