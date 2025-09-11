@@ -31,8 +31,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert         # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect    # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert
+        - app_store_connect
       flutter: stable
       xcode: latest
       vars:
@@ -43,7 +43,6 @@ workflows:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
-
     scripts:
       - name: Initialize keychain & import p12
         script: |
@@ -52,10 +51,10 @@ workflows:
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
-      - name: Debug: show available code signing identities
+      - name: "Debug: show available code signing identities"
         script: |
           set -euo pipefail
-          KEYCHAIN="$(security default-keychain -d user | tr -d '" ')"
+          KEYCHAIN="$(security default-keychain -d user | tr -d '"')"
           echo "Default keychain: $KEYCHAIN"
           security find-identity -v -p codesigning "$KEYCHAIN" || true
 
@@ -86,8 +85,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Use FLAT form (validator likes this)
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # full .p8 contents incl. BEGIN/END lines
-        key_id:  $APP_STORE_CONNECT_KEY_IDENTIFIER   # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # long UUID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY      # full .p8 contents incl. BEGIN/END
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER    # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID      # UUID
         submit_to_testflight: true
