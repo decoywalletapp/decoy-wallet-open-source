@@ -3,8 +3,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert         # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
-        - app_store_connect    # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -18,62 +18,68 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Initialize keychain & import .p12
+      - name: Clean & restore dependencies
         script: |
-          set -euo pipefail
+          set -euxo pipefail
+          flutter clean
+          flutter pub get
+          cd ios
+          rm -rf Pods Podfile.lock
+          pod repo update
+          pod install --repo-update
+          cd ..
+
+      - name: Initialize keychain & import p12
+        script: |
+          set -euxo pipefail
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          KEYCHAIN="$(security default-keychain -d user | tr -d '"')"
+          echo "Default keychain: $KEYCHAIN"
+          security find-identity -v -p codesigning "$KEYCHAIN" || true
 
-      - name: Install provisioning profile from env var + make ExportOptions.plist
+      - name: Install provisioning profile from env var
         script: |
-          set -euo pipefail
-          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/$BUNDLE_ID.mobileprovision"
-          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
-
-          security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist
-          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist)
-          TEAM_ID=$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' /tmp/profile.plist || true)
-
-          /usr/libexec/PlistBuddy -c "Add :method string app-store" /tmp/ExportOptions.plist
-          /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" /tmp/ExportOptions.plist
-          /usr/libexec/PlistBuddy -c "Add :destination string export" /tmp/ExportOptions.plist
-          /usr/libexec/PlistBuddy -c "Add :stripSwiftSymbols bool true" /tmp/ExportOptions.plist
-          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" /tmp/ExportOptions.plist
-          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$BUNDLE_ID string $PROFILE_NAME" /tmp/ExportOptions.plist
-          if [ -n "${TEAM_ID:-}" ]; then
-            /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" /tmp/ExportOptions.plist || true
+          set -euxo pipefail
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILE_DIR"
+          if [ -n "${IOS_PROVISIONING_PROFILE:-}" ]; then
+            echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
+          elif [ -n "${IOS_PROVISIONING_PROFILE_SECRET:-}" ]; then
+            echo "$IOS_PROVISIONING_PROFILE_SECRET" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
+          elif [ -n "${iOSProvisioningProfileSecret:-}" ]; then
+            echo "$iOSProvisioningProfileSecret" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
+          else
+            echo "No provisioning profile env var found"; exit 1
           fi
+          ls -lah "$PROFILE_DIR"
 
       - name: Point Xcode project to installed profile(s)
         script: |
-          set -euo pipefail
+          set -euxo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number automatically (safe numeric)
+      - name: Bump build number automatically (UTC timestamp)
         script: |
-          set -euo pipefail
-          BUILD_NUM="${CM_BUILD_NUMBER:-$(date +%Y%m%d%H%M)}"
-          echo "Using build number: $BUILD_NUM"
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUM" ios/Runner/Info.plist
-          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BUILD_NUM/" pubspec.yaml || true
+          set -euxo pipefail
+          TS=$(date -u +"%Y%m%d%H%M")
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $TS" ios/Runner/Info.plist
+          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$TS/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml || true
 
-      - name: Build IPA (App Store export)
+      - name: Build IPA (Flutter)
         script: |
-          set -euo pipefail
-          flutter pub get
-          flutter build ipa --release --export-options-plist=/tmp/ExportOptions.plist
+          set -euxo pipefail
+          flutter build ipa --release
 
-      - name: Verify IPA contains embedded.mobileprovision
+      - name: Verify IPA & embedded provisioning profile
         script: |
-          set -euo pipefail
-          IPA="$(find build -type f -name '*.ipa' -print -quit)"
-          [ -n "$IPA" ] || { echo "No IPA produced"; exit 1; }
-          unzip -l "$IPA" | grep -q "embedded.mobileprovision" \
-            || { echo "embedded.mobileprovision missing — aborting upload"; exit 1; }
-          mkdir -p build/ios/ipa && cp "$IPA" build/ios/ipa/Runner.ipa
-          ls -lah build/ios/ipa
+          set -euxo pipefail
+          ls -lah build/ios/ipa || true
+          test -e build/ios/ipa/*.ipa
+          IPA=$(ls build/ios/ipa/*.ipa | head -n 1)
+          unzip -l "$IPA" | grep -q "embedded.mobileprovision" || { echo "embedded.mobileprovision missing — aborting upload"; exit 1; }
 
     artifacts:
       - build/ios/ipa/*.ipa
@@ -81,10 +87,9 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
