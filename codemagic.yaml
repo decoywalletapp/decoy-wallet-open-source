@@ -24,7 +24,6 @@ workflows:
           cd ..
       - name: Build iOS app (no codesign)
         script: |
-          set -euo pipefail
           flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.app
@@ -32,37 +31,29 @@ workflows:
   ios_release:
     name: iOS Release (TestFlight)
     environment:
+      # Put your secrets into these groups in Codemagic:
+      # signing_cert: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
+      # app_store_connect: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       groups:
-        - signing_cert        # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
-        - app_store_connect   # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert
+        - app_store_connect
       flutter: stable
       xcode: latest
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
 
     scripts:
-      - name: Clean & restore dependencies
-        script: |
-          set -euo pipefail
-          flutter clean
-          flutter pub get
-          cd ios
-          rm -rf Pods Podfile.lock
-          pod repo update
-          pod install --repo-update
-          cd ..
-
       - name: Initialize keychain & import .p12
         script: |
           set -euo pipefail
           keychain initialize
+          # decode your distribution .p12 (exported with certificate + private key)
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
@@ -70,7 +61,8 @@ workflows:
         script: |
           set -euo pipefail
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$HOME/Library/MobileDevice/Provisioning Profiles/app_store.mobileprovision"
+          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/$BUNDLE_ID.mobileprovision"
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
 
       - name: Point Xcode project to installed profile(s)
         script: |
@@ -81,7 +73,7 @@ workflows:
         script: |
           set -euo pipefail
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
-          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml || true
           grep -n '^version:' pubspec.yaml || true
 
       - name: Build IPA
@@ -89,13 +81,25 @@ workflows:
           set -euo pipefail
           flutter build ipa --release
 
+      - name: Verify IPA path
+        script: |
+          set -euxo pipefail
+          echo "Listing build/ios/ipa:"
+          ls -lah build/ios/ipa || true
+          # Hard-fail if an .ipa isn't present
+          test -e build/ios/ipa/*.ipa
+
     artifacts:
       - build/ios/ipa/*.ipa
+      - build/**/Runner*.ipa
 
     publishing:
       app_store_connect:
-        # Codemagic validator expects flat fields here (not nested)
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # full .p8 including BEGIN/END lines
-        key_id:  $APP_STORE_CONNECT_KEY_IDENTIFIER     # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID        # the long UUID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
+        # Optional: automatically add the uploaded build to this Internal group
+        beta_groups:
+          - DayZeroDecoyTesters
