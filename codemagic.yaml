@@ -3,7 +3,7 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert           # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
+        - signing_cert           # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
         - app_store_connect      # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
@@ -32,6 +32,31 @@ workflows:
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/$BUNDLE_ID.mobileprovision"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
 
+          # Parse profile info (Name / UUID / Team) for later steps
+          security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist)
+          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /tmp/profile.plist)
+          TEAM_ID=$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' /tmp/profile.plist || true)
+          # Helpful diagnostics
+          echo "Installed profile:"
+          echo "  Name: $PROFILE_NAME"
+          echo "  UUID: $PROFILE_UUID"
+          echo "  Team: ${TEAM_ID:-unknown}"
+          echo "  Path: $PROFILE_PATH"
+
+          # Build an ExportOptions.plist that forces App Store export
+          /usr/libexec/PlistBuddy -c "Add :method string app-store" /tmp/ExportOptions.plist
+          /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" /tmp/ExportOptions.plist
+          /usr/libexec/PlistBuddy -c "Add :destination string export" /tmp/ExportOptions.plist
+          /usr/libexec/PlistBuddy -c "Add :stripSwiftSymbols bool true" /tmp/ExportOptions.plist
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" /tmp/ExportOptions.plist
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$BUNDLE_ID string $PROFILE_NAME" /tmp/ExportOptions.plist
+          if [ -n "${TEAM_ID:-}" ]; then
+            /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" /tmp/ExportOptions.plist || true
+          fi
+          echo "ExportOptions.plist:"
+          /usr/libexec/PlistBuddy -c "Print" /tmp/ExportOptions.plist
+
       - name: Point Xcode project to installed profile(s)
         script: |
           set -euo pipefail
@@ -40,50 +65,36 @@ workflows:
       - name: Bump build number automatically (numeric & App Store-safe)
         script: |
           set -euo pipefail
-          # Use Codemagic's integer if available, otherwise a timestamp
           BUILD_NUM="${CM_BUILD_NUMBER:-$(date +%Y%m%d%H%M)}"
           echo "Using build number: $BUILD_NUM"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUM" ios/Runner/Info.plist
-          # Keep marketing version; only bump the build metadata in pubspec
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BUILD_NUM/" pubspec.yaml || true
           /usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/Runner/Info.plist || true
           grep -n '^version:' pubspec.yaml || true
 
-      - name: Build IPA (Flutter)
+      - name: Build IPA (Flutter) with explicit export options (App Store)
         script: |
           set -euo pipefail
           flutter pub get
-          flutter build ipa --release
+          flutter build ipa --release --export-options-plist=/tmp/ExportOptions.plist
           grep -i "Built .*ipa" -R build || true
 
-      - name: Ensure an IPA exists (auto-package if Flutter didn’t export)
+      - name: Verify IPA contains embedded.mobileprovision (App Store export)
         script: |
           set -euo pipefail
-          mkdir -p build/ios/ipa
-          IPA_PATH="$(find build -type f -name '*.ipa' -print -quit || true)"
-          if [ -n "$IPA_PATH" ]; then
-            echo "Found IPA at: $IPA_PATH"
-            cp "$IPA_PATH" build/ios/ipa/ 2>/dev/null || true
-            ls -lah build/ios/ipa
-            exit 0
+          IPA="$(find build -type f -name '*.ipa' -print -quit)"
+          if [ -z "$IPA" ]; then
+            echo "No IPA produced"; exit 1
           fi
-          echo "No .ipa found; attempting to package Runner.app…"
-          APP_PATH="$(find build -type d -path '*/Runner.app' \
-                      \( -path '*/iphoneos/*' -o -path '*/Release-iphoneos/*' -o -path '*/Products/Applications/*' -o -path '*/Debug-iphoneos/*' \) \
-                      -print -quit || true)"
-          [ -z "$APP_PATH" ] && APP_PATH="$(find build -type d -name 'Runner.app' -print -quit || true)"
-          if [ -z "$APP_PATH" ]; then
-            echo "ERROR: Runner.app not found — Flutter build likely failed."
-            find build -maxdepth 3 -mindepth 1 -type d -print | sed 's/^/  /'
+          echo "Verifying IPA: $IPA"
+          if unzip -l "$IPA" | grep -q "embedded.mobileprovision"; then
+            echo "embedded.mobileprovision is present (OK)"
+          else
+            echo "WARNING: embedded.mobileprovision not found in IPA."
+            echo "This often means a non–App Store export. Failing to avoid a bad upload."
             exit 1
           fi
-          echo "Found Runner.app at: $APP_PATH"
-          rm -rf Payload
-          mkdir -p Payload
-          cp -R "$APP_PATH" Payload/
-          (zip -qry Runner.zip Payload && mv Runner.zip build/ios/ipa/Runner.ipa)
-          rm -rf Payload
-          echo "Created IPA at build/ios/ipa/Runner.ipa"
+          mkdir -p build/ios/ipa && cp "$IPA" build/ios/ipa/Runner.ipa
           ls -lah build/ios/ipa
 
     artifacts:
@@ -92,9 +103,10 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
