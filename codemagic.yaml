@@ -3,8 +3,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert           # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
-        - app_store_connect      # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert         # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
+        - app_store_connect    # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -25,26 +25,17 @@ workflows:
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
-      - name: Install provisioning profile from env var
+      - name: Install provisioning profile from env var + make ExportOptions.plist
         script: |
           set -euo pipefail
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/$BUNDLE_ID.mobileprovision"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
 
-          # Parse profile info (Name / UUID / Team) for later steps
           security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist
           PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist)
-          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /tmp/profile.plist)
           TEAM_ID=$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' /tmp/profile.plist || true)
-          # Helpful diagnostics
-          echo "Installed profile:"
-          echo "  Name: $PROFILE_NAME"
-          echo "  UUID: $PROFILE_UUID"
-          echo "  Team: ${TEAM_ID:-unknown}"
-          echo "  Path: $PROFILE_PATH"
 
-          # Build an ExportOptions.plist that forces App Store export
           /usr/libexec/PlistBuddy -c "Add :method string app-store" /tmp/ExportOptions.plist
           /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" /tmp/ExportOptions.plist
           /usr/libexec/PlistBuddy -c "Add :destination string export" /tmp/ExportOptions.plist
@@ -54,46 +45,33 @@ workflows:
           if [ -n "${TEAM_ID:-}" ]; then
             /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" /tmp/ExportOptions.plist || true
           fi
-          echo "ExportOptions.plist:"
-          /usr/libexec/PlistBuddy -c "Print" /tmp/ExportOptions.plist
 
       - name: Point Xcode project to installed profile(s)
         script: |
           set -euo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number automatically (numeric & App Store-safe)
+      - name: Bump build number automatically (safe numeric)
         script: |
           set -euo pipefail
           BUILD_NUM="${CM_BUILD_NUMBER:-$(date +%Y%m%d%H%M)}"
           echo "Using build number: $BUILD_NUM"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUM" ios/Runner/Info.plist
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BUILD_NUM/" pubspec.yaml || true
-          /usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/Runner/Info.plist || true
-          grep -n '^version:' pubspec.yaml || true
 
-      - name: Build IPA (Flutter) with explicit export options (App Store)
+      - name: Build IPA (App Store export)
         script: |
           set -euo pipefail
           flutter pub get
           flutter build ipa --release --export-options-plist=/tmp/ExportOptions.plist
-          grep -i "Built .*ipa" -R build || true
 
-      - name: Verify IPA contains embedded.mobileprovision (App Store export)
+      - name: Verify IPA contains embedded.mobileprovision
         script: |
           set -euo pipefail
           IPA="$(find build -type f -name '*.ipa' -print -quit)"
-          if [ -z "$IPA" ]; then
-            echo "No IPA produced"; exit 1
-          fi
-          echo "Verifying IPA: $IPA"
-          if unzip -l "$IPA" | grep -q "embedded.mobileprovision"; then
-            echo "embedded.mobileprovision is present (OK)"
-          else
-            echo "WARNING: embedded.mobileprovision not found in IPA."
-            echo "This often means a non–App Store export. Failing to avoid a bad upload."
-            exit 1
-          fi
+          [ -n "$IPA" ] || { echo "No IPA produced"; exit 1; }
+          unzip -l "$IPA" | grep -q "embedded.mobileprovision" \
+            || { echo "embedded.mobileprovision missing — aborting upload"; exit 1; }
           mkdir -p build/ios/ipa && cp "$IPA" build/ios/ipa/Runner.ipa
           ls -lah build/ios/ipa
 
