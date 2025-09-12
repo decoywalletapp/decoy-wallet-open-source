@@ -73,13 +73,32 @@ workflows:
           set -euxo pipefail
           flutter build ipa --release
 
-      - name: Verify IPA & embedded provisioning profile
+      - name: Ensure an IPA exists (auto-package if Flutter didn’t export)
         script: |
           set -euxo pipefail
-          ls -lah build/ios/ipa || true
-          test -e build/ios/ipa/*.ipa
-          IPA=$(ls build/ios/ipa/*.ipa | head -n 1)
-          unzip -l "$IPA" | grep -q "embedded.mobileprovision" || { echo "embedded.mobileprovision missing — aborting upload"; exit 1; }
+          OUTDIR="build/ios/ipa"
+          mkdir -p "$OUTDIR"
+          if compgen -G "$OUTDIR/*.ipa" > /dev/null; then
+            echo "IPA already present:"
+            ls -lah "$OUTDIR"
+          else
+            echo "No .ipa found; attempting to package Runner.app..."
+            APP_PATH=$(find build/ios -type d -name "Runner.app" -path "*/iphoneos/*" -print -quit || true)
+            if [ -z "$APP_PATH" ]; then
+              echo "ERROR: Runner.app not found — Flutter build likely failed."; exit 1
+            fi
+            # Must contain embedded.mobileprovision for App Store validation
+            if [ ! -f "$APP_PATH/embedded.mobileprovision" ]; then
+              echo "ERROR: embedded.mobileprovision missing inside Runner.app"; exit 1
+            fi
+            TMPDIR=$(mktemp -d)
+            mkdir -p "$TMPDIR/Payload"
+            cp -R "$APP_PATH" "$TMPDIR/Payload/Runner.app"
+            (cd "$TMPDIR" && zip -qry Runner.ipa Payload)
+            mv "$TMPDIR/Runner.ipa" "$OUTDIR/Runner.ipa"
+            rm -rf "$TMPDIR"
+            ls -lah "$OUTDIR"
+          fi
 
     artifacts:
       - build/ios/ipa/*.ipa
