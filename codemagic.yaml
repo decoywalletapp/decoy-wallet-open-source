@@ -33,15 +33,15 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert         # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - provisioning         # IOS_PROVISIONING_PROFILE
-        - asc_api              # APP_STORE_CONNECT_* vars
+        - signing_cert        # must contain: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
+        - app_store_connect   # must contain: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -62,19 +62,15 @@ workflows:
       - name: Initialize keychain & import .p12
         script: |
           set -euo pipefail
-          # Creates a temporary keychain and imports the .p12 from CM_CERTIFICATE
           keychain initialize
-          keychain add-certificates
-          echo "== Identities =="
-          security find-identity -v -p codesigning || true
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
       - name: Install provisioning profile from env var
         script: |
           set -euo pipefail
-          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          mkdir -p "$PROFILE_DIR"
-          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
-          ls -l "$PROFILE_DIR"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$HOME/Library/MobileDevice/Provisioning Profiles/app_store.mobileprovision"
 
       - name: Point Xcode project to installed profile(s)
         script: |
@@ -85,8 +81,7 @@ workflows:
         script: |
           set -euo pipefail
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
-          # Also align pubspec build number so App Store bundle version is unique
-          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
       - name: Build IPA
@@ -99,7 +94,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY     # FULL .p8 content incl. headers
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER   # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID     # UUID from App Store Connect
+        # Codemagic validator expects flat fields here (not nested)
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY        # full .p8 including BEGIN/END lines
+        key_id:  $APP_STORE_CONNECT_KEY_IDENTIFIER     # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID        # the long UUID
         submit_to_testflight: true
