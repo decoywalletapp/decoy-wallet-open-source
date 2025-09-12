@@ -36,7 +36,6 @@ workflows:
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
           KEYCHAIN="$(security default-keychain -d user | tr -d '"')"
-          echo "Default keychain: $KEYCHAIN"
           security find-identity -v -p codesigning "$KEYCHAIN" || true
 
       - name: Install provisioning profile from env var
@@ -73,7 +72,7 @@ workflows:
           set -euxo pipefail
           flutter doctor -v || true
           flutter build ipa --release
-          echo "==== After flutter build, build/ tree (top) ===="
+          echo "==== build/ tree (top) ===="
           find build -maxdepth 3 -mindepth 1 -print | sed 's/^/  /' | head -n 200 || true
 
       - name: Ensure an IPA exists (auto-package if Flutter didn’t export)
@@ -91,19 +90,15 @@ workflows:
             exit 0
           fi
 
-          # B) Find a Runner.app to package (prefer the .xcarchive)
+          # B) Package Runner.app from archive/products (preferred) or build tree
           APP_PATH=""
-          # 1) Inside archive
           APP_PATH="$(find build/ios/archive -type d -path '*/Runner.xcarchive/Products/Applications/Runner.app' -print -quit || true)"
-          # 2) Xcode products
           if [ -z "$APP_PATH" ]; then
             APP_PATH="$(find build -type d -path '*/Release-iphoneos/Runner.app' -print -quit || true)"
           fi
-          # 3) Any iphoneos path
           if [ -z "$APP_PATH" ]; then
             APP_PATH="$(find build -type d -name 'Runner.app' -path '*/iphoneos/*' -print -quit || true)"
           fi
-
           if [ -z "$APP_PATH" ]; then
             echo "Runner.app not found. Dumping build tree:"
             find build -maxdepth 6 -print | sed 's/^/  /' | head -n 800 || true
@@ -111,9 +106,8 @@ workflows:
           fi
           echo "Using Runner.app at: $APP_PATH"
 
-          # Ensure embedded.mobileprovision exists; if not, inject our profile
+          # Ensure profile in app
           if [ ! -f "$APP_PATH/embedded.mobileprovision" ]; then
-            echo "No embedded.mobileprovision in app; injecting from env profile"
             PROFILE="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
             [ -f "$PROFILE" ] || { echo "Expected $PROFILE to exist"; exit 1; }
             cp "$PROFILE" "$APP_PATH/embedded.mobileprovision"
@@ -128,13 +122,27 @@ workflows:
           rm -rf "$TMPDIR"
           ls -lah "$OUTDIR"
 
+      - name: Inject provisioning into IPA if missing (repair)
+        script: |
+          set -euxo pipefail
+          IPA="build/ios/ipa/Runner.ipa"
+          PROFILE="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
+          if ! unzip -l "$IPA" | grep -q "embedded.mobileprovision"; then
+            echo "IPA missing embedded.mobileprovision — repairing"
+            TMP="$(mktemp -d)"
+            unzip -q "$IPA" -d "$TMP"
+            cp "$PROFILE" "$TMP/Payload/Runner.app/embedded.mobileprovision"
+            (cd "$TMP" && zip -qry Repacked.ipa Payload)
+            mv "$TMP/Repacked.ipa" "$IPA"
+            rm -rf "$TMP"
+          fi
+
       - name: Verify IPA & embedded provisioning profile
         script: |
           set -euxo pipefail
           ls -lah build/ios/ipa
           IPA="build/ios/ipa/Runner.ipa"
-          unzip -l "$IPA" | grep -q "embedded.mobileprovision" \
-            || { echo "embedded.mobileprovision missing — aborting upload"; exit 1; }
+          unzip -l "$IPA" | grep -q "embedded.mobileprovision"
 
     artifacts:
       - build/ios/ipa/*.ipa
