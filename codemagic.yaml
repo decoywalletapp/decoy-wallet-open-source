@@ -3,7 +3,7 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64) or iOSProvisioningProfileSecret
         - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
@@ -71,34 +71,54 @@ workflows:
       - name: Build IPA (Flutter)
         script: |
           set -euxo pipefail
+          flutter doctor -v || true
           flutter build ipa --release
+          echo "==== After flutter build, top-level build/ tree ===="
+          find build -maxdepth 3 -mindepth 1 -print | sed 's/^/  /' | head -n 200 || true
 
       - name: Ensure an IPA exists (auto-package if Flutter didn’t export)
         script: |
           set -euxo pipefail
           OUTDIR="build/ios/ipa"
           mkdir -p "$OUTDIR"
-          if compgen -G "$OUTDIR/*.ipa" > /dev/null; then
-            echo "IPA already present:"
+
+          # A) If Flutter already produced an .ipa anywhere under build/, use it
+          IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
+          if [ -n "$IPA_FOUND" ]; then
+            echo "Found IPA at: $IPA_FOUND"
+            cp "$IPA_FOUND" "$OUTDIR/Runner.ipa"
             ls -lah "$OUTDIR"
-          else
-            echo "No .ipa found; attempting to package Runner.app..."
-            APP_PATH=$(find build/ios -type d -name "Runner.app" -path "*/iphoneos/*" -print -quit || true)
-            if [ -z "$APP_PATH" ]; then
-              echo "ERROR: Runner.app not found — Flutter build likely failed."; exit 1
-            fi
-            # Must contain embedded.mobileprovision for App Store validation
-            if [ ! -f "$APP_PATH/embedded.mobileprovision" ]; then
-              echo "ERROR: embedded.mobileprovision missing inside Runner.app"; exit 1
-            fi
-            TMPDIR=$(mktemp -d)
-            mkdir -p "$TMPDIR/Payload"
-            cp -R "$APP_PATH" "$TMPDIR/Payload/Runner.app"
-            (cd "$TMPDIR" && zip -qry Runner.ipa Payload)
-            mv "$TMPDIR/Runner.ipa" "$OUTDIR/Runner.ipa"
-            rm -rf "$TMPDIR"
-            ls -lah "$OUTDIR"
+            exit 0
           fi
+
+          # B) Otherwise try to package any device Runner.app we can find
+          echo "No .ipa found; attempting to package Runner.app..."
+          APP_PATH="$(find build -type d -name 'Runner.app' -path '*/iphoneos/*' -print -quit || true)"
+          if [ -z "$APP_PATH" ]; then
+            echo "Runner.app not found. Dumping build tree for debugging:"
+            find build -maxdepth 4 -print | sed 's/^/  /' | head -n 500 || true
+            exit 1
+          fi
+
+          if [ ! -f "$APP_PATH/embedded.mobileprovision" ]; then
+            echo "ERROR: embedded.mobileprovision missing inside Runner.app"; exit 1
+          fi
+
+          TMPDIR="$(mktemp -d)"
+          mkdir -p "$TMPDIR/Payload"
+          cp -R "$APP_PATH" "$TMPDIR/Payload/Runner.app"
+          (cd "$TMPDIR" && zip -qry Runner.ipa Payload)
+          mv "$TMPDIR/Runner.ipa" "$OUTDIR/Runner.ipa"
+          rm -rf "$TMPDIR"
+          ls -lah "$OUTDIR"
+
+      - name: Verify IPA & embedded provisioning profile
+        script: |
+          set -euxo pipefail
+          ls -lah build/ios/ipa
+          IPA="build/ios/ipa/Runner.ipa"
+          unzip -l "$IPA" | grep -q "embedded.mobileprovision" \
+            || { echo "embedded.mobileprovision missing — aborting upload"; exit 1; }
 
     artifacts:
       - build/ios/ipa/*.ipa
