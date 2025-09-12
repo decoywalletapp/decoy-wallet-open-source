@@ -37,14 +37,15 @@ workflows:
           set -euo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number automatically (use CM_BUILD_NUMBER)
+      - name: Bump build number automatically (numeric & App Store-safe)
         script: |
           set -euo pipefail
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_NUMBER" ios/Runner/Info.plist
-          # keep marketing version stable; bump build metadata in pubspec
-          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_NUMBER/" pubspec.yaml || true
-          echo "Current versions:"
-          /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/Runner/Info.plist || true
+          # Use Codemagic's integer if available, otherwise a timestamp
+          BUILD_NUM="${CM_BUILD_NUMBER:-$(date +%Y%m%d%H%M)}"
+          echo "Using build number: $BUILD_NUM"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUM" ios/Runner/Info.plist
+          # Keep marketing version; only bump the build metadata in pubspec
+          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BUILD_NUM/" pubspec.yaml || true
           /usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/Runner/Info.plist || true
           grep -n '^version:' pubspec.yaml || true
 
@@ -66,7 +67,7 @@ workflows:
             ls -lah build/ios/ipa
             exit 0
           fi
-          echo "No .ipa found; attempting to package Runner.app from common locations…"
+          echo "No .ipa found; attempting to package Runner.app…"
           APP_PATH="$(find build -type d -path '*/Runner.app' \
                       \( -path '*/iphoneos/*' -o -path '*/Release-iphoneos/*' -o -path '*/Products/Applications/*' -o -path '*/Debug-iphoneos/*' \) \
                       -print -quit || true)"
