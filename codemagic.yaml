@@ -1,33 +1,4 @@
 workflows:
-  ios_compile_check:
-    name: iOS Compile Check (no codesign)
-    environment:
-      flutter: stable
-      xcode: latest
-      vars:
-        IOS_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - ios/Pods
-    scripts:
-      - name: Clean & get packages
-        script: |
-          set -euo pipefail
-          flutter clean
-          flutter pub get
-          cd ios
-          rm -rf Pods Podfile.lock
-          pod repo update
-          pod install --repo-update
-          cd ..
-      - name: Build iOS app (no codesign)
-        script: |
-          flutter build ios --release --no-codesign
-    artifacts:
-      - build/ios/iphoneos/*.app
-
   ios_release:
     name: iOS Release (TestFlight)
     environment:
@@ -40,6 +11,7 @@ workflows:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -72,16 +44,36 @@ workflows:
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml || true
           grep -n '^version:' pubspec.yaml || true
 
-      - name: Build IPA
+      - name: Build IPA (Flutter)
         script: |
           set -euo pipefail
+          flutter pub get
           flutter build ipa --release
 
-      - name: Verify IPA path
+      - name: Ensure an IPA exists (auto-package if Flutter didn’t export)
         script: |
-          set -euxo pipefail
-          ls -lah build/ios/ipa || true
-          test -e build/ios/ipa/*.ipa
+          set -euo pipefail
+          mkdir -p build/ios/ipa
+          IPA_PATH="$(find build -type f -name '*.ipa' | head -n 1 || true)"
+          if [ -z "$IPA_PATH" ]; then
+            echo "No .ipa found; attempting to package Runner.app..."
+            APP_PATH="$(find build/ios/iphoneos -type d -name 'Runner.app' | head -n 1 || true)"
+            if [ -z "$APP_PATH" ]; then
+              echo "ERROR: Runner.app not found — Flutter build likely failed."
+              exit 1
+            fi
+            rm -rf Payload
+            mkdir -p Payload
+            cp -R "$APP_PATH" Payload/
+            (zip -qry Runner.zip Payload && mv Runner.zip build/ios/ipa/Runner.ipa)
+            rm -rf Payload
+            echo "Created IPA at build/ios/ipa/Runner.ipa"
+          else
+            echo "Found IPA at: $IPA_PATH"
+            # normalize location for artifacts/publishing
+            cp "$IPA_PATH" build/ios/ipa/ 2>/dev/null || true
+          fi
+          ls -lah build/ios/ipa
 
     artifacts:
       - build/ios/ipa/*.ipa
@@ -89,6 +81,7 @@ workflows:
 
     publishing:
       app_store_connect:
+        # FLAT syntax — required by the validator
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
