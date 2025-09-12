@@ -3,7 +3,7 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, and your provisioning profile secret
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, and one of: IOS_PROVISIONING_PROFILE / IOS_PROVISIONING_PROFILE_SECRET / iOSProvisioningProfileSecret (base64)
         - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
@@ -81,7 +81,7 @@ workflows:
           OUTDIR="build/ios/ipa"
           mkdir -p "$OUTDIR"
 
-          # A) If Flutter already produced an IPA anywhere, take it
+          # If Flutter already produced an IPA anywhere, take it
           IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
           if [ -n "$IPA_FOUND" ]; then
             echo "Found IPA at: $IPA_FOUND"
@@ -90,7 +90,7 @@ workflows:
             exit 0
           fi
 
-          # B) Package Runner.app from archive/products (preferred) or build tree
+          # Otherwise, package Runner.app
           APP_PATH=""
           APP_PATH="$(find build/ios/archive -type d -path '*/Runner.xcarchive/Products/Applications/Runner.app' -print -quit || true)"
           if [ -z "$APP_PATH" ]; then
@@ -106,7 +106,7 @@ workflows:
           fi
           echo "Using Runner.app at: $APP_PATH"
 
-          # Ensure profile in app
+          # Ensure profile inside the .app
           if [ ! -f "$APP_PATH/embedded.mobileprovision" ]; then
             PROFILE="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
             [ -f "$PROFILE" ] || { echo "Expected $PROFILE to exist"; exit 1; }
@@ -127,7 +127,8 @@ workflows:
           set -euxo pipefail
           IPA="build/ios/ipa/Runner.ipa"
           PROFILE="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
-          if ! unzip -l "$IPA" | grep -q "embedded.mobileprovision"; then
+          # If embedded.mobileprovision isn't present, inject it
+          if ! unzip -Z1 "$IPA" '*/embedded.mobileprovision' >/dev/null 2>&1; then
             echo "IPA missing embedded.mobileprovision — repairing"
             TMP="$(mktemp -d)"
             unzip -q "$IPA" -d "$TMP"
@@ -140,9 +141,14 @@ workflows:
       - name: Verify IPA & embedded provisioning profile
         script: |
           set -euxo pipefail
-          ls -lah build/ios/ipa
           IPA="build/ios/ipa/Runner.ipa"
-          unzip -l "$IPA" | grep -q "embedded.mobileprovision"
+          ls -lah "$(dirname "$IPA")"
+          # Avoid SIGPIPE/141: no grep pipes; rely on unzip matching
+          if unzip -Z1 "$IPA" '*/embedded.mobileprovision' >/dev/null 2>&1; then
+            echo "embedded.mobileprovision present ✅"
+          else
+            echo "embedded.mobileprovision missing ❌ — aborting"; exit 1
+          fi
 
     artifacts:
       - build/ios/ipa/*.ipa
