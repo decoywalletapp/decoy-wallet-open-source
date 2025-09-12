@@ -24,6 +24,7 @@ workflows:
           cd ..
       - name: Build iOS app (no codesign)
         script: |
+          set -euo pipefail
           flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.app
@@ -32,49 +33,60 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        # Must contain these 3 variables:
-        #  APP_STORE_CONNECT_PRIVATE_KEY  (full .p8 contents incl. BEGIN/END lines)
-        #  APP_STORE_CONNECT_KEY_IDENTIFIER
-        #  APP_STORE_CONNECT_ISSUER_ID
-        - app_store_connect
+        - signing_cert         # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - provisioning         # IOS_PROVISIONING_PROFILE
+        - asc_api              # APP_STORE_CONNECT_* vars
       flutter: stable
       xcode: latest
       vars:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
 
     scripts:
-      - name: Initialize keychain & import certificates (Codemagic-managed)
+      - name: Clean & restore dependencies
         script: |
           set -euo pipefail
+          flutter clean
+          flutter pub get
+          cd ios
+          rm -rf Pods Podfile.lock
+          pod repo update
+          pod install --repo-update
+          cd ..
+
+      - name: Initialize keychain & import .p12
+        script: |
+          set -euo pipefail
+          # Creates a temporary keychain and imports the .p12 from CM_CERTIFICATE
           keychain initialize
           keychain add-certificates
+          echo "== Identities =="
+          security find-identity -v -p codesigning || true
 
-      - name: Fetch provisioning profile from App Store Connect
+      - name: Install provisioning profile from env var
         script: |
           set -euo pipefail
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
-            --create
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILE_DIR"
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
+          ls -l "$PROFILE_DIR"
 
-      - name: Use downloaded profiles
+      - name: Point Xcode project to installed profile(s)
         script: |
           set -euo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number
+      - name: Bump build number automatically
         script: |
+          set -euo pipefail
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_ID" ios/Runner/Info.plist
-          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
+          # Also align pubspec build number so App Store bundle version is unique
+          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$CM_BUILD_ID/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
       - name: Build IPA
@@ -87,8 +99,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # *** FLAT SYNTAX REQUIRED BY THE VALIDATOR ***
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY     # FULL .p8 content incl. headers
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER   # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID     # UUID from App Store Connect
         submit_to_testflight: true
