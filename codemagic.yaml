@@ -31,12 +31,9 @@ workflows:
   ios_release:
     name: iOS Release (TestFlight)
     environment:
-      # Put your secrets into these groups in Codemagic:
-      # signing_cert: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
-      # app_store_connect: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       groups:
-        - signing_cert
-        - app_store_connect
+        - signing_cert           # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
+        - app_store_connect      # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -53,7 +50,6 @@ workflows:
         script: |
           set -euo pipefail
           keychain initialize
-          # decode your distribution .p12 (exported with certificate + private key)
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
@@ -84,9 +80,7 @@ workflows:
       - name: Verify IPA path
         script: |
           set -euxo pipefail
-          echo "Listing build/ios/ipa:"
           ls -lah build/ios/ipa || true
-          # Hard-fail if an .ipa isn't present
           test -e build/ios/ipa/*.ipa
 
     artifacts:
@@ -98,8 +92,7 @@ workflows:
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
-        # Optional: automatically add the uploaded build to this Internal group
         beta_groups:
           - DayZeroDecoyTesters
