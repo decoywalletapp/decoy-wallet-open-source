@@ -48,31 +48,54 @@ workflows:
         script: |
           set -euo pipefail
           flutter pub get
+          # Build an ipa; Flutter should export to build/ios/ipa/
           flutter build ipa --release
+          echo "Flutter build done. Printing any ipa hints from logs:"
+          # This line prints the typical "Built IPA to:" hint if Flutter emitted it
+          grep -i "Built .*ipa" -R build || true
 
       - name: Ensure an IPA exists (auto-package if Flutter didn’t export)
         script: |
           set -euo pipefail
           mkdir -p build/ios/ipa
-          IPA_PATH="$(find build -type f -name '*.ipa' | head -n 1 || true)"
-          if [ -z "$IPA_PATH" ]; then
-            echo "No .ipa found; attempting to package Runner.app..."
-            APP_PATH="$(find build/ios/iphoneos -type d -name 'Runner.app' | head -n 1 || true)"
-            if [ -z "$APP_PATH" ]; then
-              echo "ERROR: Runner.app not found — Flutter build likely failed."
-              exit 1
-            fi
-            rm -rf Payload
-            mkdir -p Payload
-            cp -R "$APP_PATH" Payload/
-            (zip -qry Runner.zip Payload && mv Runner.zip build/ios/ipa/Runner.ipa)
-            rm -rf Payload
-            echo "Created IPA at build/ios/ipa/Runner.ipa"
-          else
+
+          # 1) If an ipa already exists anywhere, use it.
+          IPA_PATH="$(find build -type f -name '*.ipa' -print -quit || true)"
+          if [ -n "$IPA_PATH" ]; then
             echo "Found IPA at: $IPA_PATH"
-            # normalize location for artifacts/publishing
             cp "$IPA_PATH" build/ios/ipa/ 2>/dev/null || true
+            ls -lah build/ios/ipa
+            exit 0
           fi
+
+          echo "No .ipa found; attempting to package Runner.app from common locations…"
+
+          # 2) Try to locate Runner.app in common Flutter/Xcode paths
+          APP_PATH="$( \
+            find build -type d -path '*/Runner.app' \
+              \( -path '*/iphoneos/*' -o -path '*/Release-iphoneos/*' -o -path '*/Products/Applications/*' -o -path '*/Debug-iphoneos/*' \) \
+              -print -quit || true \
+          )"
+
+          # If still not found, look anywhere under build as last resort
+          if [ -z "$APP_PATH" ]; then
+            APP_PATH="$(find build -type d -name 'Runner.app' -print -quit || true)"
+          fi
+
+          if [ -z "$APP_PATH" ]; then
+            echo "ERROR: Runner.app not found — Flutter build likely failed or output moved."
+            echo "Directory snapshot for debugging:"
+            find build -maxdepth 3 -mindepth 1 -type d -print | sed 's/^/  /'
+            exit 1
+          fi
+
+          echo "Found Runner.app at: $APP_PATH"
+          rm -rf Payload
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          (zip -qry Runner.zip Payload && mv Runner.zip build/ios/ipa/Runner.ipa)
+          rm -rf Payload
+          echo "Created IPA at build/ios/ipa/Runner.ipa"
           ls -lah build/ios/ipa
 
     artifacts:
@@ -81,7 +104,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # FLAT syntax — required by the validator
+        # The validator requires FLAT (not nested) keys here
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
