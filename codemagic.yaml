@@ -4,8 +4,8 @@ workflows:
 
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER (optional)
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (.p8 full text), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision), IOS_PROFILE_SPECIFIER (profile NAME, optional)
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (full .p8 with BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -20,6 +20,16 @@ workflows:
         - ios/Pods
 
     scripts:
+      - name: Fail fast if required env vars missing
+        script: |
+          set -euo pipefail
+          : "${CM_CERTIFICATE:?Missing CM_CERTIFICATE (base64 .p12)}"
+          : "${CM_CERTIFICATE_PASSWORD:?Missing CM_CERTIFICATE_PASSWORD}"
+          : "${IOS_PROVISIONING_PROFILE:?Missing IOS_PROVISIONING_PROFILE (base64 .mobileprovision)}"
+          : "${APP_STORE_CONNECT_PRIVATE_KEY:?Missing APP_STORE_CONNECT_PRIVATE_KEY (.p8)}"
+          : "${APP_STORE_CONNECT_KEY_IDENTIFIER:?Missing APP_STORE_CONNECT_KEY_IDENTIFIER}"
+          : "${APP_STORE_CONNECT_ISSUER_ID:?Missing APP_STORE_CONNECT_ISSUER_ID}"
+
       - name: Flutter clean & deps
         script: |
           set -euxo pipefail
@@ -111,11 +121,15 @@ workflows:
       - build/ios/ipa/*.ipa
 
     publishing:
-      app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        submit_to_testflight: true
-        beta_groups:
-          - DayZeroDecoyTesters
+      scripts:
+        - name: Publish to TestFlight (CLI, bypass schema)
+          script: |
+            set -euxo pipefail
+            IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+            app-store-connect publish \
+              --path "$IPA" \
+              --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+              --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+              --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY \
+              --testflight \
+              --groups "DayZeroDecoyTesters"
