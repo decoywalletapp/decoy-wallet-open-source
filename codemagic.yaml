@@ -5,7 +5,7 @@ workflows:
     environment:
       groups:
         - signing_cert             # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision), IOS_PROFILE_SPECIFIER
-        - app_store_connect        # APP_STORE_CONNECT_PRIVATE_KEY (.p8 with BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - app_store_connect        # APP_STORE_CONNECT_PRIVATE_KEY (.p8 incl BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -60,7 +60,6 @@ workflows:
           set -euxo pipefail
           BN="$(date -u +%Y%m%d%H%M)"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
-          # Replace 'version: x.y.z(+n)?' with same x.y.z and new +BN
           perl -i -pe "s/^version:\s*([0-9]+\.[0-9]+\.[0-9]+)(?:\+\d+)?/version: \${1}+$BN/m" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
@@ -85,9 +84,9 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY
+          key_id: '${APP_STORE_CONNECT_KEY_IDENTIFIER}'
+          issuer_id: '${APP_STORE_CONNECT_ISSUER_ID}'
+          key: '${APP_STORE_CONNECT_PRIVATE_KEY}'
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
