@@ -4,8 +4,8 @@ workflows:
 
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (.p8 incl BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -43,7 +43,6 @@ workflows:
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
           mkdir -p "$(dirname "$PROFILE_PATH")"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
-          /usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin <<<"$(security cms -D -i "$PROFILE_PATH")" || true
 
       - name: Point Xcode project to installed profile(s)
         script: |
@@ -68,7 +67,6 @@ workflows:
       - name: Verify IPA has embedded provisioning profile
         script: |
           set -euo pipefail
-          ls -lah build/ios/ipa || true
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
           unzip -l "$IPA" | grep -q 'embedded.mobileprovision'
 
@@ -80,7 +78,7 @@ workflows:
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY   # <-- must be 'key', not 'private_key'
+          key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
