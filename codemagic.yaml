@@ -4,8 +4,8 @@ workflows:
 
     environment:
       groups:
-        - signing_cert              # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision), IOS_PROFILE_SPECIFIER
-        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY (.p8 incl BEGIN/END)
+        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER
+        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -84,9 +84,9 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: 989Y382263
-          issuer_id: c70cc838-58d8-45e7-97c3-4e68e7d56aa5
-          key: $APP_STORE_CONNECT_PRIVATE_KEY   # <- field name MUST be 'key'
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
