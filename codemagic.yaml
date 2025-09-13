@@ -4,7 +4,7 @@ workflows:
 
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision), IOS_PROFILE_SPECIFIER (optional)
+        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER (optional)
         - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (.p8 full text), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
@@ -70,7 +70,6 @@ workflows:
                 || echo "${IOS_PROFILE_SPECIFIER:-}"
               )"
 
-              # ---- heredoc STARTS; every XML line is indented inside the script block ----
               cat > exportOptions.plist <<'PLIST'
               <?xml version="1.0" encoding="UTF-8"?>
               <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -87,7 +86,6 @@ workflows:
               </dict>
               </plist>
               PLIST
-              # ---- heredoc ENDS ----
 
               sed -i '' \
                 -e "s/__TEAM_ID__/${TEAM_ID}/" \
@@ -117,7 +115,7 @@ workflows:
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
