@@ -73,20 +73,24 @@ workflows:
       - name: Verify IPA has embedded provisioning profile
         script: |
           set -euxo pipefail
-          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
-          test -n "$IPA"
+          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1 || true)"
+          if [ -z "$IPA" ]; then
+            echo "No .ipa found; build likely failed"
+            exit 1
+          fi
           unzip -l "$IPA" | grep -q 'embedded.mobileprovision'
           echo "IPA ready: $IPA"
 
+      - name: Publish to TestFlight (CLI, bypass schema)
+        script: |
+          set -euxo pipefail
+          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          app-store-connect publish \
+            --path "$IPA" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY \
+            --verbose
+
     artifacts:
       - build/ios/ipa/*.ipa
-
-    publishing:
-      app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          key: $APP_STORE_CONNECT_PRIVATE_KEY
-        submit_to_testflight: true
-        beta_groups:
-          - DayZeroDecoyTesters
