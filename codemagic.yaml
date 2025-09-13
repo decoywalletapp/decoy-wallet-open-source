@@ -4,8 +4,8 @@ workflows:
 
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision), IOS_PROFILE_SPECIFIER
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (.p8 incl BEGIN/END), APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
+        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER
+        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
       flutter: stable
       xcode: latest
       vars:
@@ -25,6 +25,7 @@ workflows:
           set -euxo pipefail
           flutter --version
           xcodebuild -version
+          cm version || true
 
       - name: Initialize keychain & import Distribution .p12
         script: |
@@ -41,16 +42,10 @@ workflows:
           mkdir -p "$PROFILE_DIR"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
           ls -lah "$PROFILE_DIR" || true
-
-      - name: Point Xcode project to installed profile(s) (manual signing)
-        script: |
-          set -euxo pipefail
-          # This rewrites Runner.xcodeproj to Manual signing and pairs the App Store
-          # profile with your bundle id & team, so Xcode stops asking for a dev cert.
-          xcode-project use-profiles --team-id "$TEAM_ID" --bundle-id "$BUNDLE_ID" --export-method app-store
-          # Sanity: print key signing settings
-          xcodebuild -workspace "$IOS_WORKSPACE" -scheme "$XCODE_SCHEME" -showBuildSettings \
-            | egrep "CODE_SIGN|PROVISIONING|DEVELOPMENT_TEAM|PRODUCT_BUNDLE_IDENTIFIER" || true
+          # Optional: print a couple fields for sanity
+          /usr/bin/security cms -D -i "$PROFILE_DIR/appstore.mobileprovision" > /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile.plist
 
       - name: Create exportOptions.plist (manual signing)
         script: |
@@ -63,16 +58,21 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" "$plist"
           /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$BUNDLE_ID string $IOS_PROFILE_SPECIFIER" "$plist"
           /usr/libexec/PlistBuddy -c "Add :manageAppVersionAndBuildNumber bool false" "$plist"
-          /usr/libexec/PlistBuddy -c "Print" "$plist" || true
+          /usr/libexec/PlistBuddy -c "Print" "$plist"
 
       - name: Bump build number (UTC timestamp)
         script: |
           set -euxo pipefail
           BN="$(date -u +%Y%m%d%H%M)"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
-          # macOS sed is picky; use perl to bump pubspec version safely
-          perl -i -pe "s/^version:\\s*([0-9]+\\.[0-9]+\\.[0-9]+)(?:\\+\\d+)?/version: \$1+$BN/m" pubspec.yaml
+          perl -i -pe "s/^version:\s*([0-9]+\.[0-9]+\.[0-9]+)(?:\+\d+)?/version: \${1}+$BN/m" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
+
+      - name: Point Xcode project to installed profile(s) (manual signing)
+        script: |
+          set -euxo pipefail
+          # These flags aren't supported on your builder image; keep it simple:
+          xcode-project use-profiles --warn-only
 
       - name: Build IPA (Flutter)
         script: |
@@ -80,20 +80,6 @@ workflows:
           flutter clean
           flutter pub get
           flutter build ipa --release --export-options-plist exportOptions.plist
-
-      - name: Ensure an IPA exists (fallback export from xcarchive)
-        script: |
-          set -euxo pipefail
-          OUTDIR="build/ios/ipa"
-          mkdir -p "$OUTDIR"
-          IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
-          if [ -z "$IPA_FOUND" ]; then
-            echo "No .ipa from Flutter export. Trying xcodebuild -exportArchive..."
-            ARCHIVE="$(ls -dt build/ios/archive/Runner.xcarchive | head -n 1 || true)"
-            [ -n "$ARCHIVE" ]
-            xcodebuild -exportArchive -archivePath "$ARCHIVE" -exportPath "$OUTDIR" -exportOptionsPlist exportOptions.plist
-          fi
-          ls -lah "$OUTDIR" || true
 
       - name: Verify IPA has embedded provisioning profile
         script: |
@@ -103,7 +89,7 @@ workflows:
           unzip -l "$IPA" | grep -q 'embedded.mobileprovision'
           echo "IPA ready: $IPA"
 
-      - name: Publish to TestFlight (CLI)
+      - name: Upload to App Store Connect (CLI)
         script: |
           set -euxo pipefail
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
