@@ -80,10 +80,10 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        # <-- FLAT KEYS (not nested) -->
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY     # the full .p8 content (with BEGIN/END)
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER   # e.g. 989Y382263
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID     # UUID
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
