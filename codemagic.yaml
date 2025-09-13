@@ -1,18 +1,18 @@
 workflows:
   ios_release:
-    name: iOS Release (TestFlight)
+    name: "iOS Release (TestFlight)"
 
     environment:
       groups:
-        - signing_cert          # expects: CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
-        - app_store_connect     # expects: APP_STORE_CONNECT_PRIVATE_KEY (.p8 with BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
-        IOS_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
         TEAM_ID: 8Y7L4NZ5ZX
         BUNDLE_ID: com.decoywalletapp.app
+        IOS_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
 
     cache:
       cache_paths:
@@ -20,7 +20,7 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Clean & get packages
+      - name: "Clean & restore dependencies"
         script: |
           set -euo pipefail
           flutter clean
@@ -30,26 +30,27 @@ workflows:
           pod install --repo-update
           cd ..
 
-      - name: Initialize keychain & import Distribution .p12
+      - name: "Initialize keychain & import Distribution .p12"
         script: |
           set -euo pipefail
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
-      - name: Install provisioning profile from env var
+      - name: "Install provisioning profile from env var"
         script: |
           set -euo pipefail
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
           mkdir -p "$(dirname "$PROFILE_PATH")"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
 
-      - name: Point Xcode project to installed profile(s)
+      - name: "Point Xcode project to installed profile(s)"
         script: |
           set -euo pipefail
-          xcode-project use-profiles
+          # Warn-only keeps the build running even if Xcode projects were already configured
+          xcode-project use-profiles --warn-only
 
-      - name: Bump build number (UTC timestamp)
+      - name: "Bump build number (UTC timestamp)"
         script: |
           set -euo pipefail
           BN="${CM_BUILD_NUMBER:-$(date -u +%Y%m%d%H%M)}"
@@ -57,14 +58,53 @@ workflows:
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
-      - name: Build IPA (Xcode)
+      - name: "Build IPA (Flutter)"
         script: |
           set -euo pipefail
-          xcode-project build-ipa \
-            --workspace "$IOS_WORKSPACE" \
-            --scheme "$XCODE_SCHEME"
+          flutter build ipa --release
 
-      - name: Verify IPA & embedded provisioning profile
+      - name: "Ensure an IPA exists (fallback export from xcarchive)"
+        script: |
+          set -euo pipefail
+          OUTDIR=build/ios/ipa
+          mkdir -p "$OUTDIR"
+
+          # If Flutter already produced an .ipa, keep it
+          if find build -type f -name '*.ipa' | head -n 1 >/dev/null; then
+            echo "IPA already present from Flutter export."
+          else
+            echo "No .ipa from Flutter export. Trying xcodebuild -exportArchive..."
+            ARCHIVE="$(ls -dt build/ios/archive/Runner.xcarchive 2>/dev/null | head -n 1 || true)"
+            if [ -z "$ARCHIVE" ]; then
+              echo "No xcarchive found; failing."
+              exit 1
+            fi
+
+            # Make an exportOptions.plist mapping bundle id -> profile name (uses manual signing)
+            cat > exportOptions.plist <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>method</key><string>app-store</string>
+  <key>signingStyle</key><string>manual</string>
+  <key>teamID</key><string>8Y7L4NZ5ZX</string>
+  <key>manageAppVersionAndBuildNumber</key><false/>
+  <key>provisioningProfiles</key>
+  <dict>
+    <key>com.decoywalletapp.app</key><string>mochakk</string>
+  </dict>
+</dict>
+</plist>
+PLIST
+
+            xcodebuild -exportArchive \
+              -archivePath "$ARCHIVE" \
+              -exportPath "$OUTDIR" \
+              -exportOptionsPlist exportOptions.plist
+          fi
+
+      - name: "Verify IPA has embedded provisioning profile"
         script: |
           set -euo pipefail
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
