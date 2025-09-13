@@ -4,8 +4,8 @@ workflows:
 
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # expects: CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
+        - app_store_connect     # expects: APP_STORE_CONNECT_PRIVATE_KEY (.p8 with BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -49,7 +49,7 @@ workflows:
           set -euo pipefail
           xcode-project use-profiles
 
-      - name: Bump build number (numeric & monotonic)
+      - name: Bump build number (UTC timestamp)
         script: |
           set -euo pipefail
           BN="${CM_BUILD_NUMBER:-$(date -u +%Y%m%d%H%M)}"
@@ -64,10 +64,11 @@ workflows:
             --workspace "$IOS_WORKSPACE" \
             --scheme "$XCODE_SCHEME"
 
-      - name: Verify IPA has embedded provisioning profile
+      - name: Verify IPA & embedded provisioning profile
         script: |
           set -euo pipefail
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          test -n "$IPA"
           unzip -l "$IPA" | grep -q 'embedded.mobileprovision'
 
     artifacts:
