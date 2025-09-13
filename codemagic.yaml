@@ -3,7 +3,7 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
+        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
         - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
@@ -12,8 +12,8 @@ workflows:
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
         TEAM_ID: 8Y7L4NZ5ZX
-        # NEW: set this in Environment variables UI (not here)
-        # IOS_PROFILE_SPECIFIER: mochakk  # (name or UUID)
+        # Set this in the UI:
+        # IOS_PROFILE_SPECIFIER: mochakk-store-2025   # (name OR UUID)
 
     cache:
       cache_paths:
@@ -21,7 +21,7 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Clean and get dependencies
+      - name: Clean & deps
         script: |
           set -euxo pipefail
           flutter clean
@@ -32,7 +32,7 @@ workflows:
           pod install --repo-update
           cd ..
 
-      - name: Initialize keychain and import p12
+      - name: Initialize keychain & import Distribution .p12
         script: |
           set -euxo pipefail
           : "${CM_CERTIFICATE:?Missing CM_CERTIFICATE}"
@@ -40,19 +40,38 @@ workflows:
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
-          security find-identity -v -p codesigning "$(security default-keychain -d user | tr -d '"')" || true
+          security find-identity -v -p codesigning || true
 
       - name: Install App Store provisioning profile
         script: |
           set -euxo pipefail
           : "${IOS_PROVISIONING_PROFILE:?Missing IOS_PROVISIONING_PROFILE}"
+          # purge any stale profiles so Xcode never picks an old one
+          rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision || true
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
-          # quick sanity: show file type & size
           file "$PROFILE_PATH" || true
-          ls -lah "$HOME/Library/MobileDevice/Provisioning Profiles" || true
           xcode-project use-profiles --warn-only
+
+      - name: Sanity: profile contains our imported cert
+        script: |
+          set -euxo pipefail
+          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
+          security cms -D -i "$PROFILE_PATH" -o /tmp/profile.plist
+          # collect SHA-1s from the profile's DeveloperCertificates[]
+          /usr/libexec/PlistBuddy -c 'Print :DeveloperCertificates' /tmp/profile.plist >/dev/null
+          TMPDIR=$(mktemp -d)
+          i=0; MATCHED=false
+          while /usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:$i" /tmp/profile.plist >/dev/null 2>&1; do
+            /usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:$i" /tmp/profile.plist > "$TMPDIR/cert$i.der"
+            FPR=$(openssl x509 -inform der -in "$TMPDIR/cert$i.der" -noout -fingerprint -sha1 | sed 's/.*=//' | tr -d ':')
+            if security find-identity -v -p codesigning | awk '{print $2}' | tr -d '"' | grep -qi "$FPR"; then
+              MATCHED=true; break
+            fi
+            i=$((i+1))
+          done
+          $MATCHED || { echo "⚠️  The provisioning profile does NOT include the Distribution certificate imported from your .p12. Recreate the profile selecting the SAME Apple Distribution cert."; exit 1; }
 
       - name: Bump build number (UTC timestamp)
         script: |
@@ -60,9 +79,8 @@ workflows:
           BN="$(date -u +%Y%m%d%H%M)"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
-          /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' ios/Runner/Info.plist || true
 
-      - name: Build IPA using Flutter
+      - name: Build IPA (Flutter)
         script: |
           set -euxo pipefail
           flutter build ipa --release || true
@@ -75,38 +93,13 @@ workflows:
           set -euxo pipefail
           OUTDIR="build/ios/ipa"
           mkdir -p "$OUTDIR"
-
-          # If Flutter already made one, keep it.
           IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
           if [ -z "$IPA_FOUND" ]; then
-            echo "No .ipa from Flutter export. Trying xcodebuild -exportArchive..."
             ARCHIVE="$(ls -dt build/ios/archive/*.xcarchive 2>/dev/null | head -n 1 || true)"
-            if [ -z "$ARCHIVE" ]; then
-              echo "No .xcarchive found — Flutter build likely failed."
-              find build -maxdepth 4 -print | sed 's/^/  /' | head -n 300 || true
-              exit 1
-            fi
+            [ -n "$ARCHIVE" ] || { echo "No .xcarchive found — Flutter build likely failed."; exit 1; }
 
-            # Prefer an explicit specifier provided via env (name or UUID).
-            if [ -n "${IOS_PROFILE_SPECIFIER:-}" ]; then
-              PROFILE_SPECIFIER="$IOS_PROFILE_SPECIFIER"
-            else
-              # Fallback: try to parse profile name from installed file
-              PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
-              if security cms -D -i "$PROFILE_PATH" >/tmp/profile.plist 2>/dev/null; then
-                PROFILE_SPECIFIER="$(/usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist || true)"
-              else
-                PROFILE_SPECIFIER=""
-              fi
-            fi
-
-            if [ -z "$PROFILE_SPECIFIER" ]; then
-              echo "Could not determine profile specifier (name or UUID)."
-              echo "Set IOS_PROFILE_SPECIFIER in Environment variables to your profile NAME (e.g. 'mochakk') or its UUID."
-              exit 1
-            fi
-
-            # Write exportOptions.plist without heredoc to avoid parser glitches
+            # Use explicit specifier (name or UUID) — avoids parsing brittleness
+            : "${IOS_PROFILE_SPECIFIER:?Set IOS_PROFILE_SPECIFIER to your profile NAME (e.g. mochakk-store-2025) or UUID}"
             {
               echo '<?xml version="1.0" encoding="UTF-8"?>'
               echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
@@ -115,7 +108,7 @@ workflows:
               echo '  <key>signingStyle</key><string>manual</string>'
               echo "  <key>teamID</key><string>${TEAM_ID}</string>"
               echo '  <key>provisioningProfiles</key><dict>'
-              echo "    <key>${BUNDLE_ID}</key><string>${PROFILE_SPECIFIER}</string>"
+              echo "    <key>${BUNDLE_ID}</key><string>${IOS_PROFILE_SPECIFIER}</string>"
               echo '  </dict>'
               echo '  <key>manageAppVersionAndBuildNumber</key><false/>'
               echo '</dict></plist>'
@@ -126,8 +119,6 @@ workflows:
               -exportPath "$OUTDIR" \
               -exportOptionsPlist exportOptions.plist
           fi
-
-          ls -lah "$OUTDIR"
 
       - name: Verify IPA has embedded provisioning profile
         script: |
