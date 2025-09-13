@@ -3,8 +3,7 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, plus *one* of:
-                                # IOS_PROVISIONING_PROFILE / IOS_PROVISIONING_PROFILE_SECRET / iOSProvisioningProfileSecret
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, and one of the provisioning profile vars
         - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
@@ -12,6 +11,7 @@ workflows:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+        APPLE_TEAM_ID: 8Y7L4NZ5ZX
 
     cache:
       cache_paths:
@@ -36,15 +36,17 @@ workflows:
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
-          KEYCHAIN="$(security default-keychain -d user | tr -d '"')"
-          echo "Available signing identities:"
-          security find-identity -v -p codesigning "$KEYCHAIN" || true
+          KEYCHAIN_PATH="$(security default-keychain -d user | tr -d '"')"
+          echo "Signing identities in keychain:"
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
 
       - name: Install App Store provisioning profile from env var
         script: |
           set -euxo pipefail
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PROFILE_DIR"
+
+          # Accept any of the three env var names you might have used
           if [ -n "${IOS_PROVISIONING_PROFILE:-}" ]; then
             echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
           elif [ -n "${IOS_PROVISIONING_PROFILE_SECRET:-}" ]; then
@@ -54,15 +56,30 @@ workflows:
           else
             echo "No provisioning profile env var found"; exit 1
           fi
+
+          PROFILE_PATH="$PROFILE_DIR/appstore.mobileprovision"
+          # Extract useful fields (Name & UUID) from the profile
+          PLIST="$(security cms -D -i "$PROFILE_PATH")"
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin <<< "$PLIST")
+          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< "$PLIST")
+
+          echo "Using profile: $PROFILE_NAME ($PROFILE_UUID)"
+          # Export for later steps
+          echo "PROFILE_NAME=$PROFILE_NAME" >> "$CM_ENV"
+          echo "PROFILE_UUID=$PROFILE_UUID" >> "$CM_ENV"
+
           ls -lah "$PROFILE_DIR"
 
-      - name: Point Xcode project to installed profile(s)
+      - name: Write signing settings into the Xcode project
         script: |
           set -euxo pipefail
-          # Switch project to manual signing using the installed App Store profile
-          xcode-project use-profiles --warn-only
+          # This edits the project to use manual signing with the installed profiles
+          xcode-project use-profiles
 
-      - name: Bump build number automatically (UTC timestamp)
+          # Show what Xcode will use
+          xcode-project show-signing-settings || true
+
+      - name: Bump build number (UTC timestamp)
         script: |
           set -euxo pipefail
           TS=$(date -u +"%Y%m%d%H%M")
@@ -75,16 +92,19 @@ workflows:
           set -euxo pipefail
           flutter build ios --release --no-codesign
 
-      - name: Export signed IPA with Xcode (uses Distribution cert + App Store profile)
+      - name: Archive & export signed IPA with Xcode
         script: |
           set -euxo pipefail
+          # Force manual signing with Distribution identity + profile *by name*
           xcode-project build-ipa \
             --workspace "$IOS_WORKSPACE" \
-            --scheme "$XCODE_SCHEME"
-          echo "IPAs:"
+            --scheme "$XCODE_SCHEME" \
+            --archive-flags "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_IDENTITY=Apple\ Distribution PROVISIONING_PROFILE_SPECIFIER=$PROFILE_NAME"
+
+          echo "IPAs in build/ios/ipa:"
           ls -lah build/ios/ipa || true
 
-      - name: Verify IPA contains embedded provisioning profile
+      - name: Verify IPA contains embedded.mobileprovision
         script: |
           set -euxo pipefail
           IPA="build/ios/ipa/Runner.ipa"
