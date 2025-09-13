@@ -9,10 +9,10 @@ workflows:
       flutter: stable
       xcode: latest
       vars:
-        IOS_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
         TEAM_ID: 8Y7L4NZ5ZX
         BUNDLE_ID: com.decoywalletapp.app
+        IOS_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
 
     cache:
       cache_paths:
@@ -41,7 +41,7 @@ workflows:
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
           xcode-project use-profiles --warn-only
 
-      - name: Set manual signing & bump build number
+      - name: Bump build number (UTC timestamp)
         script: |
           set -euxo pipefail
           BN="$(date -u +%Y%m%d%H%M)"
@@ -60,30 +60,38 @@ workflows:
           OUTDIR="build/ios/ipa"
           mkdir -p "$OUTDIR"
 
-          IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
-          if [ -z "$IPA_FOUND" ]; then
-            ARCHIVE="$(ls -dt build/ios/archive/Runner.xcarchive 2>/dev/null | head -n 1 || true)"
-            if [ -n "$ARCHIVE" ]; then
+          if ! find build -type f -name '*.ipa' | head -n 1 >/dev/null 2>&1; then
+            ARCHIVE="build/ios/archive/Runner.xcarchive"
+            if [ -d "$ARCHIVE" ]; then
               PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
-              security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist
-              SPECIFIER="$(/wusr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist 2>/dev/null || echo "${IOS_PROFILE_SPECIFIER:-}")"
+              security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist || true
+              SPECIFIER="$(
+                /usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist 2>/dev/null \
+                || echo "${IOS_PROFILE_SPECIFIER:-}"
+              )"
 
-              cat > exportOptions.plist <<PLIST
-              <?xml version="1.0" encoding="UTF-8"?>
-              <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-              <plist version="1.0">
-              <dict>
-                <key>method</key><string>app-store</string>
-                <key>signingStyle</key><string>manual</string>
-                <key>teamID</key><string>${TEAM_ID}</string>
-                <key>provisioningProfiles</key>
-                <dict>
-                  <key>${BUNDLE_ID}</key><string>${SPECIFIER}</string>
-                </dict>
-                <key>manageAppVersionAndBuildNumber</key><false/>
-              </dict>
-              </plist>
-              PLIST
+              cat > exportOptions.plist <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>method</key><string>app-store</string>
+  <key>signingStyle</key><string>manual</string>
+  <key>teamID</key><string>__TEAM_ID__</string>
+  <key>provisioningProfiles</key>
+  <dict>
+    <key>__BUNDLE_ID__</key><string>__SPECIFIER__</string>
+  </dict>
+  <key>manageAppVersionAndBuildNumber</key><false/>
+</dict>
+</plist>
+PLIST
+
+              sed -i '' \
+                -e "s/__TEAM_ID__/${TEAM_ID}/" \
+                -e "s#__BUNDLE_ID__#${BUNDLE_ID}#" \
+                -e "s/__SPECIFIER__/${SPECIFIER}/" \
+                exportOptions.plist
 
               xcodebuild -exportArchive \
                 -archivePath "$ARCHIVE" \
@@ -101,7 +109,6 @@ workflows:
 
     artifacts:
       - build/ios/ipa/*.ipa
-      - build/**/Runner*.ipa
 
     publishing:
       app_store_connect:
