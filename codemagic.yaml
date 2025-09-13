@@ -39,8 +39,8 @@ workflows:
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
         APPLE_TEAM_ID: 8Y7L4NZ5ZX
-        # Requires these Environment Variables to exist in Codemagic:
-        #   APP_STORE_CONNECT_PRIVATE_KEY   (full .p8, with BEGIN/END headers)
+        # Required env vars in Codemagic:
+        #   APP_STORE_CONNECT_PRIVATE_KEY   (full .p8 incl. BEGIN/END)
         #   APP_STORE_CONNECT_KEY_IDENTIFIER
         #   APP_STORE_CONNECT_ISSUER_ID
         #   CM_CERTIFICATE                  (base64 of Apple Distribution .p12)
@@ -58,17 +58,14 @@ workflows:
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
-          # Show identities to confirm import
           security find-identity -v -p codesigning "$(security default-keychain -d user | tr -d '\"' | xargs)" || true
 
       - name: Install App Store provisioning profile
         script: |
           set -euxo pipefail
-          # Decode the base64 profile to a temp file
           TMP_PP=/tmp/appstore.mobileprovision
           echo "$CM_PROVISIONING_PROFILE" | base64 --decode > "$TMP_PP"
 
-          # Extract UUID & Name from the provisioning profile
           PP_PLIST=/tmp/profile.plist
           security cms -D -i "$TMP_PP" -o "$PP_PLIST"
           PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PP_PLIST")
@@ -76,33 +73,28 @@ workflows:
           echo "PROFILE_UUID=$PROFILE_UUID"
           echo "PROFILE_NAME=$PROFILE_NAME"
 
-          # Install to the canonical location with UUID filename
           PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PP_DIR"
           cp "$TMP_PP" "$PP_DIR/$PROFILE_UUID.mobileprovision"
 
-          # Export for later steps
           echo "PROFILE_UUID=$PROFILE_UUID" >> "$CM_ENV"
           echo "PROFILE_NAME=$PROFILE_NAME" >> "$CM_ENV"
 
-          # Let Codemagic tool wire Xcode to use installed profiles (warn-only)
           xcode-project use-profiles --warn-only
 
       - name: Bump build number (numeric & monotonic)
         script: |
           set -euxo pipefail
-          BN="${CM_BUILD_NUMBER:-$(date +%Y%m%d%H%M)}"
+          BN="${CM_BUILD_NUMBER:-$(date -u +%Y%m%d%H%M)}"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
-          # Update the first 'version:' line in pubspec to use the same build number
           sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
           /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' ios/Runner/Info.plist
 
-      - name: Archive & export signed IPA with Xcode (recommended: no extra keychain flags)
+      - name: "Archive & export signed IPA with Xcode (recommended: no extra keychain flags)"
         script: |
           set -euxo pipefail
 
-          # Create exportOptions.plist (manual signing, map bundle id -> profile NAME)
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -121,7 +113,6 @@ workflows:
           </plist>
           PLIST
 
-          # Archive with explicit manual signing flags + profile UUID for the build
           xcode-project build-ipa \
             --workspace "$IOS_WORKSPACE" \
             --scheme "$XCODE_SCHEME" \
@@ -143,7 +134,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY     # full .p8 incl. BEGIN/END
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
