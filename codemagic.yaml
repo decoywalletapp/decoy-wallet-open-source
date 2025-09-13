@@ -5,7 +5,7 @@ workflows:
     environment:
       groups:
         - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision)
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (.p8 incl. BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (.p8 incl BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -34,7 +34,6 @@ workflows:
         script: |
           set -euo pipefail
           keychain initialize
-          # Decode the base64 .p12 from $CM_CERTIFICATE and import it
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
 
@@ -44,7 +43,6 @@ workflows:
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
           mkdir -p "$(dirname "$PROFILE_PATH")"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
-          # Optional: print profile name (helps debugging)
           /usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin <<<"$(security cms -D -i "$PROFILE_PATH")" || true
 
       - name: Point Xcode project to installed profile(s)
@@ -82,7 +80,7 @@ workflows:
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+          key: $APP_STORE_CONNECT_PRIVATE_KEY   # <-- must be 'key', not 'private_key'
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
