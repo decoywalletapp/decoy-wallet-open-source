@@ -4,8 +4,8 @@ workflows:
 
     environment:
       groups:
-        - signing_cert
-        - app_store_connect
+        - signing_cert              # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision), IOS_PROFILE_SPECIFIER
+        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY (.p8 incl BEGIN/END)
       flutter: stable
       xcode: latest
       vars:
@@ -34,7 +34,7 @@ workflows:
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
           security find-identity -v -p codesigning || true
 
-      - name: Install provisioning profile
+      - name: Install provisioning profile from env var
         script: |
           set -euxo pipefail
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
@@ -80,14 +80,13 @@ workflows:
 
     artifacts:
       - build/ios/ipa/*.ipa
-      
-      
+
     publishing:
       app_store_connect:
         api_key:
-          key_id: "989Y382263"
-          issuer_id: "c70cc838-58d8-45e7-97c3-4e68e7d56aa5"
-          private_key: "$APP_STORE_CONNECT_PRIVATE_KEY"
+          key_id: 989Y382263
+          issuer_id: c70cc838-58d8-45e7-97c3-4e68e7d56aa5
+          key: $APP_STORE_CONNECT_PRIVATE_KEY   # <- field name MUST be 'key'
         submit_to_testflight: true
         beta_groups:
-          -DayZeroDecoyTesters
+          - DayZeroDecoyTesters
