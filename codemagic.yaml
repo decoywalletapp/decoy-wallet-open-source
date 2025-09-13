@@ -42,7 +42,6 @@ workflows:
           mkdir -p "$PROFILE_DIR"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
           ls -lah "$PROFILE_DIR" || true
-          # Optional: print a couple fields for sanity
           /usr/bin/security cms -D -i "$PROFILE_DIR/appstore.mobileprovision" > /tmp/profile.plist
           /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist
           /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile.plist
@@ -71,7 +70,6 @@ workflows:
       - name: Point Xcode project to installed profile(s) (manual signing)
         script: |
           set -euxo pipefail
-          # These flags aren't supported on your builder image; keep it simple:
           xcode-project use-profiles --warn-only
 
       - name: Build IPA (Flutter)
@@ -81,12 +79,20 @@ workflows:
           flutter pub get
           flutter build ipa --release --export-options-plist exportOptions.plist
 
-      - name: Verify IPA has embedded provisioning profile
+      - name: Verify IPA has embedded provisioning profile (SIGPIPE-safe)
         script: |
           set -euxo pipefail
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
           test -n "$IPA"
-          unzip -l "$IPA" | grep -q 'embedded.mobileprovision'
+          # Temporarily disable pipefail to avoid SIGPIPE exit 141 when using -q.
+          set +o pipefail
+          zipinfo -1 "$IPA" | grep -q 'embedded\.mobileprovision'
+          rc=$?
+          set -o pipefail
+          if [ $rc -ne 0 ]; then
+            echo "embedded.mobileprovision missing — aborting upload"
+            exit 1
+          fi
           echo "IPA ready: $IPA"
 
       - name: Upload to App Store Connect (CLI)
