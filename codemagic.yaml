@@ -1,20 +1,28 @@
 workflows:
-  ios_compile_check:
-    name: iOS Compile Check (no codesign)
+  ios_release:
+    name: iOS Release (TestFlight)
     environment:
+      # These group names MUST match what you set in the Codemagic UI
+      groups:
+        - signing_cert          # contains: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
+        - app_store_connect     # contains: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
+        BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
+
     scripts:
-      - name: Clean & get packages
+      - name: Clean & get dependencies
         script: |
           set -euxo pipefail
+          flutter --version
           flutter clean
           flutter pub get
           cd ios
@@ -22,119 +30,75 @@ workflows:
           pod repo update
           pod install --repo-update
           cd ..
-      - name: Build iOS app (no codesign)
+
+      - name: Debug — show presence of required env vars (masked)
         script: |
-          set -euxo pipefail
-          flutter build ios --release --no-codesign
-    artifacts:
-      - build/ios/iphoneos/*.app
+          set -euo pipefail
+          # Do NOT print secret contents, just lengths/present flags.
+          for v in CM_CERTIFICATE CM_CERTIFICATE_PASSWORD CM_PROVISIONING_PROFILE APP_STORE_CONNECT_PRIVATE_KEY APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID; do
+            if [ -z "${!v:-}" ]; then
+              echo "ENV MISSING: $v"
+            else
+              echo "ENV OK: $v (len ${#${v}:-0})" | sed 's/(len .*)/(len ****)/'
+            fi
+          done
 
-  ios_release:
-    name: iOS Release (TestFlight)
-    environment:
-      flutter: stable
-      xcode: latest
-      vars:
-        BUNDLE_ID: com.decoywalletapp.app
-        IOS_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
-        APPLE_TEAM_ID: 8Y7L4NZ5ZX
-        # Required env vars in Codemagic:
-        #   APP_STORE_CONNECT_PRIVATE_KEY   (full .p8 incl. BEGIN/END)
-        #   APP_STORE_CONNECT_KEY_IDENTIFIER
-        #   APP_STORE_CONNECT_ISSUER_ID
-        #   CM_CERTIFICATE                  (base64 of Apple Distribution .p12)
-        #   CM_CERTIFICATE_PASSWORD         (password used when exporting .p12)
-        #   CM_PROVISIONING_PROFILE         (base64 of App Store .mobileprovision)
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - ios/Pods
-
-    scripts:
       - name: Initialize keychain & import Distribution .p12
         script: |
           set -euxo pipefail
+          : "${CM_CERTIFICATE:?Missing CM_CERTIFICATE (base64 of .p12) in Environment variables}"
+          : "${CM_CERTIFICATE_PASSWORD:?Missing CM_CERTIFICATE_PASSWORD in Environment variables}"
+
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          # Import the distribution p12 into Codemagic keychain
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          # Show signing identities (for debugging)
           security find-identity -v -p codesigning "$(security default-keychain -d user | tr -d '\"' | xargs)" || true
 
       - name: Install App Store provisioning profile
         script: |
           set -euxo pipefail
-          TMP_PP=/tmp/appstore.mobileprovision
-          echo "$CM_PROVISIONING_PROFILE" | base64 --decode > "$TMP_PP"
-
-          PP_PLIST=/tmp/profile.plist
-          security cms -D -i "$TMP_PP" -o "$PP_PLIST"
-          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PP_PLIST")
-          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PP_PLIST")
-          echo "PROFILE_UUID=$PROFILE_UUID"
-          echo "PROFILE_NAME=$PROFILE_NAME"
-
-          PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          mkdir -p "$PP_DIR"
-          cp "$TMP_PP" "$PP_DIR/$PROFILE_UUID.mobileprovision"
-
-          echo "PROFILE_UUID=$PROFILE_UUID" >> "$CM_ENV"
-          echo "PROFILE_NAME=$PROFILE_NAME" >> "$CM_ENV"
-
+          : "${CM_PROVISIONING_PROFILE:?Missing CM_PROVISIONING_PROFILE (base64 of .mobileprovision) in Environment variables}"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
+          echo "$CM_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
+          security cms -D -i "$PROFILE_PATH" >/tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist || true
+          # Wire the downloaded profiles into the Xcode project
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number (numeric & monotonic)
+      - name: Bump build number (UTC timestamp, monotonic)
         script: |
           set -euxo pipefail
-          BN="${CM_BUILD_NUMBER:-$(date -u +%Y%m%d%H%M)}"
+          BN="$(date -u +%Y%m%d%H%M)"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
-          sed -i '' -E "1,/^version:/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
-          grep -n '^version:' pubspec.yaml || true
+          sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
           /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' ios/Runner/Info.plist
 
-      - name: "Archive & export signed IPA with Xcode (recommended: no extra keychain flags)"
+      - name: Build IPA (Flutter)
         script: |
           set -euxo pipefail
+          flutter build ipa --release
 
-          cat > exportOptions.plist <<PLIST
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key><string>app-store</string>
-            <key>signingStyle</key><string>manual</string>
-            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
-            <key>uploadSymbols</key><true/>
-            <key>compileBitcode</key><false/>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>
-            </dict>
-          </dict>
-          </plist>
-          PLIST
-
-          xcode-project build-ipa \
-            --workspace "$IOS_WORKSPACE" \
-            --scheme "$XCODE_SCHEME" \
-            --archive-flags "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_IDENTITY=Apple\\ Distribution PROVISIONING_PROFILE_SPECIFIER=$PROFILE_UUID" \
-            --export-options exportOptions.plist
-
-          echo "IPAs in build/ios/ipa:"
+      - name: Verify IPA & embedded provisioning profile
+        script: |
+          set -euxo pipefail
           ls -lah build/ios/ipa || true
-
-      - name: Verify IPA contains embedded.mobileprovision
-        script: |
-          set -euxo pipefail
-          IPA="$(/bin/ls -1 build/ios/ipa/*.ipa | head -n 1)"
-          unzip -l "$IPA" | grep -q embedded.mobileprovision
+          test -e build/ios/ipa/*.ipa
+          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          echo "IPA: $IPA"
+          unzip -l "$IPA" | grep -q embedded.mobileprovision || { echo "embedded.mobileprovision missing in IPA"; exit 1; }
 
     artifacts:
       - build/ios/ipa/*.ipa
-      - build/ios/ipa/*.dSYM.zip
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
+        beta_groups:
+          - DayZeroDecoyTesters
