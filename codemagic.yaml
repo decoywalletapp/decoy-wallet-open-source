@@ -11,7 +11,7 @@ workflows:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-        TEAM_ID: 8Y7L4NZ5ZX     # your Apple Team ID
+        TEAM_ID: 8Y7L4NZ5ZX
 
     cache:
       cache_paths:
@@ -49,7 +49,7 @@ workflows:
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number with UTC timestamp
+      - name: Bump build number (UTC timestamp)
         script: |
           set -euxo pipefail
           BN="$(date -u +%Y%m%d%H%M)"
@@ -65,7 +65,7 @@ workflows:
           ls -lah build/ios/ipa || true
           ls -lah build/ios/archive || true
 
-      - name: Ensure an IPA exists fallback export from xcarchive
+      - name: Ensure an IPA exists (fallback export from xcarchive)
         script: |
           set -euxo pipefail
           OUTDIR="build/ios/ipa"
@@ -79,27 +79,24 @@ workflows:
               find build -maxdepth 4 -print | sed 's/^/  /' | head -n 300 || true
               exit 1
             fi
-
             PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
             PROFILE_NAME="$(security cms -D -i "$PROFILE_PATH" | /usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin)"
-
-            cat > exportOptions.plist <<EOF
-            <?xml version="1.0" encoding="UTF-8"?>
-            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-            <plist version="1.0">
-            <dict>
-              <key>method</key><string>app-store</string>
-              <key>signingStyle</key><string>manual</string>
-              <key>teamID</key><string>${TEAM_ID}</string>
-              <key>provisioningProfiles</key>
-              <dict>
-                <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>
-              </dict>
-              <key>manageAppVersionAndBuildNumber</key><false/>
-            </dict>
-            </plist>
-            EOF
-
+            {
+              echo '<?xml version="1.0" encoding="UTF-8"?>'
+              echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
+              echo '<plist version="1.0">'
+              echo '  <dict>'
+              echo '    <key>method</key><string>app-store</string>'
+              echo '    <key>signingStyle</key><string>manual</string>'
+              echo "    <key>teamID</key><string>${TEAM_ID}</string>"
+              echo '    <key>provisioningProfiles</key>'
+              echo '    <dict>'
+              echo "      <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>"
+              echo '    </dict>'
+              echo '    <key>manageAppVersionAndBuildNumber</key><false/>'
+              echo '  </dict>'
+              echo '</plist>'
+            } > exportOptions.plist
             xcodebuild -exportArchive \
               -archivePath "$ARCHIVE" \
               -exportPath "$OUTDIR" \
@@ -107,7 +104,7 @@ workflows:
           fi
           ls -lah "$OUTDIR"
 
-      - name: Verify IPA contains embedded provisioning profile
+      - name: Verify IPA has embedded provisioning profile
         script: |
           set -euxo pipefail
           IPA="$(find build/ios/ipa -type f -name '*.ipa' | head -n 1)"
