@@ -3,8 +3,8 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, and one of the provisioning profile vars
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, and one of IOS_PROVISIONING_PROFILE / IOS_PROVISIONING_PROFILE_SECRET / iOSProvisioningProfileSecret (base64 .mobileprovision)
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (full .p8 incl BEGIN/END), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -37,7 +37,8 @@ workflows:
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
           KEYCHAIN_PATH="$(security default-keychain -d user | tr -d '"')"
-          echo "Signing identities in keychain:"
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$CM_ENV"
+          echo "Codesign identities:"
           security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
 
       - name: Install App Store provisioning profile from env var
@@ -46,7 +47,7 @@ workflows:
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PROFILE_DIR"
 
-          # Accept any of the three env var names you might have used
+          # Accept any of the 3 possible variable names you might be using
           if [ -n "${IOS_PROVISIONING_PROFILE:-}" ]; then
             echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
           elif [ -n "${IOS_PROVISIONING_PROFILE_SECRET:-}" ]; then
@@ -58,26 +59,35 @@ workflows:
           fi
 
           PROFILE_PATH="$PROFILE_DIR/appstore.mobileprovision"
-          # Extract useful fields (Name & UUID) from the profile
+
+          # Extract Name + UUID from the profile (we will use UUID to avoid name mismatches)
           PLIST="$(security cms -D -i "$PROFILE_PATH")"
           PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin <<< "$PLIST")
           PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< "$PLIST")
 
-          echo "Using profile: $PROFILE_NAME ($PROFILE_UUID)"
-          # Export for later steps
           echo "PROFILE_NAME=$PROFILE_NAME" >> "$CM_ENV"
           echo "PROFILE_UUID=$PROFILE_UUID" >> "$CM_ENV"
+          echo "Using profile: $PROFILE_NAME ($PROFILE_UUID)"
 
-          ls -lah "$PROFILE_DIR"
-
-      - name: Write signing settings into the Xcode project
-        script: |
-          set -euxo pipefail
-          # This edits the project to use manual signing with the installed profiles
-          xcode-project use-profiles
-
-          # Show what Xcode will use
-          xcode-project show-signing-settings || true
+          # Create ExportOptions.plist that explicitly maps your bundle id to the profile NAME
+          # (Xcode needs the name here, but we will pass UUID as the build specifier)
+          cat > exportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>
+            </dict>
+            <key>uploadBitcode</key><false/>
+            <key>compileBitcode</key><false/>
+          </dict>
+          </plist>
+          EOF
 
       - name: Bump build number (UTC timestamp)
         script: |
@@ -92,14 +102,15 @@ workflows:
           set -euxo pipefail
           flutter build ios --release --no-codesign
 
-      - name: Archive & export signed IPA with Xcode
+      - name: Archive & export signed IPA with Xcode (use UUID as specifier)
         script: |
           set -euxo pipefail
-          # Force manual signing with Distribution identity + profile *by name*
+          # Use UUID to avoid profile-name typos; also force Manual + Distribution identity.
           xcode-project build-ipa \
             --workspace "$IOS_WORKSPACE" \
             --scheme "$XCODE_SCHEME" \
-            --archive-flags "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_IDENTITY=Apple\ Distribution PROVISIONING_PROFILE_SPECIFIER=$PROFILE_NAME"
+            --archive-flags "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_IDENTITY=Apple\ Distribution PROVISIONING_PROFILE_SPECIFIER=$PROFILE_UUID OTHER_CODE_SIGN_FLAGS=--keychain\ $KEYCHAIN_PATH" \
+            --export-options exportOptions.plist
 
           echo "IPAs in build/ios/ipa:"
           ls -lah build/ios/ipa || true
