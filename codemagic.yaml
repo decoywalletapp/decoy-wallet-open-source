@@ -3,25 +3,22 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert            # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (all base64)
+        - app_store_connect       # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
         BUNDLE_ID: com.decoywalletapp.app
+        TEAM_ID: 8Y7L4NZ5ZX
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-        TEAM_ID: 8Y7L4NZ5ZX
-        # Set this in the UI:
-        # IOS_PROFILE_SPECIFIER: mochakk-store-2025   # (name OR UUID)
-
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
         - ios/Pods
 
     scripts:
-      - name: Clean & deps
+      - name: Clean & restore deps
         script: |
           set -euxo pipefail
           flutter clean
@@ -35,43 +32,41 @@ workflows:
       - name: Initialize keychain & import Distribution .p12
         script: |
           set -euxo pipefail
-          : "${CM_CERTIFICATE:?Missing CM_CERTIFICATE}"
-          : "${CM_CERTIFICATE_PASSWORD:?Missing CM_CERTIFICATE_PASSWORD}"
           keychain initialize
+          # decode base64 .p12 and import with password
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
-          security find-identity -v -p codesigning || true
 
-      - name: Install App Store provisioning profile
+      - name: Install provisioning profile from env var
         script: |
           set -euxo pipefail
-          : "${IOS_PROVISIONING_PROFILE:?Missing IOS_PROVISIONING_PROFILE}"
-          # purge any stale profiles so Xcode never picks an old one
-          rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision || true
-          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILE_DIR"
+          PROFILE_PATH="$PROFILE_DIR/appstore.mobileprovision"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
-          file "$PROFILE_PATH" || true
+          ls -lah "$PROFILE_PATH" || true
+          # Point Xcode project to installed profiles (warn only so build can continue)
           xcode-project use-profiles --warn-only
 
-      - name: Sanity: profile contains our imported cert
+      - name: "Sanity: profile contains our imported cert"
         script: |
           set -euxo pipefail
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
           security cms -D -i "$PROFILE_PATH" -o /tmp/profile.plist
-          # collect SHA-1s from the profile's DeveloperCertificates[]
-          /usr/libexec/PlistBuddy -c 'Print :DeveloperCertificates' /tmp/profile.plist >/dev/null
-          TMPDIR=$(mktemp -d)
+
+          TMPDIR="$(mktemp -d)"
           i=0; MATCHED=false
           while /usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:$i" /tmp/profile.plist >/dev/null 2>&1; do
             /usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:$i" /tmp/profile.plist > "$TMPDIR/cert$i.der"
-            FPR=$(openssl x509 -inform der -in "$TMPDIR/cert$i.der" -noout -fingerprint -sha1 | sed 's/.*=//' | tr -d ':')
+            FPR=$(openssl x509 -inform DER -in "$TMPDIR/cert$i.der" -noout -fingerprint -sha1 | sed 's/.*=//' | tr -d ':')
             if security find-identity -v -p codesigning | awk '{print $2}' | tr -d '"' | grep -qi "$FPR"; then
               MATCHED=true; break
             fi
             i=$((i+1))
           done
-          $MATCHED || { echo "⚠️  The provisioning profile does NOT include the Distribution certificate imported from your .p12. Recreate the profile selecting the SAME Apple Distribution cert."; exit 1; }
+          if [ "$MATCHED" != true ]; then
+            echo "❌ Provisioning profile does not include any cert currently in keychain"; exit 1
+          fi
 
       - name: Bump build number (UTC timestamp)
         script: |
@@ -79,61 +74,57 @@ workflows:
           BN="$(date -u +%Y%m%d%H%M)"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml || true
 
-      - name: Build IPA (Flutter)
+      - name: Archive & export signed IPA with Xcode
         script: |
           set -euxo pipefail
-          flutter build ipa --release || true
-          ls -lah build/ios || true
-          ls -lah build/ios/ipa || true
-          ls -lah build/ios/archive || true
+          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
+          security cms -D -i "$PROFILE_PATH" -o /tmp/profile.plist
+          PROFILE_SPECIFIER=$(/usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist)
 
-      - name: Ensure an IPA exists (fallback export from xcarchive)
-        script: |
-          set -euxo pipefail
-          OUTDIR="build/ios/ipa"
-          mkdir -p "$OUTDIR"
-          IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
-          if [ -z "$IPA_FOUND" ]; then
-            ARCHIVE="$(ls -dt build/ios/archive/*.xcarchive 2>/dev/null | head -n 1 || true)"
-            [ -n "$ARCHIVE" ] || { echo "No .xcarchive found — Flutter build likely failed."; exit 1; }
+          # Create minimal export options for App Store manual signing
+          cat > exportOptions.plist <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+            <dict>
+              <key>method</key><string>app-store</string>
+              <key>signingStyle</key><string>manual</string>
+              <key>manageAppVersionAndBuildNumber</key><false/>
+              <key>provisioningProfiles</key>
+              <dict>
+                <key>com.decoywalletapp.app</key><string>__PROFILE_SPECIFIER__</string>
+              </dict>
+            </dict>
+          </plist>
+          EOF
+          /usr/bin/perl -pi -e "s/__PROFILE_SPECIFIER__/${PROFILE_SPECIFIER}/g" exportOptions.plist
 
-            # Use explicit specifier (name or UUID) — avoids parsing brittleness
-            : "${IOS_PROFILE_SPECIFIER:?Set IOS_PROFILE_SPECIFIER to your profile NAME (e.g. mochakk-store-2025) or UUID}"
-            {
-              echo '<?xml version="1.0" encoding="UTF-8"?>'
-              echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
-              echo '<plist version="1.0"><dict>'
-              echo '  <key>method</key><string>app-store</string>'
-              echo '  <key>signingStyle</key><string>manual</string>'
-              echo "  <key>teamID</key><string>${TEAM_ID}</string>"
-              echo '  <key>provisioningProfiles</key><dict>'
-              echo "    <key>${BUNDLE_ID}</key><string>${IOS_PROFILE_SPECIFIER}</string>"
-              echo '  </dict>'
-              echo '  <key>manageAppVersionAndBuildNumber</key><false/>'
-              echo '</dict></plist>'
-            } > exportOptions.plist
-
-            xcodebuild -exportArchive \
-              -archivePath "$ARCHIVE" \
-              -exportPath "$OUTDIR" \
-              -exportOptionsPlist exportOptions.plist
-          fi
+          # Build & export
+          xcode-project build-ipa \
+            --workspace "$IOS_WORKSPACE" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-flags "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=$TEAM_ID CODE_SIGN_IDENTITY=Apple\ Distribution PROVISIONING_PROFILE_SPECIFIER=$PROFILE_SPECIFIER" \
+            --export-options exportOptions.plist
 
       - name: Verify IPA has embedded provisioning profile
         script: |
           set -euxo pipefail
-          IPA="$(find build/ios/ipa -type f -name '*.ipa' | head -n 1)"
+          ls -lah build/ios/ipa || true
+          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
           unzip -l "$IPA" | grep -q 'embedded.mobileprovision'
 
     artifacts:
       - build/ios/ipa/*.ipa
+      - build/**/Runner*.ipa
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
