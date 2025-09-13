@@ -9,7 +9,6 @@ import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'phone_number_verification_model.dart';
 export 'phone_number_verification_model.dart';
@@ -49,23 +48,8 @@ class _PhoneNumberVerificationWidgetState
     super.initState();
     _model = createModel(context, () => PhoneNumberVerificationModel());
 
-    _model.firstDigitTextController ??= TextEditingController(text: _model.d1);
-    _model.firstDigitFocusNode ??= FocusNode();
-
-    _model.secondDigitTextController ??= TextEditingController(text: _model.d2);
-    _model.secondDigitFocusNode ??= FocusNode();
-
-    _model.thirdDigitTextController ??= TextEditingController(text: _model.d3);
-    _model.thirdDigitFocusNode ??= FocusNode();
-
-    _model.fourthDigitTextController ??= TextEditingController(text: _model.d4);
-    _model.fourthDigitFocusNode ??= FocusNode();
-
-    _model.fifthDigitTextController ??= TextEditingController(text: _model.d5);
-    _model.fifthDigitFocusNode ??= FocusNode();
-
-    _model.sixthDigitTextController ??= TextEditingController(text: _model.d6);
-    _model.sixthDigitFocusNode ??= FocusNode();
+    _model.phoneCodeTextController ??= TextEditingController();
+    _model.phoneCodeFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -223,7 +207,7 @@ class _PhoneNumberVerificationWidgetState
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              width: 48.0,
+                              width: 300.0,
                               height: 56.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
@@ -234,476 +218,41 @@ class _PhoneNumberVerificationWidgetState
                                   width: 2.0,
                                 ),
                               ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Container(
+                                width: 200.0,
                                 child: TextFormField(
-                                  controller: _model.firstDigitTextController,
-                                  focusNode: _model.firstDigitFocusNode,
+                                  controller: _model.phoneCodeTextController,
+                                  focusNode: _model.phoneCodeFocusNode,
                                   onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.firstDigitTextController',
-                                    Duration(milliseconds: 0),
+                                    '_model.phoneCodeTextController',
+                                    Duration(milliseconds: 2000),
                                     () async {
-                                      _model.d1 =
-                                          _model.firstDigitTextController.text;
+                                      _model.phoneCode =
+                                          _model.phoneCodeTextController.text;
+                                      _model.otpCode = functions
+                                          .digitsOnly(_model.phoneCode)!;
                                       safeSetState(() {});
-                                      if (_model
-                                              .firstDigitTextController.text !=
-                                          '\"\"') {
-                                        _model.activeIndex = 2;
-                                        safeSetState(() {});
-                                        await actions.focusNext(
-                                          context,
-                                        );
-                                      } else {
-                                        _model.activeIndex = 1;
-                                        safeSetState(() {});
-                                      }
-                                    },
-                                  ),
-                                  autofocus: _model.activeIndex == 1,
-                                  textInputAction: TextInputAction.next,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMedium
-                                                  .fontStyle,
-                                        ),
-                                        fontSize: 24.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  maxLengthEnforcement:
-                                      MaxLengthEnforcement.enforced,
-                                  buildCounter: (context,
-                                          {required currentLength,
-                                          required isFocused,
-                                          maxLength}) =>
-                                      null,
-                                  keyboardType: TextInputType.number,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .firstDigitTextControllerValidator
-                                      .asValidator(context),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 48.0,
-                              height: 56.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: TextFormField(
-                                  controller: _model.secondDigitTextController,
-                                  focusNode: _model.secondDigitFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.secondDigitTextController',
-                                    Duration(milliseconds: 0),
-                                    () async {
-                                      _model.d2 =
-                                          _model.secondDigitTextController.text;
-                                      safeSetState(() {});
-                                      if (_model.d2 != '\"\"') {
-                                        _model.activeIndex = 3;
-                                        safeSetState(() {});
-                                        await actions.focusNext(
-                                          context,
-                                        );
-                                      } else {
-                                        _model.activeIndex = 1;
-                                        safeSetState(() {});
-                                        await actions.focusPrevious(
-                                          context,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  autofocus: _model.activeIndex == 2,
-                                  textInputAction: TextInputAction.next,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMedium
-                                                  .fontStyle,
-                                        ),
-                                        fontSize: 24.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  maxLengthEnforcement:
-                                      MaxLengthEnforcement.enforced,
-                                  buildCounter: (context,
-                                          {required currentLength,
-                                          required isFocused,
-                                          maxLength}) =>
-                                      null,
-                                  keyboardType: TextInputType.number,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .secondDigitTextControllerValidator
-                                      .asValidator(context),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 48.0,
-                              height: 56.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: TextFormField(
-                                  controller: _model.thirdDigitTextController,
-                                  focusNode: _model.thirdDigitFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.thirdDigitTextController',
-                                    Duration(milliseconds: 0),
-                                    () async {
-                                      _model.d3 =
-                                          _model.thirdDigitTextController.text;
-                                      safeSetState(() {});
-                                      if (_model.d3 != '\"\"') {
-                                        _model.activeIndex = 4;
-                                        safeSetState(() {});
-                                        await actions.focusNext(
-                                          context,
-                                        );
-                                      } else {
-                                        _model.activeIndex = 2;
-                                        safeSetState(() {});
-                                        await actions.focusPrevious(
-                                          context,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  autofocus: _model.activeIndex == 3,
-                                  textInputAction: TextInputAction.next,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMedium
-                                                  .fontStyle,
-                                        ),
-                                        fontSize: 24.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  maxLengthEnforcement:
-                                      MaxLengthEnforcement.enforced,
-                                  buildCounter: (context,
-                                          {required currentLength,
-                                          required isFocused,
-                                          maxLength}) =>
-                                      null,
-                                  keyboardType: TextInputType.number,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .thirdDigitTextControllerValidator
-                                      .asValidator(context),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 48.0,
-                              height: 56.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: TextFormField(
-                                  controller: _model.fourthDigitTextController,
-                                  focusNode: _model.fourthDigitFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.fourthDigitTextController',
-                                    Duration(milliseconds: 0),
-                                    () async {
-                                      _model.d4 =
-                                          _model.fourthDigitTextController.text;
-                                      safeSetState(() {});
-                                      if (_model.d4 != '\"\"') {
-                                        _model.activeIndex = 5;
-                                        safeSetState(() {});
-                                        await actions.focusNext(
-                                          context,
-                                        );
-                                      } else {
-                                        _model.activeIndex = 3;
-                                        safeSetState(() {});
-                                        await actions.focusPrevious(
-                                          context,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  autofocus: _model.activeIndex == 4,
-                                  textInputAction: TextInputAction.next,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMedium
-                                                  .fontStyle,
-                                        ),
-                                        fontSize: 24.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  maxLengthEnforcement:
-                                      MaxLengthEnforcement.enforced,
-                                  buildCounter: (context,
-                                          {required currentLength,
-                                          required isFocused,
-                                          maxLength}) =>
-                                      null,
-                                  keyboardType: TextInputType.number,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .fourthDigitTextControllerValidator
-                                      .asValidator(context),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 48.0,
-                              height: 56.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: TextFormField(
-                                  controller: _model.fifthDigitTextController,
-                                  focusNode: _model.fifthDigitFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.fifthDigitTextController',
-                                    Duration(milliseconds: 0),
-                                    () async {
-                                      _model.d5 =
-                                          _model.fifthDigitTextController.text;
-                                      safeSetState(() {});
-                                      if (_model.d5 != '\"\"') {
-                                        _model.activeIndex = 6;
-                                        safeSetState(() {});
-                                        await actions.focusNext(
-                                          context,
-                                        );
-                                      } else {
-                                        _model.activeIndex = 4;
-                                        safeSetState(() {});
-                                        await actions.focusPrevious(
-                                          context,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  autofocus: _model.activeIndex == 5,
-                                  textInputAction: TextInputAction.next,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMedium
-                                                  .fontStyle,
-                                        ),
-                                        fontSize: 24.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  maxLengthEnforcement:
-                                      MaxLengthEnforcement.enforced,
-                                  buildCounter: (context,
-                                          {required currentLength,
-                                          required isFocused,
-                                          maxLength}) =>
-                                      null,
-                                  keyboardType: TextInputType.number,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .fifthDigitTextControllerValidator
-                                      .asValidator(context),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 48.0,
-                              height: 56.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
-                                ),
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: TextFormField(
-                                  controller: _model.sixthDigitTextController,
-                                  focusNode: _model.sixthDigitFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.sixthDigitTextController',
-                                    Duration(milliseconds: 0),
-                                    () async {
-                                      _model.d6 =
-                                          _model.sixthDigitTextController.text;
-                                      safeSetState(() {});
-                                      if (_model.d6 != '\"\"') {
-                                        _model.activeIndex = 6;
-                                        safeSetState(() {});
-                                      } else {
-                                        _model.activeIndex = 5;
-                                        safeSetState(() {});
-                                        await actions.focusPrevious(
-                                          context,
-                                        );
-                                      }
-
-                                      if ((_model.d1 != '\"\"') &&
-                                          (_model.d2 != '\"\"') &&
-                                          (_model.d3 != '\"\"') &&
-                                          (_model.d4 != '\"\"') &&
-                                          (_model.d5 != '\"\"') &&
-                                          (_model.d6 != '\"\"')) {
-                                        // This dismisses the keyboard
+                                      if (functions
+                                          .isCodeSixDigits(_model.otpCode)) {
                                         await actions.dismissKeyboard(
                                           context,
                                         );
-                                        _model.joinedCode =
-                                            functions.joinVerificationCode(
-                                                _model.d1,
-                                                _model.d2,
-                                                _model.d3,
-                                                _model.d4,
-                                                _model.d5,
-                                                _model.d6);
-                                        safeSetState(() {});
-                                        _model.checkRes =
+                                        _model.checkCodeRes =
                                             await CheckVerificationCodeCall
                                                 .call(
-                                          cleanPhone: widget.cleanPhone,
-                                          code: _model.joinedCode,
+                                          cleanPhone: _model.cleanPhone,
+                                          code: _model.otpCode,
                                         );
 
                                         if ((CheckVerificationCodeCall.success(
-                                                  (_model.checkRes?.jsonBody ??
+                                                  (_model.checkCodeRes
+                                                          ?.jsonBody ??
                                                       ''),
                                                 ) ==
                                                 true) &&
                                             (CheckVerificationCodeCall.status(
-                                                  (_model.checkRes?.jsonBody ??
+                                                  (_model.checkCodeRes
+                                                          ?.jsonBody ??
                                                       ''),
                                                 ) ==
                                                 'approved')) {
@@ -734,6 +283,7 @@ class _PhoneNumberVerificationWidgetState
                                             _model.setPhoneRes =
                                                 await SetPhoneAuthCall.call(
                                               jwt: currentJwtToken,
+                                              cleanPhone: widget.cleanPhone,
                                             );
 
                                             if ((_model.setPhoneRes
@@ -765,13 +315,9 @@ class _PhoneNumberVerificationWidgetState
                                                   CreatePinWidget.routeName);
 
                                               _model.invalidcodeState = 0;
-                                              _model.joinedCode = '';
-                                              _model.d1 = '';
-                                              _model.d2 = '';
-                                              _model.d3 = '';
-                                              _model.d4 = '';
-                                              _model.d5 = '';
-                                              _model.d6 = '';
+                                              _model.code = '\"\"';
+                                              _model.otpCode = '\"\"';
+                                              _model.phoneCode = '\"\"';
                                               safeSetState(() {});
                                             }
                                           } else {
@@ -784,112 +330,135 @@ class _PhoneNumberVerificationWidgetState
                                                       getCurrentTimestamp),
                                               'user_id': currentUserUid,
                                             });
-                                            _model.d1 = '';
-                                            _model.d2 = '';
-                                            _model.d3 = '';
-                                            _model.d4 = '';
-                                            _model.d5 = '';
-                                            _model.d6 = '';
-                                            _model.joinedCode = '';
-                                            safeSetState(() {});
-                                            _model.activeIndex = 1;
+                                            _model.code = '\"\"';
+                                            _model.otpCode = '\"\"';
+                                            _model.phoneCode = '\"\"';
                                             safeSetState(() {});
 
                                             context.goNamed(
                                                 CreatePinWidget.routeName);
                                           }
                                         } else {
-                                          safeSetState(() {
-                                            _model.firstDigitTextController
-                                                ?.clear();
-                                            _model.secondDigitTextController
-                                                ?.clear();
-                                            _model.thirdDigitTextController
-                                                ?.clear();
-                                            _model.fourthDigitTextController
-                                                ?.clear();
-                                            _model.fifthDigitTextController
-                                                ?.clear();
-                                            _model.sixthDigitTextController
-                                                ?.clear();
-                                          });
-                                          _model.d1 = '';
-                                          _model.d2 = '';
-                                          _model.d3 = '';
-                                          _model.d4 = '';
-                                          _model.d5 = '';
-                                          _model.d6 = '';
-                                          _model.joinedCode = '';
-                                          safeSetState(() {});
-                                          _model.activeIndex = 1;
+                                          _model.code = '\"\"';
+                                          _model.otpCode = '\"\"';
+                                          _model.phoneCode = '\"\"';
                                           safeSetState(() {});
                                           _model.invalidcodeState = 1;
                                           safeSetState(() {});
                                         }
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Wrong Entry. Try Again. ',
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
                                       }
 
                                       safeSetState(() {});
                                     },
                                   ),
-                                  autofocus: _model.activeIndex == 6,
-                                  textInputAction: TextInputAction.done,
+                                  autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
+                                    isDense: true,
+                                    labelStyle: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontWeight,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
-                                                  .headlineMedium
+                                                  .labelMedium
                                                   .fontStyle,
                                         ),
-                                        fontSize: 24.0,
+                                    hintText: 'TextField',
+                                    hintStyle: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontStyle,
+                                        ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color:
+                                            FlutterFlowTheme.of(context).error,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color:
+                                            FlutterFlowTheme.of(context).error,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    filled: true,
+                                    fillColor: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                  ),
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        font: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                        fontSize: 20.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.bold,
                                         fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
+                                            .bodyMedium
                                             .fontStyle,
                                       ),
                                   textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  maxLengthEnforcement:
-                                      MaxLengthEnforcement.enforced,
-                                  buildCounter: (context,
-                                          {required currentLength,
-                                          required isFocused,
-                                          maxLength}) =>
-                                      null,
-                                  keyboardType: TextInputType.number,
                                   cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  enableInteractiveSelection: true,
                                   validator: _model
-                                      .sixthDigitTextControllerValidator
+                                      .phoneCodeTextControllerValidator
                                       .asValidator(context),
                                 ),
                               ),
@@ -1008,13 +577,6 @@ class _PhoneNumberVerificationWidgetState
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
                                   _model.joinedCode = '';
-                                  _model.d1 = '';
-                                  _model.d2 = '';
-                                  _model.d3 = '';
-                                  _model.d4 = '';
-                                  _model.d5 = '';
-                                  _model.d6 = '';
-                                  _model.activeIndex = 0;
                                   _model.invalidcodeState = 0;
                                   safeSetState(() {});
                                   _model.sendRes =

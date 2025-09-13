@@ -122,3 +122,10 @@ String? extractBitcoinAddress(String? input) {
   final m = scan.firstMatch(input);
   return m?.group(0) ?? '';
 }
+
+String? digitsOnly(String input) {
+  String digitsOnly(String input) {
+    // Remove anything that isn't 0–9
+    return input.replaceAll(RegExp(r'\D'), '');
+  }
+}

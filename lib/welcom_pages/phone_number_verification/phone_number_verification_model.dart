@@ -12,53 +12,31 @@ class PhoneNumberVerificationModel
   /// JoinUserVerificationCodeEntry
   String joinedCode = '';
 
-  String d1 = '';
-
-  String d2 = '';
-
-  String d3 = '';
-
-  String d4 = '';
-
-  String d5 = '';
-
-  String d6 = '';
-
-  int? activeIndex = 1;
-
   int? invalidcodeState = 0;
+
+  String code = '\"\"';
+
+  String cleanPhone = '\"\"';
+
+  String otpCode = '\"\"';
+
+  dynamic checkRes;
+
+  String errorText = '\"\"';
+
+  String phoneCode = '\"\"';
 
   ///  State fields for stateful widgets in this page.
 
-  // State field(s) for FirstDigit widget.
-  FocusNode? firstDigitFocusNode;
-  TextEditingController? firstDigitTextController;
-  String? Function(BuildContext, String?)? firstDigitTextControllerValidator;
-  // State field(s) for SecondDigit widget.
-  FocusNode? secondDigitFocusNode;
-  TextEditingController? secondDigitTextController;
-  String? Function(BuildContext, String?)? secondDigitTextControllerValidator;
-  // State field(s) for ThirdDigit widget.
-  FocusNode? thirdDigitFocusNode;
-  TextEditingController? thirdDigitTextController;
-  String? Function(BuildContext, String?)? thirdDigitTextControllerValidator;
-  // State field(s) for FourthDigit widget.
-  FocusNode? fourthDigitFocusNode;
-  TextEditingController? fourthDigitTextController;
-  String? Function(BuildContext, String?)? fourthDigitTextControllerValidator;
-  // State field(s) for FifthDigit widget.
-  FocusNode? fifthDigitFocusNode;
-  TextEditingController? fifthDigitTextController;
-  String? Function(BuildContext, String?)? fifthDigitTextControllerValidator;
-  // State field(s) for SixthDigit widget.
-  FocusNode? sixthDigitFocusNode;
-  TextEditingController? sixthDigitTextController;
-  String? Function(BuildContext, String?)? sixthDigitTextControllerValidator;
-  // Stores action output result for [Backend Call - API (CheckVerificationCode)] action in SixthDigit widget.
-  ApiCallResponse? checkRes;
-  // Stores action output result for [Backend Call - Update Row(s)] action in SixthDigit widget.
+  // State field(s) for PhoneCode widget.
+  FocusNode? phoneCodeFocusNode;
+  TextEditingController? phoneCodeTextController;
+  String? Function(BuildContext, String?)? phoneCodeTextControllerValidator;
+  // Stores action output result for [Backend Call - API (CheckVerificationCode)] action in PhoneCode widget.
+  ApiCallResponse? checkCodeRes;
+  // Stores action output result for [Backend Call - Update Row(s)] action in PhoneCode widget.
   List<DecoyWalletRow>? verifyUpdate;
-  // Stores action output result for [Backend Call - API (setPhoneAuth)] action in SixthDigit widget.
+  // Stores action output result for [Backend Call - API (setPhoneAuth)] action in PhoneCode widget.
   ApiCallResponse? setPhoneRes;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Icon widget.
   ApiCallResponse? sendResCopy;
@@ -70,22 +48,7 @@ class PhoneNumberVerificationModel
 
   @override
   void dispose() {
-    firstDigitFocusNode?.dispose();
-    firstDigitTextController?.dispose();
-
-    secondDigitFocusNode?.dispose();
-    secondDigitTextController?.dispose();
-
-    thirdDigitFocusNode?.dispose();
-    thirdDigitTextController?.dispose();
-
-    fourthDigitFocusNode?.dispose();
-    fourthDigitTextController?.dispose();
-
-    fifthDigitFocusNode?.dispose();
-    fifthDigitTextController?.dispose();
-
-    sixthDigitFocusNode?.dispose();
-    sixthDigitTextController?.dispose();
+    phoneCodeFocusNode?.dispose();
+    phoneCodeTextController?.dispose();
   }
 }

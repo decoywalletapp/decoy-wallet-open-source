@@ -274,6 +274,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
+        name: PhoneNumberVerificationv1Widget.routeName,
+        path: PhoneNumberVerificationv1Widget.routePath,
+        builder: (context, params) => PhoneNumberVerificationv1Widget(
+          cleanPhone: params.getParam(
+            'cleanPhone',
+            ParamType.String,
+          ),
+        ),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

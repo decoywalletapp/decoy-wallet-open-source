@@ -56,3 +56,5 @@ export '/welcom_pages/create_account_b4_change/create_account_b4_change_widget.d
     show CreateAccountB4ChangeWidget;
 export '/welcom_pages/confirm_email_route/confirm_email_route_widget.dart'
     show ConfirmEmailRouteWidget;
+export '/welcom_pages/phone_number_verificationv1/phone_number_verificationv1_widget.dart'
+    show PhoneNumberVerificationv1Widget;

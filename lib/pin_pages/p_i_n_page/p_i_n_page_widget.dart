@@ -798,7 +798,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                               .newCustomFunction(_model.pinInput.toList());
                           safeSetState(() {});
                           if (_model.joinedPin == '24715382') {
-                            context.pushNamed(DuressHomePageWidget.routeName);
+                            context.goNamed(DuressHomePageWidget.routeName);
                           } else {
                             _model.hashedLoginPIN = await actions.hashPin(
                               _model.joinedPin!,
