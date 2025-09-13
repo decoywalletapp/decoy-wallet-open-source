@@ -3,7 +3,7 @@ workflows:
     name: iOS Release (TestFlight)
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64)
         - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
@@ -11,6 +11,7 @@ workflows:
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
+        TEAM_ID: 8Y7L4NZ5ZX     # your Apple Team ID
 
     cache:
       cache_paths:
@@ -18,7 +19,7 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Clean & get dependencies
+      - name: Clean and get dependencies
         script: |
           set -euxo pipefail
           flutter clean
@@ -29,14 +30,7 @@ workflows:
           pod install --repo-update
           cd ..
 
-      - name: Debug — check required env vars (masked)
-        script: |
-          set -euo pipefail
-          for v in CM_CERTIFICATE CM_CERTIFICATE_PASSWORD IOS_PROVISIONING_PROFILE APP_STORE_CONNECT_PRIVATE_KEY APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID; do
-            if [ -z "${!v:-}" ]; then echo "ENV MISSING: $v"; else echo "ENV OK: $v"; fi
-          done
-
-      - name: Initialize keychain & import Distribution .p12
+      - name: Initialize keychain and import p12
         script: |
           set -euxo pipefail
           : "${CM_CERTIFICATE:?Missing CM_CERTIFICATE}"
@@ -55,7 +49,7 @@ workflows:
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number (UTC timestamp)
+      - name: Bump build number with UTC timestamp
         script: |
           set -euxo pipefail
           BN="$(date -u +%Y%m%d%H%M)"
@@ -63,27 +57,70 @@ workflows:
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
           /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' ios/Runner/Info.plist || true
 
-      - name: Build IPA (Flutter)
+      - name: Build IPA using Flutter
         script: |
           set -euxo pipefail
-          flutter build ipa --release
-
-      - name: Verify IPA has embedded provisioning profile
-        script: |
-          set -euxo pipefail
+          flutter build ipa --release || true
+          ls -lah build/ios || true
           ls -lah build/ios/ipa || true
-          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
-          unzip -l "$IPA" | grep -q embedded.mobileprovision
+          ls -lah build/ios/archive || true
+
+      - name: Ensure an IPA exists fallback export from xcarchive
+        script: |
+          set -euxo pipefail
+          OUTDIR="build/ios/ipa"
+          mkdir -p "$OUTDIR"
+          IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
+          if [ -z "$IPA_FOUND" ]; then
+            echo "No .ipa from Flutter export. Trying xcodebuild -exportArchive..."
+            ARCHIVE="$(ls -dt build/ios/archive/*.xcarchive 2>/dev/null | head -n 1 || true)"
+            if [ -z "$ARCHIVE" ]; then
+              echo "No .xcarchive found — Flutter build likely failed."
+              find build -maxdepth 4 -print | sed 's/^/  /' | head -n 300 || true
+              exit 1
+            fi
+
+            PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
+            PROFILE_NAME="$(security cms -D -i "$PROFILE_PATH" | /usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin)"
+
+            cat > exportOptions.plist <<EOF
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+            <plist version="1.0">
+            <dict>
+              <key>method</key><string>app-store</string>
+              <key>signingStyle</key><string>manual</string>
+              <key>teamID</key><string>${TEAM_ID}</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>
+              </dict>
+              <key>manageAppVersionAndBuildNumber</key><false/>
+            </dict>
+            </plist>
+            EOF
+
+            xcodebuild -exportArchive \
+              -archivePath "$ARCHIVE" \
+              -exportPath "$OUTDIR" \
+              -exportOptionsPlist exportOptions.plist
+          fi
+          ls -lah "$OUTDIR"
+
+      - name: Verify IPA contains embedded provisioning profile
+        script: |
+          set -euxo pipefail
+          IPA="$(find build/ios/ipa -type f -name '*.ipa' | head -n 1)"
+          unzip -l "$IPA" | grep -q 'embedded.mobileprovision'
 
     artifacts:
       - build/ios/ipa/*.ipa
 
     publishing:
       app_store_connect:
-        # <-- FLAT KEYS (not nested) -->
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY     # the full .p8 content (with BEGIN/END)
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER   # e.g. 989Y382263
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID     # UUID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         beta_groups:
           - DayZeroDecoyTesters
