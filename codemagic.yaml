@@ -12,6 +12,8 @@ workflows:
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
         TEAM_ID: 8Y7L4NZ5ZX
+        # NEW: set this in Environment variables UI (not here)
+        # IOS_PROFILE_SPECIFIER: mochakk  # (name or UUID)
 
     cache:
       cache_paths:
@@ -47,6 +49,9 @@ workflows:
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
+          # quick sanity: show file type & size
+          file "$PROFILE_PATH" || true
+          ls -lah "$HOME/Library/MobileDevice/Provisioning Profiles" || true
           xcode-project use-profiles --warn-only
 
       - name: Bump build number (UTC timestamp)
@@ -70,6 +75,8 @@ workflows:
           set -euxo pipefail
           OUTDIR="build/ios/ipa"
           mkdir -p "$OUTDIR"
+
+          # If Flutter already made one, keep it.
           IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
           if [ -z "$IPA_FOUND" ]; then
             echo "No .ipa from Flutter export. Trying xcodebuild -exportArchive..."
@@ -79,29 +86,47 @@ workflows:
               find build -maxdepth 4 -print | sed 's/^/  /' | head -n 300 || true
               exit 1
             fi
-            PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
-            PROFILE_NAME="$(security cms -D -i "$PROFILE_PATH" | /usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin)"
+
+            # Prefer an explicit specifier provided via env (name or UUID).
+            if [ -n "${IOS_PROFILE_SPECIFIER:-}" ]; then
+              PROFILE_SPECIFIER="$IOS_PROFILE_SPECIFIER"
+            else
+              # Fallback: try to parse profile name from installed file
+              PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
+              if security cms -D -i "$PROFILE_PATH" >/tmp/profile.plist 2>/dev/null; then
+                PROFILE_SPECIFIER="$(/usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist || true)"
+              else
+                PROFILE_SPECIFIER=""
+              fi
+            fi
+
+            if [ -z "$PROFILE_SPECIFIER" ]; then
+              echo "Could not determine profile specifier (name or UUID)."
+              echo "Set IOS_PROFILE_SPECIFIER in Environment variables to your profile NAME (e.g. 'mochakk') or its UUID."
+              exit 1
+            fi
+
+            # Write exportOptions.plist without heredoc to avoid parser glitches
             {
               echo '<?xml version="1.0" encoding="UTF-8"?>'
               echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
-              echo '<plist version="1.0">'
-              echo '  <dict>'
-              echo '    <key>method</key><string>app-store</string>'
-              echo '    <key>signingStyle</key><string>manual</string>'
-              echo "    <key>teamID</key><string>${TEAM_ID}</string>"
-              echo '    <key>provisioningProfiles</key>'
-              echo '    <dict>'
-              echo "      <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>"
-              echo '    </dict>'
-              echo '    <key>manageAppVersionAndBuildNumber</key><false/>'
+              echo '<plist version="1.0"><dict>'
+              echo '  <key>method</key><string>app-store</string>'
+              echo '  <key>signingStyle</key><string>manual</string>'
+              echo "  <key>teamID</key><string>${TEAM_ID}</string>"
+              echo '  <key>provisioningProfiles</key><dict>'
+              echo "    <key>${BUNDLE_ID}</key><string>${PROFILE_SPECIFIER}</string>"
               echo '  </dict>'
-              echo '</plist>'
+              echo '  <key>manageAppVersionAndBuildNumber</key><false/>'
+              echo '</dict></plist>'
             } > exportOptions.plist
+
             xcodebuild -exportArchive \
               -archivePath "$ARCHIVE" \
               -exportPath "$OUTDIR" \
               -exportOptionsPlist exportOptions.plist
           fi
+
           ls -lah "$OUTDIR"
 
       - name: Verify IPA has embedded provisioning profile
