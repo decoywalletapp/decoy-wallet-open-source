@@ -70,22 +70,24 @@ workflows:
                 || echo "${IOS_PROFILE_SPECIFIER:-}"
               )"
 
+              # ---- heredoc STARTS; every XML line is indented inside the script block ----
               cat > exportOptions.plist <<'PLIST'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>method</key><string>app-store</string>
-  <key>signingStyle</key><string>manual</string>
-  <key>teamID</key><string>__TEAM_ID__</string>
-  <key>provisioningProfiles</key>
-  <dict>
-    <key>__BUNDLE_ID__</key><string>__SPECIFIER__</string>
-  </dict>
-  <key>manageAppVersionAndBuildNumber</key><false/>
-</dict>
-</plist>
-PLIST
+              <?xml version="1.0" encoding="UTF-8"?>
+              <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+              <plist version="1.0">
+              <dict>
+                <key>method</key><string>app-store</string>
+                <key>signingStyle</key><string>manual</string>
+                <key>teamID</key><string>__TEAM_ID__</string>
+                <key>provisioningProfiles</key>
+                <dict>
+                  <key>__BUNDLE_ID__</key><string>__SPECIFIER__</string>
+                </dict>
+                <key>manageAppVersionAndBuildNumber</key><false/>
+              </dict>
+              </plist>
+              PLIST
+              # ---- heredoc ENDS ----
 
               sed -i '' \
                 -e "s/__TEAM_ID__/${TEAM_ID}/" \
