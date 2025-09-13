@@ -4,8 +4,8 @@ workflows:
 
     environment:
       groups:
-        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER (optional)
-        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE (base64 .p12), CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE (base64 .mobileprovision), IOS_PROFILE_SPECIFIER (optional)
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY (.p8 full), APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -60,31 +60,30 @@ workflows:
           OUTDIR="build/ios/ipa"
           mkdir -p "$OUTDIR"
 
-          # If Flutter already produced an .ipa, keep it
           IPA_FOUND="$(find build -type f -name '*.ipa' | head -n 1 || true)"
           if [ -z "$IPA_FOUND" ]; then
-            ARCHIVE="$(ls -dt build/ios/archive/Runner.xcarchive | head -n 1 || true)"
+            ARCHIVE="$(ls -dt build/ios/archive/Runner.xcarchive 2>/dev/null | head -n 1 || true)"
             if [ -n "$ARCHIVE" ]; then
               PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
               security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist
               SPECIFIER="$(/usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist)"
 
               cat > exportOptions.plist <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>method</key><string>app-store</string>
-  <key>signingStyle</key><string>manual</string>
-  <key>teamID</key><string>$TEAM_ID</string>
-  <key>provisioningProfiles</key>
-  <dict>
-    <key>$BUNDLE_ID</key><string>$SPECIFIER</string>
-  </dict>
-  <key>manageAppVersionAndBuildNumber</key><false/>
-</dict>
-</plist>
-PLIST
+              <?xml version="1.0" encoding="UTF-8"?>
+              <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+              <plist version="1.0">
+              <dict>
+                <key>method</key><string>app-store</string>
+                <key>signingStyle</key><string>manual</string>
+                <key>teamID</key><string>${TEAM_ID}</string>
+                <key>provisioningProfiles</key>
+                <dict>
+                  <key>${BUNDLE_ID}</key><string>${SPECIFIER}</string>
+                </dict>
+                <key>manageAppVersionAndBuildNumber</key><false/>
+              </dict>
+              </plist>
+              PLIST
 
               xcodebuild -exportArchive \
                 -archivePath "$ARCHIVE" \
