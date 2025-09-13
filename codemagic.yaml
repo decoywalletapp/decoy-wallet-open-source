@@ -2,10 +2,9 @@ workflows:
   ios_release:
     name: iOS Release (TestFlight)
     environment:
-      # These group names MUST match what you set in the Codemagic UI
       groups:
-        - signing_cert          # contains: CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD
-        - app_store_connect     # contains: APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
+        - signing_cert          # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE
+        - app_store_connect     # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID
       flutter: stable
       xcode: latest
       vars:
@@ -22,7 +21,6 @@ workflows:
       - name: Clean & get dependencies
         script: |
           set -euxo pipefail
-          flutter --version
           flutter clean
           flutter pub get
           cd ios
@@ -31,64 +29,51 @@ workflows:
           pod install --repo-update
           cd ..
 
-      - name: Debug — show presence of required env vars (masked)
+      - name: Debug — check required env vars (masked)
         script: |
           set -euo pipefail
-          # Do NOT print secret contents, just lengths/present flags.
-          for v in CM_CERTIFICATE CM_CERTIFICATE_PASSWORD CM_PROVISIONING_PROFILE APP_STORE_CONNECT_PRIVATE_KEY APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID; do
-            if [ -z "${!v:-}" ]; then
-              echo "ENV MISSING: $v"
-            else
-              echo "ENV OK: $v (len ${#${v}:-0})" | sed 's/(len .*)/(len ****)/'
-            fi
+          for v in CM_CERTIFICATE CM_CERTIFICATE_PASSWORD IOS_PROVISIONING_PROFILE APP_STORE_CONNECT_PRIVATE_KEY APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID; do
+            if [ -z "${!v:-}" ]; then echo "ENV MISSING: $v"; else echo "ENV OK: $v"; fi
           done
 
       - name: Initialize keychain & import Distribution .p12
         script: |
           set -euxo pipefail
-          : "${CM_CERTIFICATE:?Missing CM_CERTIFICATE (base64 of .p12) in Environment variables}"
-          : "${CM_CERTIFICATE_PASSWORD:?Missing CM_CERTIFICATE_PASSWORD in Environment variables}"
-
+          : "${CM_CERTIFICATE:?Missing CM_CERTIFICATE}"
+          : "${CM_CERTIFICATE_PASSWORD:?Missing CM_CERTIFICATE_PASSWORD}"
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          # Import the distribution p12 into Codemagic keychain
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
-          # Show signing identities (for debugging)
-          security find-identity -v -p codesigning "$(security default-keychain -d user | tr -d '\"' | xargs)" || true
+          security find-identity -v -p codesigning "$(security default-keychain -d user | tr -d '"')" || true
 
       - name: Install App Store provisioning profile
         script: |
           set -euxo pipefail
-          : "${CM_PROVISIONING_PROFILE:?Missing CM_PROVISIONING_PROFILE (base64 of .mobileprovision) in Environment variables}"
+          : "${IOS_PROVISIONING_PROFILE:?Missing IOS_PROVISIONING_PROFILE}"
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision"
-          echo "$CM_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
-          security cms -D -i "$PROFILE_PATH" >/tmp/profile.plist
-          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist || true
-          # Wire the downloaded profiles into the Xcode project
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
           xcode-project use-profiles --warn-only
 
-      - name: Bump build number (UTC timestamp, monotonic)
+      - name: Bump build number (UTC timestamp)
         script: |
           set -euxo pipefail
           BN="$(date -u +%Y%m%d%H%M)"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
           sed -i '' -E "1,/^version:.*/s/^version:.*/version: 0.1.1+$BN/" pubspec.yaml
-          /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' ios/Runner/Info.plist || true
 
       - name: Build IPA (Flutter)
         script: |
           set -euxo pipefail
           flutter build ipa --release
 
-      - name: Verify IPA & embedded provisioning profile
+      - name: Verify IPA has embedded provisioning profile
         script: |
           set -euxo pipefail
           ls -lah build/ios/ipa || true
-          test -e build/ios/ipa/*.ipa
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
-          echo "IPA: $IPA"
-          unzip -l "$IPA" | grep -q embedded.mobileprovision || { echo "embedded.mobileprovision missing in IPA"; exit 1; }
+          unzip -l "$IPA" | grep -q embedded.mobileprovision
 
     artifacts:
       - build/ios/ipa/*.ipa
