@@ -85,13 +85,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
     refreshListenable: appStateNotifier,
     navigatorKey: appNavigatorKey,
     errorBuilder: (context, state) =>
-        appStateNotifier.loggedIn ? PINPageWidget() : LoginPageWidget(),
+        appStateNotifier.loggedIn ? PINPageWidget() : PhoneNumberInputWidget(),
     routes: [
       FFRoute(
         name: '_initialize',
         path: '/',
-        builder: (context, _) =>
-            appStateNotifier.loggedIn ? PINPageWidget() : LoginPageWidget(),
+        builder: (context, _) => appStateNotifier.loggedIn
+            ? PINPageWidget()
+            : PhoneNumberInputWidget(),
       ),
       FFRoute(
         name: LoginPageWidget.routeName,
@@ -457,7 +458,7 @@ class FFRoute {
 
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
-            return '/loginPage';
+            return '/phoneNumberInput';
           }
           return null;
         },

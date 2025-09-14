@@ -230,7 +230,7 @@ class _PhoneNumberVerificationWidgetState
                                       _model.phoneCode =
                                           _model.phoneCodeTextController.text;
                                       _model.otpCode = functions
-                                          .digitsOnly(_model.phoneCode)!;
+                                          .digitsOnly(_model.phoneCode);
                                       safeSetState(() {});
                                       if (functions
                                           .isCodeSixDigits(_model.otpCode)) {
@@ -319,6 +319,10 @@ class _PhoneNumberVerificationWidgetState
                                               _model.otpCode = '\"\"';
                                               _model.phoneCode = '\"\"';
                                               safeSetState(() {});
+                                              safeSetState(() {
+                                                _model.phoneCodeTextController
+                                                    ?.text = '';
+                                              });
                                             }
                                           } else {
                                             await DecoyWalletTable().insert({
@@ -334,6 +338,10 @@ class _PhoneNumberVerificationWidgetState
                                             _model.otpCode = '\"\"';
                                             _model.phoneCode = '\"\"';
                                             safeSetState(() {});
+                                            safeSetState(() {
+                                              _model.phoneCodeTextController
+                                                  ?.text = '';
+                                            });
 
                                             context.goNamed(
                                                 CreatePinWidget.routeName);
@@ -345,6 +353,10 @@ class _PhoneNumberVerificationWidgetState
                                           safeSetState(() {});
                                           _model.invalidcodeState = 1;
                                           safeSetState(() {});
+                                          safeSetState(() {
+                                            _model.phoneCodeTextController
+                                                ?.text = '';
+                                          });
                                         }
                                       }
 
@@ -378,7 +390,6 @@ class _PhoneNumberVerificationWidgetState
                                                   .labelMedium
                                                   .fontStyle,
                                         ),
-                                    hintText: 'TextField',
                                     hintStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(

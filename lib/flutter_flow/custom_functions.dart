@@ -123,9 +123,14 @@ String? extractBitcoinAddress(String? input) {
   return m?.group(0) ?? '';
 }
 
-String? digitsOnly(String input) {
-  String digitsOnly(String input) {
-    // Remove anything that isn't 0–9
-    return input.replaceAll(RegExp(r'\D'), '');
-  }
+String digitsOnly(String input) {
+// Keep the generated signature:
+//
+// String digitsOnly(String input) {
+//
+// Paste ONLY this body:
+  final digits = input.replaceAll(RegExp(r'\D'), '');
+  return digits.length <= 6 ? digits : digits.substring(0, 6);
+//
+// }
 }

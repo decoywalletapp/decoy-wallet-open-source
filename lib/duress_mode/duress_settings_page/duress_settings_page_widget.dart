@@ -489,7 +489,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                 await authManager.signOut();
                 GoRouter.of(context).clearRedirectLocation();
 
-                context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
+                context.goNamedAuth(
+                    PhoneNumberInputWidget.routeName, context.mounted);
               },
               text: 'Log Out',
               options: FFButtonOptions(
