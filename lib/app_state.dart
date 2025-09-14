@@ -99,6 +99,12 @@ class FFAppState extends ChangeNotifier {
   set skipPinOnce(bool value) {
     _skipPinOnce = value;
   }
+
+  String _userEmail = '';
+  String get userEmail => _userEmail;
+  set userEmail(String value) {
+    _userEmail = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

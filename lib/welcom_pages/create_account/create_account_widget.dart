@@ -553,21 +553,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                       return;
                                     }
 
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Check Email to Verfiy Account',
-                                          style: TextStyle(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                          ),
-                                        ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                      ),
-                                    );
+                                    FFAppState().userEmail =
+                                        _model.emailAddressTextController.text;
+                                    safeSetState(() {});
+
+                                    context.pushNamedAuth(
+                                        ConfirmEmailPageWidget.routeName,
+                                        context.mounted);
                                   },
                                   text: 'Create Account',
                                   options: FFButtonOptions(

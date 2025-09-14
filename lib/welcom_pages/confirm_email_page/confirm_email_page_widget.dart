@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'confirm_email_page_model.dart';
 export 'confirm_email_page_model.dart';
 
@@ -45,6 +46,8 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -87,7 +90,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                   width: 120.0,
                   height: 120.0,
                   decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).accent1,
+                    color: FlutterFlowTheme.of(context).primaryBackground,
                     shape: BoxShape.circle,
                   ),
                   child: Align(
@@ -162,7 +165,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Text(
-                        'user@example.com',
+                        FFAppState().userEmail,
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               font: GoogleFonts.inter(

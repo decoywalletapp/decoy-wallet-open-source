@@ -111,190 +111,271 @@ class _PhoneNumberVerificationWidgetState
           ),
           body: SafeArea(
             top: true,
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Column(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                  child: Column(
                     mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.phone_android_rounded,
-                        color: FlutterFlowTheme.of(context).primary,
-                        size: 64.0,
-                      ),
-                      Text(
-                        'Enter Verification Code',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              font: GoogleFonts.interTight(
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .fontStyle,
-                              ),
-                              fontSize: 24.0,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .headlineMedium
-                                  .fontStyle,
-                            ),
-                      ),
-                      RichText(
-                        textScaler: MediaQuery.of(context).textScaler,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'We sent a 6-digit code to ',
-                              style: TextStyle(),
-                            ),
-                            TextSpan(
-                              text: valueOrDefault<String>(
-                                widget.cleanPhone,
-                                '\"\"',
-                              ),
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            TextSpan(
-                              text:
-                                  '. Enter it below to verify your phone number.',
-                              style: TextStyle(),
-                            )
-                          ],
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                font: GoogleFonts.inter(
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Icon(
+                            Icons.phone_android_rounded,
+                            color: FlutterFlowTheme.of(context).primary,
+                            size: 64.0,
+                          ),
+                          Text(
+                            'Enter Verification Code',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .headlineMedium
+                                .override(
+                                  font: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .headlineMedium
+                                        .fontStyle,
+                                  ),
+                                  fontSize: 24.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.bold,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
+                                      .headlineMedium
                                       .fontStyle,
                                 ),
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 16.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ].divide(SizedBox(height: 16.0)),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            12.0, 0.0, 12.0, 0.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: 300.0,
-                              height: 56.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 2.0,
+                          ),
+                          RichText(
+                            textScaler: MediaQuery.of(context).textScaler,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'We sent a 6-digit code to ',
+                                  style: TextStyle(),
                                 ),
-                              ),
-                              child: Container(
-                                width: 200.0,
-                                child: TextFormField(
-                                  controller: _model.phoneCodeTextController,
-                                  focusNode: _model.phoneCodeFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.phoneCodeTextController',
-                                    Duration(milliseconds: 2000),
-                                    () async {
-                                      _model.phoneCode =
-                                          _model.phoneCodeTextController.text;
-                                      _model.otpCode = functions
-                                          .digitsOnly(_model.phoneCode);
-                                      safeSetState(() {});
-                                      if (functions
-                                          .isCodeSixDigits(_model.otpCode)) {
-                                        await actions.dismissKeyboard(
-                                          context,
-                                        );
-                                        _model.checkCodeRes =
-                                            await CheckVerificationCodeCall
-                                                .call(
-                                          cleanPhone: widget.cleanPhone,
-                                          code: _model.otpCode,
-                                        );
-
-                                        if ((CheckVerificationCodeCall.success(
-                                                  (_model.checkCodeRes
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                ) ==
-                                                true) &&
-                                            (CheckVerificationCodeCall.status(
-                                                  (_model.checkCodeRes
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                ) ==
-                                                'approved')) {
-                                          _model.verifyUpdate =
-                                              await DecoyWalletTable().update(
-                                            data: {
-                                              'is_phone_verified': true,
-                                              'verified_at':
-                                                  supaSerialize<DateTime>(
-                                                      getCurrentTimestamp),
-                                              'phone_number':
-                                                  widget.cleanPhone,
-                                            },
-                                            matchingRows: (rows) => rows
-                                                .eqOrNull(
-                                                  'user_id',
-                                                  currentUserUid,
-                                                )
-                                                .eqOrNull(
-                                                  'phone_number',
-                                                  widget.cleanPhone,
-                                                ),
-                                            returnRows: true,
-                                          );
-                                          if (_model.verifyUpdate != null &&
-                                              (_model.verifyUpdate)!
-                                                  .isNotEmpty) {
-                                            _model.setPhoneRes =
-                                                await SetPhoneAuthCall.call(
-                                              jwt: currentJwtToken,
+                                TextSpan(
+                                  text: valueOrDefault<String>(
+                                    widget.cleanPhone,
+                                    '\"\"',
+                                  ),
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text:
+                                      '. Enter it below to verify your phone number.',
+                                  style: TextStyle(),
+                                )
+                              ],
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ].divide(SizedBox(height: 16.0)),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                12.0, 0.0, 12.0, 0.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  width: 300.0,
+                                  height: 56.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    border: Border.all(
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  child: Container(
+                                    width: 200.0,
+                                    child: TextFormField(
+                                      controller:
+                                          _model.phoneCodeTextController,
+                                      focusNode: _model.phoneCodeFocusNode,
+                                      onChanged: (_) => EasyDebounce.debounce(
+                                        '_model.phoneCodeTextController',
+                                        Duration(milliseconds: 2000),
+                                        () async {
+                                          _model.phoneCode = _model
+                                              .phoneCodeTextController.text;
+                                          _model.otpCode = functions
+                                              .digitsOnly(_model.phoneCode);
+                                          safeSetState(() {});
+                                          if (functions.isCodeSixDigits(
+                                              _model.otpCode)) {
+                                            await actions.dismissKeyboard(
+                                              context,
+                                            );
+                                            _model.invalidcodeState = 2;
+                                            safeSetState(() {});
+                                            _model.checkCodeRes =
+                                                await CheckVerificationCodeCall
+                                                    .call(
                                               cleanPhone: widget.cleanPhone,
+                                              code: _model.otpCode,
                                             );
 
-                                            if ((_model.setPhoneRes
-                                                        ?.statusCode ??
-                                                    200) ==
-                                                409) {
+                                            if ((CheckVerificationCodeCall
+                                                        .success(
+                                                      (_model.checkCodeRes
+                                                              ?.jsonBody ??
+                                                          ''),
+                                                    ) ==
+                                                    true) &&
+                                                (CheckVerificationCodeCall
+                                                        .status(
+                                                      (_model.checkCodeRes
+                                                              ?.jsonBody ??
+                                                          ''),
+                                                    ) ==
+                                                    'approved')) {
+                                              _model.verifyUpdate =
+                                                  await DecoyWalletTable()
+                                                      .update(
+                                                data: {
+                                                  'is_phone_verified': true,
+                                                  'verified_at':
+                                                      supaSerialize<DateTime>(
+                                                          getCurrentTimestamp),
+                                                  'phone_number':
+                                                      widget.cleanPhone,
+                                                },
+                                                matchingRows: (rows) => rows
+                                                    .eqOrNull(
+                                                      'user_id',
+                                                      currentUserUid,
+                                                    )
+                                                    .eqOrNull(
+                                                      'phone_number',
+                                                      widget.cleanPhone,
+                                                    ),
+                                                returnRows: true,
+                                              );
+                                              if (_model.verifyUpdate != null &&
+                                                  (_model.verifyUpdate)!
+                                                      .isNotEmpty) {
+                                                _model.setPhoneRes =
+                                                    await SetPhoneAuthCall.call(
+                                                  jwt: currentJwtToken,
+                                                  cleanPhone:
+                                                      widget.cleanPhone,
+                                                );
+
+                                                if ((_model.setPhoneRes
+                                                            ?.statusCode ??
+                                                        200) ==
+                                                    409) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'Phone is already linked to another account.',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  context.goNamed(
+                                                      CreatePinWidget
+                                                          .routeName);
+
+                                                  _model.invalidcodeState = 0;
+                                                  _model.code = '\"\"';
+                                                  _model.otpCode = '\"\"';
+                                                  _model.phoneCode = '\"\"';
+                                                  safeSetState(() {});
+                                                  safeSetState(() {
+                                                    _model
+                                                        .phoneCodeTextController
+                                                        ?.text = '';
+                                                  });
+                                                }
+                                              } else {
+                                                await DecoyWalletTable()
+                                                    .insert({
+                                                  'phone_number':
+                                                      widget.cleanPhone,
+                                                  'is_phone_verified': true,
+                                                  'verified_at':
+                                                      supaSerialize<DateTime>(
+                                                          getCurrentTimestamp),
+                                                  'user_id': currentUserUid,
+                                                });
+                                                _model.code = '\"\"';
+                                                _model.otpCode = '\"\"';
+                                                _model.phoneCode = '\"\"';
+                                                safeSetState(() {});
+                                                safeSetState(() {
+                                                  _model.phoneCodeTextController
+                                                      ?.text = '';
+                                                });
+
+                                                context.goNamed(
+                                                    CreatePinWidget.routeName);
+                                              }
+                                            } else {
+                                              _model.code = '\"\"';
+                                              _model.otpCode = '\"\"';
+                                              _model.phoneCode = '\"\"';
+                                              safeSetState(() {});
+                                              _model.invalidcodeState = 1;
+                                              safeSetState(() {});
+                                              safeSetState(() {
+                                                _model.phoneCodeTextController
+                                                    ?.text = '';
+                                              });
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'Phone is already linked to another account.',
+                                                    '\'phone: \' + cleanPhone +\'\\ncode: \' + otpCode +\'\\nresp: \' + getJsonField(checkCodeRes.jsonBody, r\'\$\')',
                                                     style: TextStyle(
                                                       color:
                                                           FlutterFlowTheme.of(
@@ -310,355 +391,252 @@ class _PhoneNumberVerificationWidgetState
                                                           .secondary,
                                                 ),
                                               );
-                                            } else {
-                                              context.goNamed(
-                                                  CreatePinWidget.routeName);
-
-                                              _model.invalidcodeState = 0;
-                                              _model.code = '\"\"';
-                                              _model.otpCode = '\"\"';
-                                              _model.phoneCode = '\"\"';
-                                              safeSetState(() {});
-                                              safeSetState(() {
-                                                _model.phoneCodeTextController
-                                                    ?.text = '';
-                                              });
                                             }
-                                          } else {
-                                            await DecoyWalletTable().insert({
-                                              'phone_number':
-                                                  widget.cleanPhone,
-                                              'is_phone_verified': true,
-                                              'verified_at':
-                                                  supaSerialize<DateTime>(
-                                                      getCurrentTimestamp),
-                                              'user_id': currentUserUid,
-                                            });
-                                            _model.code = '\"\"';
-                                            _model.otpCode = '\"\"';
-                                            _model.phoneCode = '\"\"';
-                                            safeSetState(() {});
-                                            safeSetState(() {
-                                              _model.phoneCodeTextController
-                                                  ?.text = '';
-                                            });
-
-                                            context.goNamed(
-                                                CreatePinWidget.routeName);
                                           }
-                                        } else {
-                                          _model.code = '\"\"';
-                                          _model.otpCode = '\"\"';
-                                          _model.phoneCode = '\"\"';
-                                          safeSetState(() {});
-                                          _model.invalidcodeState = 1;
-                                          safeSetState(() {});
-                                          safeSetState(() {
-                                            _model.phoneCodeTextController
-                                                ?.text = '';
-                                          });
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                '\'phone: \' + cleanPhone +\'\\ncode: \' + otpCode +\'\\nresp: \' + getJsonField(checkCodeRes.jsonBody, r\'\$\')',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                            ),
-                                          );
-                                        }
-                                      }
 
-                                      safeSetState(() {});
-                                    },
-                                  ),
-                                  autofocus: false,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    labelStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                          font: GoogleFonts.inter(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
+                                          safeSetState(() {});
+                                        },
+                                      ),
+                                      autofocus: false,
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        labelStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                              ),
+                                              letterSpacing: 0.0,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMedium
+                                                      .fontStyle,
+                                            ),
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                              ),
+                                              letterSpacing: 0.0,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMedium
+                                                      .fontStyle,
+                                            ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1.0,
                                           ),
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
                                         ),
-                                    hintStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                          font: GoogleFonts.inter(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1.0,
                                           ),
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
                                         ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    filled: true,
-                                    fillColor: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
                                         ),
-                                        fontSize: 20.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        filled: true,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
                                       ),
-                                  textAlign: TextAlign.center,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  enableInteractiveSelection: true,
-                                  validator: _model
-                                      .phoneCodeTextControllerValidator
-                                      .asValidator(context),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (_model.invalidcodeState == 1)
-                        Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Container(
-                            width: double.infinity,
-                            height: 48.0,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).error,
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.error_outline_rounded,
-                                    color: FlutterFlowTheme.of(context).info,
-                                    size: 20.0,
-                                  ),
-                                  Text(
-                                    'Invalid code. Please try again.',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.inter(
-                                            fontWeight: FontWeight.w500,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            fontSize: 20.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.bold,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
-                                          color:
-                                              FlutterFlowTheme.of(context).info,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
+                                      textAlign: TextAlign.center,
+                                      cursorColor: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      enableInteractiveSelection: true,
+                                      validator: _model
+                                          .phoneCodeTextControllerValidator
+                                          .asValidator(context),
+                                    ),
                                   ),
-                                ].divide(SizedBox(width: 8.0)),
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                    ].divide(SizedBox(height: 24.0)),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 1.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
+                        ].divide(SizedBox(height: 24.0)),
+                      ),
+                      Stack(
                         children: [
-                          Text(
-                            'Didn\'t receive the code?',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
+                          if (_model.invalidcodeState == 1)
+                            Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: Container(
+                                width: double.infinity,
+                                height: 48.0,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).error,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.error_outline_rounded,
+                                        color:
+                                            FlutterFlowTheme.of(context).info,
+                                        size: 20.0,
+                                      ),
+                                      Text(
+                                        'Invalid code. Please try again.',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .info,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                      ),
+                                    ].divide(SizedBox(width: 8.0)),
                                   ),
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
                                 ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                              ),
+                            ),
+                          Stack(
                             children: [
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  _model.sendResCopy =
-                                      await SendVerificationCodeCall.call(
-                                    cleanPhone: widget.cleanPhone,
-                                  );
-
-                                  safeSetState(() {});
-                                },
-                                child: Icon(
-                                  Icons.refresh_rounded,
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  size: 18.0,
-                                ),
-                              ),
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  _model.joinedCode = '';
-                                  _model.invalidcodeState = 0;
-                                  safeSetState(() {});
-                                  _model.sendRes =
-                                      await SendVerificationCodeCall.call(
-                                    cleanPhone: widget.cleanPhone,
-                                  );
-
-                                  safeSetState(() {});
-                                },
-                                child: Text(
-                                  'Resend Code',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
+                              if (_model.invalidcodeState == 2)
+                                Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 48.0,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Verifying... Please Wait!',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.inter(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .info,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ].divide(SizedBox(width: 8.0)),
                                       ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ].divide(SizedBox(width: 8.0)),
+                            ],
                           ),
-                          RichText(
-                            textScaler: MediaQuery.of(context).textScaler,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'You can request a new code in ',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.inter(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        letterSpacing: 0.0,
+                        ],
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, 1.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                'Didn\'t receive the code?',
+                                textAlign: TextAlign.center,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.inter(
                                         fontWeight: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .fontWeight,
@@ -666,55 +644,9 @@ class _PhoneNumberVerificationWidgetState
                                             .bodyMedium
                                             .fontStyle,
                                       ),
-                                ),
-                                TextSpan(
-                                  text: ' 60',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                ),
-                                TextSpan(
-                                  text: ' seconds',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.inter(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                )
-                              ],
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.inter(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      letterSpacing: 0.0,
                                       fontWeight: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .fontWeight,
@@ -722,24 +654,182 @@ class _PhoneNumberVerificationWidgetState
                                           .bodyMedium
                                           .fontStyle,
                                     ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      _model.sendResCopy =
+                                          await SendVerificationCodeCall.call(
+                                        cleanPhone: widget.cleanPhone,
+                                      );
+
+                                      safeSetState(() {});
+                                    },
+                                    child: Icon(
+                                      Icons.refresh_rounded,
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      size: 18.0,
+                                    ),
                                   ),
-                            ),
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      _model.joinedCode = '';
+                                      _model.invalidcodeState = 0;
+                                      safeSetState(() {});
+                                      _model.sendRes =
+                                          await SendVerificationCodeCall.call(
+                                        cleanPhone: widget.cleanPhone,
+                                      );
+
+                                      safeSetState(() {});
+                                    },
+                                    child: Text(
+                                      'Resend Code',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                  ),
+                                ].divide(SizedBox(width: 8.0)),
+                              ),
+                              RichText(
+                                textScaler: MediaQuery.of(context).textScaler,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'You can request a new code in ',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            letterSpacing: 0.0,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                    TextSpan(
+                                      text: ' 60',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                    TextSpan(
+                                      text: ' seconds',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            letterSpacing: 0.0,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    )
+                                  ],
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        font: GoogleFonts.inter(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                ),
+                              ),
+                            ].divide(SizedBox(height: 16.0)),
                           ),
-                        ].divide(SizedBox(height: 16.0)),
+                        ),
                       ),
-                    ),
+                    ]
+                        .divide(SizedBox(height: 32.0))
+                        .addToStart(SizedBox(height: 40.0)),
                   ),
-                ]
-                    .divide(SizedBox(height: 32.0))
-                    .addToStart(SizedBox(height: 40.0)),
-              ),
+                ),
+              ],
             ),
           ),
         ),
