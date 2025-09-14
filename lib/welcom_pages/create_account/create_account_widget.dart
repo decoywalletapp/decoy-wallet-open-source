@@ -525,6 +525,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                 ),
                                 FFButtonWidget(
                                   onPressed: () async {
+                                    context.pushNamedAuth(
+                                        ConfirmEmailPageWidget.routeName,
+                                        context.mounted);
+
+                                    FFAppState().userEmail =
+                                        _model.emailAddressTextController.text;
+                                    safeSetState(() {});
                                     GoRouter.of(context).prepareAuthEvent();
                                     if (_model
                                             .passwordCreateAccountTextController
@@ -552,10 +559,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                     if (user == null) {
                                       return;
                                     }
-
-                                    FFAppState().userEmail =
-                                        _model.emailAddressTextController.text;
-                                    safeSetState(() {});
 
                                     context.pushNamedAuth(
                                         ConfirmEmailPageWidget.routeName,

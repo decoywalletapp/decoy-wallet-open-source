@@ -104,32 +104,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0x001D2428),
-        appBar: AppBar(
-          backgroundColor: Color(0x001D2428),
-          automaticallyImplyLeading: false,
-          actions: [
-            Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                child: FlutterFlowIconButton(
-                  borderRadius: 40.0,
-                  buttonSize: 40.0,
-                  icon: Icon(
-                    Icons.settings_rounded,
-                    color: FlutterFlowTheme.of(context).primaryBackground,
-                    size: 24.0,
-                  ),
-                  onPressed: () async {
-                    context.goNamed(DuressSettingsPageWidget.routeName);
-                  },
-                ),
-              ),
-            ),
-          ],
-          centerTitle: false,
-          elevation: 0.0,
-        ),
         body: SafeArea(
           top: true,
           child: Padding(
@@ -137,6 +111,25 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Align(
+                  alignment: AlignmentDirectional(1.0, -1.0),
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                    child: FlutterFlowIconButton(
+                      borderRadius: 40.0,
+                      buttonSize: 40.0,
+                      icon: Icon(
+                        Icons.settings_rounded,
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        size: 24.0,
+                      ),
+                      onPressed: () async {
+                        context.goNamed(DuressSettingsPageWidget.routeName);
+                      },
+                    ),
+                  ),
+                ),
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -327,9 +320,8 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
-                                          color: _model.pctChange1y! >= 0.0
-                                              ? Color(0xFF04D501)
-                                              : Color(0xFFFF0000),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
                                           fontStyle:

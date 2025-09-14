@@ -71,10 +71,12 @@ double? percentageChange(
   }
 }
 
-String? formatpctLabel(double? v) {
+String formatpctLabel(double? v) {
   final x = (v ?? 0).toDouble();
   final s = x.abs().toStringAsFixed(1);
-  return (x >= 0 ? '+' : '') + s + '%';
+  // Use ASCII minus to avoid font issues
+  final sign = x >= 0 ? '+' : '-';
+  return '$sign$s%';
 }
 
 double? randomBtc(
