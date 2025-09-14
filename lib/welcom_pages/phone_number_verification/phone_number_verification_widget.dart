@@ -240,7 +240,7 @@ class _PhoneNumberVerificationWidgetState
                                         _model.checkCodeRes =
                                             await CheckVerificationCodeCall
                                                 .call(
-                                          cleanPhone: _model.cleanPhone,
+                                          cleanPhone: widget.cleanPhone,
                                           code: _model.otpCode,
                                         );
 
@@ -357,6 +357,24 @@ class _PhoneNumberVerificationWidgetState
                                             _model.phoneCodeTextController
                                                 ?.text = '';
                                           });
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                '\'phone: \' + cleanPhone +\'\\ncode: \' + otpCode +\'\\nresp: \' + getJsonField(checkCodeRes.jsonBody, r\'\$\')',
+                                                style: TextStyle(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                ),
+                                              ),
+                                              duration:
+                                                  Duration(milliseconds: 4000),
+                                              backgroundColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                            ),
+                                          );
                                         }
                                       }
 
