@@ -136,3 +136,11 @@ String digitsOnly(String input) {
 //
 // }
 }
+
+List<double> extractBtcPrices(List<dynamic> pairs) {
+  return pairs.map((e) => (e[1] as num).toDouble()).toList();
+}
+
+List<double> extractBtcEpochMs(List<dynamic> pairs) {
+  return pairs.map((e) => (e[0] as num).toDouble()).toList();
+}

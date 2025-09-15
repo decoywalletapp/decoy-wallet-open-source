@@ -46,14 +46,16 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (FFAppState().fakeSeeded == false) {
-        FFAppState().fakeBtcBalance = functions.randomBtc(1.0, 5.0, 8)!;
-        safeSetState(() {});
-        FFAppState().fakeSeeded = true;
-        safeSetState(() {});
-      }
       _model.priceResult = await BtcChartOneYearCall.call();
 
+      _model.prices1y = getJsonField(
+        (_model.priceResult?.jsonBody ?? ''),
+        r'''$.prices''',
+        true,
+      )!
+          .toList()
+          .cast<dynamic>();
+      safeSetState(() {});
       _model.btcPrices = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][1]''',
@@ -62,6 +64,13 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
+      _model.btcDates = getJsonField(
+        (_model.priceResult?.jsonBody ?? ''),
+        r'''$.prices[*][0]''',
+        true,
+      )!
+          .toList()
+          .cast<dynamic>();
       _model.btcEpochMs = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][0]''',
@@ -77,9 +86,11 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       _model.pctChange1y =
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
       safeSetState(() {});
-      FFAppState().fakeUsdValue = functions.usdFromBtc(
-          FFAppState().fakeBtcBalance, _model.currentPrice)!;
-      safeSetState(() {});
+      if (FFAppState().fakeSeeded == false) {
+        safeSetState(() {});
+        FFAppState().fakeSeeded = true;
+        safeSetState(() {});
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -160,7 +171,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                           ),
                     ),
                     Text(
-                      '₿ ${FFAppState().fakeBtcBalance.toString()}',
+                      '₿ ',
                       style: FlutterFlowTheme.of(context)
                           .displayMedium
                           .override(
@@ -180,7 +191,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                           ),
                     ),
                     Text(
-                      '\$ ${FFAppState().fakeUsdValue.toString()}',
+                      '\$ ',
                       style: FlutterFlowTheme.of(context).bodyLarge.override(
                             font: GoogleFonts.inter(
                               fontWeight: FlutterFlowTheme.of(context)
@@ -362,11 +373,19 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                               barWidth: 2.0,
                                               isCurved: true,
                                               dotData: FlDotData(show: false),
+                                              belowBarData: BarAreaData(
+                                                show: true,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .accent1,
+                                              ),
                                             ),
                                           )
                                         ],
                                         chartStylingInfo: ChartStylingInfo(
-                                          backgroundColor: Color(0xFF1D2428),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .accent1,
                                           showBorder: false,
                                         ),
                                         axisBounds: AxisBounds(),

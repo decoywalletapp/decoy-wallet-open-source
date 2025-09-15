@@ -20,14 +20,6 @@ class FFAppState extends ChangeNotifier {
   Future initializePersistedState() async {
     secureStorage = FlutterSecureStorage();
     await _safeInitAsync(() async {
-      _fakeBtcBalance =
-          await secureStorage.getDouble('ff_fakeBtcBalance') ?? _fakeBtcBalance;
-    });
-    await _safeInitAsync(() async {
-      _fakeUsdValue =
-          await secureStorage.getDouble('ff_fakeUsdValue') ?? _fakeUsdValue;
-    });
-    await _safeInitAsync(() async {
       _fakeSeeded = await secureStorage.getBool('ff_fakeSeeded') ?? _fakeSeeded;
     });
   }
@@ -57,30 +49,6 @@ class FFAppState extends ChangeNotifier {
   String get authJwt => _authJwt;
   set authJwt(String value) {
     _authJwt = value;
-  }
-
-  /// Shows fake generated BTC balance in duress mode
-  double _fakeBtcBalance = 0.0;
-  double get fakeBtcBalance => _fakeBtcBalance;
-  set fakeBtcBalance(double value) {
-    _fakeBtcBalance = value;
-    secureStorage.setDouble('ff_fakeBtcBalance', value);
-  }
-
-  void deleteFakeBtcBalance() {
-    secureStorage.delete(key: 'ff_fakeBtcBalance');
-  }
-
-  /// Displays corresponding USD value to fake BTC balance
-  double _fakeUsdValue = 0.0;
-  double get fakeUsdValue => _fakeUsdValue;
-  set fakeUsdValue(double value) {
-    _fakeUsdValue = value;
-    secureStorage.setDouble('ff_fakeUsdValue', value);
-  }
-
-  void deleteFakeUsdValue() {
-    secureStorage.delete(key: 'ff_fakeUsdValue');
   }
 
   bool _fakeSeeded = false;

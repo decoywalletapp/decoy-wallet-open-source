@@ -31,6 +31,24 @@ class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
 
   double? pctChange1y;
 
+  List<dynamic> prices1y = [];
+  void addToPrices1y(dynamic item) => prices1y.add(item);
+  void removeFromPrices1y(dynamic item) => prices1y.remove(item);
+  void removeAtIndexFromPrices1y(int index) => prices1y.removeAt(index);
+  void insertAtIndexInPrices1y(int index, dynamic item) =>
+      prices1y.insert(index, item);
+  void updatePrices1yAtIndex(int index, Function(dynamic) updateFn) =>
+      prices1y[index] = updateFn(prices1y[index]);
+
+  List<dynamic> btcDates = [];
+  void addToBtcDates(dynamic item) => btcDates.add(item);
+  void removeFromBtcDates(dynamic item) => btcDates.remove(item);
+  void removeAtIndexFromBtcDates(int index) => btcDates.removeAt(index);
+  void insertAtIndexInBtcDates(int index, dynamic item) =>
+      btcDates.insert(index, item);
+  void updateBtcDatesAtIndex(int index, Function(dynamic) updateFn) =>
+      btcDates[index] = updateFn(btcDates[index]);
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
