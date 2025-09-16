@@ -22,6 +22,14 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _fakeSeeded = await secureStorage.getBool('ff_fakeSeeded') ?? _fakeSeeded;
     });
+    await _safeInitAsync(() async {
+      _fakeBtcBalance =
+          await secureStorage.getDouble('ff_fakeBtcBalance') ?? _fakeBtcBalance;
+    });
+    await _safeInitAsync(() async {
+      _fakeUsdValue =
+          await secureStorage.getDouble('ff_fakeUsdValue') ?? _fakeUsdValue;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -72,6 +80,28 @@ class FFAppState extends ChangeNotifier {
   String get userEmail => _userEmail;
   set userEmail(String value) {
     _userEmail = value;
+  }
+
+  double _fakeBtcBalance = 0.0;
+  double get fakeBtcBalance => _fakeBtcBalance;
+  set fakeBtcBalance(double value) {
+    _fakeBtcBalance = value;
+    secureStorage.setDouble('ff_fakeBtcBalance', value);
+  }
+
+  void deleteFakeBtcBalance() {
+    secureStorage.delete(key: 'ff_fakeBtcBalance');
+  }
+
+  double _fakeUsdValue = 0.0;
+  double get fakeUsdValue => _fakeUsdValue;
+  set fakeUsdValue(double value) {
+    _fakeUsdValue = value;
+    secureStorage.setDouble('ff_fakeUsdValue', value);
+  }
+
+  void deleteFakeUsdValue() {
+    secureStorage.delete(key: 'ff_fakeUsdValue');
   }
 }
 

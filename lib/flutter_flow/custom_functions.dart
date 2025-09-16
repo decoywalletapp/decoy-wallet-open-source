@@ -79,26 +79,32 @@ String formatpctLabel(double? v) {
   return '$sign$s%';
 }
 
-double? randomBtc(
-  double? min,
-  double? max,
-  int? decimals,
+double randomBtc(
+  double min,
+  double max,
+  int decimals,
 ) {
-  double randomBtc(double min, double max, int decimals) {
-    final rnd = (math.Random().nextDouble() * (max - min)) + min;
-    final factor = math.pow(10, decimals);
-    // round to N decimals (BTC commonly shown to 8)
-    return (rnd * factor).round() / factor;
-  }
+  // guard rails
+  final lo = min;
+  final hi = (max <= min) ? (min + 0.000001) : max;
+  final d = decimals.clamp(0, 8); // num
+
+  final r = lo + (hi - lo) * math.Random().nextDouble();
+  final f = math.pow(10, d).toDouble(); // double
+  return (r * f).round() / f;
 }
 
-double? usdFromBtc(
-  double? btc,
+double usdFromBtc(
+  double btc,
   double? price,
 ) {
-  final b = (btc ?? 0).toDouble();
+  // Defensive guards so we never crash or return NaN/Infinity.
   final p = (price ?? 0).toDouble();
-  return b * p;
+  final b = (btc.isNaN || btc.isInfinite) ? 0.0 : btc;
+
+  final result = b * p;
+  if (result.isNaN || result.isInfinite) return 0.0;
+  return result;
 }
 
 String? extractBitcoinAddress(String? input) {

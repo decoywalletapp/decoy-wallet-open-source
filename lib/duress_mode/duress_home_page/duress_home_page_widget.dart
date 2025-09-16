@@ -86,7 +86,12 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       _model.pctChange1y =
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
       safeSetState(() {});
-      if (FFAppState().fakeSeeded == false) {
+      if ((FFAppState().fakeSeeded == false) ||
+          (FFAppState().fakeBtcBalance == null)) {
+        FFAppState().fakeBtcBalance = functions.randomBtc(1.0, 5.0, 8);
+        safeSetState(() {});
+        FFAppState().fakeUsdValue = functions.usdFromBtc(
+            FFAppState().fakeBtcBalance, _model.currentPrice);
         safeSetState(() {});
         FFAppState().fakeSeeded = true;
         safeSetState(() {});
@@ -171,7 +176,14 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                           ),
                     ),
                     Text(
-                      '₿ ',
+                      '₿ ${valueOrDefault<String>(
+                        formatNumber(
+                          FFAppState().fakeBtcBalance,
+                          formatType: FormatType.decimal,
+                          decimalType: DecimalType.periodDecimal,
+                        ),
+                        '0',
+                      )}',
                       style: FlutterFlowTheme.of(context)
                           .displayMedium
                           .override(
@@ -191,7 +203,14 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                           ),
                     ),
                     Text(
-                      '\$ ',
+                      '\$ ${valueOrDefault<String>(
+                        formatNumber(
+                          FFAppState().fakeUsdValue,
+                          formatType: FormatType.decimal,
+                          decimalType: DecimalType.periodDecimal,
+                        ),
+                        '0',
+                      )}',
                       style: FlutterFlowTheme.of(context).bodyLarge.override(
                             font: GoogleFonts.inter(
                               fontWeight: FlutterFlowTheme.of(context)
