@@ -64,13 +64,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
-      _model.btcDates = getJsonField(
-        (_model.priceResult?.jsonBody ?? ''),
-        r'''$.prices[*][0]''',
-        true,
-      )!
-          .toList()
-          .cast<dynamic>();
       _model.btcEpochMs = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][0]''',
@@ -94,6 +87,10 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             FFAppState().fakeBtcBalance, _model.currentPrice);
         safeSetState(() {});
         FFAppState().fakeSeeded = true;
+        safeSetState(() {});
+      } else {
+        FFAppState().fakeUsdValue = functions.usdFromBtc(
+            FFAppState().fakeBtcBalance, _model.currentPrice);
         safeSetState(() {});
       }
     });
@@ -239,7 +236,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                     width: double.infinity,
                     height: 300.0,
                     decoration: BoxDecoration(
-                      color: Color(0xA71D2428),
+                      color: Color(0x94000000),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 8.0,
@@ -470,7 +467,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                              elevation: 3.0,
+                              elevation: 10.0,
                               borderRadius: BorderRadius.circular(16.0),
                             ),
                           ),
@@ -558,7 +555,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                              elevation: 3.0,
+                              elevation: 10.0,
                               borderRadius: BorderRadius.circular(16.0),
                             ),
                           ),

@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -76,36 +77,41 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: FlutterFlowTheme.of(context).primaryText,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: FlutterFlowTheme.of(context).primaryText,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderRadius: 20.0,
             buttonSize: 40.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).primaryText,
+              color: FlutterFlowTheme.of(context).primaryBackground,
               size: 24.0,
             ),
             onPressed: () async {
               context.pop();
             },
           ),
-          title: Text(
-            'Send Bitcoin',
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  font: GoogleFonts.interTight(
+          title: Align(
+            alignment: AlignmentDirectional(-1.0, 0.0),
+            child: Text(
+              'Send Bitcoin',
+              textAlign: TextAlign.start,
+              style: FlutterFlowTheme.of(context).headlineMedium.override(
+                    font: GoogleFonts.interTight(
+                      fontWeight: FontWeight.w600,
+                      fontStyle:
+                          FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+                    ),
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    fontSize: 20.0,
+                    letterSpacing: 0.0,
                     fontWeight: FontWeight.w600,
                     fontStyle:
                         FlutterFlowTheme.of(context).headlineMedium.fontStyle,
                   ),
-                  fontSize: 20.0,
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                  fontStyle:
-                      FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                ),
+            ),
           ),
           actions: [],
           centerTitle: false,
@@ -224,7 +230,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                    color: Color(0x1D000000),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: Padding(
@@ -243,6 +249,8 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                                           .titleMedium
                                           .fontStyle,
                                     ),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -346,8 +354,12 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 24.0),
                 child: FFButtonWidget(
-                  onPressed: () {
-                    print('Button pressed ...');
+                  onPressed: () async {
+                    FFAppState().scannedAddress =
+                        _model.walletAddressTextController.text;
+                    safeSetState(() {});
+
+                    context.pushNamed(DuressSendBTCWidget.routeName);
                   },
                   text: 'Send Funds',
                   options: FFButtonOptions(
@@ -372,7 +384,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                                   .titleMedium
                                   .fontStyle,
                             ),
-                    elevation: 0.0,
+                    elevation: 5.0,
                     borderSide: BorderSide(
                       color: Colors.transparent,
                       width: 1.0,

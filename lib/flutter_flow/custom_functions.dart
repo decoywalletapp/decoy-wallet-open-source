@@ -143,10 +143,77 @@ String digitsOnly(String input) {
 // }
 }
 
-List<double> extractBtcPrices(List<dynamic> pairs) {
-  return pairs.map((e) => (e[1] as num).toDouble()).toList();
+String? formatBtc(String? text) {
+  // Trim and handle empty
+  final t = (text ?? '').trim();
+  if (t.isEmpty) return '0.00000000';
+
+  // Allow commas or stray characters from paste
+  final cleaned = t
+      .replaceAll(',', '')
+      .replaceAll(RegExp(r'[^0-9\.]'), ''); // keep digits and decimal point
+
+  final v = double.tryParse(cleaned);
+  if (v == null || v.isNaN || v.isInfinite) {
+    return '0.00000000';
+  }
+
+  // No negatives for send amount
+  final n = v < 0 ? 0.0 : v;
+
+  // Always show 8 decimals
+  return n.toStringAsFixed(8);
 }
 
-List<double> extractBtcEpochMs(List<dynamic> pairs) {
-  return pairs.map((e) => (e[0] as num).toDouble()).toList();
+String applyKey(
+  String current,
+  String key,
+  int maxDecimals,
+) {
+  // Helper defined BEFORE use (as a local function)
+  String _normalize(String s) {
+    if (s.contains('.')) {
+      final parts = s.split('.');
+      final intPart = parts[0].replaceFirst(RegExp(r'^0+(?=\d)'), '');
+      final normInt = intPart.isEmpty ? '0' : intPart;
+      final dec = parts[1];
+      return dec.isEmpty ? normInt : '$normInt.$dec';
+    } else {
+      final intPart = s.replaceFirst(RegExp(r'^0+(?=\d)'), '');
+      return intPart.isEmpty ? '0' : intPart;
+    }
+  }
+
+  String cur = (current ?? '').trim();
+  if (cur.isEmpty) cur = '0';
+
+  // sanitize maxDecimals
+  final md = (maxDecimals <= 0 || maxDecimals > 18) ? 8 : maxDecimals;
+
+  // Backspace
+  if (key == 'BACKSPACE') {
+    if (cur.length <= 1) return '0';
+    cur = cur.substring(0, cur.length - 1);
+    if (cur.endsWith('.')) cur = cur.substring(0, cur.length - 1);
+    return _normalize(cur);
+  }
+
+  // Decimal point
+  if (key == '.') {
+    if (cur.contains('.')) return cur; // ignore second dot
+    return cur == '0' ? '0.' : '$cur.';
+  }
+
+  // Digits
+  if (RegExp(r'^\d$').hasMatch(key)) {
+    if (cur.contains('.')) {
+      final after = cur.split('.')[1];
+      if (after.length >= md) return cur; // enforce decimal limit
+    }
+    if (cur == '0') return key == '0' ? '0' : key; // replace leading 0
+    return _normalize('$cur$key');
+  }
+
+  // Unknown key: no change
+  return cur;
 }

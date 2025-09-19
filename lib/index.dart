@@ -23,8 +23,8 @@ export '/home_pages/create_decoys/create_decoys_widget.dart'
     show CreateDecoysWidget;
 export '/test_subjects/email_verification_page/email_verification_page_widget.dart'
     show EmailVerificationPageWidget;
-export '/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart'
-    show DuressScanQRWidget;
+export '/test_subjects/duress_scan_q_rv2/duress_scan_q_rv2_widget.dart'
+    show DuressScanQRv2Widget;
 export '/duress_mode/duress_send_b_t_c/duress_send_b_t_c_widget.dart'
     show DuressSendBTCWidget;
 export '/duress_mode/duress_confirm_transaction_send/duress_confirm_transaction_send_widget.dart'
@@ -58,3 +58,5 @@ export '/welcom_pages/confirm_email_route/confirm_email_route_widget.dart'
     show ConfirmEmailRouteWidget;
 export '/welcom_pages/phone_number_verificationv1/phone_number_verificationv1_widget.dart'
     show PhoneNumberVerificationv1Widget;
+export '/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart'
+    show DuressScanQRWidget;

@@ -103,6 +103,18 @@ class FFAppState extends ChangeNotifier {
   void deleteFakeUsdValue() {
     secureStorage.delete(key: 'ff_fakeUsdValue');
   }
+
+  String _scannedQR = '';
+  String get scannedQR => _scannedQR;
+  set scannedQR(String value) {
+    _scannedQR = value;
+  }
+
+  String _scannedAddress = '';
+  String get scannedAddress => _scannedAddress;
+  set scannedAddress(String value) {
+    _scannedAddress = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

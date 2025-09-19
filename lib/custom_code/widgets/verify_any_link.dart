@@ -46,8 +46,9 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       if (kDebugMode) debugPrint('[VerifyAnyLink] initial link: $uri');
       if (uri != null) _handleUri(uri);
     } catch (e, st) {
-      if (kDebugMode)
+      if (kDebugMode) {
         debugPrint('[VerifyAnyLink] getInitialLink error: $e\n$st');
+      }
     }
 
     // Handle links while the app is running.
@@ -74,8 +75,9 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     }
 
     if (tokenHash == null || tokenHash.isEmpty) {
-      if (kDebugMode)
+      if (kDebugMode) {
         debugPrint('[VerifyAnyLink]   -> no token_hash, ignoring');
+      }
       return;
     }
 
@@ -96,21 +98,22 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         type: otpType,
         tokenHash: tokenHash,
       );
+
       if (kDebugMode) {
         debugPrint('[VerifyAnyLink] verifyOTP -> '
             'user? ${res.user != null}, session? ${res.session != null}');
       }
 
-      // Give time for the SDK to hydrate the current session.
+      // Give the SDK a moment to hydrate the current session.
       await Future.delayed(const Duration(milliseconds: 300));
 
       final session = client.auth.currentSession ?? res.session;
       final ok = session != null || res.user != null;
 
       if (!mounted || _navigated) {
-        if (kDebugMode)
-          debugPrint(
-              '[VerifyAnyLink] not mounted or already navigated, return');
+        if (kDebugMode) {
+          debugPrint('[VerifyAnyLink] not mounted/already navigated; return');
+        }
         return;
       }
 
@@ -118,22 +121,42 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         _navigated = true;
         if (kDebugMode)
           debugPrint('[VerifyAnyLink] nav -> subscriptionOptions');
-        // IMPORTANT: this must match your FlutterFlow named route exactly
+        // IMPORTANT: must match your FlutterFlow named route exactly.
         context.goNamed('subscriptionOptions');
       } else {
-        if (!mounted) return;
-        if (kDebugMode)
-          debugPrint('[VerifyAnyLink] verification failed (no session)');
+        // In release, stay silent; in debug, show a quick hint.
+        if (kDebugMode) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Verification failed.')),
+          );
+        }
+      }
+    } on AuthApiException catch (e, st) {
+      // Swallow common/benign OTP errors in release (e.g., tapping old emails).
+      if (e.code == 'otp_expired' || e.statusCode == 403) {
+        if (kDebugMode) {
+          debugPrint('[VerifyAnyLink] Ignored (otp_expired/403): $e\n$st');
+        }
+        return;
+      }
+      if (!mounted) return;
+      if (kDebugMode) {
+        debugPrint('[VerifyAnyLink] AuthApiException: $e\n$st');
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Verification failed.')),
+          SnackBar(content: Text('Error: ${e.message}')),
         );
       }
     } catch (e, st) {
       if (!mounted) return;
-      if (kDebugMode) debugPrint('[VerifyAnyLink] ERROR: $e\n$st');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (kDebugMode) {
+        debugPrint('[VerifyAnyLink] ERROR: $e\n$st');
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 

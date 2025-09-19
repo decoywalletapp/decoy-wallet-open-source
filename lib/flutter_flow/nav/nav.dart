@@ -175,9 +175,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => EmailVerificationPageWidget(),
       ),
       FFRoute(
-        name: DuressScanQRWidget.routeName,
-        path: DuressScanQRWidget.routePath,
-        builder: (context, params) => DuressScanQRWidget(),
+        name: DuressScanQRv2Widget.routeName,
+        path: DuressScanQRv2Widget.routePath,
+        builder: (context, params) => DuressScanQRv2Widget(),
       ),
       FFRoute(
         name: DuressSendBTCWidget.routeName,
@@ -282,6 +282,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             ParamType.String,
           ),
         ),
+      ),
+      FFRoute(
+        name: DuressScanQRWidget.routeName,
+        path: DuressScanQRWidget.routePath,
+        builder: (context, params) => DuressScanQRWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

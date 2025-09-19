@@ -1,9 +1,12 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
+import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'duress_send_b_t_c_model.dart';
 export 'duress_send_b_t_c_model.dart';
 
@@ -48,6 +51,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -55,20 +60,20 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: FlutterFlowTheme.of(context).primaryText,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: FlutterFlowTheme.of(context).primaryText,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderRadius: 20.0,
             buttonSize: 40.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).primaryText,
+              color: FlutterFlowTheme.of(context).primaryBackground,
               size: 24.0,
             ),
-            onPressed: () {
-              print('IconButton pressed ...');
+            onPressed: () async {
+              context.safePop();
             },
           ),
           title: Text(
@@ -79,6 +84,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                     fontStyle:
                         FlutterFlowTheme.of(context).titleLarge.fontStyle,
                   ),
+                  color: FlutterFlowTheme.of(context).primaryBackground,
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w600,
                   fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
@@ -98,23 +104,6 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Send Bitcoin',
-                    textAlign: TextAlign.center,
-                    style: FlutterFlowTheme.of(context).headlineMedium.override(
-                          font: GoogleFonts.interTight(
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .headlineMedium
-                                .fontStyle,
-                          ),
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .fontStyle,
-                        ),
-                  ),
-                  Text(
                     'Enter the amount you want to send',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -126,7 +115,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                 .bodyMedium
                                 .fontStyle,
                           ),
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           letterSpacing: 0.0,
                           fontWeight: FlutterFlowTheme.of(context)
                               .bodyMedium
@@ -146,7 +135,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '0.00000000',
+                        valueOrDefault<String>(
+                          functions.formatBtc(_model.amountText),
+                          '0.00000000',
+                        ),
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).displayMedium.override(
@@ -156,6 +148,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                         .displayMedium
                                         .fontStyle,
                                   ),
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
                                   fontSize: 48.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
@@ -174,7 +168,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                     .bodyLarge
                                     .fontStyle,
                               ),
-                              color: FlutterFlowTheme.of(context).secondaryText,
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w500,
                               fontStyle: FlutterFlowTheme.of(context)
@@ -189,7 +184,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Max available: 0.15432100 BTC',
+                        'Max available: ${FFAppState().fakeBtcBalance.toString()}',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
@@ -200,7 +195,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                     .bodyMedium
                                     .fontStyle,
                               ),
-                              color: FlutterFlowTheme.of(context).secondaryText,
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
                               letterSpacing: 0.0,
                               fontWeight: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -225,6 +221,9 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                         .bodyMedium
                                         .fontStyle,
                                   ),
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  fontSize: 18.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w500,
                                   fontStyle: FlutterFlowTheme.of(context)
@@ -232,15 +231,20 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                       .fontStyle,
                                 ),
                           ),
-                          Switch(
+                          Switch.adaptive(
                             value: _model.switchValue!,
                             onChanged: (newValue) async {
                               safeSetState(
                                   () => _model.switchValue = newValue);
+                              if (newValue) {
+                                _model.sendMax = true;
+                                safeSetState(() {});
+                              }
                             },
-                            activeColor: FlutterFlowTheme.of(context).primary,
+                            activeColor:
+                                FlutterFlowTheme.of(context).secondaryText,
                             activeTrackColor:
-                                FlutterFlowTheme.of(context).accent1,
+                                FlutterFlowTheme.of(context).primary,
                             inactiveTrackColor:
                                 FlutterFlowTheme.of(context).alternate,
                             inactiveThumbColor:
@@ -252,426 +256,526 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                   ),
                 ].divide(SizedBox(height: 24.0)),
               ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                child: GridView(
-                  padding: EdgeInsets.zero,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 16.0,
-                    mainAxisSpacing: 16.0,
-                    childAspectRatio: 2.0,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    borderRadius: BorderRadius.circular(16.0),
                   ),
-                  primary: false,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: GridView(
+                      padding: EdgeInsets.zero,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 16.0,
+                        mainAxisSpacing: 16.0,
+                        childAspectRatio: 2.0,
                       ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '1',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                      primary: false,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      children: [
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"1\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '1',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '2',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"2\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '2',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '3',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"3\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '3',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '4',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"4\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '4',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '5',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"5\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '5',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '6',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"6\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '6',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '7',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"7\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '7',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '8',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"8\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '8',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '9',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"9\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '9',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '.',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\".\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '.',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            '0',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, '\"0\"', 8);
+                            safeSetState(() {});
+                          },
+                          text: '0',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
+                                        .titleSmall
                                         .fontStyle,
                                   ),
+                                  color: Colors.white,
+                                  fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
+                                      .titleSmall
                                       .fontStyle,
                                 ),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Icon(
-                          Icons.backspace_outlined,
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                          size: 24.0,
+                        Container(
+                          width: 100.0,
+                          height: 100.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context).primary,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: FlutterFlowIconButton(
+                            borderRadius: 8.0,
+                            buttonSize: 40.0,
+                            fillColor: FlutterFlowTheme.of(context).primary,
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: FlutterFlowTheme.of(context).info,
+                              size: 24.0,
+                            ),
+                            onPressed: () async {
+                              _model.sendMax = false;
+                              safeSetState(() {});
+                              _model.amountText = functions.applyKey(
+                                  _model.amountText, 'BACKSPACE', 8);
+                              safeSetState(() {});
+                            },
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-              FFButtonWidget(
-                onPressed: () {
-                  print('Button pressed ...');
-                },
-                text: 'Next',
-                options: FFButtonOptions(
-                  width: double.infinity,
-                  height: 56.0,
-                  padding: EdgeInsets.all(8.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).primary,
-                  textStyle: FlutterFlowTheme.of(context).titleMedium.override(
-                        font: GoogleFonts.interTight(
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: FFButtonWidget(
+                  onPressed: () async {
+                    context.pushNamed(
+                        DuressConfirmTransactionSendWidget.routeName);
+                  },
+                  text: 'Next',
+                  options: FFButtonOptions(
+                    width: double.infinity,
+                    height: 56.0,
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                    color: FlutterFlowTheme.of(context).primary,
+                    textStyle: FlutterFlowTheme.of(context)
+                        .titleMedium
+                        .override(
+                          font: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .fontStyle,
+                          ),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          letterSpacing: 0.0,
                           fontWeight: FontWeight.w600,
                           fontStyle: FlutterFlowTheme.of(context)
                               .titleMedium
                               .fontStyle,
                         ),
-                        color: Colors.white,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w600,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).titleMedium.fontStyle,
-                      ),
-                  elevation: 0.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
+                    elevation: 5.0,
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
-                  borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
             ]

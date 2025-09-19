@@ -1,9 +1,12 @@
 import '/flutter_flow/flutter_flow_util.dart';
-import '/index.dart';
-import 'duress_scan_q_r_widget.dart' show DuressScanQRWidget;
+import 'duress_scan_q_rv2_widget.dart' show DuressScanQRv2Widget;
 import 'package:flutter/material.dart';
 
-class DuressScanQRModel extends FlutterFlowModel<DuressScanQRWidget> {
+class DuressScanQRv2Model extends FlutterFlowModel<DuressScanQRv2Widget> {
+  ///  Local state fields for this page.
+
+  bool isScanning = true;
+
   ///  State fields for stateful widgets in this page.
 
   var scannedQR = '';
