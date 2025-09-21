@@ -80,7 +80,8 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
       safeSetState(() {});
       if ((FFAppState().fakeSeeded == false) ||
-          (FFAppState().fakeBtcBalance == null)) {
+          (FFAppState().fakeBtcBalance == null) ||
+          (FFAppState().fakeBtcBalance <= 0.0)) {
         FFAppState().fakeBtcBalance = functions.randomBtc(1.0, 5.0, 8);
         safeSetState(() {});
         FFAppState().fakeUsdValue = functions.usdFromBtc(

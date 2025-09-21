@@ -430,7 +430,7 @@ class _DuressConfirmTransactionSendWidgetState
                               height: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(0x4D000000),
-                                borderRadius: BorderRadius.circular(26.0),
+                                shape: BoxShape.circle,
                               ),
                               child: Padding(
                                 padding: EdgeInsets.all(12.0),
