@@ -53,13 +53,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           milliseconds: 300,
         ),
       );
-      _model.prices1y = getJsonField(
-        (_model.priceResult?.jsonBody ?? ''),
-        r'''$.prices''',
-        true,
-      )!
-          .toList()
-          .cast<dynamic>();
       _model.btcPrices = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][1]''',
@@ -76,6 +69,13 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
+      _model.prices1y = getJsonField(
+        (_model.priceResult?.jsonBody ?? ''),
+        r'''$.prices''',
+        true,
+      )!
+          .toList()
+          .cast<dynamic>();
       _model.firstPrice = _model.btcPrices.firstOrNull;
       _model.currentPrice = _model.btcPrices.lastOrNull;
       _model.pctChange1y =
@@ -94,17 +94,16 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         );
         FFAppState().fakeUsdValue = valueOrDefault<double>(
           functions.usdFromBtc(
-              FFAppState().fakeBtcBalance, _model.currentPrice),
+              FFAppState().fakeBtcBalance, _model.currentPrice!),
           0.0,
         );
-        safeSetState(() {});
         FFAppState().fakeSeeded = true;
-        safeSetState(() {});
       } else {
         FFAppState().fakeUsdValue = functions.usdFromBtc(
-            FFAppState().fakeBtcBalance, _model.currentPrice);
-        safeSetState(() {});
+            FFAppState().fakeBtcBalance, _model.currentPrice!);
       }
+
+      safeSetState(() {});
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -622,6 +621,183 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       ),
                     ),
                   ].divide(SizedBox(width: 16.0)),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      FFAppState().fakeSeeded.toString(),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                    Text(
+                      FFAppState().fakeBtcBalance.toString(),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                    Text(
+                      FFAppState().fakeUsdValue.toString(),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      valueOrDefault<String>(
+                        _model.currentPrice?.toString(),
+                        '0',
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                    Text(
+                      valueOrDefault<String>(
+                        _model.firstPrice?.toString(),
+                        '0',
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            fontSize: 14.0,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                    Text(
+                      valueOrDefault<String>(
+                        _model.btcPrices.firstOrNull?.toString(),
+                        '0',
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                    Text(
+                      valueOrDefault<String>(
+                        _model.btcEpochMs.length.toString(),
+                        '0',
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                  ],
                 ),
               ].divide(SizedBox(height: 24.0)),
             ),

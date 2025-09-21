@@ -102,7 +102,10 @@ class BtcChartOneYearCall {
       apiUrl:
           'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=365&interval=daily',
       callType: ApiCallType.GET,
-      headers: {},
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'DecoyWallet/1.0',
+      },
       params: {},
       returnBody: true,
       encodeBodyUtf8: false,

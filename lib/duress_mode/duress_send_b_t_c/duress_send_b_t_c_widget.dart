@@ -5,6 +5,7 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'duress_send_b_t_c_model.dart';
@@ -37,6 +38,17 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => DuressSendBTCModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (_model.sendMax == true) {
+        _model.amountText = formatNumber(
+          FFAppState().fakeBtcBalance,
+          formatType: FormatType.decimal,
+        );
+        safeSetState(() {});
+      }
+    });
 
     _model.switchValue = false;
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -137,7 +149,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                       Text(
                         valueOrDefault<String>(
                           functions.formatBtc(_model.amountText),
-                          '0.00000000',
+                          '0',
                         ),
                         textAlign: TextAlign.center,
                         style:
@@ -238,6 +250,11 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                   () => _model.switchValue = newValue);
                               if (newValue) {
                                 _model.sendMax = true;
+                                _model.amountText =
+                                    FFAppState().fakeBtcBalance.toString();
+                                safeSetState(() {});
+                              } else {
+                                _model.amountText = '0.00000000';
                                 safeSetState(() {});
                               }
                             },

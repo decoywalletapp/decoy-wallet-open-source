@@ -96,12 +96,12 @@ double randomBtc(
 
 double usdFromBtc(
   double btc,
-  double? price,
+  double price,
 ) {
   // Defensive guards so we never crash or return NaN/Infinity.
+
   final p = (price ?? 0).toDouble();
   final b = (btc.isNaN || btc.isInfinite) ? 0.0 : btc;
-
   final result = b * p;
   if (result.isNaN || result.isInfinite) return 0.0;
   return result;
