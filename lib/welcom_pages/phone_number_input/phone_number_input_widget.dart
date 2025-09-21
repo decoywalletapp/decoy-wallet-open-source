@@ -166,6 +166,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                     () => safeSetState(() {}),
                                   ),
                                   autofocus: true,
+                                  autofillHints: [
+                                    AutofillHints.telephoneNumber
+                                  ],
                                   textInputAction: TextInputAction.done,
                                   obscureText: false,
                                   decoration: InputDecoration(

@@ -742,7 +742,14 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                 child: FFButtonWidget(
                   onPressed: () async {
                     context.pushNamed(
-                        DuressConfirmTransactionSendWidget.routeName);
+                      DuressConfirmTransactionSendWidget.routeName,
+                      extra: <String, dynamic>{
+                        kTransitionInfoKey: TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                        ),
+                      },
+                    );
                   },
                   text: 'Next',
                   options: FFButtonOptions(

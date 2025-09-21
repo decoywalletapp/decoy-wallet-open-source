@@ -376,7 +376,15 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                         _model.walletAddressTextController.text;
                     safeSetState(() {});
 
-                    context.pushNamed(DuressSendBTCWidget.routeName);
+                    context.pushNamed(
+                      DuressSendBTCWidget.routeName,
+                      extra: <String, dynamic>{
+                        kTransitionInfoKey: TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                        ),
+                      },
+                    );
                   },
                   text: 'Send Funds',
                   options: FFButtonOptions(

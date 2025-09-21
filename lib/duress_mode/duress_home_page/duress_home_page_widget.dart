@@ -48,6 +48,11 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.priceResult = await BtcChartOneYearCall.call();
 
+      await Future.delayed(
+        Duration(
+          milliseconds: 300,
+        ),
+      );
       _model.prices1y = getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices''',
@@ -55,7 +60,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       )!
           .toList()
           .cast<dynamic>();
-      safeSetState(() {});
       _model.btcPrices = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][1]''',
@@ -72,20 +76,27 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
-      safeSetState(() {});
       _model.firstPrice = _model.btcPrices.firstOrNull;
       _model.currentPrice = _model.btcPrices.lastOrNull;
-      safeSetState(() {});
       _model.pctChange1y =
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
-      safeSetState(() {});
+      await Future.delayed(
+        Duration(
+          milliseconds: 300,
+        ),
+      );
       if ((FFAppState().fakeSeeded == false) ||
           (FFAppState().fakeBtcBalance == null) ||
           (FFAppState().fakeBtcBalance <= 0.0)) {
-        FFAppState().fakeBtcBalance = functions.randomBtc(1.0, 5.0, 8);
-        safeSetState(() {});
-        FFAppState().fakeUsdValue = functions.usdFromBtc(
-            FFAppState().fakeBtcBalance, _model.currentPrice);
+        FFAppState().fakeBtcBalance = valueOrDefault<double>(
+          functions.randomBtc(1.0, 5.0, 8),
+          0.0,
+        );
+        FFAppState().fakeUsdValue = valueOrDefault<double>(
+          functions.usdFromBtc(
+              FFAppState().fakeBtcBalance, _model.currentPrice),
+          0.0,
+        );
         safeSetState(() {});
         FFAppState().fakeSeeded = true;
         safeSetState(() {});
@@ -525,7 +536,15 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                         children: [
                           FFButtonWidget(
                             onPressed: () async {
-                              context.pushNamed(DuressScanQRWidget.routeName);
+                              context.pushNamed(
+                                DuressScanQRWidget.routeName,
+                                extra: <String, dynamic>{
+                                  kTransitionInfoKey: TransitionInfo(
+                                    hasTransition: true,
+                                    transitionType: PageTransitionType.fade,
+                                  ),
+                                },
+                              );
                             },
                             text: '',
                             options: FFButtonOptions(

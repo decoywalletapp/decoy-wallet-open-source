@@ -142,6 +142,181 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           ),
                                           Stack(
                                             children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeInOut,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                ].divide(SizedBox(width: 16.0)),
+                                              ),
                                               if (_model.currentStep == 1)
                                                 Row(
                                                   mainAxisSize:
@@ -385,181 +560,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                   ].divide(
                                                       SizedBox(width: 16.0)),
                                                 ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeInOut,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                ].divide(SizedBox(width: 16.0)),
-                                              ),
                                             ],
                                           ),
                                           Column(
@@ -1478,6 +1478,181 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           ),
                                           Stack(
                                             children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeInOut,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                ].divide(SizedBox(width: 16.0)),
+                                              ),
                                               if (_model.currentStep == 2)
                                                 Row(
                                                   mainAxisSize:
@@ -1737,181 +1912,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                   ].divide(
                                                       SizedBox(width: 16.0)),
                                                 ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeInOut,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                ].divide(SizedBox(width: 16.0)),
-                                              ),
                                             ],
                                           ),
                                           Column(
@@ -2730,7 +2730,16 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                             if (_model.pinWrite != null &&
                                                 (_model.pinWrite)!.isNotEmpty) {
                                               context.pushNamed(
-                                                  HomePageWidget.routeName);
+                                                HomePageWidget.routeName,
+                                                extra: <String, dynamic>{
+                                                  kTransitionInfoKey:
+                                                      TransitionInfo(
+                                                    hasTransition: true,
+                                                    transitionType:
+                                                        PageTransitionType.fade,
+                                                  ),
+                                                },
+                                              );
                                             } else {
                                               await DecoyWalletTable().insert({
                                                 'user_id': currentUserUid,
@@ -2739,7 +2748,16 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                               });
 
                                               context.pushNamed(
-                                                  HomePageWidget.routeName);
+                                                HomePageWidget.routeName,
+                                                extra: <String, dynamic>{
+                                                  kTransitionInfoKey:
+                                                      TransitionInfo(
+                                                    hasTransition: true,
+                                                    transitionType:
+                                                        PageTransitionType.fade,
+                                                  ),
+                                                },
+                                              );
 
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
