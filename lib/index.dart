@@ -19,8 +19,6 @@ export '/pin_pages/create_pin/create_pin_widget.dart' show CreatePinWidget;
 export '/pin_pages/p_i_n_page/p_i_n_page_widget.dart' show PINPageWidget;
 export '/welcom_pages/phone_number_verification/phone_number_verification_widget.dart'
     show PhoneNumberVerificationWidget;
-export '/home_pages/create_decoys/create_decoys_widget.dart'
-    show CreateDecoysWidget;
 export '/test_subjects/email_verification_page/email_verification_page_widget.dart'
     show EmailVerificationPageWidget;
 export '/test_subjects/duress_scan_q_rv2/duress_scan_q_rv2_widget.dart'

@@ -1476,209 +1476,272 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                   ),
                                             ),
                                           ),
-                                          if (_model.currentStep == 2)
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
+                                          Stack(
+                                            children: [
+                                              if (_model.currentStep == 2)
                                                 Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeInOut,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          1;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeIn,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve:
+                                                              Curves.easeInOut,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
                                                         ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          2;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeIn,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
                                                         ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          3;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeIn,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
                                                         ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          4;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeIn,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
                                                         ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          5;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeIn,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
                                                         ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          6;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeIn,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
                                                         ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          7;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 200),
-                                                        curve: Curves.easeIn,
-                                                        width: 16.0,
-                                                        height: 16.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
                                                         ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList2) {
+                                                      return pinList2.length >=
+                                                          8;
+                                                    }(_model.confirmedPinInput
+                                                        .toList()))
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
                                                       ),
-                                                    ),
                                                   ].divide(
                                                       SizedBox(width: 16.0)),
                                                 ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 1;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1690,10 +1753,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1701,10 +1763,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 2;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1716,10 +1774,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1727,10 +1784,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 3;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1742,10 +1795,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1753,10 +1805,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 4;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1768,10 +1816,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1779,10 +1826,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 5;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1794,10 +1837,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1805,10 +1847,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 6;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1820,10 +1858,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1831,10 +1868,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 7;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1846,10 +1879,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1857,10 +1889,6 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                                if ((List<String> pinList2) {
-                                                  return pinList2.length >= 8;
-                                                }(_model.confirmedPinInput
-                                                    .toList()))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1872,10 +1900,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1883,8 +1910,10 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               0.0, 0.0),
                                                     ),
                                                   ),
-                                              ].divide(SizedBox(width: 16.0)),
-                                            ),
+                                                ].divide(SizedBox(width: 16.0)),
+                                              ),
+                                            ],
+                                          ),
                                           Column(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [

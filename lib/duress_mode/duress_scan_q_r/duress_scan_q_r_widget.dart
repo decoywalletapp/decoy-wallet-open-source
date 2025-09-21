@@ -5,9 +5,9 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'duress_scan_q_r_model.dart';
 export 'duress_scan_q_r_model.dart';
 
@@ -38,23 +38,6 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
     super.initState();
     _model = createModel(context, () => DuressScanQRModel());
 
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (isiOS || isAndroid) {
-        _model.scannedQR = await FlutterBarcodeScanner.scanBarcode(
-          '#C62828', // scanning line color
-          'Cancel', // cancel button text
-          true, // whether to show the flash icon
-          ScanMode.QR,
-        );
-
-        safeSetState(() {
-          _model.walletAddressTextController?.text =
-              functions.extractBitcoinAddress(_model.scannedQR)!;
-        });
-      }
-    });
-
     _model.walletAddressTextController ??= TextEditingController();
     _model.walletAddressFocusNode ??= FocusNode();
 
@@ -70,6 +53,8 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -154,7 +139,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 16.0, 0.0, 0.0),
                                 child: Text(
-                                  'Position QR code within frame',
+                                  'Tap for QR scanner',
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -196,26 +181,58 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                               width: 3.0,
                             ),
                           ),
-                        ),
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional(1.0, -1.0),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 16.0, 16.0, 0.0),
-                          child: Container(
-                            width: 40.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              color: Color(0x80000000),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Icon(
-                                Icons.flash_on,
-                                color: Colors.white,
-                                size: 24.0,
+                          child: Opacity(
+                            opacity: 0.0,
+                            child: FFButtonWidget(
+                              onPressed: () async {
+                                if (isiOS || isAndroid) {
+                                  _model.scannedQR =
+                                      await FlutterBarcodeScanner.scanBarcode(
+                                    '#C62828', // scanning line color
+                                    'Cancel', // cancel button text
+                                    true, // whether to show the flash icon
+                                    ScanMode.QR,
+                                  );
+
+                                  safeSetState(() {
+                                    _model.walletAddressTextController?.text =
+                                        functions.extractBitcoinAddress(
+                                            FFAppState().scannedQR)!;
+                                  });
+                                }
+
+                                safeSetState(() {});
+                              },
+                              text: 'Button',
+                              options: FFButtonOptions(
+                                height: 40.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 16.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      font: GoogleFonts.interTight(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                      color: Colors.white,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontStyle,
+                                    ),
+                                elevation: 0.0,
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                           ),

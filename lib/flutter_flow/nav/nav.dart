@@ -165,11 +165,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
-        name: CreateDecoysWidget.routeName,
-        path: CreateDecoysWidget.routePath,
-        builder: (context, params) => CreateDecoysWidget(),
-      ),
-      FFRoute(
         name: EmailVerificationPageWidget.routeName,
         path: EmailVerificationPageWidget.routePath,
         builder: (context, params) => EmailVerificationPageWidget(),
