@@ -94,22 +94,6 @@ class _DuressTransactionInitiatedWidgetState
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Container(
-                    width: 80.0,
-                    height: 80.0,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFF7931A),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Icon(
-                        Icons.currency_bitcoin,
-                        color: Colors.white,
-                        size: 40.0,
-                      ),
-                    ),
-                  ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [

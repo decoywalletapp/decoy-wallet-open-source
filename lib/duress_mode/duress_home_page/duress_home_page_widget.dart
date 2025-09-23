@@ -104,6 +104,8 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       }
 
       safeSetState(() {});
+      FFAppState().currentBtcPrice = _model.currentPrice!;
+      safeSetState(() {});
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

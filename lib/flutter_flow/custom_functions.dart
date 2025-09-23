@@ -15,14 +15,6 @@ String newCustomFunction(List<String> pinList) {
   return pinList.join('');
 }
 
-String newCustomFunction2(List<String> pinList2) {
-  return pinList2.join('');
-}
-
-int getPhoneNumberLength(String? phoneNumberTextField) {
-  return phoneNumberTextField?.replaceAll(RegExp(r'[^\d]'), '').length ?? 0;
-}
-
 String joinVerificationCode(
   String d1,
   String d2,
@@ -171,49 +163,117 @@ String applyKey(
   int maxDecimals,
 ) {
   // Helper defined BEFORE use (as a local function)
-  String _normalize(String s) {
-    if (s.contains('.')) {
-      final parts = s.split('.');
-      final intPart = parts[0].replaceFirst(RegExp(r'^0+(?=\d)'), '');
-      final normInt = intPart.isEmpty ? '0' : intPart;
-      final dec = parts[1];
-      return dec.isEmpty ? normInt : '$normInt.$dec';
-    } else {
-      final intPart = s.replaceFirst(RegExp(r'^0+(?=\d)'), '');
-      return intPart.isEmpty ? '0' : intPart;
-    }
-  }
 
-  String cur = (current ?? '').trim();
-  if (cur.isEmpty) cur = '0';
+  // normalize starting value
+  var cur = (current ?? '').trim();
+  if (cur.isEmpty || cur == '0.00000000') cur = '0';
 
-  // sanitize maxDecimals
-  final md = (maxDecimals <= 0 || maxDecimals > 18) ? 8 : maxDecimals;
-
-  // Backspace
+  // backspace
   if (key == 'BACKSPACE') {
     if (cur.length <= 1) return '0';
-    cur = cur.substring(0, cur.length - 1);
-    if (cur.endsWith('.')) cur = cur.substring(0, cur.length - 1);
-    return _normalize(cur);
+    final next = cur.substring(0, cur.length - 1);
+    return next == '' || next == '-' ? '0' : next;
   }
 
-  // Decimal point
+  // dot
   if (key == '.') {
-    if (cur.contains('.')) return cur; // ignore second dot
-    return cur == '0' ? '0.' : '$cur.';
+    if (cur.contains('.')) return cur;
+    return '$cur.';
   }
 
-  // Digits
+  // digits
   if (RegExp(r'^\d$').hasMatch(key)) {
+    // enforce decimal limit
     if (cur.contains('.')) {
       final after = cur.split('.')[1];
-      if (after.length >= md) return cur; // enforce decimal limit
+      if (after.length >= maxDecimals) return cur;
     }
-    if (cur == '0') return key == '0' ? '0' : key; // replace leading 0
-    return _normalize('$cur$key');
+    if (cur == '0') return key; // replace leading 0
+    return cur + key; // append
   }
 
-  // Unknown key: no change
+  // default: no change
   return cur;
+}
+
+double amountToDouble(String text) {
+  final t = (text ?? '').trim();
+  if (t.isEmpty) return 0.0;
+  final cleaned = t.replaceAll(',', '');
+  final v = double.tryParse(cleaned);
+  if (v == null || v.isNaN || v.isInfinite) return 0.0;
+  return v < 0 ? 0.0 : v;
+}
+
+String formatBtcTrim(String text) {
+  final raw = (text ?? '').trim();
+  if (raw.isEmpty) return '0';
+
+  // While typing "1." keep it as-is so the UX doesn’t jump.
+  if (raw.endsWith('.')) return raw;
+
+  // Keep digits and dot only; ignore commas etc.
+  final cleaned = raw.replaceAll(',', '').replaceAll(RegExp(r'[^0-9\.]'), '');
+  final v = double.tryParse(cleaned);
+  if (v == null || v.isNaN || v.isInfinite) return '0';
+
+  // Cap to 8 decimals, then trim trailing zeros and an optional trailing dot.
+  String s = v.toStringAsFixed(8);
+  s = s.replaceFirst(RegExp(r'\.?0+$'), '');
+
+  return s.isEmpty ? '0' : s;
+}
+
+String usdFromBtcText(
+  String btcText,
+  double btcUsdPrice,
+) {
+  final t = (btcText ?? '').trim().replaceAll(',', '');
+  final v = double.tryParse(t) ?? 0.0;
+  final price = btcUsdPrice.isFinite ? btcUsdPrice : 0.0;
+  final usd = v * price;
+  return NumberFormat.currency(symbol: '\$').format(usd);
+}
+
+double estimateFeeBtc(
+  int feeRateSatVb,
+  int inputs,
+  int outputs,
+) {
+  final fr = feeRateSatVb <= 0 ? 1 : feeRateSatVb;
+  // simple P2WPKH size model
+  final vbytes = (inputs * 68) + (outputs * 31) + 10;
+  final sats = vbytes * fr;
+  return sats / 100000000.0; // BTC
+}
+
+String totalAfterFee(
+  String btcText,
+  double feeBtc,
+) {
+  final v = double.tryParse((btcText ?? '').replaceAll(',', '')) ?? 0.0;
+  final fee = feeBtc.isFinite ? feeBtc : 0.0;
+  final t = v - fee;
+  if (t <= 0) return '0';
+  final s = t.toStringAsFixed(8);
+  return s.replaceFirst(RegExp(r'\.?0+$'), '');
+}
+
+String maskAddress(
+  String addr,
+  int head,
+  int tail,
+) {
+  final a = (addr ?? '').trim();
+  if (a.isEmpty) return '';
+  final h = head < 0 ? 0 : head;
+  final t = tail < 0 ? 0 : tail;
+  if (a.length <= h + t) return a;
+  return '${a.substring(0, h)}...${a.substring(a.length - t)}';
+}
+
+double alignXFromPercent(double p) {
+  // map 0..100 → -1..1 (Align.x)
+  final clamped = p < 0 ? 0 : (p > 100 ? 100 : p);
+  return -1.0 + 2.0 * (clamped / 100.0);
 }

@@ -165,11 +165,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
-        name: EmailVerificationPageWidget.routeName,
-        path: EmailVerificationPageWidget.routePath,
-        builder: (context, params) => EmailVerificationPageWidget(),
-      ),
-      FFRoute(
         name: DuressScanQRv2Widget.routeName,
         path: DuressScanQRv2Widget.routePath,
         builder: (context, params) => DuressScanQRv2Widget(),
@@ -192,7 +187,20 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: DuressProcessingTransactionWidget.routeName,
         path: DuressProcessingTransactionWidget.routePath,
-        builder: (context, params) => DuressProcessingTransactionWidget(),
+        builder: (context, params) => DuressProcessingTransactionWidget(
+          amountBtc: params.getParam(
+            'amountBtc',
+            ParamType.String,
+          ),
+          toAddress: params.getParam(
+            'toAddress',
+            ParamType.String,
+          ),
+          feeBtc: params.getParam(
+            'feeBtc',
+            ParamType.double,
+          ),
+        ),
       ),
       FFRoute(
         name: DuressHomePageWidget.routeName,
@@ -223,21 +231,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: UserNameEntryWidget.routeName,
         path: UserNameEntryWidget.routePath,
         builder: (context, params) => UserNameEntryWidget(),
-      ),
-      FFRoute(
-        name: PincodtestWidget.routeName,
-        path: PincodtestWidget.routePath,
-        builder: (context, params) => PincodtestWidget(),
-      ),
-      FFRoute(
-        name: PhoneNumberVerificationV2Widget.routeName,
-        path: PhoneNumberVerificationV2Widget.routePath,
-        builder: (context, params) => PhoneNumberVerificationV2Widget(
-          cleanPhone: params.getParam(
-            'cleanPhone',
-            ParamType.String,
-          ),
-        ),
       ),
       FFRoute(
         name: TimerSeriesChartWidget.routeName,

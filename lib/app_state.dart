@@ -30,6 +30,10 @@ class FFAppState extends ChangeNotifier {
       _fakeUsdValue =
           await secureStorage.getDouble('ff_fakeUsdValue') ?? _fakeUsdValue;
     });
+    await _safeInitAsync(() async {
+      _currentBtcPrice = await secureStorage.getDouble('ff_currentBtcPrice') ??
+          _currentBtcPrice;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -114,6 +118,29 @@ class FFAppState extends ChangeNotifier {
   String get scannedAddress => _scannedAddress;
   set scannedAddress(String value) {
     _scannedAddress = value;
+  }
+
+  String _sendAmountBtc = '';
+  String get sendAmountBtc => _sendAmountBtc;
+  set sendAmountBtc(String value) {
+    _sendAmountBtc = value;
+  }
+
+  int _feeRateSatVb = 15;
+  int get feeRateSatVb => _feeRateSatVb;
+  set feeRateSatVb(int value) {
+    _feeRateSatVb = value;
+  }
+
+  double _currentBtcPrice = 0.0;
+  double get currentBtcPrice => _currentBtcPrice;
+  set currentBtcPrice(double value) {
+    _currentBtcPrice = value;
+    secureStorage.setDouble('ff_currentBtcPrice', value);
+  }
+
+  void deleteCurrentBtcPrice() {
+    secureStorage.delete(key: 'ff_currentBtcPrice');
   }
 }
 

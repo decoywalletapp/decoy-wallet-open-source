@@ -19,8 +19,6 @@ export '/pin_pages/create_pin/create_pin_widget.dart' show CreatePinWidget;
 export '/pin_pages/p_i_n_page/p_i_n_page_widget.dart' show PINPageWidget;
 export '/welcom_pages/phone_number_verification/phone_number_verification_widget.dart'
     show PhoneNumberVerificationWidget;
-export '/test_subjects/email_verification_page/email_verification_page_widget.dart'
-    show EmailVerificationPageWidget;
 export '/test_subjects/duress_scan_q_rv2/duress_scan_q_rv2_widget.dart'
     show DuressScanQRv2Widget;
 export '/duress_mode/duress_send_b_t_c/duress_send_b_t_c_widget.dart'
@@ -43,9 +41,6 @@ export '/welcom_pages/phone_number_input/phone_number_input_widget.dart'
     show PhoneNumberInputWidget;
 export '/welcom_pages/user_name_entry/user_name_entry_widget.dart'
     show UserNameEntryWidget;
-export '/test_subjects/pincodtest/pincodtest_widget.dart' show PincodtestWidget;
-export '/test_subjects/phone_number_verification_v2/phone_number_verification_v2_widget.dart'
-    show PhoneNumberVerificationV2Widget;
 export '/timer_series_chart/timer_series_chart_widget.dart'
     show TimerSeriesChartWidget;
 export '/welcom_pages/confirm_email_page/confirm_email_page_widget.dart'
@@ -54,7 +49,7 @@ export '/welcom_pages/create_account_b4_change/create_account_b4_change_widget.d
     show CreateAccountB4ChangeWidget;
 export '/welcom_pages/confirm_email_route/confirm_email_route_widget.dart'
     show ConfirmEmailRouteWidget;
-export '/welcom_pages/phone_number_verificationv1/phone_number_verificationv1_widget.dart'
+export '/test_subjects/phone_number_verificationv1/phone_number_verificationv1_widget.dart'
     show PhoneNumberVerificationv1Widget;
 export '/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart'
     show DuressScanQRWidget;

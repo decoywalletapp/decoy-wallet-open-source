@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class DuressSendBTCModel extends FlutterFlowModel<DuressSendBTCWidget> {
   ///  Local state fields for this page.
 
-  String amountText = '0.00000000';
+  String amountText = '';
 
   bool? sendMax;
 

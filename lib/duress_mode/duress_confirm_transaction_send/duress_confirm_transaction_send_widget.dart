@@ -1,8 +1,12 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
+import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'duress_confirm_transaction_send_model.dart';
 export 'duress_confirm_transaction_send_model.dart';
 
@@ -35,6 +39,55 @@ class _DuressConfirmTransactionSendWidgetState
     super.initState();
     _model = createModel(context, () => DuressConfirmTransactionSendModel());
 
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.feeBtc = functions.estimateFeeBtc(FFAppState().feeRateSatVb, 1, 2);
+      safeSetState(() {});
+      if (_model.slideValue == 100.0) {
+        if ((_model.slideValue >= 100.0) &&
+            (functions.totalAfterFee(
+                    FFAppState().sendAmountBtc, _model.feeBtc) !=
+                '0')) {
+          FFAppState().sendAmountBtc = functions.totalAfterFee(
+              FFAppState().sendAmountBtc, _model.feeBtc);
+          safeSetState(() {});
+          await Future.delayed(
+            Duration(
+              milliseconds: 3000,
+            ),
+          );
+
+          context.pushNamed(
+            DuressProcessingTransactionWidget.routeName,
+            queryParameters: {
+              'amountBtc': serializeParam(
+                functions.totalAfterFee(
+                    FFAppState().sendAmountBtc, _model.feeBtc),
+                ParamType.String,
+              ),
+              'toAddress': serializeParam(
+                FFAppState().scannedAddress,
+                ParamType.String,
+              ),
+              'feeBtc': serializeParam(
+                _model.feeBtc,
+                ParamType.double,
+              ),
+            }.withoutNulls,
+          );
+
+          _model.slideValue = 0.0;
+          safeSetState(() {});
+        } else {
+          _model.slideValue = 0.0;
+          safeSetState(() {});
+        }
+      } else {
+        _model.slideValue = 0.0;
+        safeSetState(() {});
+      }
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -47,6 +100,8 @@ class _DuressConfirmTransactionSendWidgetState
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -54,20 +109,20 @@ class _DuressConfirmTransactionSendWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Color(0x001D2428),
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: Color(0x001D2428),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderRadius: 20.0,
             buttonSize: 40.0,
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).primaryText,
+              color: FlutterFlowTheme.of(context).primaryBackground,
               size: 24.0,
             ),
-            onPressed: () {
-              print('IconButton pressed ...');
+            onPressed: () async {
+              context.safePop();
             },
           ),
           title: Text(
@@ -79,6 +134,7 @@ class _DuressConfirmTransactionSendWidgetState
                     fontStyle:
                         FlutterFlowTheme.of(context).titleMedium.fontStyle,
                   ),
+                  color: FlutterFlowTheme.of(context).primaryBackground,
                   letterSpacing: 0.0,
                   fontWeight:
                       FlutterFlowTheme.of(context).titleMedium.fontWeight,
@@ -117,6 +173,8 @@ class _DuressConfirmTransactionSendWidgetState
                                       .headlineMedium
                                       .fontStyle,
                                 ),
+                                color: FlutterFlowTheme.of(context)
+                                    .primaryBackground,
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.w600,
                                 fontStyle: FlutterFlowTheme.of(context)
@@ -127,27 +185,26 @@ class _DuressConfirmTransactionSendWidgetState
                         Text(
                           'Please review your transaction details',
                           textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                font: GoogleFonts.inter(
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                letterSpacing: 0.0,
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
                         ),
                       ].divide(SizedBox(height: 16.0)),
                     ),
@@ -156,8 +213,7 @@ class _DuressConfirmTransactionSendWidgetState
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
+                          color: Color(0x4D000000),
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Padding(
@@ -171,7 +227,7 @@ class _DuressConfirmTransactionSendWidgetState
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '0.00234 BTC',
+                                    '${functions.formatBtcTrim(FFAppState().sendAmountBtc)}BTC',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .displayMedium
@@ -183,6 +239,8 @@ class _DuressConfirmTransactionSendWidgetState
                                                     .displayMedium
                                                     .fontStyle,
                                           ),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.bold,
                                           fontStyle:
@@ -192,7 +250,7 @@ class _DuressConfirmTransactionSendWidgetState
                                         ),
                                   ),
                                   Text(
-                                    '≈ \$1,250.00 USD',
+                                    '≈ ${functions.usdFromBtcText(FFAppState().sendAmountBtc, FFAppState().currentBtcPrice)} USD',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyLarge
@@ -232,8 +290,7 @@ class _DuressConfirmTransactionSendWidgetState
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
+                          color: Color(0x4D000000),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Padding(
@@ -262,7 +319,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                     .fontStyle,
                                           ),
                                           color: FlutterFlowTheme.of(context)
-                                              .secondaryText,
+                                              .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
@@ -275,7 +332,8 @@ class _DuressConfirmTransactionSendWidgetState
                                         ),
                                   ),
                                   Text(
-                                    '0.00001 BTC',
+                                    functions.formatBtcTrim(
+                                        _model.feeBtc.toString()),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -286,6 +344,8 @@ class _DuressConfirmTransactionSendWidgetState
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
                                           fontStyle:
@@ -313,6 +373,8 @@ class _DuressConfirmTransactionSendWidgetState
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -322,7 +384,9 @@ class _DuressConfirmTransactionSendWidgetState
                                         ),
                                   ),
                                   Text(
-                                    '0.00235 BTC',
+                                    functions.totalAfterFee(
+                                        FFAppState().sendAmountBtc,
+                                        _model.feeBtc),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -333,6 +397,8 @@ class _DuressConfirmTransactionSendWidgetState
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
@@ -368,7 +434,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                     .fontStyle,
                                           ),
                                           color: FlutterFlowTheme.of(context)
-                                              .secondaryText,
+                                              .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
@@ -381,7 +447,8 @@ class _DuressConfirmTransactionSendWidgetState
                                         ),
                                   ),
                                   Text(
-                                    '1A2b3C...xyz789',
+                                    functions.maskAddress(
+                                        FFAppState().scannedAddress, 6, 6),
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -423,21 +490,83 @@ class _DuressConfirmTransactionSendWidgetState
                           color: FlutterFlowTheme.of(context).accent1,
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0x4D000000),
-                                shape: BoxShape.circle,
+                        child: Container(
+                          width: double.infinity,
+                          child: Stack(
+                            children: [
+                              Opacity(
+                                opacity: 0.01,
+                                child: Container(
+                                  width: double.infinity,
+                                  child: Slider(
+                                    activeColor:
+                                        FlutterFlowTheme.of(context).primary,
+                                    inactiveColor:
+                                        FlutterFlowTheme.of(context).alternate,
+                                    min: 0.0,
+                                    max: 100.0,
+                                    value: _model.sliderValue ??=
+                                        _model.slideValue,
+                                    onChanged: (newValue) async {
+                                      safeSetState(
+                                          () => _model.sliderValue = newValue);
+                                      if ((_model.slideValue >= 100.0) &&
+                                          (functions.totalAfterFee(
+                                                  FFAppState().sendAmountBtc,
+                                                  _model.feeBtc) !=
+                                              '0')) {
+                                        FFAppState().sendAmountBtc =
+                                            functions.totalAfterFee(
+                                                FFAppState().sendAmountBtc,
+                                                _model.feeBtc);
+                                        safeSetState(() {});
+                                        await Future.delayed(
+                                          Duration(
+                                            milliseconds: 3000,
+                                          ),
+                                        );
+
+                                        context.pushNamed(
+                                          DuressProcessingTransactionWidget
+                                              .routeName,
+                                          queryParameters: {
+                                            'amountBtc': serializeParam(
+                                              functions.totalAfterFee(
+                                                  FFAppState().sendAmountBtc,
+                                                  _model.feeBtc),
+                                              ParamType.String,
+                                            ),
+                                            'toAddress': serializeParam(
+                                              FFAppState().scannedAddress,
+                                              ParamType.String,
+                                            ),
+                                            'feeBtc': serializeParam(
+                                              _model.feeBtc,
+                                              ParamType.double,
+                                            ),
+                                          }.withoutNulls,
+                                        );
+
+                                        _model.slideValue = 0.0;
+                                        safeSetState(() {});
+                                      } else {
+                                        _model.slideValue = 0.0;
+                                        safeSetState(() {});
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
-                              child: Padding(
-                                padding: EdgeInsets.all(12.0),
+                              Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).accent1,
+                                  shape: BoxShape.circle,
+                                ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       'Slide to Sign and Send',
@@ -445,7 +574,10 @@ class _DuressConfirmTransactionSendWidgetState
                                           .bodyMedium
                                           .override(
                                             font: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
@@ -454,7 +586,10 @@ class _DuressConfirmTransactionSendWidgetState
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryText,
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
@@ -464,27 +599,33 @@ class _DuressConfirmTransactionSendWidgetState
                                   ],
                                 ),
                               ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-1.0, 0.0),
-                              child: Container(
-                                width: 60.0,
-                                height: 60.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Icon(
-                                    Icons.arrow_forward_rounded,
-                                    color: FlutterFlowTheme.of(context).info,
-                                    size: 24.0,
+                              Align(
+                                alignment: AlignmentDirectional(
+                                    valueOrDefault<double>(
+                                      functions
+                                          .alignXFromPercent(_model.slideValue),
+                                      0.0,
+                                    ),
+                                    0.0),
+                                child: Container(
+                                  width: 60.0,
+                                  height: 60.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Icon(
+                                      Icons.arrow_forward_rounded,
+                                      color: FlutterFlowTheme.of(context).info,
+                                      size: 24.0,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -492,29 +633,32 @@ class _DuressConfirmTransactionSendWidgetState
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.check_circle_rounded,
-                          color: FlutterFlowTheme.of(context).success,
-                          size: 24.0,
-                        ),
-                        Text(
-                          'Sent',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    font: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context).success,
-                                    letterSpacing: 0.0,
+                        if (_model.slideValue == 100.0)
+                          Icon(
+                            Icons.check_circle_rounded,
+                            color: FlutterFlowTheme.of(context).primary,
+                            size: 24.0,
+                          ),
+                        if (_model.slideValue == 100.0)
+                          Text(
+                            'Sent',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.inter(
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
-                        ),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                          ),
                       ].divide(SizedBox(width: 8.0)),
                     ),
                   ].divide(SizedBox(height: 16.0)),

@@ -3,9 +3,9 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'duress_send_b_t_c_model.dart';
@@ -39,17 +39,6 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
     super.initState();
     _model = createModel(context, () => DuressSendBTCModel());
 
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (_model.sendMax == true) {
-        _model.amountText = formatNumber(
-          FFAppState().fakeBtcBalance,
-          formatType: FormatType.decimal,
-        );
-        safeSetState(() {});
-      }
-    });
-
     _model.switchValue = false;
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -72,9 +61,9 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryText,
+        backgroundColor: Color(0x001D2428),
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryText,
+          backgroundColor: Color(0x001D2428),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderRadius: 20.0,
@@ -147,10 +136,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        valueOrDefault<String>(
-                          functions.formatBtc(_model.amountText),
-                          '0',
-                        ),
+                        functions.formatBtcTrim(_model.amountText),
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).displayMedium.override(
@@ -233,8 +219,12 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                         .bodyMedium
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
+                                  color: functions.amountToDouble(
+                                              _model.amountText) >
+                                          FFAppState().fakeBtcBalance
+                                      ? FlutterFlowTheme.of(context).error
+                                      : FlutterFlowTheme.of(context)
+                                          .primaryBackground,
                                   fontSize: 18.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w500,
@@ -254,7 +244,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                     FFAppState().fakeBtcBalance.toString();
                                 safeSetState(() {});
                               } else {
-                                _model.amountText = '0.00000000';
+                                _model.sendMax = false;
                                 safeSetState(() {});
                               }
                             },
@@ -297,8 +287,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                       children: [
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"1\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '1', 8);
                             safeSetState(() {});
                           },
                           text: '1',
@@ -336,8 +326,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"2\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '2', 8);
                             safeSetState(() {});
                           },
                           text: '2',
@@ -375,8 +365,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"3\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '3', 8);
                             safeSetState(() {});
                           },
                           text: '3',
@@ -414,8 +404,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"4\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '4', 8);
                             safeSetState(() {});
                           },
                           text: '4',
@@ -453,8 +443,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"5\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '5', 8);
                             safeSetState(() {});
                           },
                           text: '5',
@@ -492,8 +482,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"6\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '6', 8);
                             safeSetState(() {});
                           },
                           text: '6',
@@ -531,8 +521,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"7\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '7', 8);
                             safeSetState(() {});
                           },
                           text: '7',
@@ -570,8 +560,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"8\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '8', 8);
                             safeSetState(() {});
                           },
                           text: '8',
@@ -609,8 +599,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"9\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '9', 8);
                             safeSetState(() {});
                           },
                           text: '9',
@@ -648,8 +638,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\".\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '.', 8);
                             safeSetState(() {});
                           },
                           text: '.',
@@ -687,8 +677,8 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.amountText = functions.applyKey(
-                                _model.amountText, '\"0\"', 8);
+                            _model.amountText =
+                                functions.applyKey(_model.amountText, '0', 8);
                             safeSetState(() {});
                           },
                           text: '0',
@@ -754,51 +744,83 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    context.pushNamed(
-                      DuressConfirmTransactionSendWidget.routeName,
-                      extra: <String, dynamic>{
-                        kTransitionInfoKey: TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                        ),
-                      },
-                    );
-                  },
-                  text: 'Next',
-                  options: FFButtonOptions(
-                    width: double.infinity,
-                    height: 56.0,
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primary,
-                    textStyle: FlutterFlowTheme.of(context)
-                        .titleMedium
-                        .override(
-                          font: GoogleFonts.interTight(
+              AnimatedOpacity(
+                opacity: (functions.amountToDouble(_model.amountText) <=
+                            FFAppState().fakeBtcBalance) &&
+                        (functions.amountToDouble(_model.amountText) > 0.0)
+                    ? 1.0
+                    : 0.5,
+                duration: 250.0.ms,
+                curve: Curves.easeInOut,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      if ((functions.amountToDouble(_model.amountText) > 0.0) &&
+                          (functions.amountToDouble(_model.amountText) <=
+                              FFAppState().fakeBtcBalance)) {
+                        FFAppState().sendAmountBtc =
+                            functions.formatBtc(_model.amountText)!;
+                        safeSetState(() {});
+
+                        context.pushNamed(
+                          DuressConfirmTransactionSendWidget.routeName,
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                            ),
+                          },
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Amount Exceeds Available Balance',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
+                      }
+                    },
+                    text: 'Next',
+                    options: FFButtonOptions(
+                      width: double.infinity,
+                      height: 56.0,
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primary,
+                      textStyle: FlutterFlowTheme.of(context)
+                          .titleMedium
+                          .override(
+                            font: GoogleFonts.interTight(
+                              fontWeight: FontWeight.w600,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .titleMedium
+                                  .fontStyle,
+                            ),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            letterSpacing: 0.0,
                             fontWeight: FontWeight.w600,
                             fontStyle: FlutterFlowTheme.of(context)
                                 .titleMedium
                                 .fontStyle,
                           ),
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .titleMedium
-                              .fontStyle,
-                        ),
-                    elevation: 5.0,
-                    borderSide: BorderSide(
-                      color: Colors.transparent,
-                      width: 1.0,
+                      elevation: 5.0,
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
               ),
