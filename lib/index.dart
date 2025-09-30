@@ -25,7 +25,7 @@ export '/duress_mode/duress_send_b_t_c/duress_send_b_t_c_widget.dart'
     show DuressSendBTCWidget;
 export '/duress_mode/duress_confirm_transaction_send/duress_confirm_transaction_send_widget.dart'
     show DuressConfirmTransactionSendWidget;
-export '/duress_mode/duress_transaction_initiated/duress_transaction_initiated_widget.dart'
+export '/test_subjects/duress_transaction_initiated/duress_transaction_initiated_widget.dart'
     show DuressTransactionInitiatedWidget;
 export '/duress_mode/duress_processing_transaction/duress_processing_transaction_widget.dart'
     show DuressProcessingTransactionWidget;

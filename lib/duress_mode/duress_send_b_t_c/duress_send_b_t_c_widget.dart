@@ -268,7 +268,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).primaryText,
+                    color: Color(0x4D000000),
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Padding(
@@ -764,14 +764,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         safeSetState(() {});
 
                         context.pushNamed(
-                          DuressConfirmTransactionSendWidget.routeName,
-                          extra: <String, dynamic>{
-                            kTransitionInfoKey: TransitionInfo(
-                              hasTransition: true,
-                              transitionType: PageTransitionType.fade,
-                            ),
-                          },
-                        );
+                            DuressConfirmTransactionSendWidget.routeName);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

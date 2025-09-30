@@ -100,11 +100,10 @@ class BtcChartOneYearCall {
     return ApiManager.instance.makeApiCall(
       callName: 'btcChartOneYear',
       apiUrl:
-          'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=365&interval=daily',
+          'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/coingecko-proxy?path=coins/bitcoin/market_chart&vs_currency=usd&days=365&interval=daily',
       callType: ApiCallType.GET,
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'DecoyWallet/1.0',
       },
       params: {},
       returnBody: true,

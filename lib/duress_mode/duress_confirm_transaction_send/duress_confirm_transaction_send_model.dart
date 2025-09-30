@@ -12,6 +12,10 @@ class DuressConfirmTransactionSendModel
 
   double slideValue = 0.0;
 
+  bool showSlider = true;
+
+  double slidePct = 0.0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for Slider widget.
