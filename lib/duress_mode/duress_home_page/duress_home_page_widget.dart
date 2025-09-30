@@ -50,9 +50,16 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
 
       await Future.delayed(
         Duration(
-          milliseconds: 300,
+          milliseconds: 800,
         ),
       );
+      _model.prices1y = getJsonField(
+        (_model.priceResult?.jsonBody ?? ''),
+        r'''$.prices''',
+        true,
+      )!
+          .toList()
+          .cast<dynamic>();
       _model.btcPrices = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][1]''',
@@ -69,22 +76,10 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
-      _model.prices1y = getJsonField(
-        (_model.priceResult?.jsonBody ?? ''),
-        r'''$.prices''',
-        true,
-      )!
-          .toList()
-          .cast<dynamic>();
       _model.firstPrice = _model.btcPrices.firstOrNull;
       _model.currentPrice = _model.btcPrices.lastOrNull;
       _model.pctChange1y =
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
-      await Future.delayed(
-        Duration(
-          milliseconds: 300,
-        ),
-      );
       if ((FFAppState().fakeSeeded == false) ||
           (FFAppState().fakeBtcBalance == null) ||
           (FFAppState().fakeBtcBalance <= 0.0)) {
@@ -98,6 +93,18 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           0.0,
         );
         FFAppState().fakeSeeded = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'SEEEEEEEEEDDDDEEEEDDDDD',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
       } else {
         FFAppState().fakeUsdValue = functions.usdFromBtc(
             FFAppState().fakeBtcBalance, _model.currentPrice!);
