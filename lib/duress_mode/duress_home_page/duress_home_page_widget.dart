@@ -48,11 +48,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.priceResult = await BtcChartOneYearCall.call();
 
-      await Future.delayed(
-        Duration(
-          milliseconds: 800,
-        ),
-      );
       _model.btcPrices = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][1]''',
@@ -69,6 +64,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
+      safeSetState(() {});
       _model.prices1y = getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices''',
@@ -76,10 +72,13 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       )!
           .toList()
           .cast<dynamic>();
+      safeSetState(() {});
       _model.firstPrice = _model.btcPrices.firstOrNull;
       _model.currentPrice = _model.btcPrices.lastOrNull;
+      safeSetState(() {});
       _model.pctChange1y =
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
+      safeSetState(() {});
       if ((FFAppState().fakeSeeded == false) ||
           (FFAppState().fakeBtcBalance == null) ||
           (FFAppState().fakeBtcBalance <= 0.0)) {
@@ -159,7 +158,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                           size: 24.0,
                         ),
                         onPressed: () async {
-                          context.goNamed(DuressSettingsPageWidget.routeName);
+                          context.pushNamed(DuressSettingsPageWidget.routeName);
                         },
                       ),
                     ),
