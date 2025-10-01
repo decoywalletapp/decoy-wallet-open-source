@@ -53,13 +53,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           milliseconds: 800,
         ),
       );
-      _model.prices1y = getJsonField(
-        (_model.priceResult?.jsonBody ?? ''),
-        r'''$.prices''',
-        true,
-      )!
-          .toList()
-          .cast<dynamic>();
       _model.btcPrices = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][1]''',
@@ -76,6 +69,13 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
+      _model.prices1y = getJsonField(
+        (_model.priceResult?.jsonBody ?? ''),
+        r'''$.prices''',
+        true,
+      )!
+          .toList()
+          .cast<dynamic>();
       _model.firstPrice = _model.btcPrices.firstOrNull;
       _model.currentPrice = _model.btcPrices.lastOrNull;
       _model.pctChange1y =
