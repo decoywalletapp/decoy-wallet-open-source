@@ -6,7 +6,6 @@ workflows:
       groups:
         - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER
         - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
-      flutter: stable
       xcode: latest
       vars:
         TEAM_ID: 8Y7L4NZ5ZX
@@ -16,10 +15,26 @@ workflows:
 
     cache:
       cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/flutter
+        - $HOME/.pub-cache
         - ios/Pods
 
     scripts:
+      - name: Install Flutter (retry and resume)
+        script: |
+          set -euxo pipefail
+          if [ ! -d "$HOME/flutter/bin" ]; then
+            cd "$HOME"
+            URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_3.35.5-stable.zip"
+            for i in $(seq 1 10); do
+              curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
+            done
+            unzip -q flutter.zip
+            rm -f flutter.zip
+          fi
+          echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
+          "$HOME/flutter/bin/flutter" --version
+
       - name: Show tool versions
         script: |
           set -euxo pipefail
@@ -46,6 +61,16 @@ workflows:
           /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist
           /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile.plist
 
+      - name: Verify provisioning profile kind
+        script: |
+          set -euxo pipefail
+          /usr/bin/security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision" > /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :ProvisionsAllDevices" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:get-task-allow" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:beta-reports-active" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :ExpirationDate" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :UUID" /tmp/profile.plist || true
+
       - name: Create exportOptions.plist (manual signing)
         script: |
           set -euxo pipefail
@@ -67,6 +92,13 @@ workflows:
           perl -i -pe "s/^version:\s*([0-9]+\.[0-9]+\.[0-9]+)(?:\+\d+)?/version: \${1}+$BN/m" pubspec.yaml
           grep -n '^version:' pubspec.yaml || true
 
+      - name: Set encryption flag in Info.plist
+        script: |
+          set -euxo pipefail
+          /usr/libexec/PlistBuddy -c "Delete :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool NO" ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist
+
       - name: Point Xcode project to installed profile(s) (manual signing)
         script: |
           set -euxo pipefail
@@ -79,12 +111,11 @@ workflows:
           flutter pub get
           flutter build ipa --release --export-options-plist exportOptions.plist
 
-      - name: Verify IPA has embedded provisioning profile (SIGPIPE-safe)
+      - name: Verify IPA has embedded provisioning profile (SIGPIPE safe)
         script: |
           set -euxo pipefail
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
           test -n "$IPA"
-          # Temporarily disable pipefail to avoid SIGPIPE exit 141 when using -q.
           set +o pipefail
           zipinfo -1 "$IPA" | grep -q 'embedded\.mobileprovision'
           rc=$?
