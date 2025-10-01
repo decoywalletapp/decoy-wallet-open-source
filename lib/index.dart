@@ -53,3 +53,5 @@ export '/test_subjects/phone_number_verificationv1/phone_number_verificationv1_w
     show PhoneNumberVerificationv1Widget;
 export '/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart'
     show DuressScanQRWidget;
+export '/pin_pages/create_decoy_pin/create_decoy_pin_widget.dart'
+    show CreateDecoyPinWidget;

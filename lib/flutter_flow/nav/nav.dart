@@ -277,6 +277,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => DuressScanQRWidget(),
       ),
       FFRoute(
+        name: CreateDecoyPinWidget.routeName,
+        path: CreateDecoyPinWidget.routePath,
+        builder: (context, params) => CreateDecoyPinWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>
