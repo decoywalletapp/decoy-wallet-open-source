@@ -76,66 +76,39 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       )!
           .toList()
           .cast<dynamic>();
+      await Future.delayed(
+        Duration(
+          milliseconds: 10000,
+        ),
+      );
       _model.firstPrice = _model.btcPrices.firstOrNull;
       _model.currentPrice = _model.btcPrices.lastOrNull;
       _model.pctChange1y =
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
-      safeSetState(() {});
       await Future.delayed(
         Duration(
           milliseconds: 200,
         ),
       );
-      if ((FFAppState().fakeBtcBalance == null) ||
-          (FFAppState().fakeBtcBalance <= 0.0)) {
-        FFAppState().fakeBtcBalance = valueOrDefault<double>(
-          functions.randomBtc(1.0, 5.0, 8),
-          0.0,
-        );
-        FFAppState().fakeUsdValue = valueOrDefault<double>(
-          functions.usdFromBtc(
-              FFAppState().fakeBtcBalance, _model.currentPrice!),
-          0.0,
-        );
-        FFAppState().currentBtcPrice = _model.currentPrice!;
-        safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'SEEEEEEEEEDDDDEEEEDDDDD',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
+      FFAppState().fakeUsdValue = valueOrDefault<double>(
+        functions.usdFromBtc(
+            FFAppState().fakeBtcBalanceFresh, _model.currentPrice!),
+        0.0,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'FALSE BRANCH',
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).primaryText,
             ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
           ),
-        );
-      } else {
-        FFAppState().fakeBtcBalance = valueOrDefault<double>(
-          functions.randomBtc(1.0, 5.0, 8),
-          0.0,
-        );
-        FFAppState().fakeUsdValue = valueOrDefault<double>(
-          functions.usdFromBtc(
-              FFAppState().fakeBtcBalance, _model.currentPrice!),
-          0.0,
-        );
-        FFAppState().currentBtcPrice = _model.currentPrice!;
-        safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'FALSE BRANCH',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-      }
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
+    
+      safeSetState(() {});
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -218,7 +191,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       Text(
                         '₿ ${valueOrDefault<String>(
                           formatNumber(
-                            FFAppState().fakeBtcBalance,
+                            FFAppState().fakeBtcBalanceFresh,
                             formatType: FormatType.decimal,
                             decimalType: DecimalType.periodDecimal,
                           ),
