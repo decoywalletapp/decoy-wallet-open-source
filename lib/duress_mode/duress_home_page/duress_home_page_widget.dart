@@ -86,9 +86,8 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           milliseconds: 200,
         ),
       );
-      if (functions.shouldSeed(
-              FFAppState().fakeSeeded, FFAppState().fakeBtcBalance) ==
-          true) {
+      if ((FFAppState().fakeBtcBalance == null) ||
+          (FFAppState().fakeBtcBalance <= 0.0)) {
         FFAppState().fakeBtcBalance = valueOrDefault<double>(
           functions.randomBtc(1.0, 5.0, 8),
           0.0,
@@ -99,8 +98,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           0.0,
         );
         FFAppState().currentBtcPrice = _model.currentPrice!;
-        safeSetState(() {});
-        FFAppState().fakeSeeded = true;
         safeSetState(() {});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -115,9 +112,29 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           ),
         );
       } else {
-        FFAppState().fakeUsdValue = functions.usdFromBtc(
-            FFAppState().fakeBtcBalance, _model.currentPrice!);
+        FFAppState().fakeBtcBalance = valueOrDefault<double>(
+          functions.randomBtc(1.0, 5.0, 8),
+          0.0,
+        );
+        FFAppState().fakeUsdValue = valueOrDefault<double>(
+          functions.usdFromBtc(
+              FFAppState().fakeBtcBalance, _model.currentPrice!),
+          0.0,
+        );
+        FFAppState().currentBtcPrice = _model.currentPrice!;
         safeSetState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'FALSE BRANCH',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
       }
     });
 
