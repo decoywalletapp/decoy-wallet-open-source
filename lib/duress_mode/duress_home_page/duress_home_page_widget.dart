@@ -48,6 +48,11 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.priceResult = await BtcChartOneYearCall.call();
 
+      await Future.delayed(
+        Duration(
+          milliseconds: 500,
+        ),
+      );
       _model.btcPrices = (getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices[*][1]''',
@@ -64,7 +69,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           .cast<double>()
           .toList()
           .cast<double>();
-      safeSetState(() {});
       _model.prices1y = getJsonField(
         (_model.priceResult?.jsonBody ?? ''),
         r'''$.prices''',
@@ -72,16 +76,19 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       )!
           .toList()
           .cast<dynamic>();
-      safeSetState(() {});
       _model.firstPrice = _model.btcPrices.firstOrNull;
       _model.currentPrice = _model.btcPrices.lastOrNull;
-      safeSetState(() {});
       _model.pctChange1y =
           functions.percentageChange(_model.firstPrice, _model.currentPrice);
       safeSetState(() {});
-      if ((FFAppState().fakeSeeded == false) ||
-          (FFAppState().fakeBtcBalance == null) ||
-          (FFAppState().fakeBtcBalance <= 0.0)) {
+      await Future.delayed(
+        Duration(
+          milliseconds: 200,
+        ),
+      );
+      if (functions.shouldSeed(
+              FFAppState().fakeSeeded, FFAppState().fakeBtcBalance) ==
+          true) {
         FFAppState().fakeBtcBalance = valueOrDefault<double>(
           functions.randomBtc(1.0, 5.0, 8),
           0.0,
@@ -91,7 +98,10 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
               FFAppState().fakeBtcBalance, _model.currentPrice!),
           0.0,
         );
+        FFAppState().currentBtcPrice = _model.currentPrice!;
+        safeSetState(() {});
         FFAppState().fakeSeeded = true;
+        safeSetState(() {});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -107,11 +117,8 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       } else {
         FFAppState().fakeUsdValue = functions.usdFromBtc(
             FFAppState().fakeBtcBalance, _model.currentPrice!);
+        safeSetState(() {});
       }
-
-      safeSetState(() {});
-      FFAppState().currentBtcPrice = _model.currentPrice!;
-      safeSetState(() {});
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

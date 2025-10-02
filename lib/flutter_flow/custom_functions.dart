@@ -277,3 +277,12 @@ double alignXFromPercent(double p) {
   final clamped = p < 0 ? 0 : (p > 100 ? 100 : p);
   return -1.0 + 2.0 * (clamped / 100.0);
 }
+
+bool shouldSeed(
+  bool? seeded,
+  double? btc,
+) {
+  final s = (seeded == true);
+  final b = btc ?? 0.0;
+  return (!s) || (b <= 0.0);
+}
