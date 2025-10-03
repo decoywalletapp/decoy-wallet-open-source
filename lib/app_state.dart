@@ -23,9 +23,8 @@ class FFAppState extends ChangeNotifier {
       _fakeSeeded = await secureStorage.getBool('ff_fakeSeeded') ?? _fakeSeeded;
     });
     await _safeInitAsync(() async {
-      _fakeBtcBalanceFresh =
-          await secureStorage.getDouble('ff_fakeBtcBalanceFresh') ??
-              _fakeBtcBalanceFresh;
+      _fakeBtcBalance =
+          await secureStorage.getDouble('ff_fakeBtcBalance') ?? _fakeBtcBalance;
     });
     await _safeInitAsync(() async {
       _fakeUsdValue =
@@ -87,15 +86,15 @@ class FFAppState extends ChangeNotifier {
     _userEmail = value;
   }
 
-  double _fakeBtcBalanceFresh = 0.0;
-  double get fakeBtcBalanceFresh => _fakeBtcBalanceFresh;
-  set fakeBtcBalanceFresh(double value) {
-    _fakeBtcBalanceFresh = value;
-    secureStorage.setDouble('ff_fakeBtcBalanceFresh', value);
+  double _fakeBtcBalance = 0.0;
+  double get fakeBtcBalance => _fakeBtcBalance;
+  set fakeBtcBalance(double value) {
+    _fakeBtcBalance = value;
+    secureStorage.setDouble('ff_fakeBtcBalance', value);
   }
 
-  void deleteFakeBtcBalanceFresh() {
-    secureStorage.delete(key: 'ff_fakeBtcBalanceFresh');
+  void deleteFakeBtcBalance() {
+    secureStorage.delete(key: 'ff_fakeBtcBalance');
   }
 
   double _fakeUsdValue = 0.0;
