@@ -48,84 +48,88 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.priceResult = await BtcChartOneYearCall.call();
 
-      await Future.delayed(
-        Duration(
-          milliseconds: 500,
-        ),
-      );
-      _model.btcPrices = (getJsonField(
-        (_model.priceResult?.jsonBody ?? ''),
-        r'''$.prices[*][1]''',
-        true,
-      ) as List?)!
-          .cast<double>()
-          .toList()
-          .cast<double>();
-      _model.btcEpochMs = (getJsonField(
-        (_model.priceResult?.jsonBody ?? ''),
-        r'''$.prices[*][0]''',
-        true,
-      ) as List?)!
-          .cast<double>()
-          .toList()
-          .cast<double>();
-      _model.prices1y = getJsonField(
-        (_model.priceResult?.jsonBody ?? ''),
-        r'''$.prices''',
-        true,
-      )!
-          .toList()
-          .cast<dynamic>();
-      _model.firstPrice = _model.btcPrices.firstOrNull;
-      _model.currentPrice = _model.btcPrices.lastOrNull;
-      _model.pctChange1y =
-          functions.percentageChange(_model.firstPrice, _model.currentPrice);
-      if (FFAppState().fakeBtcBalance == 0.0) {
-        FFAppState().fakeBtcBalance = valueOrDefault<double>(
-          functions.randomBtc(1.0, 5.0, 8),
-          0.0,
-        );
-        FFAppState().fakeUsdValue = valueOrDefault<double>(
-          functions.usdFromBtc(
-              FFAppState().fakeBtcBalance, _model.currentPrice!),
-          0.0,
-        );
-        FFAppState().currentBtcPrice = _model.currentPrice!;
-        safeSetState(() {});
-        FFAppState().fakeSeeded = true;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'SEEEEEEEEEDDDDEEEEDDDDD',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
+      if ((_model.priceResult?.statusCode ?? 200) == 200) {
+        await Future.delayed(
+          Duration(
+            milliseconds: 500,
           ),
         );
-      } else {
-        FFAppState().fakeUsdValue = valueOrDefault<double>(
-          functions.usdFromBtc(
-              FFAppState().fakeBtcBalance, _model.currentPrice!),
-          0.0,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'FALSE BRANCH',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
+        _model.btcPrices = (getJsonField(
+          (_model.priceResult?.jsonBody ?? ''),
+          r'''$.prices[*][1]''',
+          true,
+        ) as List?)!
+            .cast<double>()
+            .toList()
+            .cast<double>();
+        _model.btcEpochMs = (getJsonField(
+          (_model.priceResult?.jsonBody ?? ''),
+          r'''$.prices[*][0]''',
+          true,
+        ) as List?)!
+            .cast<double>()
+            .toList()
+            .cast<double>();
+        _model.prices1y = getJsonField(
+          (_model.priceResult?.jsonBody ?? ''),
+          r'''$.prices''',
+          true,
+        )!
+            .toList()
+            .cast<dynamic>();
+        _model.firstPrice = _model.btcPrices.firstOrNull;
+        _model.currentPrice = _model.btcPrices.lastOrNull;
+        _model.pctChange1y =
+            functions.percentageChange(_model.firstPrice, _model.currentPrice);
+        if (FFAppState().fakeBtcBalance == 0.0) {
+          FFAppState().fakeBtcBalance = valueOrDefault<double>(
+            functions.randomBtc(1.0, 5.0, 8),
+            0.0,
+          );
+          FFAppState().fakeUsdValue = valueOrDefault<double>(
+            functions.usdFromBtc(
+                FFAppState().fakeBtcBalance, _model.currentPrice!),
+            0.0,
+          );
+          FFAppState().currentBtcPrice = _model.currentPrice!;
+          safeSetState(() {});
+          FFAppState().fakeSeeded = true;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'SEEEEEEEEEDDDDEEEEDDDDD',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
               ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
             ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-      }
+          );
+        } else {
+          FFAppState().fakeUsdValue = valueOrDefault<double>(
+            functions.usdFromBtc(
+                FFAppState().fakeBtcBalance, _model.currentPrice!),
+            0.0,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'FALSE BRANCH',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
+        }
 
-      safeSetState(() {});
+        safeSetState(() {});
+      } else {
+        safeSetState(() {});
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -261,56 +265,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                             ),
                       ),
                     ].divide(SizedBox(height: 8.0)),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        FFAppState().fakeSeeded.toString(),
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                      ),
-                      Text(
-                        (_model.priceResult?.jsonBody ?? '').toString(),
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              fontSize: 18.0,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                      ),
-                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.all(20.0),
@@ -542,6 +496,28 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
                               fontSize: 18.0,
+                              letterSpacing: 0.0,
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                      ),
+                      Text(
+                        (_model.priceResult?.statusCode ?? 200).toString(),
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              font: GoogleFonts.inter(
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
                               letterSpacing: 0.0,
                               fontWeight: FlutterFlowTheme.of(context)
                                   .bodyMedium
