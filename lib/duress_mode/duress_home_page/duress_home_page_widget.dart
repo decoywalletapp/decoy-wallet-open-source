@@ -107,11 +107,18 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             ),
           );
         } else {
+          FFAppState().fakeBtcBalance = valueOrDefault<double>(
+            functions.randomBtc(1.0, 5.0, 8),
+            0.0,
+          );
           FFAppState().fakeUsdValue = valueOrDefault<double>(
             functions.usdFromBtc(
                 FFAppState().fakeBtcBalance, _model.currentPrice!),
             0.0,
           );
+          FFAppState().currentBtcPrice = _model.currentPrice!;
+          safeSetState(() {});
+          FFAppState().fakeSeeded = true;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
