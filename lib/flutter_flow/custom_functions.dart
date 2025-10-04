@@ -286,3 +286,29 @@ bool shouldSeed(
   final b = btc ?? 0.0;
   return (!s) || (b <= 0.0);
 }
+
+List<double> extractPriceList(List<dynamic> pricesJson) {
+  final out = <double>[];
+  for (final row in pricesJson) {
+    try {
+      final price = (row is List && row.length > 1) ? row[1] : row;
+      out.add((price as num).toDouble());
+    } catch (_) {
+      // skip bad rows
+    }
+  }
+  return out;
+}
+
+List<double> extractEpochMsList(List<dynamic> pricesJson) {
+  final out = <double>[];
+  for (final row in pricesJson) {
+    try {
+      final ts = (row is List && row.isNotEmpty) ? row[0] : row;
+      out.add((ts as num).toDouble());
+    } catch (_) {
+      // skip bad rows
+    }
+  }
+  return out;
+}
