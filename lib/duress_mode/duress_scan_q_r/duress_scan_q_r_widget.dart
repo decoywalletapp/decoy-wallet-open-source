@@ -7,7 +7,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'duress_scan_q_r_model.dart';
 export 'duress_scan_q_r_model.dart';
 
@@ -53,8 +52,6 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -197,7 +194,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                                   safeSetState(() {
                                     _model.walletAddressTextController?.text =
                                         functions.extractBitcoinAddress(
-                                            FFAppState().scannedQR)!;
+                                            _model.scannedQR)!;
                                   });
                                 }
 

@@ -40,7 +40,7 @@ class _DuressScanQRv2WidgetState extends State<DuressScanQRv2Widget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (isiOS || isAndroid) {
-        _model.scannedQR = await FlutterBarcodeScanner.scanBarcode(
+        _model.scannedQRv2 = await FlutterBarcodeScanner.scanBarcode(
           '#C62828', // scanning line color
           'Cancel', // cancel button text
           true, // whether to show the flash icon
@@ -49,7 +49,7 @@ class _DuressScanQRv2WidgetState extends State<DuressScanQRv2Widget> {
 
         safeSetState(() {
           _model.walletAddressTextController?.text =
-              functions.extractBitcoinAddress(_model.scannedQR)!;
+              functions.extractBitcoinAddress(_model.scannedQRv2)!;
         });
       }
     });
