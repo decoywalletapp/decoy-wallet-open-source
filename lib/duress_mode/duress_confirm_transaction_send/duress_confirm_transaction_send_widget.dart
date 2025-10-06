@@ -500,6 +500,9 @@ class _DuressConfirmTransactionSendWidgetState
                             FFAppState().sendAmountBtc =
                                 functions.totalAfterFee(
                                     FFAppState().sendAmountBtc, _model.feeBtc);
+                            FFAppState().txStartAt = getCurrentTimestamp;
+                            FFAppState().txTotalMins = 60;
+                            FFAppState().txStatus = 'awaiting';
                             safeSetState(() {});
 
                             context.pushNamed(
@@ -575,6 +578,11 @@ class _DuressConfirmTransactionSendWidgetState
                                               functions.totalAfterFee(
                                                   FFAppState().sendAmountBtc,
                                                   _model.feeBtc);
+                                          safeSetState(() {});
+                                          FFAppState().txStartAt =
+                                              getCurrentTimestamp;
+                                          FFAppState().txTotalMins = 60;
+                                          FFAppState().txStatus = 'awaiting';
                                           safeSetState(() {});
 
                                           context.pushNamed(

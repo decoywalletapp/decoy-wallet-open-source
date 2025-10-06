@@ -1,10 +1,15 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/instant_timer.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'duress_processing_transaction_model.dart';
 export 'duress_processing_transaction_model.dart';
 
@@ -45,6 +50,47 @@ class _DuressProcessingTransactionWidgetState
     super.initState();
     _model = createModel(context, () => DuressProcessingTransactionModel());
 
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.pagetimers?.cancel();
+      if (FFAppState().txStatus == 'complete') {
+        _model.remainingMins = 0;
+        _model.progress01 = 1.0;
+        safeSetState(() {});
+      } else {
+        _model.elapsedMins = functions.incElapsedFromStart(
+            FFAppState().txStartAt!, getCurrentTimestamp);
+        _model.remainingMins = functions.remainingForm(
+            FFAppState().txTotalMins, _model.elapsedMins);
+        _model.progress01 = functions.progressForm(
+            _model.elapsedMins, FFAppState().txTotalMins);
+        safeSetState(() {});
+        if ((_model.remainingMins > 0) &&
+            (FFAppState().txStatus == 'awaiting')) {
+          _model.pagetimers = InstantTimer.periodic(
+            duration: Duration(milliseconds: 60000),
+            callback: (timer) async {
+              _model.elapsedMins = functions.incElapsedFromStart(
+                  FFAppState().txStartAt!, getCurrentTimestamp);
+              _model.remainingMins = functions.remainingForm(
+                  FFAppState().txTotalMins, _model.elapsedMins);
+              _model.progress01 = functions.progressForm(
+                  _model.elapsedMins, FFAppState().txTotalMins);
+              safeSetState(() {});
+              if (_model.remainingMins <= 0) {
+                _model.pagetimers?.cancel();
+                _model.progress01 = 1.0;
+                safeSetState(() {});
+              }
+            },
+            startImmediately: true,
+          );
+        } else {
+          _model.pagetimers?.cancel();
+        }
+      }
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -57,6 +103,8 @@ class _DuressProcessingTransactionWidgetState
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -300,7 +348,7 @@ class _DuressProcessingTransactionWidgetState
                                         ),
                                   ),
                                   Text(
-                                    '0.0045 BTC',
+                                    '${widget.feeBtc?.toString()} BTC',
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -362,7 +410,7 @@ class _DuressProcessingTransactionWidgetState
                                         ),
                                   ),
                                   Text(
-                                    '45 minutes remaining',
+                                    '${_model.remainingMins.toString()} minutes remaining',
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -416,7 +464,10 @@ class _DuressProcessingTransactionWidgetState
                                   ),
                             ),
                             Text(
-                              '75%',
+                              '${formatNumber(
+                                _model.progress01,
+                                formatType: FormatType.percent,
+                              )}',
                               style: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -439,20 +490,23 @@ class _DuressProcessingTransactionWidgetState
                         Container(
                           width: double.infinity,
                           height: 8.0,
+                          constraints: BoxConstraints(
+                            maxWidth: double.infinity,
+                          ),
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).alternate,
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          child: Align(
-                            alignment: AlignmentDirectional(-1.0, 0.0),
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width * 0.75,
-                              height: 8.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).primary,
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                            ),
+                          child: LinearPercentIndicator(
+                            percent: _model.progress01,
+                            lineHeight: 12.0,
+                            animation: true,
+                            animateFromLastPercent: true,
+                            progressColor: FlutterFlowTheme.of(context).primary,
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).accent4,
+                            barRadius: Radius.circular(12.0),
+                            padding: EdgeInsets.zero,
                           ),
                         ),
                       ].divide(SizedBox(height: 12.0)),
@@ -469,7 +523,12 @@ class _DuressProcessingTransactionWidgetState
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).success,
+                                color: valueOrDefault<Color>(
+                                  _model.progress01 >= 0.0
+                                      ? FlutterFlowTheme.of(context).primary
+                                      : FlutterFlowTheme.of(context).alternate,
+                                  FlutterFlowTheme.of(context).alternate,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -506,7 +565,9 @@ class _DuressProcessingTransactionWidgetState
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).success,
+                                color: _model.progress01 >= 0.05
+                                    ? FlutterFlowTheme.of(context).primary
+                                    : FlutterFlowTheme.of(context).alternate,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -543,7 +604,9 @@ class _DuressProcessingTransactionWidgetState
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).primary,
+                                color: _model.progress01 >= 0.5
+                                    ? FlutterFlowTheme.of(context).primary
+                                    : FlutterFlowTheme.of(context).alternate,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -576,7 +639,9 @@ class _DuressProcessingTransactionWidgetState
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).alternate,
+                                color: _model.progress01 >= 1.0
+                                    ? FlutterFlowTheme.of(context).primary
+                                    : FlutterFlowTheme.of(context).alternate,
                                 shape: BoxShape.circle,
                               ),
                             ),

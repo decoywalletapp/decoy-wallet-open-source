@@ -312,3 +312,35 @@ List<double> extractEpochMsList(List<dynamic> pricesJson) {
   }
   return out;
 }
+
+int incElapsed(int elapsed) {
+  return elapsed + 1;
+}
+
+int remainingForm(
+  int total,
+  int elapsed,
+) {
+  final r = total - elapsed;
+  return r < 0 ? 0 : r;
+}
+
+double progressForm(
+  int elapsed,
+  int total,
+) {
+  if (total <= 0) return 0.0;
+  final p = elapsed / total; // int / int is double in Dart
+  if (p < 0) return 0.0;
+  if (p > 1) return 1.0;
+  return p;
+}
+
+int incElapsedFromStart(
+  DateTime startAt,
+  DateTime nowTs,
+) {
+  final ms = nowTs.millisecondsSinceEpoch - startAt.millisecondsSinceEpoch;
+  final mins = ms ~/ 60000; // integer division
+  return mins < 0 ? 0 : mins;
+}

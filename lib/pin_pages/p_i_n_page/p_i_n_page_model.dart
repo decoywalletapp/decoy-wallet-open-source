@@ -40,6 +40,10 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
   String? hashedLoginPIN;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<DecoyWalletRow>? matchingPINEntry;
+  // Stores action output result for [Custom Action - hashPin] action in Button widget.
+  String? hashedDuressPIN;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? matchingPINEntryDuress;
 
   @override
   void initState(BuildContext context) {}

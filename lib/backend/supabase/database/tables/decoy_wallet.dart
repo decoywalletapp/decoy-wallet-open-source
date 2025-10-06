@@ -50,4 +50,18 @@ class DecoyWalletRow extends SupabaseDataRow {
 
   DateTime? get verifiedAt => getField<DateTime>('verified_at');
   set verifiedAt(DateTime? value) => setField<DateTime>('verified_at', value);
+
+  String? get decoyPinHash => getField<String>('decoy_pin_hash');
+  set decoyPinHash(String? value) => setField<String>('decoy_pin_hash', value);
+
+  String? get decoyPinSalt => getField<String>('decoy_pin_salt');
+  set decoyPinSalt(String? value) => setField<String>('decoy_pin_salt', value);
+
+  DateTime? get decoyPinSetAt => getField<DateTime>('decoy_pin_set_at');
+  set decoyPinSetAt(DateTime? value) =>
+      setField<DateTime>('decoy_pin_set_at', value);
+
+  bool? get decoyModeEnabled => getField<bool>('decoy_mode_enabled');
+  set decoyModeEnabled(bool? value) =>
+      setField<bool>('decoy_mode_enabled', value);
 }

@@ -9,6 +9,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'p_i_n_page_model.dart';
 export 'p_i_n_page_model.dart';
 
@@ -58,6 +59,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -1017,10 +1020,49 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                               .secondary,
                                     ),
                                   );
-                                  _model.joinedPin = "";
-                                  safeSetState(() {});
-                                  _model.pinInput = [].toList().cast<String>();
-                                  safeSetState(() {});
+                                  _model.hashedDuressPIN =
+                                      await actions.hashPin(
+                                    _model.joinedPin!,
+                                  );
+                                  _model.matchingPINEntryDuress =
+                                      await DecoyWalletTable().queryRows(
+                                    queryFn: (q) => q.eqOrNull(
+                                      'decoy_pin_hash',
+                                      _model.hashedDuressPIN,
+                                    ),
+                                  );
+                                  if (_model.matchingPINEntryDuress!.length >
+                                      0) {
+                                    context.pushNamed(
+                                        DuressHomePageWidget.routeName);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Invalid PIN Entry. Please Retry.',
+                                          style: GoogleFonts.roboto(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondary,
+                                      ),
+                                    );
+                                    _model.joinedPin = "";
+                                    safeSetState(() {});
+                                    _model.pinInput =
+                                        [].toList().cast<String>();
+                                    safeSetState(() {});
+                                    _model.joinedPin = "";
+                                    safeSetState(() {});
+                                    _model.pinInput =
+                                        [].toList().cast<String>();
+                                    safeSetState(() {});
+                                  }
                                 }
                               }
                             } else {

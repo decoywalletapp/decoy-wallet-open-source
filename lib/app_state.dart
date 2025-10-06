@@ -34,6 +34,10 @@ class FFAppState extends ChangeNotifier {
       _currentBtcPrice = await secureStorage.getDouble('ff_currentBtcPrice') ??
           _currentBtcPrice;
     });
+    await _safeInitAsync(() async {
+      _hasDecoyPin =
+          await secureStorage.getBool('ff_hasDecoyPin') ?? _hasDecoyPin;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -141,6 +145,53 @@ class FFAppState extends ChangeNotifier {
 
   void deleteCurrentBtcPrice() {
     secureStorage.delete(key: 'ff_currentBtcPrice');
+  }
+
+  String _txId = '';
+  String get txId => _txId;
+  set txId(String value) {
+    _txId = value;
+  }
+
+  DateTime? _txStartAt = DateTime.fromMillisecondsSinceEpoch(1759695300000);
+  DateTime? get txStartAt => _txStartAt;
+  set txStartAt(DateTime? value) {
+    _txStartAt = value;
+  }
+
+  int _txTotalMins = 60;
+  int get txTotalMins => _txTotalMins;
+  set txTotalMins(int value) {
+    _txTotalMins = value;
+  }
+
+  String _txStatus = 'awaiting';
+  String get txStatus => _txStatus;
+  set txStatus(String value) {
+    _txStatus = value;
+  }
+
+  String _feeBTC = '';
+  String get feeBTC => _feeBTC;
+  set feeBTC(String value) {
+    _feeBTC = value;
+  }
+
+  String _userDecoyPIN = '';
+  String get userDecoyPIN => _userDecoyPIN;
+  set userDecoyPIN(String value) {
+    _userDecoyPIN = value;
+  }
+
+  bool _hasDecoyPin = false;
+  bool get hasDecoyPin => _hasDecoyPin;
+  set hasDecoyPin(bool value) {
+    _hasDecoyPin = value;
+    secureStorage.setBool('ff_hasDecoyPin', value);
+  }
+
+  void deleteHasDecoyPin() {
+    secureStorage.delete(key: 'ff_hasDecoyPin');
   }
 }
 
