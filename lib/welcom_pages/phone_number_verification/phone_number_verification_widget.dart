@@ -322,7 +322,7 @@ class _PhoneNumberVerificationWidgetState
                                                     ),
                                                   );
                                                 } else {
-                                                  context.goNamed(
+                                                  context.pushNamed(
                                                       CreatePinWidget
                                                           .routeName);
 
