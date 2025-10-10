@@ -1,4 +1,4 @@
-import '/backend/supabase/supabase.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'p_i_n_page_widget.dart' show PINPageWidget;
@@ -36,14 +36,8 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Custom Action - hashPin] action in Button widget.
-  String? hashedLoginPIN;
-  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
-  List<DecoyWalletRow>? matchingPINEntry;
-  // Stores action output result for [Custom Action - hashPin] action in Button widget.
-  String? hashedDuressPIN;
-  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
-  List<DecoyWalletRow>? matchingPINEntryDuress;
+  // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
+  ApiCallResponse? verifyResp;
 
   @override
   void initState(BuildContext context) {}

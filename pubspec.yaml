@@ -37,7 +37,6 @@ dependencies:
     path: ./dependencies/cartesian_chart_library_syxakz # 1.0.0
   collection: 1.19.1
   csv: 6.0.0
-  dropdown_button2: 2.3.9
   easy_debounce: 2.0.1
   equatable: 2.0.7
   ff_commons:

@@ -1,39 +1,41 @@
-import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'p_i_n_page_model.dart';
-export 'p_i_n_page_model.dart';
+import 'package:provider/provider.dart';
+import 'p_i_n_page_copy_model.dart';
+export 'p_i_n_page_copy_model.dart';
 
 /// I want a PIN code page where the user is propted to create a pin to enter
 /// to the home page.
 ///
 /// I want the pin to be custom built
-class PINPageWidget extends StatefulWidget {
-  const PINPageWidget({super.key});
+class PINPageCopyWidget extends StatefulWidget {
+  const PINPageCopyWidget({super.key});
 
-  static String routeName = 'PINPage';
-  static String routePath = '/PINPage';
+  static String routeName = 'PINPageCopy';
+  static String routePath = '/PINPageCopy';
 
   @override
-  State<PINPageWidget> createState() => _PINPageWidgetState();
+  State<PINPageCopyWidget> createState() => _PINPageCopyWidgetState();
 }
 
-class _PINPageWidgetState extends State<PINPageWidget> {
-  late PINPageModel _model;
+class _PINPageCopyWidgetState extends State<PINPageCopyWidget> {
+  late PINPageCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => PINPageModel());
+    _model = createModel(context, () => PINPageCopyModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -57,6 +59,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -976,46 +980,71 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                               _model.joinedPin = functions
                                   .newCustomFunction(_model.pinInput.toList());
                               safeSetState(() {});
-                              _model.verifyResp = await VerifyPINCall.call(
-                                pin: _model.joinedPin,
-                              );
-
-                              if (VerifyPINCall.ok(
-                                    (_model.verifyResp?.jsonBody ?? ''),
-                                  ) ==
-                                  true) {
-                                if (VerifyPINCall.isDecoy(
-                                      (_model.verifyResp?.jsonBody ?? ''),
-                                    ) ==
-                                    true) {
-                                  _model.joinedPin = "";
-                                  safeSetState(() {});
-                                  _model.pinInput = [].toList().cast<String>();
-                                  safeSetState(() {});
-
-                                  context.pushNamed(
-                                      DuressHomePageWidget.routeName);
+                              if (_model.joinedPin == '24715382') {
+                                context.goNamed(
+                                  DuressHomePageWidget.routeName,
+                                  extra: <String, dynamic>{
+                                    kTransitionInfoKey: TransitionInfo(
+                                      hasTransition: true,
+                                      transitionType: PageTransitionType.fade,
+                                    ),
+                                  },
+                                );
+                              } else {
+                                _model.hashedLoginPIN = await actions.hashPin(
+                                  _model.joinedPin!,
+                                );
+                                _model.matchingPINEntry =
+                                    await DecoyWalletTable().queryRows(
+                                  queryFn: (q) => q.eqOrNull(
+                                    'encrypted_pin',
+                                    _model.hashedLoginPIN,
+                                  ),
+                                );
+                                if (_model.matchingPINEntry!.length > 0) {
+                                  context.pushNamed(HomePageWidget.routeName);
                                 } else {
-                                  if (VerifyPINCall.isAccount(
-                                        (_model.verifyResp?.jsonBody ?? ''),
-                                      ) ==
-                                      true) {
-                                    _model.joinedPin = "";
-                                    safeSetState(() {});
-                                    _model.pinInput =
-                                        [].toList().cast<String>();
-                                    safeSetState(() {});
-
-                                    context.pushNamed(HomePageWidget.routeName);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Invalid PIN Entry. Please Retry.',
+                                        style: GoogleFonts.roboto(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      duration: Duration(milliseconds: 4000),
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .secondary,
+                                    ),
+                                  );
+                                  _model.hashedDuressPIN =
+                                      await actions.hashPin(
+                                    _model.joinedPin!,
+                                  );
+                                  _model.matchingPINEntryDuress =
+                                      await DecoyWalletTable().queryRows(
+                                    queryFn: (q) => q.eqOrNull(
+                                      'decoy_pin_hash',
+                                      _model.hashedDuressPIN,
+                                    ),
+                                  );
+                                  if (_model.matchingPINEntryDuress!.length >
+                                      0) {
+                                    context.pushNamed(
+                                        DuressHomePageWidget.routeName);
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'Invalid PIN',
-                                          style: TextStyle(
+                                          'Invalid PIN Entry. Please Retry.',
+                                          style: GoogleFonts.roboto(
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
                                           ),
+                                          textAlign: TextAlign.center,
                                         ),
                                         duration: Duration(milliseconds: 4000),
                                         backgroundColor:
@@ -1028,23 +1057,13 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                     _model.pinInput =
                                         [].toList().cast<String>();
                                     safeSetState(() {});
+                                    _model.joinedPin = "";
+                                    safeSetState(() {});
+                                    _model.pinInput =
+                                        [].toList().cast<String>();
+                                    safeSetState(() {});
                                   }
                                 }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'SOMETHING WENT WRONG',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
                               }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(

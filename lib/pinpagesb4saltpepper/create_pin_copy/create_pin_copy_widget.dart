@@ -1,39 +1,42 @@
-import '/backend/api_requests/api_calls.dart';
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'create_pin_model.dart';
-export 'create_pin_model.dart';
+import 'package:provider/provider.dart';
+import 'create_pin_copy_model.dart';
+export 'create_pin_copy_model.dart';
 
 /// I want a PIN code page where the user is propted to create a pin to enter
 /// to the home page.
 ///
 /// I want the pin to be custom built
-class CreatePinWidget extends StatefulWidget {
-  const CreatePinWidget({super.key});
+class CreatePinCopyWidget extends StatefulWidget {
+  const CreatePinCopyWidget({super.key});
 
-  static String routeName = 'CreatePin';
-  static String routePath = '/createPin';
+  static String routeName = 'CreatePinCopy';
+  static String routePath = '/createPinCopy';
 
   @override
-  State<CreatePinWidget> createState() => _CreatePinWidgetState();
+  State<CreatePinCopyWidget> createState() => _CreatePinCopyWidgetState();
 }
 
-class _CreatePinWidgetState extends State<CreatePinWidget> {
-  late CreatePinModel _model;
+class _CreatePinCopyWidgetState extends State<CreatePinCopyWidget> {
+  late CreatePinCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CreatePinModel());
+    _model = createModel(context, () => CreatePinCopyModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -57,6 +60,8 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -2616,84 +2621,69 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                             4) {
                                           if (_model.joinedPin ==
                                               _model.joinedPinConfirm) {
-                                            _model.setPinResp =
-                                                await SetPINCall.call(
-                                              type: 'account',
-                                              pin: _model.joinedPin,
+                                            FFAppState().userPIN =
+                                                _model.joinedPin!;
+                                            safeSetState(() {});
+                                            _model.hashedPIN =
+                                                await actions.hashPin(
+                                              FFAppState().userPIN,
                                             );
+                                            _model.pinWrite =
+                                                await DecoyWalletTable().update(
+                                              data: {
+                                                'encrypted_pin':
+                                                    _model.hashedPIN,
+                                              },
+                                              matchingRows: (rows) =>
+                                                  rows.eqOrNull(
+                                                'user_id',
+                                                currentUserUid,
+                                              ),
+                                              returnRows: true,
+                                            );
+                                            if (_model.pinWrite != null &&
+                                                (_model.pinWrite)!.isNotEmpty) {
+                                              context.pushNamed(
+                                                HomePageWidget.routeName,
+                                                extra: <String, dynamic>{
+                                                  kTransitionInfoKey:
+                                                      TransitionInfo(
+                                                    hasTransition: true,
+                                                    transitionType:
+                                                        PageTransitionType.fade,
+                                                  ),
+                                                },
+                                              );
+                                            } else {
+                                              await DecoyWalletTable().insert({
+                                                'user_id': currentUserUid,
+                                                'encrypted_pin':
+                                                    _model.hashedPIN,
+                                              });
 
-                                            if (SetPINCall.ok(
-                                                  (_model.setPinResp
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                ) ==
-                                                true) {
-                                              _model.verifyResp =
-                                                  await VerifyPINCall.call(
-                                                pin: _model.joinedPin,
+                                              context.pushNamed(
+                                                HomePageWidget.routeName,
+                                                extra: <String, dynamic>{
+                                                  kTransitionInfoKey:
+                                                      TransitionInfo(
+                                                    hasTransition: true,
+                                                    transitionType:
+                                                        PageTransitionType.fade,
+                                                  ),
+                                                },
                                               );
 
-                                              if (VerifyPINCall.isAccount(
-                                                    (_model.verifyResp
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                  ) ==
-                                                  true) {
-                                                context.pushNamed(
-                                                  HomePageWidget.routeName,
-                                                  extra: <String, dynamic>{
-                                                    kTransitionInfoKey:
-                                                        TransitionInfo(
-                                                      hasTransition: true,
-                                                      transitionType:
-                                                          PageTransitionType
-                                                              .fade,
-                                                    ),
-                                                  },
-                                                );
-                                              } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'FAILED',
-                                                      style: TextStyle(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                  ),
-                                                );
-                                              }
-
-                                              _model.confirmedPinInput =
-                                                  [].toList().cast<String>();
-                                              _model.pinInput =
-                                                  [].toList().cast<String>();
-                                              safeSetState(() {});
-                                              _model.currentStep = 1;
-                                              safeSetState(() {});
-                                            } else {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'PIN NOT SAVED',
+                                                    'FAILED',
                                                     style: TextStyle(
                                                       color:
                                                           FlutterFlowTheme.of(
                                                                   context)
                                                               .primaryText,
                                                     ),
-                                                    textAlign: TextAlign.center,
                                                   ),
                                                   duration: Duration(
                                                       milliseconds: 4000),

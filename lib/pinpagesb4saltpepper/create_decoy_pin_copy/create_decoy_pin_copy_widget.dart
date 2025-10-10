@@ -1,39 +1,42 @@
-import '/backend/api_requests/api_calls.dart';
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'create_decoy_pin_model.dart';
-export 'create_decoy_pin_model.dart';
+import 'create_decoy_pin_copy_model.dart';
+export 'create_decoy_pin_copy_model.dart';
 
 /// I want a PIN code page where the user is propted to create a pin to enter
 /// to the home page.
 ///
 /// I want the pin to be custom built
-class CreateDecoyPinWidget extends StatefulWidget {
-  const CreateDecoyPinWidget({super.key});
+class CreateDecoyPinCopyWidget extends StatefulWidget {
+  const CreateDecoyPinCopyWidget({super.key});
 
-  static String routeName = 'CreateDecoyPin';
-  static String routePath = '/createDecoyPin';
+  static String routeName = 'CreateDecoyPinCopy';
+  static String routePath = '/createDecoyPinCopy';
 
   @override
-  State<CreateDecoyPinWidget> createState() => _CreateDecoyPinWidgetState();
+  State<CreateDecoyPinCopyWidget> createState() =>
+      _CreateDecoyPinCopyWidgetState();
 }
 
-class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
-  late CreateDecoyPinModel _model;
+class _CreateDecoyPinCopyWidgetState extends State<CreateDecoyPinCopyWidget> {
+  late CreateDecoyPinCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CreateDecoyPinModel());
+    _model = createModel(context, () => CreateDecoyPinCopyModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -2917,79 +2920,79 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                       if (_model.currentStep == 2)
                                         FFButtonWidget(
                                           onPressed: () async {
-                                            _model.joinedPin =
+                                            _model.joinedDecoyPin =
                                                 functions.newCustomFunction(
                                                     _model.pinDecoyInput
                                                         .toList());
                                             safeSetState(() {});
-                                            _model.joinedPinConfirm = functions
-                                                .newCustomFunction(_model
-                                                    .confirmedDecoyPinInput
-                                                    .toList());
+                                            _model.joinedDecoyConfirm =
+                                                functions.newCustomFunction(
+                                                    _model
+                                                        .confirmedDecoyPinInput
+                                                        .toList());
                                             safeSetState(() {});
                                             if (_model.confirmedDecoyPinInput
                                                     .length >=
                                                 4) {
                                               if (_model.joinedDecoyPin ==
                                                   _model.joinedDecoyConfirm) {
-                                                _model.setPinDecoyResp =
-                                                    await SetPINCall.call(
-                                                  type: 'decoy',
-                                                  pin: _model.joinedDecoyPin,
+                                                _model.caHashedDecoy =
+                                                    await actions.hashPin(
+                                                  _model.joinedDecoyPin!,
                                                 );
-
-                                                if (SetPINCall.ok(
-                                                      (_model.setPinDecoyResp
-                                                              ?.jsonBody ??
-                                                          ''),
-                                                    ) ==
-                                                    true) {
-                                                  _model.verifyDecoyResp =
-                                                      await VerifyPINCall.call(
-                                                    pin: _model.joinedDecoyPin,
-                                                  );
-
-                                                  if (VerifyPINCall.isDecoy(
-                                                        (_model.verifyDecoyResp
-                                                                ?.jsonBody ??
-                                                            ''),
-                                                      ) ==
-                                                      true) {
-                                                    context.pushNamed(
-                                                      HomePageWidget.routeName,
-                                                      extra: <String, dynamic>{
-                                                        kTransitionInfoKey:
-                                                            TransitionInfo(
-                                                          hasTransition: true,
-                                                          transitionType:
-                                                              PageTransitionType
-                                                                  .fade,
+                                                _model.hashedDecoyPIN =
+                                                    _model.caHashedDecoy;
+                                                safeSetState(() {});
+                                                FFAppState().userDecoyPIN =
+                                                    _model.caHashedDecoy!;
+                                                safeSetState(() {});
+                                                _model.updateDecoyResult =
+                                                    await DecoyWalletTable()
+                                                        .update(
+                                                  data: {
+                                                    'decoy_pin_hash':
+                                                        _model.hashedDecoyPIN,
+                                                    'decoy_pin_set_at':
+                                                        supaSerialize<DateTime>(
+                                                            getCurrentTimestamp),
+                                                    'decoy_pin_salt': '',
+                                                    'decoy_mode_enabled': true,
+                                                  },
+                                                  matchingRows: (rows) =>
+                                                      rows.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                  returnRows: true,
+                                                );
+                                                if (_model.updateDecoyResult !=
+                                                        null &&
+                                                    (_model.updateDecoyResult)!
+                                                        .isNotEmpty) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'DECOY PIN SAVED',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
                                                         ),
-                                                      },
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'FAILED',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
                                                       ),
-                                                    );
-                                                  }
-
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                  _model.joinedDecoyPin = '';
+                                                  _model.joinedDecoyConfirm =
+                                                      '';
+                                                  _model.hashedDecoyPIN = '';
+                                                  safeSetState(() {});
                                                   _model.confirmedDecoyPinInput =
                                                       []
                                                           .toList()
@@ -2998,21 +3001,23 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                       .toList()
                                                       .cast<String>();
                                                   safeSetState(() {});
-                                                  _model.currentStep = 1;
+                                                  FFAppState().hasDecoyPin =
+                                                      true;
                                                   safeSetState(() {});
+
+                                                  context.pushNamed(
+                                                      HomePageWidget.routeName);
                                                 } else {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
                                                     SnackBar(
                                                       content: Text(
-                                                        'PIN NOT SAVED',
+                                                        'COULD NOT SAVE DECOY PIN',
                                                         style: TextStyle(
                                                           color: FlutterFlowTheme
                                                                   .of(context)
                                                               .primaryText,
                                                         ),
-                                                        textAlign:
-                                                            TextAlign.center,
                                                       ),
                                                       duration: Duration(
                                                           milliseconds: 4000),

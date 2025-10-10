@@ -150,6 +150,102 @@ class SetPhoneAuthCall {
   }
 }
 
+class SetPINCall {
+  static Future<ApiCallResponse> call({
+    String? type = '',
+    String? pin = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "type": "${escapeStringForJson(type)}",
+  "pin": "${escapeStringForJson(pin)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'setPIN',
+      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/setPin',
+      callType: ApiCallType.POST,
+      headers: {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IlZjcDJ4ekpSN2tKT1RZYlAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Z4bXJ0aHl1bXpyZmd0dXZqcW1yLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI4MjQ0MWQwZi0wZWJmLTRjYWItOTEzZS1iYzVkMTU5NjE0NjUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzU5OTY4NzYyLCJpYXQiOjE3NTk5NjUxNjIsImVtYWlsIjoidGVzdEBkZW1vLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzU5OTY1MTYyfV0sInNlc3Npb25faWQiOiI0NjBmNTVkNi1jNWM1LTRkZDMtOTI5My1iMjdiMDllNGFkOGMiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.nKe-HWcxMmXXqEJEs2F5M0QEK8i1112i-wcEVnjLCko',
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static bool? ok(dynamic response) => castToType<bool>(getJsonField(
+        response,
+        r'''$.ok''',
+      ));
+  static String? error(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.error''',
+      ));
+  static dynamic isAccount(dynamic response) => getJsonField(
+        response,
+        r'''$.isAccount''',
+      );
+  static dynamic isDecoy(dynamic response) => getJsonField(
+        response,
+        r'''$.isDecoy''',
+      );
+}
+
+class VerifyPINCall {
+  static Future<ApiCallResponse> call({
+    String? pin = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "pin": "${escapeStringForJson(pin)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'verifyPIN',
+      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/verifyPin',
+      callType: ApiCallType.POST,
+      headers: {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IlZjcDJ4ekpSN2tKT1RZYlAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Z4bXJ0aHl1bXpyZmd0dXZqcW1yLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI4MjQ0MWQwZi0wZWJmLTRjYWItOTEzZS1iYzVkMTU5NjE0NjUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzU5OTY4NzYyLCJpYXQiOjE3NTk5NjUxNjIsImVtYWlsIjoidGVzdEBkZW1vLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzU5OTY1MTYyfV0sInNlc3Npb25faWQiOiI0NjBmNTVkNi1jNWM1LTRkZDMtOTI5My1iMjdiMDllNGFkOGMiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.nKe-HWcxMmXXqEJEs2F5M0QEK8i1112i-wcEVnjLCko',
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static bool? ok(dynamic response) => castToType<bool>(getJsonField(
+        response,
+        r'''$.ok''',
+      ));
+  static String? error(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.error''',
+      ));
+  static bool? isAccount(dynamic response) => castToType<bool>(getJsonField(
+        response,
+        r'''$.isAccount''',
+      ));
+  static bool? isDecoy(dynamic response) => castToType<bool>(getJsonField(
+        response,
+        r'''$.isDecoy''',
+      ));
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

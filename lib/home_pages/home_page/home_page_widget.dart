@@ -69,13 +69,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           color: Colors.transparent,
                           elevation: 8.0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(5.0),
                           ),
                           child: Container(
                             width: double.infinity,
                             height: 150.0,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
                             child: Align(
                               alignment: AlignmentDirectional(0.0, 0.0),

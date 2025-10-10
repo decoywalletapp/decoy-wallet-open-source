@@ -1,10 +1,10 @@
-import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'create_pin_widget.dart' show CreatePinWidget;
+import 'p_i_n_page_copy_widget.dart' show PINPageCopyWidget;
 import 'package:flutter/material.dart';
 
-class CreatePinModel extends FlutterFlowModel<CreatePinWidget> {
+class PINPageCopyModel extends FlutterFlowModel<PINPageCopyWidget> {
   ///  Local state fields for this page.
   /// Accepts User PIN Inputs
   List<String> pinInput = [];
@@ -36,10 +36,14 @@ class CreatePinModel extends FlutterFlowModel<CreatePinWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Backend Call - API (setPIN)] action in Button widget.
-  ApiCallResponse? setPinResp;
-  // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
-  ApiCallResponse? verifyResp;
+  // Stores action output result for [Custom Action - hashPin] action in Button widget.
+  String? hashedLoginPIN;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? matchingPINEntry;
+  // Stores action output result for [Custom Action - hashPin] action in Button widget.
+  String? hashedDuressPIN;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? matchingPINEntryDuress;
 
   @override
   void initState(BuildContext context) {}

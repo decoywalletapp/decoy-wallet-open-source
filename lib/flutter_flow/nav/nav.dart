@@ -233,11 +233,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => UserNameEntryWidget(),
       ),
       FFRoute(
-        name: TimerSeriesChartWidget.routeName,
-        path: TimerSeriesChartWidget.routePath,
-        builder: (context, params) => TimerSeriesChartWidget(),
-      ),
-      FFRoute(
         name: ConfirmEmailPageWidget.routeName,
         path: ConfirmEmailPageWidget.routePath,
         builder: (context, params) => ConfirmEmailPageWidget(),
@@ -280,6 +275,21 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: CreateDecoyPinWidget.routeName,
         path: CreateDecoyPinWidget.routePath,
         builder: (context, params) => CreateDecoyPinWidget(),
+      ),
+      FFRoute(
+        name: CreatePinCopyWidget.routeName,
+        path: CreatePinCopyWidget.routePath,
+        builder: (context, params) => CreatePinCopyWidget(),
+      ),
+      FFRoute(
+        name: CreateDecoyPinCopyWidget.routeName,
+        path: CreateDecoyPinCopyWidget.routePath,
+        builder: (context, params) => CreateDecoyPinCopyWidget(),
+      ),
+      FFRoute(
+        name: PINPageCopyWidget.routeName,
+        path: PINPageCopyWidget.routePath,
+        builder: (context, params) => PINPageCopyWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

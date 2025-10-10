@@ -41,8 +41,6 @@ export '/welcom_pages/phone_number_input/phone_number_input_widget.dart'
     show PhoneNumberInputWidget;
 export '/welcom_pages/user_name_entry/user_name_entry_widget.dart'
     show UserNameEntryWidget;
-export '/timer_series_chart/timer_series_chart_widget.dart'
-    show TimerSeriesChartWidget;
 export '/welcom_pages/confirm_email_page/confirm_email_page_widget.dart'
     show ConfirmEmailPageWidget;
 export '/welcom_pages/create_account_b4_change/create_account_b4_change_widget.dart'
@@ -55,3 +53,9 @@ export '/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart'
     show DuressScanQRWidget;
 export '/pin_pages/create_decoy_pin/create_decoy_pin_widget.dart'
     show CreateDecoyPinWidget;
+export '/pinpagesb4saltpepper/create_pin_copy/create_pin_copy_widget.dart'
+    show CreatePinCopyWidget;
+export '/pinpagesb4saltpepper/create_decoy_pin_copy/create_decoy_pin_copy_widget.dart'
+    show CreateDecoyPinCopyWidget;
+export '/pinpagesb4saltpepper/p_i_n_page_copy/p_i_n_page_copy_widget.dart'
+    show PINPageCopyWidget;
