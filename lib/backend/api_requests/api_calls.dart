@@ -165,8 +165,7 @@ class SetPINCall {
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/setPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IlZjcDJ4ekpSN2tKT1RZYlAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Z4bXJ0aHl1bXpyZmd0dXZqcW1yLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI4MjQ0MWQwZi0wZWJmLTRjYWItOTEzZS1iYzVkMTU5NjE0NjUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzU5OTY4NzYyLCJpYXQiOjE3NTk5NjUxNjIsImVtYWlsIjoidGVzdEBkZW1vLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzU5OTY1MTYyfV0sInNlc3Npb25faWQiOiI0NjBmNTVkNi1jNWM1LTRkZDMtOTI5My1iMjdiMDllNGFkOGMiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.nKe-HWcxMmXXqEJEs2F5M0QEK8i1112i-wcEVnjLCko',
+        'Authorization': 'Bearer \${authUserJwtToken}',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -212,8 +211,7 @@ class VerifyPINCall {
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/verifyPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IlZjcDJ4ekpSN2tKT1RZYlAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Z4bXJ0aHl1bXpyZmd0dXZqcW1yLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI4MjQ0MWQwZi0wZWJmLTRjYWItOTEzZS1iYzVkMTU5NjE0NjUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzU5OTY4NzYyLCJpYXQiOjE3NTk5NjUxNjIsImVtYWlsIjoidGVzdEBkZW1vLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzU5OTY1MTYyfV0sInNlc3Npb25faWQiOiI0NjBmNTVkNi1jNWM1LTRkZDMtOTI5My1iMjdiMDllNGFkOGMiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.nKe-HWcxMmXXqEJEs2F5M0QEK8i1112i-wcEVnjLCko',
+        'Authorization': 'Bearer \${authUserJwtToken}',
         'Content-Type': 'application/json',
       },
       params: {},
