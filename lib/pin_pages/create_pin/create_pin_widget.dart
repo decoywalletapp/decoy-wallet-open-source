@@ -2621,6 +2621,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                 await SetPINCall.call(
                                               type: 'account',
                                               pin: _model.joinedPin,
+                                              jwt: currentJwtToken,
                                             );
 
                                             ScaffoldMessenger.of(context)
@@ -2650,6 +2651,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                               _model.verifyResp =
                                                   await VerifyPINCall.call(
                                                 pin: _model.joinedPin,
+                                                jwt: currentJwtToken,
                                               );
 
                                               if (VerifyPINCall.isAccount(
@@ -2886,6 +2888,33 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                               },
                             ),
                           ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              '${currentJwtToken}${loggedIn.toString()}',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ],

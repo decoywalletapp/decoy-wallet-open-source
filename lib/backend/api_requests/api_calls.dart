@@ -154,6 +154,7 @@ class SetPINCall {
   static Future<ApiCallResponse> call({
     String? type = '',
     String? pin = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -162,10 +163,10 @@ class SetPINCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'setPIN',
-      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/setPin',
+      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/setPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer \${authUserJwtToken}',
+        'Authorization': 'Bearer {{jwt}}',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -201,6 +202,7 @@ class SetPINCall {
 class VerifyPINCall {
   static Future<ApiCallResponse> call({
     String? pin = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -208,10 +210,10 @@ class VerifyPINCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'verifyPIN',
-      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/verifyPin',
+      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/verifyPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer \${authUserJwtToken}',
+        'Authorization': 'Bearer {{jwt}}',
         'Content-Type': 'application/json',
       },
       params: {},
