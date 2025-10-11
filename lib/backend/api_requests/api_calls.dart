@@ -159,14 +159,14 @@ class SetPINCall {
     final ffApiRequestBody = '''
 {
   "type": "${escapeStringForJson(type)}",
-  "pin": "${escapeStringForJson(pin)}"
+  "pin": "${escapeStringForJson(pin)}",
+  "jwt": "${escapeStringForJson(jwt)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'setPIN',
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/setPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer \$jwt',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -206,14 +206,14 @@ class VerifyPINCall {
   }) async {
     final ffApiRequestBody = '''
 {
-  "pin": "${escapeStringForJson(pin)}"
+  "pin": "${escapeStringForJson(pin)}",
+  "jwt": "${escapeStringForJson(jwt)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'verifyPIN',
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/verifyPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer \$jwt',
         'Content-Type': 'application/json',
       },
       params: {},
