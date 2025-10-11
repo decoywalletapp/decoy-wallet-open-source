@@ -277,15 +277,11 @@ class _PhoneNumberVerificationWidgetState
                                                   'phone_number':
                                                       widget.cleanPhone,
                                                 },
-                                                matchingRows: (rows) => rows
-                                                    .eqOrNull(
-                                                      'user_id',
-                                                      currentUserUid,
-                                                    )
-                                                    .eqOrNull(
-                                                      'phone_number',
-                                                      widget.cleanPhone,
-                                                    ),
+                                                matchingRows: (rows) =>
+                                                    rows.eqOrNull(
+                                                  'user_id',
+                                                  currentUserUid,
+                                                ),
                                                 returnRows: true,
                                               );
                                               if (_model.verifyUpdate != null &&
