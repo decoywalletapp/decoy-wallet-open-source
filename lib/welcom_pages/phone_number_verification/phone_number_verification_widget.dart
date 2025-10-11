@@ -342,6 +342,29 @@ class _PhoneNumberVerificationWidgetState
                                                       widget.cleanPhone,
                                                 );
 
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      (_model.setPhoneRes
+                                                                  ?.statusCode ??
+                                                              200)
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
                                                 if ((_model.setPhoneRes
                                                             ?.statusCode ??
                                                         200) ==
@@ -401,7 +424,7 @@ class _PhoneNumberVerificationWidgetState
                                                       ?.text = '';
                                                 });
 
-                                                context.goNamed(
+                                                context.pushNamed(
                                                     CreatePinWidget.routeName);
                                               }
                                             } else {
@@ -711,6 +734,38 @@ class _PhoneNumberVerificationWidgetState
                                 children: [
                                   Text(
                                     (_model.checkCodeRes?.jsonBody ?? '')
+                                        .toString(),
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(
+                                    (_model.setPhoneRes?.statusCode ?? 200)
                                         .toString(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
