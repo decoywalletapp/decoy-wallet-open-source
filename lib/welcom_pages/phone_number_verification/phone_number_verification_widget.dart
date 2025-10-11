@@ -288,30 +288,99 @@ class _PhoneNumberVerificationWidgetState
                                                     ),
                                                 returnRows: true,
                                               );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'true branch',
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
+                                              if (_model.verifyUpdate != null &&
+                                                  (_model.verifyUpdate)!
+                                                      .isNotEmpty) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'true branch',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
                                                     ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
                                                   ),
-                                                  duration: Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                ),
-                                              );
+                                                );
 
-                                              context.pushNamed(
-                                                  CreatePinWidget.routeName);
-                                                                                        } else {
+                                                context.pushNamed(
+                                                    CreatePinWidget.routeName);
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'false branch',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
+                                                _model.verifyInsert =
+                                                    await DecoyWalletTable()
+                                                        .insert({
+                                                  'phone_number':
+                                                      widget.cleanPhone,
+                                                  'is_phone_verified': true,
+                                                  'verified_at':
+                                                      supaSerialize<DateTime>(
+                                                          getCurrentTimestamp),
+                                                  'user_id': currentUserUid,
+                                                });
+                                                _model.code = '\"\"';
+                                                _model.otpCode = '\"\"';
+                                                _model.phoneCode = '\"\"';
+                                                safeSetState(() {});
+                                                safeSetState(() {
+                                                  _model.phoneCodeTextController
+                                                      ?.text = '';
+                                                });
+                                                _model.invalidcodeState = 1;
+                                                safeSetState(() {});
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '\'phone: \' + cleanPhone +\'\\ncode: \' + otpCode +\'\\nresp: \' + getJsonField(checkCodeRes.jsonBody, r\'\$\')',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
+
+                                                context.pushNamed(
+                                                    CreatePinWidget.routeName);
+                                              }
+                                            } else {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
