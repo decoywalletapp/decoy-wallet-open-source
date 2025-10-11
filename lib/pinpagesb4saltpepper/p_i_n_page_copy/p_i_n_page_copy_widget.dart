@@ -21,7 +21,7 @@ class PINPageCopyWidget extends StatefulWidget {
   const PINPageCopyWidget({super.key});
 
   static String routeName = 'PINPageCopy';
-  static String routePath = '/PINPageCopy';
+  static String routePath = '/three';
 
   @override
   State<PINPageCopyWidget> createState() => _PINPageCopyWidgetState();

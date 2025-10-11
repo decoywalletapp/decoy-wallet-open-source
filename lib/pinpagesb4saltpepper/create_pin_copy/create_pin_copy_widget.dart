@@ -22,7 +22,7 @@ class CreatePinCopyWidget extends StatefulWidget {
   const CreatePinCopyWidget({super.key});
 
   static String routeName = 'CreatePinCopy';
-  static String routePath = '/createPinCopy';
+  static String routePath = '/two';
 
   @override
   State<CreatePinCopyWidget> createState() => _CreatePinCopyWidgetState();

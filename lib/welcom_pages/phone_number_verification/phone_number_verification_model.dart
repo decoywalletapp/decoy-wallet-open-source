@@ -36,8 +36,8 @@ class PhoneNumberVerificationModel
   ApiCallResponse? checkCodeRes;
   // Stores action output result for [Backend Call - Update Row(s)] action in PhoneCode widget.
   List<DecoyWalletRow>? verifyUpdate;
-  // Stores action output result for [Backend Call - API (setPhoneAuth)] action in PhoneCode widget.
-  ApiCallResponse? setPhoneRes;
+  // Stores action output result for [Backend Call - Insert Row] action in PhoneCode widget.
+  DecoyWalletRow? verifyInsert;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Icon widget.
   ApiCallResponse? sendResCopy;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Text widget.

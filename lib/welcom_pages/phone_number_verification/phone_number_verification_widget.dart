@@ -252,50 +252,6 @@ class _PhoneNumberVerificationWidgetState
                                               code: _model.otpCode,
                                             );
 
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  CheckVerificationCodeCall
-                                                      .status(
-                                                    (_model.checkCodeRes
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                  )!,
-                                                  style: TextStyle(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
-                                                  ),
-                                                ),
-                                                duration: Duration(
-                                                    milliseconds: 4000),
-                                                backgroundColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondary,
-                                              ),
-                                            );
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  (_model.checkCodeRes
-                                                              ?.jsonBody ??
-                                                          '')
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
-                                                  ),
-                                                ),
-                                                duration: Duration(
-                                                    milliseconds: 4000),
-                                                backgroundColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondary,
-                                              ),
-                                            );
                                             if ((CheckVerificationCodeCall
                                                         .success(
                                                       (_model.checkCodeRes
@@ -335,78 +291,12 @@ class _PhoneNumberVerificationWidgetState
                                               if (_model.verifyUpdate != null &&
                                                   (_model.verifyUpdate)!
                                                       .isNotEmpty) {
-                                                _model.setPhoneRes =
-                                                    await SetPhoneAuthCall.call(
-                                                  jwt: currentJwtToken,
-                                                  cleanPhone:
-                                                      widget.cleanPhone,
-                                                );
-
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      (_model.setPhoneRes
-                                                                  ?.statusCode ??
-                                                              200)
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                  ),
-                                                );
-                                                if ((_model.setPhoneRes
-                                                            ?.statusCode ??
-                                                        200) ==
-                                                    409) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                        'Phone is already linked to another account.',
-                                                        style: TextStyle(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryText,
-                                                        ),
-                                                      ),
-                                                      duration: Duration(
-                                                          milliseconds: 4000),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                    ),
-                                                  );
-                                                } else {
-                                                  context.pushNamed(
-                                                      CreatePinWidget
-                                                          .routeName);
-
-                                                  _model.invalidcodeState = 0;
-                                                  _model.code = '\"\"';
-                                                  _model.otpCode = '\"\"';
-                                                  _model.phoneCode = '\"\"';
-                                                  safeSetState(() {});
-                                                  safeSetState(() {
-                                                    _model
-                                                        .phoneCodeTextController
-                                                        ?.text = '';
-                                                  });
-                                                }
+                                                context.pushNamed(
+                                                    CreatePinWidget.routeName);
                                               } else {
-                                                await DecoyWalletTable()
-                                                    .insert({
+                                                _model.verifyInsert =
+                                                    await DecoyWalletTable()
+                                                        .insert({
                                                   'phone_number':
                                                       widget.cleanPhone,
                                                   'is_phone_verified': true,
@@ -423,26 +313,63 @@ class _PhoneNumberVerificationWidgetState
                                                   _model.phoneCodeTextController
                                                       ?.text = '';
                                                 });
+                                                _model.invalidcodeState = 1;
+                                                safeSetState(() {});
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '\'phone: \' + cleanPhone +\'\\ncode: \' + otpCode +\'\\nresp: \' + getJsonField(checkCodeRes.jsonBody, r\'\$\')',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
 
                                                 context.pushNamed(
                                                     CreatePinWidget.routeName);
                                               }
                                             } else {
-                                              _model.code = '\"\"';
-                                              _model.otpCode = '\"\"';
-                                              _model.phoneCode = '\"\"';
-                                              safeSetState(() {});
-                                              _model.invalidcodeState = 1;
-                                              safeSetState(() {});
-                                              safeSetState(() {
-                                                _model.phoneCodeTextController
-                                                    ?.text = '';
-                                              });
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    '\'phone: \' + cleanPhone +\'\\ncode: \' + otpCode +\'\\nresp: \' + getJsonField(checkCodeRes.jsonBody, r\'\$\')',
+                                                    'INVALID CODE',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                ),
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    CheckVerificationCodeCall
+                                                        .status(
+                                                      (_model.checkCodeRes
+                                                              ?.jsonBody ??
+                                                          ''),
+                                                    )!,
                                                     style: TextStyle(
                                                       color:
                                                           FlutterFlowTheme.of(
@@ -734,38 +661,6 @@ class _PhoneNumberVerificationWidgetState
                                 children: [
                                   Text(
                                     (_model.checkCodeRes?.jsonBody ?? '')
-                                        .toString(),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.inter(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    (_model.setPhoneRes?.statusCode ?? 200)
                                         .toString(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium

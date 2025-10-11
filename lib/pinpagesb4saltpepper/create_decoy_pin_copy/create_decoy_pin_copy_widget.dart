@@ -21,7 +21,7 @@ class CreateDecoyPinCopyWidget extends StatefulWidget {
   const CreateDecoyPinCopyWidget({super.key});
 
   static String routeName = 'CreateDecoyPinCopy';
-  static String routePath = '/createDecoyPinCopy';
+  static String routePath = '/one';
 
   @override
   State<CreateDecoyPinCopyWidget> createState() =>
