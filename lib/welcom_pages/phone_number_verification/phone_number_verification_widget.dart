@@ -252,6 +252,11 @@ class _PhoneNumberVerificationWidgetState
                                               code: _model.otpCode,
                                             );
 
+                                            await Future.delayed(
+                                              Duration(
+                                                milliseconds: 300,
+                                              ),
+                                            );
                                             if ((CheckVerificationCodeCall
                                                         .success(
                                                       (_model.checkCodeRes

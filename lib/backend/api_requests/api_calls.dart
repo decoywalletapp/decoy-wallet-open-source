@@ -166,7 +166,7 @@ class SetPINCall {
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/setPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer \${Supabase Auth JWT}',
+        'Authorization': 'Bearer {{jwt}}',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -213,7 +213,7 @@ class VerifyPINCall {
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/verifyPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer \${Supabase Auth JWT}',
+        'Authorization': 'Bearer {{jwt}}',
         'Content-Type': 'application/json',
       },
       params: {},
