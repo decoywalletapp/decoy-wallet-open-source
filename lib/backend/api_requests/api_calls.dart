@@ -165,7 +165,7 @@ class SetPINCall {
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/setPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer <Id token (JWT token)>',
+        'Authorization': 'Bearer \${authUserJwtToken}',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -211,7 +211,7 @@ class VerifyPINCall {
       apiUrl: 'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/verifyPin',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer <Id token (JWT token)>',
+        'Authorization': 'Bearer \${authUserJwtToken}',
         'Content-Type': 'application/json',
       },
       params: {},
