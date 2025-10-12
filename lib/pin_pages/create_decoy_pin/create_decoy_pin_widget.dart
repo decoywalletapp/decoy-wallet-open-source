@@ -1,3 +1,4 @@
+import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -2932,25 +2933,27 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                 4) {
                                               if (_model.joinedDecoyPin ==
                                                   _model.joinedDecoyConfirm) {
-                                                _model.setPinDecoyResp =
+                                                _model.setPinResp =
                                                     await SetPINCall.call(
                                                   type: 'decoy',
                                                   pin: _model.joinedDecoyPin,
+                                                  jwt: currentJwtToken,
                                                 );
 
                                                 if (SetPINCall.ok(
-                                                      (_model.setPinDecoyResp
+                                                      (_model.setPinResp
                                                               ?.jsonBody ??
                                                           ''),
                                                     ) ==
                                                     true) {
-                                                  _model.verifyDecoyResp =
+                                                  _model.verifyResp =
                                                       await VerifyPINCall.call(
                                                     pin: _model.joinedDecoyPin,
+                                                    jwt: currentJwtToken,
                                                   );
 
                                                   if (VerifyPINCall.isDecoy(
-                                                        (_model.verifyDecoyResp
+                                                        (_model.verifyResp
                                                                 ?.jsonBody ??
                                                             ''),
                                                       ) ==
@@ -3138,7 +3141,6 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     20.0, 40.0, 0.0, 0.0),
                                 child: FlutterFlowIconButton(
-                                  borderColor: Colors.transparent,
                                   borderRadius: 30.0,
                                   borderWidth: 1.0,
                                   buttonSize: 60.0,
