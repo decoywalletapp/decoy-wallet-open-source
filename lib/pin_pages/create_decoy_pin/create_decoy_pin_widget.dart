@@ -2918,15 +2918,16 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                       if (_model.currentStep == 2)
                                         FFButtonWidget(
                                           onPressed: () async {
-                                            _model.joinedPin =
+                                            _model.joinedDecoyPin =
                                                 functions.newCustomFunction(
                                                     _model.pinDecoyInput
                                                         .toList());
                                             safeSetState(() {});
-                                            _model.joinedPinConfirm = functions
-                                                .newCustomFunction(_model
-                                                    .confirmedDecoyPinInput
-                                                    .toList());
+                                            _model.joinedDecoyConfirm =
+                                                functions.newCustomFunction(
+                                                    _model
+                                                        .confirmedDecoyPinInput
+                                                        .toList());
                                             safeSetState(() {});
                                             if (_model.confirmedDecoyPinInput
                                                     .length >=
