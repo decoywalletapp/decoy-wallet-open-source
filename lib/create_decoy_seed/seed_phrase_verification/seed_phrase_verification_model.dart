@@ -63,6 +63,8 @@ class SeedPhraseVerificationModel
   void updateSelectedIndicesAtIndex(int index, Function(int) updateFn) =>
       selectedIndices[index] = updateFn(selectedIndices[index]);
 
+  int attemptCount = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Custom Action - splitMnemonicAction] action in SeedPhraseVerification widget.
@@ -73,14 +75,28 @@ class SeedPhraseVerificationModel
   dynamic stepOut;
   // Stores action output result for [Custom Action - buildQuizStepAction] action in Button widget.
   dynamic quizStep;
+  // Stores action output result for [Custom Action - verifyAllSelectionsAction] action in Button widget.
+  bool? verifyResult;
+  // Stores action output result for [Custom Action - makeQuizIndicesAction] action in Button widget.
+  List<int>? indicesOutRetry;
+  // Stores action output result for [Custom Action - buildQuizStepAction] action in Button widget.
+  dynamic quizStepRetry;
   // Stores action output result for [Custom Action - buildQuizStepAction] action in Button widget.
   dynamic quizStepMid;
+  // Stores action output result for [Custom Action - verifyAllSelectionsAction] action in Button widget.
+  bool? verifyResultMid;
+  // Stores action output result for [Custom Action - makeQuizIndicesAction] action in Button widget.
+  List<int>? indicesOutRetryMid;
+  // Stores action output result for [Custom Action - buildQuizStepAction] action in Button widget.
+  dynamic quizStepRetryMid;
   // Stores action output result for [Custom Action - buildQuizStepAction] action in Button widget.
   dynamic quizStepBot;
   // Stores action output result for [Custom Action - verifyAllSelectionsAction] action in Button widget.
-  bool? verifyOut;
+  bool? verifyResultBot;
+  // Stores action output result for [Custom Action - makeQuizIndicesAction] action in Button widget.
+  List<int>? indicesOutRetryBot;
   // Stores action output result for [Custom Action - buildQuizStepAction] action in Button widget.
-  dynamic quizStepReset;
+  dynamic quizStepRetryBot;
 
   @override
   void initState(BuildContext context) {}

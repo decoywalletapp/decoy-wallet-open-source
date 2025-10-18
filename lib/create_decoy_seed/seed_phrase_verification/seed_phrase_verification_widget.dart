@@ -57,9 +57,11 @@ class _SeedPhraseVerificationWidgetState
         widget.mnemonic!,
       );
       _model.words = _model.splitOut!.toList().cast<String>();
+      _model.quizIndices = [];
       _model.currentQuestion = 0;
-      _model.selectedIndex = -1;
       _model.chosenWords = [];
+      _model.attemptCount = 0;
+      _model.selectedIndex = -1;
       _model.verifyEnabled = false;
       safeSetState(() {});
       _model.indicesOut = await actions.makeQuizIndicesAction(
@@ -90,7 +92,6 @@ class _SeedPhraseVerificationWidgetState
         _model.stepOut,
         r'''$.displayIndex''',
       );
-      _model.verifyEnabled = false;
       safeSetState(() {});
     });
 
@@ -287,8 +288,7 @@ class _SeedPhraseVerificationWidgetState
                                                 ),
                                           ),
                                           Text(
-                                            functions.plusOneToString(
-                                                _model.displayIndex),
+                                            _model.displayIndex.toString(),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -324,6 +324,8 @@ class _SeedPhraseVerificationWidgetState
                                                   _model.addToChosenWords(_model
                                                       .options
                                                       .elementAtOrNull(0)!);
+                                                  safeSetState(() {});
+                                                  _model.selectedIndex = 0;
                                                   safeSetState(() {});
                                                   if (_model.currentQuestion <
                                                       2) {
@@ -361,12 +363,122 @@ class _SeedPhraseVerificationWidgetState
                                                       _model.quizStep,
                                                       r'''$.displayIndex''',
                                                     );
-                                                    _model.verifyEnabled =
-                                                        false;
+                                                    _model.selectedIndex = -1;
                                                     safeSetState(() {});
                                                   } else {
-                                                    _model.verifyEnabled = true;
-                                                    safeSetState(() {});
+                                                    _model.verifyResult =
+                                                        await actions
+                                                            .verifyAllSelectionsAction(
+                                                      _model.words.toList(),
+                                                      _model.quizIndices
+                                                          .toList(),
+                                                      _model.chosenWords
+                                                          .toList(),
+                                                    );
+                                                    if (_model.verifyResult ==
+                                                        true) {
+                                                      context.pushNamed(
+                                                          DecoySeedActiveWidget
+                                                              .routeName);
+                                                    } else {
+                                                      _model.attemptCount =
+                                                          _model.attemptCount +
+                                                              1;
+                                                      _model.currentQuestion =
+                                                          0;
+                                                      _model.chosenWords = [];
+                                                      _model.selectedIndex = -1;
+                                                      safeSetState(() {});
+                                                      if (_model.attemptCount <
+                                                          3) {
+                                                        _model.indicesOutRetry =
+                                                            await actions
+                                                                .makeQuizIndicesAction(
+                                                          _model.words.length,
+                                                        );
+                                                        _model.quizIndices =
+                                                            _model
+                                                                .indicesOutRetry!
+                                                                .toList()
+                                                                .cast<int>();
+                                                        safeSetState(() {});
+                                                        _model.quizStepRetry =
+                                                            await actions
+                                                                .buildQuizStepAction(
+                                                          _model.words.toList(),
+                                                          _model.quizIndices
+                                                              .toList(),
+                                                          0,
+                                                        );
+                                                        _model.options =
+                                                            (getJsonField(
+                                                          _model.quizStepRetry,
+                                                          r'''$.options''',
+                                                          true,
+                                                        ) as List?)!
+                                                                .map<String>((e) =>
+                                                                    e.toString())
+                                                                .toList()
+                                                                .cast<String>()
+                                                                .toList()
+                                                                .cast<String>();
+                                                        _model.correctWord =
+                                                            getJsonField(
+                                                          _model.quizStepRetry,
+                                                          r'''$.correctWord''',
+                                                        ).toString();
+                                                        _model.displayIndex =
+                                                            getJsonField(
+                                                          _model.quizStepRetry,
+                                                          r'''$.displayIndex''',
+                                                        );
+                                                        safeSetState(() {});
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              'NOT QUITE - TRY AGAIN',
+                                                              style: TextStyle(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryText,
+                                                              ),
+                                                            ),
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    4000),
+                                                            backgroundColor:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondary,
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        context.pushNamed(
+                                                          ShowDecoySeedPhraseWidget
+                                                              .routeName,
+                                                          queryParameters: {
+                                                            'mnemonic':
+                                                                serializeParam(
+                                                              widget.mnemonic,
+                                                              ParamType.String,
+                                                            ),
+                                                          }.withoutNulls,
+                                                          extra: <String,
+                                                              dynamic>{
+                                                            kTransitionInfoKey:
+                                                                TransitionInfo(
+                                                              hasTransition:
+                                                                  true,
+                                                              transitionType:
+                                                                  PageTransitionType
+                                                                      .leftToRight,
+                                                            ),
+                                                          },
+                                                        );
+                                                      }
+                                                    }
                                                   }
 
                                                   safeSetState(() {});
@@ -437,6 +549,8 @@ class _SeedPhraseVerificationWidgetState
                                                       .options
                                                       .elementAtOrNull(1)!);
                                                   safeSetState(() {});
+                                                  _model.selectedIndex = 0;
+                                                  safeSetState(() {});
                                                   if (_model.currentQuestion <
                                                       2) {
                                                     _model.currentQuestion =
@@ -473,12 +587,125 @@ class _SeedPhraseVerificationWidgetState
                                                       _model.quizStepMid,
                                                       r'''$.displayIndex''',
                                                     );
-                                                    _model.verifyEnabled =
-                                                        false;
+                                                    _model.selectedIndex = -1;
                                                     safeSetState(() {});
                                                   } else {
-                                                    _model.verifyEnabled = true;
-                                                    safeSetState(() {});
+                                                    _model.verifyResultMid =
+                                                        await actions
+                                                            .verifyAllSelectionsAction(
+                                                      _model.words.toList(),
+                                                      _model.quizIndices
+                                                          .toList(),
+                                                      _model.chosenWords
+                                                          .toList(),
+                                                    );
+                                                    if (_model
+                                                            .verifyResultMid ==
+                                                        true) {
+                                                      context.pushNamed(
+                                                          DecoySeedActiveWidget
+                                                              .routeName);
+                                                    } else {
+                                                      _model.attemptCount =
+                                                          _model.attemptCount +
+                                                              1;
+                                                      _model.currentQuestion =
+                                                          0;
+                                                      _model.chosenWords = [];
+                                                      _model.selectedIndex = -1;
+                                                      safeSetState(() {});
+                                                      if (_model.attemptCount <
+                                                          3) {
+                                                        _model.indicesOutRetryMid =
+                                                            await actions
+                                                                .makeQuizIndicesAction(
+                                                          _model.words.length,
+                                                        );
+                                                        _model.quizIndices = _model
+                                                            .indicesOutRetryMid!
+                                                            .toList()
+                                                            .cast<int>();
+                                                        safeSetState(() {});
+                                                        _model.quizStepRetryMid =
+                                                            await actions
+                                                                .buildQuizStepAction(
+                                                          _model.words.toList(),
+                                                          _model.quizIndices
+                                                              .toList(),
+                                                          0,
+                                                        );
+                                                        _model.options =
+                                                            (getJsonField(
+                                                          _model
+                                                              .quizStepRetryMid,
+                                                          r'''$.options''',
+                                                          true,
+                                                        ) as List?)!
+                                                                .map<String>((e) =>
+                                                                    e.toString())
+                                                                .toList()
+                                                                .cast<String>()
+                                                                .toList()
+                                                                .cast<String>();
+                                                        _model.correctWord =
+                                                            getJsonField(
+                                                          _model
+                                                              .quizStepRetryMid,
+                                                          r'''$.correctWord''',
+                                                        ).toString();
+                                                        _model.displayIndex =
+                                                            getJsonField(
+                                                          _model
+                                                              .quizStepRetryMid,
+                                                          r'''$.displayIndex''',
+                                                        );
+                                                        safeSetState(() {});
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              'NOT QUITE - TRY AGAIN',
+                                                              style: TextStyle(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryText,
+                                                              ),
+                                                            ),
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    4000),
+                                                            backgroundColor:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondary,
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        context.pushNamed(
+                                                          ShowDecoySeedPhraseWidget
+                                                              .routeName,
+                                                          queryParameters: {
+                                                            'mnemonic':
+                                                                serializeParam(
+                                                              widget.mnemonic,
+                                                              ParamType.String,
+                                                            ),
+                                                          }.withoutNulls,
+                                                          extra: <String,
+                                                              dynamic>{
+                                                            kTransitionInfoKey:
+                                                                TransitionInfo(
+                                                              hasTransition:
+                                                                  true,
+                                                              transitionType:
+                                                                  PageTransitionType
+                                                                      .leftToRight,
+                                                            ),
+                                                          },
+                                                        );
+                                                      }
+                                                    }
                                                   }
 
                                                   safeSetState(() {});
@@ -549,6 +776,8 @@ class _SeedPhraseVerificationWidgetState
                                                       .options
                                                       .elementAtOrNull(2)!);
                                                   safeSetState(() {});
+                                                  _model.selectedIndex = 0;
+                                                  safeSetState(() {});
                                                   if (_model.currentQuestion <
                                                       2) {
                                                     _model.currentQuestion =
@@ -585,12 +814,125 @@ class _SeedPhraseVerificationWidgetState
                                                       _model.quizStepBot,
                                                       r'''$.displayIndex''',
                                                     );
-                                                    _model.verifyEnabled =
-                                                        false;
+                                                    _model.selectedIndex = -1;
                                                     safeSetState(() {});
                                                   } else {
-                                                    _model.verifyEnabled = true;
-                                                    safeSetState(() {});
+                                                    _model.verifyResultBot =
+                                                        await actions
+                                                            .verifyAllSelectionsAction(
+                                                      _model.words.toList(),
+                                                      _model.quizIndices
+                                                          .toList(),
+                                                      _model.chosenWords
+                                                          .toList(),
+                                                    );
+                                                    if (_model
+                                                            .verifyResultBot ==
+                                                        true) {
+                                                      context.pushNamed(
+                                                          DecoySeedActiveWidget
+                                                              .routeName);
+                                                    } else {
+                                                      _model.attemptCount =
+                                                          _model.attemptCount +
+                                                              1;
+                                                      _model.currentQuestion =
+                                                          0;
+                                                      _model.chosenWords = [];
+                                                      _model.selectedIndex = -1;
+                                                      safeSetState(() {});
+                                                      if (_model.attemptCount <
+                                                          3) {
+                                                        _model.indicesOutRetryBot =
+                                                            await actions
+                                                                .makeQuizIndicesAction(
+                                                          _model.words.length,
+                                                        );
+                                                        _model.quizIndices = _model
+                                                            .indicesOutRetryBot!
+                                                            .toList()
+                                                            .cast<int>();
+                                                        safeSetState(() {});
+                                                        _model.quizStepRetryBot =
+                                                            await actions
+                                                                .buildQuizStepAction(
+                                                          _model.words.toList(),
+                                                          _model.quizIndices
+                                                              .toList(),
+                                                          0,
+                                                        );
+                                                        _model.options =
+                                                            (getJsonField(
+                                                          _model
+                                                              .quizStepRetryBot,
+                                                          r'''$.options''',
+                                                          true,
+                                                        ) as List?)!
+                                                                .map<String>((e) =>
+                                                                    e.toString())
+                                                                .toList()
+                                                                .cast<String>()
+                                                                .toList()
+                                                                .cast<String>();
+                                                        _model.correctWord =
+                                                            getJsonField(
+                                                          _model
+                                                              .quizStepRetryBot,
+                                                          r'''$.correctWord''',
+                                                        ).toString();
+                                                        _model.displayIndex =
+                                                            getJsonField(
+                                                          _model
+                                                              .quizStepRetryBot,
+                                                          r'''$.displayIndex''',
+                                                        );
+                                                        safeSetState(() {});
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              'NOT QUITE - TRY AGAIN',
+                                                              style: TextStyle(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryText,
+                                                              ),
+                                                            ),
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    4000),
+                                                            backgroundColor:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondary,
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        context.pushNamed(
+                                                          ShowDecoySeedPhraseWidget
+                                                              .routeName,
+                                                          queryParameters: {
+                                                            'mnemonic':
+                                                                serializeParam(
+                                                              widget.mnemonic,
+                                                              ParamType.String,
+                                                            ),
+                                                          }.withoutNulls,
+                                                          extra: <String,
+                                                              dynamic>{
+                                                            kTransitionInfoKey:
+                                                                TransitionInfo(
+                                                              hasTransition:
+                                                                  true,
+                                                              transitionType:
+                                                                  PageTransitionType
+                                                                      .leftToRight,
+                                                            ),
+                                                          },
+                                                        );
+                                                      }
+                                                    }
                                                   }
 
                                                   safeSetState(() {});
@@ -669,104 +1011,6 @@ class _SeedPhraseVerificationWidgetState
                       ].divide(SizedBox(height: 24.0)),
                     ),
                   ].divide(SizedBox(height: 32.0)),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: [
-                        if (_model.verifyEnabled == true)
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 40.0, 0.0, 0.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                _model.verifyOut =
-                                    await actions.verifyAllSelectionsAction(
-                                  _model.words.toList(),
-                                  _model.quizIndices.toList(),
-                                  _model.chosenWords.toList(),
-                                );
-                                if (_model.verifyOut == true) {
-                                  context
-                                      .goNamed(DecoySeedActiveWidget.routeName);
-                                } else {
-                                  _model.currentQuestion = 0;
-                                  _model.verifyEnabled = false;
-                                  _model.chosenWords = [];
-                                  safeSetState(() {});
-                                  _model.quizStepReset =
-                                      await actions.buildQuizStepAction(
-                                    _model.words.toList(),
-                                    _model.quizIndices.toList(),
-                                    0,
-                                  );
-                                  _model.options = (getJsonField(
-                                    _model.quizStepReset,
-                                    r'''$.options''',
-                                    true,
-                                  ) as List?)!
-                                      .map<String>((e) => e.toString())
-                                      .toList()
-                                      .cast<String>()
-                                      .toList()
-                                      .cast<String>();
-                                  _model.correctWord = getJsonField(
-                                    _model.quizStepReset,
-                                    r'''$.correctWord''',
-                                  ).toString();
-                                  _model.displayIndex = getJsonField(
-                                    _model.quizStepReset,
-                                    r'''$.displayIndex''',
-                                  );
-                                  _model.verifyEnabled = false;
-                                  _model.selectedIndex = -1;
-                                  safeSetState(() {});
-                                }
-
-                                safeSetState(() {});
-                              },
-                              text: 'Verify',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 56.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 16.0, 24.0, 16.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ].divide(SizedBox(height: 16.0)),
                 ),
               ],
             ),
