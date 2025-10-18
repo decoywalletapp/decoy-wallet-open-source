@@ -224,7 +224,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.firstOrNull}',
+                                    '${_model.words.elementAtOrNull(0)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -287,7 +287,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(7)}',
+                                    '${_model.words.elementAtOrNull(6)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -350,7 +350,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(2)}',
+                                    '${_model.words.elementAtOrNull(1)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -413,7 +413,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(8)}',
+                                    '${_model.words.elementAtOrNull(7)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -476,7 +476,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(3)}',
+                                    '${_model.words.elementAtOrNull(2)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -539,7 +539,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(9)}',
+                                    '${_model.words.elementAtOrNull(8)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -602,7 +602,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(4)}',
+                                    '${_model.words.elementAtOrNull(3)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -665,7 +665,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(10)}',
+                                    '${_model.words.elementAtOrNull(9)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -728,7 +728,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(5)}',
+                                    '${_model.words.elementAtOrNull(4)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -791,7 +791,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(11)}',
+                                    '${_model.words.elementAtOrNull(10)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -854,7 +854,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(6)}',
+                                    '${_model.words.elementAtOrNull(5)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -917,7 +917,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                         ),
                                   ),
                                   Text(
-                                    '${_model.words.elementAtOrNull(12)}',
+                                    '${_model.words.elementAtOrNull(11)}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
