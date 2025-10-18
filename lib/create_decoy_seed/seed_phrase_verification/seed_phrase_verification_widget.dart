@@ -287,8 +287,7 @@ class _SeedPhraseVerificationWidgetState
                                                 ),
                                           ),
                                           Text(
-                                            functions.plusOneToString(
-                                                _model.displayIndex),
+                                            _model.displayIndex.toString(),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
