@@ -8,58 +8,45 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-// Inputs: words(List<String>), currentQuestion(int), quizIndices(List<int>)
-// Returns JSON: { quizIndices, correctIndex, displayIndex, options, correctWord }
+import 'dart:math' as math;
 
 import 'dart:convert';
 import 'dart:math' as math;
 
 Future<dynamic> buildQuizStepAction(
   List<String> words,
-  int currentQuestion,
   List<int> quizIndices,
+  int currentQuestion,
 ) async {
-  final r = math.Random.secure();
-  final wlen = words.length;
+  // which word (0-based) are we quizzing?
+  final quizWordIndex = quizIndices[currentQuestion];
 
-  // Ensure we have 3 distinct indices total
-  final target = (wlen >= 3) ? 3 : wlen;
-  final set = <int>{...quizIndices};
-  while (set.length < target && set.length < wlen) {
-    set.add(r.nextInt(wlen));
-  }
-  final finalIndices = set.toList(growable: false);
+  // the correct word
+  final correct = words[quizWordIndex];
 
-  // Clamp currentQuestion
-  final cq = (currentQuestion < 0)
-      ? 0
-      : (currentQuestion >= finalIndices.length
-          ? finalIndices.length - 1
-          : currentQuestion);
+  // pick two distinct distractors (not the correct index)
+  final rng = math.Random();
+  int a, b;
+  do {
+    a = rng.nextInt(words.length);
+  } while (a == quizWordIndex);
+  do {
+    b = rng.nextInt(words.length);
+  } while (b == quizWordIndex || b == a);
 
-  final correctIdx = finalIndices[cq];
-  final correctWord = words[correctIdx];
+  // build + shuffle options
+  final options = <String>[correct, words[a], words[b]]..shuffle(rng);
 
-  // Build 2 distractors
-  final pool = <String>[
-    for (final w in words)
-      if (w != correctWord) w
-  ];
-  final distractors = <String>[];
-  while (distractors.length < 2 && pool.isNotEmpty) {
-    final pick = pool[r.nextInt(pool.length)];
-    if (!distractors.contains(pick)) distractors.add(pick);
-  }
+  // 1-based number for UI label "Choose word #N"
+  final displayIndex = quizWordIndex + 1;
 
-  final options = <String>[correctWord, ...distractors]..shuffle(r);
-
+  // Return a plain map (FF JSON)
   return {
-    "quizIndices": finalIndices,
-    "correctIndex": correctIdx,
-    "displayIndex": correctIdx + 1, // 1-based for the UI label
-    "options": options,
-    "correctWord": correctWord
+    'options': options,
+    'correctWord': correct,
+    'displayIndex': displayIndex,
   };
 }
+
 // Set your action name, define your arguments and return parameter,
 // and then add the boilerplate code using the green button on the right!

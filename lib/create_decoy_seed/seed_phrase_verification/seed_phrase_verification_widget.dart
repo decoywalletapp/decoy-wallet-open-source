@@ -1,4 +1,3 @@
-import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
@@ -70,8 +69,8 @@ class _SeedPhraseVerificationWidgetState
       safeSetState(() {});
       _model.stepOut = await actions.buildQuizStepAction(
         _model.words.toList(),
-        _model.currentQuestion,
         _model.quizIndices.toList(),
+        _model.currentQuestion,
       );
       _model.options = (getJsonField(
         _model.stepOut,
@@ -123,23 +122,6 @@ class _SeedPhraseVerificationWidgetState
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: AlignmentDirectional(-1.0, 0.0),
-                  child: FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 20.0,
-                    borderWidth: 1.0,
-                    buttonSize: 40.0,
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      size: 24.0,
-                    ),
-                    onPressed: () {
-                      print('IconButton pressed ...');
-                    },
-                  ),
-                ),
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -311,23 +293,16 @@ class _SeedPhraseVerificationWidgetState
                                                 .bodyMedium
                                                 .override(
                                                   font: GoogleFonts.inter(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
+                                                    fontWeight: FontWeight.bold,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
                                                                 context)
                                                             .bodyMedium
                                                             .fontStyle,
                                                   ),
+                                                  fontSize: 20.0,
                                                   letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
+                                                  fontWeight: FontWeight.bold,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -360,9 +335,9 @@ class _SeedPhraseVerificationWidgetState
                                                         await actions
                                                             .buildQuizStepAction(
                                                       _model.words.toList(),
-                                                      _model.currentQuestion,
                                                       _model.quizIndices
                                                           .toList(),
+                                                      _model.currentQuestion,
                                                     );
                                                     _model.options =
                                                         (getJsonField(
@@ -410,7 +385,7 @@ class _SeedPhraseVerificationWidgetState
                                                               0.0, 0.0),
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .secondaryBackground,
+                                                      .primaryBackground,
                                                   textStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .titleSmall
@@ -448,7 +423,7 @@ class _SeedPhraseVerificationWidgetState
                                                   borderSide: BorderSide(
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .alternate,
+                                                        .primary,
                                                     width: 2.0,
                                                   ),
                                                   borderRadius:
@@ -472,9 +447,9 @@ class _SeedPhraseVerificationWidgetState
                                                         await actions
                                                             .buildQuizStepAction(
                                                       _model.words.toList(),
-                                                      _model.currentQuestion,
                                                       _model.quizIndices
                                                           .toList(),
+                                                      _model.currentQuestion,
                                                     );
                                                     _model.options =
                                                         (getJsonField(
@@ -522,7 +497,7 @@ class _SeedPhraseVerificationWidgetState
                                                               0.0, 0.0),
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .accent1,
+                                                      .primaryBackground,
                                                   textStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .titleSmall
@@ -543,7 +518,7 @@ class _SeedPhraseVerificationWidgetState
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .info,
+                                                                .primaryText,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FlutterFlowTheme.of(
@@ -584,9 +559,9 @@ class _SeedPhraseVerificationWidgetState
                                                         await actions
                                                             .buildQuizStepAction(
                                                       _model.words.toList(),
-                                                      _model.currentQuestion,
                                                       _model.quizIndices
                                                           .toList(),
+                                                      _model.currentQuestion,
                                                     );
                                                     _model.options =
                                                         (getJsonField(
@@ -634,7 +609,7 @@ class _SeedPhraseVerificationWidgetState
                                                               0.0, 0.0),
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .secondaryBackground,
+                                                      .primaryBackground,
                                                   textStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .titleSmall
@@ -672,7 +647,7 @@ class _SeedPhraseVerificationWidgetState
                                                   borderSide: BorderSide(
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .alternate,
+                                                        .primary,
                                                     width: 2.0,
                                                   ),
                                                   borderRadius:
@@ -711,7 +686,7 @@ class _SeedPhraseVerificationWidgetState
                                     await actions.verifyAllSelectionsAction(
                                   _model.words.toList(),
                                   _model.quizIndices.toList(),
-                                  _model.selectedIndices.toList(),
+                                  _model.chosenWords.toList(),
                                 );
                                 if (_model.verifyOut == true) {
                                   context
@@ -719,20 +694,13 @@ class _SeedPhraseVerificationWidgetState
                                 } else {
                                   _model.currentQuestion = 0;
                                   _model.verifyEnabled = false;
-                                  _model.selectedIndices = [];
-                                  safeSetState(() {});
-                                  _model.indicesOut2 =
-                                      await actions.makeQuizIndicesAction(
-                                    _model.words.length,
-                                  );
-                                  _model.quizIndices =
-                                      _model.indicesOut2!.toList().cast<int>();
+                                  _model.chosenWords = [];
                                   safeSetState(() {});
                                   _model.quizStepReset =
                                       await actions.buildQuizStepAction(
                                     _model.words.toList(),
-                                    0,
                                     _model.quizIndices.toList(),
+                                    0,
                                   );
                                   _model.options = (getJsonField(
                                     _model.quizStepReset,

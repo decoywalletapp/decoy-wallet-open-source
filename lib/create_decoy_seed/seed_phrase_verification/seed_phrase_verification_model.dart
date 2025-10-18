@@ -79,8 +79,6 @@ class SeedPhraseVerificationModel
   dynamic quizStepBot;
   // Stores action output result for [Custom Action - verifyAllSelectionsAction] action in Button widget.
   bool? verifyOut;
-  // Stores action output result for [Custom Action - makeQuizIndicesAction] action in Button widget.
-  List<int>? indicesOut2;
   // Stores action output result for [Custom Action - buildQuizStepAction] action in Button widget.
   dynamic quizStepReset;
 
