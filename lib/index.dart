@@ -33,10 +33,10 @@ export '/duress_mode/duress_home_page/duress_home_page_widget.dart'
     show DuressHomePageWidget;
 export '/duress_mode/duress_settings_page/duress_settings_page_widget.dart'
     show DuressSettingsPageWidget;
-export '/create_decoy_seed/generated_decoy_seed_phrase/generated_decoy_seed_phrase_widget.dart'
-    show GeneratedDecoySeedPhraseWidget;
-export '/create_decoy_seed/acknowledgements_page/acknowledgements_page_widget.dart'
-    show AcknowledgementsPageWidget;
+export '/create_decoy_seed/show_decoy_seed_phrase/show_decoy_seed_phrase_widget.dart'
+    show ShowDecoySeedPhraseWidget;
+export '/create_decoy_seed/decoy_seed_acknowledgements/decoy_seed_acknowledgements_widget.dart'
+    show DecoySeedAcknowledgementsWidget;
 export '/welcom_pages/phone_number_input/phone_number_input_widget.dart'
     show PhoneNumberInputWidget;
 export '/welcom_pages/user_name_entry/user_name_entry_widget.dart'
@@ -59,3 +59,9 @@ export '/pinpagesb4saltpepper/create_decoy_pin_copy/create_decoy_pin_copy_widget
     show CreateDecoyPinCopyWidget;
 export '/pinpagesb4saltpepper/p_i_n_page_copy/p_i_n_page_copy_widget.dart'
     show PINPageCopyWidget;
+export '/create_decoy_seed/generate_decoy_seed_phrase/generate_decoy_seed_phrase_widget.dart'
+    show GenerateDecoySeedPhraseWidget;
+export '/create_decoy_seed/decoy_seed_active/decoy_seed_active_widget.dart'
+    show DecoySeedActiveWidget;
+export '/create_decoy_seed/seed_phrase_verification/seed_phrase_verification_widget.dart'
+    show SeedPhraseVerificationWidget;

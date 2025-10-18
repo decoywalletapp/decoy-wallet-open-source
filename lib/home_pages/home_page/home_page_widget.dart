@@ -419,8 +419,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 child: Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: FFButtonWidget(
-                                    onPressed: () {
-                                      print('Button pressed ...');
+                                    onPressed: () async {
+                                      context.pushNamed(
+                                          DecoySeedAcknowledgementsWidget
+                                              .routeName);
                                     },
                                     text: '',
                                     options: FFButtonOptions(

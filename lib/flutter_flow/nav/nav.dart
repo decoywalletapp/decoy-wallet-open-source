@@ -213,14 +213,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => DuressSettingsPageWidget(),
       ),
       FFRoute(
-        name: GeneratedDecoySeedPhraseWidget.routeName,
-        path: GeneratedDecoySeedPhraseWidget.routePath,
-        builder: (context, params) => GeneratedDecoySeedPhraseWidget(),
+        name: ShowDecoySeedPhraseWidget.routeName,
+        path: ShowDecoySeedPhraseWidget.routePath,
+        builder: (context, params) => ShowDecoySeedPhraseWidget(
+          mnemonic: params.getParam(
+            'mnemonic',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
-        name: AcknowledgementsPageWidget.routeName,
-        path: AcknowledgementsPageWidget.routePath,
-        builder: (context, params) => AcknowledgementsPageWidget(),
+        name: DecoySeedAcknowledgementsWidget.routeName,
+        path: DecoySeedAcknowledgementsWidget.routePath,
+        builder: (context, params) => DecoySeedAcknowledgementsWidget(),
       ),
       FFRoute(
         name: PhoneNumberInputWidget.routeName,
@@ -290,6 +295,26 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: PINPageCopyWidget.routeName,
         path: PINPageCopyWidget.routePath,
         builder: (context, params) => PINPageCopyWidget(),
+      ),
+      FFRoute(
+        name: GenerateDecoySeedPhraseWidget.routeName,
+        path: GenerateDecoySeedPhraseWidget.routePath,
+        builder: (context, params) => GenerateDecoySeedPhraseWidget(),
+      ),
+      FFRoute(
+        name: DecoySeedActiveWidget.routeName,
+        path: DecoySeedActiveWidget.routePath,
+        builder: (context, params) => DecoySeedActiveWidget(),
+      ),
+      FFRoute(
+        name: SeedPhraseVerificationWidget.routeName,
+        path: SeedPhraseVerificationWidget.routePath,
+        builder: (context, params) => SeedPhraseVerificationWidget(
+          mnemonic: params.getParam(
+            'mnemonic',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

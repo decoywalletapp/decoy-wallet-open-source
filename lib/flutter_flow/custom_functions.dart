@@ -313,10 +313,6 @@ List<double> extractEpochMsList(List<dynamic> pricesJson) {
   return out;
 }
 
-int incElapsed(int elapsed) {
-  return elapsed + 1;
-}
-
 int remainingForm(
   int total,
   int elapsed,
@@ -343,4 +339,8 @@ int incElapsedFromStart(
   final ms = nowTs.millisecondsSinceEpoch - startAt.millisecondsSinceEpoch;
   final mins = ms ~/ 60000; // integer division
   return mins < 0 ? 0 : mins;
+}
+
+String plusOneToString(int v) {
+  return (v + 1).toString();
 }

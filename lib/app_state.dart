@@ -38,6 +38,28 @@ class FFAppState extends ChangeNotifier {
       _hasDecoyPin =
           await secureStorage.getBool('ff_hasDecoyPin') ?? _hasDecoyPin;
     });
+    await _safeInitAsync(() async {
+      _registerDecoyUrl =
+          await secureStorage.getString('ff_registerDecoyUrl') ??
+              _registerDecoyUrl;
+    });
+    await _safeInitAsync(() async {
+      _registerDecoyKey =
+          await secureStorage.getString('ff_registerDecoyKey') ??
+              _registerDecoyKey;
+    });
+    await _safeInitAsync(() async {
+      _serverRegistrationUrl =
+          await secureStorage.getString('ff_serverRegistrationUrl') ??
+              _serverRegistrationUrl;
+    });
+    await _safeInitAsync(() async {
+      _decoyId = await secureStorage.getString('ff_decoyId') ?? _decoyId;
+    });
+    await _safeInitAsync(() async {
+      _decoyActiveId =
+          await secureStorage.getString('ff_decoyActiveId') ?? _decoyActiveId;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -192,6 +214,63 @@ class FFAppState extends ChangeNotifier {
 
   void deleteHasDecoyPin() {
     secureStorage.delete(key: 'ff_hasDecoyPin');
+  }
+
+  String _registerDecoyUrl = '';
+  String get registerDecoyUrl => _registerDecoyUrl;
+  set registerDecoyUrl(String value) {
+    _registerDecoyUrl = value;
+    secureStorage.setString('ff_registerDecoyUrl', value);
+  }
+
+  void deleteRegisterDecoyUrl() {
+    secureStorage.delete(key: 'ff_registerDecoyUrl');
+  }
+
+  String _registerDecoyKey =
+      'f304badb5fdabea85139de4c6b08f331fbe790b047d3dcf81d5243bba9d5a0dd';
+  String get registerDecoyKey => _registerDecoyKey;
+  set registerDecoyKey(String value) {
+    _registerDecoyKey = value;
+    secureStorage.setString('ff_registerDecoyKey', value);
+  }
+
+  void deleteRegisterDecoyKey() {
+    secureStorage.delete(key: 'ff_registerDecoyKey');
+  }
+
+  String _serverRegistrationUrl =
+      'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/register-decoy';
+  String get serverRegistrationUrl => _serverRegistrationUrl;
+  set serverRegistrationUrl(String value) {
+    _serverRegistrationUrl = value;
+    secureStorage.setString('ff_serverRegistrationUrl', value);
+  }
+
+  void deleteServerRegistrationUrl() {
+    secureStorage.delete(key: 'ff_serverRegistrationUrl');
+  }
+
+  String _decoyId = '';
+  String get decoyId => _decoyId;
+  set decoyId(String value) {
+    _decoyId = value;
+    secureStorage.setString('ff_decoyId', value);
+  }
+
+  void deleteDecoyId() {
+    secureStorage.delete(key: 'ff_decoyId');
+  }
+
+  String _decoyActiveId = '';
+  String get decoyActiveId => _decoyActiveId;
+  set decoyActiveId(String value) {
+    _decoyActiveId = value;
+    secureStorage.setString('ff_decoyActiveId', value);
+  }
+
+  void deleteDecoyActiveId() {
+    secureStorage.delete(key: 'ff_decoyActiveId');
   }
 }
 
