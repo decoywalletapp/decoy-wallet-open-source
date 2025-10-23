@@ -217,24 +217,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         _model.emailAddressLoginTextController,
                                     focusNode:
                                         _model.emailAddressLoginFocusNode,
-                                    onFieldSubmitted: (_) async {
-                                      GoRouter.of(context).prepareAuthEvent();
-
-                                      final user =
-                                          await authManager.signInWithEmail(
-                                        context,
-                                        _model.emailAddressLoginTextController
-                                            .text,
-                                        _model.passwordLoginTextController.text,
-                                      );
-                                      if (user == null) {
-                                        return;
-                                      }
-
-                                      context.goNamedAuth(
-                                          PINPageWidget.routeName,
-                                          context.mounted);
-                                    },
                                     autofocus: true,
                                     autofillHints: [AutofillHints.email],
                                     obscureText: false,

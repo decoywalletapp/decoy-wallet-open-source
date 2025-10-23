@@ -1,10 +1,15 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'personal_information_model.dart';
 export 'personal_information_model.dart';
 
@@ -34,17 +39,17 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
     super.initState();
     _model = createModel(context, () => PersonalInformationModel());
 
-    _model.textController1 ??= TextEditingController();
-    _model.textFieldFocusNode1 ??= FocusNode();
+    _model.firstNameTextController ??= TextEditingController();
+    _model.firstNameFocusNode ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController();
-    _model.textFieldFocusNode2 ??= FocusNode();
+    _model.lastNameTextController ??= TextEditingController();
+    _model.lastNameFocusNode ??= FocusNode();
 
-    _model.textController3 ??= TextEditingController();
-    _model.textFieldFocusNode3 ??= FocusNode();
+    _model.phoneTextController ??= TextEditingController();
+    _model.phoneFocusNode ??= FocusNode();
 
-    _model.textController4 ??= TextEditingController();
-    _model.textFieldFocusNode4 ??= FocusNode();
+    _model.emailTextController ??= TextEditingController();
+    _model.emailFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -58,6 +63,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -171,8 +178,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       ),
                                 ),
                                 TextFormField(
-                                  controller: _model.textController1,
-                                  focusNode: _model.textFieldFocusNode1,
+                                  controller: _model.firstNameTextController,
+                                  focusNode: _model.firstNameFocusNode,
                                   autofocus: false,
                                   textCapitalization: TextCapitalization.words,
                                   textInputAction: TextInputAction.next,
@@ -268,7 +275,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                   keyboardType: TextInputType.name,
                                   cursorColor:
                                       FlutterFlowTheme.of(context).primary,
-                                  validator: _model.textController1Validator
+                                  validator: _model
+                                      .firstNameTextControllerValidator
                                       .asValidator(context),
                                   inputFormatters: [
                                     if (!isAndroid && !isiOS)
@@ -308,8 +316,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       ),
                                 ),
                                 TextFormField(
-                                  controller: _model.textController2,
-                                  focusNode: _model.textFieldFocusNode2,
+                                  controller: _model.lastNameTextController,
+                                  focusNode: _model.lastNameFocusNode,
                                   autofocus: false,
                                   textCapitalization: TextCapitalization.words,
                                   textInputAction: TextInputAction.next,
@@ -405,7 +413,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                   keyboardType: TextInputType.name,
                                   cursorColor:
                                       FlutterFlowTheme.of(context).primary,
-                                  validator: _model.textController2Validator
+                                  validator: _model
+                                      .lastNameTextControllerValidator
                                       .asValidator(context),
                                   inputFormatters: [
                                     if (!isAndroid && !isiOS)
@@ -445,8 +454,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       ),
                                 ),
                                 TextFormField(
-                                  controller: _model.textController3,
-                                  focusNode: _model.textFieldFocusNode3,
+                                  controller: _model.phoneTextController,
+                                  focusNode: _model.phoneFocusNode,
                                   autofocus: false,
                                   textInputAction: TextInputAction.done,
                                   obscureText: false,
@@ -541,7 +550,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                   keyboardType: TextInputType.phone,
                                   cursorColor:
                                       FlutterFlowTheme.of(context).primary,
-                                  validator: _model.textController3Validator
+                                  validator: _model.phoneTextControllerValidator
                                       .asValidator(context),
                                 ),
                               ].divide(SizedBox(height: 8.0)),
@@ -570,8 +579,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       ),
                                 ),
                                 TextFormField(
-                                  controller: _model.textController4,
-                                  focusNode: _model.textFieldFocusNode4,
+                                  controller: _model.emailTextController,
+                                  focusNode: _model.emailFocusNode,
                                   autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
@@ -664,7 +673,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       ),
                                   cursorColor:
                                       FlutterFlowTheme.of(context).primary,
-                                  validator: _model.textController4Validator
+                                  validator: _model.emailTextControllerValidator
                                       .asValidator(context),
                                 ),
                               ].divide(SizedBox(height: 8.0)),
@@ -672,18 +681,130 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                           ].divide(SizedBox(height: 20.0)),
                         ),
                       ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Icon(
+                              Icons.check_circle_sharp,
+                              color: FlutterFlowTheme.of(context).primary,
+                              size: 20.0,
+                            ),
+                          ),
+                          Text(
+                            'Personal Info Saved',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyLarge
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyLarge
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyLarge
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyLarge
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyLarge
+                                      .fontStyle,
+                                ),
+                          ),
+                        ].divide(SizedBox(width: 5.0)),
+                      ),
                     ].divide(SizedBox(height: 24.0)),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 32.0),
                   child: FFButtonWidget(
-                    onPressed: () {
-                      print('Button pressed ...');
+                    onPressed: () async {
+                      _model.personalJsonOut = await actions.buildPersonalJson(
+                        _model.firstNameTextController.text,
+                        _model.lastNameTextController.text,
+                        _model.phoneTextController.text,
+                        _model.emailTextController.text,
+                      );
+                      _model.personalJson = _model.personalJsonOut;
+                      safeSetState(() {});
+                      _model.dek = await actions.generateDataKeyIfMissing();
+                      _model.dataKeyB64 = _model.dek;
+                      safeSetState(() {});
+                      _model.enc = await actions.aesGcmEncryptString(
+                        _model.personalJson!,
+                        _model.dataKeyB64!,
+                      );
+                      _model.ctB64 = getJsonField(
+                        _model.enc,
+                        r'''$.ciphertextB64''',
+                      ).toString();
+                      _model.nonceB64 = getJsonField(
+                        _model.enc,
+                        r'''$.nonceB64''',
+                      ).toString();
+                      safeSetState(() {});
+                      _model.wrap = await WrapDataKeyCall.call(
+                        dataKeyB64: _model.dataKeyB64,
+                        jwt: FFAppState().authJwt,
+                      );
+
+                      _model.wrappedB64 = getJsonField(
+                        (_model.wrap?.jsonBody ?? ''),
+                        r'''$.wrappedB64''',
+                      ).toString();
+                      safeSetState(() {});
+                      if ((_model.wrap?.succeeded ?? true)) {
+                        _model.supaNameInserts =
+                            await DecoyWalletTable().insert({
+                          'user_id': currentUserUid,
+                          'personal_ciphertext': _model.ctB64,
+                          'personal_nonce': _model.nonceB64,
+                          'personal_version': 1,
+                          'wrapped_datakey': _model.wrappedB64,
+                          'first_name': _model.firstNameTextController.text,
+                          'last_name': _model.lastNameTextController.text,
+                          'phone_number': _model.phoneTextController.text,
+                          'email': _model.emailTextController.text,
+                          'updated_at':
+                              supaSerialize<DateTime>(getCurrentTimestamp),
+                        });
+                        _model.personalSaved = _model.personalSaved + 1;
+                        safeSetState(() {});
+                        await Future.delayed(
+                          Duration(
+                            milliseconds: 250,
+                          ),
+                        );
+                        _model.personalSaved = _model.personalSaved + 1;
+                        safeSetState(() {});
+                        context.safePop();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'FAILED',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
+                      }
+
+                      safeSetState(() {});
                     },
-                    text: 'Save Contact',
+                    text: 'Save',
                     options: FFButtonOptions(
-                      width: double.infinity,
+                      width: 250.0,
                       height: 52.0,
                       padding: EdgeInsets.all(8.0),
                       iconPadding:
@@ -704,7 +825,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     .titleMedium
                                     .fontStyle,
                               ),
-                      elevation: 0.0,
+                      elevation: 3.0,
                       borderSide: BorderSide(
                         color: Colors.transparent,
                       ),

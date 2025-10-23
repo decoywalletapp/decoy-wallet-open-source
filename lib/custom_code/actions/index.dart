@@ -18,3 +18,4 @@ export 'get_supabase_jwt.dart' show getSupabaseJwt;
 export 'build_contacts_payload_v2.dart' show buildContactsPayloadV2;
 export 'build_address_payload_v1.dart' show buildAddressPayloadV1;
 export 'aes_gcm_decrypt_to_map.dart' show aesGcmDecryptToMap;
+export 'build_personal_json.dart' show buildPersonalJson;

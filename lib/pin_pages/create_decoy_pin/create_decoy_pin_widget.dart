@@ -1581,7 +1581,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                               Padding(
                                                 padding: EdgeInsets.all(17.0),
                                                 child: Text(
-                                                  'Confirm  DECOY PIN',
+                                                  'Confirm DECOY PIN',
                                                   textAlign: TextAlign.center,
                                                   style: FlutterFlowTheme.of(
                                                           context)
