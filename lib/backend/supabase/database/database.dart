@@ -6,3 +6,5 @@ export 'row.dart';
 export 'table.dart';
 
 export 'tables/decoy_wallet.dart';
+export 'tables/decoy_triggers.dart';
+export 'tables/decoys.dart';

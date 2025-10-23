@@ -1,6 +1,7 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -442,8 +443,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     return;
                                   }
 
+                                  _model.result =
+                                      await actions.getSupabaseJwt();
+                                  FFAppState().authJwt = _model.result!;
+                                  safeSetState(() {});
+
                                   context.goNamedAuth(
                                       PINPageWidget.routeName, context.mounted);
+
+                                  safeSetState(() {});
                                 },
                                 text: 'Log in',
                                 options: FFButtonOptions(

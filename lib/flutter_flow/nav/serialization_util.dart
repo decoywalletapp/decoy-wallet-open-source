@@ -207,6 +207,10 @@ dynamic deserializeParam<T>(
         switch (T) {
           case DecoyWalletRow:
             return DecoyWalletRow(data);
+          case DecoyTriggersRow:
+            return DecoyTriggersRow(data);
+          case DecoysRow:
+            return DecoysRow(data);
           default:
             return null;
         }

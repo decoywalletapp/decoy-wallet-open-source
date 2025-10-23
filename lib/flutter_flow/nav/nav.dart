@@ -317,6 +317,31 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
+        name: CreateDecoyEmergencyContactsSetupWidget.routeName,
+        path: CreateDecoyEmergencyContactsSetupWidget.routePath,
+        builder: (context, params) => CreateDecoyEmergencyContactsSetupWidget(),
+      ),
+      FFRoute(
+        name: HomeAddressEntryPageWidget.routeName,
+        path: HomeAddressEntryPageWidget.routePath,
+        builder: (context, params) => HomeAddressEntryPageWidget(),
+      ),
+      FFRoute(
+        name: EmergencyContactsWidget.routeName,
+        path: EmergencyContactsWidget.routePath,
+        builder: (context, params) => EmergencyContactsWidget(),
+      ),
+      FFRoute(
+        name: BiometricVerificationWidget.routeName,
+        path: BiometricVerificationWidget.routePath,
+        builder: (context, params) => BiometricVerificationWidget(),
+      ),
+      FFRoute(
+        name: PersonalInformationWidget.routeName,
+        path: PersonalInformationWidget.routePath,
+        builder: (context, params) => PersonalInformationWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

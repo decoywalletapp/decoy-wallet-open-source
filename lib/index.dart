@@ -65,3 +65,13 @@ export '/create_decoy_seed/decoy_seed_active/decoy_seed_active_widget.dart'
     show DecoySeedActiveWidget;
 export '/create_decoy_seed/seed_phrase_verification/seed_phrase_verification_widget.dart'
     show SeedPhraseVerificationWidget;
+export '/emergancy_contact_information/create_decoy_emergency_contacts_setup/create_decoy_emergency_contacts_setup_widget.dart'
+    show CreateDecoyEmergencyContactsSetupWidget;
+export '/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart'
+    show HomeAddressEntryPageWidget;
+export '/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart'
+    show EmergencyContactsWidget;
+export '/welcom_pages/biometric_verification/biometric_verification_widget.dart'
+    show BiometricVerificationWidget;
+export '/emergancy_contact_information/personal_information/personal_information_widget.dart'
+    show PersonalInformationWidget;

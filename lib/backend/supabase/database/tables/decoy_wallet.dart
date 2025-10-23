@@ -64,4 +64,50 @@ class DecoyWalletRow extends SupabaseDataRow {
   bool? get decoyModeEnabled => getField<bool>('decoy_mode_enabled');
   set decoyModeEnabled(bool? value) =>
       setField<bool>('decoy_mode_enabled', value);
+
+  String? get accountPinHash => getField<String>('account_pin_hash');
+  set accountPinHash(String? value) =>
+      setField<String>('account_pin_hash', value);
+
+  String? get accountPinSalt => getField<String>('account_pin_salt');
+  set accountPinSalt(String? value) =>
+      setField<String>('account_pin_salt', value);
+
+  String? get accountPinAlgo => getField<String>('account_pin_algo');
+  set accountPinAlgo(String? value) =>
+      setField<String>('account_pin_algo', value);
+
+  String? get decoyPinAlgo => getField<String>('decoy_pin_algo');
+  set decoyPinAlgo(String? value) => setField<String>('decoy_pin_algo', value);
+
+  String? get decoyEncryptedPin => getField<String>('decoy_encrypted_pin');
+  set decoyEncryptedPin(String? value) =>
+      setField<String>('decoy_encrypted_pin', value);
+
+  String? get wrappedDatakey => getField<String>('wrapped_datakey');
+  set wrappedDatakey(String? value) =>
+      setField<String>('wrapped_datakey', value);
+
+  String? get contactsCiphertext => getField<String>('contacts_ciphertext');
+  set contactsCiphertext(String? value) =>
+      setField<String>('contacts_ciphertext', value);
+
+  String? get contactsNonce => getField<String>('contacts_nonce');
+  set contactsNonce(String? value) => setField<String>('contacts_nonce', value);
+
+  int? get contactsVersion => getField<int>('contacts_version');
+  set contactsVersion(int? value) => setField<int>('contacts_version', value);
+
+  String? get addressCiphertext => getField<String>('address_ciphertext');
+  set addressCiphertext(String? value) =>
+      setField<String>('address_ciphertext', value);
+
+  String? get addressNonce => getField<String>('address_nonce');
+  set addressNonce(String? value) => setField<String>('address_nonce', value);
+
+  int? get addressVersion => getField<int>('address_version');
+  set addressVersion(int? value) => setField<int>('address_version', value);
+
+  DateTime? get updatedAt => getField<DateTime>('updated_at');
+  set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
 }

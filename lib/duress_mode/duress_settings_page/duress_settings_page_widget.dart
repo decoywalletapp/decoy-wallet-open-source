@@ -2,6 +2,7 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -485,11 +486,16 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 0.0, 0.0),
             child: FFButtonWidget(
               onPressed: () async {
+                _model.dloutResult = await actions.getSupabaseJwt();
+                FFAppState().authJwt = '';
+                safeSetState(() {});
                 GoRouter.of(context).prepareAuthEvent();
                 await authManager.signOut();
                 GoRouter.of(context).clearRedirectLocation();
 
                 context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
+
+                safeSetState(() {});
               },
               text: 'Log Out',
               options: FFButtonOptions(

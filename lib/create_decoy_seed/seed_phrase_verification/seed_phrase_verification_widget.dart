@@ -473,7 +473,7 @@ class _SeedPhraseVerificationWidgetState
                                                                   true,
                                                               transitionType:
                                                                   PageTransitionType
-                                                                      .leftToRight,
+                                                                      .rightToLeft,
                                                             ),
                                                           },
                                                         );
@@ -700,7 +700,7 @@ class _SeedPhraseVerificationWidgetState
                                                                   true,
                                                               transitionType:
                                                                   PageTransitionType
-                                                                      .leftToRight,
+                                                                      .rightToLeft,
                                                             ),
                                                           },
                                                         );
@@ -927,7 +927,7 @@ class _SeedPhraseVerificationWidgetState
                                                                   true,
                                                               transitionType:
                                                                   PageTransitionType
-                                                                      .leftToRight,
+                                                                      .rightToLeft,
                                                             ),
                                                           },
                                                         );

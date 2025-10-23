@@ -246,6 +246,42 @@ class VerifyPINCall {
       ));
 }
 
+class WrapDataKeyCall {
+  static Future<ApiCallResponse> call({
+    String? dataKeyB64 = '',
+    String? jwt = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "dataKeyB64": "${escapeStringForJson(dataKeyB64)}",
+  "jwt": "${escapeStringForJson(jwt)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'WrapDataKey',
+      apiUrl: 'https://wrapdatakey-866378207353.us-central1.run.app',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer \${appState.authJwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static dynamic wrappedB64(dynamic response) => getJsonField(
+        response,
+        r'''$.wrappedB64''',
+      );
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

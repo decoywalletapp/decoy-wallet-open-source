@@ -76,10 +76,25 @@ class _GenerateDecoySeedPhraseWidgetState
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.security_rounded,
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 80.0,
+                          Stack(
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.01, 0.0),
+                                child: Icon(
+                                  Icons.security_rounded,
+                                  color: Color(0xFF001DF7),
+                                  size: 80.0,
+                                ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Icon(
+                                  Icons.security_rounded,
+                                  color: FlutterFlowTheme.of(context).error,
+                                  size: 80.0,
+                                ),
+                              ),
+                            ],
                           ),
                           Column(
                             mainAxisSize: MainAxisSize.max,

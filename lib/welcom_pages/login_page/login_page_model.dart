@@ -16,6 +16,8 @@ class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
   TextEditingController? passwordLoginTextController;
   late bool passwordLoginVisibility;
   String? Function(BuildContext, String?)? passwordLoginTextControllerValidator;
+  // Stores action output result for [Custom Action - getSupabaseJwt] action in Login widget.
+  String? result;
 
   @override
   void initState(BuildContext context) {

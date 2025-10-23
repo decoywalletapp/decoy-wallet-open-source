@@ -22,6 +22,8 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   late bool passwordConfirmVisibility;
   String? Function(BuildContext, String?)?
       passwordConfirmTextControllerValidator;
+  // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
+  String? caResult;
 
   @override
   void initState(BuildContext context) {

@@ -2,6 +2,7 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -525,6 +526,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                 ),
                                 FFButtonWidget(
                                   onPressed: () async {
+                                    _model.caResult =
+                                        await actions.getSupabaseJwt();
+                                    FFAppState().authJwt = _model.caResult!;
+                                    safeSetState(() {});
+
                                     context.pushNamedAuth(
                                         ConfirmEmailPageWidget.routeName,
                                         context.mounted);
@@ -563,6 +569,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                     context.pushNamedAuth(
                                         ConfirmEmailPageWidget.routeName,
                                         context.mounted);
+
+                                    safeSetState(() {});
                                   },
                                   text: 'Create Account',
                                   options: FFButtonOptions(
