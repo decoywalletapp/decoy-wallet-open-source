@@ -9,8 +9,6 @@ export '/welcom_pages/update_password_page/update_password_page_widget.dart'
     show UpdatePasswordPageWidget;
 export '/home_pages/settings/settings_widget.dart' show SettingsWidget;
 export '/home_pages/home_page/home_page_widget.dart' show HomePageWidget;
-export '/welcom_pages/subscription_options/subscription_options_widget.dart'
-    show SubscriptionOptionsWidget;
 export '/welcom_pages/lightning_scan/lightning_scan_widget.dart'
     show LightningScanWidget;
 export '/home_pages/create_ticket/create_ticket_widget.dart'

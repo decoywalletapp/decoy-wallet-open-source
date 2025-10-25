@@ -9,14 +9,18 @@ import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import '/custom_code/widgets/index.dart';
+import '/custom_code/actions/index.dart';
+import '/flutter_flow/custom_functions.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
-/// Listens for any incoming deep link and verifies the Supabase OTP.
-/// Keep this mounted on the very first page that opens (e.g. Login).
+/// Verifies Supabase OTP from confirm-email deep links,
+/// then navigates to the phoneNumberInput page.
 class VerifyAnyLink extends StatefulWidget {
   final double? width;
   final double? height;
@@ -40,7 +44,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   Future<void> _init() async {
     _appLinks = AppLinks();
 
-    // Handle a link that launched the app (cold start).
+    // Cold start: app opened from a link
     try {
       final uri = await _appLinks!.getInitialLink();
       if (kDebugMode) debugPrint('[VerifyAnyLink] initial link: $uri');
@@ -51,7 +55,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       }
     }
 
-    // Handle links while the app is running.
+    // While running: subsequent links
     _sub = _appLinks!.uriLinkStream.listen(
       (uri) {
         if (kDebugMode) debugPrint('[VerifyAnyLink] stream link: $uri');
@@ -64,7 +68,6 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   }
 
   Future<void> _handleUri(Uri uri) async {
-    // Accept either `token_hash` or `tokenHash`
     final p = uri.queryParameters;
     final tokenHash = p['token_hash'] ?? p['tokenHash'];
     final t = (p['type'] ?? 'signup').toLowerCase();
@@ -73,13 +76,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       debugPrint('[VerifyAnyLink] handling: $uri');
       debugPrint('[VerifyAnyLink]   tokenHash: $tokenHash | type: $t');
     }
-
-    if (tokenHash == null || tokenHash.isEmpty) {
-      if (kDebugMode) {
-        debugPrint('[VerifyAnyLink]   -> no token_hash, ignoring');
-      }
-      return;
-    }
+    if (tokenHash == null || tokenHash.isEmpty) return;
 
     final typeMap = <String, OtpType>{
       'signup': OtpType.signup,
@@ -99,41 +96,27 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         tokenHash: tokenHash,
       );
 
-      if (kDebugMode) {
-        debugPrint('[VerifyAnyLink] verifyOTP -> '
-            'user? ${res.user != null}, session? ${res.session != null}');
-      }
-
-      // Give the SDK a moment to hydrate the current session.
+      // let session hydrate
       await Future.delayed(const Duration(milliseconds: 300));
 
       final session = client.auth.currentSession ?? res.session;
       final ok = session != null || res.user != null;
 
-      if (!mounted || _navigated) {
-        if (kDebugMode) {
-          debugPrint('[VerifyAnyLink] not mounted/already navigated; return');
-        }
-        return;
-      }
+      if (!mounted || _navigated) return;
 
       if (ok) {
         _navigated = true;
-        if (kDebugMode)
-          debugPrint('[VerifyAnyLink] nav -> subscriptionOptions');
-        // IMPORTANT: must match your FlutterFlow named route exactly.
-        context.goNamed('subscriptionOptions');
+        if (kDebugMode) debugPrint('[VerifyAnyLink] nav -> phoneNumberInput');
+        // MUST match your FlutterFlow Page Name exactly
+        context.goNamed('phoneNumberInput');
       } else {
-        // In release, stay silent; in debug, show a quick hint.
         if (kDebugMode) {
-          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Verification failed.')),
           );
         }
       }
     } on AuthApiException catch (e, st) {
-      // Swallow common/benign OTP errors in release (e.g., tapping old emails).
       if (e.code == 'otp_expired' || e.statusCode == 403) {
         if (kDebugMode) {
           debugPrint('[VerifyAnyLink] Ignored (otp_expired/403): $e\n$st');
@@ -143,7 +126,6 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       if (!mounted) return;
       if (kDebugMode) {
         debugPrint('[VerifyAnyLink] AuthApiException: $e\n$st');
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${e.message}')),
         );
@@ -152,7 +134,6 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       if (!mounted) return;
       if (kDebugMode) {
         debugPrint('[VerifyAnyLink] ERROR: $e\n$st');
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
         );
@@ -168,7 +149,6 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
 
   @override
   Widget build(BuildContext context) {
-    // Invisible placeholder so FlutterFlow can place the widget.
     return SizedBox(
       width: widget.width,
       height: widget.height,

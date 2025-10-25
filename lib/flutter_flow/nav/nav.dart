@@ -129,12 +129,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => HomePageWidget(),
       ),
       FFRoute(
-        name: SubscriptionOptionsWidget.routeName,
-        path: SubscriptionOptionsWidget.routePath,
-        requireAuth: true,
-        builder: (context, params) => SubscriptionOptionsWidget(),
-      ),
-      FFRoute(
         name: LightningScanWidget.routeName,
         path: LightningScanWidget.routePath,
         builder: (context, params) => LightningScanWidget(),

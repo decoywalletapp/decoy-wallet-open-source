@@ -810,7 +810,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                           });
 
                                                           context.pushNamedAuth(
-                                                              SubscriptionOptionsWidget
+                                                              PhoneNumberInputWidget
                                                                   .routeName,
                                                               context.mounted);
                                                         },

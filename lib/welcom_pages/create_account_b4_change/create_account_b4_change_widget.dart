@@ -556,7 +556,7 @@ class _CreateAccountB4ChangeWidgetState
                                     }
 
                                     context.pushNamedAuth(
-                                        SubscriptionOptionsWidget.routeName,
+                                        PhoneNumberInputWidget.routeName,
                                         context.mounted);
                                   },
                                   text: 'Create Account',
@@ -797,7 +797,7 @@ class _CreateAccountB4ChangeWidgetState
                                                           });
 
                                                           context.pushNamedAuth(
-                                                              SubscriptionOptionsWidget
+                                                              PhoneNumberInputWidget
                                                                   .routeName,
                                                               context.mounted);
                                                         },

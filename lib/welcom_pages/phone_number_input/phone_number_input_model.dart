@@ -15,6 +15,8 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
+  // Stores action output result for [Custom Action - getSupabaseJwt] action in phoneNumberInput widget.
+  String? soResult;
   // State field(s) for PhoneNumberField widget.
   FocusNode? phoneNumberFieldFocusNode;
   TextEditingController? phoneNumberFieldTextController;

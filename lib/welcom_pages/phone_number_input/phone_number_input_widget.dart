@@ -1,13 +1,16 @@
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:provider/provider.dart';
 import 'phone_number_input_model.dart';
 export 'phone_number_input_model.dart';
 
@@ -16,7 +19,7 @@ export 'phone_number_input_model.dart';
 class PhoneNumberInputWidget extends StatefulWidget {
   const PhoneNumberInputWidget({super.key});
 
-  static String routeName = 'PhoneNumberInput';
+  static String routeName = 'phoneNumberInput';
   static String routePath = '/phoneNumberInput';
 
   @override
@@ -32,6 +35,13 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PhoneNumberInputModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.soResult = await actions.getSupabaseJwt();
+      FFAppState().authJwt = _model.soResult!;
+      safeSetState(() {});
+    });
 
     _model.phoneNumberFieldTextController ??= TextEditingController();
     _model.phoneNumberFieldFocusNode ??= FocusNode();
@@ -50,6 +60,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

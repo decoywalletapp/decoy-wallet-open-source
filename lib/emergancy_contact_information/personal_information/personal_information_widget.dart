@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,12 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PersonalInformationModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.personalSaved = 0;
+      safeSetState(() {});
+    });
 
     _model.firstNameTextController ??= TextEditingController();
     _model.firstNameFocusNode ??= FocusNode();
@@ -98,11 +105,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Personal Contact Information',
@@ -685,20 +694,31 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Icon(
-                              Icons.check_circle_sharp,
-                              color: FlutterFlowTheme.of(context).primary,
-                              size: 20.0,
+                          if (_model.personalSaved == 1)
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Icon(
+                                Icons.check_circle_sharp,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 20.0,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Personal Info Saved',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyLarge
-                                .override(
-                                  font: GoogleFonts.inter(
+                          if (_model.personalSaved == 1)
+                            Text(
+                              'Personal Info Saved',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyLarge
+                                  .override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .fontStyle,
+                                    ),
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    letterSpacing: 0.0,
                                     fontWeight: FlutterFlowTheme.of(context)
                                         .bodyLarge
                                         .fontWeight,
@@ -706,16 +726,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         .bodyLarge
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyLarge
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyLarge
-                                      .fontStyle,
-                                ),
-                          ),
+                            ),
                         ].divide(SizedBox(width: 5.0)),
                       ),
                     ].divide(SizedBox(height: 24.0)),

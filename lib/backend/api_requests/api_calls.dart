@@ -262,7 +262,6 @@ class WrapDataKeyCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer \${appState.authJwt}',
       },
       params: {},
       body: ffApiRequestBody,
