@@ -2075,6 +2075,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                           _model.c5PhoneTFTextController.text,
                           _model.contactIncrement,
                         );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'AAAAAAAAAA',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
                         _model.contactsJson = getJsonField(
                           _model.contactsPayload,
                           r'''$.contactsJson''',
@@ -2084,6 +2097,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                           r'''$.validCount''',
                         );
                         safeSetState(() {});
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'BBBBBBB',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
                         if (_model.contactsJson == '') {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

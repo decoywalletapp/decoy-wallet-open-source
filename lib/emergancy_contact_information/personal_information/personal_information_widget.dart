@@ -742,9 +742,35 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         _model.phoneTextController.text,
                         _model.emailTextController.text,
                       );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'AAAAAAA',
+                            style: TextStyle(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).secondary,
+                        ),
+                      );
                       _model.personalJson = _model.personalJsonOut;
                       safeSetState(() {});
                       _model.dek = await actions.generateDataKeyIfMissing();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'BBBBBBB',
+                            style: TextStyle(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).secondary,
+                        ),
+                      );
                       _model.dataKeyB64 = _model.dek;
                       safeSetState(() {});
                       _model.enc = await actions.aesGcmEncryptString(
@@ -760,6 +786,19 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         r'''$.nonceB64''',
                       ).toString();
                       safeSetState(() {});
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'CCCCCC',
+                            style: TextStyle(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).secondary,
+                        ),
+                      );
                       _model.wrap = await WrapDataKeyCall.call(
                         dataKeyB64: _model.dataKeyB64,
                         jwt: FFAppState().authJwt,
@@ -770,6 +809,19 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         r'''$.wrappedB64''',
                       ).toString();
                       safeSetState(() {});
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'DDDDDD',
+                            style: TextStyle(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).secondary,
+                        ),
+                      );
                       if ((_model.wrap?.succeeded ?? true)) {
                         _model.supaNameInserts =
                             await DecoyWalletTable().insert({

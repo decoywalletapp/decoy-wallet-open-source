@@ -41,7 +41,7 @@ export '/welcom_pages/user_name_entry/user_name_entry_widget.dart'
     show UserNameEntryWidget;
 export '/welcom_pages/confirm_email_page/confirm_email_page_widget.dart'
     show ConfirmEmailPageWidget;
-export '/welcom_pages/create_account_b4_change/create_account_b4_change_widget.dart'
+export '/test_subjects/create_account_b4_change/create_account_b4_change_widget.dart'
     show CreateAccountB4ChangeWidget;
 export '/welcom_pages/confirm_email_route/confirm_email_route_widget.dart'
     show ConfirmEmailRouteWidget;
