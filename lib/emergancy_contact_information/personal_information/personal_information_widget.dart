@@ -823,6 +823,19 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         ),
                       );
                       if ((_model.wrap?.succeeded ?? true)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'trrrrrruuuee',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
                         _model.supaNameInserts =
                             await DecoyWalletTable().insert({
                           'user_id': currentUserUid,
@@ -848,6 +861,19 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         safeSetState(() {});
                         context.safePop();
                       } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'ffffaaaaaalllllssssseeee',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(

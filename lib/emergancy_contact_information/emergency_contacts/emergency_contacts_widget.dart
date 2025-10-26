@@ -50,6 +50,18 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             .order('updated_at'),
       );
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'trrrrrruuuee',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
         _model.ctB64 = _model.rows!.elementAtOrNull(0)!.contactsCiphertext!;
         _model.nonceB64 = _model.rows!.elementAtOrNull(0)!.contactsNonce!;
         safeSetState(() {});
@@ -157,6 +169,18 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           ).toString();
         });
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'fffaaalllsee',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
         _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut2!;
         safeSetState(() {});
@@ -2075,19 +2099,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                           _model.c5PhoneTFTextController.text,
                           _model.contactIncrement,
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'AAAAAAAAAA',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
                         _model.contactsJson = getJsonField(
                           _model.contactsPayload,
                           r'''$.contactsJson''',
@@ -2097,20 +2108,21 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                           r'''$.validCount''',
                         );
                         safeSetState(() {});
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'BBBBBBB',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
                         if (_model.contactsJson == '') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'trrrrrruuuee',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -2126,6 +2138,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                             ),
                           );
                         } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'fffaaaaallllsseee',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
                           _model.jwtOut = await actions.getSupabaseJwt();
                           FFAppState().authJwt = _model.jwtOut!;
                           safeSetState(() {});
