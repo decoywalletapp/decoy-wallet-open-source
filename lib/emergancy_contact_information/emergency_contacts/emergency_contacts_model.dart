@@ -102,8 +102,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   dynamic enc;
   // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
   ApiCallResponse? wrap;
-  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
-  DecoyWalletRow? eMSContactsSave;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<DecoyWalletRow>? eMSContactsSave;
 
   @override
   void initState(BuildContext context) {}

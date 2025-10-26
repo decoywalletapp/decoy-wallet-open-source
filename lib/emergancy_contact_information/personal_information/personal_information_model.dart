@@ -23,6 +23,14 @@ class PersonalInformationModel
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
+  // Stores action output result for [Backend Call - Query Rows] action in PersonalInformation widget.
+  List<DecoyWalletRow>? rows;
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in PersonalInformation widget.
+  String? dataKeyOut;
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in PersonalInformation widget.
+  dynamic personObj;
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in PersonalInformation widget.
+  String? dataKeyOut2;
   // State field(s) for firstName widget.
   FocusNode? firstNameFocusNode;
   TextEditingController? firstNameTextController;
@@ -47,8 +55,8 @@ class PersonalInformationModel
   dynamic enc;
   // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
   ApiCallResponse? wrap;
-  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
-  DecoyWalletRow? supaNameInserts;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<DecoyWalletRow>? supaNameInserts;
 
   @override
   void initState(BuildContext context) {}

@@ -2182,14 +2182,16 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                             r'''$.wrappedB64''',
                           ).toString();
                           safeSetState(() {});
-                          _model.eMSContactsSave =
-                              await DecoyWalletTable().insert({
-                            'user_id': currentUserUid,
-                            'contacts_ciphertext': _model.ctB64,
-                            'contacts_nonce': _model.nonceB64,
-                            'wrapped_datakey': _model.wrappedB64,
-                            'contacts_version': 1,
-                          });
+                          await DecoyWalletTable().update(
+                            data: {
+                              'user_id': currentUserUid,
+                              'contacts_ciphertext': _model.ctB64,
+                              'contacts_nonce': _model.nonceB64,
+                              'wrapped_datakey': _model.wrappedB64,
+                              'contacts_version': 1,
+                            },
+                            matchingRows: (rows) => rows,
+                          );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(

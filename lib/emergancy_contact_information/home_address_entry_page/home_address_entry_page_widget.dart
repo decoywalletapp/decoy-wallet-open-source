@@ -8,6 +8,7 @@ import '/custom_code/actions/index.dart' as actions;
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_address_entry_page_model.dart';
@@ -509,6 +510,8 @@ class _HomeAddressEntryPageWidgetState
                                 controller: _model.stateTextController,
                                 focusNode: _model.stateFocusNode,
                                 autofocus: false,
+                                textCapitalization:
+                                    TextCapitalization.characters,
                                 textInputAction: TextInputAction.next,
                                 obscureText: false,
                                 decoration: InputDecoration(
@@ -618,10 +621,29 @@ class _HomeAddressEntryPageWidgetState
                                           .bodyMedium
                                           .fontStyle,
                                     ),
+                                maxLength: 2,
+                                maxLengthEnforcement:
+                                    MaxLengthEnforcement.enforced,
+                                buildCounter: (context,
+                                        {required currentLength,
+                                        required isFocused,
+                                        maxLength}) =>
+                                    null,
                                 cursorColor:
                                     FlutterFlowTheme.of(context).primaryText,
                                 validator: _model.stateTextControllerValidator
                                     .asValidator(context),
+                                inputFormatters: [
+                                  if (!isAndroid && !isiOS)
+                                    TextInputFormatter.withFunction(
+                                        (oldValue, newValue) {
+                                      return TextEditingValue(
+                                        selection: newValue.selection,
+                                        text: newValue.text.toCapitalization(
+                                            TextCapitalization.characters),
+                                      );
+                                    }),
+                                ],
                               ),
                             ),
                           ].divide(SizedBox(width: 12.0)),
@@ -1082,15 +1104,18 @@ class _HomeAddressEntryPageWidgetState
                             r'''$.wrappedB64''',
                           ).toString();
                           safeSetState(() {});
-                          _model.supaAddress = await DecoyWalletTable().insert({
-                            'user_id': currentUserUid,
-                            'wrapped_datakey': _model.wrappedB64,
-                            'address_ciphertext': _model.ctB64,
-                            'address_nonce': _model.nonceB64,
-                            'address_version': 1,
-                            'updated_at':
-                                supaSerialize<DateTime>(getCurrentTimestamp),
-                          });
+                          await DecoyWalletTable().update(
+                            data: {
+                              'user_id': currentUserUid,
+                              'wrapped_datakey': _model.wrappedB64,
+                              'address_ciphertext': _model.ctB64,
+                              'address_nonce': _model.nonceB64,
+                              'address_version': 1,
+                              'updated_at':
+                                  supaSerialize<DateTime>(getCurrentTimestamp),
+                            },
+                            matchingRows: (rows) => rows,
+                          );
                           _model.addressSaved = 1;
                           safeSetState(() {});
                           await Future.delayed(

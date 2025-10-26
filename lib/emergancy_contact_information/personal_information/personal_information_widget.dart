@@ -44,6 +44,85 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.personalSaved = 0;
       safeSetState(() {});
+      _model.rows = await DecoyWalletTable().queryRows(
+        queryFn: (q) => q
+            .eqOrNull(
+              'user_id',
+              currentUserUid,
+            )
+            .order('updated_at'),
+      );
+      _model.ctB64 = _model.rows?.elementAtOrNull(0)?.personalCiphertext;
+      _model.nonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
+      safeSetState(() {});
+      if (_model.rows != null && (_model.rows)!.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'trrrrrruuuee',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
+        _model.dataKeyOut = await actions.generateDataKeyIfMissing();
+        _model.dataKeyB64 = _model.dataKeyOut;
+        safeSetState(() {});
+        _model.personObj = await actions.aesGcmDecryptToMap(
+          _model.ctB64!,
+          _model.nonceB64!,
+          _model.dataKeyB64!,
+        );
+        safeSetState(() {
+          _model.firstNameTextController?.text = getJsonField(
+            _model.personObj,
+            r'''$.firstName''',
+          ).toString();
+        });
+        safeSetState(() {
+          _model.lastNameTextController?.text = getJsonField(
+            _model.personObj,
+            r'''$.lastName''',
+          ).toString();
+        });
+        safeSetState(() {
+          _model.phoneTextController?.text = getJsonField(
+            _model.personObj,
+            r'''$.phone''',
+          ).toString();
+        });
+        safeSetState(() {
+          _model.emailTextController?.text = getJsonField(
+            _model.personObj,
+            r'''$.email''',
+          ).toString();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'ffffaaallllssseee',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
+        _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
+        _model.dataKeyB64 = _model.dataKeyOut2;
+        safeSetState(() {});
+        safeSetState(() {
+          _model.firstNameTextController?.clear();
+          _model.lastNameTextController?.clear();
+          _model.phoneTextController?.clear();
+          _model.emailTextController?.clear();
+        });
+      }
     });
 
     _model.firstNameTextController ??= TextEditingController();
@@ -836,20 +915,22 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                 FlutterFlowTheme.of(context).secondary,
                           ),
                         );
-                        _model.supaNameInserts =
-                            await DecoyWalletTable().insert({
-                          'user_id': currentUserUid,
-                          'personal_ciphertext': _model.ctB64,
-                          'personal_nonce': _model.nonceB64,
-                          'personal_version': 1,
-                          'wrapped_datakey': _model.wrappedB64,
-                          'first_name': _model.firstNameTextController.text,
-                          'last_name': _model.lastNameTextController.text,
-                          'phone_number': _model.phoneTextController.text,
-                          'email': _model.emailTextController.text,
-                          'updated_at':
-                              supaSerialize<DateTime>(getCurrentTimestamp),
-                        });
+                        await DecoyWalletTable().update(
+                          data: {
+                            'user_id': currentUserUid,
+                            'personal_ciphertext': _model.ctB64,
+                            'personal_nonce': _model.nonceB64,
+                            'personal_version': 1,
+                            'wrapped_datakey': _model.wrappedB64,
+                            'first_name': _model.firstNameTextController.text,
+                            'last_name': _model.lastNameTextController.text,
+                            'phone_number': _model.phoneTextController.text,
+                            'email': _model.emailTextController.text,
+                            'updated_at':
+                                supaSerialize<DateTime>(getCurrentTimestamp),
+                          },
+                          matchingRows: (rows) => rows,
+                        );
                         _model.personalSaved = _model.personalSaved + 1;
                         safeSetState(() {});
                         await Future.delayed(
