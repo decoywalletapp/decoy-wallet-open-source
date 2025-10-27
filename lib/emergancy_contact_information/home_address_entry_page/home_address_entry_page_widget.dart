@@ -1106,7 +1106,6 @@ class _HomeAddressEntryPageWidgetState
                           safeSetState(() {});
                           await DecoyWalletTable().update(
                             data: {
-                              'user_id': currentUserUid,
                               'wrapped_datakey': _model.wrappedB64,
                               'address_ciphertext': _model.ctB64,
                               'address_nonce': _model.nonceB64,
@@ -1114,7 +1113,10 @@ class _HomeAddressEntryPageWidgetState
                               'updated_at':
                                   supaSerialize<DateTime>(getCurrentTimestamp),
                             },
-                            matchingRows: (rows) => rows,
+                            matchingRows: (rows) => rows.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
                           );
                           _model.addressSaved = 1;
                           safeSetState(() {});
