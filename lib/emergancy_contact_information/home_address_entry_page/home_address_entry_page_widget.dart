@@ -51,9 +51,6 @@ class _HomeAddressEntryPageWidgetState
             )
             .order('updated_at'),
       );
-      _model.rowCipherB64 = _model.rows?.elementAtOrNull(0)?.addressCiphertext;
-      _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.addressNonce;
-      safeSetState(() {});
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -67,15 +64,17 @@ class _HomeAddressEntryPageWidgetState
             backgroundColor: FlutterFlowTheme.of(context).secondary,
           ),
         );
-        _model.ctB64 = _model.rows?.elementAtOrNull(0)?.addressCiphertext;
-        _model.nonceB64 = _model.rows?.elementAtOrNull(0)?.addressNonce;
+        _model.rowCipherB64 =
+            _model.rows?.elementAtOrNull(0)?.addressCiphertext;
+        _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.addressNonce;
+        _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
         safeSetState(() {});
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
         _model.addrObj = await actions.aesGcmDecryptToMap(
-          _model.ctB64!,
-          _model.nonceB64!,
+          _model.rowCipherB64!,
+          _model.rowNonceB64!,
           _model.dataKeyB64!,
         );
         safeSetState(() {
@@ -129,6 +128,9 @@ class _HomeAddressEntryPageWidgetState
         );
         _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut2;
+        _model.rowCipherB64 = '';
+        _model.rowNonceB64 = '';
+        _model.wrappedB64 = '';
         safeSetState(() {});
         safeSetState(() {
           _model.streetAddressTextController?.clear();
@@ -1064,11 +1066,11 @@ class _HomeAddressEntryPageWidgetState
                         safeSetState(() {});
                         _model.keyOut =
                             await actions.generateDataKeyIfMissing();
-                        _model.dataKey = _model.keyOut;
+                        _model.dataKeyB64 = _model.keyOut;
                         safeSetState(() {});
                         _model.enc = await actions.aesGcmEncryptString(
-                          _model.playload!.toString(),
-                          _model.dataKey!,
+                          _model.addressJson!,
+                          _model.dataKeyB64!,
                         );
                         _model.ctB64 = getJsonField(
                           _model.enc,
@@ -1080,7 +1082,7 @@ class _HomeAddressEntryPageWidgetState
                         ).toString();
                         safeSetState(() {});
                         _model.wrap = await WrapDataKeyCall.call(
-                          dataKeyB64: _model.dataKey,
+                          dataKeyB64: _model.dataKeyB64,
                           jwt: FFAppState().authJwt,
                         );
 
@@ -1104,28 +1106,55 @@ class _HomeAddressEntryPageWidgetState
                             r'''$.wrappedB64''',
                           ).toString();
                           safeSetState(() {});
-                          await DecoyWalletTable().update(
-                            data: {
+                          _model.supaRows = await DecoyWalletTable().queryRows(
+                            queryFn: (q) => q.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
+                          );
+                          if (_model.supaRows != null &&
+                              (_model.supaRows)!.isNotEmpty) {
+                            await DecoyWalletTable().update(
+                              data: {
+                                'wrapped_datakey': _model.wrappedB64,
+                                'address_ciphertext': _model.ctB64,
+                                'address_nonce': _model.nonceB64,
+                                'address_version': 1,
+                                'updated_at': supaSerialize<DateTime>(
+                                    getCurrentTimestamp),
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+                            _model.addressSaved = 1;
+                            safeSetState(() {});
+                            await Future.delayed(
+                              Duration(
+                                milliseconds: 2000,
+                              ),
+                            );
+                            context.safePop();
+                          } else {
+                            _model.insRow = await DecoyWalletTable().insert({
+                              'user_id': currentUserUid,
                               'wrapped_datakey': _model.wrappedB64,
                               'address_ciphertext': _model.ctB64,
                               'address_nonce': _model.nonceB64,
                               'address_version': 1,
                               'updated_at':
                                   supaSerialize<DateTime>(getCurrentTimestamp),
-                            },
-                            matchingRows: (rows) => rows.eqOrNull(
-                              'user_id',
-                              currentUserUid,
-                            ),
-                          );
-                          _model.addressSaved = 1;
-                          safeSetState(() {});
-                          await Future.delayed(
-                            Duration(
-                              milliseconds: 2000,
-                            ),
-                          );
-                          context.safePop();
+                            });
+                            _model.addressSaved = 1;
+                            safeSetState(() {});
+                            await Future.delayed(
+                              Duration(
+                                milliseconds: 2000,
+                              ),
+                            );
+                            context.safePop();
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
