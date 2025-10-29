@@ -20,6 +20,10 @@ class PersonalInformationModel
 
   int personalSaved = 0;
 
+  String? rowCipherB64;
+
+  String? rowNonceB64;
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -28,7 +32,7 @@ class PersonalInformationModel
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in PersonalInformation widget.
   String? dataKeyOut;
   // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in PersonalInformation widget.
-  dynamic personObj;
+  dynamic personalObj;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in PersonalInformation widget.
   String? dataKeyOut2;
   // State field(s) for firstName widget.
@@ -49,10 +53,14 @@ class PersonalInformationModel
   String? Function(BuildContext, String?)? emailTextControllerValidator;
   // Stores action output result for [Custom Action - buildPersonalJson] action in Button widget.
   String? personalJsonOut;
+  // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
+  String? jwtOut;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
-  String? dek;
+  String? keyOut;
   // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.
   dynamic enc;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? supaRows;
   // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
   ApiCallResponse? wrap;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.

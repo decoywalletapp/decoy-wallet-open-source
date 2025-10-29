@@ -52,9 +52,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             )
             .order('updated_at'),
       );
-      _model.ctB64 = _model.rows?.elementAtOrNull(0)?.personalCiphertext;
-      _model.nonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
-      safeSetState(() {});
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -68,35 +65,39 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             backgroundColor: FlutterFlowTheme.of(context).secondary,
           ),
         );
+        _model.rowCipherB64 = _model.rows?.elementAtOrNull(0)?.personalCipher;
+        _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
+        _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
+        safeSetState(() {});
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
-        _model.personObj = await actions.aesGcmDecryptToMap(
-          _model.ctB64!,
-          _model.nonceB64!,
+        _model.personalObj = await actions.aesGcmDecryptToMap(
+          _model.rowCipherB64!,
+          _model.rowNonceB64!,
           _model.dataKeyB64!,
         );
         safeSetState(() {
           _model.firstNameTextController?.text = getJsonField(
-            _model.personObj,
+            _model.personalObj,
             r'''$.firstName''',
           ).toString();
         });
         safeSetState(() {
           _model.lastNameTextController?.text = getJsonField(
-            _model.personObj,
+            _model.personalObj,
             r'''$.lastName''',
           ).toString();
         });
         safeSetState(() {
           _model.phoneTextController?.text = getJsonField(
-            _model.personObj,
+            _model.personalObj,
             r'''$.phone''',
           ).toString();
         });
         safeSetState(() {
           _model.emailTextController?.text = getJsonField(
-            _model.personObj,
+            _model.personalObj,
             r'''$.email''',
           ).toString();
         });
@@ -821,36 +822,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         _model.phoneTextController.text,
                         _model.emailTextController.text,
                       );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'AAAAAAA',
-                            style: TextStyle(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                            ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).secondary,
-                        ),
-                      );
                       _model.personalJson = _model.personalJsonOut;
                       safeSetState(() {});
-                      _model.dek = await actions.generateDataKeyIfMissing();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'BBBBBBB',
-                            style: TextStyle(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                            ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).secondary,
-                        ),
-                      );
-                      _model.dataKeyB64 = _model.dek;
+                      _model.jwtOut = await actions.getSupabaseJwt();
+                      FFAppState().authJwt = _model.jwtOut!;
+                      safeSetState(() {});
+                      _model.keyOut = await actions.generateDataKeyIfMissing();
+                      _model.dataKeyB64 = _model.keyOut;
                       safeSetState(() {});
                       _model.enc = await actions.aesGcmEncryptString(
                         _model.personalJson!,
@@ -865,109 +843,105 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                         r'''$.nonceB64''',
                       ).toString();
                       safeSetState(() {});
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'CCCCCC',
-                            style: TextStyle(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                            ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).secondary,
-                        ),
+                      _model.supaRows = await DecoyWalletTable().queryRows(
+                        queryFn: (q) => q
+                            .eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            )
+                            .order('updated_at'),
                       );
-                      _model.wrap = await WrapDataKeyCall.call(
-                        dataKeyB64: _model.dataKeyB64,
-                        jwt: FFAppState().authJwt,
-                      );
-
-                      _model.wrappedB64 = getJsonField(
-                        (_model.wrap?.jsonBody ?? ''),
-                        r'''$.wrappedB64''',
-                      ).toString();
-                      safeSetState(() {});
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'DDDDDD',
-                            style: TextStyle(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                            ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).secondary,
-                        ),
-                      );
-                      if ((_model.wrap?.succeeded ?? true)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'trrrrrruuuee',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
-                        await DecoyWalletTable().update(
-                          data: {
-                            'user_id': currentUserUid,
-                            'personal_ciphertext': _model.ctB64,
-                            'personal_nonce': _model.nonceB64,
-                            'personal_version': 1,
-                            'wrapped_datakey': _model.wrappedB64,
-                            'first_name': _model.firstNameTextController.text,
-                            'last_name': _model.lastNameTextController.text,
-                            'phone_number': _model.phoneTextController.text,
-                            'email': _model.emailTextController.text,
-                            'updated_at':
-                                supaSerialize<DateTime>(getCurrentTimestamp),
-                          },
-                          matchingRows: (rows) => rows,
-                        );
-                        _model.personalSaved = _model.personalSaved + 1;
+                      if ((_model.supaRows != null &&
+                              (_model.supaRows)!.isNotEmpty) &&
+                          (_model.wrappedB64 != null &&
+                              _model.wrappedB64 != '')) {
+                        _model.wrappedB64 =
+                            _model.supaRows?.elementAtOrNull(0)?.wrappedDatakey;
                         safeSetState(() {});
-                        await Future.delayed(
-                          Duration(
-                            milliseconds: 250,
-                          ),
-                        );
-                        _model.personalSaved = _model.personalSaved + 1;
-                        safeSetState(() {});
-                        context.safePop();
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'ffffaaaaaalllllssssseeee',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
+                        _model.wrap = await WrapDataKeyCall.call(
+                          dataKeyB64: _model.dataKeyB64,
+                          jwt: FFAppState().authJwt,
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'FAILED',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
+
+                        if ((_model.wrap?.succeeded ?? true)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'trrrrrruuuee',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
                               ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
                             ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
+                          );
+                          _model.wrappedB64 = getJsonField(
+                            (_model.wrap?.jsonBody ?? ''),
+                            r'''$.wrappedB64''',
+                          ).toString();
+                          safeSetState(() {});
+                          await DecoyWalletTable().update(
+                            data: {
+                              'personal_ciphertext': _model.ctB64,
+                              'personal_nonce': _model.nonceB64,
+                              'personal_version': 1,
+                              'wrapped_datakey': _model.wrappedB64,
+                              'first_name': _model.firstNameTextController.text,
+                              'last_name': _model.lastNameTextController.text,
+                              'phone_number': _model.phoneTextController.text,
+                              'email': _model.emailTextController.text,
+                              'updated_at':
+                                  supaSerialize<DateTime>(getCurrentTimestamp),
+                            },
+                            matchingRows: (rows) => rows.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
+                          );
+                          _model.personalSaved = _model.personalSaved + 1;
+                          safeSetState(() {});
+                          await Future.delayed(
+                            Duration(
+                              milliseconds: 250,
+                            ),
+                          );
+                          _model.personalSaved = _model.personalSaved + -1;
+                          safeSetState(() {});
+                          context.safePop();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'ffffaaaaaalllllssssseeee',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'FAILED',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
+                        }
                       }
 
                       safeSetState(() {});
