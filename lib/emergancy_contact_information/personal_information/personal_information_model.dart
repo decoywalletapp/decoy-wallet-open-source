@@ -59,12 +59,14 @@ class PersonalInformationModel
   String? keyOut;
   // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.
   dynamic enc;
-  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
-  List<DecoyWalletRow>? supaRows;
   // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
   ApiCallResponse? wrap;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? supaRows;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
-  List<DecoyWalletRow>? supaNameInserts;
+  List<DecoyWalletRow>? supaNameUpdate;
+  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
+  DecoyWalletRow? supaNameInserts;
 
   @override
   void initState(BuildContext context) {}

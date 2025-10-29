@@ -1049,175 +1049,179 @@ class _HomeAddressEntryPageWidgetState
                         ),
                       ].divide(SizedBox(height: 16.0)),
                     ),
-                    FFButtonWidget(
-                      onPressed: () async {
-                        _model.playload = await actions.buildAddressPayloadV1(
-                          _model.streetAddressTextController.text,
-                          _model.cityTextController.text,
-                          _model.stateTextController.text,
-                          _model.zipTextController.text,
-                          _model.apartmentTextController.text,
-                          _model.countryTextController.text,
-                        );
-                        _model.addressJson = _model.playload?.toString();
-                        safeSetState(() {});
-                        _model.jwtOut = await actions.getSupabaseJwt();
-                        FFAppState().authJwt = _model.jwtOut!;
-                        safeSetState(() {});
-                        _model.keyOut =
-                            await actions.generateDataKeyIfMissing();
-                        _model.dataKeyB64 = _model.keyOut;
-                        safeSetState(() {});
-                        _model.enc = await actions.aesGcmEncryptString(
-                          _model.addressJson!,
-                          _model.dataKeyB64!,
-                        );
-                        _model.ctB64 = getJsonField(
-                          _model.enc,
-                          r'''$.ciphertextB64''',
-                        ).toString();
-                        _model.nonceB64 = getJsonField(
-                          _model.enc,
-                          r'''$.nonceB64''',
-                        ).toString();
-                        safeSetState(() {});
-                        _model.wrap = await WrapDataKeyCall.call(
-                          dataKeyB64: _model.dataKeyB64,
-                          jwt: FFAppState().authJwt,
-                        );
-
-                        if ((_model.wrap?.succeeded ?? true)) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'trrrrrruuuee',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          _model.playload = await actions.buildAddressPayloadV1(
+                            _model.streetAddressTextController.text,
+                            _model.cityTextController.text,
+                            _model.stateTextController.text,
+                            _model.zipTextController.text,
+                            _model.apartmentTextController.text,
+                            _model.countryTextController.text,
                           );
-                          _model.wrappedB64 = getJsonField(
-                            (_model.wrap?.jsonBody ?? ''),
-                            r'''$.wrappedB64''',
+                          _model.addressJson = _model.playload?.toString();
+                          safeSetState(() {});
+                          _model.jwtOut = await actions.getSupabaseJwt();
+                          FFAppState().authJwt = _model.jwtOut!;
+                          safeSetState(() {});
+                          _model.keyOut =
+                              await actions.generateDataKeyIfMissing();
+                          _model.dataKeyB64 = _model.keyOut;
+                          safeSetState(() {});
+                          _model.enc = await actions.aesGcmEncryptString(
+                            _model.addressJson!,
+                            _model.dataKeyB64!,
+                          );
+                          _model.ctB64 = getJsonField(
+                            _model.enc,
+                            r'''$.ciphertextB64''',
+                          ).toString();
+                          _model.nonceB64 = getJsonField(
+                            _model.enc,
+                            r'''$.nonceB64''',
                           ).toString();
                           safeSetState(() {});
-                          _model.supaRows = await DecoyWalletTable().queryRows(
-                            queryFn: (q) => q.eqOrNull(
-                              'user_id',
-                              currentUserUid,
-                            ),
+                          _model.wrap = await WrapDataKeyCall.call(
+                            dataKeyB64: _model.dataKeyB64,
+                            jwt: FFAppState().authJwt,
                           );
-                          if (_model.supaRows != null &&
-                              (_model.supaRows)!.isNotEmpty) {
-                            await DecoyWalletTable().update(
-                              data: {
+
+                          if ((_model.wrap?.succeeded ?? true)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'trrrrrruuuee',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+                            _model.wrappedB64 = getJsonField(
+                              (_model.wrap?.jsonBody ?? ''),
+                              r'''$.wrappedB64''',
+                            ).toString();
+                            safeSetState(() {});
+                            _model.supaRows =
+                                await DecoyWalletTable().queryRows(
+                              queryFn: (q) => q.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+                            if (_model.supaRows != null &&
+                                (_model.supaRows)!.isNotEmpty) {
+                              await DecoyWalletTable().update(
+                                data: {
+                                  'wrapped_datakey': _model.wrappedB64,
+                                  'address_ciphertext': _model.ctB64,
+                                  'address_nonce': _model.nonceB64,
+                                  'address_version': 1,
+                                  'updated_at': supaSerialize<DateTime>(
+                                      getCurrentTimestamp),
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              );
+                              _model.addressSaved = 1;
+                              safeSetState(() {});
+                              await Future.delayed(
+                                Duration(
+                                  milliseconds: 2000,
+                                ),
+                              );
+                              context.safePop();
+                            } else {
+                              _model.insRow = await DecoyWalletTable().insert({
+                                'user_id': currentUserUid,
                                 'wrapped_datakey': _model.wrappedB64,
                                 'address_ciphertext': _model.ctB64,
                                 'address_nonce': _model.nonceB64,
                                 'address_version': 1,
                                 'updated_at': supaSerialize<DateTime>(
                                     getCurrentTimestamp),
-                              },
-                              matchingRows: (rows) => rows.eqOrNull(
-                                'user_id',
-                                currentUserUid,
-                              ),
-                            );
-                            _model.addressSaved = 1;
-                            safeSetState(() {});
-                            await Future.delayed(
-                              Duration(
-                                milliseconds: 2000,
-                              ),
-                            );
-                            context.safePop();
+                              });
+                              _model.addressSaved = 1;
+                              safeSetState(() {});
+                              await Future.delayed(
+                                Duration(
+                                  milliseconds: 2000,
+                                ),
+                              );
+                              context.safePop();
+                            }
                           } else {
-                            _model.insRow = await DecoyWalletTable().insert({
-                              'user_id': currentUserUid,
-                              'wrapped_datakey': _model.wrappedB64,
-                              'address_ciphertext': _model.ctB64,
-                              'address_nonce': _model.nonceB64,
-                              'address_version': 1,
-                              'updated_at':
-                                  supaSerialize<DateTime>(getCurrentTimestamp),
-                            });
-                            _model.addressSaved = 1;
-                            safeSetState(() {});
-                            await Future.delayed(
-                              Duration(
-                                milliseconds: 2000,
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'ffffaaaallllssseee',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
                               ),
                             );
-                            context.safePop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'ADDRESS NOT SAVED',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
                           }
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'ffffaaaallllssseee',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'ADDRESS NOT SAVED',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
-                        }
 
-                        safeSetState(() {});
-                      },
-                      text: 'Save Address',
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 56.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleMedium.override(
-                                  font: GoogleFonts.interTight(
+                          safeSetState(() {});
+                        },
+                        text: 'Save',
+                        options: FFButtonOptions(
+                          width: 250.0,
+                          height: 56.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primary,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleMedium.override(
+                                    font: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w600,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .fontStyle,
+                                    ),
+                                    color: Colors.white,
+                                    letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .fontStyle,
                                   ),
-                                  color: Colors.white,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .fontStyle,
-                                ),
-                        elevation: 3.0,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
+                          elevation: 3.0,
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
                         ),
-                        borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
                   ]

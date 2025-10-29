@@ -21,6 +21,10 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   String wrappedB64 = '\"\"';
 
+  String? rowCipherB64;
+
+  String? rowNonceB64;
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -102,8 +106,12 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   dynamic enc;
   // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
   ApiCallResponse? wrap;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? upd;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
-  List<DecoyWalletRow>? eMSContactsSave;
+  List<DecoyWalletRow>? updRow;
+  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
+  DecoyWalletRow? insRow;
 
   @override
   void initState(BuildContext context) {}

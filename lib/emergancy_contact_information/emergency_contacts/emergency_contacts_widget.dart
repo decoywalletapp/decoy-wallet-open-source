@@ -62,112 +62,143 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             backgroundColor: FlutterFlowTheme.of(context).secondary,
           ),
         );
-        _model.ctB64 = _model.rows!.elementAtOrNull(0)!.contactsCiphertext!;
-        _model.nonceB64 = _model.rows!.elementAtOrNull(0)!.contactsNonce!;
+        _model.rowCipherB64 =
+            _model.rows?.elementAtOrNull(0)?.contactsCiphertext;
+        _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.contactsNonce;
+        _model.wrappedB64 = _model.rows!.elementAtOrNull(0)!.wrappedDatakey!;
         safeSetState(() {});
-        _model.dataKeyOut = await actions.generateDataKeyIfMissing();
-        _model.dataKeyB64 = _model.dataKeyOut!;
-        safeSetState(() {});
-        _model.contactsObj = await actions.aesGcmDecryptToMap(
-          _model.ctB64,
-          _model.nonceB64,
-          _model.dataKeyB64,
-        );
-        _model.contactIncrement = getJsonField(
-          _model.contactsObj,
-          r'''$.contacts.length''',
-        );
-        safeSetState(() {});
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
+        if (_model.wrappedB64 != '') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'true pt2',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
+          _model.dataKeyOut = await actions.generateDataKeyIfMissing();
+          _model.dataKeyB64 = _model.dataKeyOut!;
+          safeSetState(() {});
+          _model.contactsObj = await actions.aesGcmDecryptToMap(
+            _model.rowCipherB64!,
+            _model.rowNonceB64!,
+            _model.dataKeyB64,
+          );
+          _model.contactsJson = _model.contactsObj!.toString();
+          safeSetState(() {});
+          _model.contactIncrement = getJsonField(
             _model.contactsObj,
-            r'''$.contacts[0].first''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[0].last''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[0].phone''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[1].first''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[1].last''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[1].phone''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[2].first''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[2].last''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[2].phone''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[3].first''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[3].last''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[3].phone''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[4].first''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[4].last''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.c1FirstTFTextController?.text = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[4].phone''',
-          ).toString();
-        });
+            r'''$.contacts.length''',
+          );
+          safeSetState(() {});
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[0].first''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[0].last''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[0].phone''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[1].first''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[1].last''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[1].phone''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[2].first''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[2].last''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[2].phone''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[3].first''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[3].last''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[3].phone''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[4].first''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[4].last''',
+            ).toString();
+          });
+          safeSetState(() {
+            _model.c1FirstTFTextController?.text = getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[4].phone''',
+            ).toString();
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'false pt2',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -2099,119 +2130,65 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                           _model.c5PhoneTFTextController.text,
                           _model.contactIncrement,
                         );
-                        _model.contactsJson = getJsonField(
-                          _model.contactsPayload,
-                          r'''$.contactsJson''',
-                        ).toString();
-                        _model.validCount = getJsonField(
-                          _model.contactsPayload,
-                          r'''$.validCount''',
-                        );
+                        _model.contactsJson =
+                            _model.contactsPayload!.toString();
                         safeSetState(() {});
-                        if (_model.contactsJson == '') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'trrrrrruuuee',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Add Contacts to Continue',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'fffaaaaallllsseee',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
-                          _model.jwtOut = await actions.getSupabaseJwt();
-                          FFAppState().authJwt = _model.jwtOut!;
-                          safeSetState(() {});
-                          _model.keyOut =
-                              await actions.generateDataKeyIfMissing();
-                          _model.dataKeyB64 = _model.keyOut!;
-                          safeSetState(() {});
-                          _model.enc = await actions.aesGcmEncryptString(
-                            _model.contactsJson,
-                            _model.dataKeyB64,
-                          );
-                          _model.ctB64 = getJsonField(
-                            _model.enc,
-                            r'''$.ciphertextB64''',
-                          ).toString();
-                          _model.nonceB64 = getJsonField(
-                            _model.enc,
-                            r'''$.nonceB64''',
-                          ).toString();
-                          safeSetState(() {});
-                          _model.wrap = await WrapDataKeyCall.call(
-                            jwt: FFAppState().authJwt,
-                            dataKeyB64: _model.dataKeyB64,
-                          );
+                        _model.jwtOut = await actions.getSupabaseJwt();
+                        FFAppState().authJwt = _model.jwtOut!;
+                        safeSetState(() {});
+                        _model.keyOut =
+                            await actions.generateDataKeyIfMissing();
+                        _model.dataKeyB64 = _model.keyOut!;
+                        safeSetState(() {});
+                        _model.enc = await actions.aesGcmEncryptString(
+                          _model.contactsJson,
+                          _model.dataKeyB64,
+                        );
+                        _model.ctB64 = getJsonField(
+                          _model.enc,
+                          r'''$.ciphertextB64''',
+                        ).toString();
+                        _model.nonceB64 = getJsonField(
+                          _model.enc,
+                          r'''$.nonceB64''',
+                        ).toString();
+                        safeSetState(() {});
+                        _model.wrap = await WrapDataKeyCall.call(
+                          jwt: FFAppState().authJwt,
+                          dataKeyB64: _model.dataKeyB64,
+                        );
 
+                        if ((_model.wrap?.succeeded ?? true)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'truuuuueeee',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
                           _model.wrappedB64 = getJsonField(
                             (_model.wrap?.jsonBody ?? ''),
                             r'''$.wrappedB64''',
                           ).toString();
                           safeSetState(() {});
-                          await DecoyWalletTable().update(
-                            data: {
-                              'user_id': currentUserUid,
-                              'contacts_ciphertext': _model.ctB64,
-                              'contacts_nonce': _model.nonceB64,
-                              'wrapped_datakey': _model.wrappedB64,
-                              'contacts_version': 1,
-                            },
-                            matchingRows: (rows) => rows,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'EMERGENCY CONTACTS SAVED',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
+                          _model.upd = await DecoyWalletTable().queryRows(
+                            queryFn: (q) => q.eqOrNull(
+                              'user_id',
+                              currentUserUid,
                             ),
                           );
-                          context.safePop();
-                          if (!(_model.wrap?.succeeded ?? true)) {
+                          if (_model.upd != null && (_model.upd)!.isNotEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'COULDN\'T SECURE KEY. PLEASE TRY AGAIN.',
+                                  'EMERGENCY CONTACTS SAVED',
                                   style: TextStyle(
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
@@ -2222,7 +2199,62 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                     FlutterFlowTheme.of(context).secondary,
                               ),
                             );
+                            await DecoyWalletTable().update(
+                              data: {
+                                'wrapped_datakey': _model.wrappedB64,
+                                'updated_at': supaSerialize<DateTime>(
+                                    getCurrentTimestamp),
+                                'contacts_ciphertext': _model.ctB64,
+                                'contacts_nonce': _model.nonceB64,
+                                'contacts_version': 1,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+                            context.safePop();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'INSERTING ROWS',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+                            _model.insRow = await DecoyWalletTable().insert({
+                              'wrapped_datakey': _model.wrappedB64,
+                              'updated_at':
+                                  supaSerialize<DateTime>(getCurrentTimestamp),
+                              'contacts_ciphertext': _model.ctB64,
+                              'contacts_nonce': _model.nonceB64,
+                              'contacts_version': 1,
+                              'user_id': currentUserUid,
+                            });
+                            context.safePop();
                           }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Couldn\'t secure key',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
                         }
 
                         safeSetState(() {});
