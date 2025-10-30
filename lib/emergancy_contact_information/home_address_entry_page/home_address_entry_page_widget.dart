@@ -89,6 +89,20 @@ class _HomeAddressEntryPageWidgetState
           _model.rowNonceB64!,
           _model.dataKeyB64!,
         );
+        _model.debugJSON = _model.addrObj?.toString();
+        safeSetState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _model.debugJSON!,
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
