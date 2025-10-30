@@ -77,6 +77,18 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           _model.rowNonceB64!,
           _model.dataKeyB64!,
         );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _model.personalObj!.toString(),
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
         safeSetState(() {
           _model.firstNameTextController?.text = getJsonField(
             _model.personalObj,

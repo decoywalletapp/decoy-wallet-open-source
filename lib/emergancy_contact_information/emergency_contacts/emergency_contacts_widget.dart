@@ -88,6 +88,18 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             _model.rowNonceB64!,
             _model.dataKeyB64,
           );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _model.contactsObj!.toString(),
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
           _model.contactsJson = _model.contactsObj!.toString();
           safeSetState(() {});
           _model.contactIncrement = getJsonField(
