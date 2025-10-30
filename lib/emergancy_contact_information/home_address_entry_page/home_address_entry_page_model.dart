@@ -76,7 +76,7 @@ class HomeAddressEntryPageModel
   TextEditingController? apartmentTextController;
   String? Function(BuildContext, String?)? apartmentTextControllerValidator;
   // Stores action output result for [Custom Action - buildAddressPayloadV1] action in Button widget.
-  dynamic playload;
+  String? playload;
   // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
   String? jwtOut;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.

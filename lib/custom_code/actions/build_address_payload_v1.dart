@@ -13,7 +13,7 @@ import '/flutter_flow/custom_functions.dart';
 
 import 'dart:convert';
 
-Future<dynamic> buildAddressPayloadV1(
+Future<String> buildAddressPayloadV1(
   String? street,
   String? city,
   String? state,
@@ -21,18 +21,15 @@ Future<dynamic> buildAddressPayloadV1(
   String? apt,
   String? country,
 ) async {
-  // coerce null -> '' and trim
-  String _s(String? v) => (v ?? '').trim();
-
+  String s(String? v) => (v ?? '').trim();
   final m = <String, dynamic>{
-    'street': _s(street),
-    'city': _s(city),
-    'state': _s(state),
-    'zip': _s(zip),
-    'apt': _s(apt),
-    'country': _s(country),
-    'version': 1
+    'street': s(street),
+    'city': s(city),
+    'state': s(state),
+    'zip': s(zip),
+    'apt': s(apt),
+    'country': s(country),
+    'version': 1,
   };
-
-  return m; // JSON object
+  return jsonEncode(m); // ← IMPORTANT
 }
