@@ -145,7 +145,11 @@ class _HomeAddressEntryPageWidgetState
         _model.wrappedB64 = '';
         safeSetState(() {});
         safeSetState(() {
-          _model.streetAddressTextController?.clear();
+          _model.streetAddressTextController?.text = getJsonField(
+            _model.addrObj,
+            r'''$.street''',
+          ).toString();
+
           _model.cityTextController?.clear();
           _model.stateTextController?.clear();
           _model.zipTextController?.clear();
@@ -154,7 +158,11 @@ class _HomeAddressEntryPageWidgetState
       }
     });
 
-    _model.streetAddressTextController ??= TextEditingController();
+    _model.streetAddressTextController ??= TextEditingController(
+        text: getJsonField(
+      _model.addrObj,
+      r'''$.street''',
+    ).toString());
     _model.streetAddressFocusNode ??= FocusNode();
 
     _model.cityTextController ??= TextEditingController();
@@ -1058,6 +1066,65 @@ class _HomeAddressEntryPageWidgetState
                                     ),
                               ),
                           ].divide(SizedBox(width: 5.0)),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                getJsonField(
+                                  _model.addrObj,
+                                  r'''$.street''',
+                                ).toString(),
+                                textAlign: TextAlign.center,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.inter(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                            Text(
+                              getJsonField(
+                                _model.addrObj,
+                                r'''$.city''',
+                              ).toString(),
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                            ),
+                          ],
                         ),
                       ].divide(SizedBox(height: 16.0)),
                     ),
