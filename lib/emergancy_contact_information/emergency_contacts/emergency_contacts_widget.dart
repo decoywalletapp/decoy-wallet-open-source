@@ -104,11 +104,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           );
           _model.contactsJson = _model.contactsObj!.toString();
           safeSetState(() {});
-          _model.contactIncrement = getJsonField(
-            _model.contactsObj,
-            r'''$.contacts.length''',
-          );
-          safeSetState(() {});
           safeSetState(() {
             _model.c1FirstTFTextController?.text = getJsonField(
               _model.contactsObj,
