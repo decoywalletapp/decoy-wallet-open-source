@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
 Uint8List _decodeB64Any(String s) {
@@ -17,6 +18,28 @@ Uint8List _decodeB64Any(String s) {
   final pad = norm.length % 4;
   if (pad != 0) norm = norm + ('=' * (4 - pad));
   return Uint8List.fromList(base64.decode(norm));
+}
+
+// Recursively replace nulls with empty strings in maps/lists
+void _nullsToEmpty(dynamic node) {
+  if (node is Map) {
+    node.forEach((k, v) {
+      if (v == null) {
+        node[k] = '';
+      } else {
+        _nullsToEmpty(v);
+      }
+    });
+  } else if (node is List) {
+    for (var i = 0; i < node.length; i++) {
+      final v = node[i];
+      if (v == null) {
+        node[i] = '';
+      } else {
+        _nullsToEmpty(v);
+      }
+    }
+  }
 }
 
 Future<dynamic> aesGcmDecryptToMap(
@@ -51,6 +74,10 @@ Future<dynamic> aesGcmDecryptToMap(
 
     // plaintext must be a JSON string (your encrypt step builds JSON)
     final obj = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
+
+    // sanitize: convert any nulls (including inside lists) to ''
+    _nullsToEmpty(obj);
+
     obj['_ok'] = true;
     return obj;
   } catch (e) {
