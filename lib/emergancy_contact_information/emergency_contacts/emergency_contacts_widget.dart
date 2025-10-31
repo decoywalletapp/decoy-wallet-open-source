@@ -41,6 +41,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.contactIncrement = FFAppState().emergencyContactsIncrement;
+      safeSetState(() {});
       _model.rows = await DecoyWalletTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
@@ -2218,12 +2220,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 'contacts_ciphertext': _model.ctB64,
                                 'contacts_nonce': _model.nonceB64,
                                 'contacts_version': 1,
+                                'created_at': supaSerialize<DateTime>(
+                                    getCurrentTimestamp),
                               },
                               matchingRows: (rows) => rows.eqOrNull(
                                 'user_id',
                                 currentUserUid,
                               ),
                             );
+                            FFAppState().emergencyContactsIncrement =
+                                _model.contactIncrement;
+                            safeSetState(() {});
                             context.safePop();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -2249,6 +2256,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                               'contacts_version': 1,
                               'user_id': currentUserUid,
                             });
+                            FFAppState().emergencyContactsIncrement =
+                                _model.contactIncrement;
+                            safeSetState(() {});
                             context.safePop();
                           }
                         } else {

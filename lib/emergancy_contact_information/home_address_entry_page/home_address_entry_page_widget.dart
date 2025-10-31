@@ -52,18 +52,6 @@ class _HomeAddressEntryPageWidgetState
             .order('updated_at'),
       );
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'trrrrrruuuee',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         _model.rowCipherB64 =
             _model.rows?.elementAtOrNull(0)?.addressCiphertext;
         _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.addressNonce;
@@ -72,18 +60,6 @@ class _HomeAddressEntryPageWidgetState
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'vertigo',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         _model.addrObj = await actions.aesGcmDecryptToMap(
           _model.rowCipherB64!,
           _model.rowNonceB64!,
@@ -91,42 +67,6 @@ class _HomeAddressEntryPageWidgetState
         );
         _model.debugJSON = _model.addrObj?.toString();
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.debugJSON!,
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'afters',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.addrObj!.toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         safeSetState(() {
           _model.streetAddressTextController?.text = getJsonField(
             _model.addrObj,
@@ -164,18 +104,6 @@ class _HomeAddressEntryPageWidgetState
           ).toString();
         });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'ffffaaallllssseee',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut2;
         _model.rowCipherB64 = '';
@@ -1120,20 +1048,6 @@ class _HomeAddressEntryPageWidgetState
                               await actions.generateDataKeyIfMissing();
                           _model.dataKeyB64 = _model.keyOut;
                           safeSetState(() {});
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                _model.addressJson!,
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
                           _model.enc = await actions.aesGcmEncryptString(
                             _model.addressJson!,
                             _model.dataKeyB64!,
@@ -1153,20 +1067,6 @@ class _HomeAddressEntryPageWidgetState
                           );
 
                           if ((_model.wrap?.succeeded ?? true)) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'trrrrrruuuee',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
                             _model.wrappedB64 = getJsonField(
                               (_model.wrap?.jsonBody ?? ''),
                               r'''$.wrappedB64''',
@@ -1223,20 +1123,6 @@ class _HomeAddressEntryPageWidgetState
                               context.safePop();
                             }
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'ffffaaaallllssseee',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(

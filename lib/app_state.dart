@@ -60,6 +60,11 @@ class FFAppState extends ChangeNotifier {
       _decoyActiveId =
           await secureStorage.getString('ff_decoyActiveId') ?? _decoyActiveId;
     });
+    await _safeInitAsync(() async {
+      _emergencyContactsIncrement =
+          await secureStorage.getInt('ff_emergencyContactsIncrement') ??
+              _emergencyContactsIncrement;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -271,6 +276,17 @@ class FFAppState extends ChangeNotifier {
 
   void deleteDecoyActiveId() {
     secureStorage.delete(key: 'ff_decoyActiveId');
+  }
+
+  int _emergencyContactsIncrement = 0;
+  int get emergencyContactsIncrement => _emergencyContactsIncrement;
+  set emergencyContactsIncrement(int value) {
+    _emergencyContactsIncrement = value;
+    secureStorage.setInt('ff_emergencyContactsIncrement', value);
+  }
+
+  void deleteEmergencyContactsIncrement() {
+    secureStorage.delete(key: 'ff_emergencyContactsIncrement');
   }
 }
 
