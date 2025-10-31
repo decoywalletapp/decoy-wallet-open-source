@@ -134,31 +134,31 @@ class _HomeAddressEntryPageWidgetState
           ).toString();
         });
         safeSetState(() {
-          _model.streetAddressTextController?.text = getJsonField(
+          _model.cityTextController?.text = getJsonField(
             _model.addrObj,
             r'''$.city''',
           ).toString();
         });
         safeSetState(() {
-          _model.streetAddressTextController?.text = getJsonField(
+          _model.stateTextController?.text = getJsonField(
             _model.addrObj,
             r'''$.state''',
           ).toString();
         });
         safeSetState(() {
-          _model.streetAddressTextController?.text = getJsonField(
+          _model.zipTextController?.text = getJsonField(
             _model.addrObj,
             r'''$.zip''',
           ).toString();
         });
         safeSetState(() {
-          _model.streetAddressTextController?.text = getJsonField(
+          _model.countryTextController?.text = getJsonField(
             _model.addrObj,
             r'''$.country''',
           ).toString();
         });
         safeSetState(() {
-          _model.streetAddressTextController?.text = getJsonField(
+          _model.apartmentTextController?.text = getJsonField(
             _model.addrObj,
             r'''$.apt''',
           ).toString();
@@ -1104,95 +1104,6 @@ class _HomeAddressEntryPageWidgetState
                                     ),
                               ),
                           ].divide(SizedBox(width: 5.0)),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Text(
-                                getJsonField(
-                                  _model.addrObj,
-                                  r'''$.street''',
-                                ).toString(),
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.inter(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                              ),
-                            ),
-                            Text(
-                              valueOrDefault<String>(
-                                _model.dataKeyB64,
-                                '0',
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.inter(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              valueOrDefault<String>(
-                                _model.dataKeyOut,
-                                '0',
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.inter(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ],
                         ),
                       ].divide(SizedBox(height: 16.0)),
                     ),
