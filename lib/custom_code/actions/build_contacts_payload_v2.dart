@@ -8,49 +8,32 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-// ---------- Helpers ----------
-String _safeTrim(String? s) => (s ?? '').trim();
+import 'dart:convert';
+
+String _s(String? v) => (v ?? '').trim();
 
 String _normalizePhone(String? input) {
-  // Very forgiving normalizer:
-  // 1) strip everything except digits and '+'
-  // 2) if it already starts with '+', keep it
-  // 3) if 11 digits and starts with '1' -> +1XXXXXXXXXX
-  // 4) if 10 digits -> assume US -> +1XXXXXXXXXX
-  // 5) if starts with '00' -> replace with '+'
-  final raw = (input ?? '').replaceAll(RegExp(r'[^0-9\+]'), '');
+  final raw = _s(input).replaceAll(RegExp(r'[^0-9+]'), '');
   if (raw.isEmpty) return '';
-
   if (raw.startsWith('+')) return raw;
-
-  if (raw.startsWith('00') && raw.length > 2) {
-    return '+${raw.substring(2)}';
-  }
-
+  // If US-like 10 digits, add +1
   final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
-  if (digits.length == 11 && digits.startsWith('1')) return '+$digits';
   if (digits.length == 10) return '+1$digits';
-
-  // Fallback: if we have digits but no leading '+', add it
   return '+$digits';
 }
 
-Map<String, String> _contact(String? first, String? last, String? phone) {
-  return {
-    'first': _safeTrim(first),
-    'last': _safeTrim(last),
-    'phone': _normalizePhone(phone),
-  };
-}
+Map<String, String> _contact(String? f, String? l, String? p) => {
+      'first': _s(f),
+      'last': _s(l),
+      'phone': _normalizePhone(p),
+    };
 
-bool _isEmptyContact(Map<String, String> c) {
-  return (c['first']?.isEmpty ?? true) &&
-      (c['last']?.isEmpty ?? true) &&
-      (c['phone']?.isEmpty ?? true);
-}
+bool _empty(Map<String, String> c) =>
+    (c['first'] ?? '').isEmpty &&
+    (c['last'] ?? '').isEmpty &&
+    (c['phone'] ?? '').isEmpty;
 
-// ---------- Action ----------
-Future<dynamic> buildContactsPayloadV2(
+Future<String> buildContactsPayloadV2(
   String? c1First,
   String? c1Last,
   String? c1Phone,
@@ -68,24 +51,22 @@ Future<dynamic> buildContactsPayloadV2(
   String? c5Phone,
   int contactsVisibleCount,
 ) async {
-  // Build each contact
   final c1 = _contact(c1First, c1Last, c1Phone);
   final c2 = _contact(c2First, c2Last, c2Phone);
   final c3 = _contact(c3First, c3Last, c3Phone);
   final c4 = _contact(c4First, c4Last, c4Phone);
   final c5 = _contact(c5First, c5Last, c5Phone);
 
-  // Only include up to the visible count
   final all = [c1, c2, c3, c4, c5];
   final allowed = all.take(contactsVisibleCount.clamp(0, 5)).toList();
+  final filtered = allowed.where((c) => !_empty(c)).toList();
 
-  // Keep contacts that have at least one non-empty field
-  final filtered = allowed.where((c) => !_isEmptyContact(c)).toList();
-
-  return {
+  final out = {
+    'version': 1,
     'contacts': filtered,
     'validCount': filtered.length,
   };
+  return jsonEncode(out); // IMPORTANT: String out
 }
 // Set your action name, define your arguments and return parameter,
 // and then add the boilerplate code using the green button on the right!

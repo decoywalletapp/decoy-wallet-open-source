@@ -114,85 +114,85 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c1LastTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[0].last''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c1PhoneTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[0].phone''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c2FirstTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[1].first''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c2LastTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[1].last''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c2PhoneTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[1].phone''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c3FirstTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[2].first''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c3LastTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[2].last''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c3PhoneTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[2].phone''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c4FirstTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[3].first''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c4LastTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[3].last''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c4PhoneTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[3].phone''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c5FirstTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[4].first''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c5LastTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[4].last''',
             ).toString();
           });
           safeSetState(() {
-            _model.c1FirstTFTextController?.text = getJsonField(
+            _model.c5PhoneTFTextController?.text = getJsonField(
               _model.contactsObj,
               r'''$.contacts[4].phone''',
             ).toString();
@@ -2142,8 +2142,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                           _model.c5PhoneTFTextController.text,
                           _model.contactIncrement,
                         );
-                        _model.contactsJson =
-                            _model.contactsPayload!.toString();
+                        _model.contactsJson = _model.contactsPayload!;
                         safeSetState(() {});
                         _model.jwtOut = await actions.getSupabaseJwt();
                         FFAppState().authJwt = _model.jwtOut!;

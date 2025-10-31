@@ -183,11 +183,7 @@ class _HomeAddressEntryPageWidgetState
         _model.wrappedB64 = '';
         safeSetState(() {});
         safeSetState(() {
-          _model.streetAddressTextController?.text = getJsonField(
-            _model.addrObj,
-            r'''$.street''',
-          ).toString();
-
+          _model.streetAddressTextController?.clear();
           _model.cityTextController?.clear();
           _model.stateTextController?.clear();
           _model.zipTextController?.clear();
@@ -196,11 +192,7 @@ class _HomeAddressEntryPageWidgetState
       }
     });
 
-    _model.streetAddressTextController ??= TextEditingController(
-        text: getJsonField(
-      _model.addrObj,
-      r'''$.street''',
-    ).toString());
+    _model.streetAddressTextController ??= TextEditingController();
     _model.streetAddressFocusNode ??= FocusNode();
 
     _model.cityTextController ??= TextEditingController();

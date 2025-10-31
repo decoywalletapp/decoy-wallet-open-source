@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 // Automatic FlutterFlow imports...
-
 import 'dart:convert';
 
 Future<String> buildPersonalJson(
@@ -18,14 +17,31 @@ Future<String> buildPersonalJson(
   String? phone,
   String? email,
 ) async {
-  String s(String? v) => (v ?? '').trim();
+  String _s(String? v) => (v ?? '').trim();
+
+  // very forgiving E.164-ish normalizer: keeps digits and a single leading +
+  String _normalizePhone(String? input) {
+    final raw = (input ?? '').trim();
+    if (raw.isEmpty) return '';
+    final digits = raw.replaceAll(RegExp(r'[^0-9+]'), '');
+    if (digits.startsWith('+')) return '+' + digits.replaceAll('+', '');
+    // if 11 digits and starts with 1, assume US
+    final onlyNums = digits.replaceAll(RegExp(r'[^0-9]'), '');
+    if (onlyNums.length == 11 && onlyNums.startsWith('1')) {
+      return '+$onlyNums';
+    }
+    // fallback: just return digits
+    return onlyNums;
+  }
+
   final m = <String, dynamic>{
-    'firstName': s(firstName),
-    'lastName': s(lastName),
-    'phone': s(phone),
-    'email': s(email),
+    'firstName': _s(firstName),
+    'lastName': _s(lastName),
+    'phone': _normalizePhone(phone),
+    'email': _s(email),
     'version': 1,
   };
+
   return jsonEncode(m);
 }
 // Set your action name, define your arguments and return parameter,
