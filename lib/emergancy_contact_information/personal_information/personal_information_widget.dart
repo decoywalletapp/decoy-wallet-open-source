@@ -986,6 +986,42 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(
+                                            _model.origEmail!,
+                                            style: TextStyle(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondary,
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            _model.origPhone!,
+                                            style: TextStyle(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondary,
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
                                             _model.changedEmail!,
                                             style: TextStyle(
                                               color:
@@ -1004,7 +1040,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            _model.cleanEmail!,
+                                            _model.changedPhone!,
                                             style: TextStyle(
                                               color:
                                                   FlutterFlowTheme.of(context)
