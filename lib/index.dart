@@ -73,3 +73,5 @@ export '/welcom_pages/biometric_verification/biometric_verification_widget.dart'
     show BiometricVerificationWidget;
 export '/emergancy_contact_information/personal_information/personal_information_widget.dart'
     show PersonalInformationWidget;
+export '/welcom_pages/create_account_copy/create_account_copy_widget.dart'
+    show CreateAccountCopyWidget;

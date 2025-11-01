@@ -1,9 +1,9 @@
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'create_account_widget.dart' show CreateAccountWidget;
+import 'create_account_copy_widget.dart' show CreateAccountCopyWidget;
 import 'package:flutter/material.dart';
 
-class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
+class CreateAccountCopyModel extends FlutterFlowModel<CreateAccountCopyWidget> {
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for EmailAddress widget.
@@ -22,6 +22,8 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   late bool passwordConfirmVisibility;
   String? Function(BuildContext, String?)?
       passwordConfirmTextControllerValidator;
+  // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
+  String? caResult;
 
   @override
   void initState(BuildContext context) {
