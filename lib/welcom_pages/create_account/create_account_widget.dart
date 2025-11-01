@@ -561,12 +561,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                       return;
                                     }
 
-                                    _model.userEmail =
-                                        await DecoyWalletTable().insert({
-                                      'email': _model
-                                          .emailAddressTextController.text,
-                                    });
-
                                     context.pushNamedAuth(
                                         ConfirmEmailPageWidget.routeName,
                                         context.mounted);

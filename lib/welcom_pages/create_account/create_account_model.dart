@@ -1,4 +1,3 @@
-import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'create_account_widget.dart' show CreateAccountWidget;
@@ -25,8 +24,6 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
       passwordConfirmTextControllerValidator;
   // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
   String? caResult;
-  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
-  DecoyWalletRow? userEmail;
 
   @override
   void initState(BuildContext context) {

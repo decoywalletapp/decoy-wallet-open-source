@@ -964,8 +964,10 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         functions.sanitizePhoneNumber(
                                             _model.phoneTextController.text);
                                     safeSetState(() {});
-                                    if (_model.origEmail !=
-                                        _model.changedEmail) {
+                                    if ((_model.origEmail !=
+                                            _model.changedEmail) &&
+                                        (_model.changedEmail != null &&
+                                            _model.changedEmail != '')) {
                                       await DecoyWalletTable().update(
                                         data: {
                                           'pending_email': _model.changedEmail,
