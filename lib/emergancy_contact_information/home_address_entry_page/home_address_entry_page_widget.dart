@@ -195,7 +195,7 @@ class _HomeAddressEntryPageWidgetState
                     Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: Text(
-                        'Enter your home address',
+                        'Home Address',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context)
                             .headlineSmall
@@ -221,33 +221,15 @@ class _HomeAddressEntryPageWidgetState
                     ),
                     Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Icon(
-                        Icons.home_rounded,
-                        color: FlutterFlowTheme.of(context).primary,
-                        size: 100.0,
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                        child: Icon(
+                          Icons.home_rounded,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 100.0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Please provide your complete home address for emergency services correspondence',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            font: GoogleFonts.inter(
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            letterSpacing: 0.0,
-                            fontWeight: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontWeight,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontStyle,
-                            lineHeight: 1.4,
-                          ),
                     ),
                     Column(
                       mainAxisSize: MainAxisSize.max,

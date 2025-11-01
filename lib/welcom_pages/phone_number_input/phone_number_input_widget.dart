@@ -212,7 +212,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                         color: FlutterFlowTheme.of(context)
-                                            .alternate,
+                                            .primary,
                                         width: 2.0,
                                       ),
                                       borderRadius: BorderRadius.circular(12.0),

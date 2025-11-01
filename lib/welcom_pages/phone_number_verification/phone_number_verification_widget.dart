@@ -210,19 +210,7 @@ class _PhoneNumberVerificationWidgetState
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Container(
-                                  width: 300.0,
-                                  height: 56.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    border: Border.all(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      width: 2.0,
-                                    ),
-                                  ),
+                                Expanded(
                                   child: Container(
                                     width: 200.0,
                                     child: TextFormField(
@@ -444,7 +432,8 @@ class _PhoneNumberVerificationWidgetState
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Color(0x00000000),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
                                             width: 1.0,
                                           ),
                                           borderRadius:

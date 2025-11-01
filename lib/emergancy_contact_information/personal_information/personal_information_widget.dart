@@ -73,6 +73,12 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
+        safeSetState(() {
+          _model.phoneTextController?.text = currentPhoneNumber;
+        });
+        safeSetState(() {
+          _model.emailTextController?.text = currentUserEmail;
+        });
         _model.personalObj = await actions.aesGcmDecryptToMap(
           _model.rowCipherB64!,
           _model.rowNonceB64!,
@@ -124,37 +130,60 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           });
         }
 
-        if (getJsonField(
-          _model.personalObj,
-          r'''$.phone''',
-        )) {
+        if ((getJsonField(
+                  _model.personalObj,
+                  r'''$.phone''',
+                ) ==
+                null) &&
+            (currentPhoneNumber == '')) {
           safeSetState(() {
             _model.phoneTextController?.text = '';
           });
         } else {
-          safeSetState(() {
-            _model.phoneTextController?.text = getJsonField(
-              _model.personalObj,
-              r'''$.phone''',
-            ).toString();
-          });
+          if (getJsonField(
+                _model.personalObj,
+                r'''$.phone''',
+              ) ==
+              null) {
+            safeSetState(() {
+              _model.phoneTextController?.text = currentPhoneNumber;
+            });
+          } else {
+            safeSetState(() {
+              _model.phoneTextController?.text = getJsonField(
+                _model.personalObj,
+                r'''$.phone''',
+              ).toString();
+            });
+          }
         }
 
-        if (getJsonField(
-              _model.personalObj,
-              r'''$.email''',
-            ) ==
-            null) {
+        if ((getJsonField(
+                  _model.personalObj,
+                  r'''$.email''',
+                ) ==
+                null) &&
+            (currentUserEmail == '')) {
           safeSetState(() {
             _model.emailTextController?.text = '';
           });
         } else {
-          safeSetState(() {
-            _model.emailTextController?.text = getJsonField(
-              _model.personalObj,
-              r'''$.email''',
-            ).toString();
-          });
+          if (getJsonField(
+                _model.personalObj,
+                r'''$.email''',
+              ) ==
+              null) {
+            safeSetState(() {
+              _model.emailTextController?.text = currentUserEmail;
+            });
+          } else {
+            safeSetState(() {
+              _model.emailTextController?.text = getJsonField(
+                _model.personalObj,
+                r'''$.email''',
+              ).toString();
+            });
+          }
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -228,8 +257,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                 children: [
                   SingleChildScrollView(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Align(
@@ -247,12 +276,22 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                             },
                           ),
                         ),
-                        Text(
-                          'Personal Contact Information',
-                          style: FlutterFlowTheme.of(context)
-                              .headlineSmall
-                              .override(
-                                font: GoogleFonts.interTight(
+                        Align(
+                          alignment: AlignmentDirectional(0.0, -1.0),
+                          child: Text(
+                            'Personal Contact Information',
+                            style: FlutterFlowTheme.of(context)
+                                .headlineSmall
+                                .override(
+                                  font: GoogleFonts.interTight(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .headlineSmall
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .headlineSmall
+                                        .fontStyle,
+                                  ),
+                                  letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
                                       .headlineSmall
                                       .fontWeight,
@@ -260,47 +299,20 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       .headlineSmall
                                       .fontStyle,
                                 ),
-                                letterSpacing: 0.0,
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .headlineSmall
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineSmall
-                                    .fontStyle,
-                              ),
+                          ),
                         ),
-                        Text(
-                          'Enter the contact information for someone who can be reached in case of an emergency.',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                font: GoogleFonts.inter(
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                letterSpacing: 0.0,
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                                lineHeight: 1.4,
-                              ),
+                        Icon(
+                          Icons.person,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 100.0,
                         ),
                         Form(
                           key: _model.formKey,
                           autovalidateMode: AutovalidateMode.disabled,
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Column(
                                 mainAxisSize: MainAxisSize.max,

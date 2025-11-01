@@ -87,22 +87,26 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text(
-                  'Decoy Emergency Setup',
-                  textAlign: TextAlign.center,
-                  style: FlutterFlowTheme.of(context).displaySmall.override(
-                        font: GoogleFonts.interTight(
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                  child: Text(
+                    'Decoy Emergency Setup',
+                    textAlign: TextAlign.center,
+                    style: FlutterFlowTheme.of(context).displaySmall.override(
+                          font: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .displaySmall
+                                .fontStyle,
+                          ),
+                          fontSize: 28.0,
+                          letterSpacing: 0.0,
                           fontWeight: FontWeight.w600,
                           fontStyle: FlutterFlowTheme.of(context)
                               .displaySmall
                               .fontStyle,
                         ),
-                        fontSize: 28.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w600,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).displaySmall.fontStyle,
-                      ),
+                  ),
                 ),
                 Expanded(
                   child: Column(
@@ -136,7 +140,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                 borderRadius: BorderRadius.circular(16.0),
                                 border: Border.all(
                                   color: FlutterFlowTheme.of(context).primary,
-                                  width: 1.0,
+                                  width: 1.2,
                                 ),
                               ),
                               child: Padding(
@@ -319,7 +323,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                 borderRadius: BorderRadius.circular(16.0),
                                 border: Border.all(
                                   color: FlutterFlowTheme.of(context).primary,
-                                  width: 1.0,
+                                  width: 1.2,
                                 ),
                               ),
                               child: Padding(
@@ -501,7 +505,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                 borderRadius: BorderRadius.circular(16.0),
                                 border: Border.all(
                                   color: FlutterFlowTheme.of(context).primary,
-                                  width: 1.0,
+                                  width: 1.2,
                                 ),
                               ),
                               child: Padding(
@@ -683,7 +687,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                 borderRadius: BorderRadius.circular(16.0),
                                 border: Border.all(
                                   color: FlutterFlowTheme.of(context).primary,
-                                  width: 1.0,
+                                  width: 1.2,
                                 ),
                               ),
                               child: Padding(

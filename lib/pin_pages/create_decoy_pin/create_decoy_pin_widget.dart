@@ -3147,7 +3147,8 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                   buttonSize: 60.0,
                                   icon: Icon(
                                     Icons.arrow_back_rounded,
-                                    color: Color(0xFF15161E),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     size: 30.0,
                                   ),
                                   onPressed: () async {

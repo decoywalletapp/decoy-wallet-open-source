@@ -532,28 +532,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
-                      'Add up to 5 emergency contacts who can be reached in case of an emergency.',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            font: GoogleFonts.inter(
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            letterSpacing: 0.0,
-                            fontWeight: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontWeight,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontStyle,
-                            lineHeight: 1.4,
-                          ),
-                    ),
                     if (_model.contactIncrement >= 1)
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -2434,6 +2412,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
+                        await actions.dismissKeyboard(
+                          context,
+                        );
                         _model.contactsPayload =
                             await actions.buildContactsPayloadV2(
                           _model.c1FirstTFTextController.text,
