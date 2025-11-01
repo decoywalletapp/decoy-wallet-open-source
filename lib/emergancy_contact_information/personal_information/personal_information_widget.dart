@@ -65,25 +65,14 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             backgroundColor: FlutterFlowTheme.of(context).secondary,
           ),
         );
-        _model.rowCipherB64 = _model.rows?.elementAtOrNull(0)?.personalCipher;
+        _model.rowCipherB64 =
+            _model.rows?.elementAtOrNull(0)?.personalCiphertext;
         _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
         _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
         safeSetState(() {});
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.dataKeyOut!,
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         _model.personalObj = await actions.aesGcmDecryptToMap(
           _model.rowCipherB64!,
           _model.rowNonceB64!,

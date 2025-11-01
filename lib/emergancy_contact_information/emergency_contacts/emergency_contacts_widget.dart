@@ -605,6 +605,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       .fontStyle,
                                             ),
                                       ),
+                                      FlutterFlowIconButton(
+                                        borderRadius: 16.0,
+                                        buttonSize: 32.0,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        icon: Icon(
+                                          Icons.delete_outline,
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          size: 16.0,
+                                        ),
+                                        onPressed: () async {
+                                          _model.contactIncrement =
+                                              _model.contactIncrement + -1;
+                                          safeSetState(() {});
+                                        },
+                                      ),
                                     ],
                                   ),
                                   TextFormField(
