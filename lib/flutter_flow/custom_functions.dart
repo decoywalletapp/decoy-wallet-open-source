@@ -351,3 +351,8 @@ String safeStr(String? v) {
   if (t.toLowerCase() == 'null') return '';
   return t;
 }
+
+String normalizeEmail(String? v) {
+  final s = (v ?? '').trim();
+  return s.toLowerCase();
+}

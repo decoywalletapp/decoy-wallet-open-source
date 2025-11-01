@@ -5,6 +5,8 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
+import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -57,6 +59,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             _model.rows?.elementAtOrNull(0)?.personalCiphertext;
         _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
         _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
+        _model.origEmail = _model.rows?.elementAtOrNull(0)?.email;
+        _model.origPhone = _model.rows?.elementAtOrNull(0)?.phoneNumber;
         safeSetState(() {});
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
@@ -111,7 +115,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                   r'''$.phone''',
                 ) ==
                 null) &&
-            (currentPhoneNumber == '')) {
+            (_model.rows?.elementAtOrNull(0)?.phoneNumber == null ||
+                _model.rows?.elementAtOrNull(0)?.phoneNumber == '')) {
           safeSetState(() {
             _model.phoneTextController?.text = '';
           });
@@ -947,10 +952,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.firstNameTextController.text,
                                         'last_name':
                                             _model.lastNameTextController.text,
-                                        'phone_number':
-                                            _model.phoneTextController.text,
-                                        'email':
-                                            _model.emailTextController.text,
                                         'updated_at': supaSerialize<DateTime>(
                                             getCurrentTimestamp),
                                       },
@@ -962,15 +963,66 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     _model.personalSaved =
                                         _model.personalSaved + 1;
                                     safeSetState(() {});
-                                    await Future.delayed(
-                                      Duration(
-                                        milliseconds: 250,
-                                      ),
-                                    );
-                                    _model.personalSaved =
-                                        _model.personalSaved + -1;
+                                    _model.changedEmail =
+                                        functions.normalizeEmail(
+                                            _model.emailTextController.text);
+                                    _model.changedPhone =
+                                        functions.sanitizePhoneNumber(
+                                            _model.phoneTextController.text);
                                     safeSetState(() {});
-                                    context.safePop();
+                                    if (_model.origEmail !=
+                                        _model.changedEmail) {
+                                      await DecoyWalletTable().update(
+                                        data: {
+                                          'pending_email': _model.changedEmail,
+                                          'email_verified': false,
+                                        },
+                                        matchingRows: (rows) => rows.eqOrNull(
+                                          'user_id',
+                                          currentUserUid,
+                                        ),
+                                      );
+                                      FFAppState().userEmail = functions
+                                          .normalizeEmail(_model.changedEmail);
+                                      safeSetState(() {});
+                                      if (_model
+                                          .emailTextController.text.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Email required!',
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      await authManager.updateEmail(
+                                        email: _model.emailTextController.text,
+                                        context: context,
+                                      );
+                                      safeSetState(() {});
+
+                                      context.pushNamed(
+                                          ConfirmEmailPageWidget.routeName);
+                                    } else {
+                                      if (_model.origPhone !=
+                                          _model.changedPhone) {
+                                        context.pushNamed(
+                                            PhoneNumberInputWidget.routeName);
+                                      } else {
+                                        await Future.delayed(
+                                          Duration(
+                                            milliseconds: 250,
+                                          ),
+                                        );
+                                        _model.personalSaved =
+                                            _model.personalSaved + -1;
+                                        safeSetState(() {});
+                                        context.safePop();
+                                      }
+                                    }
                                   } else {
                                     _model.supaNameInserts =
                                         await DecoyWalletTable().insert({

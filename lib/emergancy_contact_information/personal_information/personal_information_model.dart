@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/index.dart';
 import 'personal_information_widget.dart' show PersonalInformationWidget;
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,18 @@ class PersonalInformationModel
   String? rowCipherB64;
 
   String? rowNonceB64;
+
+  String? origEmail;
+
+  String? origPhone;
+
+  String? cleanEmail;
+
+  String? cleanPhone;
+
+  String? changedEmail;
+
+  String? changedPhone;
 
   ///  State fields for stateful widgets in this page.
 
@@ -65,6 +78,8 @@ class PersonalInformationModel
   List<DecoyWalletRow>? supaRows;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? supaNameUpdate;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<DecoyWalletRow>? cngEmail;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
   DecoyWalletRow? supaNameInserts;
 

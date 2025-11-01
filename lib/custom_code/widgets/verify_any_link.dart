@@ -9,8 +9,7 @@ import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import '/custom_code/widgets/index.dart';
-import '/custom_code/actions/index.dart';
+import '/custom_code/actions/index.dart'; // Imports other custom actions
 import '/flutter_flow/custom_functions.dart';
 
 import 'package:flutter/foundation.dart';
@@ -19,8 +18,6 @@ import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
-/// Verifies Supabase OTP from confirm-email deep links,
-/// then navigates to the phoneNumberInput page.
 class VerifyAnyLink extends StatefulWidget {
   final double? width;
   final double? height;
@@ -33,7 +30,7 @@ class VerifyAnyLink extends StatefulWidget {
 class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   AppLinks? _appLinks;
   StreamSubscription<Uri>? _sub;
-  bool _navigated = false; // guard against double nav
+  bool _navigated = false;
 
   @override
   void initState() {
@@ -44,18 +41,17 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   Future<void> _init() async {
     _appLinks = AppLinks();
 
-    // Cold start: app opened from a link
+    // Cold start
     try {
       final uri = await _appLinks!.getInitialLink();
       if (kDebugMode) debugPrint('[VerifyAnyLink] initial link: $uri');
       if (uri != null) _handleUri(uri);
     } catch (e, st) {
-      if (kDebugMode) {
+      if (kDebugMode)
         debugPrint('[VerifyAnyLink] getInitialLink error: $e\n$st');
-      }
     }
 
-    // While running: subsequent links
+    // Warm
     _sub = _appLinks!.uriLinkStream.listen(
       (uri) {
         if (kDebugMode) debugPrint('[VerifyAnyLink] stream link: $uri');
@@ -71,11 +67,6 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     final p = uri.queryParameters;
     final tokenHash = p['token_hash'] ?? p['tokenHash'];
     final t = (p['type'] ?? 'signup').toLowerCase();
-
-    if (kDebugMode) {
-      debugPrint('[VerifyAnyLink] handling: $uri');
-      debugPrint('[VerifyAnyLink]   tokenHash: $tokenHash | type: $t');
-    }
     if (tokenHash == null || tokenHash.isEmpty) return;
 
     final typeMap = <String, OtpType>{
@@ -86,11 +77,9 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       'email_change': OtpType.emailChange,
     };
     final otpType = typeMap[t] ?? OtpType.signup;
+    final client = Supabase.instance.client;
 
     try {
-      final client = Supabase.instance.client;
-
-      if (kDebugMode) debugPrint('[VerifyAnyLink] calling verifyOTP...');
       final res = await client.auth.verifyOTP(
         type: otpType,
         tokenHash: tokenHash,
@@ -98,46 +87,64 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
 
       // let session hydrate
       await Future.delayed(const Duration(milliseconds: 300));
-
       final session = client.auth.currentSession ?? res.session;
       final ok = session != null || res.user != null;
+      if (!ok || !mounted) return;
 
-      if (!mounted || _navigated) return;
+      // Optional: promote pending_email -> email on your profile row
+      try {
+        final uid = client.auth.currentUser?.id;
+        final nowEmail =
+            (client.auth.currentUser?.email ?? '').trim().toLowerCase();
+        if (uid != null && nowEmail.isNotEmpty) {
+          // maybeSingle() can return null; keep everything nullable-safe
+          final dynamic profDyn = await client
+              .from('profiles') // <-- change table name if yours differs
+              .select()
+              .eq('id', uid)
+              .maybeSingle();
 
-      if (ok) {
-        _navigated = true;
-        if (kDebugMode) debugPrint('[VerifyAnyLink] nav -> phoneNumberInput');
-        // MUST match your FlutterFlow Page Name exactly
-        context.goNamed('phoneNumberInput');
-      } else {
-        if (kDebugMode) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Verification failed.')),
-          );
+          final Map<String, dynamic>? prof =
+              (profDyn is Map<String, dynamic>) ? profDyn : null;
+
+          String pending = '';
+          final dynamic val = prof?['pending_email']; // null-safe index
+          if (val is String) {
+            pending = val.trim().toLowerCase();
+          }
+
+          if (pending.isNotEmpty && pending == nowEmail) {
+            await client.from('profiles').update({
+              'email': nowEmail,
+              'pending_email': null,
+              'email_verified': true,
+            }).eq('id', uid);
+          }
         }
+      } catch (e, st) {
+        if (kDebugMode)
+          debugPrint('[VerifyAnyLink] profile promote err: $e\n$st');
+      }
+
+      if (!_navigated && mounted) {
+        _navigated = true;
+        context.goNamed('phoneNumberInput'); // next step in your flow
       }
     } on AuthApiException catch (e, st) {
       if (e.code == 'otp_expired' || e.statusCode == 403) {
-        if (kDebugMode) {
-          debugPrint('[VerifyAnyLink] Ignored (otp_expired/403): $e\n$st');
-        }
+        if (kDebugMode) debugPrint('[VerifyAnyLink] expired/403: $e\n$st');
         return;
       }
       if (!mounted) return;
-      if (kDebugMode) {
-        debugPrint('[VerifyAnyLink] AuthApiException: $e\n$st');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.message}')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.message}')),
+      );
     } catch (e, st) {
       if (!mounted) return;
-      if (kDebugMode) {
-        debugPrint('[VerifyAnyLink] ERROR: $e\n$st');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
+      if (kDebugMode) debugPrint('[VerifyAnyLink] ERROR: $e\n$st');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     }
   }
 
@@ -149,10 +156,6 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: const SizedBox.shrink(),
-    );
+    return SizedBox(width: widget.width, height: widget.height);
   }
 }

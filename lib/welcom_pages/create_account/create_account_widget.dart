@@ -530,11 +530,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         await actions.getSupabaseJwt();
                                     FFAppState().authJwt = _model.caResult!;
                                     safeSetState(() {});
-
-                                    context.pushNamedAuth(
-                                        ConfirmEmailPageWidget.routeName,
-                                        context.mounted);
-
                                     FFAppState().userEmail =
                                         _model.emailAddressTextController.text;
                                     safeSetState(() {});

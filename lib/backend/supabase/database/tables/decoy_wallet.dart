@@ -129,4 +129,14 @@ class DecoyWalletRow extends SupabaseDataRow {
   String? get personalCiphertext => getField<String>('personal_ciphertext');
   set personalCiphertext(String? value) =>
       setField<String>('personal_ciphertext', value);
+
+  bool? get emailVerified => getField<bool>('email_verified');
+  set emailVerified(bool? value) => setField<bool>('email_verified', value);
+
+  DateTime? get emailVerifiedAt => getField<DateTime>('email_verified_at');
+  set emailVerifiedAt(DateTime? value) =>
+      setField<DateTime>('email_verified_at', value);
+
+  String? get pendingEmail => getField<String>('pending_email');
+  set pendingEmail(String? value) => setField<String>('pending_email', value);
 }
