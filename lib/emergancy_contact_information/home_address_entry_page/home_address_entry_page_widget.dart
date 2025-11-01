@@ -159,9 +159,9 @@ class _HomeAddressEntryPageWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -190,7 +190,7 @@ class _HomeAddressEntryPageWidgetState
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
@@ -305,29 +305,29 @@ class _HomeAddressEntryPageWidgetState
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).alternate,
-                                width: 1.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).primary,
-                                width: 1.0,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
@@ -423,9 +423,9 @@ class _HomeAddressEntryPageWidgetState
                                       ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      width: 1.0,
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -433,21 +433,21 @@ class _HomeAddressEntryPageWidgetState
                                     borderSide: BorderSide(
                                       color:
                                           FlutterFlowTheme.of(context).primary,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -545,9 +545,9 @@ class _HomeAddressEntryPageWidgetState
                                       ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      width: 1.0,
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -555,21 +555,21 @@ class _HomeAddressEntryPageWidgetState
                                     borderSide: BorderSide(
                                       color:
                                           FlutterFlowTheme.of(context).primary,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -689,9 +689,9 @@ class _HomeAddressEntryPageWidgetState
                                       ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      width: 1.0,
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -699,21 +699,21 @@ class _HomeAddressEntryPageWidgetState
                                     borderSide: BorderSide(
                                       color:
                                           FlutterFlowTheme.of(context).primary,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -811,9 +811,9 @@ class _HomeAddressEntryPageWidgetState
                                       ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      width: 1.0,
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -821,21 +821,21 @@ class _HomeAddressEntryPageWidgetState
                                     borderSide: BorderSide(
                                       color:
                                           FlutterFlowTheme.of(context).primary,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
+                                      width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -929,29 +929,29 @@ class _HomeAddressEntryPageWidgetState
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).alternate,
-                                width: 1.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).primary,
-                                width: 1.0,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
+                                width: 1.5,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),

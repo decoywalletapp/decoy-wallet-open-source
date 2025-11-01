@@ -344,3 +344,10 @@ int incElapsedFromStart(
 String plusOneToString(int v) {
   return (v + 1).toString();
 }
+
+String safeStr(String? v) {
+  if (v == null) return '';
+  final t = v.trim();
+  if (t.toLowerCase() == 'null') return '';
+  return t;
+}

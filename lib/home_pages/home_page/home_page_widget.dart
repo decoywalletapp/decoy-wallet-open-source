@@ -48,7 +48,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
           child: Align(
@@ -111,7 +111,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             color: FlutterFlowTheme.of(context).primary,
                             borderRadius: BorderRadius.circular(16.0),
                             border: Border.all(
-                              color: FlutterFlowTheme.of(context).alternate,
+                              color: FlutterFlowTheme.of(context).primary,
                               width: 1.0,
                             ),
                           ),
@@ -272,6 +272,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   .titleSmall
                                                   .fontStyle,
                                         ),
+                                    borderSide: BorderSide(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                    ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
@@ -312,6 +316,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primary,
                                     borderRadius: BorderRadius.circular(8.0),
+                                    border: Border.all(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -456,6 +464,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   .fontStyle,
                                         ),
                                     elevation: 3.0,
+                                    borderSide: BorderSide(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                    ),
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                 ),
@@ -496,6 +508,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primary,
                                     borderRadius: BorderRadius.circular(8.0),
+                                    border: Border.all(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -640,6 +656,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   .fontStyle,
                                         ),
                                     elevation: 3.0,
+                                    borderSide: BorderSide(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                    ),
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                 ),
