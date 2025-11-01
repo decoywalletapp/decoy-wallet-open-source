@@ -108,10 +108,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           width: double.infinity,
                           height: 120.0,
                           decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).primary,
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
                             borderRadius: BorderRadius.circular(16.0),
                             border: Border.all(
-                              color: FlutterFlowTheme.of(context).primary,
+                              color: FlutterFlowTheme.of(context).alternate,
                               width: 1.0,
                             ),
                           ),
@@ -121,14 +122,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 color: Colors.transparent,
                                 elevation: 5.0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: Container(
                                   width: double.infinity,
                                   height: double.infinity,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primary,
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
                               ),

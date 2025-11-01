@@ -53,18 +53,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             .order('updated_at'),
       );
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'trrrrrruuuee',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         _model.rowCipherB64 =
             _model.rows?.elementAtOrNull(0)?.personalCiphertext;
         _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
@@ -83,18 +71,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           _model.rowCipherB64!,
           _model.rowNonceB64!,
           _model.dataKeyB64!,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.personalObj!.toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
         );
         if (getJsonField(
               _model.personalObj,
@@ -146,7 +122,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
               ) ==
               null) {
             safeSetState(() {
-              _model.phoneTextController?.text = currentPhoneNumber;
+              _model.phoneTextController?.text =
+                  _model.rows!.elementAtOrNull(0)!.phoneNumber!;
             });
           } else {
             safeSetState(() {
@@ -186,18 +163,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           }
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'ffffaaallllssseee',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut2;
         safeSetState(() {});
@@ -956,21 +921,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                 );
 
                                 if ((_model.wrap?.succeeded ?? true)) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'trrrrrruuuee',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
                                   _model.wrappedB64 = getJsonField(
                                     (_model.wrap?.jsonBody ?? ''),
                                     r'''$.wrappedB64''',
@@ -1053,21 +1003,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     context.safePop();
                                   }
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'ffffaaaaaalllllssssseeee',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
