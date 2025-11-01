@@ -59,18 +59,12 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             _model.rows?.elementAtOrNull(0)?.personalCiphertext;
         _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
         _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
-        _model.origEmail = _model.rows?.elementAtOrNull(0)?.email;
+        _model.origEmail = currentUserEmail;
         _model.origPhone = _model.rows?.elementAtOrNull(0)?.phoneNumber;
         safeSetState(() {});
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
-        safeSetState(() {
-          _model.phoneTextController?.text = currentPhoneNumber;
-        });
-        safeSetState(() {
-          _model.emailTextController?.text = currentUserEmail;
-        });
         _model.personalObj = await actions.aesGcmDecryptToMap(
           _model.rowCipherB64!,
           _model.rowNonceB64!,
