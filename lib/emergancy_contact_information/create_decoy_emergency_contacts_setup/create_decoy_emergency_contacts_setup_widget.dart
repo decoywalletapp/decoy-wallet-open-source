@@ -76,19 +76,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
               context.safePop();
             },
           ),
-          title: Text(
-            'Emergency Setup',
-            style: FlutterFlowTheme.of(context).titleLarge.override(
-                  font: GoogleFonts.interTight(
-                    fontWeight: FontWeight.w600,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                  ),
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                ),
-          ),
           actions: [],
           centerTitle: true,
           elevation: 0.0,
@@ -96,7 +83,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 56.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -766,38 +753,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                         ],
                       ),
                     ].divide(SizedBox(height: 16.0)),
-                  ),
-                ),
-                FFButtonWidget(
-                  onPressed: () {
-                    print('Button pressed ...');
-                  },
-                  text: 'Save Settings',
-                  options: FFButtonOptions(
-                    width: double.infinity,
-                    height: 52.0,
-                    padding: EdgeInsets.all(8.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primary,
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          font: GoogleFonts.interTight(
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .fontStyle,
-                          ),
-                          color: Colors.white,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.w600,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).titleSmall.fontStyle,
-                        ),
-                    elevation: 3.0,
-                    borderSide: BorderSide(
-                      color: Colors.transparent,
-                    ),
-                    borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
               ].divide(SizedBox(height: 24.0)),
