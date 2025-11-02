@@ -135,10 +135,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 ),
                               ),
                             ),
-                            custom_widgets.VerifyAnyLink(
-                              width: 1.0,
-                              height: 1.0,
-                            ),
                           ],
                         ),
                       ),
