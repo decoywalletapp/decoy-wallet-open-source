@@ -479,8 +479,8 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                 );
                                 safeSetState(() {});
 
-                                context.goNamedAuth(
-                                    PINPageWidget.routeName, context.mounted);
+                                context.goNamedAuth(AuthRouterWidget.routeName,
+                                    context.mounted);
                               },
                               text: 'Update Password',
                               options: FFButtonOptions(

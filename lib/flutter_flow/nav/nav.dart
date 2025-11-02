@@ -85,13 +85,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
     refreshListenable: appStateNotifier,
     navigatorKey: appNavigatorKey,
     errorBuilder: (context, state) =>
-        appStateNotifier.loggedIn ? PINPageWidget() : LoginPageWidget(),
+        appStateNotifier.loggedIn ? AuthRouterWidget() : LoginPageWidget(),
     routes: [
       FFRoute(
         name: '_initialize',
         path: '/',
         builder: (context, _) =>
-            appStateNotifier.loggedIn ? PINPageWidget() : LoginPageWidget(),
+            appStateNotifier.loggedIn ? AuthRouterWidget() : LoginPageWidget(),
       ),
       FFRoute(
         name: LoginPageWidget.routeName,
@@ -327,9 +327,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => CreateAccountCopyWidget(),
       ),
       FFRoute(
-        name: ConfirmoldieemailWidget.routeName,
-        path: ConfirmoldieemailWidget.routePath,
-        builder: (context, params) => ConfirmoldieemailWidget(),
+        name: AuthRouterWidget.routeName,
+        path: AuthRouterWidget.routePath,
+        builder: (context, params) => AuthRouterWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
