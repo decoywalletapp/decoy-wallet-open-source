@@ -2,6 +2,7 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -525,21 +526,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                 ),
                                 FFButtonWidget(
                                   onPressed: () async {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'ok',
-                                          style: TextStyle(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                          ),
-                                        ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                      ),
-                                    );
+                                    _model.caResult =
+                                        await actions.getSupabaseJwt();
+                                    FFAppState().authJwt = _model.caResult!;
+                                    safeSetState(() {});
+                                    FFAppState().userEmail =
+                                        _model.emailAddressTextController.text;
+                                    safeSetState(() {});
                                     GoRouter.of(context).prepareAuthEvent();
                                     if (_model
                                             .passwordCreateAccountTextController
@@ -568,10 +561,15 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                       return;
                                     }
 
+                                    _model.hello = await actions.debugSignUp(
+                                      _model.emailAddressTextController.text,
+                                      _model.passwordCreateAccountTextController
+                                          .text,
+                                    );
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          currentUserUid,
+                                          _model.hello!,
                                           style: TextStyle(
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
@@ -583,25 +581,17 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                 .secondary,
                                       ),
                                     );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          currentUserEmail,
-                                          style: TextStyle(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                          ),
-                                        ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
+                                    await Future.delayed(
+                                      Duration(
+                                        milliseconds: 10000,
                                       ),
                                     );
 
                                     context.pushNamedAuth(
                                         ConfirmEmailPageWidget.routeName,
                                         context.mounted);
+
+                                    safeSetState(() {});
                                   },
                                   text: 'Create Account',
                                   options: FFButtonOptions(
