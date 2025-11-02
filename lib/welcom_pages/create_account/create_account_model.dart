@@ -26,8 +26,6 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   String? caResult;
   // Stores action output result for [Custom Action - supaEmailSignUp] action in Button widget.
   String? ctResult;
-  // Stores action output result for [Custom Action - debugSignUp] action in Button widget.
-  String? hello;
 
   @override
   void initState(BuildContext context) {

@@ -2,7 +2,6 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
-import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -880,20 +879,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                       .fontStyle,
                                             ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Opacity(
-                                opacity: 0.0,
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Container(
-                                    width: 1.0,
-                                    height: 1.0,
-                                    child: custom_widgets.VerifyAnyLink(
-                                      width: 1.0,
-                                      height: 1.0,
                                     ),
                                   ),
                                 ),
