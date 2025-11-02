@@ -561,6 +561,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                       return;
                                     }
 
+                                    await Future.delayed(
+                                      Duration(
+                                        milliseconds: 10000,
+                                      ),
+                                    );
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
@@ -594,11 +599,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         backgroundColor:
                                             FlutterFlowTheme.of(context)
                                                 .secondary,
-                                      ),
-                                    );
-                                    await Future.delayed(
-                                      Duration(
-                                        milliseconds: 10000,
                                       ),
                                     );
 
