@@ -31,26 +31,25 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await authManager.refreshUser();
       await Future.delayed(
         Duration(
           milliseconds: 600,
         ),
       );
-      _model.dIWalletList = await DecoyWalletTable().queryRows(
+      _model.query1 = await DecoyWalletTable().queryRows(
         queryFn: (q) => q.eqOrNull(
           'user_id',
           currentUserUid,
         ),
       );
-      _model.dwList = _model.dIWalletList!.toList().cast<DecoyWalletRow>();
+      _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
       _model.hasRow = _model.dwList.isNotEmpty;
       safeSetState(() {});
       if (_model.hasRow == false) {
         _model.firstInsert = await DecoyWalletTable().insert({
           'user_id': currentUserUid,
           'email': currentUserEmail,
-          'email_verified': currentUserEmailVerified,
+          'email_verified': true,
           'email_verified_at': supaSerialize<DateTime>(null),
           'is_phone_verified': false,
           'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
@@ -63,11 +62,26 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         );
         _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
         _model.hasRow = _model.dwList.isNotEmpty;
-        _model.verifiedViaEmail =
-            _model.dwList.elementAtOrNull(0)!.emailVerified!;
-        _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
         safeSetState(() {});
+      } else {
+        await DecoyWalletTable().update(
+          data: {
+            'email_verified': true,
+            'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          },
+          matchingRows: (rows) => rows.eqOrNull(
+            'user_id',
+            currentUserUid,
+          ),
+        );
+        _model.query3 = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q.eqOrNull(
+            'user_id',
+            currentUserUid,
+          ),
+        );
       }
+
       _model.verifiedViaEmail =
           _model.dwList.elementAtOrNull(0)!.emailVerified!;
       _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
