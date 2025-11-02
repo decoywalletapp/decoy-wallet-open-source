@@ -525,6 +525,21 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                 ),
                                 FFButtonWidget(
                                   onPressed: () async {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'ok',
+                                          style: TextStyle(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondary,
+                                      ),
+                                    );
                                     GoRouter.of(context).prepareAuthEvent();
                                     if (_model
                                             .passwordCreateAccountTextController
