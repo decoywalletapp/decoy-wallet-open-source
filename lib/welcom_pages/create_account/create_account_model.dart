@@ -24,6 +24,8 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
       passwordConfirmTextControllerValidator;
   // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
   String? caResult;
+  // Stores action output result for [Custom Action - supaEmailSignUp] action in Button widget.
+  String? ctResult;
   // Stores action output result for [Custom Action - debugSignUp] action in Button widget.
   String? hello;
 

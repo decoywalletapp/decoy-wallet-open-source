@@ -242,20 +242,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => CreateAccountB4ChangeWidget(),
       ),
       FFRoute(
-        name: ConfirmEmailRouteWidget.routeName,
-        path: ConfirmEmailRouteWidget.routePath,
-        builder: (context, params) => ConfirmEmailRouteWidget(
-          tokenHash: params.getParam(
-            'tokenHash',
-            ParamType.String,
-          ),
-          type: params.getParam(
-            'type',
-            ParamType.String,
-          ),
-        ),
-      ),
-      FFRoute(
         name: PhoneNumberVerificationv1Widget.routeName,
         path: PhoneNumberVerificationv1Widget.routePath,
         builder: (context, params) => PhoneNumberVerificationv1Widget(

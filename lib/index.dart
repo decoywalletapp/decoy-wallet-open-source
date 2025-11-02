@@ -43,8 +43,6 @@ export '/welcom_pages/confirm_email_page/confirm_email_page_widget.dart'
     show ConfirmEmailPageWidget;
 export '/test_subjects/create_account_b4_change/create_account_b4_change_widget.dart'
     show CreateAccountB4ChangeWidget;
-export '/welcom_pages/confirm_email_route/confirm_email_route_widget.dart'
-    show ConfirmEmailRouteWidget;
 export '/test_subjects/phone_number_verificationv1/phone_number_verificationv1_widget.dart'
     show PhoneNumberVerificationv1Widget;
 export '/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart'
