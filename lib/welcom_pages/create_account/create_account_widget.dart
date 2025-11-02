@@ -561,6 +561,26 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                       return;
                                     }
 
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Success',
+                                          style: TextStyle(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondary,
+                                      ),
+                                    );
+
+                                    context.pushNamedAuth(
+                                        ConfirmEmailPageWidget.routeName,
+                                        context.mounted);
+
                                     await Future.delayed(
                                       Duration(
                                         milliseconds: 10000,
@@ -601,10 +621,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                 .secondary,
                                       ),
                                     );
-
-                                    context.pushNamedAuth(
-                                        ConfirmEmailPageWidget.routeName,
-                                        context.mounted);
 
                                     safeSetState(() {});
                                   },
