@@ -73,3 +73,5 @@ export '/emergancy_contact_information/personal_information/personal_information
     show PersonalInformationWidget;
 export '/welcom_pages/create_account_copy/create_account_copy_widget.dart'
     show CreateAccountCopyWidget;
+export '/welcom_pages/confirmoldieemail/confirmoldieemail_widget.dart'
+    show ConfirmoldieemailWidget;

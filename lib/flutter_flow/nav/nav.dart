@@ -327,6 +327,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => CreateAccountCopyWidget(),
       ),
       FFRoute(
+        name: ConfirmoldieemailWidget.routeName,
+        path: ConfirmoldieemailWidget.routePath,
+        builder: (context, params) => ConfirmoldieemailWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>
