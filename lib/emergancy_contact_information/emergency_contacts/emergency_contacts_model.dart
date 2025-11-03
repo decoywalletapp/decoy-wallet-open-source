@@ -3,6 +3,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'emergency_contacts_widget.dart' show EmergencyContactsWidget;
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   ///  Local state fields for this page.
@@ -47,6 +48,7 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   // State field(s) for c1PhoneTF widget.
   FocusNode? c1PhoneTFFocusNode;
   TextEditingController? c1PhoneTFTextController;
+  late MaskTextInputFormatter c1PhoneTFMask;
   String? Function(BuildContext, String?)? c1PhoneTFTextControllerValidator;
   // State field(s) for c2FirstTF widget.
   FocusNode? c2FirstTFFocusNode;
@@ -59,6 +61,7 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   // State field(s) for c2PhoneTF widget.
   FocusNode? c2PhoneTFFocusNode;
   TextEditingController? c2PhoneTFTextController;
+  late MaskTextInputFormatter c2PhoneTFMask;
   String? Function(BuildContext, String?)? c2PhoneTFTextControllerValidator;
   // State field(s) for c3FirstTF widget.
   FocusNode? c3FirstTFFocusNode;
@@ -71,6 +74,7 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   // State field(s) for c3PhoneTF widget.
   FocusNode? c3PhoneTFFocusNode;
   TextEditingController? c3PhoneTFTextController;
+  late MaskTextInputFormatter c3PhoneTFMask;
   String? Function(BuildContext, String?)? c3PhoneTFTextControllerValidator;
   // State field(s) for c4FirstTF widget.
   FocusNode? c4FirstTFFocusNode;
@@ -83,6 +87,7 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   // State field(s) for c4PhoneTF widget.
   FocusNode? c4PhoneTFFocusNode;
   TextEditingController? c4PhoneTFTextController;
+  late MaskTextInputFormatter c4PhoneTFMask;
   String? Function(BuildContext, String?)? c4PhoneTFTextControllerValidator;
   // State field(s) for c5FirstTF widget.
   FocusNode? c5FirstTFFocusNode;
@@ -95,6 +100,7 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   // State field(s) for c5PhoneTF widget.
   FocusNode? c5PhoneTFFocusNode;
   TextEditingController? c5PhoneTFTextController;
+  late MaskTextInputFormatter c5PhoneTFMask;
   String? Function(BuildContext, String?)? c5PhoneTFTextControllerValidator;
   // Stores action output result for [Custom Action - buildContactsPayloadV2] action in Button widget.
   String? contactsPayload;

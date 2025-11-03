@@ -67,6 +67,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           data: {
             'email_verified': true,
             'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+            'email': currentUserEmail,
           },
           matchingRows: (rows) => rows.eqOrNull(
             'user_id',
@@ -127,7 +128,31 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: FlutterFlowTheme.of(context).info,
+        body: SafeArea(
+          top: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5.0),
+                    child: Image.asset(
+                      'assets/images/DecoyLogo1-WOHiRes.jpg',
+                      width: 500.0,
+                      height: 200.0,
+                      fit: BoxFit.cover,
+                      alignment: Alignment(0.0, 0.5),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

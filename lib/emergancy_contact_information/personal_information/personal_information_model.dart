@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'personal_information_widget.dart' show PersonalInformationWidget;
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PersonalInformationModel
     extends FlutterFlowModel<PersonalInformationWidget> {
@@ -59,6 +60,7 @@ class PersonalInformationModel
   // State field(s) for phone widget.
   FocusNode? phoneFocusNode;
   TextEditingController? phoneTextController;
+  late MaskTextInputFormatter phoneMask;
   String? Function(BuildContext, String?)? phoneTextControllerValidator;
   // State field(s) for email widget.
   FocusNode? emailFocusNode;

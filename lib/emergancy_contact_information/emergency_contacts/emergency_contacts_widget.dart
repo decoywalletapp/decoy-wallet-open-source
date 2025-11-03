@@ -9,6 +9,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'emergency_contacts_model.dart';
 export 'emergency_contacts_model.dart';
@@ -112,6 +113,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               null) {
             safeSetState(() {
               _model.c1PhoneTFTextController?.text = '';
+              _model.c1PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c1PhoneTFTextController!.text,
+                ),
+              );
             });
           } else {
             safeSetState(() {
@@ -119,6 +125,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 _model.contactsObj,
                 r'''$.contacts[0].phone''',
               ).toString();
+              _model.c1PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c1PhoneTFTextController!.text,
+                ),
+              );
             });
           }
 
@@ -163,6 +174,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               null) {
             safeSetState(() {
               _model.c2PhoneTFTextController?.text = '';
+              _model.c2PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c2PhoneTFTextController!.text,
+                ),
+              );
             });
           } else {
             safeSetState(() {
@@ -170,6 +186,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 _model.contactsObj,
                 r'''$.contacts[1].phone''',
               ).toString();
+              _model.c2PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c2PhoneTFTextController!.text,
+                ),
+              );
             });
           }
 
@@ -213,6 +234,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           )) {
             safeSetState(() {
               _model.c3PhoneTFTextController?.text = '';
+              _model.c3PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c3PhoneTFTextController!.text,
+                ),
+              );
             });
           } else {
             safeSetState(() {
@@ -220,6 +246,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 _model.contactsObj,
                 r'''$.contacts[2].phone''',
               ).toString();
+              _model.c3PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c3PhoneTFTextController!.text,
+                ),
+              );
             });
           }
 
@@ -264,6 +295,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               null) {
             safeSetState(() {
               _model.c4PhoneTFTextController?.text = '';
+              _model.c4PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c4PhoneTFTextController!.text,
+                ),
+              );
             });
           } else {
             safeSetState(() {
@@ -271,6 +307,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 _model.contactsObj,
                 r'''$.contacts[3].phone''',
               ).toString();
+              _model.c4PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c4PhoneTFTextController!.text,
+                ),
+              );
             });
           }
 
@@ -315,6 +356,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               null) {
             safeSetState(() {
               _model.c5PhoneTFTextController?.text = '';
+              _model.c5PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c5PhoneTFTextController!.text,
+                ),
+              );
             });
           } else {
             safeSetState(() {
@@ -322,6 +368,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 _model.contactsObj,
                 r'''$.contacts[4].phone''',
               ).toString();
+              _model.c5PhoneTFMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.c5PhoneTFTextController!.text,
+                ),
+              );
             });
           }
         }
@@ -335,18 +386,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           _model.c1FirstTFTextController?.clear();
           _model.c1LastTFTextController?.clear();
           _model.c1PhoneTFTextController?.clear();
+          _model.c1PhoneTFMask.clear();
           _model.c2FirstTFTextController?.clear();
           _model.c2LastTFTextController?.clear();
           _model.c2PhoneTFTextController?.clear();
+          _model.c2PhoneTFMask.clear();
           _model.c3FirstTFTextController?.clear();
           _model.c3LastTFTextController?.clear();
           _model.c3PhoneTFTextController?.clear();
+          _model.c3PhoneTFMask.clear();
           _model.c4FirstTFTextController?.clear();
           _model.c4LastTFTextController?.clear();
           _model.c4PhoneTFTextController?.clear();
+          _model.c4PhoneTFMask.clear();
           _model.c5FirstTFTextController?.clear();
           _model.c5LastTFTextController?.clear();
           _model.c5PhoneTFTextController?.clear();
+          _model.c5PhoneTFMask.clear();
         });
       }
     });
@@ -360,6 +416,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     _model.c1PhoneTFTextController ??= TextEditingController();
     _model.c1PhoneTFFocusNode ??= FocusNode();
 
+    _model.c1PhoneTFMask = MaskTextInputFormatter(mask: '(###) ###-####');
     _model.c2FirstTFTextController ??= TextEditingController();
     _model.c2FirstTFFocusNode ??= FocusNode();
 
@@ -369,6 +426,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     _model.c2PhoneTFTextController ??= TextEditingController();
     _model.c2PhoneTFFocusNode ??= FocusNode();
 
+    _model.c2PhoneTFMask = MaskTextInputFormatter(mask: '(###) ###-####');
     _model.c3FirstTFTextController ??= TextEditingController();
     _model.c3FirstTFFocusNode ??= FocusNode();
 
@@ -378,6 +436,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     _model.c3PhoneTFTextController ??= TextEditingController();
     _model.c3PhoneTFFocusNode ??= FocusNode();
 
+    _model.c3PhoneTFMask = MaskTextInputFormatter(mask: '(###) ###-####');
     _model.c4FirstTFTextController ??= TextEditingController();
     _model.c4FirstTFFocusNode ??= FocusNode();
 
@@ -387,6 +446,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     _model.c4PhoneTFTextController ??= TextEditingController();
     _model.c4PhoneTFFocusNode ??= FocusNode();
 
+    _model.c4PhoneTFMask = MaskTextInputFormatter(mask: '(###) ###-####');
     _model.c5FirstTFTextController ??= TextEditingController();
     _model.c5FirstTFFocusNode ??= FocusNode();
 
@@ -396,6 +456,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     _model.c5PhoneTFTextController ??= TextEditingController();
     _model.c5PhoneTFFocusNode ??= FocusNode();
 
+    _model.c5PhoneTFMask = MaskTextInputFormatter(mask: '(###) ###-####');
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -885,6 +946,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c1PhoneTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            _model.c1PhoneTFMask
+                                          ],
                                         ),
                                       ].divide(SizedBox(height: 12.0)),
                                     ),
@@ -1306,6 +1370,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c2PhoneTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            _model.c2PhoneTFMask
+                                          ],
                                         ),
                                       ].divide(SizedBox(height: 12.0)),
                                     ),
@@ -1727,6 +1794,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c3PhoneTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            _model.c3PhoneTFMask
+                                          ],
                                         ),
                                       ].divide(SizedBox(height: 12.0)),
                                     ),
@@ -2148,6 +2218,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c4PhoneTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            _model.c4PhoneTFMask
+                                          ],
                                         ),
                                       ].divide(SizedBox(height: 12.0)),
                                     ),
@@ -2569,6 +2642,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c5PhoneTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            _model.c5PhoneTFMask
+                                          ],
                                         ),
                                       ].divide(SizedBox(height: 12.0)),
                                     ),

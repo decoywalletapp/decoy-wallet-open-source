@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'personal_information_model.dart';
 export 'personal_information_model.dart';
@@ -65,6 +66,19 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
+        safeSetState(() {
+          _model.phoneTextController?.text =
+              _model.rows!.elementAtOrNull(0)!.phoneNumber!;
+          _model.phoneMask.updateMask(
+            newValue: TextEditingValue(
+              text: _model.phoneTextController!.text,
+            ),
+          );
+        });
+        safeSetState(() {
+          _model.emailTextController?.text =
+              _model.rows!.elementAtOrNull(0)!.email!;
+        });
         _model.personalObj = await actions.aesGcmDecryptToMap(
           _model.rowCipherB64!,
           _model.rowNonceB64!,
@@ -113,6 +127,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                 _model.rows?.elementAtOrNull(0)?.phoneNumber == '')) {
           safeSetState(() {
             _model.phoneTextController?.text = '';
+            _model.phoneMask.updateMask(
+              newValue: TextEditingValue(
+                text: _model.phoneTextController!.text,
+              ),
+            );
           });
         } else {
           if (getJsonField(
@@ -123,6 +142,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             safeSetState(() {
               _model.phoneTextController?.text =
                   _model.rows!.elementAtOrNull(0)!.phoneNumber!;
+              _model.phoneMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.phoneTextController!.text,
+                ),
+              );
             });
           } else {
             safeSetState(() {
@@ -130,6 +154,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                 _model.personalObj,
                 r'''$.phone''',
               ).toString();
+              _model.phoneMask.updateMask(
+                newValue: TextEditingValue(
+                  text: _model.phoneTextController!.text,
+                ),
+              );
             });
           }
         }
@@ -169,6 +198,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           _model.firstNameTextController?.clear();
           _model.lastNameTextController?.clear();
           _model.phoneTextController?.clear();
+          _model.phoneMask.clear();
           _model.emailTextController?.clear();
         });
       }
@@ -183,6 +213,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
     _model.phoneTextController ??= TextEditingController();
     _model.phoneFocusNode ??= FocusNode();
 
+    _model.phoneMask = MaskTextInputFormatter(mask: '(###) ###-####');
     _model.emailTextController ??= TextEditingController();
     _model.emailFocusNode ??= FocusNode();
 
@@ -702,6 +733,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     validator: _model
                                         .phoneTextControllerValidator
                                         .asValidator(context),
+                                    inputFormatters: [_model.phoneMask],
                                   ),
                                 ].divide(SizedBox(height: 8.0)),
                               ),
