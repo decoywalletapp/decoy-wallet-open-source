@@ -42,13 +42,13 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         ),
       );
       _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
-      _model.hasRow = _model.dwList.isNotEmpty;
+      _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
       safeSetState(() {});
       if (_model.hasRow == false) {
         _model.firstInsert = await DecoyWalletTable().insert({
           'user_id': currentUserUid,
           'email': currentUserEmail,
-          'email_verified': true,
+          'email_verified': false,
           'email_verified_at': supaSerialize<DateTime>(null),
           'is_phone_verified': false,
           'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
@@ -60,7 +60,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           ),
         );
         _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.dwList.isNotEmpty;
+        _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
         safeSetState(() {});
       } else {
         await DecoyWalletTable().update(
@@ -79,6 +79,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             currentUserUid,
           ),
         );
+        _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
+        _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
+        safeSetState(() {});
       }
 
       _model.verifiedViaEmail =
