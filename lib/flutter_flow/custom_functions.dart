@@ -356,3 +356,14 @@ String normalizeEmail(String? v) {
   final s = (v ?? '').trim();
   return s.toLowerCase();
 }
+
+String displayTenDigits(String input) {
+  if (input == null) return '';
+  final digits = input.replaceAll(RegExp(r'\D'), '');
+  // If it's E.164 +1xxxxxxxxxx, show the last 10.
+  if (digits.length == 11 && digits.startsWith('1')) return digits.substring(1);
+  // If the user stored plain 10 digits, just show them.
+  if (digits.length == 10) return digits;
+  // Anything else -> show nothing (or you could return digits).
+  return '';
+}

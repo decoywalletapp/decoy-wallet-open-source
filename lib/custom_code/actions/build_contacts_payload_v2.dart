@@ -12,14 +12,25 @@ import 'dart:convert';
 
 // helpers
 String _s(String? v) => (v ?? '').trim();
+
 String _normalizePhone(String? input) {
+  // keep only digits and an optional leading '+'
   final raw = (input ?? '').replaceAll(RegExp(r'[^0-9+]'), '');
   if (raw.isEmpty) return '';
-  if (raw.startsWith('+')) return raw;
+
+  // If it already starts with '+', allow only +1XXXXXXXXXX
+  if (raw.startsWith('+')) {
+    final only = raw.replaceAll(RegExp(r'[^0-9]'), ''); // just digits
+    return RegExp(r'^1\d{10}$').hasMatch(only) ? '+$only' : '';
+  }
+
+  // Otherwise normalize common US inputs
   final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
-  if (digits.length == 11 && digits.startsWith('1')) return '+$digits';
   if (digits.length == 10) return '+1$digits';
-  return '+$digits';
+  if (digits.length == 11 && digits.startsWith('1')) return '+$digits';
+
+  // Anything else is invalid for our US-only phase
+  return '';
 }
 
 Map<String, String> _contact(String? f, String? l, String? p) => {

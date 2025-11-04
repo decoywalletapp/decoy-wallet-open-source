@@ -5,9 +5,11 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
@@ -121,10 +123,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             });
           } else {
             safeSetState(() {
-              _model.c1PhoneTFTextController?.text = getJsonField(
+              _model.c1PhoneTFTextController?.text =
+                  functions.displayTenDigits(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[0].phone''',
-              ).toString();
+              ).toString());
               _model.c1PhoneTFMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.c1PhoneTFTextController!.text,
@@ -182,10 +185,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             });
           } else {
             safeSetState(() {
-              _model.c2PhoneTFTextController?.text = getJsonField(
+              _model.c2PhoneTFTextController?.text =
+                  functions.displayTenDigits(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[1].phone''',
-              ).toString();
+              ).toString());
               _model.c2PhoneTFMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.c2PhoneTFTextController!.text,
@@ -242,10 +246,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             });
           } else {
             safeSetState(() {
-              _model.c3PhoneTFTextController?.text = getJsonField(
+              _model.c3PhoneTFTextController?.text =
+                  functions.displayTenDigits(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[2].phone''',
-              ).toString();
+              ).toString());
               _model.c3PhoneTFMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.c3PhoneTFTextController!.text,
@@ -303,10 +308,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             });
           } else {
             safeSetState(() {
-              _model.c4PhoneTFTextController?.text = getJsonField(
+              _model.c4PhoneTFTextController?.text =
+                  functions.displayTenDigits(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[3].phone''',
-              ).toString();
+              ).toString());
               _model.c4PhoneTFMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.c4PhoneTFTextController!.text,
@@ -364,10 +370,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             });
           } else {
             safeSetState(() {
-              _model.c5PhoneTFTextController?.text = getJsonField(
+              _model.c5PhoneTFTextController?.text =
+                  functions.displayTenDigits(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[4].phone''',
-              ).toString();
+              ).toString());
               _model.c5PhoneTFMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.c5PhoneTFTextController!.text,
@@ -939,6 +946,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
+                                          maxLength: 10,
+                                          maxLengthEnforcement:
+                                              MaxLengthEnforcement.enforced,
+                                          buildCounter: (context,
+                                                  {required currentLength,
+                                                  required isFocused,
+                                                  maxLength}) =>
+                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -1363,6 +1378,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
+                                          maxLength: 10,
+                                          maxLengthEnforcement:
+                                              MaxLengthEnforcement.enforced,
+                                          buildCounter: (context,
+                                                  {required currentLength,
+                                                  required isFocused,
+                                                  maxLength}) =>
+                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -1787,6 +1810,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
+                                          maxLength: 10,
+                                          maxLengthEnforcement:
+                                              MaxLengthEnforcement.enforced,
+                                          buildCounter: (context,
+                                                  {required currentLength,
+                                                  required isFocused,
+                                                  maxLength}) =>
+                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -2211,6 +2242,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
+                                          maxLength: 10,
+                                          maxLengthEnforcement:
+                                              MaxLengthEnforcement.enforced,
+                                          buildCounter: (context,
+                                                  {required currentLength,
+                                                  required isFocused,
+                                                  maxLength}) =>
+                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -2635,6 +2674,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
+                                          maxLength: 10,
+                                          maxLengthEnforcement:
+                                              MaxLengthEnforcement.enforced,
+                                          buildCounter: (context,
+                                                  {required currentLength,
+                                                  required isFocused,
+                                                  maxLength}) =>
+                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)

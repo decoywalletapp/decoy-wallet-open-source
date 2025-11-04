@@ -1013,6 +1013,9 @@ class _HomeAddressEntryPageWidgetState
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
+                          await actions.dismissKeyboard(
+                            context,
+                          );
                           _model.playload = await actions.buildAddressPayloadV1(
                             _model.streetAddressTextController.text,
                             _model.cityTextController.text,

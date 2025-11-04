@@ -140,8 +140,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
               ) ==
               null) {
             safeSetState(() {
-              _model.phoneTextController?.text =
-                  _model.rows!.elementAtOrNull(0)!.phoneNumber!;
+              _model.phoneTextController?.text = functions.displayTenDigits(
+                  _model.rows!.elementAtOrNull(0)!.phoneNumber!);
               _model.phoneMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.phoneTextController!.text,
@@ -150,10 +150,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             });
           } else {
             safeSetState(() {
-              _model.phoneTextController?.text = getJsonField(
+              _model.phoneTextController?.text =
+                  functions.displayTenDigits(getJsonField(
                 _model.personalObj,
                 r'''$.phone''',
-              ).toString();
+              ).toString());
               _model.phoneMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.phoneTextController!.text,
@@ -727,6 +728,14 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                   .bodyMedium
                                                   .fontStyle,
                                         ),
+                                    maxLength: 10,
+                                    maxLengthEnforcement:
+                                        MaxLengthEnforcement.enforced,
+                                    buildCounter: (context,
+                                            {required currentLength,
+                                            required isFocused,
+                                            maxLength}) =>
+                                        null,
                                     keyboardType: TextInputType.phone,
                                     cursorColor:
                                         FlutterFlowTheme.of(context).primary,
@@ -917,6 +926,9 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                             padding: EdgeInsets.all(12.0),
                             child: FFButtonWidget(
                               onPressed: () async {
+                                await actions.dismissKeyboard(
+                                  context,
+                                );
                                 _model.personalJsonOut =
                                     await actions.buildPersonalJson(
                                   _model.firstNameTextController.text,
@@ -1135,7 +1147,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       'last_name':
                                           _model.lastNameTextController.text,
                                       'phone_number':
-                                          _model.phoneTextController.text,
+                                          functions.sanitizePhoneNumber(
+                                              _model.phoneTextController.text),
                                       'email': _model.emailTextController.text,
                                       'updated_at': supaSerialize<DateTime>(
                                           getCurrentTimestamp),
