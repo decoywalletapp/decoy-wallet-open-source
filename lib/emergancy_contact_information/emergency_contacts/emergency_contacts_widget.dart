@@ -9,6 +9,7 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
@@ -123,7 +124,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           } else {
             safeSetState(() {
               _model.c1PhoneTFTextController?.text =
-                  functions.displayTenDigits(getJsonField(
+                  functions.displayUSPhone(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[0].phone''',
               ).toString());
@@ -185,7 +186,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           } else {
             safeSetState(() {
               _model.c2PhoneTFTextController?.text =
-                  functions.displayTenDigits(getJsonField(
+                  functions.displayUSPhone(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[1].phone''',
               ).toString());
@@ -246,7 +247,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           } else {
             safeSetState(() {
               _model.c3PhoneTFTextController?.text =
-                  functions.displayTenDigits(getJsonField(
+                  functions.displayUSPhone(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[2].phone''',
               ).toString());
@@ -308,7 +309,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           } else {
             safeSetState(() {
               _model.c4PhoneTFTextController?.text =
-                  functions.displayTenDigits(getJsonField(
+                  functions.displayUSPhone(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[3].phone''',
               ).toString());
@@ -370,7 +371,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           } else {
             safeSetState(() {
               _model.c5PhoneTFTextController?.text =
-                  functions.displayTenDigits(getJsonField(
+                  functions.displayUSPhone(getJsonField(
                 _model.contactsObj,
                 r'''$.contacts[4].phone''',
               ).toString());
@@ -622,6 +623,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               _model.c1FirstTFTextController,
                                           focusNode: _model.c1FirstTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -728,12 +731,27 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c1FirstTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
                                               _model.c1LastTFTextController,
                                           focusNode: _model.c1LastTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -840,6 +858,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c1LastTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
@@ -1046,6 +1077,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               _model.c2FirstTFTextController,
                                           focusNode: _model.c2FirstTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -1152,12 +1185,27 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c2FirstTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
                                               _model.c2LastTFTextController,
                                           focusNode: _model.c2LastTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -1264,6 +1312,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c2LastTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
@@ -1470,6 +1531,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               _model.c3FirstTFTextController,
                                           focusNode: _model.c3FirstTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -1576,12 +1639,27 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c3FirstTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
                                               _model.c3LastTFTextController,
                                           focusNode: _model.c3LastTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -1688,6 +1766,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c3LastTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
@@ -1894,6 +1985,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               _model.c4FirstTFTextController,
                                           focusNode: _model.c4FirstTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -2000,12 +2093,27 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c4FirstTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
                                               _model.c4LastTFTextController,
                                           focusNode: _model.c4LastTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -2112,6 +2220,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c4LastTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
@@ -2318,6 +2439,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               _model.c5FirstTFTextController,
                                           focusNode: _model.c5FirstTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -2424,12 +2547,27 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c5FirstTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:
                                               _model.c5LastTFTextController,
                                           focusNode: _model.c5LastTFFocusNode,
                                           autofocus: false,
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
@@ -2536,6 +2674,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           validator: _model
                                               .c5LastTFTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            if (!isAndroid && !isiOS)
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                return TextEditingValue(
+                                                  selection: newValue.selection,
+                                                  text: newValue.text
+                                                      .toCapitalization(
+                                                          TextCapitalization
+                                                              .words),
+                                                );
+                                              }),
+                                          ],
                                         ),
                                         TextFormField(
                                           controller:

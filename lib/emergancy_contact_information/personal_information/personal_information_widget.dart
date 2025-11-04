@@ -68,7 +68,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         safeSetState(() {});
         safeSetState(() {
           _model.phoneTextController?.text = functions
-              .displayTenDigits(_model.rows!.elementAtOrNull(0)!.phoneNumber!);
+              .displayUSPhone(_model.rows?.elementAtOrNull(0)?.phoneNumber);
           _model.phoneMask.updateMask(
             newValue: TextEditingValue(
               text: _model.phoneTextController!.text,
@@ -140,8 +140,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
               ) ==
               null) {
             safeSetState(() {
-              _model.phoneTextController?.text = functions.displayTenDigits(
-                  _model.rows!.elementAtOrNull(0)!.phoneNumber!);
+              _model.phoneTextController?.text = functions
+                  .displayUSPhone(_model.rows?.elementAtOrNull(0)?.phoneNumber);
               _model.phoneMask.updateMask(
                 newValue: TextEditingValue(
                   text: _model.phoneTextController!.text,
@@ -151,7 +151,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           } else {
             safeSetState(() {
               _model.phoneTextController?.text =
-                  functions.displayTenDigits(getJsonField(
+                  functions.displayUSPhone(getJsonField(
                 _model.personalObj,
                 r'''$.phone''',
               ).toString());

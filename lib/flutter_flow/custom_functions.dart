@@ -367,3 +367,14 @@ String displayTenDigits(String input) {
   // Anything else -> show nothing (or you could return digits).
   return '';
 }
+
+String displayUSPhone(String? input) {
+  if (input == null) return '';
+  // keep only digits
+  final digits = input.replaceAll(RegExp(r'\D'), '');
+  // take last 10 so it works for +1XXXXXXXXXX too
+  final ten =
+      digits.length >= 10 ? digits.substring(digits.length - 10) : digits;
+  if (ten.length != 10) return digits; // not a 10-digit US number, show as-is
+  return '(${ten.substring(0, 3)}) ${ten.substring(3, 6)}-${ten.substring(6)}';
+}
