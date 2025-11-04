@@ -179,7 +179,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   ),
                                   autofocus: true,
                                   autofillHints: [
-                                    AutofillHints.telephoneNumber
+                                    AutofillHints.telephoneNumberNational
                                   ],
                                   textInputAction: TextInputAction.done,
                                   obscureText: false,

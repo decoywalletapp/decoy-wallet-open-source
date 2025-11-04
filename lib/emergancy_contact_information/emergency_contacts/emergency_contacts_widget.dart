@@ -9,7 +9,6 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
@@ -946,14 +945,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                          maxLength: 10,
-                                          maxLengthEnforcement:
-                                              MaxLengthEnforcement.enforced,
-                                          buildCounter: (context,
-                                                  {required currentLength,
-                                                  required isFocused,
-                                                  maxLength}) =>
-                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -1378,14 +1369,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                          maxLength: 10,
-                                          maxLengthEnforcement:
-                                              MaxLengthEnforcement.enforced,
-                                          buildCounter: (context,
-                                                  {required currentLength,
-                                                  required isFocused,
-                                                  maxLength}) =>
-                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -1810,14 +1793,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                          maxLength: 10,
-                                          maxLengthEnforcement:
-                                              MaxLengthEnforcement.enforced,
-                                          buildCounter: (context,
-                                                  {required currentLength,
-                                                  required isFocused,
-                                                  maxLength}) =>
-                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -2242,14 +2217,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                          maxLength: 10,
-                                          maxLengthEnforcement:
-                                              MaxLengthEnforcement.enforced,
-                                          buildCounter: (context,
-                                                  {required currentLength,
-                                                  required isFocused,
-                                                  maxLength}) =>
-                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -2674,14 +2641,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                          maxLength: 10,
-                                          maxLengthEnforcement:
-                                              MaxLengthEnforcement.enforced,
-                                          buildCounter: (context,
-                                                  {required currentLength,
-                                                  required isFocused,
-                                                  maxLength}) =>
-                                              null,
                                           keyboardType: TextInputType.phone,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)

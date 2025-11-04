@@ -67,8 +67,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
         safeSetState(() {
-          _model.phoneTextController?.text =
-              _model.rows!.elementAtOrNull(0)!.phoneNumber!;
+          _model.phoneTextController?.text = functions
+              .displayTenDigits(_model.rows!.elementAtOrNull(0)!.phoneNumber!);
           _model.phoneMask.updateMask(
             newValue: TextEditingValue(
               text: _model.phoneTextController!.text,
@@ -728,14 +728,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                   .bodyMedium
                                                   .fontStyle,
                                         ),
-                                    maxLength: 10,
-                                    maxLengthEnforcement:
-                                        MaxLengthEnforcement.enforced,
-                                    buildCounter: (context,
-                                            {required currentLength,
-                                            required isFocused,
-                                            maxLength}) =>
-                                        null,
                                     keyboardType: TextInputType.phone,
                                     cursorColor:
                                         FlutterFlowTheme.of(context).primary,
