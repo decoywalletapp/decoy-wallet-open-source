@@ -378,3 +378,11 @@ String displayUSPhone(String? input) {
   if (ten.length != 10) return digits; // not a 10-digit US number, show as-is
   return '(${ten.substring(0, 3)}) ${ten.substring(3, 6)}-${ten.substring(6)}';
 }
+
+String displayTenFromE164(String input) {
+  final d = input.replaceAll(RegExp(r'\D'), '');
+  if (d.isEmpty) return '';
+  if (d.length >= 11 && d.startsWith('1')) return d.substring(1, 11);
+  if (d.length >= 10) return d.substring(0, 10);
+  return d; // partial input while typing
+}

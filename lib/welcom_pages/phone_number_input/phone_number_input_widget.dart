@@ -175,7 +175,37 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.phoneNumberFieldTextController',
                                     Duration(milliseconds: 1000),
-                                    () => safeSetState(() {}),
+                                    () async {
+                                      await Future.delayed(
+                                        Duration(
+                                          milliseconds: 50,
+                                        ),
+                                      );
+                                      _model.cleanPhone =
+                                          functions.sanitizePhoneNumber(_model
+                                              .phoneNumberFieldTextController
+                                              .text);
+                                      safeSetState(() {});
+                                      if (functions.displayTenFromE164(
+                                              _model.cleanPhone) !=
+                                          _model.phoneNumberFieldTextController
+                                              .text) {
+                                        safeSetState(() {
+                                          _model.phoneNumberFieldTextController
+                                                  ?.text =
+                                              functions.displayTenFromE164(
+                                                  _model.cleanPhone);
+                                          _model.phoneNumberFieldMask
+                                              .updateMask(
+                                            newValue: TextEditingValue(
+                                              text: _model
+                                                  .phoneNumberFieldTextController!
+                                                  .text,
+                                            ),
+                                          );
+                                        });
+                                      }
+                                    },
                                   ),
                                   autofocus: true,
                                   autofillHints: [
