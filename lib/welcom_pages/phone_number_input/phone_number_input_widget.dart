@@ -41,21 +41,39 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
       _model.soResult = await actions.getSupabaseJwt();
       FFAppState().authJwt = _model.soResult!;
       safeSetState(() {});
+      await Future.delayed(
+        Duration(
+          milliseconds: 80,
+        ),
+      );
       if (_model.phoneNumberFieldTextController.text != '') {
-        _model.cleanPhone = functions.sanitizePhoneNumber(functions
-            .displayTenFromE164(_model.phoneNumberFieldTextController.text));
+        _model.cleanPhone = functions
+            .sanitizePhoneNumber(_model.phoneNumberFieldTextController.text);
         safeSetState(() {});
         _model.skipChange = true;
         safeSetState(() {});
         safeSetState(() {
           _model.phoneNumberFieldTextController?.text =
-              _model.phoneNumberFieldTextController.text;
+              functions.displayTenFromE164(_model.cleanPhone);
           _model.phoneNumberFieldMask.updateMask(
             newValue: TextEditingValue(
               text: _model.phoneNumberFieldTextController!.text,
             ),
           );
         });
+        await actions.focusNext(
+          context,
+        );
+        await Future.delayed(
+          Duration(
+            milliseconds: 60,
+          ),
+        );
+        await actions.focusPrevious(
+          context,
+        );
+        _model.skipChange = false;
+        safeSetState(() {});
       }
     });
 
@@ -64,6 +82,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
 
     _model.phoneNumberFieldMask =
         MaskTextInputFormatter(mask: '(###) ###-####');
+    _model.focusTrapTFTextController ??= TextEditingController();
+    _model.focusTrapTFFocusNode ??= FocusNode();
+
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -196,20 +217,18 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                         _model.skipChange = false;
                                         safeSetState(() {});
                                       } else {
-                                        _model.cleanPhone = functions
-                                            .sanitizePhoneNumber(functions
-                                                .displayTenFromE164(_model
-                                                    .phoneNumberFieldTextController
-                                                    .text));
+                                        _model.cleanPhone =
+                                            functions.sanitizePhoneNumber(_model
+                                                .phoneNumberFieldTextController
+                                                .text);
                                         safeSetState(() {});
                                         _model.skipChange = true;
                                         safeSetState(() {});
                                         safeSetState(() {
                                           _model.phoneNumberFieldTextController
                                                   ?.text =
-                                              functions.displayTenFromE164(_model
-                                                  .phoneNumberFieldTextController
-                                                  .text);
+                                              functions.displayTenFromE164(
+                                                  _model.cleanPhone);
                                           _model.phoneNumberFieldMask
                                               .updateMask(
                                             newValue: TextEditingValue(
@@ -219,6 +238,19 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                             ),
                                           );
                                         });
+                                        await actions.focusNext(
+                                          context,
+                                        );
+                                        await Future.delayed(
+                                          Duration(
+                                            milliseconds: 60,
+                                          ),
+                                        );
+                                        await actions.focusPrevious(
+                                          context,
+                                        );
+                                        _model.skipChange = false;
+                                        safeSetState(() {});
                                       }
                                     },
                                   ),
@@ -448,6 +480,158 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                 ].divide(SizedBox(width: 8.0)),
                               ),
                             ].divide(SizedBox(height: 8.0)),
+                          ),
+                          Opacity(
+                            opacity: 0.0,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Opacity(
+                                    opacity: 0.0,
+                                    child: Container(
+                                      width: 1.0,
+                                      child: TextFormField(
+                                        controller:
+                                            _model.focusTrapTFTextController,
+                                        focusNode: _model.focusTrapTFFocusNode,
+                                        autofocus: false,
+                                        enabled: true,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          labelStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .labelMedium
+                                              .override(
+                                                font: GoogleFonts.inter(
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .labelMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .labelMedium
+                                                          .fontStyle,
+                                                ),
+                                                letterSpacing: 0.0,
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                                lineHeight: 1.0,
+                                              ),
+                                          hintText: 'TextField',
+                                          hintStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .labelMedium
+                                              .override(
+                                                font: GoogleFonts.inter(
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .labelMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .labelMedium
+                                                          .fontStyle,
+                                                ),
+                                                letterSpacing: 0.0,
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0x00000000),
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0x00000000),
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondaryBackground,
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                              letterSpacing: 0.0,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                        enableInteractiveSelection: true,
+                                        validator: _model
+                                            .focusTrapTFTextControllerValidator
+                                            .asValidator(context),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ].divide(SizedBox(height: 24.0)),
                       ),

@@ -25,6 +25,10 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
   late MaskTextInputFormatter phoneNumberFieldMask;
   String? Function(BuildContext, String?)?
       phoneNumberFieldTextControllerValidator;
+  // State field(s) for FocusTrapTF widget.
+  FocusNode? focusTrapTFFocusNode;
+  TextEditingController? focusTrapTFTextController;
+  String? Function(BuildContext, String?)? focusTrapTFTextControllerValidator;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Button widget.
   ApiCallResponse? sendRes;
 
@@ -35,5 +39,8 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
   void dispose() {
     phoneNumberFieldFocusNode?.dispose();
     phoneNumberFieldTextController?.dispose();
+
+    focusTrapTFFocusNode?.dispose();
+    focusTrapTFTextController?.dispose();
   }
 }
