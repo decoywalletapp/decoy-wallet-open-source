@@ -12,6 +12,8 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
 
   String rawPhoneInput = '\"\"';
 
+  bool skipChange = false;
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();

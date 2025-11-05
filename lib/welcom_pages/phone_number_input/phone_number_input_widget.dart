@@ -41,6 +41,22 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
       _model.soResult = await actions.getSupabaseJwt();
       FFAppState().authJwt = _model.soResult!;
       safeSetState(() {});
+      if (_model.phoneNumberFieldTextController.text != '') {
+        _model.cleanPhone = functions.sanitizePhoneNumber(functions
+            .displayTenFromE164(_model.phoneNumberFieldTextController.text));
+        safeSetState(() {});
+        _model.skipChange = true;
+        safeSetState(() {});
+        safeSetState(() {
+          _model.phoneNumberFieldTextController?.text =
+              _model.phoneNumberFieldTextController.text;
+          _model.phoneNumberFieldMask.updateMask(
+            newValue: TextEditingValue(
+              text: _model.phoneNumberFieldTextController!.text,
+            ),
+          );
+        });
+      }
     });
 
     _model.phoneNumberFieldTextController ??= TextEditingController();
@@ -176,25 +192,24 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                     '_model.phoneNumberFieldTextController',
                                     Duration(milliseconds: 1000),
                                     () async {
-                                      await Future.delayed(
-                                        Duration(
-                                          milliseconds: 50,
-                                        ),
-                                      );
-                                      _model.cleanPhone =
-                                          functions.sanitizePhoneNumber(_model
-                                              .phoneNumberFieldTextController
-                                              .text);
-                                      safeSetState(() {});
-                                      if (functions.displayTenFromE164(
-                                              _model.cleanPhone) !=
-                                          _model.phoneNumberFieldTextController
-                                              .text) {
+                                      if (_model.skipChange == true) {
+                                        _model.skipChange = false;
+                                        safeSetState(() {});
+                                      } else {
+                                        _model.cleanPhone = functions
+                                            .sanitizePhoneNumber(functions
+                                                .displayTenFromE164(_model
+                                                    .phoneNumberFieldTextController
+                                                    .text));
+                                        safeSetState(() {});
+                                        _model.skipChange = true;
+                                        safeSetState(() {});
                                         safeSetState(() {
                                           _model.phoneNumberFieldTextController
                                                   ?.text =
-                                              functions.displayTenFromE164(
-                                                  _model.cleanPhone);
+                                              functions.displayTenFromE164(_model
+                                                  .phoneNumberFieldTextController
+                                                  .text);
                                           _model.phoneNumberFieldMask
                                               .updateMask(
                                             newValue: TextEditingValue(
@@ -467,35 +482,6 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                               SnackBar(
                                 content: Text(
                                   'Enter Valid Phone Number',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  _model.cleanPhone,
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  (_model.sendRes?.statusCode ?? 200)
-                                      .toString(),
                                   style: TextStyle(
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,

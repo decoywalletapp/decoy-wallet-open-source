@@ -233,9 +233,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           }
 
           if (getJsonField(
-            _model.contactsObj,
-            r'''$.contacts[2].phone''',
-          )) {
+                _model.contactsObj,
+                r'''$.contacts[2].phone''',
+              ) ==
+              null) {
             safeSetState(() {
               _model.c3PhoneTFTextController?.text = '';
               _model.c3PhoneTFMask.updateMask(
