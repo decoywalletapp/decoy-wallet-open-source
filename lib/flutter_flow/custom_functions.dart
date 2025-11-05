@@ -386,3 +386,36 @@ String displayTenFromE164(String input) {
   if (d.length >= 10) return d.substring(0, 10);
   return d; // partial input while typing
 }
+
+String toE164US(String input) {
+  final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
+  if (digits.isEmpty) return '';
+  // if user/device provides 11 with leading 1
+  if (digits.length >= 11 && digits.startsWith('1')) {
+    final d11 = digits.substring(0, 11);
+    return '+$d11';
+  }
+  // otherwise use last 10 as US number
+  if (digits.length >= 10) {
+    final last10 = digits.substring(digits.length - 10);
+    return '+1$last10';
+  }
+  // partial typing
+  return '+1$digits';
+}
+
+String formatUSPhone(String input) {
+  final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
+  if (digits.isEmpty) return '';
+
+  final last10 =
+      digits.length >= 10 ? digits.substring(digits.length - 10) : digits;
+
+  if (last10.length <= 3) {
+    return last10;
+  } else if (last10.length <= 6) {
+    return '(${last10.substring(0, 3)}) ${last10.substring(3)}';
+  } else {
+    return '(${last10.substring(0, 3)}) ${last10.substring(3, 6)}-${last10.substring(6)}';
+  }
+}

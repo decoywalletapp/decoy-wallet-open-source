@@ -9,7 +9,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'phone_number_input_model.dart';
 export 'phone_number_input_model.dart';
@@ -41,47 +40,21 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
       _model.soResult = await actions.getSupabaseJwt();
       FFAppState().authJwt = _model.soResult!;
       safeSetState(() {});
-      await Future.delayed(
-        Duration(
-          milliseconds: 80,
-        ),
-      );
-      if (_model.phoneNumberFieldTextController.text != '') {
-        _model.cleanPhone = functions
-            .sanitizePhoneNumber(_model.phoneNumberFieldTextController.text);
-        safeSetState(() {});
-        _model.skipChange = true;
-        safeSetState(() {});
+      _model.cleanPhone =
+          functions.toE164US(_model.phoneNumberFieldTextController.text);
+      safeSetState(() {});
+      if (functions.formatUSPhone(_model.phoneNumberFieldTextController.text) !=
+          _model.phoneNumberFieldTextController.text) {
         safeSetState(() {
-          _model.phoneNumberFieldTextController?.text =
-              functions.displayTenFromE164(_model.cleanPhone);
-          _model.phoneNumberFieldMask.updateMask(
-            newValue: TextEditingValue(
-              text: _model.phoneNumberFieldTextController!.text,
-            ),
-          );
+          _model.phoneNumberFieldTextController?.text = functions
+              .formatUSPhone(_model.phoneNumberFieldTextController.text);
         });
-        await actions.focusNext(
-          context,
-        );
-        await Future.delayed(
-          Duration(
-            milliseconds: 60,
-          ),
-        );
-        await actions.focusPrevious(
-          context,
-        );
-        _model.skipChange = false;
-        safeSetState(() {});
       }
     });
 
     _model.phoneNumberFieldTextController ??= TextEditingController();
     _model.phoneNumberFieldFocusNode ??= FocusNode();
 
-    _model.phoneNumberFieldMask =
-        MaskTextInputFormatter(mask: '(###) ###-####');
     _model.focusTrapTFTextController ??= TextEditingController();
     _model.focusTrapTFFocusNode ??= FocusNode();
 
@@ -213,44 +186,22 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                     '_model.phoneNumberFieldTextController',
                                     Duration(milliseconds: 1000),
                                     () async {
-                                      if (_model.skipChange == true) {
-                                        _model.skipChange = false;
-                                        safeSetState(() {});
-                                      } else {
-                                        _model.cleanPhone =
-                                            functions.sanitizePhoneNumber(_model
-                                                .phoneNumberFieldTextController
-                                                .text);
-                                        safeSetState(() {});
-                                        _model.skipChange = true;
-                                        safeSetState(() {});
+                                      _model.cleanPhone = functions.toE164US(
+                                          _model.phoneNumberFieldTextController
+                                              .text);
+                                      safeSetState(() {});
+                                      if (functions.formatUSPhone(_model
+                                              .phoneNumberFieldTextController
+                                              .text) !=
+                                          _model.phoneNumberFieldTextController
+                                              .text) {
                                         safeSetState(() {
                                           _model.phoneNumberFieldTextController
                                                   ?.text =
-                                              functions.displayTenFromE164(
-                                                  _model.cleanPhone);
-                                          _model.phoneNumberFieldMask
-                                              .updateMask(
-                                            newValue: TextEditingValue(
-                                              text: _model
-                                                  .phoneNumberFieldTextController!
-                                                  .text,
-                                            ),
-                                          );
+                                              functions.formatUSPhone(_model
+                                                  .phoneNumberFieldTextController
+                                                  .text);
                                         });
-                                        await actions.focusNext(
-                                          context,
-                                        );
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 60,
-                                          ),
-                                        );
-                                        await actions.focusPrevious(
-                                          context,
-                                        );
-                                        _model.skipChange = false;
-                                        safeSetState(() {});
                                       }
                                     },
                                   ),
@@ -354,9 +305,6 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   validator: _model
                                       .phoneNumberFieldTextControllerValidator
                                       .asValidator(context),
-                                  inputFormatters: [
-                                    _model.phoneNumberFieldMask
-                                  ],
                                 ),
                               ),
                             ],
