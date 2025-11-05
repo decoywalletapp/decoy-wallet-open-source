@@ -419,3 +419,49 @@ String formatUSPhone(String input) {
     return '(${last10.substring(0, 3)}) ${last10.substring(3, 6)}-${last10.substring(6)}';
   }
 }
+
+String normalizeToTenDigits(String input) {
+  final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
+  if (digits.length >= 11 && digits.startsWith('1')) {
+    // drop leading country digit
+    final core = digits.substring(1);
+    return core.length >= 10 ? core.substring(0, 10) : core;
+  }
+  // not starting with 1; just take first 10
+  return digits.length >= 10 ? digits.substring(0, 10) : digits;
+}
+
+String formatAsUsPhone(String d10) {
+  final d = d10.replaceAll(RegExp(r'[^0-9]'), '');
+  if (d.length < 1) return '';
+  final b = StringBuffer('(')..write(d.substring(0, d.length.clamp(0, 3)));
+  if (d.length > 3) {
+    b.write(') ');
+    b.write(d.substring(3, d.length.clamp(3, 6)));
+  }
+  if (d.length > 6) {
+    b.write('-');
+    b.write(d.substring(6, d.length.clamp(6, 10)));
+  }
+  return b.toString();
+}
+
+String toE164USpt2(String input) {
+  final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
+  if (digits.isEmpty) return '';
+
+  // Case: iOS/keyboard provides 11 with leading 1
+  if (digits.length >= 11 && digits.startsWith('1')) {
+    final d11 = digits.substring(0, 11); // keep only the first 11
+    return '+$d11'; // +1##########
+  }
+
+  // Case: any 10+ digits → use the last 10 as US number
+  if (digits.length >= 10) {
+    final last10 = digits.substring(digits.length - 10);
+    return '+1$last10';
+  }
+
+  // Partial typing → not yet valid
+  return '';
+}

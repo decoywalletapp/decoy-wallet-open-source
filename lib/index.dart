@@ -75,3 +75,5 @@ export '/welcom_pages/create_account_copy/create_account_copy_widget.dart'
     show CreateAccountCopyWidget;
 export '/welcom_pages/auth_router/auth_router_widget.dart'
     show AuthRouterWidget;
+export '/welcom_pages/phone_number_input_copy/phone_number_input_copy_widget.dart'
+    show PhoneNumberInputCopyWidget;
