@@ -145,7 +145,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       width: 500.0,
                       height: 200.0,
                       fit: BoxFit.cover,
-                      alignment: Alignment(0.0, 0.5),
+                      alignment: Alignment(0.0, 0.45),
                     ),
                   ),
                 ),
