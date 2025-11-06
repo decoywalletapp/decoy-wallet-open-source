@@ -329,7 +329,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: AuthRouterWidget.routeName,
         path: AuthRouterWidget.routePath,
-        builder: (context, params) => AuthRouterWidget(),
+        builder: (context, params) => AuthRouterWidget(
+          type: params.getParam(
+            'type',
+            ParamType.String,
+          ),
+          tokenHash: params.getParam(
+            'tokenHash',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
         name: PhoneNumberInputCopyWidget.routeName,
