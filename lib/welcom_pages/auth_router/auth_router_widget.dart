@@ -1,4 +1,5 @@
 import '/auth/supabase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -13,10 +14,12 @@ class AuthRouterWidget extends StatefulWidget {
     super.key,
     this.type,
     this.tokenHash,
+    this.token,
   });
 
   final String? type;
   final String? tokenHash;
+  final String? token;
 
   static String routeName = 'AuthRouter';
   static String routePath = '/authRouter';
@@ -38,32 +41,45 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (widget.type == 'email_change') {
-        await DecoyWalletTable().update(
-          data: {
-            'email_verified': true,
-            'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
-          },
-          matchingRows: (rows) => rows.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-        _model.walletRow = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q
-              .eqOrNull(
+        if (widget.token != '') {
+          _model.verifyEmailResp = await SupabaseVerifyEmailChangeCall.call(
+            token: widget.token,
+          );
+
+          if ((_model.verifyEmailResp?.succeeded ?? true)) {
+            await DecoyWalletTable().update(
+              data: {
+                'email_verified': true,
+                'email_verified_at':
+                    supaSerialize<DateTime>(getCurrentTimestamp),
+              },
+              matchingRows: (rows) => rows.eqOrNull(
                 'user_id',
                 currentUserUid,
-              )
-              .order('created_at'),
-        );
-        _model.verifiedViaEmail = true;
-        _model.needPhone =
-            !_model.walletRow!.elementAtOrNull(0)!.isPhoneVerified!;
-        safeSetState(() {});
-        if (_model.needPhone == true) {
-          context.pushNamed(PhoneNumberInputWidget.routeName);
-        } else {
-          context.pushNamed(PINPageWidget.routeName);
+              ),
+            );
+            _model.userRowAfterVerify = await DecoyWalletTable().queryRows(
+              queryFn: (q) => q
+                  .eqOrNull(
+                    'user_id',
+                    currentUserUid,
+                  )
+                  .order('created_at'),
+            );
+            _model.verifiedViaEmail =
+                _model.userRowAfterVerify!.elementAtOrNull(0)!.emailVerified!;
+            _model.needPhone = !_model.userRowAfterVerify!
+                .elementAtOrNull(0)!
+                .isPhoneVerified!;
+            safeSetState(() {});
+            if (_model.needPhone == true) {
+              context.pushNamed(PhoneNumberInputWidget.routeName);
+            } else {
+              context.pushNamed(PINPageWidget.routeName);
+            }
+          } else {
+            context.pushNamed(AuthRouterWidget.routeName);
+          }
         }
       } else {
         await Future.delayed(
@@ -177,14 +193,17 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               Expanded(
                 child: Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5.0),
-                    child: Image.asset(
-                      'assets/images/DecoyLogo1-WOHiRes.jpg',
-                      width: 500.0,
-                      height: 200.0,
-                      fit: BoxFit.cover,
-                      alignment: Alignment(0.0, 0.47),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5.0),
+                      child: Image.asset(
+                        'assets/images/DecoyLogo1-WOHiRes.jpg',
+                        width: 500.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                        alignment: Alignment(0.0, 0.47),
+                      ),
                     ),
                   ),
                 ),

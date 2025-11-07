@@ -338,6 +338,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             'tokenHash',
             ParamType.String,
           ),
+          token: params.getParam(
+            'token',
+            ParamType.String,
+          ),
         ),
       ),
       FFRoute(

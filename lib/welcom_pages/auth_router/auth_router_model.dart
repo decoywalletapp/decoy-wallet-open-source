@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -24,10 +25,12 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   ///  State fields for stateful widgets in this page.
 
+  // Stores action output result for [Backend Call - API (supabaseVerifyEmailChange)] action in AuthRouter widget.
+  ApiCallResponse? verifyEmailResp;
   // Stores action output result for [Backend Call - Update Row(s)] action in AuthRouter widget.
-  List<DecoyWalletRow>? updateEmailFlags;
+  List<DecoyWalletRow>? updR;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
-  List<DecoyWalletRow>? walletRow;
+  List<DecoyWalletRow>? userRowAfterVerify;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<DecoyWalletRow>? query1;
   // Stores action output result for [Backend Call - Insert Row] action in AuthRouter widget.
