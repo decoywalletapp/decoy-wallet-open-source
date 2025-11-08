@@ -23,6 +23,12 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
   void updateDwListAtIndex(int index, Function(DecoyWalletRow) updateFn) =>
       dwList[index] = updateFn(dwList[index]);
 
+  String? dbgStep;
+
+  bool dbgApiOk = false;
+
+  int? dgbTokenLen = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (supabaseVerifyEmailChange)] action in AuthRouter widget.
