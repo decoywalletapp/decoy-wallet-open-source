@@ -42,9 +42,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.dbgStep = 'start';
       _model.dbgApiOk = false;
-      _model.dgbTokenLen = 0;
-      safeSetState(() {});
+      _model.dbgType = widget.type;
       _model.dgbTokenLen = functions.stringLength(widget.token);
+      _model.dbgTokenHead = functions.prefix(widget.token, 10);
       safeSetState(() {});
       if (widget.type == 'email_change') {
         _model.dbgStep = 'email_change';
@@ -361,6 +361,58 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Text(
+                            'dbgType',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                          ),
+                          Text(
+                            valueOrDefault<String>(
+                              widget.type,
+                              '0',
+                            ),
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
                             'dgbTokenLen',
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -410,7 +462,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Text(
-                            'type',
+                            'dbgTokenHead',
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -433,8 +485,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           ),
                           Text(
                             valueOrDefault<String>(
-                              widget.type,
-                              '0',
+                              _model.dbgTokenHead,
+                              '\"\"',
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium

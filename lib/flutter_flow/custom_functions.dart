@@ -467,5 +467,14 @@ String toE164USpt2(String input) {
 }
 
 int stringLength(String? s) {
-  return (s ?? '').length;
+  if (s == null) return 0;
+  return s.length;
+}
+
+String prefix(
+  String? s,
+  int n,
+) {
+  if (s == null || n <= 0) return '';
+  return s.length <= n ? s : s.substring(0, n);
 }
