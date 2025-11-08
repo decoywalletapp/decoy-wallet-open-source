@@ -27,7 +27,7 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   bool dbgApiOk = false;
 
-  int? dgbTokenLen = 0;
+  int? dgbTokenLen = -1;
 
   String? dbgType;
 
