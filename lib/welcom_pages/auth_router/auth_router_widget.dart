@@ -1,8 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +13,9 @@ class AuthRouterWidget extends StatefulWidget {
   const AuthRouterWidget({
     super.key,
     this.type,
-    this.token,
   });
 
   final String? type;
-  final String? token;
 
   static String routeName = 'AuthRouter';
   static String routePath = '/authRouter';
@@ -41,99 +37,45 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.dbgStep = 'start';
-      _model.dbgApiOk = false;
-      _model.dbgType = widget.type;
-      _model.dgbTokenLen = functions.stringLength(widget.token);
-      _model.dbgTokenHead = functions.prefix(widget.token, 10);
       safeSetState(() {});
-      if (widget.type == 'email_change') {
-        _model.dbgStep = 'email_change';
+      if (widget.type == 'post_verify') {
+        _model.dbgStep = 'post_verify';
         safeSetState(() {});
-        if (widget.token != '') {
-          _model.dbgStep = 'got_token';
-          safeSetState(() {});
-          _model.verifyEmailResp = await SupabaseVerifyEmailChangeCall.call(
-            tokenHash: widget.token,
-          );
-
-          _model.dbgApiOk = (_model.verifyEmailResp?.succeeded ?? true);
-          _model.dbgStep = 'api_returned';
-          safeSetState(() {});
-          if ((_model.verifyEmailResp?.succeeded ?? true)) {
-            _model.currentRow = await DecoyWalletTable().queryRows(
-              queryFn: (q) => q
-                  .eqOrNull(
-                    'user_id',
-                    currentUserUid,
-                  )
-                  .order('created_at'),
-            );
-            await DecoyWalletTable().update(
-              data: {
-                'email': _model.currentRow?.elementAtOrNull(0)?.pendingEmail,
-                'pending_email': null,
-                'email_verified': true,
-                'email_verified_at':
-                    supaSerialize<DateTime>(getCurrentTimestamp),
-              },
-              matchingRows: (rows) => rows.eqOrNull(
+        _model.back1 = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
                 'user_id',
                 currentUserUid,
-              ),
-            );
-            _model.userRowAfterVerify = await DecoyWalletTable().queryRows(
-              queryFn: (q) => q
-                  .eqOrNull(
-                    'user_id',
-                    currentUserUid,
-                  )
-                  .order('created_at'),
-            );
-            _model.verifiedViaEmail =
-                _model.userRowAfterVerify!.elementAtOrNull(0)!.emailVerified!;
-            _model.needPhone = !_model.userRowAfterVerify!
-                .elementAtOrNull(0)!
-                .isPhoneVerified!;
-            _model.dbgStep = 'updated_row';
-            safeSetState(() {});
-            if (_model.needPhone == true) {
-              context.pushNamed(PhoneNumberInputWidget.routeName);
-            } else {
-              context.pushNamed(PINPageWidget.routeName);
-            }
-          } else {
-            _model.dbgStep = 'api_failed';
-            safeSetState(() {});
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'EMAIL CHANGE VERIFICATION FAILED',
-                  style: TextStyle(
-                    color: FlutterFlowTheme.of(context).primaryText,
-                  ),
-                ),
-                duration: Duration(milliseconds: 4000),
-                backgroundColor: FlutterFlowTheme.of(context).secondary,
-              ),
-            );
-
-            context.pushNamed(AuthRouterWidget.routeName);
-          }
+              )
+              .order('created_at'),
+        );
+        await DecoyWalletTable().update(
+          data: {
+            'email_verified': true,
+            'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          },
+          matchingRows: (rows) => rows.eqOrNull(
+            'user_id',
+            '',
+          ),
+        );
+        _model.back2 = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .order('created_at'),
+        );
+        _model.verifiedViaEmail =
+            _model.back2!.elementAtOrNull(0)!.emailVerified!;
+        _model.needPhone = !_model.back2!.elementAtOrNull(0)!.isPhoneVerified!;
+        _model.dbgStep = 'updated_row';
+        safeSetState(() {});
+        if (_model.needPhone == true) {
+          context.pushNamed(PhoneNumberInputWidget.routeName);
         } else {
-          _model.dbgStep = 'no_token';
-          safeSetState(() {});
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'MISSING TOKEN',
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).secondary,
-            ),
-          );
+          context.pushNamed(PINPageWidget.routeName);
         }
       } else {
         await Future.delayed(
@@ -487,58 +429,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                             valueOrDefault<String>(
                               _model.dbgTokenHead,
                               '\"\"',
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            'token:',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                          Text(
-                            valueOrDefault<String>(
-                              widget.token,
-                              'no',
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
