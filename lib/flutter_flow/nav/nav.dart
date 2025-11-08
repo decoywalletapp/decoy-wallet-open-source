@@ -334,10 +334,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             'type',
             ParamType.String,
           ),
-          tokenHash: params.getParam(
-            'tokenHash',
-            ParamType.String,
-          ),
           token: params.getParam(
             'token',
             ParamType.String,

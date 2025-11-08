@@ -13,12 +13,10 @@ class AuthRouterWidget extends StatefulWidget {
   const AuthRouterWidget({
     super.key,
     this.type,
-    this.tokenHash,
     this.token,
   });
 
   final String? type;
-  final String? tokenHash;
   final String? token;
 
   static String routeName = 'AuthRouter';
@@ -40,6 +38,30 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.type!,
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).primaryText,
+            ),
+          ),
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.token!,
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).primaryText,
+            ),
+          ),
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
       if (widget.type == 'email_change') {
         if (widget.token != '') {
           _model.verifyEmailResp = await SupabaseVerifyEmailChangeCall.call(
@@ -47,11 +69,19 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           );
 
           if ((_model.verifyEmailResp?.succeeded ?? true)) {
+            _model.currentRow = await DecoyWalletTable().queryRows(
+              queryFn: (q) => q.eqOrNull(
+                'user_id',
+                currentUserUid,
+              ),
+            );
             await DecoyWalletTable().update(
               data: {
                 'email_verified': true,
                 'email_verified_at':
                     supaSerialize<DateTime>(getCurrentTimestamp),
+                'email': _model.currentRow?.elementAtOrNull(0)?.pendingEmail,
+                'pending_email': null,
               },
               matchingRows: (rows) => rows.eqOrNull(
                 'user_id',
@@ -78,8 +108,34 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               context.pushNamed(PINPageWidget.routeName);
             }
           } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'EMAIL CHANGE VERIFICATION FAILED',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+
             context.pushNamed(AuthRouterWidget.routeName);
           }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'MISSING TOKEN',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
         }
       } else {
         await Future.delayed(

@@ -27,6 +27,8 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   // Stores action output result for [Backend Call - API (supabaseVerifyEmailChange)] action in AuthRouter widget.
   ApiCallResponse? verifyEmailResp;
+  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  List<DecoyWalletRow>? currentRow;
   // Stores action output result for [Backend Call - Update Row(s)] action in AuthRouter widget.
   List<DecoyWalletRow>? updR;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
