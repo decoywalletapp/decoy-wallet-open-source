@@ -288,6 +288,24 @@ class FFAppState extends ChangeNotifier {
   void deleteEmergencyContactsIncrement() {
     secureStorage.delete(key: 'ff_emergencyContactsIncrement');
   }
+
+  String _pendingLink = '';
+  String get pendingLink => _pendingLink;
+  set pendingLink(String value) {
+    _pendingLink = value;
+  }
+
+  String _linkType = '';
+  String get linkType => _linkType;
+  set linkType(String value) {
+    _linkType = value;
+  }
+
+  String _linkToken = '';
+  String get linkToken => _linkToken;
+  set linkToken(String value) {
+    _linkToken = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

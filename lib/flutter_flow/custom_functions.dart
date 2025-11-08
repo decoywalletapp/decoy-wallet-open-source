@@ -478,3 +478,15 @@ String prefix(
   if (s == null || n <= 0) return '';
   return s.length <= n ? s : s.substring(0, n);
 }
+
+String getQueryParam(
+  String url,
+  String key,
+) {
+  try {
+    final uri = Uri.parse(url);
+    return uri.queryParameters[key] ?? '';
+  } catch (_) {
+    return '';
+  }
+}

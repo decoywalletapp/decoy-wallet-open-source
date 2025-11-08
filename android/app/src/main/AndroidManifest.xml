@@ -45,7 +45,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="decoywalletapp" android:host="decoywallet-a283b.web.app" />
+                <data android:scheme="decoywalletapp" android:host="decoywalletapp.com" />
             </intent-filter>
 
         </activity>

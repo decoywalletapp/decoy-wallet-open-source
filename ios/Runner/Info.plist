@@ -37,7 +37,7 @@
         <key>CFBundleTypeRole</key>
         <string>Editor</string>
         <key>CFBundleURLName</key>
-        <string>decoywallet-a283b.web.app</string>
+        <string>decoywalletapp.com</string>
         <key>CFBundleURLSchemes</key>
         <array>
         <string>decoywalletapp</string>
