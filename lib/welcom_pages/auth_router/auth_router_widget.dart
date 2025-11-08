@@ -14,10 +14,12 @@ class AuthRouterWidget extends StatefulWidget {
     super.key,
     this.type,
     this.token,
+    this.tokanHash,
   });
 
   final String? type;
   final String? token;
+  final String? tokanHash;
 
   static String routeName = 'AuthRouter';
   static String routePath = '/authRouter';
