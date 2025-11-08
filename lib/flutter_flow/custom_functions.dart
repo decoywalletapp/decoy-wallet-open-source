@@ -465,3 +465,7 @@ String toE164USpt2(String input) {
   // Partial typing → not yet valid
   return '';
 }
+
+int stringLength(String? s) {
+  return (s ?? '').length;
+}

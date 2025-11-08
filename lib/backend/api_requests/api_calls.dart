@@ -283,11 +283,11 @@ class WrapDataKeyCall {
 
 class SupabaseVerifyEmailChangeCall {
   static Future<ApiCallResponse> call({
-    String? token = '',
+    String? tokenHash = '',
   }) async {
     final ffApiRequestBody = '''
 {
-  "token": "${escapeStringForJson(token)}",
+  "token_hash": "${escapeStringForJson(tokenHash)}",
   "type": "email_change"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -296,9 +296,7 @@ class SupabaseVerifyEmailChangeCall {
       callType: ApiCallType.POST,
       headers: {
         'apikey':
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bXJ0aHl1bXpyZmd0dXZqcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMDY2NDksImV4cCI6MjA2NTc4MjY0OX0.ZBjqtz7DKRkxnR3-rYtvtmz0JJb4-pDL4ux89qVBASc',
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bXJ0aHl1bXpyZmd0dXZqcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMDY2NDksImV4cCI6MjA2NTc4MjY0OX0.ZBjqtz7DKRkxnR3-rYtvtmz0JJb4-pDL4ux89qVBASc',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bXJ0aHl1bXpyaZmd0dXZqcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMDY2NDksImV4cCI6MjA2NTc4MjY0OX0.ZBjqtz7DKRkxnR3-rYtvtmz0JJb4-pDL4ux89qVBASc',
         'Content-Type': 'application/json',
       },
       params: {},

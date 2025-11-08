@@ -2,6 +2,7 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,10 @@ class AuthRouterWidget extends StatefulWidget {
     super.key,
     this.type,
     this.token,
-    this.tokanHash,
   });
 
   final String? type;
   final String? token;
-  final String? tokanHash;
 
   static String routeName = 'AuthRouter';
   static String routePath = '/authRouter';
@@ -43,7 +42,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.dbgStep = 'start';
       _model.dbgApiOk = false;
-      _model.dgbTokenLen = _model.dgbTokenLen;
+      _model.dgbTokenLen = 0;
+      safeSetState(() {});
+      _model.dgbTokenLen = functions.stringLength(widget.token);
       safeSetState(() {});
       if (widget.type == 'email_change') {
         _model.dbgStep = 'email_change';
@@ -52,7 +53,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.dbgStep = 'got_token';
           safeSetState(() {});
           _model.verifyEmailResp = await SupabaseVerifyEmailChangeCall.call(
-            token: widget.token,
+            tokenHash: widget.token,
           );
 
           _model.dbgApiOk = (_model.verifyEmailResp?.succeeded ?? true);
@@ -69,11 +70,11 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             );
             await DecoyWalletTable().update(
               data: {
+                'email': _model.currentRow?.elementAtOrNull(0)?.pendingEmail,
+                'pending_email': null,
                 'email_verified': true,
                 'email_verified_at':
                     supaSerialize<DateTime>(getCurrentTimestamp),
-                'email': _model.currentRow?.elementAtOrNull(0)?.pendingEmail,
-                'pending_email': null,
               },
               matchingRows: (rows) => rows.eqOrNull(
                 'user_id',
