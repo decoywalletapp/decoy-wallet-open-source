@@ -287,7 +287,7 @@ class SupabaseVerifyEmailChangeCall {
   }) async {
     final ffApiRequestBody = '''
 {
-  "token": "{{token}}",
+  "token": "${escapeStringForJson(token)}",
   "type": "email_change"
 }''';
     return ApiManager.instance.makeApiCall(
