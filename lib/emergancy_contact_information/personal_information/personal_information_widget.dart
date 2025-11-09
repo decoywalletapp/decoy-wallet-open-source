@@ -1017,27 +1017,57 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       FFAppState().userEmail = functions
                                           .normalizeEmail(_model.changedEmail);
                                       safeSetState(() {});
-                                      if (_model
-                                          .emailTextController.text.isEmpty) {
+                                      _model.apicomeinhere =
+                                          await UpdateEmailViaProxyCall.call(
+                                        newEmail: _model.changedEmail,
+                                        authJwt: FFAppState().authJwt,
+                                      );
+
+                                      if ((_model.apicomeinhere?.succeeded ??
+                                          true)) {
+                                        context.pushNamed(
+                                            ConfirmEmailPageWidget.routeName);
+                                      } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              'Email required!',
+                                              'ERROR',
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
                                             ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
                                           ),
                                         );
-                                        return;
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              (_model.apicomeinhere
+                                                          ?.statusCode ??
+                                                      200)
+                                                  .toString(),
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
                                       }
-
-                                      await authManager.updateEmail(
-                                        email: _model.emailTextController.text,
-                                        context: context,
-                                      );
-                                      safeSetState(() {});
-
-                                      context.pushNamed(
-                                          ConfirmEmailPageWidget.routeName);
                                     } else {
                                       if (_model.origPhone !=
                                           _model.changedPhone) {

@@ -35,12 +35,6 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
-  List<DecoyWalletRow>? back1;
-  // Stores action output result for [Backend Call - Update Row(s)] action in AuthRouter widget.
-  List<DecoyWalletRow>? upd1;
-  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
-  List<DecoyWalletRow>? back2;
-  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<DecoyWalletRow>? query1;
   // Stores action output result for [Backend Call - Insert Row] action in AuthRouter widget.
   DecoyWalletRow? firstInsert;

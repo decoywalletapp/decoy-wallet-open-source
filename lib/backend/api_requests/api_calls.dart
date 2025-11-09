@@ -281,22 +281,22 @@ class WrapDataKeyCall {
       );
 }
 
-class SupabaseVerifyEmailChangeCall {
+class UpdateEmailViaProxyCall {
   static Future<ApiCallResponse> call({
-    String? tokenHash = '',
+    String? newEmail = '',
+    String? authJwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
-  "token_hash": "${escapeStringForJson(tokenHash)}",
-  "type": "email_change"
+  "email": "${escapeStringForJson(newEmail)}",
+  "jwt": "${escapeStringForJson(authJwt)}"
 }''';
     return ApiManager.instance.makeApiCall(
-      callName: 'supabaseVerifyEmailChange',
-      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/auth/v1/verify',
+      callName: 'UpdateEmailViaProxy',
+      apiUrl:
+          'https://decoy-verify-866378207353.us-central1.run.app/update-email',
       callType: ApiCallType.POST,
       headers: {
-        'apikey':
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bXJ0aHl1bXpyaZmd0dXZqcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMDY2NDksImV4cCI6MjA2NTc4MjY0OX0.ZBjqtz7DKRkxnR3-rYtvtmz0JJb4-pDL4ux89qVBASc',
         'Content-Type': 'application/json',
       },
       params: {},
