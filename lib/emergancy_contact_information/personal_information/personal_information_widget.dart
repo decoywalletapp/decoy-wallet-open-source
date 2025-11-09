@@ -1017,6 +1017,10 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       FFAppState().userEmail = functions
                                           .normalizeEmail(_model.changedEmail);
                                       safeSetState(() {});
+                                      _model.cusjwt =
+                                          await actions.getSupabaseJwt();
+                                      FFAppState().authJwt = _model.cusjwt!;
+                                      safeSetState(() {});
                                       _model.apicomeinhere =
                                           await UpdateEmailViaProxyCall.call(
                                         newEmail: _model.changedEmail,
