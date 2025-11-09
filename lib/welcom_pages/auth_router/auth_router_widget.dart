@@ -1,16 +1,23 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'auth_router_model.dart';
 export 'auth_router_model.dart';
 
 class AuthRouterWidget extends StatefulWidget {
-  const AuthRouterWidget({super.key});
+  const AuthRouterWidget({
+    super.key,
+    this.type,
+  });
+
+  final String? type;
 
   static String routeName = 'AuthRouter';
   static String routePath = '/authRouter';
@@ -31,41 +38,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(
-        Duration(
-          milliseconds: 600,
-        ),
-      );
-      _model.query1 = await DecoyWalletTable().queryRows(
-        queryFn: (q) => q
-            .eqOrNull(
-              'user_id',
-              currentUserUid,
-            )
-            .order('created_at'),
-      );
-      _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
-      _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
+      _model.jwtOut = await actions.getSupabaseJwt();
+      FFAppState().authJwt = _model.jwtOut!;
       safeSetState(() {});
-      if (_model.hasRow == false) {
-        _model.firstInsert = await DecoyWalletTable().insert({
-          'user_id': currentUserUid,
-          'email': currentUserEmail,
-          'email_verified': false,
-          'email_verified_at': supaSerialize<DateTime>(null),
-          'is_phone_verified': false,
-          'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
-        });
-        _model.query2 = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
+      if (widget.type == 'post_verify') {
+        _model.quero = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .order('created_at'),
         );
-        _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
-        safeSetState(() {});
-      } else {
         await DecoyWalletTable().update(
           data: {
             'email_verified': true,
@@ -77,27 +61,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             currentUserUid,
           ),
         );
-        _model.query3 = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-        _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
-        safeSetState(() {});
-      }
-
-      _model.verifiedViaEmail =
-          _model.dwList.elementAtOrNull(0)!.emailVerified!;
-      _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
-      safeSetState(() {});
-      if (_model.verifiedViaEmail == false) {
-        if (Navigator.of(context).canPop()) {
-          context.pop();
-        }
-        context.pushNamed(ConfirmEmailPageWidget.routeName);
-      } else {
         if (_model.needPhone == true) {
           if (Navigator.of(context).canPop()) {
             context.pop();
@@ -108,6 +71,86 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             context.pop();
           }
           context.pushNamed(PINPageWidget.routeName);
+        }
+      } else {
+        await Future.delayed(
+          Duration(
+            milliseconds: 600,
+          ),
+        );
+        _model.query1 = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .order('created_at'),
+        );
+        _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
+        _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
+        safeSetState(() {});
+        if (_model.hasRow == false) {
+          _model.firstInsert = await DecoyWalletTable().insert({
+            'user_id': currentUserUid,
+            'email': currentUserEmail,
+            'email_verified': false,
+            'email_verified_at': supaSerialize<DateTime>(null),
+            'is_phone_verified': false,
+            'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          });
+          _model.query2 = await DecoyWalletTable().queryRows(
+            queryFn: (q) => q.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
+          _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
+          safeSetState(() {});
+        } else {
+          await DecoyWalletTable().update(
+            data: {
+              'email_verified': true,
+              'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+              'email': currentUserEmail,
+            },
+            matchingRows: (rows) => rows.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.query3 = await DecoyWalletTable().queryRows(
+            queryFn: (q) => q.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
+          _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
+          safeSetState(() {});
+        }
+
+        _model.verifiedViaEmail =
+            _model.dwList.elementAtOrNull(0)!.emailVerified!;
+        _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
+        safeSetState(() {});
+        if (_model.verifiedViaEmail == false) {
+          if (Navigator.of(context).canPop()) {
+            context.pop();
+          }
+          context.pushNamed(ConfirmEmailPageWidget.routeName);
+        } else {
+          if (_model.needPhone == true) {
+            if (Navigator.of(context).canPop()) {
+              context.pop();
+            }
+            context.pushNamed(PhoneNumberInputWidget.routeName);
+          } else {
+            if (Navigator.of(context).canPop()) {
+              context.pop();
+            }
+            context.pushNamed(PINPageWidget.routeName);
+          }
         }
       }
     });
@@ -124,6 +167,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
