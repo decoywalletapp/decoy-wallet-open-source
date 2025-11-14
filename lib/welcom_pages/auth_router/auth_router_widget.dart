@@ -59,7 +59,31 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
       _model.authEmail = _model.query1?.elementAtOrNull(0)?.email;
       _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
       safeSetState(() {});
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '1',
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).primaryText,
+            ),
+          ),
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
       if (_model.hasRow == false) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '2',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
         _model.firstInsert = await DecoyWalletTable().insert({
           'user_id': currentUserUid,
           'email': currentUserEmail,
@@ -79,6 +103,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         safeSetState(() {});
       } else {
         if (_model.pendingEmail != null && _model.pendingEmail != '') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '3',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
           await DecoyWalletTable().update(
             data: {
               'email_verified': true,
@@ -95,6 +131,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.pendingEmail = null;
           safeSetState(() {});
         } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '4',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
           await DecoyWalletTable().update(
             data: {
               'email_verified': true,
@@ -122,6 +170,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.dwList.elementAtOrNull(0)!.emailVerified!;
       _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
       safeSetState(() {});
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '5',
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).primaryText,
+            ),
+          ),
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
       if (_model.verifiedViaEmail == false) {
         if (Navigator.of(context).canPop()) {
           context.pop();
@@ -137,7 +197,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           if (Navigator.of(context).canPop()) {
             context.pop();
           }
-          context.pushNamed(PINPageWidget.routeName);
+          context.pushNamed(HomePageWidget.routeName);
         }
       }
     });
