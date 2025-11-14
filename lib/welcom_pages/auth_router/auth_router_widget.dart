@@ -127,6 +127,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               currentUserUid,
             ),
           );
+          _model.dbgStep = 'promotedPendingEmail';
+          safeSetState(() {});
           _model.authEmail = _model.pendingEmail;
           _model.pendingEmail = null;
           safeSetState(() {});
@@ -371,6 +373,58 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           Text(
                             valueOrDefault<String>(
                               _model.dbgTokenHead,
+                              '\"\"',
+                            ),
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            'dbgStep',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                          ),
+                          Text(
+                            valueOrDefault<String>(
+                              _model.dbgStep,
                               '\"\"',
                             ),
                             style: FlutterFlowTheme.of(context)
