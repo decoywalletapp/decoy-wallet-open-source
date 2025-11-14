@@ -1008,6 +1008,9 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         data: {
                                           'pending_email': _model.changedEmail,
                                           'email_verified': false,
+                                          'email_verified_at':
+                                              supaSerialize<DateTime>(
+                                                  getCurrentTimestamp),
                                         },
                                         matchingRows: (rows) => rows.eqOrNull(
                                           'user_id',

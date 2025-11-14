@@ -41,71 +41,58 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
       _model.jwtOut = await actions.getSupabaseJwt();
       FFAppState().authJwt = _model.jwtOut!;
       safeSetState(() {});
-      if (widget.type == 'post_verify') {
-        _model.quero = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q
-              .eqOrNull(
-                'user_id',
-                currentUserUid,
-              )
-              .order('created_at'),
-        );
-        await DecoyWalletTable().update(
-          data: {
-            'email_verified': true,
-            'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
-            'email': currentUserEmail,
-          },
-          matchingRows: (rows) => rows.eqOrNull(
+      await Future.delayed(
+        Duration(
+          milliseconds: 600,
+        ),
+      );
+      _model.query1 = await DecoyWalletTable().queryRows(
+        queryFn: (q) => q
+            .eqOrNull(
+              'user_id',
+              currentUserUid,
+            )
+            .order('created_at'),
+      );
+      _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
+      _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
+      _model.authEmail = _model.query1?.elementAtOrNull(0)?.email;
+      _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
+      safeSetState(() {});
+      if (_model.hasRow == false) {
+        _model.firstInsert = await DecoyWalletTable().insert({
+          'user_id': currentUserUid,
+          'email': currentUserEmail,
+          'email_verified': false,
+          'email_verified_at': supaSerialize<DateTime>(null),
+          'is_phone_verified': false,
+          'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
+        });
+        _model.query2 = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q.eqOrNull(
             'user_id',
             currentUserUid,
           ),
         );
-        if (_model.needPhone == true) {
-          if (Navigator.of(context).canPop()) {
-            context.pop();
-          }
-          context.pushNamed(PhoneNumberInputWidget.routeName);
-        } else {
-          if (Navigator.of(context).canPop()) {
-            context.pop();
-          }
-          context.pushNamed(PINPageWidget.routeName);
-        }
-      } else {
-        await Future.delayed(
-          Duration(
-            milliseconds: 600,
-          ),
-        );
-        _model.query1 = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q
-              .eqOrNull(
-                'user_id',
-                currentUserUid,
-              )
-              .order('created_at'),
-        );
-        _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
+        _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
+        _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
         safeSetState(() {});
-        if (_model.hasRow == false) {
-          _model.firstInsert = await DecoyWalletTable().insert({
-            'user_id': currentUserUid,
-            'email': currentUserEmail,
-            'email_verified': false,
-            'email_verified_at': supaSerialize<DateTime>(null),
-            'is_phone_verified': false,
-            'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
-          });
-          _model.query2 = await DecoyWalletTable().queryRows(
-            queryFn: (q) => q.eqOrNull(
+      } else {
+        if (_model.pendingEmail != null && _model.pendingEmail != '') {
+          await DecoyWalletTable().update(
+            data: {
+              'email_verified': true,
+              'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+              'email': _model.pendingEmail,
+              'pending_email': null,
+            },
+            matchingRows: (rows) => rows.eqOrNull(
               'user_id',
               currentUserUid,
             ),
           );
-          _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
-          _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
+          _model.authEmail = _model.pendingEmail;
+          _model.pendingEmail = null;
           safeSetState(() {});
         } else {
           await DecoyWalletTable().update(
@@ -129,28 +116,28 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
           safeSetState(() {});
         }
+      }
 
-        _model.verifiedViaEmail =
-            _model.dwList.elementAtOrNull(0)!.emailVerified!;
-        _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
-        safeSetState(() {});
-        if (_model.verifiedViaEmail == false) {
+      _model.verifiedViaEmail =
+          _model.dwList.elementAtOrNull(0)!.emailVerified!;
+      _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
+      safeSetState(() {});
+      if (_model.verifiedViaEmail == false) {
+        if (Navigator.of(context).canPop()) {
+          context.pop();
+        }
+        context.pushNamed(ConfirmEmailPageWidget.routeName);
+      } else {
+        if (_model.needPhone == true) {
           if (Navigator.of(context).canPop()) {
             context.pop();
           }
-          context.pushNamed(ConfirmEmailPageWidget.routeName);
+          context.pushNamed(PhoneNumberInputWidget.routeName);
         } else {
-          if (_model.needPhone == true) {
-            if (Navigator.of(context).canPop()) {
-              context.pop();
-            }
-            context.pushNamed(PhoneNumberInputWidget.routeName);
-          } else {
-            if (Navigator.of(context).canPop()) {
-              context.pop();
-            }
-            context.pushNamed(PINPageWidget.routeName);
+          if (Navigator.of(context).canPop()) {
+            context.pop();
           }
+          context.pushNamed(PINPageWidget.routeName);
         }
       }
     });
