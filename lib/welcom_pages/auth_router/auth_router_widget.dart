@@ -1,13 +1,11 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'auth_router_model.dart';
 export 'auth_router_model.dart';
 
@@ -38,9 +36,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.jwtOut = await actions.getSupabaseJwt();
-      FFAppState().authJwt = _model.jwtOut!;
-      safeSetState(() {});
       await Future.delayed(
         Duration(
           milliseconds: 600,
@@ -216,8 +211,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
