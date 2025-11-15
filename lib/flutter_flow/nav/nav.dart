@@ -342,6 +342,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => PhoneNumberInputCopyWidget(),
       ),
       FFRoute(
+        name: ChangeEmailRouterWidget.routeName,
+        path: ChangeEmailRouterWidget.routePath,
+        builder: (context, params) => ChangeEmailRouterWidget(
+          type: params.getParam(
+            'type',
+            ParamType.String,
+          ),
+        ),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

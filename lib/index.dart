@@ -77,3 +77,5 @@ export '/welcom_pages/auth_router/auth_router_widget.dart'
     show AuthRouterWidget;
 export '/welcom_pages/phone_number_input_copy/phone_number_input_copy_widget.dart'
     show PhoneNumberInputCopyWidget;
+export '/welcom_pages/change_email_router/change_email_router_widget.dart'
+    show ChangeEmailRouterWidget;
