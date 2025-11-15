@@ -168,6 +168,13 @@ class _BiometricVerificationWidgetState
                                 onChanged: (newValue) async {
                                   safeSetState(() =>
                                       _model.switchListTileValue = newValue);
+                                  if (newValue) {
+                                    _model.wantsBiometrics = true;
+                                    safeSetState(() {});
+                                  } else {
+                                    _model.wantsBiometrics = false;
+                                    safeSetState(() {});
+                                  }
                                 },
                                 title: Text(
                                   'Enable Biometric Authentication',
