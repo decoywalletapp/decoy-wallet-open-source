@@ -40,7 +40,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       _model.currentJwtToken = await actions.getSupabaseJwt();
       FFAppState().authJwt = _model.currentJwtToken!;
       safeSetState(() {});
-      if (FFAppState().biometricsEnabled == true) {
+      FFAppState().isLocked = true;
+      safeSetState(() {});
+      if ((FFAppState().biometricsEnabled == true) &&
+          (FFAppState().isLocked == true) &&
+          (loggedIn == true)) {
         final _localAuth = LocalAuthentication();
         bool _isBiometricSupported = await _localAuth.isDeviceSupported();
 
@@ -55,7 +59,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         }
 
         if (_model.loginBioResult == true) {
-          context.pushNamed(HomePageWidget.routeName);
+          FFAppState().isLocked = false;
+          safeSetState(() {});
+
+          context.pushNamed(PINPageWidget.routeName);
         }
       }
     });
@@ -491,7 +498,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Text(
-                                    FFAppState().biometricsEnabled.toString(),
+                                    FFAppState().isLocked.toString(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(

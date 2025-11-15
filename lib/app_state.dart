@@ -70,6 +70,9 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getBool('ff_biometricsEnabled') ??
               _biometricsEnabled;
     });
+    await _safeInitAsync(() async {
+      _isLocked = await secureStorage.getBool('ff_isLocked') ?? _isLocked;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -321,6 +324,17 @@ class FFAppState extends ChangeNotifier {
 
   void deleteBiometricsEnabled() {
     secureStorage.delete(key: 'ff_biometricsEnabled');
+  }
+
+  bool _isLocked = false;
+  bool get isLocked => _isLocked;
+  set isLocked(bool value) {
+    _isLocked = value;
+    secureStorage.setBool('ff_isLocked', value);
+  }
+
+  void deleteIsLocked() {
+    secureStorage.delete(key: 'ff_isLocked');
   }
 }
 
