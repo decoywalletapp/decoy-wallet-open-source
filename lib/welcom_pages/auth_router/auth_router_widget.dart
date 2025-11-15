@@ -5,7 +5,10 @@ import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'auth_router_model.dart';
 export 'auth_router_model.dart';
 
@@ -36,6 +39,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      FFAppState().isLocked = true;
+      safeSetState(() {});
       await Future.delayed(
         Duration(
           milliseconds: 600,
@@ -123,18 +128,54 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         if (Navigator.of(context).canPop()) {
           context.pop();
         }
-        context.pushNamed(ConfirmEmailPageWidget.routeName);
+        context.pushNamedAuth(
+            ConfirmEmailPageWidget.routeName, context.mounted);
       } else {
         if (_model.needPhone == true) {
           if (Navigator.of(context).canPop()) {
             context.pop();
           }
-          context.pushNamed(PhoneNumberInputWidget.routeName);
+          context.pushNamedAuth(
+              PhoneNumberInputWidget.routeName, context.mounted);
         } else {
-          if (Navigator.of(context).canPop()) {
-            context.pop();
+          if (FFAppState().biometricsEnabled == true) {
+            final _localAuth = LocalAuthentication();
+            bool _isBiometricSupported = await _localAuth.isDeviceSupported();
+
+            if (_isBiometricSupported) {
+              try {
+                _model.authRouterBioResult = await _localAuth.authenticate(
+                    localizedReason:
+                        'Please authenticate to unlock your wallet');
+              } on PlatformException {
+                _model.authRouterBioResult = false;
+              }
+              safeSetState(() {});
+            }
+
+            if (_model.authRouterBioResult == true) {
+              FFAppState().isLocked = false;
+              safeSetState(() {});
+
+              context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
+            } else {
+              GoRouter.of(context).prepareAuthEvent();
+              await authManager.signOut();
+              GoRouter.of(context).clearRedirectLocation();
+
+              FFAppState().isLocked = false;
+              safeSetState(() {});
+
+              context.pushNamedAuth(LoginPageWidget.routeName, context.mounted);
+            }
+          } else {
+            FFAppState().isLocked = false;
+            safeSetState(() {});
+            if (Navigator.of(context).canPop()) {
+              context.pop();
+            }
+            context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
           }
-          context.pushNamed(HomePageWidget.routeName);
         }
       }
     });
@@ -151,6 +192,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -180,12 +223,22 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text(
-                            'step:',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
+                          Align(
+                            alignment: AlignmentDirectional(-1.0, 0.0),
+                            child: Text(
+                              'auth router',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    letterSpacing: 0.0,
                                     fontWeight: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontWeight,
@@ -193,192 +246,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                                         .bodyMedium
                                         .fontStyle,
                                   ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                          Text(
-                            valueOrDefault<String>(
-                              _model.dbgStep,
-                              '0',
                             ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            'apiOK',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                          Text(
-                            _model.dbgApiOk.toString(),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            'dbgTokenHead',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                          Text(
-                            valueOrDefault<String>(
-                              _model.dbgTokenHead,
-                              '\"\"',
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            'dbgStep',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                          Text(
-                            valueOrDefault<String>(
-                              _model.dbgStep,
-                              '\"\"',
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
                           ),
                         ],
                       ),
