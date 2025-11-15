@@ -611,6 +611,63 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
+                                  Text(
+                                    'Is User Logged In?: ',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                  Text(
+                                    loggedIn.toString(),
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
                                   FFButtonWidget(
                                     onPressed: () async {
                                       FFAppState().biometricsEnabled = false;
@@ -620,7 +677,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     },
                                     text: 'RESET',
                                     options: FFButtonOptions(
-                                      height: 40.0,
+                                      height: 20.0,
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 0.0, 16.0, 0.0),
                                       iconPadding:
