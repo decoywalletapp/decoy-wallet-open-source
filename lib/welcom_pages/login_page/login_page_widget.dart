@@ -37,9 +37,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      FFAppState().authJwt = 'currentJwtToken';
+      _model.currentJwtToken = await actions.getSupabaseJwt();
+      FFAppState().authJwt = _model.currentJwtToken!;
       safeSetState(() {});
-      if ((FFAppState().biometricsEnabled == true) && (loggedIn == true)) {
+      if (FFAppState().biometricsEnabled == true) {
         final _localAuth = LocalAuthentication();
         bool _isBiometricSupported = await _localAuth.isDeviceSupported();
 
