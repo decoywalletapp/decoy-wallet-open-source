@@ -1,10 +1,10 @@
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'auth_router_widget.dart' show AuthRouterWidget;
+import 'dup_auth_widget.dart' show DupAuthWidget;
 import 'package:flutter/material.dart';
 
-class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
+class DupAuthModel extends FlutterFlowModel<DupAuthWidget> {
   ///  Local state fields for this page.
 
   bool hasRow = false;
@@ -38,15 +38,17 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  // Stores action output result for [Backend Call - Query Rows] action in DupAuth widget.
   List<DecoyWalletRow>? query1;
-  // Stores action output result for [Backend Call - Insert Row] action in AuthRouter widget.
+  // Stores action output result for [Backend Call - Insert Row] action in DupAuth widget.
   DecoyWalletRow? firstInsert;
-  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  // Stores action output result for [Backend Call - Query Rows] action in DupAuth widget.
   List<DecoyWalletRow>? query2;
-  // Stores action output result for [Backend Call - Update Row(s)] action in AuthRouter widget.
+  // Stores action output result for [Backend Call - Update Row(s)] action in DupAuth widget.
+  List<DecoyWalletRow>? swapUpdate;
+  // Stores action output result for [Backend Call - Update Row(s)] action in DupAuth widget.
   List<DecoyWalletRow>? updateRows;
-  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  // Stores action output result for [Backend Call - Query Rows] action in DupAuth widget.
   List<DecoyWalletRow>? query3;
   bool authRouterBioResult = false;
 

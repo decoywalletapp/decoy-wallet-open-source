@@ -352,6 +352,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
+        name: DupAuthWidget.routeName,
+        path: DupAuthWidget.routePath,
+        builder: (context, params) => DupAuthWidget(
+          type: params.getParam(
+            'type',
+            ParamType.String,
+          ),
+        ),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

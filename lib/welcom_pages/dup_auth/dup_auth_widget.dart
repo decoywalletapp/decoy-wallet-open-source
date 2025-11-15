@@ -9,38 +9,43 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
-import 'auth_router_model.dart';
-export 'auth_router_model.dart';
+import 'dup_auth_model.dart';
+export 'dup_auth_model.dart';
 
-class AuthRouterWidget extends StatefulWidget {
-  const AuthRouterWidget({
+class DupAuthWidget extends StatefulWidget {
+  const DupAuthWidget({
     super.key,
     this.type,
   });
 
   final String? type;
 
-  static String routeName = 'AuthRouter';
-  static String routePath = '/authRouter';
+  static String routeName = 'DupAuth';
+  static String routePath = '/dupAuth';
 
   @override
-  State<AuthRouterWidget> createState() => _AuthRouterWidgetState();
+  State<DupAuthWidget> createState() => _DupAuthWidgetState();
 }
 
-class _AuthRouterWidgetState extends State<AuthRouterWidget> {
-  late AuthRouterModel _model;
+class _DupAuthWidgetState extends State<DupAuthWidget> {
+  late DupAuthModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => AuthRouterModel());
+    _model = createModel(context, () => DupAuthModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().isLocked = true;
       safeSetState(() {});
+      await Future.delayed(
+        Duration(
+          milliseconds: 600,
+        ),
+      );
       _model.query1 = await DecoyWalletTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
@@ -73,26 +78,46 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
         safeSetState(() {});
       } else {
-        await DecoyWalletTable().update(
-          data: {
-            'email_verified': true,
-            'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
-            'email': currentUserEmail,
-          },
-          matchingRows: (rows) => rows.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-        _model.query3 = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-        _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
-        safeSetState(() {});
+        if (_model.pendingEmail != null && _model.pendingEmail != '') {
+          await DecoyWalletTable().update(
+            data: {
+              'email_verified': true,
+              'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+              'email': _model.pendingEmail,
+              'pending_email': null,
+            },
+            matchingRows: (rows) => rows.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.dbgStep = 'promotedPendingEmail';
+          safeSetState(() {});
+          _model.authEmail = _model.pendingEmail;
+          _model.pendingEmail = null;
+          safeSetState(() {});
+        } else {
+          await DecoyWalletTable().update(
+            data: {
+              'email_verified': true,
+              'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+              'email': currentUserEmail,
+            },
+            matchingRows: (rows) => rows.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.query3 = await DecoyWalletTable().queryRows(
+            queryFn: (q) => q.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
+          _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
+          safeSetState(() {});
+        }
       }
 
       _model.verifiedViaEmail =

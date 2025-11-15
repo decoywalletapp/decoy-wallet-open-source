@@ -79,3 +79,4 @@ export '/welcom_pages/phone_number_input_copy/phone_number_input_copy_widget.dar
     show PhoneNumberInputCopyWidget;
 export '/welcom_pages/change_email_router/change_email_router_widget.dart'
     show ChangeEmailRouterWidget;
+export '/welcom_pages/dup_auth/dup_auth_widget.dart' show DupAuthWidget;
