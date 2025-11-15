@@ -281,7 +281,8 @@ class _PhoneNumberVerificationWidgetState
                                                   (_model.verifyUpdate)!
                                                       .isNotEmpty) {
                                                 context.pushNamed(
-                                                    CreatePinWidget.routeName);
+                                                    BiometricVerificationWidget
+                                                        .routeName);
                                               } else {
                                                 _model.verifyInsert =
                                                     await DecoyWalletTable()
@@ -326,7 +327,8 @@ class _PhoneNumberVerificationWidgetState
                                                 );
 
                                                 context.pushNamed(
-                                                    CreatePinWidget.routeName);
+                                                    BiometricVerificationWidget
+                                                        .routeName);
                                               }
                                             } else {
                                               ScaffoldMessenger.of(context)

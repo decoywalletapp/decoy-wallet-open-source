@@ -56,7 +56,8 @@
 	<key>NSCameraUsageDescription</key>
     <string>Needed to scan Bitcoin QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
-    <string>Allow Decoy Wallet to use Face ID for secure login.</string>
+    <string>This app requires permissions to perform a biometric verification.</string>
+
 
 
 

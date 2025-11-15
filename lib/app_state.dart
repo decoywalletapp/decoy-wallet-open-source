@@ -65,6 +65,11 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getInt('ff_emergencyContactsIncrement') ??
               _emergencyContactsIncrement;
     });
+    await _safeInitAsync(() async {
+      _biometricsEnabled =
+          await secureStorage.getBool('ff_biometricsEnabled') ??
+              _biometricsEnabled;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -305,6 +310,17 @@ class FFAppState extends ChangeNotifier {
   String get linkToken => _linkToken;
   set linkToken(String value) {
     _linkToken = value;
+  }
+
+  bool _biometricsEnabled = false;
+  bool get biometricsEnabled => _biometricsEnabled;
+  set biometricsEnabled(bool value) {
+    _biometricsEnabled = value;
+    secureStorage.setBool('ff_biometricsEnabled', value);
+  }
+
+  void deleteBiometricsEnabled() {
+    secureStorage.delete(key: 'ff_biometricsEnabled');
   }
 }
 

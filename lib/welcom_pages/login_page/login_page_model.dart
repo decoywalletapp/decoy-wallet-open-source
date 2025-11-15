@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
   ///  State fields for stateful widgets in this page.
 
+  bool loginBioResult = false;
   // State field(s) for emailAddressLogin widget.
   FocusNode? emailAddressLoginFocusNode;
   TextEditingController? emailAddressLoginTextController;

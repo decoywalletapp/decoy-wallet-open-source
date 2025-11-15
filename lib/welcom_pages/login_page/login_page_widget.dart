@@ -7,8 +7,10 @@ import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'login_page_model.dart';
 export 'login_page_model.dart';
@@ -37,6 +39,24 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().authJwt = 'currentJwtToken';
       safeSetState(() {});
+      if ((FFAppState().biometricsEnabled == true) && (loggedIn == true)) {
+        final _localAuth = LocalAuthentication();
+        bool _isBiometricSupported = await _localAuth.isDeviceSupported();
+
+        if (_isBiometricSupported) {
+          try {
+            _model.loginBioResult = await _localAuth.authenticate(
+                localizedReason: 'Please authenticate to unlock your wallet');
+          } on PlatformException {
+            _model.loginBioResult = false;
+          }
+          safeSetState(() {});
+        }
+
+        if (_model.loginBioResult == true) {
+          context.pushNamed(HomePageWidget.routeName);
+        }
+      }
     });
 
     _model.emailAddressLoginTextController ??= TextEditingController();
