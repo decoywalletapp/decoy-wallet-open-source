@@ -11,7 +11,9 @@ class BiometricSettingsPageModel
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for SwitchListTile widget.
-  bool? switchListTileValue;
+  bool? switchListTileValue1;
+  // State field(s) for SwitchListTile widget.
+  bool? switchListTileValue2;
   bool settingsBioResult = false;
 
   @override
