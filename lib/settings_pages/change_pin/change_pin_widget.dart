@@ -320,7 +320,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   ),
                                                 ].divide(SizedBox(width: 16.0)),
                                               ),
-                                              if (_model.currentStep == 2)
+                                              if (_model.currentStep == 3)
                                                 Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -1821,7 +1821,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   ),
                                                 ].divide(SizedBox(width: 16.0)),
                                               ),
-                                              if (_model.currentStep == 1)
+                                              if (_model.currentStep == 2)
                                                 Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -3134,7 +3134,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   ),
                                                 ].divide(SizedBox(width: 16.0)),
                                               ),
-                                              if (_model.currentStep == 2)
+                                              if (_model.currentStep == 1)
                                                 Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,

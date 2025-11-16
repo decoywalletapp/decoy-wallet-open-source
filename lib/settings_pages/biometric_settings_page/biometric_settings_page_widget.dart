@@ -1,7 +1,6 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -269,39 +268,41 @@ class _BiometricSettingsPageWidgetState
                               0.0, 0.0, 0.0, 48.0),
                           child: FFButtonWidget(
                             onPressed: () async {
-                              if (_model.wantsBiometrics == true) {
-                                final _localAuth = LocalAuthentication();
-                                bool _isBiometricSupported =
-                                    await _localAuth.isDeviceSupported();
+                              if (_model.wantsBiometrics ==
+                                  FFAppState().biometricsEnabled) {
+                                context.safePop();
+                              } else {
+                                if (_model.wantsBiometrics == true) {
+                                  final _localAuth = LocalAuthentication();
+                                  bool _isBiometricSupported =
+                                      await _localAuth.isDeviceSupported();
 
-                                if (_isBiometricSupported) {
-                                  try {
-                                    _model.enableBioResult =
-                                        await _localAuth.authenticate(
-                                            localizedReason:
-                                                'Please authenticate to enable biometric unlock for Decoy Wallet');
-                                  } on PlatformException {
-                                    _model.enableBioResult = false;
+                                  if (_isBiometricSupported) {
+                                    try {
+                                      _model.settingsBioResult =
+                                          await _localAuth.authenticate(
+                                              localizedReason:
+                                                  'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                    } on PlatformException {
+                                      _model.settingsBioResult = false;
+                                    }
+                                    safeSetState(() {});
                                   }
-                                  safeSetState(() {});
-                                }
 
-                                if (_model.enableBioResult == true) {
-                                  FFAppState().biometricsEnabled = true;
-                                  safeSetState(() {});
-
-                                  context.pushNamed(SettingsWidget.routeName);
+                                  if (_model.settingsBioResult == true) {
+                                    FFAppState().biometricsEnabled = true;
+                                    safeSetState(() {});
+                                    context.safePop();
+                                  } else {
+                                    FFAppState().biometricsEnabled = false;
+                                    safeSetState(() {});
+                                    context.safePop();
+                                  }
                                 } else {
                                   FFAppState().biometricsEnabled = false;
                                   safeSetState(() {});
-
-                                  context.pushNamed(SettingsWidget.routeName);
+                                  context.safePop();
                                 }
-                              } else {
-                                FFAppState().biometricsEnabled = false;
-                                safeSetState(() {});
-
-                                context.pushNamed(SettingsWidget.routeName);
                               }
 
                               safeSetState(() {});
