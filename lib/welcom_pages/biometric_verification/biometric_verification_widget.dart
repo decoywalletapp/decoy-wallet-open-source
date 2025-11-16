@@ -247,57 +247,67 @@ class _BiometricVerificationWidgetState
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    FFButtonWidget(
-                      onPressed: () async {
-                        if (_model.wantsBiometrics == true) {
-                          final _localAuth = LocalAuthentication();
-                          bool _isBiometricSupported =
-                              await _localAuth.isDeviceSupported();
+                    if (_model.wantsBiometrics)
+                      FFButtonWidget(
+                        onPressed: () async {
+                          if (_model.wantsBiometrics == true) {
+                            final _localAuth = LocalAuthentication();
+                            bool _isBiometricSupported =
+                                await _localAuth.isDeviceSupported();
 
-                          if (_isBiometricSupported) {
-                            try {
-                              _model.enableBioResult =
-                                  await _localAuth.authenticate(
-                                      localizedReason:
-                                          'Please authenticate to enable biometric unlock for Decoy Wallet');
-                            } on PlatformException {
-                              _model.enableBioResult = false;
+                            if (_isBiometricSupported) {
+                              try {
+                                _model.enableBioResult =
+                                    await _localAuth.authenticate(
+                                        localizedReason:
+                                            'Please authenticate to enable biometric unlock for Decoy Wallet');
+                              } on PlatformException {
+                                _model.enableBioResult = false;
+                              }
+                              safeSetState(() {});
                             }
-                            safeSetState(() {});
-                          }
 
-                          if (_model.enableBioResult == true) {
-                            FFAppState().biometricsEnabled = true;
-                            safeSetState(() {});
+                            if (_model.enableBioResult == true) {
+                              FFAppState().biometricsEnabled = true;
+                              safeSetState(() {});
 
-                            context.pushNamed(CreatePinWidget.routeName);
+                              context.pushNamed(CreatePinWidget.routeName);
+                            } else {
+                              FFAppState().biometricsEnabled = false;
+                              safeSetState(() {});
+
+                              context.pushNamed(CreatePinWidget.routeName);
+                            }
                           } else {
                             FFAppState().biometricsEnabled = false;
                             safeSetState(() {});
 
                             context.pushNamed(CreatePinWidget.routeName);
                           }
-                        } else {
-                          FFAppState().biometricsEnabled = false;
+
                           safeSetState(() {});
-
-                          context.pushNamed(CreatePinWidget.routeName);
-                        }
-
-                        safeSetState(() {});
-                      },
-                      text: 'Continue',
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 50.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  font: GoogleFonts.interTight(
+                        },
+                        text: 'Continue',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 50.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primary,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    font: GoogleFonts.interTight(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontStyle,
+                                    ),
+                                    color: Colors.white,
+                                    letterSpacing: 0.0,
                                     fontWeight: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .fontWeight,
@@ -305,22 +315,13 @@ class _BiometricVerificationWidgetState
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                                  color: Colors.white,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .fontStyle,
-                                ),
-                        elevation: 3.0,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
+                          elevation: 3.0,
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
                         ),
-                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                    ),
                     FFButtonWidget(
                       onPressed: () async {
                         FFAppState().biometricsEnabled = false;

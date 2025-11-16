@@ -227,11 +227,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => PhoneNumberInputWidget(),
       ),
       FFRoute(
-        name: UserNameEntryWidget.routeName,
-        path: UserNameEntryWidget.routePath,
-        builder: (context, params) => UserNameEntryWidget(),
-      ),
-      FFRoute(
         name: ConfirmEmailPageWidget.routeName,
         path: ConfirmEmailPageWidget.routePath,
         builder: (context, params) => ConfirmEmailPageWidget(),
@@ -360,6 +355,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             ParamType.String,
           ),
         ),
+      ),
+      FFRoute(
+        name: ChangePinWidget.routeName,
+        path: ChangePinWidget.routePath,
+        builder: (context, params) => ChangePinWidget(),
+      ),
+      FFRoute(
+        name: BiometricSettingsPageWidget.routeName,
+        path: BiometricSettingsPageWidget.routePath,
+        builder: (context, params) => BiometricSettingsPageWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

@@ -11,7 +11,7 @@ export '/home_pages/settings/settings_widget.dart' show SettingsWidget;
 export '/home_pages/home_page/home_page_widget.dart' show HomePageWidget;
 export '/welcom_pages/lightning_scan/lightning_scan_widget.dart'
     show LightningScanWidget;
-export '/home_pages/create_ticket/create_ticket_widget.dart'
+export '/settings_pages/create_ticket/create_ticket_widget.dart'
     show CreateTicketWidget;
 export '/pin_pages/create_pin/create_pin_widget.dart' show CreatePinWidget;
 export '/pin_pages/p_i_n_page/p_i_n_page_widget.dart' show PINPageWidget;
@@ -37,8 +37,6 @@ export '/create_decoy_seed/decoy_seed_acknowledgements/decoy_seed_acknowledgemen
     show DecoySeedAcknowledgementsWidget;
 export '/welcom_pages/phone_number_input/phone_number_input_widget.dart'
     show PhoneNumberInputWidget;
-export '/welcom_pages/user_name_entry/user_name_entry_widget.dart'
-    show UserNameEntryWidget;
 export '/welcom_pages/confirm_email_page/confirm_email_page_widget.dart'
     show ConfirmEmailPageWidget;
 export '/test_subjects/create_account_b4_change/create_account_b4_change_widget.dart'
@@ -80,3 +78,6 @@ export '/welcom_pages/phone_number_input_copy/phone_number_input_copy_widget.dar
 export '/welcom_pages/change_email_router/change_email_router_widget.dart'
     show ChangeEmailRouterWidget;
 export '/welcom_pages/dup_auth/dup_auth_widget.dart' show DupAuthWidget;
+export '/settings_pages/change_pin/change_pin_widget.dart' show ChangePinWidget;
+export '/settings_pages/biometric_settings_page/biometric_settings_page_widget.dart'
+    show BiometricSettingsPageWidget;
