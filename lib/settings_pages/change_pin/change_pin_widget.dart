@@ -4116,12 +4116,11 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           ),
                                           onPressed: () async {
                                             // RemoveFromList
-                                            _model
-                                                .removeAtIndexFromConfirmedNewPinInput(
-                                                    _model.confirmedNewPinInput
-                                                            .toList()
-                                                            .length -
-                                                        1);
+                                            _model.removeAtIndexFromOldPinInput(
+                                                _model.oldPinInput
+                                                        .toList()
+                                                        .length -
+                                                    1);
                                             safeSetState(() {});
                                           },
                                         ),

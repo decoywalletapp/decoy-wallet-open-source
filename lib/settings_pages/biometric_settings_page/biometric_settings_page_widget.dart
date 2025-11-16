@@ -3,7 +3,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
@@ -34,12 +33,6 @@ class _BiometricSettingsPageWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => BiometricSettingsPageModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.wantsBiometrics = FFAppState().biometricsEnabled;
-      safeSetState(() {});
-    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -177,124 +170,11 @@ class _BiometricSettingsPageWidgetState
                                   child: Material(
                                     color: Colors.transparent,
                                     child: SwitchListTile(
-                                      value: _model.switchListTileValue1 ??=
-                                          _model.wantsBiometrics,
-                                      onChanged: (newValue) async {
-                                        safeSetState(() => _model
-                                            .switchListTileValue1 = newValue);
-                                        if (newValue) {
-                                          _model.wantsBiometrics = true;
-                                          safeSetState(() {});
-                                        } else {
-                                          _model.wantsBiometrics = false;
-                                          safeSetState(() {});
-                                        }
-                                      },
-                                      title: Text(
-                                        'Enable Biometric Authentication',
-                                        style: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .override(
-                                              font: GoogleFonts.interTight(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontStyle,
-                                              ),
-                                              fontSize: 16.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                      subtitle: Text(
-                                        'Use fingerprint or face ID to sign in',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodySmall
-                                            .override(
-                                              font: GoogleFonts.inter(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                      tileColor: Colors.transparent,
-                                      activeColor:
-                                          FlutterFlowTheme.of(context).primary,
-                                      activeTrackColor:
-                                          FlutterFlowTheme.of(context).accent1,
-                                      dense: false,
-                                      controlAffinity:
-                                          ListTileControlAffinity.trailing,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(0.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Material(
-                                color: Colors.transparent,
-                                elevation: 3.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    border: Border.all(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: SwitchListTile(
-                                      value: _model.switchListTileValue2 ??=
+                                      value: _model.switchListTileValue ??=
                                           FFAppState().biometricsEnabled,
                                       onChanged: (newValue) async {
                                         safeSetState(() => _model
-                                            .switchListTileValue2 = newValue);
-                                        if (newValue) {
-                                          _model.wantsBiometrics = true;
-                                          safeSetState(() {});
-                                        } else {
-                                          _model.wantsBiometrics = false;
-                                          safeSetState(() {});
-                                        }
+                                            .switchListTileValue = newValue);
                                       },
                                       title: Text(
                                         'Enable Biometric Authentication',
@@ -378,11 +258,11 @@ class _BiometricSettingsPageWidgetState
                               0.0, 0.0, 0.0, 48.0),
                           child: FFButtonWidget(
                             onPressed: () async {
-                              if (_model.wantsBiometrics ==
+                              if (_model.switchListTileValue ==
                                   FFAppState().biometricsEnabled) {
                                 context.safePop();
                               } else {
-                                if (_model.wantsBiometrics == true) {
+                                if (_model.switchListTileValue == true) {
                                   final _localAuth = LocalAuthentication();
                                   bool _isBiometricSupported =
                                       await _localAuth.isDeviceSupported();
@@ -404,8 +284,21 @@ class _BiometricSettingsPageWidgetState
                                     safeSetState(() {});
                                     context.safePop();
                                   } else {
-                                    FFAppState().biometricsEnabled = false;
-                                    safeSetState(() {});
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'BIOMETRIC VERIFICATION FAILED. YOUR SETTING WAS NOT CHANGED.',
+                                          style: TextStyle(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondary,
+                                      ),
+                                    );
                                     context.safePop();
                                   }
                                 } else {
