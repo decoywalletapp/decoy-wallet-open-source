@@ -264,71 +264,61 @@ class _BiometricSettingsPageWidgetState
                     Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        if (_model.wantsBiometrics)
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 48.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                if (_model.wantsBiometrics == true) {
-                                  final _localAuth = LocalAuthentication();
-                                  bool _isBiometricSupported =
-                                      await _localAuth.isDeviceSupported();
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 48.0),
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              if (_model.wantsBiometrics == true) {
+                                final _localAuth = LocalAuthentication();
+                                bool _isBiometricSupported =
+                                    await _localAuth.isDeviceSupported();
 
-                                  if (_isBiometricSupported) {
-                                    try {
-                                      _model.enableBioResult =
-                                          await _localAuth.authenticate(
-                                              localizedReason:
-                                                  'Please authenticate to enable biometric unlock for Decoy Wallet');
-                                    } on PlatformException {
-                                      _model.enableBioResult = false;
-                                    }
-                                    safeSetState(() {});
+                                if (_isBiometricSupported) {
+                                  try {
+                                    _model.enableBioResult =
+                                        await _localAuth.authenticate(
+                                            localizedReason:
+                                                'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                  } on PlatformException {
+                                    _model.enableBioResult = false;
                                   }
+                                  safeSetState(() {});
+                                }
 
-                                  if (_model.enableBioResult == true) {
-                                    FFAppState().biometricsEnabled = true;
-                                    safeSetState(() {});
+                                if (_model.enableBioResult == true) {
+                                  FFAppState().biometricsEnabled = true;
+                                  safeSetState(() {});
 
-                                    context.pushNamed(SettingsWidget.routeName);
-                                  } else {
-                                    FFAppState().biometricsEnabled = false;
-                                    safeSetState(() {});
-
-                                    context.pushNamed(SettingsWidget.routeName);
-                                  }
+                                  context.pushNamed(SettingsWidget.routeName);
                                 } else {
                                   FFAppState().biometricsEnabled = false;
                                   safeSetState(() {});
 
                                   context.pushNamed(SettingsWidget.routeName);
                                 }
-
+                              } else {
+                                FFAppState().biometricsEnabled = false;
                                 safeSetState(() {});
-                              },
-                              text: 'Save',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 50.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
+
+                                context.pushNamed(SettingsWidget.routeName);
+                              }
+
+                              safeSetState(() {});
+                            },
+                            text: 'Save',
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 50.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).primary,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    font: GoogleFonts.interTight(
                                       fontWeight: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .fontWeight,
@@ -336,14 +326,23 @@ class _BiometricSettingsPageWidgetState
                                           .titleSmall
                                           .fontStyle,
                                     ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
+                                    color: Colors.white,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontStyle,
+                                  ),
+                              elevation: 3.0,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
                               ),
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
                           ),
+                        ),
                       ].divide(SizedBox(height: 16.0)),
                     ),
                   ]
