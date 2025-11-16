@@ -48,12 +48,12 @@ class ChangePinModel extends FlutterFlowModel<ChangePinWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
-  ApiCallResponse? verifyOldPinResp;
   // Stores action output result for [Backend Call - API (setPIN)] action in Button widget.
   ApiCallResponse? setPinResp;
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
   ApiCallResponse? verifyResp;
+  // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
+  ApiCallResponse? verifyOldPinResp;
 
   @override
   void initState(BuildContext context) {}

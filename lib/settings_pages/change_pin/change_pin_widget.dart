@@ -78,1394 +78,6 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                   children: [
                     Stack(
                       children: [
-                        if (_model.currentStep == 1)
-                          Container(
-                            decoration: BoxDecoration(),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  24.0, 20.0, 24.0, 40.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.lock_outline,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            size: 80.0,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.all(17.0),
-                                            child: Text(
-                                              'Enter Old PIN',
-                                              textAlign: TextAlign.center,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .headlineMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.interTight(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .headlineMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .headlineMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .headlineMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .headlineMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                          Stack(
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeInOut,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 200),
-                                                      curve: Curves.easeIn,
-                                                      width: 16.0,
-                                                      height: 16.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                    ),
-                                                  ),
-                                                ].divide(SizedBox(width: 16.0)),
-                                              ),
-                                              if (_model.currentStep == 2)
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          1;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve:
-                                                              Curves.easeInOut,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          2;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve: Curves.easeIn,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          3;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve: Curves.easeIn,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          4;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve: Curves.easeIn,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          5;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve: Curves.easeIn,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          6;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve: Curves.easeIn,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          7;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve: Curves.easeIn,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    if ((List<String>
-                                                        pinList5) {
-                                                      return pinList5.length >=
-                                                          8;
-                                                    }(_model.oldPinInput
-                                                        .toList()))
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  200),
-                                                          curve: Curves.easeIn,
-                                                          width: 16.0,
-                                                          height: 16.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                  ].divide(
-                                                      SizedBox(width: 16.0)),
-                                                ),
-                                            ],
-                                          ),
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 20.0),
-                                                    child: Text(
-                                                      'Enter the current PIN you use to access your account',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodySmall
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmall
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmall
-                                                                      .fontStyle,
-                                                                ),
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondaryText,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodySmall
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodySmall
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                ].divide(
-                                                    SizedBox(height: 24.0)),
-                                              ),
-                                            ],
-                                          ),
-                                        ].divide(SizedBox(height: 16.0)),
-                                      ),
-                                    ].divide(SizedBox(height: 32.0)),
-                                  ),
-                                  Expanded(
-                                    child: GridView(
-                                      padding: EdgeInsets.zero,
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 10.0,
-                                        mainAxisSpacing: 10.0,
-                                        childAspectRatio: 1.25,
-                                      ),
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      children: [
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('1');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '1',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('2');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '2',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('3');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '3',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('4');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '4',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('5');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '5',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('6');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '6',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('7');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '7',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('8');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '8',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('9');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '9',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 100.0,
-                                          height: 100.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
-                                          ),
-                                        ),
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            // Add1
-                                            _model.addToOldPinInput('0');
-                                            safeSetState(() {});
-                                            if (_model.oldPinInput
-                                                    .toList()
-                                                    .length >
-                                                8) {
-                                              _model
-                                                  .removeAtIndexFromOldPinInput(
-                                                      _model.oldPinInput
-                                                              .toList()
-                                                              .length -
-                                                          1);
-                                              safeSetState(() {});
-                                            }
-                                          },
-                                          text: '0',
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
-                                            elevation: 2.0,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                        ),
-                                        FlutterFlowIconButton(
-                                          borderRadius: 35.0,
-                                          buttonSize: 70.0,
-                                          icon: Icon(
-                                            Icons.backspace_outlined,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            size: 28.0,
-                                          ),
-                                          onPressed: () async {
-                                            // RemoveFromList
-                                            _model
-                                                .removeAtIndexFromConfirmedNewPinInput(
-                                                    _model.confirmedNewPinInput
-                                                            .toList()
-                                                            .length -
-                                                        1);
-                                            safeSetState(() {});
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  if (_model.currentStep == 2)
-                                    FFButtonWidget(
-                                      onPressed: () async {
-                                        _model.joinedOldPin =
-                                            functions.newCustomFunction(
-                                                _model.oldPinInput.toList());
-                                        safeSetState(() {});
-                                        if (_model.oldPinInput.length >= 4) {
-                                          _model.verifyOldPinResp =
-                                              await VerifyPINCall.call(
-                                            pin: _model.joinedOldPin,
-                                            jwt: currentJwtToken,
-                                          );
-
-                                          if (VerifyPINCall.ok(
-                                                (_model.verifyOldPinResp
-                                                        ?.jsonBody ??
-                                                    ''),
-                                              ) ==
-                                              true) {
-                                            if (VerifyPINCall.isAccount(
-                                                  (_model.verifyOldPinResp
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                ) ==
-                                                true) {
-                                              _model.currentStep = 2;
-                                              _model.newPinInput =
-                                                  [].toList().cast<String>();
-                                              _model.joinedNewPin = '';
-                                              _model.confirmedNewPinInput =
-                                                  [].toList().cast<String>();
-                                              _model.joinedConfirmNewPin = '';
-                                              safeSetState(() {});
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'INCORRECT PIN',
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                ),
-                                              );
-                                              _model.oldPinInput =
-                                                  [].toList().cast<String>();
-                                              _model.joinedOldPin = '';
-                                              safeSetState(() {});
-                                            }
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'UNABLE TO VERIFY PIN, PLEASE TRY AGAIN',
-                                                  style: TextStyle(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                duration: Duration(
-                                                    milliseconds: 4000),
-                                                backgroundColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondary,
-                                              ),
-                                            );
-                                          }
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'PIN must be at least 4 digits.',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                            ),
-                                          );
-                                        }
-
-                                        safeSetState(() {});
-                                      },
-                                      text: 'Confirm',
-                                      options: FFButtonOptions(
-                                        width: double.infinity,
-                                        height: 50.0,
-                                        padding: EdgeInsets.all(0.0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .override(
-                                              font: GoogleFonts.interTight(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontStyle,
-                                              ),
-                                              color: Colors.white,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontStyle,
-                                            ),
-                                        elevation: 3.0,
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
                         if (_model.currentStep == 2)
                           Container(
                             decoration: BoxDecoration(),
@@ -4209,6 +2821,1394 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                             _model.currentStep =
                                                 _model.currentStep! + -1;
                                             safeSetState(() {});
+                                          }
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'PIN must be at least 4 digits.',
+                                                style: TextStyle(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              duration:
+                                                  Duration(milliseconds: 4000),
+                                              backgroundColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                            ),
+                                          );
+                                        }
+
+                                        safeSetState(() {});
+                                      },
+                                      text: 'Confirm',
+                                      options: FFButtonOptions(
+                                        width: double.infinity,
+                                        height: 50.0,
+                                        padding: EdgeInsets.all(0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .override(
+                                              font: GoogleFonts.interTight(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleMedium
+                                                        .fontStyle,
+                                              ),
+                                              color: Colors.white,
+                                              letterSpacing: 0.0,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleMedium
+                                                      .fontStyle,
+                                            ),
+                                        elevation: 3.0,
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        if (_model.currentStep == 1)
+                          Container(
+                            decoration: BoxDecoration(),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 20.0, 24.0, 40.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.lock_outline,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            size: 80.0,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(17.0),
+                                            child: Text(
+                                              'Enter Old PIN',
+                                              textAlign: TextAlign.center,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .headlineMedium
+                                                  .override(
+                                                    font:
+                                                        GoogleFonts.interTight(
+                                                      fontWeight:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .headlineMedium
+                                                              .fontWeight,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .headlineMedium
+                                                              .fontStyle,
+                                                    ),
+                                                    letterSpacing: 0.0,
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .headlineMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .headlineMedium
+                                                            .fontStyle,
+                                                  ),
+                                            ),
+                                          ),
+                                          Stack(
+                                            children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeInOut,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: AnimatedContainer(
+                                                      duration: Duration(
+                                                          milliseconds: 200),
+                                                      curve: Curves.easeIn,
+                                                      width: 16.0,
+                                                      height: 16.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                    ),
+                                                  ),
+                                                ].divide(SizedBox(width: 16.0)),
+                                              ),
+                                              if (_model.currentStep == 2)
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          1;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve:
+                                                              Curves.easeInOut,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          2;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          3;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          4;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          5;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          6;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          7;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                    if ((List<String>
+                                                        pinList5) {
+                                                      return pinList5.length >=
+                                                          8;
+                                                    }(_model.oldPinInput
+                                                        .toList()))
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves.easeIn,
+                                                          width: 16.0,
+                                                          height: 16.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                        ),
+                                                      ),
+                                                  ].divide(
+                                                      SizedBox(width: 16.0)),
+                                                ),
+                                            ],
+                                          ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 20.0),
+                                                    child: Text(
+                                                      'Enter the current PIN you use to access your account',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodySmall
+                                                              .override(
+                                                                font:
+                                                                    GoogleFonts
+                                                                        .inter(
+                                                                  fontWeight: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .fontWeight,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .fontStyle,
+                                                                ),
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondaryText,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontWeight,
+                                                                fontStyle: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontStyle,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                ].divide(
+                                                    SizedBox(height: 24.0)),
+                                              ),
+                                            ],
+                                          ),
+                                        ].divide(SizedBox(height: 16.0)),
+                                      ),
+                                    ].divide(SizedBox(height: 32.0)),
+                                  ),
+                                  Expanded(
+                                    child: GridView(
+                                      padding: EdgeInsets.zero,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 10.0,
+                                        mainAxisSpacing: 10.0,
+                                        childAspectRatio: 1.25,
+                                      ),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      children: [
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('1');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '1',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('2');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '2',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('3');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '3',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('4');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '4',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('5');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '5',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('6');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '6',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('7');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '7',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('8');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '8',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('9');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '9',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 100.0,
+                                          height: 100.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                          ),
+                                        ),
+                                        FFButtonWidget(
+                                          onPressed: () async {
+                                            // Add1
+                                            _model.addToOldPinInput('0');
+                                            safeSetState(() {});
+                                            if (_model.oldPinInput
+                                                    .toList()
+                                                    .length >
+                                                8) {
+                                              _model
+                                                  .removeAtIndexFromOldPinInput(
+                                                      _model.oldPinInput
+                                                              .toList()
+                                                              .length -
+                                                          1);
+                                              safeSetState(() {});
+                                            }
+                                          },
+                                          text: '0',
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 16.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.interTight(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                            elevation: 2.0,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
+                                        FlutterFlowIconButton(
+                                          borderRadius: 35.0,
+                                          buttonSize: 70.0,
+                                          icon: Icon(
+                                            Icons.backspace_outlined,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                            size: 28.0,
+                                          ),
+                                          onPressed: () async {
+                                            // RemoveFromList
+                                            _model
+                                                .removeAtIndexFromConfirmedNewPinInput(
+                                                    _model.confirmedNewPinInput
+                                                            .toList()
+                                                            .length -
+                                                        1);
+                                            safeSetState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (_model.currentStep == 1)
+                                    FFButtonWidget(
+                                      onPressed: () async {
+                                        _model.joinedOldPin =
+                                            functions.newCustomFunction(
+                                                _model.oldPinInput.toList());
+                                        safeSetState(() {});
+                                        if (_model.oldPinInput.length >= 4) {
+                                          _model.verifyOldPinResp =
+                                              await VerifyPINCall.call(
+                                            pin: _model.joinedOldPin,
+                                            jwt: currentJwtToken,
+                                          );
+
+                                          if (VerifyPINCall.ok(
+                                                (_model.verifyOldPinResp
+                                                        ?.jsonBody ??
+                                                    ''),
+                                              ) ==
+                                              true) {
+                                            if (VerifyPINCall.isAccount(
+                                                  (_model.verifyOldPinResp
+                                                          ?.jsonBody ??
+                                                      ''),
+                                                ) ==
+                                                true) {
+                                              _model.currentStep = 2;
+                                              _model.newPinInput =
+                                                  [].toList().cast<String>();
+                                              _model.joinedNewPin = '';
+                                              _model.confirmedNewPinInput =
+                                                  [].toList().cast<String>();
+                                              _model.joinedConfirmNewPin = '';
+                                              safeSetState(() {});
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'INCORRECT PIN',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  duration: Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                ),
+                                              );
+                                              _model.oldPinInput =
+                                                  [].toList().cast<String>();
+                                              _model.joinedOldPin = '';
+                                              safeSetState(() {});
+                                            }
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'UNABLE TO VERIFY PIN, PLEASE TRY AGAIN',
+                                                  style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryText,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                duration: Duration(
+                                                    milliseconds: 4000),
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                              ),
+                                            );
                                           }
                                         } else {
                                           ScaffoldMessenger.of(context)

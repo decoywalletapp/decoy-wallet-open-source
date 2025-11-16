@@ -258,7 +258,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     child: FFButtonWidget(
                                       onPressed: () async {
                                         context.pushNamed(
-                                            BiometricVerificationWidget
+                                            BiometricSettingsPageWidget
                                                 .routeName);
                                       },
                                       text: '',
