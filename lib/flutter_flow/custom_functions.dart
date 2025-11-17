@@ -490,3 +490,16 @@ String getQueryParam(
     return '';
   }
 }
+
+dynamic latLngToJson(LatLng? location) {
+  // If we somehow don't have a location, just return null
+  if (location == null) {
+    return null;
+  }
+
+  // JSON-compatible map that Supabase can store in a jsonb column
+  return <String, dynamic>{
+    'lat': location.latitude,
+    'lng': location.longitude,
+  };
+}

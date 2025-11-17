@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'p_i_n_page_widget.dart' show PINPageWidget;
@@ -34,10 +35,14 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
 
   String? joinedPinConfirm;
 
+  LatLng? emergencyLocation;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
   ApiCallResponse? verifyResp;
+  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
+  DecoyTriggersRow? newTriggerRow;
 
   @override
   void initState(BuildContext context) {}

@@ -746,7 +746,12 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     borderRadius: BorderRadius.circular(16.0),
                                     border: Border.all(
                                       color:
-                                          FlutterFlowTheme.of(context).primary,
+                                          createDecoyEmergencyContactsSetupDecoyWalletRow!
+                                                  .useCurrentLocation
+                                              ? FlutterFlowTheme.of(context)
+                                                  .success
+                                              : FlutterFlowTheme.of(context)
+                                                  .primary,
                                       width: 1.2,
                                     ),
                                   ),
@@ -844,7 +849,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                         ),
                                         Switch(
                                           value: _model.switchValue ??=
-                                              createDecoyEmergencyContactsSetupDecoyWalletRow!
+                                              createDecoyEmergencyContactsSetupDecoyWalletRow
                                                   .useCurrentLocation,
                                           onChanged: (newValue) async {
                                             safeSetState(() =>

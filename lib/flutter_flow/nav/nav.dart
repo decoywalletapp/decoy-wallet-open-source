@@ -317,11 +317,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => PersonalInformationWidget(),
       ),
       FFRoute(
-        name: CreateAccountCopyWidget.routeName,
-        path: CreateAccountCopyWidget.routePath,
-        builder: (context, params) => CreateAccountCopyWidget(),
-      ),
-      FFRoute(
         name: AuthRouterWidget.routeName,
         path: AuthRouterWidget.routePath,
         builder: (context, params) => AuthRouterWidget(
