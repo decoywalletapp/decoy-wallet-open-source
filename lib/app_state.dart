@@ -336,6 +336,12 @@ class FFAppState extends ChangeNotifier {
   void deleteIsLocked() {
     secureStorage.delete(key: 'ff_isLocked');
   }
+
+  LatLng? _lastKnownLocation = LatLng(0.0, 0.0);
+  LatLng? get lastKnownLocation => _lastKnownLocation;
+  set lastKnownLocation(LatLng? value) {
+    _lastKnownLocation = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

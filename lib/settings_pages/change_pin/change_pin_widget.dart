@@ -4300,6 +4300,25 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                               },
                             ),
                           ),
+                        if (_model.currentStep == 1)
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 40.0, 0.0, 0.0),
+                            child: FlutterFlowIconButton(
+                              borderColor: Colors.transparent,
+                              borderRadius: 30.0,
+                              borderWidth: 1.0,
+                              buttonSize: 60.0,
+                              icon: Icon(
+                                Icons.arrow_back_rounded,
+                                color: Color(0xFF15161E),
+                                size: 30.0,
+                              ),
+                              onPressed: () async {
+                                context.safePop();
+                              },
+                            ),
+                          ),
                       ],
                     ),
                   ],

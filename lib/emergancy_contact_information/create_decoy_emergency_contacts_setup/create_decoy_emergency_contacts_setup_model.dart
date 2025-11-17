@@ -1,3 +1,4 @@
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'create_decoy_emergency_contacts_setup_widget.dart'
@@ -10,6 +11,10 @@ class CreateDecoyEmergencyContactsSetupModel
 
   // State field(s) for Switch widget.
   bool? switchValue;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Switch widget.
+  List<DecoyWalletRow>? setLocationOn;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Switch widget.
+  List<DecoyWalletRow>? setLocationOff;
 
   @override
   void initState(BuildContext context) {}

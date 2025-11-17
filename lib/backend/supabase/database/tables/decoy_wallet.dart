@@ -139,4 +139,8 @@ class DecoyWalletRow extends SupabaseDataRow {
 
   String? get pendingEmail => getField<String>('pending_email');
   set pendingEmail(String? value) => setField<String>('pending_email', value);
+
+  bool get useCurrentLocation => getField<bool>('use_current_location')!;
+  set useCurrentLocation(bool value) =>
+      setField<bool>('use_current_location', value);
 }
