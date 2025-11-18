@@ -9,6 +9,51 @@ export 'package:ff_commons/api_requests/api_manager.dart' show ApiCallResponse;
 
 const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 
+/// Start DecoyAlert Group Code
+
+class DecoyAlertGroup {
+  static String getBaseUrl() =>
+      'https://decoy-alert-866378207353.us-central1.run.app';
+  static Map<String, String> headers = {};
+  static SendEmergencyAlertsCall sendEmergencyAlertsCall =
+      SendEmergencyAlertsCall();
+}
+
+class SendEmergencyAlertsCall {
+  Future<ApiCallResponse> call() async {
+    final baseUrl = DecoyAlertGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "userId": "ff-test-user",
+  "triggerId": "manual-test",
+  "contacts": [
+    { "first": "Mitch", "phone": "+15862469339" }
+  ],
+  "location": { "lat": 45.3215937, "lng": -85.2529349 }
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'SendEmergencyAlerts',
+      apiUrl: '${baseUrl}/sendEmergencyAlerts',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// End DecoyAlert Group Code
+
 class SendVerificationCodeCall {
   static Future<ApiCallResponse> call({
     String? cleanPhone = '',

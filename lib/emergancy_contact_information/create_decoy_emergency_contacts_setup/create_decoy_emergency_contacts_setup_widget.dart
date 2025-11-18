@@ -367,8 +367,19 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     ],
                                     borderRadius: BorderRadius.circular(16.0),
                                     border: Border.all(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      color: valueOrDefault<Color>(
+                                        createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.addressCiphertext !=
+                                                    null &&
+                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.addressCiphertext !=
+                                                    ''
+                                            ? FlutterFlowTheme.of(context)
+                                                .success
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                       width: 1.2,
                                     ),
                                   ),
@@ -521,8 +532,19 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                         ),
                                     elevation: 3.0,
                                     borderSide: BorderSide(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      color: valueOrDefault<Color>(
+                                        createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.addressCiphertext !=
+                                                    null &&
+                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.addressCiphertext !=
+                                                    ''
+                                            ? FlutterFlowTheme.of(context)
+                                                .success
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                     ),
                                     borderRadius: BorderRadius.circular(16.0),
                                   ),
@@ -556,8 +578,19 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     ],
                                     borderRadius: BorderRadius.circular(16.0),
                                     border: Border.all(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      color: valueOrDefault<Color>(
+                                        createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.contactsCiphertext !=
+                                                    null &&
+                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.contactsCiphertext !=
+                                                    ''
+                                            ? FlutterFlowTheme.of(context)
+                                                .success
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                       width: 1.2,
                                     ),
                                   ),
@@ -710,8 +743,19 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                         ),
                                     elevation: 3.0,
                                     borderSide: BorderSide(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      color: valueOrDefault<Color>(
+                                        createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.contactsCiphertext !=
+                                                    null &&
+                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                        ?.contactsCiphertext !=
+                                                    ''
+                                            ? FlutterFlowTheme.of(context)
+                                                .success
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                     ),
                                     borderRadius: BorderRadius.circular(16.0),
                                   ),
@@ -745,13 +789,15 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     ],
                                     borderRadius: BorderRadius.circular(16.0),
                                     border: Border.all(
-                                      color:
-                                          createDecoyEmergencyContactsSetupDecoyWalletRow!
-                                                  .useCurrentLocation
-                                              ? FlutterFlowTheme.of(context)
-                                                  .success
-                                              : FlutterFlowTheme.of(context)
-                                                  .primary,
+                                      color: valueOrDefault<Color>(
+                                        createDecoyEmergencyContactsSetupDecoyWalletRow!
+                                                .useCurrentLocation
+                                            ? FlutterFlowTheme.of(context)
+                                                .success
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                       width: 1.2,
                                     ),
                                   ),
