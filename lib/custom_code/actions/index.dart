@@ -21,3 +21,4 @@ export 'aes_gcm_decrypt_to_map.dart' show aesGcmDecryptToMap;
 export 'build_personal_json.dart' show buildPersonalJson;
 export 'debug_sign_up.dart' show debugSignUp;
 export 'supa_email_sign_up.dart' show supaEmailSignUp;
+export 'delete_current_user_account.dart' show deleteCurrentUserAccount;

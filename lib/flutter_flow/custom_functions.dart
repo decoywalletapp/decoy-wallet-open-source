@@ -503,3 +503,22 @@ dynamic latLngToJson(LatLng? location) {
     'lng': location.longitude,
   };
 }
+
+/// Returns latitude from a LatLng, or 0.0 if null (anything is fine)
+double latFromLatLng(LatLng? location) {
+  // if we somehow do not have a location, return 0.0
+  if (location == null) {
+    return 0.0;
+  }
+
+  // normal case
+  return location.latitude;
+}
+
+double lngFromLatLng(LatLng? location) {
+  if (location == null) {
+    return 0.0;
+  }
+
+  return location.longitude;
+}

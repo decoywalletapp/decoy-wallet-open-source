@@ -20,17 +20,25 @@ class DecoyAlertGroup {
 }
 
 class SendEmergencyAlertsCall {
-  Future<ApiCallResponse> call() async {
+  Future<ApiCallResponse> call({
+    String? userId = '',
+    String? triggerId = '',
+    double? lat,
+    double? lng,
+    dynamic contactsJson,
+  }) async {
     final baseUrl = DecoyAlertGroup.getBaseUrl();
 
+    final contacts = _serializeJson(contactsJson, true);
     final ffApiRequestBody = '''
 {
-  "userId": "ff-test-user",
-  "triggerId": "manual-test",
-  "contacts": [
-    { "first": "Mitch", "phone": "+15862469339" }
-  ],
-  "location": { "lat": 45.3215937, "lng": -85.2529349 }
+  "userId": "${escapeStringForJson(userId)}",
+  "triggerId": "${escapeStringForJson(triggerId)}",
+  "contacts": ${contacts},
+  "location": {
+    "lat": ${lat},
+    "lng": ${lng}
+  }
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'SendEmergencyAlerts',
@@ -340,6 +348,39 @@ class UpdateEmailViaProxyCall {
       callName: 'UpdateEmailViaProxy',
       apiUrl:
           'https://decoy-verify-866378207353.us-central1.run.app/update-email',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class SendSupportTicketCall {
+  static Future<ApiCallResponse> call({
+    String? userEmail = '',
+    String? subject = '',
+    String? message = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "userEmail": "${escapeStringForJson(userEmail)}",
+  "subject": "${escapeStringForJson(subject)}",
+  "message": "${escapeStringForJson(message)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'sendSupportTicket',
+      apiUrl:
+          'https://us-central1-decoywallet-a283b.cloudfunctions.net/sendSupportTicket',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',

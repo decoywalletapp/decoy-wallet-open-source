@@ -59,7 +59,7 @@ class _GenerateDecoySeedPhraseWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -186,6 +186,9 @@ class _GenerateDecoySeedPhraseWidgetState
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
+                                FFAppState().decoySeedArmed = false;
+                                FFAppState().decoySeedContactsEnabled = false;
+                                safeSetState(() {});
 
                                 context.pushNamed(
                                   ShowDecoySeedPhraseWidget.routeName,

@@ -43,6 +43,14 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
   ApiCallResponse? verifyResp;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
   DecoyTriggersRow? newTriggerRow;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? walletRow;
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
+  String? dataKeyB64;
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in Button widget.
+  dynamic contactObj;
+  // Stores action output result for [Backend Call - API (SendEmergencyAlerts)] action in Button widget.
+  ApiCallResponse? alertResult;
 
   @override
   void initState(BuildContext context) {}

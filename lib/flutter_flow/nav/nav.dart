@@ -134,11 +134,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => LightningScanWidget(),
       ),
       FFRoute(
-        name: CreateTicketWidget.routeName,
-        path: CreateTicketWidget.routePath,
-        builder: (context, params) => CreateTicketWidget(),
-      ),
-      FFRoute(
         name: CreatePinWidget.routeName,
         path: CreatePinWidget.routePath,
         builder: (context, params) => CreatePinWidget(),
@@ -360,6 +355,31 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: BiometricSettingsPageWidget.routeName,
         path: BiometricSettingsPageWidget.routePath,
         builder: (context, params) => BiometricSettingsPageWidget(),
+      ),
+      FFRoute(
+        name: SupportTicketWidget.routeName,
+        path: SupportTicketWidget.routePath,
+        builder: (context, params) => SupportTicketWidget(),
+      ),
+      FFRoute(
+        name: ControlCenterWidget.routeName,
+        path: ControlCenterWidget.routePath,
+        builder: (context, params) => ControlCenterWidget(),
+      ),
+      FFRoute(
+        name: DecoyPinSystemValuesWidget.routeName,
+        path: DecoyPinSystemValuesWidget.routePath,
+        builder: (context, params) => DecoyPinSystemValuesWidget(),
+      ),
+      FFRoute(
+        name: DecoySeedSystemValuesWidget.routeName,
+        path: DecoySeedSystemValuesWidget.routePath,
+        builder: (context, params) => DecoySeedSystemValuesWidget(),
+      ),
+      FFRoute(
+        name: DeleteUserAccountWidget.routeName,
+        path: DeleteUserAccountWidget.routePath,
+        builder: (context, params) => DeleteUserAccountWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

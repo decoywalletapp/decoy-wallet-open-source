@@ -392,7 +392,7 @@ class _SeedPhraseVerificationWidgetState
                                                     if (_model.verifyResult ==
                                                         true) {
                                                       context.pushNamed(
-                                                          DecoySeedActiveWidget
+                                                          DecoySeedSystemValuesWidget
                                                               .routeName);
                                                     } else {
                                                       _model.attemptCount =
@@ -617,7 +617,7 @@ class _SeedPhraseVerificationWidgetState
                                                             .verifyResultMid ==
                                                         true) {
                                                       context.pushNamed(
-                                                          DecoySeedActiveWidget
+                                                          DecoySeedSystemValuesWidget
                                                               .routeName);
                                                     } else {
                                                       _model.attemptCount =
@@ -844,7 +844,7 @@ class _SeedPhraseVerificationWidgetState
                                                             .verifyResultBot ==
                                                         true) {
                                                       context.pushNamed(
-                                                          DecoySeedActiveWidget
+                                                          DecoySeedSystemValuesWidget
                                                               .routeName);
                                                     } else {
                                                       _model.attemptCount =

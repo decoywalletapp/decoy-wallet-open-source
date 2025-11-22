@@ -73,6 +73,25 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _isLocked = await secureStorage.getBool('ff_isLocked') ?? _isLocked;
     });
+    await _safeInitAsync(() async {
+      _decoyPin911Enabled =
+          await secureStorage.getBool('ff_decoyPin911Enabled') ??
+              _decoyPin911Enabled;
+    });
+    await _safeInitAsync(() async {
+      _decoyPinContactsEnabled =
+          await secureStorage.getBool('ff_decoyPinContactsEnabled') ??
+              _decoyPinContactsEnabled;
+    });
+    await _safeInitAsync(() async {
+      _decoySeedArmed =
+          await secureStorage.getBool('ff_decoySeedArmed') ?? _decoySeedArmed;
+    });
+    await _safeInitAsync(() async {
+      _decoySeedContactsEnabled =
+          await secureStorage.getBool('ff_decoySeedContactsEnabled') ??
+              _decoySeedContactsEnabled;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -341,6 +360,50 @@ class FFAppState extends ChangeNotifier {
   LatLng? get lastKnownLocation => _lastKnownLocation;
   set lastKnownLocation(LatLng? value) {
     _lastKnownLocation = value;
+  }
+
+  bool _decoyPin911Enabled = false;
+  bool get decoyPin911Enabled => _decoyPin911Enabled;
+  set decoyPin911Enabled(bool value) {
+    _decoyPin911Enabled = value;
+    secureStorage.setBool('ff_decoyPin911Enabled', value);
+  }
+
+  void deleteDecoyPin911Enabled() {
+    secureStorage.delete(key: 'ff_decoyPin911Enabled');
+  }
+
+  bool _decoyPinContactsEnabled = false;
+  bool get decoyPinContactsEnabled => _decoyPinContactsEnabled;
+  set decoyPinContactsEnabled(bool value) {
+    _decoyPinContactsEnabled = value;
+    secureStorage.setBool('ff_decoyPinContactsEnabled', value);
+  }
+
+  void deleteDecoyPinContactsEnabled() {
+    secureStorage.delete(key: 'ff_decoyPinContactsEnabled');
+  }
+
+  bool _decoySeedArmed = false;
+  bool get decoySeedArmed => _decoySeedArmed;
+  set decoySeedArmed(bool value) {
+    _decoySeedArmed = value;
+    secureStorage.setBool('ff_decoySeedArmed', value);
+  }
+
+  void deleteDecoySeedArmed() {
+    secureStorage.delete(key: 'ff_decoySeedArmed');
+  }
+
+  bool _decoySeedContactsEnabled = false;
+  bool get decoySeedContactsEnabled => _decoySeedContactsEnabled;
+  set decoySeedContactsEnabled(bool value) {
+    _decoySeedContactsEnabled = value;
+    secureStorage.setBool('ff_decoySeedContactsEnabled', value);
+  }
+
+  void deleteDecoySeedContactsEnabled() {
+    secureStorage.delete(key: 'ff_decoySeedContactsEnabled');
   }
 }
 

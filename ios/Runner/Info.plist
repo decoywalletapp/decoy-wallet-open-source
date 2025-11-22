@@ -54,7 +54,7 @@
 	<true/>
 
 	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>In order to search nearby, this app requires access to your current location.</string>
+    <string>Only used for emergency situations.</string>
 	<key>NSCameraUsageDescription</key>
     <string>Needed to scan Bitcoin QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>

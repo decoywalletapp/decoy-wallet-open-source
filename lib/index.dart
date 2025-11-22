@@ -11,8 +11,6 @@ export '/home_pages/settings/settings_widget.dart' show SettingsWidget;
 export '/home_pages/home_page/home_page_widget.dart' show HomePageWidget;
 export '/welcom_pages/lightning_scan/lightning_scan_widget.dart'
     show LightningScanWidget;
-export '/settings_pages/create_ticket/create_ticket_widget.dart'
-    show CreateTicketWidget;
 export '/pin_pages/create_pin/create_pin_widget.dart' show CreatePinWidget;
 export '/pin_pages/p_i_n_page/p_i_n_page_widget.dart' show PINPageWidget;
 export '/welcom_pages/phone_number_verification/phone_number_verification_widget.dart'
@@ -79,3 +77,13 @@ export '/welcom_pages/dup_auth/dup_auth_widget.dart' show DupAuthWidget;
 export '/settings_pages/change_pin/change_pin_widget.dart' show ChangePinWidget;
 export '/settings_pages/biometric_settings_page/biometric_settings_page_widget.dart'
     show BiometricSettingsPageWidget;
+export '/settings_pages/support_ticket/support_ticket_widget.dart'
+    show SupportTicketWidget;
+export '/settings_pages/control_center/control_center_widget.dart'
+    show ControlCenterWidget;
+export '/pin_pages/decoy_pin_system_values/decoy_pin_system_values_widget.dart'
+    show DecoyPinSystemValuesWidget;
+export '/create_decoy_seed/decoy_seed_system_values/decoy_seed_system_values_widget.dart'
+    show DecoySeedSystemValuesWidget;
+export '/settings_pages/delete_user_account/delete_user_account_widget.dart'
+    show DeleteUserAccountWidget;

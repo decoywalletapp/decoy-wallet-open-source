@@ -4,6 +4,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -1077,70 +1078,170 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                           ),
                           Align(
                             alignment: AlignmentDirectional(0.0, 1.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                currentUserLocationValue =
-                                    await getCurrentUserLocation(
-                                        defaultLocation: LatLng(0.0, 0.0));
-                                if (_model.pinInput.length >= 4) {
-                                  _model.joinedPin =
-                                      functions.newCustomFunction(
-                                          _model.pinInput.toList());
-                                  safeSetState(() {});
-                                  _model.verifyResp = await VerifyPINCall.call(
-                                    pin: _model.joinedPin,
-                                    jwt: currentJwtToken,
+                            child: FutureBuilder<List<DecoyWalletRow>>(
+                              future: DecoyWalletTable().querySingleRow(
+                                queryFn: (q) => q.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
+                                      ),
+                                    ),
                                   );
+                                }
+                                List<DecoyWalletRow> buttonDecoyWalletRowList =
+                                    snapshot.data!;
 
-                                  if (VerifyPINCall.ok(
-                                        (_model.verifyResp?.jsonBody ?? ''),
-                                      ) ==
-                                      true) {
-                                    if (VerifyPINCall.isDecoy(
-                                          (_model.verifyResp?.jsonBody ?? ''),
-                                        ) ==
-                                        true) {
-                                      if (pINPageDecoyWalletRow
-                                              ?.useCurrentLocation ==
-                                          true) {
-                                        _model.emergencyLocation =
-                                            currentUserLocationValue;
-                                        safeSetState(() {});
-                                      }
-                                      _model.joinedPin = "";
-                                      safeSetState(() {});
-                                      _model.pinInput =
-                                          [].toList().cast<String>();
-                                      safeSetState(() {});
-                                      _model.newTriggerRow =
-                                          await DecoyTriggersTable().insert({
-                                        'user_id': currentUserUid,
-                                        'trigger_type': 'PIN_DECOY',
-                                        'location': functions.latLngToJson(
-                                            _model.emergencyLocation),
-                                      });
+                                final buttonDecoyWalletRow =
+                                    buttonDecoyWalletRowList.isNotEmpty
+                                        ? buttonDecoyWalletRowList.first
+                                        : null;
 
-                                      context.pushNamed(
-                                          DuressHomePageWidget.routeName);
-                                    } else {
-                                      if (VerifyPINCall.isAccount(
+                                return FFButtonWidget(
+                                  onPressed: () async {
+                                    currentUserLocationValue =
+                                        await getCurrentUserLocation(
+                                            defaultLocation: LatLng(0.0, 0.0));
+                                    if (_model.pinInput.length >= 4) {
+                                      _model.joinedPin =
+                                          functions.newCustomFunction(
+                                              _model.pinInput.toList());
+                                      safeSetState(() {});
+                                      _model.verifyResp =
+                                          await VerifyPINCall.call(
+                                        pin: _model.joinedPin,
+                                        jwt: currentJwtToken,
+                                      );
+
+                                      if (VerifyPINCall.ok(
                                             (_model.verifyResp?.jsonBody ?? ''),
                                           ) ==
                                           true) {
-                                        _model.joinedPin = "";
-                                        safeSetState(() {});
-                                        _model.pinInput =
-                                            [].toList().cast<String>();
-                                        safeSetState(() {});
+                                        if (VerifyPINCall.isDecoy(
+                                              (_model.verifyResp?.jsonBody ??
+                                                  ''),
+                                            ) ==
+                                            true) {
+                                          if (pINPageDecoyWalletRow
+                                                  ?.useCurrentLocation ==
+                                              true) {
+                                            _model.emergencyLocation =
+                                                currentUserLocationValue;
+                                            safeSetState(() {});
+                                          }
+                                          _model.joinedPin = "";
+                                          safeSetState(() {});
+                                          _model.pinInput =
+                                              [].toList().cast<String>();
+                                          safeSetState(() {});
+                                          _model.newTriggerRow =
+                                              await DecoyTriggersTable()
+                                                  .insert({
+                                            'user_id': currentUserUid,
+                                            'trigger_type': 'PIN_DECOY',
+                                            'location': functions.latLngToJson(
+                                                _model.emergencyLocation),
+                                          });
+                                          _model.walletRow =
+                                              await DecoyWalletTable()
+                                                  .queryRows(
+                                            queryFn: (q) => q
+                                                .eqOrNull(
+                                                  'user_id',
+                                                  currentUserUid,
+                                                )
+                                                .order('updated_at'),
+                                          );
+                                          _model.dataKeyB64 = await actions
+                                              .generateDataKeyIfMissing();
+                                          _model.contactObj =
+                                              await actions.aesGcmDecryptToMap(
+                                            _model.walletRow!
+                                                .elementAtOrNull(0)!
+                                                .contactsCiphertext!,
+                                            _model.walletRow!
+                                                .elementAtOrNull(0)!
+                                                .contactsNonce!,
+                                            _model.dataKeyB64!,
+                                          );
+                                          _model.alertResult =
+                                              await DecoyAlertGroup
+                                                  .sendEmergencyAlertsCall
+                                                  .call(
+                                            userId: currentUserUid,
+                                            triggerId: _model
+                                                .newTriggerRow?.triggerType,
+                                            contactsJson: getJsonField(
+                                              _model.contactObj,
+                                              r'''$.contacts''',
+                                              true,
+                                            ),
+                                            lat: functions.latFromLatLng(
+                                                _model.emergencyLocation),
+                                            lng: functions.lngFromLatLng(
+                                                _model.emergencyLocation),
+                                          );
 
-                                        context.pushNamed(
-                                            HomePageWidget.routeName);
+                                          context.pushNamed(
+                                              DuressHomePageWidget.routeName);
+                                        } else {
+                                          if (VerifyPINCall.isAccount(
+                                                (_model.verifyResp?.jsonBody ??
+                                                    ''),
+                                              ) ==
+                                              true) {
+                                            _model.joinedPin = "";
+                                            safeSetState(() {});
+                                            _model.pinInput =
+                                                [].toList().cast<String>();
+                                            safeSetState(() {});
+
+                                            context.pushNamed(
+                                                HomePageWidget.routeName);
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Invalid PIN',
+                                                  style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryText,
+                                                  ),
+                                                ),
+                                                duration: Duration(
+                                                    milliseconds: 4000),
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                              ),
+                                            );
+                                            _model.joinedPin = "";
+                                            safeSetState(() {});
+                                            _model.pinInput =
+                                                [].toList().cast<String>();
+                                            safeSetState(() {});
+                                          }
+                                        }
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              'Invalid PIN',
+                                              'SOMETHING WENT WRONG',
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1154,86 +1255,72 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                     .secondary,
                                           ),
                                         );
-                                        _model.joinedPin = "";
-                                        safeSetState(() {});
-                                        _model.pinInput =
-                                            [].toList().cast<String>();
-                                        safeSetState(() {});
                                       }
-                                    }
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'SOMETHING WENT WRONG',
-                                          style: TextStyle(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Please enter at least 4 digits to continue',
+                                            style: GoogleFonts.roboto(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondary,
                                         ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Please enter at least 4 digits to continue',
-                                        style: GoogleFonts.roboto(
+                                      );
+                                    }
+
+                                    safeSetState(() {});
+                                  },
+                                  text: 'Enter',
+                                  options: FFButtonOptions(
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    padding: EdgeInsets.all(0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          font: GoogleFonts.interTight(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleMedium
+                                                    .fontStyle,
+                                          ),
                                           color: FlutterFlowTheme.of(context)
                                               .primaryText,
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleMedium
+                                                  .fontStyle,
                                         ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
+                                    elevation: 3.0,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
                                     ),
-                                  );
-                                }
-
-                                safeSetState(() {});
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                );
                               },
-                              text: 'Enter',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 50.0,
-                                padding: EdgeInsets.all(0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
                             ),
                           ),
                         ],

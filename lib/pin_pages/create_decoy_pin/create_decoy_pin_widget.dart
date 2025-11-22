@@ -2959,8 +2959,17 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                             ''),
                                                       ) ==
                                                       true) {
+                                                    FFAppState()
+                                                            .decoyPin911Enabled =
+                                                        true;
+                                                    FFAppState()
+                                                            .decoyPinContactsEnabled =
+                                                        true;
+                                                    safeSetState(() {});
+
                                                     context.pushNamed(
-                                                      HomePageWidget.routeName,
+                                                      DecoyPinSystemValuesWidget
+                                                          .routeName,
                                                       extra: <String, dynamic>{
                                                         kTransitionInfoKey:
                                                             TransitionInfo(
