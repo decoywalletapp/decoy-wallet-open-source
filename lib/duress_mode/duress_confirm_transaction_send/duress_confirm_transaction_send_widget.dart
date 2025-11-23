@@ -71,7 +71,7 @@ class _DuressConfirmTransactionSendWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0x001D2428),
+        backgroundColor: Color(0x3A14181B),
         appBar: AppBar(
           backgroundColor: Color(0x001D2428),
           automaticallyImplyLeading: false,
@@ -86,22 +86,6 @@ class _DuressConfirmTransactionSendWidgetState
             onPressed: () async {
               context.safePop();
             },
-          ),
-          title: Text(
-            'Send Bitcoin',
-            style: FlutterFlowTheme.of(context).titleMedium.override(
-                  font: GoogleFonts.interTight(
-                    fontWeight:
-                        FlutterFlowTheme.of(context).titleMedium.fontWeight,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).titleMedium.fontStyle,
-                  ),
-                  color: FlutterFlowTheme.of(context).primaryBackground,
-                  letterSpacing: 0.0,
-                  fontWeight:
-                      FlutterFlowTheme.of(context).titleMedium.fontWeight,
-                  fontStyle: FlutterFlowTheme.of(context).titleMedium.fontStyle,
-                ),
           ),
           actions: [],
           centerTitle: true,

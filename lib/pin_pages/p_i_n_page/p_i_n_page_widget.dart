@@ -11,6 +11,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'p_i_n_page_model.dart';
 export 'p_i_n_page_model.dart';
 
@@ -61,6 +62,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return FutureBuilder<List<DecoyWalletRow>>(
       future: DecoyWalletTable().querySingleRow(
         queryFn: (q) => q.eqOrNull(
@@ -1197,6 +1200,17 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             lng: functions.lngFromLatLng(
                                                 _model.emergencyLocation),
                                           );
+
+                                          if ((FFAppState().fakeSeeded ==
+                                                  false) ||
+                                              (FFAppState().fakeBtcBalance <=
+                                                  0.0)) {
+                                            FFAppState().fakeBtcBalance =
+                                                functions.randomBtc(
+                                                    1.0, 5.0, 8);
+                                            FFAppState().fakeSeeded = true;
+                                            safeSetState(() {});
+                                          }
 
                                           context.pushNamed(
                                               DuressHomePageWidget.routeName);

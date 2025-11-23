@@ -50,13 +50,13 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
 
       await Future.delayed(
         Duration(
-          milliseconds: 200,
+          milliseconds: 1000,
         ),
       );
       if ((_model.priceResult?.statusCode ?? 200) == 200) {
         await Future.delayed(
           Duration(
-            milliseconds: 500,
+            milliseconds: 300,
           ),
         );
         _model.prices1y = getJsonField(
@@ -79,10 +79,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         _model.currentPrice = _model.btcPrices.lastOrNull;
         _model.pctChange1y =
             functions.percentageChange(_model.firstPrice, _model.currentPrice);
-        FFAppState().fakeBtcBalance = valueOrDefault<double>(
-          functions.randomBtc(1.0, 5.0, 8),
-          0.0,
-        );
         FFAppState().fakeUsdValue = valueOrDefault<double>(
           functions.usdFromBtc(
               FFAppState().fakeBtcBalance, _model.currentPrice!),
@@ -102,11 +98,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             ),
             duration: Duration(milliseconds: 4000),
             backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-        await Future.delayed(
-          Duration(
-            milliseconds: 800,
           ),
         );
         safeSetState(() {});
@@ -134,7 +125,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0x002E3838),
+        backgroundColor: Colors.black,
         body: SafeArea(
           top: true,
           child: Padding(
@@ -153,7 +144,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                         buttonSize: 40.0,
                         icon: Icon(
                           Icons.settings_rounded,
-                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          color: FlutterFlowTheme.of(context).info,
                           size: 24.0,
                         ),
                         onPressed: () async {
@@ -178,8 +169,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                         .headlineLarge
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
+                                  color: FlutterFlowTheme.of(context).info,
                                   fontSize: 16.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
@@ -207,8 +197,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                         .displayMedium
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
+                                  color: FlutterFlowTheme.of(context).info,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
                                   fontStyle: FlutterFlowTheme.of(context)
@@ -253,7 +242,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       width: double.infinity,
                       height: 300.0,
                       decoration: BoxDecoration(
-                        color: Color(0x4D7D7B7B),
+                        color: Color(0x4D646363),
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 8.0,
@@ -337,7 +326,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                                       .fontStyle,
                                             ),
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                                .info,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
@@ -442,28 +431,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        FFAppState().fakeSeeded.toString(),
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                      ),
-                      Text(
                         (_model.priceResult?.statusCode ?? 200).toString(),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
@@ -532,7 +499,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: Color(0xFF1E1E1E),
                                   borderRadius: BorderRadius.circular(16.0),
                                 ),
                               ),
@@ -548,7 +515,8 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                   children: [
                                     Icon(
                                       Icons.download_rounded,
-                                      color: FlutterFlowTheme.of(context).info,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBackground,
                                       size: 24.0,
                                     ),
                                     Text(
@@ -564,7 +532,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                                       .fontStyle,
                                             ),
                                             color: FlutterFlowTheme.of(context)
-                                                .info,
+                                                .primaryBackground,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
@@ -639,7 +607,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: Color(0xFF343739),
                                   borderRadius: BorderRadius.circular(16.0),
                                 ),
                               ),
@@ -654,7 +622,8 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                   children: [
                                     Icon(
                                       Icons.qr_code_rounded,
-                                      color: FlutterFlowTheme.of(context).info,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBackground,
                                       size: 24.0,
                                     ),
                                     Text(
@@ -670,7 +639,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                                       .fontStyle,
                                             ),
                                             color: FlutterFlowTheme.of(context)
-                                                .info,
+                                                .primaryBackground,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
                                             fontStyle:

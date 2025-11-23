@@ -112,7 +112,7 @@ class _DuressProcessingTransactionWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0x001D2428),
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Padding(

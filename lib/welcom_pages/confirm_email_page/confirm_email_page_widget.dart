@@ -1,8 +1,11 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'confirm_email_page_model.dart';
@@ -33,6 +36,13 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ConfirmEmailPageModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.emailResubmitted = 0;
+      _model.resendLocked = false;
+      safeSetState(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -222,9 +232,43 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 80.0, 0.0, 0.0),
                   child: FFButtonWidget(
-                    onPressed: () {
-                      print('Button pressed ...');
-                    },
+                    onPressed: (_model.resendLocked == true)
+                        ? null
+                        : () async {
+                            if (_model.resendLocked != true) {
+                              _model.apiResulte1h =
+                                  await SupabaseResendSignupEmailCall.call(
+                                email: currentUserEmail,
+                              );
+
+                              if ((_model.apiResulte1h?.succeeded ?? true)) {
+                                _model.emailResubmitted = 1;
+                                _model.resendLocked = true;
+                                safeSetState(() {});
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 30000,
+                                  ),
+                                );
+                                _model.emailResubmitted = 0;
+                                _model.resendLocked = false;
+                                safeSetState(() {});
+                              } else {
+                                _model.emailResubmitted = 2;
+                                safeSetState(() {});
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 30000,
+                                  ),
+                                );
+                                _model.emailResubmitted = 0;
+                                _model.resendLocked = false;
+                                safeSetState(() {});
+                              }
+                            }
+
+                            safeSetState(() {});
+                          },
                     text: 'Resend Email Confirmation',
                     options: FFButtonOptions(
                       width: double.infinity,
@@ -260,6 +304,93 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
+                ),
+                Stack(
+                  children: [
+                    if (_model.emailResubmitted == 1)
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 30.0, 0.0, 0.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle_sharp,
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  size: 20.0,
+                                ),
+                              ),
+                              Text(
+                                'Email Resent',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyLarge
+                                    .override(
+                                      font: GoogleFonts.inter(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyLarge
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyLarge
+                                            .fontStyle,
+                                      ),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ].divide(SizedBox(width: 5.0)),
+                          ),
+                        ),
+                      ),
+                    if (_model.emailResubmitted == 2)
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 30.0, 0.0, 0.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Error',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyLarge
+                                    .override(
+                                      font: GoogleFonts.inter(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyLarge
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyLarge
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context).error,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ].divide(SizedBox(width: 5.0)),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ],
             ),

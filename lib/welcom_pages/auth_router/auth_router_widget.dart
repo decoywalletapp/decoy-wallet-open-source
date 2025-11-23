@@ -6,6 +6,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'auth_router_model.dart';
@@ -175,7 +176,42 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).info,
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          top: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: Text(
+                    '₿itcoin Wallet',
+                    textAlign: TextAlign.start,
+                    style: FlutterFlowTheme.of(context).displayMedium.override(
+                          font: GoogleFonts.interTight(
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .displayMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .displayMedium
+                                .fontStyle,
+                          ),
+                          color: FlutterFlowTheme.of(context).primary,
+                          letterSpacing: 0.0,
+                          fontWeight: FlutterFlowTheme.of(context)
+                              .displayMedium
+                              .fontWeight,
+                          fontStyle: FlutterFlowTheme.of(context)
+                              .displayMedium
+                              .fontStyle,
+                        ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

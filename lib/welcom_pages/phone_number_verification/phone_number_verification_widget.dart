@@ -780,7 +780,7 @@ class _PhoneNumberVerificationWidgetState
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: 'You can request a new code in',
+                                      text: 'You can request a new code in ',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -817,6 +817,8 @@ class _PhoneNumberVerificationWidgetState
                                                       .bodyMedium
                                                       .fontStyle,
                                             ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.bold,
                                             fontStyle:

@@ -296,6 +296,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                       await authManager.resetPassword(
                         email: _model.emailAddressTextController.text,
                         context: context,
+                        redirectTo: "decoywalletapp://updatePasswordPage",
                       );
                     },
                     text: 'Send Link',

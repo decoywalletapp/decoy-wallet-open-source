@@ -177,8 +177,16 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     ],
                                     borderRadius: BorderRadius.circular(16.0),
                                     border: Border.all(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      color: valueOrDefault<Color>(
+                                        createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                    ?.personalComplete ==
+                                                true
+                                            ? FlutterFlowTheme.of(context)
+                                                .success
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                       width: 1.2,
                                     ),
                                   ),

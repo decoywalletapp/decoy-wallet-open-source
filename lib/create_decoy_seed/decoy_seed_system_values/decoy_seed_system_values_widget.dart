@@ -124,23 +124,13 @@ class _DecoySeedSystemValuesWidgetState
                                 color: Colors.transparent,
                                 elevation: 3.0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(0.0),
-                                    bottomRight: Radius.circular(0.0),
-                                    topLeft: Radius.circular(0.0),
-                                    topRight: Radius.circular(0.0),
-                                  ),
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(0.0),
-                                      bottomRight: Radius.circular(0.0),
-                                      topLeft: Radius.circular(0.0),
-                                      topRight: Radius.circular(0.0),
-                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
                                     border: Border.all(
                                       color:
                                           FlutterFlowTheme.of(context).primary,

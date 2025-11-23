@@ -75,26 +75,6 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
               context.pop();
             },
           ),
-          title: Align(
-            alignment: AlignmentDirectional(-1.0, 0.0),
-            child: Text(
-              'Send Bitcoin',
-              textAlign: TextAlign.start,
-              style: FlutterFlowTheme.of(context).headlineMedium.override(
-                    font: GoogleFonts.interTight(
-                      fontWeight: FontWeight.w600,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                    ),
-                    color: FlutterFlowTheme.of(context).primaryBackground,
-                    fontSize: 20.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w600,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                  ),
-            ),
-          ),
           actions: [],
           centerTitle: false,
           elevation: 0.0,
