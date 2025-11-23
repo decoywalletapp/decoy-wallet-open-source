@@ -78,9 +78,9 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderRadius: 20.0,
@@ -236,8 +236,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     filled: true,
-                                    fillColor: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
+                                    fillColor: Colors.white,
                                     contentPadding:
                                         EdgeInsetsDirectional.fromSTEB(
                                             16.0, 14.0, 16.0, 14.0),
@@ -354,8 +353,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     filled: true,
-                                    fillColor: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
+                                    fillColor: Colors.white,
                                     contentPadding:
                                         EdgeInsetsDirectional.fromSTEB(
                                             16.0, 14.0, 16.0, 14.0),

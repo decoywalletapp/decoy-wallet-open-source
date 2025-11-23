@@ -984,6 +984,14 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.lastNameTextController.text,
                                         'updated_at': supaSerialize<DateTime>(
                                             getCurrentTimestamp),
+                                        'personal_complete': (_model.firstNameTextController
+                                                            .text !=
+                                                        '') &&
+                                                (_model.lastNameTextController
+                                                            .text !=
+                                                        '')
+                                            ? true
+                                            : false,
                                       },
                                       matchingRows: (rows) => rows.eqOrNull(
                                         'user_id',
@@ -1075,6 +1083,14 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       'updated_at': supaSerialize<DateTime>(
                                           getCurrentTimestamp),
                                       'user_id': currentUserUid,
+                                      'personal_complete': (_model.firstNameTextController
+                                                          .text !=
+                                                      '') &&
+                                              (_model.lastNameTextController
+                                                          .text !=
+                                                      '')
+                                          ? true
+                                          : false,
                                     });
                                     _model.personalSaved =
                                         _model.personalSaved + 1;

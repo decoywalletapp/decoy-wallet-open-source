@@ -591,6 +591,25 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                               GoRouter.of(context)
                                                   .clearRedirectLocation();
 
+                                              FFAppState().hasDecoyPin = false;
+                                              FFAppState().biometricsEnabled =
+                                                  false;
+                                              FFAppState().isLocked = true;
+                                              FFAppState().decoyPin911Enabled =
+                                                  false;
+                                              FFAppState()
+                                                      .decoyPinContactsEnabled =
+                                                  false;
+                                              FFAppState().decoySeedArmed =
+                                                  false;
+                                              FFAppState()
+                                                      .decoySeedContactsEnabled =
+                                                  false;
+                                              FFAppState().fakeSeeded = false;
+                                              FFAppState().lastKnownLocation =
+                                                  LatLng(0.0, 0.0);
+                                              safeSetState(() {});
+
                                               context.goNamedAuth(
                                                   LoginPageWidget.routeName,
                                                   context.mounted);

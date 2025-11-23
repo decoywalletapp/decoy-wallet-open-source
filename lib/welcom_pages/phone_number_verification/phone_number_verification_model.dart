@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/instant_timer.dart';
 import '/index.dart';
 import 'phone_number_verification_widget.dart'
     show PhoneNumberVerificationWidget;
@@ -26,8 +27,15 @@ class PhoneNumberVerificationModel
 
   String phoneCode = '\"\"';
 
+  int secondsLeft = 0;
+
+  bool canResend = false;
+
+  int secondsRemaining = 60;
+
   ///  State fields for stateful widgets in this page.
 
+  InstantTimer? instantTimer;
   // State field(s) for PhoneCode widget.
   FocusNode? phoneCodeFocusNode;
   TextEditingController? phoneCodeTextController;
@@ -40,15 +48,21 @@ class PhoneNumberVerificationModel
   DecoyWalletRow? verifyInsert;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Icon widget.
   ApiCallResponse? sendResCopy;
+  InstantTimer? instantTimerResend1;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Text widget.
   ApiCallResponse? sendRes;
+  InstantTimer? instantTimerResend2;
 
   @override
   void initState(BuildContext context) {}
 
   @override
   void dispose() {
+    instantTimer?.cancel();
     phoneCodeFocusNode?.dispose();
     phoneCodeTextController?.dispose();
+
+    instantTimerResend1?.cancel();
+    instantTimerResend2?.cancel();
   }
 }

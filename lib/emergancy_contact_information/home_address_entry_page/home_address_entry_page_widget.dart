@@ -1074,6 +1074,17 @@ class _HomeAddressEntryPageWidgetState
                                   'address_version': 1,
                                   'updated_at': supaSerialize<DateTime>(
                                       getCurrentTimestamp),
+                                  'address_complete': (_model.streetAddressTextController
+                                                      .text !=
+                                                  '') &&
+                                          (_model.cityTextController.text !=
+                                                  '') &&
+                                          (_model.stateTextController.text !=
+                                                  '') &&
+                                          (_model.zipTextController.text !=
+                                                  '')
+                                      ? true
+                                      : false,
                                 },
                                 matchingRows: (rows) => rows.eqOrNull(
                                   'user_id',
@@ -1097,6 +1108,16 @@ class _HomeAddressEntryPageWidgetState
                                 'address_version': 1,
                                 'updated_at': supaSerialize<DateTime>(
                                     getCurrentTimestamp),
+                                'address_complete': (_model.streetAddressTextController
+                                                    .text !=
+                                                '') &&
+                                        (_model.cityTextController.text !=
+                                                '') &&
+                                        (_model.stateTextController.text !=
+                                                '') &&
+                                        (_model.zipTextController.text != '')
+                                    ? true
+                                    : false,
                               });
                               _model.addressSaved = 1;
                               safeSetState(() {});

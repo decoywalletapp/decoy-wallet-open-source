@@ -129,11 +129,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => HomePageWidget(),
       ),
       FFRoute(
-        name: LightningScanWidget.routeName,
-        path: LightningScanWidget.routePath,
-        builder: (context, params) => LightningScanWidget(),
-      ),
-      FFRoute(
         name: CreatePinWidget.routeName,
         path: CreatePinWidget.routePath,
         builder: (context, params) => CreatePinWidget(),
@@ -322,24 +317,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
-        name: PhoneNumberInputCopyWidget.routeName,
-        path: PhoneNumberInputCopyWidget.routePath,
-        builder: (context, params) => PhoneNumberInputCopyWidget(),
-      ),
-      FFRoute(
         name: ChangeEmailRouterWidget.routeName,
         path: ChangeEmailRouterWidget.routePath,
         builder: (context, params) => ChangeEmailRouterWidget(
-          type: params.getParam(
-            'type',
-            ParamType.String,
-          ),
-        ),
-      ),
-      FFRoute(
-        name: DupAuthWidget.routeName,
-        path: DupAuthWidget.routePath,
-        builder: (context, params) => DupAuthWidget(
           type: params.getParam(
             'type',
             ParamType.String,

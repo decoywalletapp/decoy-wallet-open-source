@@ -63,7 +63,7 @@ class _DecoySeedAcknowledgementsWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -108,8 +108,8 @@ class _DecoySeedAcknowledgementsWidgetState
                                 color: Color(0xFFF9F9F9),
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                  color: Color(0xFFE0E0E0),
-                                  width: 1.0,
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  width: 1.5,
                                 ),
                               ),
                               child: Padding(

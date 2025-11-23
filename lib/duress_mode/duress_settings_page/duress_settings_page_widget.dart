@@ -6,7 +6,6 @@ import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'duress_settings_page_model.dart';
 export 'duress_settings_page_model.dart';
@@ -46,9 +45,9 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: FlutterFlowTheme.of(context).primaryText,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: FlutterFlowTheme.of(context).primaryText,
         automaticallyImplyLeading: false,
         leading: FlutterFlowIconButton(
           borderColor: Colors.transparent,
@@ -56,7 +55,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
           buttonSize: 46.0,
           icon: Icon(
             Icons.arrow_back_rounded,
-            color: Color(0xFF15161E),
+            color: FlutterFlowTheme.of(context).primaryBackground,
             size: 25.0,
           ),
           onPressed: () async {
@@ -71,42 +70,27 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
-            child: Text(
-              'Settings Page',
-              style: FlutterFlowTheme.of(context).headlineSmall.override(
-                    font: GoogleFonts.outfit(
+          Align(
+            alignment: AlignmentDirectional(0.0, 0.0),
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 30.0),
+              child: Text(
+                'Settings Page',
+                style: FlutterFlowTheme.of(context).headlineSmall.override(
+                      font: GoogleFonts.outfit(
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FlutterFlowTheme.of(context)
+                            .headlineSmall
+                            .fontStyle,
+                      ),
+                      color: FlutterFlowTheme.of(context).primaryBackground,
+                      fontSize: 22.0,
+                      letterSpacing: 0.0,
                       fontWeight: FontWeight.bold,
                       fontStyle:
                           FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                     ),
-                    color: Color(0xFF15161E),
-                    fontSize: 22.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.bold,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).headlineSmall.fontStyle,
-                  ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 0.0, 0.0),
-            child: Text(
-              'Please evaluate your options below.',
-              style: FlutterFlowTheme.of(context).labelMedium.override(
-                    font: GoogleFonts.plusJakartaSans(
-                      fontWeight: FontWeight.w500,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                    ),
-                    color: Color(0xFF606A85),
-                    fontSize: 14.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w500,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                  ),
+              ),
             ),
           ),
           ListView(
@@ -135,7 +119,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                                           .titleLarge
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF15161E),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
@@ -146,7 +131,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
-                          color: Color(0xFF606A85),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           size: 24.0,
                         ),
                       ],
@@ -175,7 +160,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                                           .titleLarge
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF15161E),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
@@ -186,7 +172,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
-                          color: Color(0xFF606A85),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           size: 24.0,
                         ),
                       ],
@@ -215,7 +201,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                                           .titleLarge
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF15161E),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
@@ -226,7 +213,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
-                          color: Color(0xFF606A85),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           size: 24.0,
                         ),
                       ],
@@ -255,7 +242,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                                           .titleLarge
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF15161E),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
@@ -266,7 +254,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
-                          color: Color(0xFF606A85),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           size: 24.0,
                         ),
                       ],
@@ -295,7 +283,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                                           .titleLarge
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF15161E),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
@@ -306,7 +295,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
-                          color: Color(0xFF606A85),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           size: 24.0,
                         ),
                       ],
@@ -335,7 +324,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                                           .titleLarge
                                           .fontStyle,
                                     ),
-                                    color: Color(0xFF15161E),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
@@ -346,7 +336,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                         ),
                         Icon(
                           Icons.chevron_right_rounded,
-                          color: Color(0xFF606A85),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           size: 24.0,
                         ),
                       ],
@@ -355,93 +345,6 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                 ),
               ),
             ],
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 0.0, 8.0),
-            child: Text(
-              'Follow us on',
-              style: FlutterFlowTheme.of(context).labelMedium.override(
-                    font: GoogleFonts.plusJakartaSans(
-                      fontWeight: FontWeight.w500,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                    ),
-                    color: Color(0xFF606A85),
-                    fontSize: 14.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w500,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                  ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                FlutterFlowIconButton(
-                  borderColor: Color(0xFFE5E7EB),
-                  borderRadius: 12.0,
-                  borderWidth: 1.0,
-                  buttonSize: 48.0,
-                  fillColor: Colors.white,
-                  icon: FaIcon(
-                    FontAwesomeIcons.youtube,
-                    color: Color(0xFF606A85),
-                    size: 24.0,
-                  ),
-                  onPressed: () {
-                    print('IconButton pressed ...');
-                  },
-                ),
-                FlutterFlowIconButton(
-                  borderColor: Color(0xFFE5E7EB),
-                  borderRadius: 12.0,
-                  borderWidth: 1.0,
-                  buttonSize: 48.0,
-                  fillColor: Colors.white,
-                  icon: FaIcon(
-                    FontAwesomeIcons.instagram,
-                    color: Color(0xFF606A85),
-                    size: 24.0,
-                  ),
-                  onPressed: () {
-                    print('IconButton pressed ...');
-                  },
-                ),
-                FlutterFlowIconButton(
-                  borderColor: Color(0xFFE5E7EB),
-                  borderRadius: 12.0,
-                  borderWidth: 1.0,
-                  buttonSize: 48.0,
-                  fillColor: Colors.white,
-                  icon: FaIcon(
-                    FontAwesomeIcons.facebookF,
-                    color: Color(0xFF606A85),
-                    size: 24.0,
-                  ),
-                  onPressed: () {
-                    print('IconButton pressed ...');
-                  },
-                ),
-                FlutterFlowIconButton(
-                  borderColor: Color(0xFFE5E7EB),
-                  borderRadius: 12.0,
-                  borderWidth: 1.0,
-                  buttonSize: 48.0,
-                  fillColor: Colors.white,
-                  icon: FaIcon(
-                    FontAwesomeIcons.linkedinIn,
-                    color: Color(0xFF606A85),
-                    size: 24.0,
-                  ),
-                  onPressed: () {
-                    print('IconButton pressed ...');
-                  },
-                ),
-              ].divide(SizedBox(width: 8.0)),
-            ),
           ),
           Spacer(),
           Padding(
@@ -454,7 +357,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                       fontStyle:
                           FlutterFlowTheme.of(context).titleLarge.fontStyle,
                     ),
-                    color: Color(0xFF15161E),
+                    color: FlutterFlowTheme.of(context).primaryBackground,
                     fontSize: 22.0,
                     letterSpacing: 0.0,
                     fontWeight: FontWeight.w500,
@@ -466,14 +369,14 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 0.0, 0.0),
             child: Text(
-              'v0.0.1',
+              'v4.9.0',
               style: FlutterFlowTheme.of(context).labelMedium.override(
                     font: GoogleFonts.plusJakartaSans(
                       fontWeight: FontWeight.w500,
                       fontStyle:
                           FlutterFlowTheme.of(context).labelMedium.fontStyle,
                     ),
-                    color: Color(0xFF606A85),
+                    color: FlutterFlowTheme.of(context).primaryBackground,
                     fontSize: 14.0,
                     letterSpacing: 0.0,
                     fontWeight: FontWeight.w500,
@@ -502,14 +405,14 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                 height: 40.0,
                 padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                 iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                color: Colors.white,
+                color: FlutterFlowTheme.of(context).primaryText,
                 textStyle: FlutterFlowTheme.of(context).labelMedium.override(
                       font: GoogleFonts.plusJakartaSans(
                         fontWeight: FontWeight.w500,
                         fontStyle:
                             FlutterFlowTheme.of(context).labelMedium.fontStyle,
                       ),
-                      color: Color(0xFF606A85),
+                      color: FlutterFlowTheme.of(context).primaryBackground,
                       fontSize: 14.0,
                       letterSpacing: 0.0,
                       fontWeight: FontWeight.w500,
@@ -518,14 +421,14 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                     ),
                 elevation: 0.0,
                 borderSide: BorderSide(
-                  color: Color(0xFFE5E7EB),
+                  color: FlutterFlowTheme.of(context).primaryBackground,
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(50.0),
               ),
             ),
           ),
-        ].addToEnd(SizedBox(height: 64.0)),
+        ].divide(SizedBox(height: 20.0)).addToEnd(SizedBox(height: 64.0)),
       ),
     );
   }

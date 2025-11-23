@@ -1154,6 +1154,10 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             'location': functions.latLngToJson(
                                                 _model.emergencyLocation),
                                           });
+
+                                          context.pushNamed(
+                                              DuressHomePageWidget.routeName);
+
                                           _model.walletRow =
                                               await DecoyWalletTable()
                                                   .queryRows(

@@ -55,9 +55,9 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -86,19 +86,28 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: 120.0,
-                  height: 120.0,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).primaryBackground,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Icon(
-                      Icons.email_outlined,
+                Material(
+                  color: Colors.transparent,
+                  elevation: 3.0,
+                  shape: const CircleBorder(),
+                  child: Container(
+                    width: 120.0,
+                    height: 120.0,
+                    decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).primary,
-                      size: 60.0,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: FlutterFlowTheme.of(context).primary,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Icon(
+                        Icons.email_outlined,
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                        size: 60.0,
+                      ),
                     ),
                   ),
                 ),
@@ -158,8 +167,8 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border.all(
-                        color: FlutterFlowTheme.of(context).alternate,
-                        width: 1.0,
+                        color: FlutterFlowTheme.of(context).primary,
+                        width: 1.5,
                       ),
                     ),
                     child: Padding(
@@ -244,7 +253,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                                     .titleSmall
                                     .fontStyle,
                               ),
-                      elevation: 0.0,
+                      elevation: 3.0,
                       borderSide: BorderSide(
                         color: Colors.transparent,
                       ),

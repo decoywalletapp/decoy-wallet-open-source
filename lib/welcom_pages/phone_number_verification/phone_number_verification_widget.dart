@@ -3,12 +3,14 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/instant_timer.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'phone_number_verification_model.dart';
 export 'phone_number_verification_model.dart';
@@ -48,6 +50,25 @@ class _PhoneNumberVerificationWidgetState
     super.initState();
     _model = createModel(context, () => PhoneNumberVerificationModel());
 
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.secondsLeft = 60;
+      _model.canResend = false;
+      _model.secondsRemaining = 60;
+      safeSetState(() {});
+      _model.instantTimer = InstantTimer.periodic(
+        duration: Duration(milliseconds: 1000),
+        callback: (timer) async {
+          _model.secondsRemaining = _model.secondsRemaining + -1;
+          safeSetState(() {});
+          if (_model.secondsRemaining == 0) {
+            _model.instantTimer?.cancel();
+          }
+        },
+        startImmediately: true,
+      );
+    });
+
     _model.phoneCodeTextController ??= TextEditingController();
     _model.phoneCodeFocusNode ??= FocusNode();
 
@@ -72,9 +93,9 @@ class _PhoneNumberVerificationWidgetState
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+            backgroundColor: Colors.white,
             automaticallyImplyLeading: false,
             leading: FlutterFlowIconButton(
               borderColor: Colors.transparent,
@@ -652,17 +673,42 @@ class _PhoneNumberVerificationWidgetState
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
-                                      _model.sendResCopy =
-                                          await SendVerificationCodeCall.call(
-                                        cleanPhone: widget.cleanPhone,
-                                      );
+                                      if (_model.secondsRemaining == 0) {
+                                        _model.joinedCode = '';
+                                        _model.invalidcodeState = 0;
+                                        _model.secondsRemaining = 60;
+                                        safeSetState(() {});
+                                        _model.sendResCopy =
+                                            await SendVerificationCodeCall.call(
+                                          cleanPhone: widget.cleanPhone,
+                                        );
+
+                                        _model.instantTimerResend1 =
+                                            InstantTimer.periodic(
+                                          duration:
+                                              Duration(milliseconds: 1000),
+                                          callback: (timer) async {
+                                            _model.secondsRemaining =
+                                                _model.secondsRemaining + -1;
+                                            safeSetState(() {});
+                                            if (_model.secondsRemaining == 0) {
+                                              _model.instantTimerResend1
+                                                  ?.cancel();
+                                            }
+                                          },
+                                          startImmediately: true,
+                                        );
+                                      }
 
                                       safeSetState(() {});
                                     },
                                     child: Icon(
                                       Icons.refresh_rounded,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      color: _model.secondsRemaining != 0
+                                          ? FlutterFlowTheme.of(context)
+                                              .secondaryText
+                                          : FlutterFlowTheme.of(context)
+                                              .primary,
                                       size: 18.0,
                                     ),
                                   ),
@@ -672,13 +718,32 @@ class _PhoneNumberVerificationWidgetState
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
-                                      _model.joinedCode = '';
-                                      _model.invalidcodeState = 0;
-                                      safeSetState(() {});
-                                      _model.sendRes =
-                                          await SendVerificationCodeCall.call(
-                                        cleanPhone: widget.cleanPhone,
-                                      );
+                                      if (_model.secondsRemaining == 0) {
+                                        _model.joinedCode = '';
+                                        _model.invalidcodeState = 0;
+                                        _model.secondsRemaining = 60;
+                                        safeSetState(() {});
+                                        _model.sendRes =
+                                            await SendVerificationCodeCall.call(
+                                          cleanPhone: widget.cleanPhone,
+                                        );
+
+                                        _model.instantTimerResend2 =
+                                            InstantTimer.periodic(
+                                          duration:
+                                              Duration(milliseconds: 1000),
+                                          callback: (timer) async {
+                                            _model.secondsRemaining =
+                                                _model.secondsRemaining + -1;
+                                            safeSetState(() {});
+                                            if (_model.secondsRemaining == 0) {
+                                              _model.instantTimerResend2
+                                                  ?.cancel();
+                                            }
+                                          },
+                                          startImmediately: true,
+                                        );
+                                      }
 
                                       safeSetState(() {});
                                     },
@@ -694,8 +759,11 @@ class _PhoneNumberVerificationWidgetState
                                                       .bodyMedium
                                                       .fontStyle,
                                             ),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
+                                            color: _model.secondsRemaining != 0
+                                                ? FlutterFlowTheme.of(context)
+                                                    .secondaryText
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
@@ -712,7 +780,7 @@ class _PhoneNumberVerificationWidgetState
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: 'You can request a new code in ',
+                                      text: 'You can request a new code in',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -738,7 +806,7 @@ class _PhoneNumberVerificationWidgetState
                                           ),
                                     ),
                                     TextSpan(
-                                      text: ' 60',
+                                      text: _model.secondsRemaining.toString(),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(

@@ -696,9 +696,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -823,9 +821,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -948,9 +944,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1150,9 +1144,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1277,9 +1269,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1402,9 +1392,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1604,9 +1592,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1731,9 +1717,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1856,9 +1840,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -2058,9 +2040,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -2185,9 +2165,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -2310,9 +2288,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -2512,9 +2488,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -2639,9 +2613,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -2764,9 +2736,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
+                                            fillColor: Colors.white,
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -2899,6 +2869,24 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                       'contacts_version': 1,
                                       'created_at': supaSerialize<DateTime>(
                                           getCurrentTimestamp),
+                                      'contacts_complete': (_model.c1PhoneTFTextController
+                                                          .text !=
+                                                      '') ||
+                                              (_model
+                                                          .c2PhoneTFTextController
+                                                          .text !=
+                                                      '') ||
+                                              (_model.c3PhoneTFTextController
+                                                          .text !=
+                                                      '') ||
+                                              (_model.c4PhoneTFTextController
+                                                          .text !=
+                                                      '') ||
+                                              (_model.c5PhoneTFTextController
+                                                          .text !=
+                                                      '')
+                                          ? true
+                                          : false,
                                     },
                                     matchingRows: (rows) => rows.eqOrNull(
                                       'user_id',
@@ -2919,6 +2907,22 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                     'contacts_nonce': _model.nonceB64,
                                     'contacts_version': 1,
                                     'user_id': currentUserUid,
+                                    'contacts_complete': (_model.c1PhoneTFTextController.text !=
+                                                    '') ||
+                                            (_model.c2PhoneTFTextController
+                                                        .text !=
+                                                    '') ||
+                                            (_model.c3PhoneTFTextController
+                                                        .text !=
+                                                    '') ||
+                                            (_model.c4PhoneTFTextController
+                                                        .text !=
+                                                    '') ||
+                                            (_model.c5PhoneTFTextController
+                                                        .text !=
+                                                    '')
+                                        ? true
+                                        : false,
                                   });
                                   FFAppState().emergencyContactsIncrement =
                                       _model.contactIncrement;

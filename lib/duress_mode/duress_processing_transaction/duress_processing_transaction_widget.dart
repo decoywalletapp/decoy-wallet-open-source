@@ -499,6 +499,7 @@ class _DuressProcessingTransactionWidgetState
                           ),
                           child: LinearPercentIndicator(
                             percent: _model.progress01,
+                            width: 100.0,
                             lineHeight: 12.0,
                             animation: true,
                             animateFromLastPercent: true,

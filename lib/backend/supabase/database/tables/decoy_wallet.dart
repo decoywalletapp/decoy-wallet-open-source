@@ -143,4 +143,15 @@ class DecoyWalletRow extends SupabaseDataRow {
   bool get useCurrentLocation => getField<bool>('use_current_location')!;
   set useCurrentLocation(bool value) =>
       setField<bool>('use_current_location', value);
+
+  bool? get personalComplete => getField<bool>('personal_complete');
+  set personalComplete(bool? value) =>
+      setField<bool>('personal_complete', value);
+
+  bool? get addressComplete => getField<bool>('address_complete');
+  set addressComplete(bool? value) => setField<bool>('address_complete', value);
+
+  bool? get contactsComplete => getField<bool>('contacts_complete');
+  set contactsComplete(bool? value) =>
+      setField<bool>('contacts_complete', value);
 }

@@ -1190,7 +1190,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'ACTIVATED',
+                                                      'ARMED',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -1232,7 +1232,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'DEACTIVATED',
+                                                      'DISARMED',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -1543,7 +1543,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'ARMED',
+                                                      'ACTIVATED',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -1585,7 +1585,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'DISARMED',
+                                                      'DEACTIVATED',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)

@@ -2924,7 +2924,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           Padding(
                                             padding: EdgeInsets.all(17.0),
                                             child: Text(
-                                              'Enter Old PIN',
+                                              'Enter Current PIN',
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)

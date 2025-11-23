@@ -48,6 +48,11 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.priceResult = await BtcChartOneYearCall.call();
 
+      await Future.delayed(
+        Duration(
+          milliseconds: 200,
+        ),
+      );
       if ((_model.priceResult?.statusCode ?? 200) == 200) {
         await Future.delayed(
           Duration(
@@ -129,7 +134,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0x001D2428),
+        backgroundColor: Color(0x002E3838),
         body: SafeArea(
           top: true,
           child: Padding(
@@ -248,7 +253,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       width: double.infinity,
                       height: 300.0,
                       decoration: BoxDecoration(
-                        color: Color(0x4D000000),
+                        color: Color(0x4D7D7B7B),
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 8.0,
@@ -608,7 +613,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                             .titleSmall
                                             .fontStyle,
                                       ),
-                                  elevation: 10.0,
+                                  elevation: 3.0,
                                   borderRadius: BorderRadius.circular(16.0),
                                 ),
                               ),
@@ -716,7 +721,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                             .titleSmall
                                             .fontStyle,
                                       ),
-                                  elevation: 10.0,
+                                  elevation: 3.0,
                                   borderRadius: BorderRadius.circular(16.0),
                                 ),
                               ),
