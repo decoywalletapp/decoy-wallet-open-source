@@ -88,19 +88,134 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         safeSetState(() {});
         safeSetState(() {});
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'NOT GOOD',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
+        _model.priceResult2 = await BtcChartOneYearCall.call();
+
+        await Future.delayed(
+          Duration(
+            milliseconds: 1000,
           ),
         );
-        safeSetState(() {});
+        if ((_model.priceResult2?.statusCode ?? 200) == 200) {
+          await Future.delayed(
+            Duration(
+              milliseconds: 300,
+            ),
+          );
+          _model.prices1y = getJsonField(
+            (_model.priceResult?.jsonBody ?? ''),
+            r'''$.prices''',
+            true,
+          )!
+              .toList()
+              .cast<dynamic>();
+          safeSetState(() {});
+          _model.btcPrices = functions
+              .extractPriceList(_model.prices1y.toList())
+              .toList()
+              .cast<double>();
+          _model.btcEpochMs = functions
+              .extractEpochMsList(_model.prices1y.toList())
+              .toList()
+              .cast<double>();
+          _model.firstPrice = _model.btcPrices.firstOrNull;
+          _model.currentPrice = _model.btcPrices.lastOrNull;
+          _model.pctChange1y = functions.percentageChange(
+              _model.firstPrice, _model.currentPrice);
+          FFAppState().fakeUsdValue = valueOrDefault<double>(
+            functions.usdFromBtc(
+                FFAppState().fakeBtcBalance, _model.currentPrice!),
+            0.0,
+          );
+          FFAppState().fakeSeeded = true;
+          safeSetState(() {});
+          safeSetState(() {});
+        } else {
+          _model.priceResult3 = await BtcChartOneYearCall.call();
+
+          await Future.delayed(
+            Duration(
+              milliseconds: 1000,
+            ),
+          );
+          if ((_model.priceResult3?.statusCode ?? 200) == 200) {
+            await Future.delayed(
+              Duration(
+                milliseconds: 300,
+              ),
+            );
+            _model.prices1y = getJsonField(
+              (_model.priceResult?.jsonBody ?? ''),
+              r'''$.prices''',
+              true,
+            )!
+                .toList()
+                .cast<dynamic>();
+            safeSetState(() {});
+            _model.btcPrices = functions
+                .extractPriceList(_model.prices1y.toList())
+                .toList()
+                .cast<double>();
+            _model.btcEpochMs = functions
+                .extractEpochMsList(_model.prices1y.toList())
+                .toList()
+                .cast<double>();
+            _model.firstPrice = _model.btcPrices.firstOrNull;
+            _model.currentPrice = _model.btcPrices.lastOrNull;
+            _model.pctChange1y = functions.percentageChange(
+                _model.firstPrice, _model.currentPrice);
+            FFAppState().fakeUsdValue = valueOrDefault<double>(
+              functions.usdFromBtc(
+                  FFAppState().fakeBtcBalance, _model.currentPrice!),
+              0.0,
+            );
+            FFAppState().fakeSeeded = true;
+            safeSetState(() {});
+            safeSetState(() {});
+          } else {
+            _model.priceResult4 = await BtcChartOneYearCall.call();
+
+            await Future.delayed(
+              Duration(
+                milliseconds: 1000,
+              ),
+            );
+            if ((_model.priceResult4?.statusCode ?? 200) == 200) {
+              await Future.delayed(
+                Duration(
+                  milliseconds: 300,
+                ),
+              );
+              _model.prices1y = getJsonField(
+                (_model.priceResult?.jsonBody ?? ''),
+                r'''$.prices''',
+                true,
+              )!
+                  .toList()
+                  .cast<dynamic>();
+              safeSetState(() {});
+              _model.btcPrices = functions
+                  .extractPriceList(_model.prices1y.toList())
+                  .toList()
+                  .cast<double>();
+              _model.btcEpochMs = functions
+                  .extractEpochMsList(_model.prices1y.toList())
+                  .toList()
+                  .cast<double>();
+              _model.firstPrice = _model.btcPrices.firstOrNull;
+              _model.currentPrice = _model.btcPrices.lastOrNull;
+              _model.pctChange1y = functions.percentageChange(
+                  _model.firstPrice, _model.currentPrice);
+              FFAppState().fakeUsdValue = valueOrDefault<double>(
+                functions.usdFromBtc(
+                    FFAppState().fakeBtcBalance, _model.currentPrice!),
+                0.0,
+              );
+              FFAppState().fakeSeeded = true;
+              safeSetState(() {});
+              safeSetState(() {});
+            }
+          }
+        }
       }
     });
 
@@ -125,7 +240,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0x001D2428),
         body: SafeArea(
           top: true,
           child: Padding(
@@ -135,7 +250,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Align(
-                    alignment: AlignmentDirectional(1.0, -1.0),
+                    alignment: AlignmentDirectional(-1.0, -1.0),
                     child: Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
@@ -242,7 +357,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       width: double.infinity,
                       height: 300.0,
                       decoration: BoxDecoration(
-                        color: Color(0x4D646363),
+                        color: Color(0x9D343739),
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 8.0,
@@ -429,56 +544,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        (_model.priceResult?.statusCode ?? 200).toString(),
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              fontSize: 18.0,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                      ),
-                      Text(
-                        (_model.priceResult?.statusCode ?? 200).toString(),
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
@@ -491,7 +556,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                           children: [
                             Material(
                               color: Colors.transparent,
-                              elevation: 10.0,
+                              elevation: 3.0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                               ),
@@ -499,7 +564,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF1E1E1E),
+                                  color: Color(0xFF343739),
                                   borderRadius: BorderRadius.circular(16.0),
                                 ),
                               ),
@@ -558,7 +623,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                   padding: EdgeInsets.all(0.0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: Color(0xFF343739),
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
@@ -667,7 +732,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                       16.0, 0.0, 16.0, 0.0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: Color(0xFF343739),
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
@@ -700,7 +765,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       ),
                     ].divide(SizedBox(width: 16.0)),
                   ),
-                ].divide(SizedBox(height: 24.0)),
+                ].divide(SizedBox(height: 32.0)),
               ),
             ),
           ),

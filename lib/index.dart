@@ -43,12 +43,6 @@ export '/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart'
     show DuressScanQRWidget;
 export '/pin_pages/create_decoy_pin/create_decoy_pin_widget.dart'
     show CreateDecoyPinWidget;
-export '/pinpagesb4saltpepper/create_pin_copy/create_pin_copy_widget.dart'
-    show CreatePinCopyWidget;
-export '/pinpagesb4saltpepper/create_decoy_pin_copy/create_decoy_pin_copy_widget.dart'
-    show CreateDecoyPinCopyWidget;
-export '/pinpagesb4saltpepper/p_i_n_page_copy/p_i_n_page_copy_widget.dart'
-    show PINPageCopyWidget;
 export '/create_decoy_seed/generate_decoy_seed_phrase/generate_decoy_seed_phrase_widget.dart'
     show GenerateDecoySeedPhraseWidget;
 export '/create_decoy_seed/decoy_seed_active/decoy_seed_active_widget.dart'
@@ -82,3 +76,9 @@ export '/create_decoy_seed/decoy_seed_system_values/decoy_seed_system_values_wid
     show DecoySeedSystemValuesWidget;
 export '/settings_pages/delete_user_account/delete_user_account_widget.dart'
     show DeleteUserAccountWidget;
+export '/duress_mode/duress_order_processed/duress_order_processed_widget.dart'
+    show DuressOrderProcessedWidget;
+export '/settings_pages/termsof_use/termsof_use_widget.dart'
+    show TermsofUseWidget;
+export '/pin_pages/decoy_pin_acknowledgements/decoy_pin_acknowledgements_widget.dart'
+    show DecoyPinAcknowledgementsWidget;

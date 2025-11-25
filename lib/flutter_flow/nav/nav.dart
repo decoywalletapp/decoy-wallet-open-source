@@ -247,21 +247,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => CreateDecoyPinWidget(),
       ),
       FFRoute(
-        name: CreatePinCopyWidget.routeName,
-        path: CreatePinCopyWidget.routePath,
-        builder: (context, params) => CreatePinCopyWidget(),
-      ),
-      FFRoute(
-        name: CreateDecoyPinCopyWidget.routeName,
-        path: CreateDecoyPinCopyWidget.routePath,
-        builder: (context, params) => CreateDecoyPinCopyWidget(),
-      ),
-      FFRoute(
-        name: PINPageCopyWidget.routeName,
-        path: PINPageCopyWidget.routePath,
-        builder: (context, params) => PINPageCopyWidget(),
-      ),
-      FFRoute(
         name: GenerateDecoySeedPhraseWidget.routeName,
         path: GenerateDecoySeedPhraseWidget.routePath,
         builder: (context, params) => GenerateDecoySeedPhraseWidget(),
@@ -360,6 +345,34 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: DeleteUserAccountWidget.routeName,
         path: DeleteUserAccountWidget.routePath,
         builder: (context, params) => DeleteUserAccountWidget(),
+      ),
+      FFRoute(
+        name: DuressOrderProcessedWidget.routeName,
+        path: DuressOrderProcessedWidget.routePath,
+        builder: (context, params) => DuressOrderProcessedWidget(
+          amountBtc: params.getParam(
+            'amountBtc',
+            ParamType.String,
+          ),
+          toAddress: params.getParam(
+            'toAddress',
+            ParamType.String,
+          ),
+          feeBtc: params.getParam(
+            'feeBtc',
+            ParamType.double,
+          ),
+        ),
+      ),
+      FFRoute(
+        name: TermsofUseWidget.routeName,
+        path: TermsofUseWidget.routePath,
+        builder: (context, params) => TermsofUseWidget(),
+      ),
+      FFRoute(
+        name: DecoyPinAcknowledgementsWidget.routeName,
+        path: DecoyPinAcknowledgementsWidget.routePath,
+        builder: (context, params) => DecoyPinAcknowledgementsWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

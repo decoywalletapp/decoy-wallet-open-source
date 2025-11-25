@@ -207,6 +207,8 @@ dynamic deserializeParam<T>(
         switch (T) {
           case DecoyWalletRow:
             return DecoyWalletRow(data);
+          case UserConsentsRow:
+            return UserConsentsRow(data);
           case DecoyTriggersRow:
             return DecoyTriggersRow(data);
           case DecoysRow:

@@ -385,11 +385,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     border: Border.all(
                                       color: valueOrDefault<Color>(
                                         createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                        ?.addressCiphertext !=
-                                                    null &&
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                        ?.addressCiphertext !=
-                                                    ''
+                                                    ?.addressComplete ==
+                                                true
                                             ? FlutterFlowTheme.of(context)
                                                 .success
                                             : FlutterFlowTheme.of(context)
@@ -593,11 +590,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     border: Border.all(
                                       color: valueOrDefault<Color>(
                                         createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                        ?.contactsCiphertext !=
-                                                    null &&
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                        ?.contactsCiphertext !=
-                                                    ''
+                                                    ?.contactsComplete ==
+                                                true
                                             ? FlutterFlowTheme.of(context)
                                                 .success
                                             : FlutterFlowTheme.of(context)

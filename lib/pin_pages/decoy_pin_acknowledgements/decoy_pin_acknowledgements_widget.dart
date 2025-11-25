@@ -7,8 +7,8 @@ import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'decoy_seed_acknowledgements_model.dart';
-export 'decoy_seed_acknowledgements_model.dart';
+import 'decoy_pin_acknowledgements_model.dart';
+export 'decoy_pin_acknowledgements_model.dart';
 
 /// Create an Acknowledgements Page.
 ///
@@ -24,27 +24,27 @@ export 'decoy_seed_acknowledgements_model.dart';
 /// Include a Continue button at the bottom of the page. The Continue button
 /// must remain disabled until the user selects the checkbox. Design the page
 /// to be clean, simple, and easy for the user to understand.
-class DecoySeedAcknowledgementsWidget extends StatefulWidget {
-  const DecoySeedAcknowledgementsWidget({super.key});
+class DecoyPinAcknowledgementsWidget extends StatefulWidget {
+  const DecoyPinAcknowledgementsWidget({super.key});
 
-  static String routeName = 'DecoySeedAcknowledgements';
-  static String routePath = '/decoySeedAcknowledgements';
+  static String routeName = 'DecoyPinAcknowledgements';
+  static String routePath = '/decoyPinAcknowledgements';
 
   @override
-  State<DecoySeedAcknowledgementsWidget> createState() =>
-      _DecoySeedAcknowledgementsWidgetState();
+  State<DecoyPinAcknowledgementsWidget> createState() =>
+      _DecoyPinAcknowledgementsWidgetState();
 }
 
-class _DecoySeedAcknowledgementsWidgetState
-    extends State<DecoySeedAcknowledgementsWidget> {
-  late DecoySeedAcknowledgementsModel _model;
+class _DecoyPinAcknowledgementsWidgetState
+    extends State<DecoyPinAcknowledgementsWidget> {
+  late DecoyPinAcknowledgementsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DecoySeedAcknowledgementsModel());
+    _model = createModel(context, () => DecoyPinAcknowledgementsModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -129,8 +129,8 @@ class _DecoySeedAcknowledgementsWidgetState
                                     child: Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Text(
-                                        'By continuing, you understand that this seed phrase is a Decoy Wallet emergency trigger.\n\nAny wallet activity derived from this seed phrase may send alerts to your emergency contacts and may share your information with third party emergency service providers and public safety agencies.\nDecoy Wallet cannot guarantee that help will arrive or that any emergency service will respond.\n\nMisuse or abuse of this feature, including false or non emergency alerts, is strictly prohibited and may result in account suspension, fees, or legal consequences in your jurisdiction.',
-                                        textAlign: TextAlign.start,
+                                        'Using a Decoy PIN will activate emergency trigger behavior inside Decoy Wallet.\n\nEntering your Decoy PIN may notify your emergency contacts, generate emergency alerts, and may transmit information to third party services and public safety agencies. Decoy Wallet cannot guarantee that help will arrive or that any emergency service will respond.\n\nMisuse or triggering alerts in non emergency situations may lead to account restrictions, emergency service fees, or legal consequences depending on your jurisdiction.',
+                                        textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -173,7 +173,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 0.0, 0.0, 10.0),
                                         child: Text(
-                                          'The emergency trigger feature carries significant risk if misused.\nTo proceed, you must confirm each acknowledgement below.\nIf you do not agree to all statements, do not continue and do not activate this feature.',
+                                          'Important: To enable the Decoy PIN feature, you must confirm all of the acknowledgements below.\nIf you do not agree with every statement, do not continue.',
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .titleMedium
@@ -253,7 +253,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'I accept full responsibility for using this Decoy Wallet seed phrase only in lawful situations and only for genuine emergencies as defined by the laws where I live or where I use this app.',
+                                      'I understand that entering my Decoy PIN will activate an emergency trigger and may notify emergency contacts or public safety services automatically.',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -331,7 +331,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'I understand and acknowledge the responsibility and consequences of using this Decoy Wallet seed phrase.',
+                                      'I understand that the Decoy PIN is not for regular login or daily use. It is meant only for duress or emergency situations.',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -409,7 +409,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'I understand that false or abusive emergency alerts can lead to fees, fines, or criminal charges, and that I am solely responsible for any costs, penalties, or consequences that result from my use of this feature.',
+                                      'I understand that entering my Decoy PIN unintentionally or in non emergency situations may create false alerts and that I am solely responsible for any fees, penalties, or consequences.',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -487,7 +487,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'I understand that Decoy Wallet does not hold or control my funds, cannot prevent loss of funds, and cannot guarantee that emergency responders will receive, act on, or respond to any alert generated by this seed phrase.',
+                                      'I understand that emergencies may not be detected if my device has no connectivity, is powered off, has disabled permissions, or if there are technical failures.',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -565,7 +565,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'I consent to Decoy Wallet sharing my device information, approximate location, and relevant account details with third party service providers and public safety agencies for the purpose of attempting to transmit emergency alerts, in accordance with the Decoy Wallet Privacy Policy.',
+                                      'I understand that Decoy Wallet cannot guarantee that emergency alerts will be sent, received, or acted upon by any emergency service provider.',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -643,7 +643,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'I confirm that I am at least 18 years old (or the age of majority in my jurisdiction) and that I am authorized to agree to these terms.',
+                                      'I understand that I am fully responsible for keeping my Decoy PIN confidential and separate from my primary PIN.',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -721,7 +721,163 @@ class _DecoySeedAcknowledgementsWidgetState
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'I have read and agree to the Decoy Wallet Terms of Service and Privacy Policy, including the limitations of liability and disclaimers related to emergency features.',
+                                      'I agree to use the Decoy PIN feature only in lawful emergency situations and comply with any emergency reporting laws in my region.',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            letterSpacing: 0.0,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                            lineHeight: 1.4,
+                                          ),
+                                    ),
+                                  ),
+                                ].divide(SizedBox(width: 12.0)),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Theme(
+                                    data: ThemeData(
+                                      checkboxTheme: CheckboxThemeData(
+                                        visualDensity: VisualDensity.compact,
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(4.0),
+                                        ),
+                                      ),
+                                      unselectedWidgetColor:
+                                          FlutterFlowTheme.of(context)
+                                              .alternate,
+                                    ),
+                                    child: Checkbox(
+                                      value: _model.checkboxValue8 ??= false,
+                                      onChanged: (newValue) async {
+                                        safeSetState(() =>
+                                            _model.checkboxValue8 = newValue!);
+                                        if (newValue!) {
+                                          _model.boxesSelected = true;
+                                          safeSetState(() {});
+                                        }
+                                      },
+                                      side: (FlutterFlowTheme.of(context)
+                                                  .alternate !=
+                                              null)
+                                          ? BorderSide(
+                                              width: 2,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                            )
+                                          : null,
+                                      activeColor:
+                                          FlutterFlowTheme.of(context).primary,
+                                      checkColor:
+                                          FlutterFlowTheme.of(context).info,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      'I consent to Decoy Wallet sharing relevant device and account information with emergency services or third party providers when my Decoy PIN is entered.',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            letterSpacing: 0.0,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                            lineHeight: 1.4,
+                                          ),
+                                    ),
+                                  ),
+                                ].divide(SizedBox(width: 12.0)),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Theme(
+                                    data: ThemeData(
+                                      checkboxTheme: CheckboxThemeData(
+                                        visualDensity: VisualDensity.compact,
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(4.0),
+                                        ),
+                                      ),
+                                      unselectedWidgetColor:
+                                          FlutterFlowTheme.of(context)
+                                              .alternate,
+                                    ),
+                                    child: Checkbox(
+                                      value: _model.checkboxValue9 ??= false,
+                                      onChanged: (newValue) async {
+                                        safeSetState(() =>
+                                            _model.checkboxValue9 = newValue!);
+                                        if (newValue!) {
+                                          _model.boxesSelected = true;
+                                          safeSetState(() {});
+                                        }
+                                      },
+                                      side: (FlutterFlowTheme.of(context)
+                                                  .alternate !=
+                                              null)
+                                          ? BorderSide(
+                                              width: 2,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                            )
+                                          : null,
+                                      activeColor:
+                                          FlutterFlowTheme.of(context).primary,
+                                      checkColor:
+                                          FlutterFlowTheme.of(context).info,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      'I have read and agree to the Decoy Wallet Terms of Use and Privacy Policy, including all disclaimers and limitations related to emergency features.',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -766,7 +922,9 @@ class _DecoySeedAcknowledgementsWidgetState
                               (_model.checkboxValue4 != null) &&
                               (_model.checkboxValue5 != null) &&
                               (_model.checkboxValue6 != null) &&
-                              (_model.checkboxValue7 != null)
+                              (_model.checkboxValue7 != null) &&
+                              (_model.checkboxValue8 != null) &&
+                              (_model.checkboxValue9 != null)
                           ? 100.0
                           : 0.0,
                       child: Padding(
@@ -775,12 +933,12 @@ class _DecoySeedAcknowledgementsWidgetState
                         child: FFButtonWidget(
                           onPressed: () async {
                             _model.ins1 = await UserConsentsTable().insert({
-                              'feature': 'decoy_seed_ack',
-                              'consent_version': 'seed_ack_v1',
+                              'feature': 'decoy_pin_ack',
+                              'consent_version': 'pin_ack_1',
                             });
                             await DecoyWalletTable().update(
                               data: {
-                                'has_decoy_seed_ack': true,
+                                'has_decoy_pin_ack': true,
                               },
                               matchingRows: (rows) => rows.eqOrNull(
                                 'user_id',
@@ -788,8 +946,7 @@ class _DecoySeedAcknowledgementsWidgetState
                               ),
                             );
 
-                            context.pushNamed(
-                                GenerateDecoySeedPhraseWidget.routeName);
+                            context.pushNamed(CreateDecoyPinWidget.routeName);
 
                             safeSetState(() {});
                           },

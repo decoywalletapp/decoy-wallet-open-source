@@ -283,7 +283,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                       EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      if (_model.emailAddressTextController.text.isEmpty) {
+                      if (currentUserEmail.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -294,9 +294,10 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                         return;
                       }
                       await authManager.resetPassword(
-                        email: _model.emailAddressTextController.text,
+                        email: currentUserEmail,
                         context: context,
-                        redirectTo: "decoywalletapp://updatePasswordPage",
+                        redirectTo:
+                            "https://decoywallet-a283b.web.app/updatePasswordPage",
                       );
                     },
                     text: 'Send Link',

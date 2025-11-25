@@ -237,7 +237,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 child: FFButtonWidget(
                                   onPressed: () async {
                                     context.pushNamed(
-                                        CreateDecoyPinWidget.routeName);
+                                        DecoyPinAcknowledgementsWidget
+                                            .routeName);
                                   },
                                   text: '',
                                   options: FFButtonOptions(

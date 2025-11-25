@@ -98,7 +98,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                         width: double.infinity,
                         height: double.infinity,
                         decoration: BoxDecoration(
-                          color: Color(0xFF1A1A1A),
+                          color: Color(0x9D343739),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Padding(
@@ -224,7 +224,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color(0x1D000000),
+                    color: Color(0x9D343739),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: Padding(
@@ -357,27 +357,28 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                   },
                   text: 'Send Funds',
                   options: FFButtonOptions(
-                    width: double.infinity,
+                    width: 350.0,
                     height: 56.0,
                     padding: EdgeInsets.all(8.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: FlutterFlowTheme.of(context).primary,
-                    textStyle:
-                        FlutterFlowTheme.of(context).titleMedium.override(
-                              font: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .fontStyle,
-                              ),
-                              color: Colors.white,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .fontStyle,
-                            ),
+                    textStyle: FlutterFlowTheme.of(context)
+                        .titleMedium
+                        .override(
+                          font: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .fontStyle,
+                          ),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FlutterFlowTheme.of(context)
+                              .titleMedium
+                              .fontStyle,
+                        ),
                     elevation: 5.0,
                     borderSide: BorderSide(
                       color: Colors.transparent,

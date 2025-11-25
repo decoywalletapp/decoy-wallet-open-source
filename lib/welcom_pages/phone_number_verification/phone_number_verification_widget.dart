@@ -55,6 +55,7 @@ class _PhoneNumberVerificationWidgetState
       _model.secondsLeft = 60;
       _model.canResend = false;
       _model.secondsRemaining = 60;
+      _model.invalidcodeState = 0;
       safeSetState(() {});
       _model.instantTimer = InstantTimer.periodic(
         duration: Duration(milliseconds: 1000),
@@ -352,51 +353,24 @@ class _PhoneNumberVerificationWidgetState
                                                         .routeName);
                                               }
                                             } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'INVALID CODE',
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                    ),
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                ),
-                                              );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    CheckVerificationCodeCall
-                                                        .status(
-                                                      (_model.checkCodeRes
-                                                              ?.jsonBody ??
-                                                          ''),
-                                                    )!,
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                    ),
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                ),
-                                              );
+                                              await Future.wait([
+                                                Future(() async {
+                                                  safeSetState(() {
+                                                    _model
+                                                        .phoneCodeTextController
+                                                        ?.clear();
+                                                  });
+                                                }),
+                                                Future(() async {
+                                                  _model.invalidcodeState = 1;
+                                                  _model.cleanPhone = '';
+                                                  _model.phoneCode = '';
+                                                  _model.otpCode = '';
+                                                  _model.code = '';
+                                                  _model.joinedCode = '';
+                                                  safeSetState(() {});
+                                                }),
+                                              ]);
                                             }
                                           }
 
@@ -583,7 +557,9 @@ class _PhoneNumberVerificationWidgetState
                               if (_model.invalidcodeState == 2)
                                 Padding(
                                   padding: EdgeInsets.all(12.0),
-                                  child: Container(
+                                  child: AnimatedContainer(
+                                    duration: Duration(milliseconds: 100),
+                                    curve: Curves.easeIn,
                                     width: double.infinity,
                                     height: 48.0,
                                     decoration: BoxDecoration(

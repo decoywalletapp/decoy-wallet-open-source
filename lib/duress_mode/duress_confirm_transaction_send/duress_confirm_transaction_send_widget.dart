@@ -71,7 +71,7 @@ class _DuressConfirmTransactionSendWidgetState
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0x3A14181B),
+        backgroundColor: Color(0x001D2428),
         appBar: AppBar(
           backgroundColor: Color(0x001D2428),
           automaticallyImplyLeading: false,
@@ -159,7 +159,7 @@ class _DuressConfirmTransactionSendWidgetState
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Color(0x4D000000),
+                          color: Color(0x9D343739),
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Padding(
@@ -237,7 +237,7 @@ class _DuressConfirmTransactionSendWidgetState
                                     ],
                                   ),
                                   Text(
-                                    '≈ ${functions.usdFromBtcText(FFAppState().sendAmountBtc, FFAppState().currentBtcPrice)} USD',
+                                    '≈ ${FFAppState().fakeUsdValue.toString()} USD',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyLarge
@@ -277,7 +277,7 @@ class _DuressConfirmTransactionSendWidgetState
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Color(0x4D000000),
+                          color: Color(0x9D343739),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Padding(
@@ -490,7 +490,7 @@ class _DuressConfirmTransactionSendWidgetState
                             safeSetState(() {});
 
                             context.pushNamed(
-                              DuressProcessingTransactionWidget.routeName,
+                              DuressOrderProcessedWidget.routeName,
                               queryParameters: {
                                 'amountBtc': serializeParam(
                                   functions.totalAfterFee(
@@ -524,7 +524,7 @@ class _DuressConfirmTransactionSendWidgetState
                           }
                         },
                         child: Container(
-                          width: double.infinity,
+                          width: 325.0,
                           height: 60.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).accent1,
@@ -536,92 +536,119 @@ class _DuressConfirmTransactionSendWidgetState
                               children: [
                                 Opacity(
                                   opacity: 0.01,
-                                  child: Container(
-                                    width: double.infinity,
-                                    child: Slider(
-                                      activeColor:
-                                          FlutterFlowTheme.of(context).primary,
-                                      inactiveColor:
-                                          FlutterFlowTheme.of(context)
-                                              .alternate,
-                                      min: 0.0,
-                                      max: 100.0,
-                                      value: _model.sliderValue ??=
-                                          _model.slideValue,
-                                      onChanged: (newValue) async {
-                                        safeSetState(() =>
-                                            _model.sliderValue = newValue);
-                                        _model.slidePct = _model.sliderValue!;
-                                        safeSetState(() {});
-                                        if ((_model.sliderValue! >= 100.0) &&
-                                            (functions.totalAfterFee(
-                                                    FFAppState().sendAmountBtc,
-                                                    _model.feeBtc) !=
-                                                '0')) {
-                                          FFAppState().sendAmountBtc =
-                                              functions.totalAfterFee(
-                                                  FFAppState().sendAmountBtc,
-                                                  _model.feeBtc);
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: Slider(
+                                        activeColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        inactiveColor:
+                                            FlutterFlowTheme.of(context)
+                                                .alternate,
+                                        min: 0.0,
+                                        max: 100.0,
+                                        value: _model.sliderValue ??=
+                                            _model.slideValue,
+                                        onChanged: (newValue) async {
+                                          safeSetState(() =>
+                                              _model.sliderValue = newValue);
+                                          _model.slidePct = _model.sliderValue!;
                                           safeSetState(() {});
-                                          FFAppState().txStartAt =
-                                              getCurrentTimestamp;
-                                          FFAppState().txTotalMins = 60;
-                                          FFAppState().txStatus = 'awaiting';
-                                          safeSetState(() {});
-
-                                          context.pushNamed(
-                                            DuressProcessingTransactionWidget
-                                                .routeName,
-                                            queryParameters: {
-                                              'amountBtc': serializeParam(
+                                          if ((_model.sliderValue! >= 100.0) &&
+                                              (functions.totalAfterFee(
+                                                      FFAppState()
+                                                          .sendAmountBtc,
+                                                      _model.feeBtc) !=
+                                                  '0')) {
+                                            FFAppState().sendAmountBtc =
                                                 functions.totalAfterFee(
                                                     FFAppState().sendAmountBtc,
-                                                    _model.feeBtc),
-                                                ParamType.String,
-                                              ),
-                                              'toAddress': serializeParam(
-                                                FFAppState().scannedAddress,
-                                                ParamType.String,
-                                              ),
-                                              'feeBtc': serializeParam(
-                                                _model.feeBtc,
-                                                ParamType.double,
-                                              ),
-                                            }.withoutNulls,
-                                          );
+                                                    _model.feeBtc);
+                                            safeSetState(() {});
+                                            FFAppState().txStartAt =
+                                                getCurrentTimestamp;
+                                            FFAppState().txTotalMins = 60;
+                                            FFAppState().txStatus = 'awaiting';
+                                            safeSetState(() {});
 
-                                          _model.slideValue = 0.0;
-                                          safeSetState(() {});
-                                          _model.slidePct = 0.0;
-                                          safeSetState(() {});
-                                        } else {
-                                          _model.slideValue = 0.0;
-                                          safeSetState(() {});
-                                          safeSetState(() {
-                                            _model.sliderValue = 0.0;
-                                          });
-                                        }
-                                      },
+                                            context.pushNamed(
+                                              DuressProcessingTransactionWidget
+                                                  .routeName,
+                                              queryParameters: {
+                                                'amountBtc': serializeParam(
+                                                  functions.totalAfterFee(
+                                                      FFAppState()
+                                                          .sendAmountBtc,
+                                                      _model.feeBtc),
+                                                  ParamType.String,
+                                                ),
+                                                'toAddress': serializeParam(
+                                                  FFAppState().scannedAddress,
+                                                  ParamType.String,
+                                                ),
+                                                'feeBtc': serializeParam(
+                                                  _model.feeBtc,
+                                                  ParamType.double,
+                                                ),
+                                              }.withoutNulls,
+                                            );
+
+                                            _model.slideValue = 0.0;
+                                            safeSetState(() {});
+                                            _model.slidePct = 0.0;
+                                            safeSetState(() {});
+                                          } else {
+                                            _model.slideValue = 0.0;
+                                            safeSetState(() {});
+                                            safeSetState(() {
+                                              _model.sliderValue = 0.0;
+                                            });
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context).accent1,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Slide to Sign and Send',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              font: GoogleFonts.inter(
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 100.0,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      borderRadius: BorderRadius.circular(32.0),
+                                      shape: BoxShape.rectangle,
+                                    ),
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Slide to Sign and Send',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                font: GoogleFonts.inter(
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.0,
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -631,21 +658,9 @@ class _DuressConfirmTransactionSendWidgetState
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                    ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 Align(
@@ -680,38 +695,6 @@ class _DuressConfirmTransactionSendWidgetState
                           ),
                         ),
                       ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (_model.slideValue == 100.0)
-                          Icon(
-                            Icons.check_circle_rounded,
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 24.0,
-                          ),
-                        if (_model.slideValue == 100.0)
-                          Text(
-                            'Sent',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                      ].divide(SizedBox(width: 8.0)),
                     ),
                   ].divide(SizedBox(height: 16.0)),
                 ),

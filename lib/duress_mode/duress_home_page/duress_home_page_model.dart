@@ -53,6 +53,12 @@ class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
 
   // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
   ApiCallResponse? priceResult;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
+  ApiCallResponse? priceResult2;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
+  ApiCallResponse? priceResult3;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
+  ApiCallResponse? priceResult4;
 
   @override
   void initState(BuildContext context) {}

@@ -45,9 +45,9 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryText,
+      backgroundColor: Color(0x001D2428),
       appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryText,
+        backgroundColor: Color(0x001D2428),
         automaticallyImplyLeading: false,
         leading: FlutterFlowIconButton(
           borderColor: Colors.transparent,
@@ -405,7 +405,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                 height: 40.0,
                 padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                 iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                color: FlutterFlowTheme.of(context).primaryText,
+                color: Color(0x001D2428),
                 textStyle: FlutterFlowTheme.of(context).labelMedium.override(
                       font: GoogleFonts.plusJakartaSans(
                         fontWeight: FontWeight.w500,

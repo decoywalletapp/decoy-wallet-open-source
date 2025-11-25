@@ -154,4 +154,11 @@ class DecoyWalletRow extends SupabaseDataRow {
   bool? get contactsComplete => getField<bool>('contacts_complete');
   set contactsComplete(bool? value) =>
       setField<bool>('contacts_complete', value);
+
+  bool get hasDecoySeedAck => getField<bool>('has_decoy_seed_ack')!;
+  set hasDecoySeedAck(bool value) =>
+      setField<bool>('has_decoy_seed_ack', value);
+
+  bool get hasDecoyPinAck => getField<bool>('has_decoy_pin_ack')!;
+  set hasDecoyPinAck(bool value) => setField<bool>('has_decoy_pin_ack', value);
 }

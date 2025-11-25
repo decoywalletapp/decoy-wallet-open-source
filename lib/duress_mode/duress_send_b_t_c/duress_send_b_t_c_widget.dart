@@ -268,7 +268,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color(0x4D000000),
+                    color: Color(0x9D343739),
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Padding(
@@ -714,30 +714,22 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        Container(
-                          width: 100.0,
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).primary,
-                            borderRadius: BorderRadius.circular(8.0),
+                        FlutterFlowIconButton(
+                          borderRadius: 8.0,
+                          buttonSize: 40.0,
+                          fillColor: FlutterFlowTheme.of(context).primary,
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: FlutterFlowTheme.of(context).info,
+                            size: 24.0,
                           ),
-                          child: FlutterFlowIconButton(
-                            borderRadius: 8.0,
-                            buttonSize: 40.0,
-                            fillColor: FlutterFlowTheme.of(context).primary,
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: FlutterFlowTheme.of(context).info,
-                              size: 24.0,
-                            ),
-                            onPressed: () async {
-                              _model.sendMax = false;
-                              safeSetState(() {});
-                              _model.amountText = functions.applyKey(
-                                  _model.amountText, 'BACKSPACE', 8);
-                              safeSetState(() {});
-                            },
-                          ),
+                          onPressed: () async {
+                            _model.sendMax = false;
+                            safeSetState(() {});
+                            _model.amountText = functions.applyKey(
+                                _model.amountText, 'BACKSPACE', 8);
+                            safeSetState(() {});
+                          },
                         ),
                       ],
                     ),
@@ -752,73 +744,77 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                     : 0.5,
                 duration: 250.0.ms,
                 curve: Curves.easeInOut,
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      if ((functions.amountToDouble(_model.amountText) > 0.0) &&
-                          (functions.amountToDouble(_model.amountText) <=
-                              FFAppState().fakeBtcBalance)) {
-                        FFAppState().sendAmountBtc =
-                            functions.formatBtc(_model.amountText)!;
-                        safeSetState(() {});
+                child: Align(
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: FFButtonWidget(
+                      onPressed: () async {
+                        if ((functions.amountToDouble(_model.amountText) >
+                                0.0) &&
+                            (functions.amountToDouble(_model.amountText) <=
+                                FFAppState().fakeBtcBalance)) {
+                          FFAppState().sendAmountBtc =
+                              functions.formatBtc(_model.amountText)!;
+                          safeSetState(() {});
 
-                        context.pushNamed(
-                            DuressConfirmTransactionSendWidget.routeName);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Amount Exceeds Available Balance',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
+                          context.pushNamed(
+                              DuressConfirmTransactionSendWidget.routeName);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Amount Exceeds Available Balance',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
                               ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
                             ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
-                      }
-                    },
-                    text: 'Next',
-                    options: FFButtonOptions(
-                      width: double.infinity,
-                      height: 56.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                      color: FlutterFlowTheme.of(context).primary,
-                      textStyle: FlutterFlowTheme.of(context)
-                          .titleMedium
-                          .override(
-                            font: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .fontStyle,
-                            ),
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .titleMedium
-                                .fontStyle,
-                          ),
-                      elevation: 5.0,
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1.0,
+                          );
+                        }
+                      },
+                      text: 'Next',
+                      options: FFButtonOptions(
+                        width: 350.0,
+                        height: 56.0,
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 0.0, 20.0, 0.0),
+                        iconPadding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 0.0, 20.0, 0.0),
+                        color: FlutterFlowTheme.of(context).primary,
+                        textStyle:
+                            FlutterFlowTheme.of(context).titleMedium.override(
+                                  font: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .fontStyle,
+                                ),
+                        elevation: 5.0,
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
                 ),
               ),
             ]
-                .divide(SizedBox(height: 32.0))
+                .divide(SizedBox(height: 10.0))
                 .addToStart(SizedBox(height: 24.0))
                 .addToEnd(SizedBox(height: 24.0)),
           ),
