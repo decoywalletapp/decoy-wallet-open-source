@@ -81,7 +81,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         alignment: AlignmentDirectional(0.0, 0.0),
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 20.0),
+                              0.0, 0.0, 0.0, 10.0),
                           child: Text(
                             'Settings Page',
                             style: FlutterFlowTheme.of(context)
@@ -644,6 +644,99 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     onPressed: () async {
                                       context.pushNamed(
                                           TermsofUseWidget.routeName);
+                                    },
+                                    text: '',
+                                    options: FFButtonOptions(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 0.0, 16.0, 0.0),
+                                      iconPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                            font: GoogleFonts.interTight(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .fontStyle,
+                                            ),
+                                            color: Colors.white,
+                                            letterSpacing: 0.0,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .fontStyle,
+                                          ),
+                                      elevation: 0.0,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            height: 60.0,
+                            decoration: BoxDecoration(),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Privacy Policy',
+                                        style: FlutterFlowTheme.of(context)
+                                            .titleLarge
+                                            .override(
+                                              font: GoogleFonts.outfit(
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleLarge
+                                                        .fontStyle,
+                                              ),
+                                              color: Color(0xFF15161E),
+                                              fontSize: 22.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleLarge
+                                                      .fontStyle,
+                                            ),
+                                      ),
+                                      Icon(
+                                        Icons.chevron_right_rounded,
+                                        color: Color(0xFF606A85),
+                                        size: 24.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Opacity(
+                                  opacity: 0.0,
+                                  child: FFButtonWidget(
+                                    onPressed: () async {
+                                      context.pushNamed(
+                                          PrivacyPolicyWidget.routeName);
                                     },
                                     text: '',
                                     options: FFButtonOptions(

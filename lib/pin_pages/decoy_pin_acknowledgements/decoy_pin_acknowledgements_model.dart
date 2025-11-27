@@ -31,6 +31,8 @@ class DecoyPinAcknowledgementsModel
   bool? checkboxValue8;
   // State field(s) for Checkbox widget.
   bool? checkboxValue9;
+  // State field(s) for Checkbox widget.
+  bool? checkboxValue10;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
   UserConsentsRow? ins1;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.

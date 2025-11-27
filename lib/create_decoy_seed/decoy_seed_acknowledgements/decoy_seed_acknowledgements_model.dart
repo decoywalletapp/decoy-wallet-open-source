@@ -27,6 +27,8 @@ class DecoySeedAcknowledgementsModel
   bool? checkboxValue6;
   // State field(s) for Checkbox widget.
   bool? checkboxValue7;
+  // State field(s) for Checkbox widget.
+  bool? checkboxValue8;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
   UserConsentsRow? ins1;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.

@@ -615,6 +615,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     _model.contactIncrement +
                                                         -1;
                                                 safeSetState(() {});
+                                                safeSetState(() {
+                                                  _model.c1FirstTFTextController
+                                                      ?.clear();
+                                                  _model.c1LastTFTextController
+                                                      ?.clear();
+                                                  _model.c1PhoneTFTextController
+                                                      ?.clear();
+                                                  _model.c1PhoneTFMask.clear();
+                                                });
                                               },
                                             ),
                                           ],
@@ -1063,6 +1072,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     _model.contactIncrement +
                                                         -1;
                                                 safeSetState(() {});
+                                                safeSetState(() {
+                                                  _model.c2FirstTFTextController
+                                                      ?.clear();
+                                                  _model.c2LastTFTextController
+                                                      ?.clear();
+                                                  _model.c2PhoneTFTextController
+                                                      ?.clear();
+                                                  _model.c2PhoneTFMask.clear();
+                                                });
                                               },
                                             ),
                                           ],
@@ -1511,6 +1529,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     _model.contactIncrement +
                                                         -1;
                                                 safeSetState(() {});
+                                                safeSetState(() {
+                                                  _model.c3FirstTFTextController
+                                                      ?.clear();
+                                                  _model.c3LastTFTextController
+                                                      ?.clear();
+                                                  _model.c3PhoneTFTextController
+                                                      ?.clear();
+                                                  _model.c3PhoneTFMask.clear();
+                                                });
                                               },
                                             ),
                                           ],
@@ -1959,6 +1986,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     _model.contactIncrement +
                                                         -1;
                                                 safeSetState(() {});
+                                                safeSetState(() {
+                                                  _model.c4FirstTFTextController
+                                                      ?.clear();
+                                                  _model.c4LastTFTextController
+                                                      ?.clear();
+                                                  _model.c4PhoneTFTextController
+                                                      ?.clear();
+                                                  _model.c4PhoneTFMask.clear();
+                                                });
                                               },
                                             ),
                                           ],
@@ -2407,6 +2443,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     _model.contactIncrement +
                                                         -1;
                                                 safeSetState(() {});
+                                                safeSetState(() {
+                                                  _model.c5FirstTFTextController
+                                                      ?.clear();
+                                                  _model.c5LastTFTextController
+                                                      ?.clear();
+                                                  _model.c5PhoneTFTextController
+                                                      ?.clear();
+                                                  _model.c5PhoneTFMask.clear();
+                                                });
                                               },
                                             ),
                                           ],

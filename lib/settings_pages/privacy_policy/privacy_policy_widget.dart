@@ -3,8 +3,8 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'termsof_use_model.dart';
-export 'termsof_use_model.dart';
+import 'privacy_policy_model.dart';
+export 'privacy_policy_model.dart';
 
 /// To the fullest extent permitted by law, Decoy Wallet and its owners,
 /// officers, employees, developers, and contractors shall not be liable for
@@ -19,25 +19,25 @@ export 'termsof_use_model.dart';
 ///
 /// Total liability shall never exceed the amount you paid for the Services
 /// (if any).
-class TermsofUseWidget extends StatefulWidget {
-  const TermsofUseWidget({super.key});
+class PrivacyPolicyWidget extends StatefulWidget {
+  const PrivacyPolicyWidget({super.key});
 
-  static String routeName = 'TermsofUse';
-  static String routePath = '/termsofUse';
+  static String routeName = 'PrivacyPolicy';
+  static String routePath = '/privacyPolicy';
 
   @override
-  State<TermsofUseWidget> createState() => _TermsofUseWidgetState();
+  State<PrivacyPolicyWidget> createState() => _PrivacyPolicyWidgetState();
 }
 
-class _TermsofUseWidgetState extends State<TermsofUseWidget> {
-  late TermsofUseModel _model;
+class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
+  late PrivacyPolicyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => TermsofUseModel());
+    _model = createModel(context, () => PrivacyPolicyModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -75,7 +75,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
             },
           ),
           title: Text(
-            'Terms of Use',
+            'Privacy Policy',
             style: FlutterFlowTheme.of(context).titleLarge.override(
                   font: GoogleFonts.interTight(
                     fontWeight: FontWeight.w600,
@@ -108,7 +108,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                     Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: Text(
-                        'Welcome to Decoy Wallet (“Decoy Wallet,” “we,” “us,” or “our”).\nThese Terms of Use (“Terms”) govern your access to and use of the Decoy Wallet mobile application, website, services, and any associated features (collectively, the “Services”).',
+                        'Last Updated: November 2025',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
@@ -133,7 +133,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                       child: Text(
-                        '1. Overview of Decoy Wallet',
+                        '1. Overview',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -156,7 +156,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'Decoy Wallet provides software tools that allow users to generate and manage decoy seed phrases, duress PINs, fake wallet interfaces, and emergency alert triggers.',
+                        'Decoy Wallet LLC (“Decoy Wallet,” “we,” “us,” or “our”) provides a personal-safety mobile application designed to help users trigger emergency alerts, notify trusted contacts, and simulate decoy wallet activity for security purposes.',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -181,7 +181,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'Decoy Wallet does not:\n• hold your cryptocurrency\n• access or store your private keys\n• execute transactions on your behalf\n• guarantee emergency response or dispatch\n\nAll wallet keys, funds, and transactions remain solely under your control.',
+                        'This Privacy Policy explains how we collect, use, store, and share information when you use the Decoy Wallet mobile application (“App”).\n\nBy using the App, you agree to the terms outlined below.',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -215,7 +215,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                       child: Text(
-                        '2. Emergency Trigger Features',
+                        '2. Information We Collect',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -238,107 +238,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 16.0),
                       child: Text(
-                        'Some Decoy Wallet features—including decoy seed phrases, duress PINs, QR-triggered alerts, and other mechanisms—are designed to send emergency notifications to:\n• your designated emergency contacts,\n• third-party service providers (such as RapidSOS or similar platforms),\n• and/or public safety agencies where available.\n\nBy enabling these features, you agree and acknowledge:',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 8.0),
-                      child: Text(
-                        '2.1 No guarantee of response\nDecoy Wallet cannot guarantee:\n• that alerts will be transmitted successfully\n• that emergency service providers will receive them\n• that any agency will respond\n• the timing or effectiveness of any response',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 8.0),
-                      child: Text(
-                        '2.2 User responsibility\nYou are solely responsible for understanding the risks of enabling emergency triggers and using them only in lawful emergency situations.',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 8.0),
-                      child: Text(
-                        '2.3 False or improper alerts\nFalse alarms, misuse, or frivolous emergency alerts may violate local, state, or federal laws.\nYou accept full responsibility for any fines, penalties, legal consequences, or emergency service fees arising from false or improper use.',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
-                      child: Text(
-                        '2.4 Your device may affect emergency routing\nInternet connectivity, device settings, permissions, battery level, GPS accuracy, and app configuration may prevent successful alert transmission.',
+                        'A. Information You Provide\n\t•\tFirst and last name\n\t•\tPhone number\n\t•\tEmergency contact names and phone numbers\n\t•\tHome or safe-location address\n\t•\tOptional profile information\n\nB. Automatically Collected Information\n\t•\tDevice type and model\n\t•\tOperating system\n\t•\tApp usage and feature activation\n\t•\tPush notification tokens\n\t•\tIP address and coarse geolocation (if available)\n\nC. Location Information\n\nWe only access your location when an emergency trigger is activated (for example, Decoy Seed trigger, duress PIN, or emergency contacts alert).\n\nWe do not collect background location data.\n\nD. Sensitive Safety Data\n\nWhen an emergency alert is triggered, the App may process:\n\t•\tYour approximate or precise location\n\t•\tLocal time of alert\n\t•\tDevice data (OS version, model, etc.)\n\t•\tSelected emergency contacts\n\t•\tEmergency event type (e.g., seed alert, duress PIN alert)',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -372,7 +272,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                       child: Text(
-                        '3. No Financial, Custodial, or Transaction Services',
+                        '3. How We Use Your Information',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -394,7 +294,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'Decoy Wallet is not a cryptocurrency custodian or financial institution.\n\nWe do not:\n• store your seed phrases\n• access your private keys\n• send or receive cryptocurrency for you\n• protect you from loss, theft, hacking, hardware failure, or user error\n\nAll cryptocurrency risks remain entirely your own.\n',
+                        'We use collected information for the following purposes:\n\t1.\tTo process emergency alerts and notify your designated contacts\n\t2.\tTo send SMS safety messages when you enable emergency contact triggers\n\t3.\tTo facilitate communication with emergency service providers (through partners such as RapidSOS, if enabled)\n\t4.\tTo maintain app functionality and security\n\t5.\tTo comply with legal obligations or respond to lawful requests\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -428,7 +328,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '4. Eligibility',
+                        '4. SMS Communications (Required Disclosure)',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -450,7 +350,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'You must be at least 18 years old or the age of majority in your jurisdiction to use the Services.\nBy using Decoy Wallet, you confirm that you meet this requirement.',
+                        'If you enable Emergency Contact Alerts or Decoy Seed triggers, Decoy Wallet may send SMS messages on your behalf to your selected contacts using Twilio.\n\nSMS Disclosures:\n\t•\tMessage frequency varies based on user activity\n\t•\tStandard message & data rates may apply\n\t•\tReply STOP to unsubscribe\n\t•\tReply HELP for help\n\nYour contacts may opt out at any time.\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -484,7 +384,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '5. User Responsibilities',
+                        '5. Sharing of Information',
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
                                   font: GoogleFonts.interTight(
@@ -505,7 +405,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'You agree to:\n• use Decoy Wallet only for lawful purposes\n• comply with all emergency service laws and reporting requirements\n• maintain accurate emergency contact information\n• keep your device secure and updated\n• ensure you understand how decoy seed phrases and triggers operate before enabling them\n\nYou are responsible for all activity conducted through your account.',
+                        'We do not sell your data.\n\nWe may share your information only with:\n\nA. Service Providers\n\nIncluding:\n\t•\tTwilio (SMS and phone number verification)\n\t•\tSupabase (secure database storage)\n\t•\tRapidSOS (optional emergency services integration)\n\nB. Emergency Contacts\n\nIf you enable emergency alerts, your emergency contacts will receive messages with:\n\t•\tYour name\n\t•\tA safety notification\n\t•\tApproximate location (if enabled)\n\t•\tInstructions for help or opting out\n\nC. Legal & Safety Situations\n\nWe may share information when required by law or when necessary to protect the safety of you or others.\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -539,7 +439,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '6. Prohibited Conduct',
+                        '6. Data Retention',
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
                                   font: GoogleFonts.interTight(
@@ -560,7 +460,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'You may not:\n• use Decoy Wallet for fraudulent or criminal purposes\n• intentionally generate false emergency alerts\n• reverse engineer, modify, or tamper with the app\n• access or attempt to access other users’ information\n• disrupt or attempt to disrupt Decoy Wallet systems\n\nViolation may result in termination of your account.\n',
+                        '•\tEmergency contact information is retained until you delete or modify it.\n\t•\tLog and diagnostic data may be retained for security.\n\t•\tEmergency event data may be stored temporarily for delivery purposes.\n\nYou may request deletion of your account and data at any time.\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -583,9 +483,78 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                     ),
                     Padding(
                       padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 24.0),
+                      child: Divider(
+                        height: 1.0,
+                        thickness: 0.5,
+                        color: FlutterFlowTheme.of(context).alternate,
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            16.0, 0.0, 16.0, 12.0),
+                        child: Text(
+                          '7. SMS and Mobile Data (Required Carrier Disclosure)',
+                          textAlign: TextAlign.center,
+                          style: FlutterFlowTheme.of(context)
+                              .headlineSmall
+                              .override(
+                                font: GoogleFonts.interTight(
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .headlineSmall
+                                      .fontStyle,
+                                ),
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .headlineSmall
+                                    .fontStyle,
+                              ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
+                      child: Text(
+                        'We collect and use mobile phone numbers and SMS data only to deliver account related and emergency alert text messages that you enable inside Decoy Wallet. We do not sell, rent, or share mobile numbers, SMS consent, or text messaging originator opt in data with third parties or affiliates for their own marketing or promotional purposes. We may share mobile numbers and SMS data with subcontractors or service providers only as needed to provide support services on our behalf, such as emergency notification partners or cloud communications providers. For all other use cases, text messaging originator opt in data and consent will not be shared with any third parties.',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              font: GoogleFonts.inter(
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                              letterSpacing: 0.0,
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                              lineHeight: 1.5,
+                            ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 24.0),
+                      child: Divider(
+                        height: 1.0,
+                        thickness: 0.5,
+                        color: FlutterFlowTheme.of(context).alternate,
+                      ),
+                    ),
+                    Padding(
+                      padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '7. Data and Privacy',
+                        '8. Security',
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
                                   font: GoogleFonts.interTight(
@@ -606,32 +575,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 16.0),
                       child: Text(
-                        'SMS and Mobile Data',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 16.0),
-                      child: Text(
-                        'We use mobile phone numbers and SMS data only to deliver account-related and emergency alert text messages that you enable inside Decoy Wallet. We do not sell, rent, or share mobile numbers, text messaging originator opt-in data, or SMS consent with third parties or affiliates for their own marketing or promotional purposes. We may share mobile numbers and SMS data with subcontractors and service providers only as needed to provide support services on our behalf (for example, customer support tools, cloud communications providers, or emergency-service integration partners). For all other use cases, text messaging originator opt-in data and consent will not be shared with any third parties.',
+                        'We use industry-standard encryption and access controls to protect your data.\n\nNo security system is perfect, but we continuously monitor for vulnerabilities.\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -665,7 +609,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '8. No Warranty / Services Provided “As-Is”',
+                        '9. Your Rights',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -687,7 +631,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'Decoy Wallet is provided “as is” and “as available.”\n\nWe make no warranties, express or implied, regarding:\n\n• reliability of emergency alert transmission\n• accuracy of information\n• uptime or availability\n• prevention of injury, harm, or loss\n• responsiveness of emergency agencies',
+                        'Depending on your region, you may have rights to:\n\t•\tAccess your data\n\t•\tModify your data\n\t•\tDelete your data\n\t•\tRequest a copy of your data\n\t•\tWithdraw consent for certain features\n\nYou may exercise these rights through the app or by contacting us.\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -721,7 +665,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '9. Limitation of Liability',
+                        '10. Children’s Privacy',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -743,7 +687,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                       child: Text(
-                        'To the fullest extent permitted by law, Decoy Wallet and its owners, officers, employees, developers, and contractors shall not be liable for any:\n\n• personal injury, harm, or death\n• lost cryptocurrency or financial losses\n• failed, delayed, or inaccurate emergency alerts\n• actions or inactions of third-party emergency services\n• data loss, corruption, or accidental disclosure\n• device issues, bugs, or software errors\n\nTotal liability shall never exceed the amount you paid for the Services (if any).',
+                        'Decoy Wallet is not intended for individuals under 16 years of age.\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -777,7 +721,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '10. Indemnification',
+                        '11. Updates',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -799,7 +743,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 32.0),
                       child: Text(
-                        'You agree to indemnify and hold harmless Decoy Wallet from any claims, damages, lawsuits, fines, or expenses arising from:\n\n• your misuse of the app\n• false or improper emergency alerts\n• illegal activity\n• violation of these Terms\n• disputes involving emergency contact notifications\n\nYou are solely responsible for your use of emergency features.',
+                        'We may update this policy periodically. The latest version will always be available at the link provided in the App.\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -833,7 +777,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
                       child: Text(
-                        '11. Third-Party Services',
+                        '12. Contact Us',
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).headlineSmall.override(
@@ -855,7 +799,7 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 32.0),
                       child: Text(
-                        'Decoy Wallet may integrate with external platforms such as RapidSOS.\n\nWe do not control these services and are not responsible for:\n• their availability\n• accuracy\n• privacy practices\n• emergency agency participation\n• their response or lack thereof\n\nYour use of third-party services is at your own risk.',
+                        'Decoy Wallet LLC\nEmail: support@decoywallet.app\nWebsite: www.decoywalletapp.com\n',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
@@ -875,280 +819,6 @@ class _TermsofUseWidgetState extends State<TermsofUseWidget> {
                               lineHeight: 1.5,
                             ),
                       ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 24.0),
-                      child: Divider(
-                        height: 1.0,
-                        thickness: 0.5,
-                        color: FlutterFlowTheme.of(context).alternate,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
-                      child: Text(
-                        '12. Modifications to the Services',
-                        textAlign: TextAlign.center,
-                        style:
-                            FlutterFlowTheme.of(context).headlineSmall.override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .fontStyle,
-                                ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 32.0),
-                      child: Text(
-                        'We may change, update, or discontinue any part of the Services at any time without notice.\n',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 24.0),
-                      child: Divider(
-                        height: 1.0,
-                        thickness: 0.5,
-                        color: FlutterFlowTheme.of(context).alternate,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
-                      child: Text(
-                        '13. Termination',
-                        textAlign: TextAlign.center,
-                        style:
-                            FlutterFlowTheme.of(context).headlineSmall.override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .fontStyle,
-                                ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 32.0),
-                      child: Text(
-                        'We may suspend or terminate your access to the Services at any time for any violation of these Terms, misuse, fraudulent activity, or unsafe behavior related to emergency alerts.\n',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 24.0),
-                      child: Divider(
-                        height: 1.0,
-                        thickness: 0.5,
-                        color: FlutterFlowTheme.of(context).alternate,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
-                      child: Text(
-                        '14. Governing Law',
-                        textAlign: TextAlign.center,
-                        style:
-                            FlutterFlowTheme.of(context).headlineSmall.override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .fontStyle,
-                                ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 32.0),
-                      child: Text(
-                        'These Terms are governed by the laws of the State of Michigan, without regard to conflict of law principles.',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 24.0),
-                      child: Divider(
-                        height: 1.0,
-                        thickness: 0.5,
-                        color: FlutterFlowTheme.of(context).alternate,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 12.0),
-                      child: Text(
-                        '15. Contact Information',
-                        textAlign: TextAlign.center,
-                        style:
-                            FlutterFlowTheme.of(context).headlineSmall.override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .fontStyle,
-                                ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 16.0),
-                      child: Text(
-                        'If you have questions about these Terms or the Services, you may contact us at:',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 32.0),
-                      child: Text(
-                        'support@decoywallet.com',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.5,
-                            ),
-                      ),
-                    ),
-                    Text(
-                      'Last updated: January 2024',
-                      textAlign: TextAlign.center,
-                      style: FlutterFlowTheme.of(context).bodySmall.override(
-                            font: GoogleFonts.inter(
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodySmall
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodySmall
-                                  .fontStyle,
-                            ),
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            letterSpacing: 0.0,
-                            fontWeight: FlutterFlowTheme.of(context)
-                                .bodySmall
-                                .fontWeight,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodySmall
-                                .fontStyle,
-                          ),
                     ),
                   ].divide(SizedBox(height: 24.0)),
                 ),

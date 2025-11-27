@@ -82,3 +82,5 @@ export '/settings_pages/termsof_use/termsof_use_widget.dart'
     show TermsofUseWidget;
 export '/pin_pages/decoy_pin_acknowledgements/decoy_pin_acknowledgements_widget.dart'
     show DecoyPinAcknowledgementsWidget;
+export '/settings_pages/privacy_policy/privacy_policy_widget.dart'
+    show PrivacyPolicyWidget;
