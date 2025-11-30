@@ -1157,10 +1157,6 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             'location': functions.latLngToJson(
                                                 _model.emergencyLocation),
                                           });
-
-                                          context.pushNamed(
-                                              DuressHomePageWidget.routeName);
-
                                           _model.walletRow =
                                               await DecoyWalletTable()
                                                   .queryRows(
@@ -1183,24 +1179,27 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                 .contactsNonce!,
                                             _model.dataKeyB64!,
                                           );
-                                          _model.alertResult =
-                                              await DecoyAlertGroup
-                                                  .sendEmergencyAlertsCall
-                                                  .call(
-                                            userId: currentUserUid,
-                                            triggerId: _model
-                                                .newTriggerRow?.triggerType,
-                                            contactsJson: getJsonField(
-                                              _model.contactObj,
-                                              r'''$.contacts''',
-                                              true,
-                                            ),
-                                            lat: functions.latFromLatLng(
-                                                _model.emergencyLocation),
-                                            lng: functions.lngFromLatLng(
-                                                _model.emergencyLocation),
-                                          );
-
+                                          if (FFAppState()
+                                                  .decoyPinContactsEnabled ==
+                                              true) {
+                                            _model.alertResult =
+                                                await DecoyAlertGroup
+                                                    .sendEmergencyAlertsCall
+                                                    .call(
+                                              userId: currentUserUid,
+                                              triggerId: _model
+                                                  .newTriggerRow?.triggerType,
+                                              contactsJson: getJsonField(
+                                                _model.contactObj,
+                                                r'''$.contacts''',
+                                                true,
+                                              ),
+                                              lat: functions.latFromLatLng(
+                                                  _model.emergencyLocation),
+                                              lng: functions.lngFromLatLng(
+                                                  _model.emergencyLocation),
+                                            );
+                                          }
                                           if ((FFAppState().fakeSeeded ==
                                                   false) ||
                                               (FFAppState().fakeBtcBalance <=

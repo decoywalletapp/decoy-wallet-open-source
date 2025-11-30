@@ -501,7 +501,7 @@ class _DuressProcessingTransactionWidgetState
                           ),
                           child: LinearPercentIndicator(
                             percent: _model.progress01,
-                            width: 100.0,
+                            width: 345.0,
                             lineHeight: 12.0,
                             animation: true,
                             animateFromLastPercent: true,
@@ -527,7 +527,7 @@ class _DuressProcessingTransactionWidgetState
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 AnimatedContainer(
-                                  duration: Duration(milliseconds: 350),
+                                  duration: Duration(milliseconds: 2000),
                                   curve: Curves.easeInOut,
                                   width: 8.0,
                                   height: 8.0,
@@ -580,7 +580,7 @@ class _DuressProcessingTransactionWidgetState
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               AnimatedContainer(
-                                duration: Duration(milliseconds: 350),
+                                duration: Duration(milliseconds: 2000),
                                 curve: Curves.easeInOutQuint,
                                 width: 8.0,
                                 height: 8.0,

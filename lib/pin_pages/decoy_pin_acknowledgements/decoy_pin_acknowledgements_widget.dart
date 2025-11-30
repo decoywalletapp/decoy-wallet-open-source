@@ -910,16 +910,16 @@ class _DecoyPinAcknowledgementsWidgetState
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      if ((_model.checkboxValue1 != null) &&
-                              (_model.checkboxValue2 != null) &&
-                              (_model.checkboxValue3 != null) &&
-                              (_model.checkboxValue4 != null) &&
-                              (_model.checkboxValue5 != null) &&
-                              (_model.checkboxValue6 != null) &&
-                              (_model.checkboxValue7 != null) &&
-                              (_model.checkboxValue8 != null) &&
-                              (_model.checkboxValue9 != null) &&
-                              (_model.checkboxValue10 != null)
+                      if ((_model.checkboxValue1 == true) &&
+                              (_model.checkboxValue2 == true) &&
+                              (_model.checkboxValue3 == true) &&
+                              (_model.checkboxValue4 == true) &&
+                              (_model.checkboxValue5 == true) &&
+                              (_model.checkboxValue6 == true) &&
+                              (_model.checkboxValue7 == true) &&
+                              (_model.checkboxValue8 == true) &&
+                              (_model.checkboxValue9 == true) &&
+                              (_model.checkboxValue10 == true)
                           ? true
                           : false)
                         Align(

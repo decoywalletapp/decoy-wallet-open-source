@@ -54,11 +54,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         ),
       );
       if ((_model.priceResult?.statusCode ?? 200) == 200) {
-        await Future.delayed(
-          Duration(
-            milliseconds: 300,
-          ),
-        );
         _model.prices1y = getJsonField(
           (_model.priceResult?.jsonBody ?? ''),
           r'''$.prices''',
@@ -75,15 +70,19 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             .extractEpochMsList(_model.prices1y.toList())
             .toList()
             .cast<double>();
+        safeSetState(() {});
         _model.firstPrice = _model.btcPrices.firstOrNull;
         _model.currentPrice = _model.btcPrices.lastOrNull;
+        safeSetState(() {});
         _model.pctChange1y =
             functions.percentageChange(_model.firstPrice, _model.currentPrice);
+        safeSetState(() {});
         FFAppState().fakeUsdValue = valueOrDefault<double>(
           functions.usdFromBtc(
               FFAppState().fakeBtcBalance, _model.currentPrice!),
           0.0,
         );
+        FFAppState().update(() {});
         FFAppState().fakeSeeded = true;
         safeSetState(() {});
         safeSetState(() {});

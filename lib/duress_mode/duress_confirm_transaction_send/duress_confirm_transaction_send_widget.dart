@@ -656,7 +656,7 @@ class _DuressConfirmTransactionSendWidgetState
                                             safeSetState(() {});
 
                                             context.pushNamed(
-                                              DuressProcessingTransactionWidget
+                                              DuressOrderProcessedWidget
                                                   .routeName,
                                               queryParameters: {
                                                 'amountBtc': serializeParam(
