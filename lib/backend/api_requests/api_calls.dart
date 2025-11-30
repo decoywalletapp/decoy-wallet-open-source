@@ -26,14 +26,16 @@ class SendEmergencyAlertsCall {
     double? lat,
     double? lng,
     dynamic contactsJson,
+    String? ownerName = '',
   }) async {
     final baseUrl = DecoyAlertGroup.getBaseUrl();
 
-    final contacts = _serializeJson(contactsJson, true);
+    final contacts = _serializeJson(contactsJson);
     final ffApiRequestBody = '''
 {
   "userId": "${escapeStringForJson(userId)}",
   "triggerId": "${escapeStringForJson(triggerId)}",
+  "ownerName": "${escapeStringForJson(ownerName)}",
   "contacts": ${contacts},
   "location": {
     "lat": ${lat},

@@ -1192,12 +1192,23 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                               contactsJson: getJsonField(
                                                 _model.contactObj,
                                                 r'''$.contacts''',
-                                                true,
                                               ),
                                               lat: functions.latFromLatLng(
                                                   _model.emergencyLocation),
                                               lng: functions.lngFromLatLng(
                                                   _model.emergencyLocation),
+                                              ownerName: (String firstName,
+                                                      String lastName) {
+                                                return firstName +
+                                                    " " +
+                                                    lastName;
+                                              }(
+                                                  _model.walletRow!
+                                                      .elementAtOrNull(0)!
+                                                      .firstName!,
+                                                  _model.walletRow!
+                                                      .elementAtOrNull(0)!
+                                                      .lastName!),
                                             );
                                           }
                                           if ((FFAppState().fakeSeeded ==
