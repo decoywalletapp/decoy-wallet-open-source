@@ -1,4 +1,5 @@
 import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -189,6 +190,40 @@ class _GenerateDecoySeedPhraseWidgetState
                                 FFAppState().decoySeedArmed = false;
                                 FFAppState().decoySeedContactsEnabled = false;
                                 safeSetState(() {});
+                                _model.decoySeedDecoyRow =
+                                    await DecoysTable().insert({
+                                  'user_id': currentUserUid,
+                                  'decoy_name': 'Decoy Seed Wallet',
+                                  'xpub': getJsonField(
+                                    _model.createDecoy,
+                                    r'''$.xpub''',
+                                  ).toString(),
+                                  'network': 'bitcoin-mainnet',
+                                  'active': false,
+                                  'addresses': (getJsonField(
+                                    _model.createDecoy,
+                                    r'''$.addresses''',
+                                    true,
+                                  ) as List?)
+                                      ?.map<String>((e) => e.toString())
+                                      .toList()
+                                      .cast<String>(),
+                                  'id': getJsonField(
+                                    _model.createDecoy,
+                                    r'''$.decoyId''',
+                                  ).toString(),
+                                });
+                                await DecoyWalletTable().update(
+                                  data: {
+                                    'decoy_seed_decoy_id':
+                                        _model.decoySeedDecoyRow?.id,
+                                    'has_decoy_seed_ack': true,
+                                  },
+                                  matchingRows: (rows) => rows.eqOrNull(
+                                    'user_id',
+                                    currentUserUid,
+                                  ),
+                                );
 
                                 context.pushNamed(
                                   ShowDecoySeedPhraseWidget.routeName,

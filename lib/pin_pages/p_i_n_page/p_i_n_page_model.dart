@@ -51,6 +51,8 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
   dynamic contactObj;
   // Stores action output result for [Backend Call - API (SendEmergencyAlerts)] action in Button widget.
   ApiCallResponse? alertResult;
+  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
+  AlertLogsRow? logResult;
 
   @override
   void initState(BuildContext context) {}

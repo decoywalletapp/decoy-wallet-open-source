@@ -1,8 +1,11 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
@@ -47,6 +50,23 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ControlCenterModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.decoyWalletRow = await DecoyWalletTable().queryRows(
+        queryFn: (q) => q
+            .eqOrNull(
+              'user_id',
+              currentUserUid,
+            )
+            .order('created_at'),
+      );
+      FFAppState().decoySeedArmed =
+          _model.decoyWalletRow!.elementAtOrNull(0)!.decoySeedArmed!;
+      FFAppState().decoySeedContactsEnabled =
+          _model.decoyWalletRow!.elementAtOrNull(0)!.decoySeedContactsEnabled!;
+      safeSetState(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -1899,6 +1919,18 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                               FFAppState().decoySeedContactsEnabled =
                                   _model.seedEMSTileValue!;
                               safeSetState(() {});
+                              await DecoyWalletTable().update(
+                                data: {
+                                  'decoy_seed_armed':
+                                      FFAppState().decoySeedArmed,
+                                  'decoy_seed_contacts_enabled':
+                                      FFAppState().decoySeedContactsEnabled,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'id',
+                                  _model.decoyWalletRow?.elementAtOrNull(0)?.id,
+                                ),
+                              );
                               context.safePop();
                             } else {
                               if (_model.bioSwitchTileValue == true) {
@@ -1930,6 +1962,20 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   FFAppState().decoySeedContactsEnabled =
                                       _model.seedEMSTileValue!;
                                   safeSetState(() {});
+                                  await DecoyWalletTable().update(
+                                    data: {
+                                      'decoy_seed_armed':
+                                          FFAppState().decoySeedArmed,
+                                      'decoy_seed_contacts_enabled':
+                                          FFAppState().decoySeedContactsEnabled,
+                                    },
+                                    matchingRows: (rows) => rows.eqOrNull(
+                                      'id',
+                                      _model.decoyWalletRow
+                                          ?.elementAtOrNull(0)
+                                          ?.id,
+                                    ),
+                                  );
                                   context.safePop();
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -1970,6 +2016,20 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                 FFAppState().decoySeedContactsEnabled =
                                     _model.seedEMSTileValue!;
                                 safeSetState(() {});
+                                await DecoyWalletTable().update(
+                                  data: {
+                                    'decoy_seed_armed':
+                                        FFAppState().decoySeedArmed,
+                                    'decoy_seed_contacts_enabled':
+                                        FFAppState().decoySeedContactsEnabled,
+                                  },
+                                  matchingRows: (rows) => rows.eqOrNull(
+                                    'id',
+                                    _model.decoyWalletRow
+                                        ?.elementAtOrNull(0)
+                                        ?.id,
+                                  ),
+                                );
                                 context.safePop();
                               }
                             }

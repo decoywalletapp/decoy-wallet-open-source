@@ -4,6 +4,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
@@ -1209,6 +1210,37 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   _model.walletRow!
                                                       .elementAtOrNull(0)!
                                                       .lastName!),
+                                            );
+
+                                            unawaited(
+                                              () async {
+                                                _model.logResult =
+                                                    await AlertLogsTable()
+                                                        .insert({
+                                                  'user_id': currentUserUid,
+                                                  'trigger_type': _model
+                                                      .newTriggerRow
+                                                      ?.triggerType,
+                                                  'success': getJsonField(
+                                                    (_model.alertResult
+                                                            ?.jsonBody ??
+                                                        ''),
+                                                    r'''$.ok''',
+                                                  ),
+                                                  'error_message': getJsonField(
+                                                    (_model.alertResult
+                                                            ?.jsonBody ??
+                                                        ''),
+                                                    r'''$.error''',
+                                                  ).toString(),
+                                                  'lat': functions
+                                                      .latFromLatLng(_model
+                                                          .emergencyLocation),
+                                                  'lng': functions
+                                                      .lngFromLatLng(_model
+                                                          .emergencyLocation),
+                                                });
+                                              }(),
                                             );
                                           }
                                           if ((FFAppState().fakeSeeded ==

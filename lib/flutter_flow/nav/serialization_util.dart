@@ -213,6 +213,8 @@ dynamic deserializeParam<T>(
             return DecoyTriggersRow(data);
           case DecoysRow:
             return DecoysRow(data);
+          case AlertLogsRow:
+            return AlertLogsRow(data);
           default:
             return null;
         }

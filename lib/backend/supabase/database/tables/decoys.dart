@@ -34,4 +34,15 @@ class DecoysRow extends SupabaseDataRow {
 
   DateTime? get createdAt => getField<DateTime>('created_at');
   set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
+
+  String? get network => getField<String>('network');
+  set network(String? value) => setField<String>('network', value);
+
+  int? get lastCheckedHeight => getField<int>('last_checked_height');
+  set lastCheckedHeight(int? value) =>
+      setField<int>('last_checked_height', value);
+
+  DateTime? get lastActivityAt => getField<DateTime>('last_activity_at');
+  set lastActivityAt(DateTime? value) =>
+      setField<DateTime>('last_activity_at', value);
 }

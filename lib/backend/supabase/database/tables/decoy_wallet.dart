@@ -161,4 +161,21 @@ class DecoyWalletRow extends SupabaseDataRow {
 
   bool get hasDecoyPinAck => getField<bool>('has_decoy_pin_ack')!;
   set hasDecoyPinAck(bool value) => setField<bool>('has_decoy_pin_ack', value);
+
+  bool? get decoySeedArmed => getField<bool>('decoy_seed_armed');
+  set decoySeedArmed(bool? value) => setField<bool>('decoy_seed_armed', value);
+
+  bool? get decoySeedContactsEnabled =>
+      getField<bool>('decoy_seed_contacts_enabled');
+  set decoySeedContactsEnabled(bool? value) =>
+      setField<bool>('decoy_seed_contacts_enabled', value);
+
+  DateTime? get decoySeedLastTriggeredAt =>
+      getField<DateTime>('decoy_seed_last_triggered_at');
+  set decoySeedLastTriggeredAt(DateTime? value) =>
+      setField<DateTime>('decoy_seed_last_triggered_at', value);
+
+  String? get decoySeedDecoyId => getField<String>('decoy_seed_decoy_id');
+  set decoySeedDecoyId(String? value) =>
+      setField<String>('decoy_seed_decoy_id', value);
 }
