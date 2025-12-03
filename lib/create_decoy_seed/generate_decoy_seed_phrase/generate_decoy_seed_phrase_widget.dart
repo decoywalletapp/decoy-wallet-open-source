@@ -190,6 +190,20 @@ class _GenerateDecoySeedPhraseWidgetState
                                 FFAppState().decoySeedArmed = false;
                                 FFAppState().decoySeedContactsEnabled = false;
                                 safeSetState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '1',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
                                 _model.decoySeedDecoyRow =
                                     await DecoysTable().insert({
                                   'user_id': currentUserUid,
@@ -213,6 +227,20 @@ class _GenerateDecoySeedPhraseWidgetState
                                     r'''$.decoyId''',
                                   ).toString(),
                                 });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '2',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
                                 await DecoyWalletTable().update(
                                   data: {
                                     'decoy_seed_decoy_id':
@@ -222,6 +250,20 @@ class _GenerateDecoySeedPhraseWidgetState
                                   matchingRows: (rows) => rows.eqOrNull(
                                     'user_id',
                                     currentUserUid,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '3',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
 
