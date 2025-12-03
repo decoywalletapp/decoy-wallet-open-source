@@ -23,8 +23,6 @@ class GenerateDecoySeedPhraseModel
 
   // Stores action output result for [Custom Action - createAndRegisterDecoy] action in Button widget.
   dynamic createDecoy;
-  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
-  DecoysRow? decoySeedDecoyRow;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? linkDecoySeedToWallet;
 

@@ -190,6 +190,19 @@ class _GenerateDecoySeedPhraseWidgetState
                                 FFAppState().decoySeedArmed = false;
                                 FFAppState().decoySeedContactsEnabled = false;
                                 safeSetState(() {});
+                                await DecoyWalletTable().update(
+                                  data: {
+                                    'decoy_seed_decoy_id': getJsonField(
+                                      _model.createDecoy,
+                                      r'''$.decoyId''',
+                                    ).toString(),
+                                    'has_decoy_seed_ack': true,
+                                  },
+                                  matchingRows: (rows) => rows.eqOrNull(
+                                    'user_id',
+                                    currentUserUid,
+                                  ),
+                                );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -204,70 +217,19 @@ class _GenerateDecoySeedPhraseWidgetState
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
-                                _model.decoySeedDecoyRow =
-                                    await DecoysTable().insert({
-                                  'user_id': currentUserUid,
-                                  'decoy_name': 'Decoy Seed Wallet',
-                                  'xpub': getJsonField(
-                                    _model.createDecoy,
-                                    r'''$.xpub''',
-                                  ).toString(),
-                                  'network': 'bitcoin-mainnet',
-                                  'active': false,
-                                  'addresses': (getJsonField(
-                                    _model.createDecoy,
-                                    r'''$.addresses''',
-                                    true,
-                                  ) as List?)
-                                      ?.map<String>((e) => e.toString())
-                                      .toList()
-                                      .cast<String>(),
-                                  'id': getJsonField(
-                                    _model.createDecoy,
-                                    r'''$.decoyId''',
-                                  ).toString(),
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '2',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
-                                await DecoyWalletTable().update(
-                                  data: {
-                                    'decoy_seed_decoy_id':
-                                        _model.decoySeedDecoyRow?.id,
-                                    'has_decoy_seed_ack': true,
-                                  },
-                                  matchingRows: (rows) => rows.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '3',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
 
-                                context.pushNamed(HomePageWidget.routeName);
+                                context.pushNamed(
+                                  ShowDecoySeedPhraseWidget.routeName,
+                                  queryParameters: {
+                                    'mnemonic': serializeParam(
+                                      getJsonField(
+                                        _model.createDecoy,
+                                        r'''$.mnemonic''',
+                                      ).toString(),
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
