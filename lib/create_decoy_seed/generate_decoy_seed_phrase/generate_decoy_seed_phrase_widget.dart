@@ -225,18 +225,7 @@ class _GenerateDecoySeedPhraseWidgetState
                                   ),
                                 );
 
-                                context.pushNamed(
-                                  ShowDecoySeedPhraseWidget.routeName,
-                                  queryParameters: {
-                                    'mnemonic': serializeParam(
-                                      getJsonField(
-                                        _model.createDecoy,
-                                        r'''$.mnemonic''',
-                                      ).toString(),
-                                      ParamType.String,
-                                    ),
-                                  }.withoutNulls,
-                                );
+                                context.pushNamed(HomePageWidget.routeName);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
