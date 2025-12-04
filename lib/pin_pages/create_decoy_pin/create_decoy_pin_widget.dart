@@ -2961,10 +2961,10 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                       true) {
                                                     FFAppState()
                                                             .decoyPin911Enabled =
-                                                        true;
+                                                        false;
                                                     FFAppState()
                                                             .decoyPinContactsEnabled =
-                                                        true;
+                                                        false;
                                                     safeSetState(() {});
 
                                                     context.pushNamed(

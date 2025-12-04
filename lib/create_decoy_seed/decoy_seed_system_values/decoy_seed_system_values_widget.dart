@@ -1,3 +1,5 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
@@ -1068,10 +1070,23 @@ class _DecoySeedSystemValuesWidgetState
                           FFAppState().decoySeedContactsEnabled =
                               _model.seedEMSTileValue!;
                           safeSetState(() {});
+                          await DecoyWalletTable().update(
+                            data: {
+                              'decoy_seed_armed': FFAppState().decoySeedArmed,
+                              'decoy_seed_contacts_enabled':
+                                  FFAppState().decoySeedContactsEnabled,
+                            },
+                            matchingRows: (rows) => rows.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
+                          );
 
                           context.pushNamed(HomePageWidget.routeName);
+
+                          safeSetState(() {});
                         },
-                        text: 'Go Home',
+                        text: 'Save & Go Home',
                         options: FFButtonOptions(
                           width: double.infinity,
                           height: 50.0,
