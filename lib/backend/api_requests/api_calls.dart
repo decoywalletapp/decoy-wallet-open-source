@@ -261,8 +261,8 @@ class VerifyPINCall {
   }) async {
     final ffApiRequestBody = '''
 {
-  "pin": "${escapeStringForJson(pin)}",
-  "jwt": "${escapeStringForJson(jwt)}"
+  "pin": "${pin}",
+  "jwt": "${jwt}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'verifyPIN',
@@ -330,10 +330,11 @@ class WrapDataKeyCall {
     );
   }
 
-  static dynamic wrappedB64(dynamic response) => getJsonField(
+  static String? wrappedB64(dynamic response) =>
+      castToType<String>(getJsonField(
         response,
         r'''$.wrappedB64''',
-      );
+      ));
 }
 
 class UpdateEmailViaProxyCall {

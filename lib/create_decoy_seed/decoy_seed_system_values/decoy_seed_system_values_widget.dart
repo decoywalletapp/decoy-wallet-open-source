@@ -209,7 +209,7 @@ class _DecoySeedSystemValuesWidgetState
                                                       ),
                                             ),
                                             subtitle: Text(
-                                              'Armed - Trigger is active and monitoring',
+                                              'ARMED - ACTIVELY WATHCING SEED',
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodySmall
