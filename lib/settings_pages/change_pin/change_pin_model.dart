@@ -53,6 +53,8 @@ class ChangePinModel extends FlutterFlowModel<ChangePinWidget> {
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
   ApiCallResponse? verifyResp;
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
+  ApiCallResponse? verifyNewPIN;
+  // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
   ApiCallResponse? verifyOldPinResp;
 
   @override
