@@ -45,6 +45,8 @@ class CreateDecoyPinModel extends FlutterFlowModel<CreateDecoyPinWidget> {
 
   ///  State fields for stateful widgets in this page.
 
+  // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
+  ApiCallResponse? verifyMe;
   // Stores action output result for [Backend Call - API (setPIN)] action in Button widget.
   ApiCallResponse? setPinResp;
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.

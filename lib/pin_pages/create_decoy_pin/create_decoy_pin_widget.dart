@@ -1446,8 +1446,46 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                         _model.pinDecoyInput
                                                             .toList());
                                                 safeSetState(() {});
-                                                _model.currentStep = 2;
-                                                safeSetState(() {});
+                                                _model.verifyMe =
+                                                    await VerifyPINCall.call(
+                                                  pin: _model.joinedPin,
+                                                  jwt: currentJwtToken,
+                                                );
+
+                                                if (VerifyPINCall.isAccount(
+                                                      (_model.verifyMe
+                                                              ?.jsonBody ??
+                                                          ''),
+                                                    ) ==
+                                                    true) {
+                                                  _model.pinDecoyInput = []
+                                                      .toList()
+                                                      .cast<String>();
+                                                  _model.joinedPin = "";
+                                                  safeSetState(() {});
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'DECOY PIN CANNOT MATCH ACCOUNT ENTRY PIN',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  _model.currentStep = 2;
+                                                  safeSetState(() {});
+                                                }
                                               } else {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
@@ -1472,6 +1510,8 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                   ),
                                                 );
                                               }
+
+                                              safeSetState(() {});
                                             },
                                             text: 'Continue',
                                             options: FFButtonOptions(
