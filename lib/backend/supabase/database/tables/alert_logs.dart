@@ -37,4 +37,7 @@ class AlertLogsRow extends SupabaseDataRow {
 
   DateTime get createdAt => getField<DateTime>('created_at')!;
   set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+
+  String? get txid => getField<String>('txid');
+  set txid(String? value) => setField<String>('txid', value);
 }

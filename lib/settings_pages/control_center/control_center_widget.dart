@@ -63,8 +63,10 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       );
       FFAppState().decoySeedArmed =
           _model.decoyWalletRow!.elementAtOrNull(0)!.decoySeedArmed!;
-      FFAppState().decoySeedContactsEnabled =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.decoySeedContactsEnabled!;
+      FFAppState().decoyPin911Enabled =
+          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPin911Enabled;
+      FFAppState().decoyPinContactsEnabled =
+          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPinContactsEnabled;
       safeSetState(() {});
     });
 
@@ -1199,326 +1201,6 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     ),
                                   ),
                                 ),
-                                Divider(
-                                  thickness: 0.5,
-                                  indent: 0.0,
-                                  endIndent: 0.0,
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                ),
-                                Material(
-                                  color: Colors.transparent,
-                                  child: SwitchListTile(
-                                    value: _model.seedEMSTileValue ??=
-                                        FFAppState().decoySeedContactsEnabled,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() =>
-                                          _model.seedEMSTileValue = newValue);
-                                    },
-                                    title: Text(
-                                      'Emergency Contacts Trigger',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w600,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                            fontSize: 18.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w600,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                    ),
-                                    subtitle: Text(
-                                      'Send alerts to emergency contacts via Decoy Seed',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            font: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w500,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .fontStyle,
-                                            ),
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodySmall
-                                                    .fontStyle,
-                                          ),
-                                    ),
-                                    activeColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    activeTrackColor:
-                                        FlutterFlowTheme.of(context).accent1,
-                                    dense: false,
-                                    controlAffinity:
-                                        ListTileControlAffinity.trailing,
-                                    contentPadding: EdgeInsets.all(0.0),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            'Switch Value:',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Stack(
-                                            children: [
-                                              if (_model.seedEMSTileValue ==
-                                                  true)
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Text(
-                                                    'ENABLE',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ),
-                                              if (_model.seedEMSTileValue ==
-                                                  false)
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Text(
-                                                    'DISABLE',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Text(
-                                              'System Status:',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        fontSize: 16.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Stack(
-                                              children: [
-                                                if (FFAppState()
-                                                        .decoySeedContactsEnabled ==
-                                                    true)
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Text(
-                                                      'ACTIVATED',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .inter(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .success,
-                                                            fontSize: 16.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                if (FFAppState()
-                                                        .decoySeedContactsEnabled ==
-                                                    false)
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Text(
-                                                      'DEACTIVATED',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .inter(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .error,
-                                                            fontSize: 16.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
                               ].divide(SizedBox(height: 16.0)),
                             ),
                           ),
@@ -1916,19 +1598,26 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   _model.pINEContactsTileValue!;
                               FFAppState().decoySeedArmed =
                                   _model.seedMonitorArmTileValue!;
-                              FFAppState().decoySeedContactsEnabled =
-                                  _model.seedEMSTileValue!;
                               safeSetState(() {});
                               await DecoyWalletTable().update(
                                 data: {
                                   'decoy_seed_armed':
                                       FFAppState().decoySeedArmed,
                                   'decoy_seed_contacts_enabled':
-                                      FFAppState().decoySeedContactsEnabled,
+                                      FFAppState().decoySeedArmed,
+                                  'decoy_pin_911_enabled':
+                                      FFAppState().decoyPin911Enabled,
+                                  'decoy_pin_contacts_enabled':
+                                      FFAppState().decoyPinContactsEnabled,
                                 },
                                 matchingRows: (rows) => rows.eqOrNull(
                                   'id',
                                   _model.decoyWalletRow?.elementAtOrNull(0)?.id,
+                                ),
+                              );
+                              await Future.delayed(
+                                Duration(
+                                  milliseconds: 100,
                                 ),
                               );
                               context.safePop();
@@ -1959,21 +1648,28 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       _model.pINEContactsTileValue!;
                                   FFAppState().decoySeedArmed =
                                       _model.seedMonitorArmTileValue!;
-                                  FFAppState().decoySeedContactsEnabled =
-                                      _model.seedEMSTileValue!;
                                   safeSetState(() {});
                                   await DecoyWalletTable().update(
                                     data: {
                                       'decoy_seed_armed':
                                           FFAppState().decoySeedArmed,
                                       'decoy_seed_contacts_enabled':
-                                          FFAppState().decoySeedContactsEnabled,
+                                          FFAppState().decoySeedArmed,
+                                      'decoy_pin_911_enabled':
+                                          FFAppState().decoyPin911Enabled,
+                                      'decoy_pin_contacts_enabled':
+                                          FFAppState().decoyPinContactsEnabled,
                                     },
                                     matchingRows: (rows) => rows.eqOrNull(
                                       'id',
                                       _model.decoyWalletRow
                                           ?.elementAtOrNull(0)
                                           ?.id,
+                                    ),
+                                  );
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 100,
                                     ),
                                   );
                                   context.safePop();
@@ -1999,9 +1695,30 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       _model.pINEContactsTileValue!;
                                   FFAppState().decoySeedArmed =
                                       _model.seedMonitorArmTileValue!;
-                                  FFAppState().decoySeedContactsEnabled =
-                                      _model.seedEMSTileValue!;
                                   safeSetState(() {});
+                                  await DecoyWalletTable().update(
+                                    data: {
+                                      'decoy_seed_armed':
+                                          FFAppState().decoySeedArmed,
+                                      'decoy_seed_contacts_enabled':
+                                          FFAppState().decoySeedArmed,
+                                      'decoy_pin_911_enabled':
+                                          FFAppState().decoyPin911Enabled,
+                                      'decoy_pin_contacts_enabled':
+                                          FFAppState().decoyPinContactsEnabled,
+                                    },
+                                    matchingRows: (rows) => rows.eqOrNull(
+                                      'id',
+                                      _model.decoyWalletRow
+                                          ?.elementAtOrNull(0)
+                                          ?.id,
+                                    ),
+                                  );
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 100,
+                                    ),
+                                  );
                                   context.safePop();
                                 }
                               } else {
@@ -2013,21 +1730,28 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     _model.pINEContactsTileValue!;
                                 FFAppState().decoySeedArmed =
                                     _model.seedMonitorArmTileValue!;
-                                FFAppState().decoySeedContactsEnabled =
-                                    _model.seedEMSTileValue!;
                                 safeSetState(() {});
                                 await DecoyWalletTable().update(
                                   data: {
                                     'decoy_seed_armed':
                                         FFAppState().decoySeedArmed,
                                     'decoy_seed_contacts_enabled':
-                                        FFAppState().decoySeedContactsEnabled,
+                                        FFAppState().decoySeedArmed,
+                                    'decoy_pin_911_enabled':
+                                        FFAppState().decoyPin911Enabled,
+                                    'decoy_pin_contacts_enabled':
+                                        FFAppState().decoyPinContactsEnabled,
                                   },
                                   matchingRows: (rows) => rows.eqOrNull(
                                     'id',
                                     _model.decoyWalletRow
                                         ?.elementAtOrNull(0)
                                         ?.id,
+                                  ),
+                                );
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 100,
                                   ),
                                 );
                                 context.safePop();

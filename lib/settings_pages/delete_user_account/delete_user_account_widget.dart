@@ -602,9 +602,6 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                   false;
                                               FFAppState().decoySeedArmed =
                                                   false;
-                                              FFAppState()
-                                                      .decoySeedContactsEnabled =
-                                                  false;
                                               FFAppState().fakeSeeded = false;
                                               FFAppState().lastKnownLocation =
                                                   LatLng(0.0, 0.0);

@@ -1,3 +1,4 @@
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'decoy_pin_system_values_widget.dart' show DecoyPinSystemValuesWidget;
@@ -11,6 +12,8 @@ class DecoyPinSystemValuesModel
   bool? pINPoliceTileValue;
   // State field(s) for PINEContactsTile widget.
   bool? pINEContactsTileValue;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<DecoyWalletRow>? upSysVals;
 
   @override
   void initState(BuildContext context) {}

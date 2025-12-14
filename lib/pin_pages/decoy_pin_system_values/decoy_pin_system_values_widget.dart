@@ -1,3 +1,5 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
@@ -512,7 +514,7 @@ class _DecoyPinSystemValuesWidgetState
                                             indent: 0.0,
                                             endIndent: 0.0,
                                             color: FlutterFlowTheme.of(context)
-                                                .alternate,
+                                                .primary,
                                           ),
                                           Material(
                                             color: Colors.transparent,
@@ -1039,8 +1041,27 @@ class _DecoyPinSystemValuesWidgetState
                           FFAppState().decoyPinContactsEnabled =
                               _model.pINEContactsTileValue!;
                           safeSetState(() {});
+                          await DecoyWalletTable().update(
+                            data: {
+                              'decoy_pin_911_enabled':
+                                  FFAppState().decoyPin911Enabled,
+                              'decoy_pin_contacts_enabled':
+                                  FFAppState().decoyPinContactsEnabled,
+                            },
+                            matchingRows: (rows) => rows.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
+                          );
+                          await Future.delayed(
+                            Duration(
+                              milliseconds: 100,
+                            ),
+                          );
 
                           context.pushNamed(HomePageWidget.routeName);
+
+                          safeSetState(() {});
                         },
                         text: 'Save & Go Home',
                         options: FFButtonOptions(

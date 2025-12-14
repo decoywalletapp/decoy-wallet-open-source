@@ -87,11 +87,6 @@ class FFAppState extends ChangeNotifier {
       _decoySeedArmed =
           await secureStorage.getBool('ff_decoySeedArmed') ?? _decoySeedArmed;
     });
-    await _safeInitAsync(() async {
-      _decoySeedContactsEnabled =
-          await secureStorage.getBool('ff_decoySeedContactsEnabled') ??
-              _decoySeedContactsEnabled;
-    });
   }
 
   void update(VoidCallback callback) {
@@ -393,17 +388,6 @@ class FFAppState extends ChangeNotifier {
 
   void deleteDecoySeedArmed() {
     secureStorage.delete(key: 'ff_decoySeedArmed');
-  }
-
-  bool _decoySeedContactsEnabled = false;
-  bool get decoySeedContactsEnabled => _decoySeedContactsEnabled;
-  set decoySeedContactsEnabled(bool value) {
-    _decoySeedContactsEnabled = value;
-    secureStorage.setBool('ff_decoySeedContactsEnabled', value);
-  }
-
-  void deleteDecoySeedContactsEnabled() {
-    secureStorage.delete(key: 'ff_decoySeedContactsEnabled');
   }
 }
 

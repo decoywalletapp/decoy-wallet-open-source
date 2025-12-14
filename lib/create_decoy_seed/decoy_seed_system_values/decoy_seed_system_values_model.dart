@@ -10,8 +10,6 @@ class DecoySeedSystemValuesModel
 
   // State field(s) for SeedMonitorArmTile widget.
   bool? seedMonitorArmTileValue;
-  // State field(s) for SeedEMSTile widget.
-  bool? seedEMSTileValue;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? saveDecoySeedSettings;
 

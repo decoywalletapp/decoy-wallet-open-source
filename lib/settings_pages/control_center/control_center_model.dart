@@ -18,8 +18,6 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
   bool? pINEContactsTileValue;
   // State field(s) for SeedMonitorArmTile widget.
   bool? seedMonitorArmTileValue;
-  // State field(s) for SeedEMSTile widget.
-  bool? seedEMSTileValue;
   // State field(s) for BioSwitchTile widget.
   bool? bioSwitchTileValue;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
@@ -27,6 +25,8 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
   bool settingsBioResult = false;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? saveDecoySeedSettingspt3;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<DecoyWalletRow>? saveDecoySeedSettingspt4;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? saveDecoySeedSettings;
 

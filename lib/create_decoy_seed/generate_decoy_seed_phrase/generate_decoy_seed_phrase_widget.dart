@@ -188,7 +188,6 @@ class _GenerateDecoySeedPhraseWidgetState
                                   ),
                                 );
                                 FFAppState().decoySeedArmed = false;
-                                FFAppState().decoySeedContactsEnabled = false;
                                 safeSetState(() {});
                                 await DecoyWalletTable().update(
                                   data: {
