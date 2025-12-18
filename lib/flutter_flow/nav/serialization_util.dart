@@ -211,6 +211,8 @@ dynamic deserializeParam<T>(
             return DecoyWalletRow(data);
           case UserConsentsRow:
             return UserConsentsRow(data);
+          case UserEntitlementsRow:
+            return UserEntitlementsRow(data);
           case DecoyTriggersRow:
             return DecoyTriggersRow(data);
           case EmergencyContactsRow:
@@ -221,6 +223,8 @@ dynamic deserializeParam<T>(
             return SmsQueueRow(data);
           case AlertLogsRow:
             return AlertLogsRow(data);
+          case StripeEventsRow:
+            return StripeEventsRow(data);
           default:
             return null;
         }

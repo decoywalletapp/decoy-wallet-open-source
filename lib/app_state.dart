@@ -87,6 +87,11 @@ class FFAppState extends ChangeNotifier {
       _decoySeedArmed =
           await secureStorage.getBool('ff_decoySeedArmed') ?? _decoySeedArmed;
     });
+    await _safeInitAsync(() async {
+      _hasActiveSubscription =
+          await secureStorage.getBool('ff_hasActiveSubscription') ??
+              _hasActiveSubscription;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -388,6 +393,17 @@ class FFAppState extends ChangeNotifier {
 
   void deleteDecoySeedArmed() {
     secureStorage.delete(key: 'ff_decoySeedArmed');
+  }
+
+  bool _hasActiveSubscription = false;
+  bool get hasActiveSubscription => _hasActiveSubscription;
+  set hasActiveSubscription(bool value) {
+    _hasActiveSubscription = value;
+    secureStorage.setBool('ff_hasActiveSubscription', value);
+  }
+
+  void deleteHasActiveSubscription() {
+    secureStorage.delete(key: 'ff_hasActiveSubscription');
   }
 }
 

@@ -131,8 +131,29 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             if (_model.authRouterBioResult == true) {
               FFAppState().isLocked = false;
               safeSetState(() {});
-
-              context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
+              _model.entitlementRow1 = await UserEntitlementsTable().queryRows(
+                queryFn: (q) => q
+                    .eqOrNull(
+                      'user_id',
+                      currentUserUid,
+                    )
+                    .eqOrNull(
+                      'entitlement',
+                      'decoy_wallet',
+                    ),
+              );
+              FFAppState().hasActiveSubscription =
+                  (_model.entitlementRow1 != null &&
+                          (_model.entitlementRow1)!.isNotEmpty) &&
+                      (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
+                          true);
+              safeSetState(() {});
+              if (FFAppState().hasActiveSubscription == true) {
+                context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
+              } else {
+                context.pushNamedAuth(
+                    HomePageWidget.routeName, context.mounted);
+              }
             } else {
               GoRouter.of(context).prepareAuthEvent();
               await authManager.signOut();
@@ -146,10 +167,27 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           } else {
             FFAppState().isLocked = false;
             safeSetState(() {});
-            if (Navigator.of(context).canPop()) {
-              context.pop();
+            _model.entitlementRow2 = await UserEntitlementsTable().queryRows(
+              queryFn: (q) => q
+                  .eqOrNull(
+                    'user_id',
+                    currentUserUid,
+                  )
+                  .eqOrNull(
+                    'entitlement',
+                    'decoy_wallet',
+                  ),
+            );
+            FFAppState().hasActiveSubscription = (_model.entitlementRow2 !=
+                        null &&
+                    (_model.entitlementRow2)!.isNotEmpty) &&
+                (_model.entitlementRow2?.elementAtOrNull(0)?.isActive == true);
+            safeSetState(() {});
+            if (FFAppState().hasActiveSubscription == true) {
+              context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
+            } else {
+              context.pushNamedAuth(HomePageWidget.routeName, context.mounted);
             }
-            context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
           }
         }
       }

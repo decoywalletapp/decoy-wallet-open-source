@@ -433,6 +433,40 @@ class SupabaseResendSignupEmailCall {
   }
 }
 
+class CreateCheckoutSessionCall {
+  static Future<ApiCallResponse> call({
+    String? currentUserUid = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "user_id": "${escapeStringForJson(currentUserUid)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'CreateCheckoutSession',
+      apiUrl:
+          'https://decoy-stripe-webhook-866378207353.us-central1.run.app/create-checkout-session',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static String? url(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.url''',
+      ));
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }
