@@ -43,12 +43,16 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.currentStep = 1;
-      _model.pinInput = [].toList().cast<String>();
-      _model.joinedPin = "";
-      _model.confirmedPinInput = [].toList().cast<String>();
-      _model.joinedPinConfirm = "";
-      safeSetState(() {});
+      if (FFAppState().hasActiveSubscription == false) {
+        context.pushNamed(HomePageWidget.routeName);
+      } else {
+        _model.currentStep = 1;
+        _model.pinInput = [].toList().cast<String>();
+        _model.joinedPin = "";
+        _model.confirmedPinInput = [].toList().cast<String>();
+        _model.joinedPinConfirm = "";
+        safeSetState(() {});
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

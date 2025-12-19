@@ -455,7 +455,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   safeSetState(() {});
 
                                   context.goNamedAuth(
-                                      PINPageWidget.routeName, context.mounted);
+                                      AuthRouterWidget.routeName,
+                                      context.mounted);
 
                                   safeSetState(() {});
                                 },
