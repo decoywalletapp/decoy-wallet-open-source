@@ -385,6 +385,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => PaymentPendingWidget(),
       ),
       FFRoute(
+        name: SubscriptionOptionsWidget.routeName,
+        path: SubscriptionOptionsWidget.routePath,
+        builder: (context, params) => SubscriptionOptionsWidget(),
+      ),
+      FFRoute(
+        name: PaymentReturnWidget.routeName,
+        path: PaymentReturnWidget.routePath,
+        builder: (context, params) => PaymentReturnWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

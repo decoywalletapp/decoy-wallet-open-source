@@ -1,0 +1,18 @@
+import '/backend/supabase/supabase.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/index.dart';
+import 'payment_return_widget.dart' show PaymentReturnWidget;
+import 'package:flutter/material.dart';
+
+class PaymentReturnModel extends FlutterFlowModel<PaymentReturnWidget> {
+  ///  State fields for stateful widgets in this page.
+
+  // Stores action output result for [Backend Call - Query Rows] action in PaymentReturn widget.
+  List<UserEntitlementsRow>? entitlementsQuery;
+
+  @override
+  void initState(BuildContext context) {}
+
+  @override
+  void dispose() {}
+}
