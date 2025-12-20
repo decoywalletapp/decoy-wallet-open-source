@@ -1,10 +1,8 @@
 import '/auth/supabase_auth/auth_util.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -837,20 +835,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           0.0, 0.0, 0.0, 50.0),
                                       child: FFButtonWidget(
                                         onPressed: () async {
-                                          _model.checkoutResp =
-                                              await CreateCheckoutSessionCall
-                                                  .call(
-                                            currentUserUid: currentUserUid,
-                                          );
-
-                                          await actions.openExternalUrl(
-                                            CreateCheckoutSessionCall.url(
-                                              (_model.checkoutResp?.jsonBody ??
-                                                  ''),
-                                            )!,
-                                          );
-
-                                          safeSetState(() {});
+                                          context.pushNamed(
+                                              SubscriptionOptionsWidget
+                                                  .routeName);
                                         },
                                         text: 'Unlock Decoy Wallet',
                                         options: FFButtonOptions(

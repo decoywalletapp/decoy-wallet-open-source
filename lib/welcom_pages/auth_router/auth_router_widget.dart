@@ -228,7 +228,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     alignment: AlignmentDirectional(0.0, 0.0),
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),
                       child: Text(
                         '₿itcoin Wallet',
                         textAlign: TextAlign.start,

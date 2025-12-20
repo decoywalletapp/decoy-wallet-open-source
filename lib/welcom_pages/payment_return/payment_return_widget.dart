@@ -83,36 +83,48 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primary,
-          automaticallyImplyLeading: false,
-          title: Text(
-            'Page Title',
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  font: GoogleFonts.interTight(
-                    fontWeight:
-                        FlutterFlowTheme.of(context).headlineMedium.fontWeight,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                  ),
-                  color: Colors.white,
-                  fontSize: 22.0,
-                  letterSpacing: 0.0,
-                  fontWeight:
-                      FlutterFlowTheme.of(context).headlineMedium.fontWeight,
-                  fontStyle:
-                      FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                ),
-          ),
-          actions: [],
-          centerTitle: false,
-          elevation: 2.0,
-        ),
         body: SafeArea(
           top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [],
+          child: Align(
+            alignment: AlignmentDirectional(0.0, 0.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional(0.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),
+                      child: Text(
+                        '₿itcoin Wallet',
+                        textAlign: TextAlign.start,
+                        style:
+                            FlutterFlowTheme.of(context).displayMedium.override(
+                                  font: GoogleFonts.interTight(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .displayMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .displayMedium
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .displayMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .displayMedium
+                                      .fontStyle,
+                                ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

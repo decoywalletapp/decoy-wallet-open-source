@@ -85,6 +85,7 @@ export '/pin_pages/decoy_pin_acknowledgements/decoy_pin_acknowledgements_widget.
 export '/settings_pages/privacy_policy/privacy_policy_widget.dart'
     show PrivacyPolicyWidget;
 export '/payment_pending/payment_pending_widget.dart' show PaymentPendingWidget;
-export '/subscription_options/subscription_options_widget.dart'
+export '/welcom_pages/subscription_options/subscription_options_widget.dart'
     show SubscriptionOptionsWidget;
-export '/payment_return/payment_return_widget.dart' show PaymentReturnWidget;
+export '/welcom_pages/payment_return/payment_return_widget.dart'
+    show PaymentReturnWidget;

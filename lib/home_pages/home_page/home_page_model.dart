@@ -1,4 +1,3 @@
-import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -10,8 +9,6 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
 
   // Stores action output result for [Backend Call - Query Rows] action in HomePage widget.
   List<UserEntitlementsRow>? entitlementRow;
-  // Stores action output result for [Backend Call - API (CreateCheckoutSession)] action in Button widget.
-  ApiCallResponse? checkoutResp;
 
   @override
   void initState(BuildContext context) {}
