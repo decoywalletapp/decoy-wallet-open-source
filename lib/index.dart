@@ -84,3 +84,4 @@ export '/pin_pages/decoy_pin_acknowledgements/decoy_pin_acknowledgements_widget.
     show DecoyPinAcknowledgementsWidget;
 export '/settings_pages/privacy_policy/privacy_policy_widget.dart'
     show PrivacyPolicyWidget;
+export '/payment_pending/payment_pending_widget.dart' show PaymentPendingWidget;

@@ -405,6 +405,12 @@ class FFAppState extends ChangeNotifier {
   void deleteHasActiveSubscription() {
     secureStorage.delete(key: 'ff_hasActiveSubscription');
   }
+
+  bool _isCheckingEntitlement = false;
+  bool get isCheckingEntitlement => _isCheckingEntitlement;
+  set isCheckingEntitlement(bool value) {
+    _isCheckingEntitlement = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

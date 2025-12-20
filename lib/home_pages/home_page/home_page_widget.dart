@@ -4,6 +4,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -842,11 +843,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             currentUserUid: currentUserUid,
                                           );
 
-                                          await launchURL(
-                                              CreateCheckoutSessionCall.url(
-                                            (_model.checkoutResp?.jsonBody ??
-                                                ''),
-                                          )!);
+                                          await actions.openExternalUrl(
+                                            CreateCheckoutSessionCall.url(
+                                              (_model.checkoutResp?.jsonBody ??
+                                                  ''),
+                                            )!,
+                                          );
 
                                           safeSetState(() {});
                                         },

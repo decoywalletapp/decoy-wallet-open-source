@@ -22,3 +22,4 @@ export 'build_personal_json.dart' show buildPersonalJson;
 export 'debug_sign_up.dart' show debugSignUp;
 export 'supa_email_sign_up.dart' show supaEmailSignUp;
 export 'delete_current_user_account.dart' show deleteCurrentUserAccount;
+export 'open_external_url.dart' show openExternalUrl;
