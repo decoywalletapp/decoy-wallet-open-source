@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -87,7 +88,11 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                         size: 20.0,
                       ),
                       onPressed: () async {
-                        context.safePop();
+                        if (loggedIn == true) {
+                          context.pushNamed(HomePageWidget.routeName);
+                        } else {
+                          context.goNamed(LoginPageWidget.routeName);
+                        }
                       },
                     ),
                   ),
@@ -99,34 +104,64 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(0.0, -1.0),
-                                child: Text(
-                                  'Choose Access Method',
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineLarge
-                                      .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineLarge
-                                                  .fontStyle,
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Material(
+                                  color: Colors.transparent,
+                                  elevation: 3.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Container(
+                                    width: 350.0,
+                                    height: 120.0,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'Choose Access Method',
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                font: GoogleFonts.bebasNeue(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .info,
+                                                fontSize: 48.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
                                         ),
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineLarge
-                                            .fontStyle,
                                       ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ].divide(SizedBox(height: 8.0)),
+                              ].divide(SizedBox(height: 0.0)),
+                            ),
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -182,7 +217,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       child: Image.asset(
                                                         'assets/images/Bitcoin-Logo.png',
                                                         width: 200.0,
-                                                        height: 125.0,
+                                                        height: 120.0,
                                                         fit: BoxFit.cover,
                                                         alignment:
                                                             Alignment(0.0, 0.0),
@@ -191,8 +226,26 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                   ),
                                                   FFButtonWidget(
                                                     onPressed: () async {
-                                                      await launchURL(
-                                                          'https://decoywalletapp.com/btc-test');
+                                                      _model.apiResultk1h =
+                                                          await CreateBTCPayInvoiceCall
+                                                              .call(
+                                                        currentUserUid:
+                                                            currentUserUid,
+                                                      );
+
+                                                      if ((_model.apiResultk1h
+                                                              ?.succeeded ??
+                                                          true)) {
+                                                        await launchURL(
+                                                            CreateBTCPayInvoiceCall
+                                                                .invoiceUrl(
+                                                          (_model.apiResultk1h
+                                                                  ?.jsonBody ??
+                                                              ''),
+                                                        )!);
+                                                      }
+
+                                                      safeSetState(() {});
                                                     },
                                                     text: 'Pay with Bitcoin',
                                                     options: FFButtonOptions(
@@ -490,8 +543,8 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                             ),
                           ),
                         ]
-                            .divide(SizedBox(height: 30.0))
-                            .addToStart(SizedBox(height: 24.0)),
+                            .divide(SizedBox(height: 24.0))
+                            .addToStart(SizedBox(height: 12.0)),
                       ),
                     ),
                   ),

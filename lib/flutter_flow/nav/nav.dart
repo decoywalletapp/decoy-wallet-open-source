@@ -126,6 +126,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: HomePageWidget.routeName,
         path: HomePageWidget.routePath,
+        requireAuth: true,
         builder: (context, params) => HomePageWidget(),
       ),
       FFRoute(
@@ -387,11 +388,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: SubscriptionOptionsWidget.routeName,
         path: SubscriptionOptionsWidget.routePath,
+        requireAuth: true,
         builder: (context, params) => SubscriptionOptionsWidget(),
       ),
       FFRoute(
         name: PaymentReturnWidget.routeName,
         path: PaymentReturnWidget.routePath,
+        requireAuth: true,
         builder: (context, params) => PaymentReturnWidget(),
       ),
       FFRoute(
