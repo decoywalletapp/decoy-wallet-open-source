@@ -129,7 +129,8 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                     child: Align(
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Padding(
-                                        padding: EdgeInsets.all(8.0),
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8.0, 12.0, 8.0, 12.0),
                                         child: Text(
                                           'Choose Access Method',
                                           textAlign: TextAlign.center,
@@ -154,6 +155,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
                                                         .fontStyle,
+                                                lineHeight: 1.125,
                                               ),
                                         ),
                                       ),
@@ -236,13 +238,15 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       if ((_model.apiResultk1h
                                                               ?.succeeded ??
                                                           true)) {
-                                                        await launchURL(
-                                                            CreateBTCPayInvoiceCall
-                                                                .invoiceUrl(
-                                                          (_model.apiResultk1h
-                                                                  ?.jsonBody ??
-                                                              ''),
-                                                        )!);
+                                                        await actions
+                                                            .openExternalUrl(
+                                                          CreateBTCPayInvoiceCall
+                                                              .invoiceUrl(
+                                                            (_model.apiResultk1h
+                                                                    ?.jsonBody ??
+                                                                ''),
+                                                          )!,
+                                                        );
                                                       }
 
                                                       safeSetState(() {});
