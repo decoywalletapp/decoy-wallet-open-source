@@ -3,6 +3,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -116,36 +117,67 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                   ),
                 ],
               ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
-                      child: Text(
-                        'Control Center',
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              font: GoogleFonts.interTight(
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .fontStyle,
-                              ),
-                              fontSize: 32.0,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .headlineMedium
-                                  .fontStyle,
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+                        child: Material(
+                          color: Colors.transparent,
+                          elevation: 3.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Container(
+                            width: 300.0,
+                            height: 72.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    8.0, 12.0, 8.0, 12.0),
+                                child: Text(
+                                  'Control Center',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        font: GoogleFonts.bebasNeue(
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                        color:
+                                            FlutterFlowTheme.of(context).info,
+                                        fontSize: 48.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                        lineHeight: 1.125,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -204,10 +236,15 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   child: SwitchListTile(
                                     value: _model.pINPoliceTileValue ??=
                                         FFAppState().decoyPin911Enabled,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() => _model
-                                          .pINPoliceTileValue = newValue);
-                                    },
+                                    onChanged:
+                                        (FFAppState().hasActiveSubscription ==
+                                                false)
+                                            ? null
+                                            : (newValue) async {
+                                                safeSetState(() =>
+                                                    _model.pINPoliceTileValue =
+                                                        newValue);
+                                              },
                                     title: Text(
                                       '911 Trigger',
                                       style: FlutterFlowTheme.of(context)
@@ -525,10 +562,15 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   child: SwitchListTile(
                                     value: _model.pINEContactsTileValue ??=
                                         FFAppState().decoyPinContactsEnabled,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() => _model
-                                          .pINEContactsTileValue = newValue);
-                                    },
+                                    onChanged: (FFAppState()
+                                                .hasActiveSubscription ==
+                                            false)
+                                        ? null
+                                        : (newValue) async {
+                                            safeSetState(() =>
+                                                _model.pINEContactsTileValue =
+                                                    newValue);
+                                          },
                                     title: Text(
                                       'Emergency Contacts Trigger',
                                       style: FlutterFlowTheme.of(context)
@@ -890,10 +932,15 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   child: SwitchListTile(
                                     value: _model.seedMonitorArmTileValue ??=
                                         FFAppState().decoySeedArmed,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() => _model
-                                          .seedMonitorArmTileValue = newValue);
-                                    },
+                                    onChanged: (FFAppState()
+                                                .hasActiveSubscription ==
+                                            false)
+                                        ? null
+                                        : (newValue) async {
+                                            safeSetState(() =>
+                                                _model.seedMonitorArmTileValue =
+                                                    newValue);
+                                          },
                                     title: Text(
                                       'Seed Phrase Monitor',
                                       style: FlutterFlowTheme.of(context)
@@ -1255,10 +1302,15 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   child: SwitchListTile(
                                     value: _model.bioSwitchTileValue ??=
                                         FFAppState().biometricsEnabled,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() => _model
-                                          .bioSwitchTileValue = newValue);
-                                    },
+                                    onChanged:
+                                        (FFAppState().hasActiveSubscription ==
+                                                false)
+                                            ? null
+                                            : (newValue) async {
+                                                safeSetState(() =>
+                                                    _model.bioSwitchTileValue =
+                                                        newValue);
+                                              },
                                     title: Text(
                                       'Biometric Authentication',
                                       style: FlutterFlowTheme.of(context)
@@ -1585,214 +1637,316 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: FFButtonWidget(
-                          onPressed: () async {
-                            if (_model.bioSwitchTileValue ==
-                                FFAppState().biometricsEnabled) {
-                              FFAppState().decoyPin911Enabled =
-                                  _model.pINPoliceTileValue!;
-                              FFAppState().decoyPinContactsEnabled =
-                                  _model.pINEContactsTileValue!;
-                              FFAppState().decoySeedArmed =
-                                  _model.seedMonitorArmTileValue!;
-                              safeSetState(() {});
-                              await DecoyWalletTable().update(
-                                data: {
-                                  'decoy_seed_armed':
-                                      FFAppState().decoySeedArmed,
-                                  'decoy_seed_contacts_enabled':
-                                      FFAppState().decoySeedArmed,
-                                  'decoy_pin_911_enabled':
-                                      FFAppState().decoyPin911Enabled,
-                                  'decoy_pin_contacts_enabled':
-                                      FFAppState().decoyPinContactsEnabled,
-                                },
-                                matchingRows: (rows) => rows.eqOrNull(
-                                  'id',
-                                  _model.decoyWalletRow?.elementAtOrNull(0)?.id,
-                                ),
-                              );
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 100,
-                                ),
-                              );
-                              context.safePop();
-                            } else {
-                              if (_model.bioSwitchTileValue == true) {
-                                final _localAuth = LocalAuthentication();
-                                bool _isBiometricSupported =
-                                    await _localAuth.isDeviceSupported();
+                      Stack(
+                        children: [
+                          if ((FFAppState().entitlementCheckCompleted ==
+                                  true) &&
+                              (FFAppState().hasActiveSubscription == true))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  20.0, 0.0, 20.0, 0.0),
+                              child: FFButtonWidget(
+                                onPressed: ((FFAppState()
+                                                .entitlementCheckCompleted !=
+                                            true) ||
+                                        (FFAppState().hasActiveSubscription !=
+                                            true))
+                                    ? null
+                                    : () async {
+                                        if (_model.bioSwitchTileValue ==
+                                            FFAppState().biometricsEnabled) {
+                                          FFAppState().decoyPin911Enabled =
+                                              _model.pINPoliceTileValue!;
+                                          FFAppState().decoyPinContactsEnabled =
+                                              _model.pINEContactsTileValue!;
+                                          FFAppState().decoySeedArmed =
+                                              _model.seedMonitorArmTileValue!;
+                                          safeSetState(() {});
+                                          await DecoyWalletTable().update(
+                                            data: {
+                                              'decoy_seed_armed':
+                                                  FFAppState().decoySeedArmed,
+                                              'decoy_seed_contacts_enabled':
+                                                  FFAppState().decoySeedArmed,
+                                              'decoy_pin_911_enabled':
+                                                  FFAppState()
+                                                      .decoyPin911Enabled,
+                                              'decoy_pin_contacts_enabled':
+                                                  FFAppState()
+                                                      .decoyPinContactsEnabled,
+                                            },
+                                            matchingRows: (rows) =>
+                                                rows.eqOrNull(
+                                              'id',
+                                              _model.decoyWalletRow
+                                                  ?.elementAtOrNull(0)
+                                                  ?.id,
+                                            ),
+                                          );
+                                          await Future.delayed(
+                                            Duration(
+                                              milliseconds: 100,
+                                            ),
+                                          );
+                                          context.safePop();
+                                        } else {
+                                          if (_model.bioSwitchTileValue ==
+                                              true) {
+                                            final _localAuth =
+                                                LocalAuthentication();
+                                            bool _isBiometricSupported =
+                                                await _localAuth
+                                                    .isDeviceSupported();
 
-                                if (_isBiometricSupported) {
-                                  try {
-                                    _model.settingsBioResult =
-                                        await _localAuth.authenticate(
-                                            localizedReason:
-                                                'Please authenticate to enable biometric unlock for Decoy Wallet');
-                                  } on PlatformException {
-                                    _model.settingsBioResult = false;
-                                  }
-                                  safeSetState(() {});
-                                }
+                                            if (_isBiometricSupported) {
+                                              try {
+                                                _model.settingsBioResult =
+                                                    await _localAuth.authenticate(
+                                                        localizedReason:
+                                                            'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                              } on PlatformException {
+                                                _model.settingsBioResult =
+                                                    false;
+                                              }
+                                              safeSetState(() {});
+                                            }
 
-                                if (_model.settingsBioResult == true) {
-                                  FFAppState().biometricsEnabled = true;
-                                  safeSetState(() {});
-                                  FFAppState().decoyPin911Enabled =
-                                      _model.pINPoliceTileValue!;
-                                  FFAppState().decoyPinContactsEnabled =
-                                      _model.pINEContactsTileValue!;
-                                  FFAppState().decoySeedArmed =
-                                      _model.seedMonitorArmTileValue!;
-                                  safeSetState(() {});
-                                  await DecoyWalletTable().update(
-                                    data: {
-                                      'decoy_seed_armed':
-                                          FFAppState().decoySeedArmed,
-                                      'decoy_seed_contacts_enabled':
-                                          FFAppState().decoySeedArmed,
-                                      'decoy_pin_911_enabled':
-                                          FFAppState().decoyPin911Enabled,
-                                      'decoy_pin_contacts_enabled':
-                                          FFAppState().decoyPinContactsEnabled,
-                                    },
-                                    matchingRows: (rows) => rows.eqOrNull(
-                                      'id',
-                                      _model.decoyWalletRow
-                                          ?.elementAtOrNull(0)
-                                          ?.id,
-                                    ),
-                                  );
-                                  await Future.delayed(
-                                    Duration(
-                                      milliseconds: 100,
-                                    ),
-                                  );
-                                  context.safePop();
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'BIOMETRIC VERIFICATION FAILED. YOUR SETTING WAS NOT CHANGED.',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
-                                  FFAppState().decoyPin911Enabled =
-                                      _model.pINPoliceTileValue!;
-                                  FFAppState().decoyPinContactsEnabled =
-                                      _model.pINEContactsTileValue!;
-                                  FFAppState().decoySeedArmed =
-                                      _model.seedMonitorArmTileValue!;
-                                  safeSetState(() {});
-                                  await DecoyWalletTable().update(
-                                    data: {
-                                      'decoy_seed_armed':
-                                          FFAppState().decoySeedArmed,
-                                      'decoy_seed_contacts_enabled':
-                                          FFAppState().decoySeedArmed,
-                                      'decoy_pin_911_enabled':
-                                          FFAppState().decoyPin911Enabled,
-                                      'decoy_pin_contacts_enabled':
-                                          FFAppState().decoyPinContactsEnabled,
-                                    },
-                                    matchingRows: (rows) => rows.eqOrNull(
-                                      'id',
-                                      _model.decoyWalletRow
-                                          ?.elementAtOrNull(0)
-                                          ?.id,
-                                    ),
-                                  );
-                                  await Future.delayed(
-                                    Duration(
-                                      milliseconds: 100,
-                                    ),
-                                  );
-                                  context.safePop();
-                                }
-                              } else {
-                                FFAppState().biometricsEnabled = false;
-                                safeSetState(() {});
-                                FFAppState().decoyPin911Enabled =
-                                    _model.pINPoliceTileValue!;
-                                FFAppState().decoyPinContactsEnabled =
-                                    _model.pINEContactsTileValue!;
-                                FFAppState().decoySeedArmed =
-                                    _model.seedMonitorArmTileValue!;
-                                safeSetState(() {});
-                                await DecoyWalletTable().update(
-                                  data: {
-                                    'decoy_seed_armed':
-                                        FFAppState().decoySeedArmed,
-                                    'decoy_seed_contacts_enabled':
-                                        FFAppState().decoySeedArmed,
-                                    'decoy_pin_911_enabled':
-                                        FFAppState().decoyPin911Enabled,
-                                    'decoy_pin_contacts_enabled':
-                                        FFAppState().decoyPinContactsEnabled,
-                                  },
-                                  matchingRows: (rows) => rows.eqOrNull(
-                                    'id',
-                                    _model.decoyWalletRow
-                                        ?.elementAtOrNull(0)
-                                        ?.id,
-                                  ),
-                                );
-                                await Future.delayed(
-                                  Duration(
-                                    milliseconds: 100,
-                                  ),
-                                );
-                                context.safePop();
-                              }
-                            }
+                                            if (_model.settingsBioResult ==
+                                                true) {
+                                              FFAppState().biometricsEnabled =
+                                                  true;
+                                              safeSetState(() {});
+                                              FFAppState().decoyPin911Enabled =
+                                                  _model.pINPoliceTileValue!;
+                                              FFAppState()
+                                                      .decoyPinContactsEnabled =
+                                                  _model.pINEContactsTileValue!;
+                                              FFAppState().decoySeedArmed =
+                                                  _model
+                                                      .seedMonitorArmTileValue!;
+                                              safeSetState(() {});
+                                              await DecoyWalletTable().update(
+                                                data: {
+                                                  'decoy_seed_armed':
+                                                      FFAppState()
+                                                          .decoySeedArmed,
+                                                  'decoy_seed_contacts_enabled':
+                                                      FFAppState()
+                                                          .decoySeedArmed,
+                                                  'decoy_pin_911_enabled':
+                                                      FFAppState()
+                                                          .decoyPin911Enabled,
+                                                  'decoy_pin_contacts_enabled':
+                                                      FFAppState()
+                                                          .decoyPinContactsEnabled,
+                                                },
+                                                matchingRows: (rows) =>
+                                                    rows.eqOrNull(
+                                                  'id',
+                                                  _model.decoyWalletRow
+                                                      ?.elementAtOrNull(0)
+                                                      ?.id,
+                                                ),
+                                              );
+                                              await Future.delayed(
+                                                Duration(
+                                                  milliseconds: 100,
+                                                ),
+                                              );
+                                              context.safePop();
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'BIOMETRIC VERIFICATION FAILED. YOUR SETTING WAS NOT CHANGED.',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                ),
+                                              );
+                                              FFAppState().decoyPin911Enabled =
+                                                  _model.pINPoliceTileValue!;
+                                              FFAppState()
+                                                      .decoyPinContactsEnabled =
+                                                  _model.pINEContactsTileValue!;
+                                              FFAppState().decoySeedArmed =
+                                                  _model
+                                                      .seedMonitorArmTileValue!;
+                                              safeSetState(() {});
+                                              await DecoyWalletTable().update(
+                                                data: {
+                                                  'decoy_seed_armed':
+                                                      FFAppState()
+                                                          .decoySeedArmed,
+                                                  'decoy_seed_contacts_enabled':
+                                                      FFAppState()
+                                                          .decoySeedArmed,
+                                                  'decoy_pin_911_enabled':
+                                                      FFAppState()
+                                                          .decoyPin911Enabled,
+                                                  'decoy_pin_contacts_enabled':
+                                                      FFAppState()
+                                                          .decoyPinContactsEnabled,
+                                                },
+                                                matchingRows: (rows) =>
+                                                    rows.eqOrNull(
+                                                  'id',
+                                                  _model.decoyWalletRow
+                                                      ?.elementAtOrNull(0)
+                                                      ?.id,
+                                                ),
+                                              );
+                                              await Future.delayed(
+                                                Duration(
+                                                  milliseconds: 100,
+                                                ),
+                                              );
+                                              context.safePop();
+                                            }
+                                          } else {
+                                            FFAppState().biometricsEnabled =
+                                                false;
+                                            safeSetState(() {});
+                                            FFAppState().decoyPin911Enabled =
+                                                _model.pINPoliceTileValue!;
+                                            FFAppState()
+                                                    .decoyPinContactsEnabled =
+                                                _model.pINEContactsTileValue!;
+                                            FFAppState().decoySeedArmed =
+                                                _model.seedMonitorArmTileValue!;
+                                            safeSetState(() {});
+                                            await DecoyWalletTable().update(
+                                              data: {
+                                                'decoy_seed_armed':
+                                                    FFAppState().decoySeedArmed,
+                                                'decoy_seed_contacts_enabled':
+                                                    FFAppState().decoySeedArmed,
+                                                'decoy_pin_911_enabled':
+                                                    FFAppState()
+                                                        .decoyPin911Enabled,
+                                                'decoy_pin_contacts_enabled':
+                                                    FFAppState()
+                                                        .decoyPinContactsEnabled,
+                                              },
+                                              matchingRows: (rows) =>
+                                                  rows.eqOrNull(
+                                                'id',
+                                                _model.decoyWalletRow
+                                                    ?.elementAtOrNull(0)
+                                                    ?.id,
+                                              ),
+                                            );
+                                            await Future.delayed(
+                                              Duration(
+                                                milliseconds: 100,
+                                              ),
+                                            );
+                                            context.safePop();
+                                          }
+                                        }
 
-                            safeSetState(() {});
-                          },
-                          text: 'Save Changes',
-                          options: FFButtonOptions(
-                            width: double.infinity,
-                            height: 50.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                24.0, 0.0, 24.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).primary,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontStyle,
-                                  ),
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FlutterFlowTheme.of(context)
+                                        safeSetState(() {});
+                                      },
+                                text: 'Save Changes',
+                                options: FFButtonOptions(
+                                  width: double.infinity,
+                                  height: 50.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
-                                      .fontStyle,
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 3.0,
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
-                            elevation: 2.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                        ),
+                          if ((FFAppState().entitlementCheckCompleted ==
+                                  true) &&
+                              (FFAppState().hasActiveSubscription != true))
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    20.0, 0.0, 20.0, 0.0),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    context.pushNamed(
+                                        SubscriptionOptionsWidget.routeName);
+                                  },
+                                  text:
+                                      'Subscription Required to Change Values',
+                                  options: FFButtonOptions(
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        24.0, 0.0, 24.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: FlutterFlowTheme.of(context).error,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          font: GoogleFonts.interTight(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .fontStyle,
+                                          ),
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                    elevation: 3.0,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),

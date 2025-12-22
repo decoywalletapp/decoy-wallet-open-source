@@ -32,6 +32,9 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      FFAppState().entitlementCheckCompleted = false;
+      FFAppState().hasActiveSubscription = false;
+      safeSetState(() {});
       _model.entitlementsQuery = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
@@ -43,17 +46,20 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
               'decoy_wallet',
             ),
       );
-      FFAppState().hasActiveSubscription = valueOrDefault<bool>(
-        _model.entitlementsQuery?.elementAtOrNull(0)?.isActive,
-        false,
-      );
-      safeSetState(() {});
-      if (FFAppState().hasActiveSubscription == true) {
+      if ((_model.entitlementsQuery != null &&
+              (_model.entitlementsQuery)!.isNotEmpty) &&
+          (_model.entitlementsQuery?.elementAtOrNull(0)?.isActive == true)) {
+        FFAppState().hasActiveSubscription = true;
+        FFAppState().entitlementCheckCompleted = true;
+        safeSetState(() {});
         if (Navigator.of(context).canPop()) {
           context.pop();
         }
         context.pushNamed(HomePageWidget.routeName);
       } else {
+        FFAppState().hasActiveSubscription = false;
+        FFAppState().entitlementCheckCompleted = true;
+        safeSetState(() {});
         if (Navigator.of(context).canPop()) {
           context.pop();
         }

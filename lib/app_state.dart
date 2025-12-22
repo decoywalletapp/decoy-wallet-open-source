@@ -92,6 +92,11 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getBool('ff_hasActiveSubscription') ??
               _hasActiveSubscription;
     });
+    await _safeInitAsync(() async {
+      _entitlementCheckCompleted =
+          await secureStorage.getBool('ff_entitlementCheckCompleted') ??
+              _entitlementCheckCompleted;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -406,10 +411,15 @@ class FFAppState extends ChangeNotifier {
     secureStorage.delete(key: 'ff_hasActiveSubscription');
   }
 
-  bool _isCheckingEntitlement = false;
-  bool get isCheckingEntitlement => _isCheckingEntitlement;
-  set isCheckingEntitlement(bool value) {
-    _isCheckingEntitlement = value;
+  bool _entitlementCheckCompleted = false;
+  bool get entitlementCheckCompleted => _entitlementCheckCompleted;
+  set entitlementCheckCompleted(bool value) {
+    _entitlementCheckCompleted = value;
+    secureStorage.setBool('ff_entitlementCheckCompleted', value);
+  }
+
+  void deleteEntitlementCheckCompleted() {
+    secureStorage.delete(key: 'ff_entitlementCheckCompleted');
   }
 }
 

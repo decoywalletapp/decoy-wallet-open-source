@@ -381,11 +381,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => PrivacyPolicyWidget(),
       ),
       FFRoute(
-        name: PaymentPendingWidget.routeName,
-        path: PaymentPendingWidget.routePath,
-        builder: (context, params) => PaymentPendingWidget(),
-      ),
-      FFRoute(
         name: SubscriptionOptionsWidget.routeName,
         path: SubscriptionOptionsWidget.routePath,
         requireAuth: true,

@@ -35,6 +35,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      FFAppState().entitlementCheckCompleted = false;
+      FFAppState().hasActiveSubscription = false;
+      safeSetState(() {});
       _model.entitlementRow = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
@@ -46,8 +49,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               'decoy_wallet',
             ),
       );
-      FFAppState().hasActiveSubscription =
-          _model.entitlementRow!.elementAtOrNull(0)!.isActive;
+      FFAppState().entitlementCheckCompleted = true;
       safeSetState(() {});
       if ((_model.entitlementRow != null &&
               (_model.entitlementRow)!.isNotEmpty) &&

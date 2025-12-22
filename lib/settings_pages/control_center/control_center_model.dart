@@ -1,5 +1,6 @@
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/index.dart';
 import 'control_center_widget.dart' show ControlCenterWidget;
 import 'package:flutter/material.dart';
 

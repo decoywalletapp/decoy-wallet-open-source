@@ -173,20 +173,6 @@ class _GenerateDecoySeedPhraseWidgetState
                                   r'''$.mnemonic''',
                                 ).toString();
                                 safeSetState(() {});
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Decoy Wallet Created & Activated',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
                                 FFAppState().decoySeedArmed = false;
                                 safeSetState(() {});
                                 await DecoyWalletTable().update(
