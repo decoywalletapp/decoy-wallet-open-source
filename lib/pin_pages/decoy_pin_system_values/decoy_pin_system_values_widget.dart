@@ -1036,30 +1036,37 @@ class _DecoyPinSystemValuesWidgetState
                       ),
                       FFButtonWidget(
                         onPressed: () async {
-                          FFAppState().decoyPin911Enabled =
-                              _model.pINPoliceTileValue!;
-                          FFAppState().decoyPinContactsEnabled =
-                              _model.pINEContactsTileValue!;
-                          safeSetState(() {});
-                          await DecoyWalletTable().update(
-                            data: {
-                              'decoy_pin_911_enabled':
-                                  FFAppState().decoyPin911Enabled,
-                              'decoy_pin_contacts_enabled':
-                                  FFAppState().decoyPinContactsEnabled,
-                            },
-                            matchingRows: (rows) => rows.eqOrNull(
-                              'user_id',
-                              currentUserUid,
-                            ),
-                          );
-                          await Future.delayed(
-                            Duration(
-                              milliseconds: 100,
-                            ),
-                          );
+                          if ((FFAppState().hasActiveSubscription == true) &&
+                              (FFAppState().entitlementCheckCompleted ==
+                                  true)) {
+                            FFAppState().decoyPin911Enabled =
+                                _model.pINPoliceTileValue!;
+                            FFAppState().decoyPinContactsEnabled =
+                                _model.pINEContactsTileValue!;
+                            safeSetState(() {});
+                            await DecoyWalletTable().update(
+                              data: {
+                                'decoy_pin_911_enabled':
+                                    FFAppState().decoyPin911Enabled,
+                                'decoy_pin_contacts_enabled':
+                                    FFAppState().decoyPinContactsEnabled,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+                            await Future.delayed(
+                              Duration(
+                                milliseconds: 100,
+                              ),
+                            );
 
-                          context.pushNamed(HomePageWidget.routeName);
+                            context.pushNamed(HomePageWidget.routeName);
+                          } else {
+                            context
+                                .goNamed(SubscriptionOptionsWidget.routeName);
+                          }
 
                           safeSetState(() {});
                         },

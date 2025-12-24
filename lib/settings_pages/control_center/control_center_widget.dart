@@ -1653,171 +1653,14 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                             true))
                                     ? null
                                     : () async {
-                                        if (_model.bioSwitchTileValue ==
-                                            FFAppState().biometricsEnabled) {
-                                          FFAppState().decoyPin911Enabled =
-                                              _model.pINPoliceTileValue!;
-                                          FFAppState().decoyPinContactsEnabled =
-                                              _model.pINEContactsTileValue!;
-                                          FFAppState().decoySeedArmed =
-                                              _model.seedMonitorArmTileValue!;
-                                          safeSetState(() {});
-                                          await DecoyWalletTable().update(
-                                            data: {
-                                              'decoy_seed_armed':
-                                                  FFAppState().decoySeedArmed,
-                                              'decoy_seed_contacts_enabled':
-                                                  FFAppState().decoySeedArmed,
-                                              'decoy_pin_911_enabled':
-                                                  FFAppState()
-                                                      .decoyPin911Enabled,
-                                              'decoy_pin_contacts_enabled':
-                                                  FFAppState()
-                                                      .decoyPinContactsEnabled,
-                                            },
-                                            matchingRows: (rows) =>
-                                                rows.eqOrNull(
-                                              'id',
-                                              _model.decoyWalletRow
-                                                  ?.elementAtOrNull(0)
-                                                  ?.id,
-                                            ),
-                                          );
-                                          await Future.delayed(
-                                            Duration(
-                                              milliseconds: 100,
-                                            ),
-                                          );
-                                          context.safePop();
-                                        } else {
+                                        if ((FFAppState()
+                                                    .hasActiveSubscription ==
+                                                true) &&
+                                            (FFAppState()
+                                                    .entitlementCheckCompleted ==
+                                                true)) {
                                           if (_model.bioSwitchTileValue ==
-                                              true) {
-                                            final _localAuth =
-                                                LocalAuthentication();
-                                            bool _isBiometricSupported =
-                                                await _localAuth
-                                                    .isDeviceSupported();
-
-                                            if (_isBiometricSupported) {
-                                              try {
-                                                _model.settingsBioResult =
-                                                    await _localAuth.authenticate(
-                                                        localizedReason:
-                                                            'Please authenticate to enable biometric unlock for Decoy Wallet');
-                                              } on PlatformException {
-                                                _model.settingsBioResult =
-                                                    false;
-                                              }
-                                              safeSetState(() {});
-                                            }
-
-                                            if (_model.settingsBioResult ==
-                                                true) {
-                                              FFAppState().biometricsEnabled =
-                                                  true;
-                                              safeSetState(() {});
-                                              FFAppState().decoyPin911Enabled =
-                                                  _model.pINPoliceTileValue!;
-                                              FFAppState()
-                                                      .decoyPinContactsEnabled =
-                                                  _model.pINEContactsTileValue!;
-                                              FFAppState().decoySeedArmed =
-                                                  _model
-                                                      .seedMonitorArmTileValue!;
-                                              safeSetState(() {});
-                                              await DecoyWalletTable().update(
-                                                data: {
-                                                  'decoy_seed_armed':
-                                                      FFAppState()
-                                                          .decoySeedArmed,
-                                                  'decoy_seed_contacts_enabled':
-                                                      FFAppState()
-                                                          .decoySeedArmed,
-                                                  'decoy_pin_911_enabled':
-                                                      FFAppState()
-                                                          .decoyPin911Enabled,
-                                                  'decoy_pin_contacts_enabled':
-                                                      FFAppState()
-                                                          .decoyPinContactsEnabled,
-                                                },
-                                                matchingRows: (rows) =>
-                                                    rows.eqOrNull(
-                                                  'id',
-                                                  _model.decoyWalletRow
-                                                      ?.elementAtOrNull(0)
-                                                      ?.id,
-                                                ),
-                                              );
-                                              await Future.delayed(
-                                                Duration(
-                                                  milliseconds: 100,
-                                                ),
-                                              );
-                                              context.safePop();
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'BIOMETRIC VERIFICATION FAILED. YOUR SETTING WAS NOT CHANGED.',
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                    ),
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                ),
-                                              );
-                                              FFAppState().decoyPin911Enabled =
-                                                  _model.pINPoliceTileValue!;
-                                              FFAppState()
-                                                      .decoyPinContactsEnabled =
-                                                  _model.pINEContactsTileValue!;
-                                              FFAppState().decoySeedArmed =
-                                                  _model
-                                                      .seedMonitorArmTileValue!;
-                                              safeSetState(() {});
-                                              await DecoyWalletTable().update(
-                                                data: {
-                                                  'decoy_seed_armed':
-                                                      FFAppState()
-                                                          .decoySeedArmed,
-                                                  'decoy_seed_contacts_enabled':
-                                                      FFAppState()
-                                                          .decoySeedArmed,
-                                                  'decoy_pin_911_enabled':
-                                                      FFAppState()
-                                                          .decoyPin911Enabled,
-                                                  'decoy_pin_contacts_enabled':
-                                                      FFAppState()
-                                                          .decoyPinContactsEnabled,
-                                                },
-                                                matchingRows: (rows) =>
-                                                    rows.eqOrNull(
-                                                  'id',
-                                                  _model.decoyWalletRow
-                                                      ?.elementAtOrNull(0)
-                                                      ?.id,
-                                                ),
-                                              );
-                                              await Future.delayed(
-                                                Duration(
-                                                  milliseconds: 100,
-                                                ),
-                                              );
-                                              context.safePop();
-                                            }
-                                          } else {
-                                            FFAppState().biometricsEnabled =
-                                                false;
-                                            safeSetState(() {});
+                                              FFAppState().biometricsEnabled) {
                                             FFAppState().decoyPin911Enabled =
                                                 _model.pINPoliceTileValue!;
                                             FFAppState()
@@ -1853,7 +1696,183 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               ),
                                             );
                                             context.safePop();
+                                          } else {
+                                            if (_model.bioSwitchTileValue ==
+                                                true) {
+                                              final _localAuth =
+                                                  LocalAuthentication();
+                                              bool _isBiometricSupported =
+                                                  await _localAuth
+                                                      .isDeviceSupported();
+
+                                              if (_isBiometricSupported) {
+                                                try {
+                                                  _model.settingsBioResult =
+                                                      await _localAuth.authenticate(
+                                                          localizedReason:
+                                                              'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                                } on PlatformException {
+                                                  _model.settingsBioResult =
+                                                      false;
+                                                }
+                                                safeSetState(() {});
+                                              }
+
+                                              if (_model.settingsBioResult ==
+                                                  true) {
+                                                FFAppState().biometricsEnabled =
+                                                    true;
+                                                safeSetState(() {});
+                                                FFAppState()
+                                                        .decoyPin911Enabled =
+                                                    _model.pINPoliceTileValue!;
+                                                FFAppState()
+                                                        .decoyPinContactsEnabled =
+                                                    _model
+                                                        .pINEContactsTileValue!;
+                                                FFAppState().decoySeedArmed =
+                                                    _model
+                                                        .seedMonitorArmTileValue!;
+                                                safeSetState(() {});
+                                                await DecoyWalletTable().update(
+                                                  data: {
+                                                    'decoy_seed_armed':
+                                                        FFAppState()
+                                                            .decoySeedArmed,
+                                                    'decoy_seed_contacts_enabled':
+                                                        FFAppState()
+                                                            .decoySeedArmed,
+                                                    'decoy_pin_911_enabled':
+                                                        FFAppState()
+                                                            .decoyPin911Enabled,
+                                                    'decoy_pin_contacts_enabled':
+                                                        FFAppState()
+                                                            .decoyPinContactsEnabled,
+                                                  },
+                                                  matchingRows: (rows) =>
+                                                      rows.eqOrNull(
+                                                    'id',
+                                                    _model.decoyWalletRow
+                                                        ?.elementAtOrNull(0)
+                                                        ?.id,
+                                                  ),
+                                                );
+                                                await Future.delayed(
+                                                  Duration(
+                                                    milliseconds: 100,
+                                                  ),
+                                                );
+                                                context.safePop();
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'BIOMETRIC VERIFICATION FAILED. YOUR SETTING WAS NOT CHANGED.',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
+                                                FFAppState()
+                                                        .decoyPin911Enabled =
+                                                    _model.pINPoliceTileValue!;
+                                                FFAppState()
+                                                        .decoyPinContactsEnabled =
+                                                    _model
+                                                        .pINEContactsTileValue!;
+                                                FFAppState().decoySeedArmed =
+                                                    _model
+                                                        .seedMonitorArmTileValue!;
+                                                safeSetState(() {});
+                                                await DecoyWalletTable().update(
+                                                  data: {
+                                                    'decoy_seed_armed':
+                                                        FFAppState()
+                                                            .decoySeedArmed,
+                                                    'decoy_seed_contacts_enabled':
+                                                        FFAppState()
+                                                            .decoySeedArmed,
+                                                    'decoy_pin_911_enabled':
+                                                        FFAppState()
+                                                            .decoyPin911Enabled,
+                                                    'decoy_pin_contacts_enabled':
+                                                        FFAppState()
+                                                            .decoyPinContactsEnabled,
+                                                  },
+                                                  matchingRows: (rows) =>
+                                                      rows.eqOrNull(
+                                                    'id',
+                                                    _model.decoyWalletRow
+                                                        ?.elementAtOrNull(0)
+                                                        ?.id,
+                                                  ),
+                                                );
+                                                await Future.delayed(
+                                                  Duration(
+                                                    milliseconds: 100,
+                                                  ),
+                                                );
+                                                context.safePop();
+                                              }
+                                            } else {
+                                              FFAppState().biometricsEnabled =
+                                                  false;
+                                              safeSetState(() {});
+                                              FFAppState().decoyPin911Enabled =
+                                                  _model.pINPoliceTileValue!;
+                                              FFAppState()
+                                                      .decoyPinContactsEnabled =
+                                                  _model.pINEContactsTileValue!;
+                                              FFAppState().decoySeedArmed =
+                                                  _model
+                                                      .seedMonitorArmTileValue!;
+                                              safeSetState(() {});
+                                              await DecoyWalletTable().update(
+                                                data: {
+                                                  'decoy_seed_armed':
+                                                      FFAppState()
+                                                          .decoySeedArmed,
+                                                  'decoy_seed_contacts_enabled':
+                                                      FFAppState()
+                                                          .decoySeedArmed,
+                                                  'decoy_pin_911_enabled':
+                                                      FFAppState()
+                                                          .decoyPin911Enabled,
+                                                  'decoy_pin_contacts_enabled':
+                                                      FFAppState()
+                                                          .decoyPinContactsEnabled,
+                                                },
+                                                matchingRows: (rows) =>
+                                                    rows.eqOrNull(
+                                                  'id',
+                                                  _model.decoyWalletRow
+                                                      ?.elementAtOrNull(0)
+                                                      ?.id,
+                                                ),
+                                              );
+                                              await Future.delayed(
+                                                Duration(
+                                                  milliseconds: 100,
+                                                ),
+                                              );
+                                              context.safePop();
+                                            }
                                           }
+                                        } else {
+                                          context.goNamed(
+                                              SubscriptionOptionsWidget
+                                                  .routeName);
                                         }
 
                                         safeSetState(() {});

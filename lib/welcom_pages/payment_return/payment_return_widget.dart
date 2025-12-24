@@ -46,11 +46,12 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
               'decoy_wallet',
             ),
       );
+      FFAppState().entitlementCheckCompleted = true;
+      safeSetState(() {});
       if ((_model.entitlementsQuery != null &&
               (_model.entitlementsQuery)!.isNotEmpty) &&
           (_model.entitlementsQuery?.elementAtOrNull(0)?.isActive == true)) {
         FFAppState().hasActiveSubscription = true;
-        FFAppState().entitlementCheckCompleted = true;
         safeSetState(() {});
         if (Navigator.of(context).canPop()) {
           context.pop();
@@ -58,7 +59,6 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
         context.pushNamed(HomePageWidget.routeName);
       } else {
         FFAppState().hasActiveSubscription = false;
-        FFAppState().entitlementCheckCompleted = true;
         safeSetState(() {});
         if (Navigator.of(context).canPop()) {
           context.pop();

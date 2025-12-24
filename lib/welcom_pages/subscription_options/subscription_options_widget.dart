@@ -89,7 +89,15 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                       ),
                       onPressed: () async {
                         if (loggedIn == true) {
-                          context.pushNamed(HomePageWidget.routeName);
+                          context.pushNamed(
+                            HomePageWidget.routeName,
+                            extra: <String, dynamic>{
+                              kTransitionInfoKey: TransitionInfo(
+                                hasTransition: true,
+                                transitionType: PageTransitionType.rightToLeft,
+                              ),
+                            },
+                          );
                         } else {
                           context.goNamed(LoginPageWidget.routeName);
                         }
@@ -217,10 +225,10 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                           BorderRadius.circular(
                                                               8.0),
                                                       child: Image.asset(
-                                                        'assets/images/Bitcoin-Logo.png',
+                                                        'assets/images/2a4d10ac-3000-4b7c-8891-b50ff1bdf6d0.jpg',
                                                         width: 200.0,
                                                         height: 120.0,
-                                                        fit: BoxFit.cover,
+                                                        fit: BoxFit.contain,
                                                         alignment:
                                                             Alignment(0.0, 0.0),
                                                       ),

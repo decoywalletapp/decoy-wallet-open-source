@@ -706,27 +706,34 @@ class _DecoySeedSystemValuesWidgetState
                       ),
                       FFButtonWidget(
                         onPressed: () async {
-                          FFAppState().decoySeedArmed =
-                              _model.seedMonitorArmTileValue!;
-                          safeSetState(() {});
-                          await DecoyWalletTable().update(
-                            data: {
-                              'decoy_seed_armed': FFAppState().decoySeedArmed,
-                              'decoy_seed_contacts_enabled':
-                                  FFAppState().decoySeedArmed,
-                            },
-                            matchingRows: (rows) => rows.eqOrNull(
-                              'user_id',
-                              currentUserUid,
-                            ),
-                          );
-                          await Future.delayed(
-                            Duration(
-                              milliseconds: 100,
-                            ),
-                          );
+                          if ((FFAppState().hasActiveSubscription == true) &&
+                              (FFAppState().entitlementCheckCompleted ==
+                                  true)) {
+                            FFAppState().decoySeedArmed =
+                                _model.seedMonitorArmTileValue!;
+                            safeSetState(() {});
+                            await DecoyWalletTable().update(
+                              data: {
+                                'decoy_seed_armed': FFAppState().decoySeedArmed,
+                                'decoy_seed_contacts_enabled':
+                                    FFAppState().decoySeedArmed,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+                            await Future.delayed(
+                              Duration(
+                                milliseconds: 100,
+                              ),
+                            );
 
-                          context.pushNamed(HomePageWidget.routeName);
+                            context.pushNamed(HomePageWidget.routeName);
+                          } else {
+                            context
+                                .goNamed(SubscriptionOptionsWidget.routeName);
+                          }
 
                           safeSetState(() {});
                         },

@@ -187,4 +187,8 @@ class DecoyWalletRow extends SupabaseDataRow {
       getField<bool>('decoy_pin_contacts_enabled')!;
   set decoyPinContactsEnabled(bool value) =>
       setField<bool>('decoy_pin_contacts_enabled', value);
+
+  DateTime? get lastTeardownAt => getField<DateTime>('last_teardown_at');
+  set lastTeardownAt(DateTime? value) =>
+      setField<DateTime>('last_teardown_at', value);
 }

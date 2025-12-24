@@ -9,6 +9,8 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
 
   // Stores action output result for [Backend Call - Query Rows] action in HomePage widget.
   List<UserEntitlementsRow>? entitlementRow;
+  // Stores action output result for [Backend Call - Update Row(s)] action in HomePage widget.
+  List<DecoyWalletRow>? updateFalses;
 
   @override
   void initState(BuildContext context) {}

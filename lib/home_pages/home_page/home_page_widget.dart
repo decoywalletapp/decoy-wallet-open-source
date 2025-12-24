@@ -59,7 +59,32 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       } else {
         FFAppState().hasActiveSubscription = false;
         safeSetState(() {});
+        if ((FFAppState().prevHasActiveSubscription == true) &&
+            (FFAppState().hasActiveSubscription == false) &&
+            (FFAppState().entitlementCheckCompleted == true)) {
+          await DecoyWalletTable().update(
+            data: {
+              'decoy_seed_armed': false,
+              'decoy_seed_contacts_enabled': false,
+              'decoy_pin_911_enabled': false,
+              'decoy_pin_contacts_enabled': false,
+              'last_teardown_at': supaSerialize<DateTime>(getCurrentTimestamp),
+            },
+            matchingRows: (rows) => rows.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          FFAppState().decoyPin911Enabled = false;
+          FFAppState().decoyPinContactsEnabled = false;
+          FFAppState().decoySeedArmed = false;
+          safeSetState(() {});
+        }
       }
+
+      FFAppState().prevHasActiveSubscription =
+          FFAppState().hasActiveSubscription;
+      safeSetState(() {});
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -104,18 +129,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           color: Colors.transparent,
                           elevation: 8.0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(6.0),
                           ),
                           child: Container(
                             width: double.infinity,
                             height: 150.0,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
+                              borderRadius: BorderRadius.circular(6.0),
                             ),
                             child: Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5.0),
+                                borderRadius: BorderRadius.circular(6.0),
                                 child: Image.asset(
                                   'assets/images/DecoyLogo1-WOHiRes.jpg',
                                   width: double.infinity,
@@ -211,12 +236,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               children: [
                                                 Text(
                                                   'Create Decoy PIN',
+                                                  textAlign: TextAlign.center,
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .titleMedium
                                                       .override(
                                                         font: GoogleFonts
-                                                            .interTight(
+                                                            .bebasNeue(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontStyle:
@@ -225,6 +251,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   .titleMedium
                                                                   .fontStyle,
                                                         ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                        fontSize: 24.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -271,13 +302,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         lineHeight: 1.3,
                                                       ),
                                                 ),
-                                              ].divide(SizedBox(height: 8.0)),
+                                              ].divide(SizedBox(height: 2.0)),
                                             ),
                                           ),
                                           Icon(
                                             Icons.chevron_right_rounded,
                                             color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
+                                                .accent1,
                                             size: 24.0,
                                           ),
                                         ].divide(SizedBox(width: 15.5)),
@@ -430,7 +461,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                       .titleMedium
                                                       .override(
                                                         font: GoogleFonts
-                                                            .interTight(
+                                                            .bebasNeue(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontStyle:
@@ -439,6 +470,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   .titleMedium
                                                                   .fontStyle,
                                                         ),
+                                                        fontSize: 24.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -485,13 +517,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         lineHeight: 1.3,
                                                       ),
                                                 ),
-                                              ].divide(SizedBox(height: 8.0)),
+                                              ].divide(SizedBox(height: 2.0)),
                                             ),
                                           ),
                                           Icon(
                                             Icons.chevron_right_rounded,
                                             color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
+                                                .accent1,
                                             size: 24.0,
                                           ),
                                         ].divide(SizedBox(width: 15.5)),
@@ -643,7 +675,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                       .titleMedium
                                                       .override(
                                                         font: GoogleFonts
-                                                            .interTight(
+                                                            .bebasNeue(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontStyle:
@@ -652,6 +684,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   .titleMedium
                                                                   .fontStyle,
                                                         ),
+                                                        fontSize: 24.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -698,13 +731,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         lineHeight: 1.3,
                                                       ),
                                                 ),
-                                              ].divide(SizedBox(height: 8.0)),
+                                              ].divide(SizedBox(height: 2.0)),
                                             ),
                                           ),
                                           Icon(
                                             Icons.chevron_right_rounded,
                                             color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
+                                                .accent1,
                                             size: 24.0,
                                           ),
                                         ].divide(SizedBox(width: 15.5)),
