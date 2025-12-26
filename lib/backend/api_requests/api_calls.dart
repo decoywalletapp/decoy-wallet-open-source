@@ -532,10 +532,10 @@ class CreateBillingPortalSessionCall {
     );
   }
 
-  static dynamic url(dynamic response) => getJsonField(
+  static String? url(dynamic response) => castToType<String>(getJsonField(
         response,
         r'''$.url''',
-      );
+      ));
 }
 
 String _toEncodable(dynamic item) {

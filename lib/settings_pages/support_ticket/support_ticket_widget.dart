@@ -137,6 +137,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                       ),
                       Text(
                         'We\'re here to help! Submit a support ticket and we\'ll get back to you as soon as possible.',
+                        textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               font: GoogleFonts.inter(
                                 fontWeight: FlutterFlowTheme.of(context)
