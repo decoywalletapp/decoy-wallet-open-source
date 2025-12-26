@@ -26,4 +26,24 @@ class UserEntitlementsRow extends SupabaseDataRow {
 
   DateTime get updatedAt => getField<DateTime>('updated_at')!;
   set updatedAt(DateTime value) => setField<DateTime>('updated_at', value);
+
+  String? get provider => getField<String>('provider');
+  set provider(String? value) => setField<String>('provider', value);
+
+  String? get providerCustomerId => getField<String>('provider_customer_id');
+  set providerCustomerId(String? value) =>
+      setField<String>('provider_customer_id', value);
+
+  String? get providerSubscriptionId =>
+      getField<String>('provider_subscription_id');
+  set providerSubscriptionId(String? value) =>
+      setField<String>('provider_subscription_id', value);
+
+  String? get providerStatus => getField<String>('provider_status');
+  set providerStatus(String? value) =>
+      setField<String>('provider_status', value);
+
+  DateTime? get currentPeriodEnd => getField<DateTime>('current_period_end');
+  set currentPeriodEnd(DateTime? value) =>
+      setField<DateTime>('current_period_end', value);
 }

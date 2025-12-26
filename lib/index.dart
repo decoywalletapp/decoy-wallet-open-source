@@ -88,3 +88,5 @@ export '/welcom_pages/subscription_options/subscription_options_widget.dart'
     show SubscriptionOptionsWidget;
 export '/welcom_pages/payment_return/payment_return_widget.dart'
     show PaymentReturnWidget;
+export '/settings_pages/manage_subscription/manage_subscription_widget.dart'
+    show ManageSubscriptionWidget;

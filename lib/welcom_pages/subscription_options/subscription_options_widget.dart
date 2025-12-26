@@ -94,12 +94,21 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                             extra: <String, dynamic>{
                               kTransitionInfoKey: TransitionInfo(
                                 hasTransition: true,
-                                transitionType: PageTransitionType.rightToLeft,
+                                transitionType: PageTransitionType.leftToRight,
                               ),
                             },
                           );
                         } else {
-                          context.goNamed(LoginPageWidget.routeName);
+                          context.goNamed(
+                            LoginPageWidget.routeName,
+                            extra: <String, dynamic>{
+                              kTransitionInfoKey: TransitionInfo(
+                                hasTransition: true,
+                                transitionType: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 0),
+                              ),
+                            },
+                          );
                         }
                       },
                     ),

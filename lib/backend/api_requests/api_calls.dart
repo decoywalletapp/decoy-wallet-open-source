@@ -502,6 +502,42 @@ class CreateBTCPayInvoiceCall {
       ));
 }
 
+class CreateBillingPortalSessionCall {
+  static Future<ApiCallResponse> call({
+    String? customerId = '',
+    String? returnUrl = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+“customer_id”: "${escapeStringForJson(customerId)}",
+“return_url”: "${escapeStringForJson(returnUrl)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'CreateBillingPortalSession',
+      apiUrl:
+          'https://decoy-stripe-webhook-866378207353.us-central1.run.app/create-billing-portal-session',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static dynamic url(dynamic response) => getJsonField(
+        response,
+        r'''$.url''',
+      );
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

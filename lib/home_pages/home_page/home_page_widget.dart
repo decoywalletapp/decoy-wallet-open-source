@@ -943,7 +943,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         size: 24.0,
                       ),
                       onPressed: () async {
-                        context.pushNamed(SettingsWidget.routeName);
+                        context.pushNamed(
+                          SettingsWidget.routeName,
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.leftToRight,
+                            ),
+                          },
+                        );
                       },
                     ),
                   ),

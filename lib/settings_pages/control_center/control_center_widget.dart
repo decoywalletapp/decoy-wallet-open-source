@@ -1692,7 +1692,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                             );
                                             await Future.delayed(
                                               Duration(
-                                                milliseconds: 100,
+                                                milliseconds: 300,
                                               ),
                                             );
                                             context.safePop();
@@ -1759,7 +1759,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 );
                                                 await Future.delayed(
                                                   Duration(
-                                                    milliseconds: 100,
+                                                    milliseconds: 300,
                                                   ),
                                                 );
                                                 context.safePop();
@@ -1820,7 +1820,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 );
                                                 await Future.delayed(
                                                   Duration(
-                                                    milliseconds: 100,
+                                                    milliseconds: 300,
                                                   ),
                                                 );
                                                 context.safePop();
@@ -1863,7 +1863,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               );
                                               await Future.delayed(
                                                 Duration(
-                                                  milliseconds: 100,
+                                                  milliseconds: 300,
                                                 ),
                                               );
                                               context.safePop();
