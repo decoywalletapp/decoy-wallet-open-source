@@ -5,7 +5,6 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
-import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -111,28 +110,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                         size: 20.0,
                       ),
                       onPressed: () async {
-                        if (loggedIn == true) {
-                          context.pushNamed(
-                            HomePageWidget.routeName,
-                            extra: <String, dynamic>{
-                              kTransitionInfoKey: TransitionInfo(
-                                hasTransition: true,
-                                transitionType: PageTransitionType.leftToRight,
-                              ),
-                            },
-                          );
-                        } else {
-                          context.goNamed(
-                            LoginPageWidget.routeName,
-                            extra: <String, dynamic>{
-                              kTransitionInfoKey: TransitionInfo(
-                                hasTransition: true,
-                                transitionType: PageTransitionType.fade,
-                                duration: Duration(milliseconds: 0),
-                              ),
-                            },
-                          );
-                        }
+                        context.safePop();
                       },
                     ),
                   ),
@@ -411,6 +389,26 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           null &&
                                                       _model.providerCustomerId !=
                                                           '') {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          '1',
+                                                          style: TextStyle(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryText,
+                                                          ),
+                                                        ),
+                                                        duration: Duration(
+                                                            milliseconds: 4000),
+                                                        backgroundColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                      ),
+                                                    );
                                                     _model.portalResp =
                                                         await CreateBillingPortalSessionCall
                                                             .call(
@@ -420,6 +418,26 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           'https://decoywalletapp.com/open',
                                                     );
 
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          '2',
+                                                          style: TextStyle(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryText,
+                                                          ),
+                                                        ),
+                                                        duration: Duration(
+                                                            milliseconds: 4000),
+                                                        backgroundColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                      ),
+                                                    );
                                                     await actions
                                                         .openExternalUrl(
                                                       CreateBillingPortalSessionCall
@@ -428,6 +446,26 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                 ?.jsonBody ??
                                                             ''),
                                                       ).toString(),
+                                                    );
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          '3',
+                                                          style: TextStyle(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryText,
+                                                          ),
+                                                        ),
+                                                        duration: Duration(
+                                                            milliseconds: 4000),
+                                                        backgroundColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                      ),
                                                     );
                                                   } else {
                                                     ScaffoldMessenger.of(
@@ -521,15 +559,15 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                           .bodyMedium
                                           .override(
                                             font: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.w600,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
                                                       .fontStyle,
                                             ),
-                                            fontSize: 18.0,
+                                            fontSize: 16.0,
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
@@ -558,6 +596,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .success,
+                                                  fontSize: 16.0,
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.bold,
                                                   fontStyle:
@@ -592,6 +631,25 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         null &&
                                                     _model.providerCustomerId !=
                                                         '') {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        '1',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
                                                   _model.portalRespCancel =
                                                       await CreateBillingPortalSessionCall
                                                           .call(
@@ -601,6 +659,25 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         'https://decoywalletapp.com/open',
                                                   );
 
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        '2',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
                                                   await actions.openExternalUrl(
                                                     CreateBillingPortalSessionCall
                                                         .url(
@@ -608,6 +685,25 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                               ?.jsonBody ??
                                                           ''),
                                                     ).toString(),
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        '3',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
                                                   );
                                                 } else {
                                                   ScaffoldMessenger.of(context)
@@ -690,7 +786,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                             ),
                           ),
                         ]
-                            .divide(SizedBox(height: 24.0))
+                            .divide(SizedBox(height: 20.0))
                             .addToStart(SizedBox(height: 12.0)),
                       ),
                     ),

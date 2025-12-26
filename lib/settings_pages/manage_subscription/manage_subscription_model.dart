@@ -1,7 +1,6 @@
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/index.dart';
 import 'manage_subscription_widget.dart' show ManageSubscriptionWidget;
 import 'package:flutter/material.dart';
 
