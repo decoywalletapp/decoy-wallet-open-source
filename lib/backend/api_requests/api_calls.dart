@@ -509,8 +509,8 @@ class CreateBillingPortalSessionCall {
   }) async {
     final ffApiRequestBody = '''
 {
-“customer_id”: "${escapeStringForJson(customerId)}",
-“return_url”: "${escapeStringForJson(returnUrl)}"
+"customer_id": "${escapeStringForJson(customerId)}",
+"return_url": "${escapeStringForJson(returnUrl)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'CreateBillingPortalSession',

@@ -385,7 +385,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                               ),
                                               FFButtonWidget(
                                                 onPressed: () async {
-                                                  _model.checkoutResp =
+                                                  _model.portalRespManage =
                                                       await CreateBillingPortalSessionCall
                                                           .call(
                                                     customerId:
@@ -394,15 +394,36 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         'https://decoywalletapp.com/open',
                                                   );
 
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        CreateBillingPortalSessionCall
+                                                            .url(
+                                                          (_model.portalRespManage
+                                                                  ?.jsonBody ??
+                                                              ''),
+                                                        ).toString(),
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
                                                   await actions.openExternalUrl(
                                                     CreateBillingPortalSessionCall
                                                         .url(
-                                                      CreateBillingPortalSessionCall
-                                                          .url(
-                                                        (_model.checkoutResp
-                                                                ?.jsonBody ??
-                                                            ''),
-                                                      ),
+                                                      (_model.portalRespManage
+                                                              ?.jsonBody ??
+                                                          ''),
                                                     ).toString(),
                                                   );
 
@@ -600,9 +621,36 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                       content: Text(
                                                         CreateBillingPortalSessionCall
                                                             .url(
-                                                          (_model.checkoutResp
+                                                          (_model.portalRespCancel
                                                                   ?.jsonBody ??
                                                               ''),
+                                                        ).toString(),
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        CreateBillingPortalSessionCall
+                                                            .url(
+                                                          CreateBillingPortalSessionCall
+                                                              .url(
+                                                            (_model.portalRespCancel
+                                                                    ?.jsonBody ??
+                                                                ''),
+                                                          ),
                                                         ).toString(),
                                                         style: TextStyle(
                                                           color: FlutterFlowTheme
