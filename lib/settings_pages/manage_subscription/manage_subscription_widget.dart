@@ -397,9 +397,12 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   await actions.openExternalUrl(
                                                     CreateBillingPortalSessionCall
                                                         .url(
-                                                      (_model.checkoutResp
-                                                              ?.jsonBody ??
-                                                          ''),
+                                                      CreateBillingPortalSessionCall
+                                                          .url(
+                                                        (_model.checkoutResp
+                                                                ?.jsonBody ??
+                                                            ''),
+                                                      ),
                                                     ).toString(),
                                                   );
 
@@ -577,6 +580,30 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                     SnackBar(
                                                       content: Text(
                                                         '2',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        CreateBillingPortalSessionCall
+                                                            .url(
+                                                          (_model.checkoutResp
+                                                                  ?.jsonBody ??
+                                                              ''),
+                                                        ).toString(),
                                                         style: TextStyle(
                                                           color: FlutterFlowTheme
                                                                   .of(context)
