@@ -385,110 +385,23 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                               ),
                                               FFButtonWidget(
                                                 onPressed: () async {
-                                                  if (_model.providerCustomerId !=
-                                                          null &&
-                                                      _model.providerCustomerId !=
-                                                          '') {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          '1',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
-                                                    );
-                                                    _model.portalResp =
-                                                        await CreateBillingPortalSessionCall
-                                                            .call(
-                                                      customerId: _model
-                                                          .providerCustomerId,
-                                                      returnUrl:
-                                                          'https://decoywalletapp.com/open',
-                                                    );
+                                                  _model.checkoutResp =
+                                                      await CreateBillingPortalSessionCall
+                                                          .call(
+                                                    customerId:
+                                                        'cus_Tg0kmuLDmYjbWN',
+                                                    returnUrl:
+                                                        'https://decoywalletapp.com/open',
+                                                  );
 
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          '2',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
-                                                    );
-                                                    await actions
-                                                        .openExternalUrl(
-                                                      CreateBillingPortalSessionCall
-                                                          .url(
-                                                        (_model.portalResp
-                                                                ?.jsonBody ??
-                                                            ''),
-                                                      ).toString(),
-                                                    );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          '3',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'No Stripe customer found. Please subscribe first.',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
-                                                    );
-                                                  }
+                                                  await actions.openExternalUrl(
+                                                    CreateBillingPortalSessionCall
+                                                        .url(
+                                                      (_model.checkoutResp
+                                                              ?.jsonBody ??
+                                                          ''),
+                                                    ).toString(),
+                                                  );
 
                                                   safeSetState(() {});
                                                 },

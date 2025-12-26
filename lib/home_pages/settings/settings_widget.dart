@@ -1006,7 +1006,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         padding:
                             EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
                         child: Text(
-                          'App Versions',
+                          'App Version',
                           style:
                               FlutterFlowTheme.of(context).titleLarge.override(
                                     font: GoogleFonts.outfit(
