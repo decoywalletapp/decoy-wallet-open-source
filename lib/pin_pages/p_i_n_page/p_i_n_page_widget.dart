@@ -1075,24 +1075,60 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .contactsNonce!,
                                         _model.dataKeyB64!,
                                       );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            '1',
+                                            style: TextStyle(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondary,
+                                        ),
+                                      );
                                       if (FFAppState()
                                               .decoyPinContactsEnabled ==
                                           true) {
-                                        _model.alertResult =
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              '2',
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
+                                        _model.alertResult1 =
                                             await DecoyAlertGroup
                                                 .sendEmergencyAlertsCall
                                                 .call(
                                           userId: currentUserUid,
                                           triggerId:
                                               _model.newTriggerRow?.triggerType,
-                                          contactsJson: getJsonField(
-                                            _model.contactObj,
-                                            r'''$.contacts''',
-                                          ),
                                           lat: functions.latFromLatLng(
                                               _model.emergencyLocation),
                                           lng: functions.lngFromLatLng(
                                               _model.emergencyLocation),
+                                          contactsJson: getJsonField(
+                                            _model.contactObj,
+                                            r'''$.contacts''',
+                                          ),
                                           ownerName: (String firstName,
                                                   String lastName) {
                                             return firstName + " " + lastName;
@@ -1105,6 +1141,24 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   .lastName!),
                                         );
 
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              '3',
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
                                         unawaited(
                                           () async {
                                             _model.logResult =
@@ -1113,12 +1167,14 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                               'trigger_type': _model
                                                   .newTriggerRow?.triggerType,
                                               'success': getJsonField(
-                                                (_model.alertResult?.jsonBody ??
+                                                (_model.alertResult1
+                                                        ?.jsonBody ??
                                                     ''),
                                                 r'''$.ok''',
                                               ),
                                               'error_message': getJsonField(
-                                                (_model.alertResult?.jsonBody ??
+                                                (_model.alertResult1
+                                                        ?.jsonBody ??
                                                     ''),
                                                 r'''$.error''',
                                               ).toString(),
