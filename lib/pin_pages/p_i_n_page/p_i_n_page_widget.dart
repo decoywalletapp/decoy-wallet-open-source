@@ -1139,7 +1139,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                         safeSetState(() {});
                                       }
 
-                                      context.pushNamed(
+                                      context.goNamed(
                                           DuressHomePageWidget.routeName);
                                     } else {
                                       if (VerifyPINCall.isAccount(
@@ -1152,8 +1152,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             [].toList().cast<String>();
                                         safeSetState(() {});
 
-                                        context.pushNamed(
-                                            HomePageWidget.routeName);
+                                        context
+                                            .goNamed(HomePageWidget.routeName);
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(

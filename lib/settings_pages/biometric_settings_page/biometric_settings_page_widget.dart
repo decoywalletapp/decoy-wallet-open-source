@@ -69,19 +69,24 @@ class _BiometricSettingsPageWidgetState
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          width: 120.0,
-                          height: 120.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).accent1,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Icon(
-                              Icons.fingerprint,
-                              color: FlutterFlowTheme.of(context).primary,
-                              size: 64.0,
+                        Material(
+                          color: Colors.transparent,
+                          elevation: 3.0,
+                          shape: const CircleBorder(),
+                          child: Container(
+                            width: 120.0,
+                            height: 120.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).accent1,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Icon(
+                                Icons.fingerprint,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 64.0,
+                              ),
                             ),
                           ),
                         ),

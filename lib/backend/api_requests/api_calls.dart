@@ -34,7 +34,7 @@ class SendEmergencyAlertsCall {
     final ffApiRequestBody = '''
 {
   "userId": "${escapeStringForJson(userId)}",
-  "triggerId": "${escapeStringForJson(triggerId)}",
+  "triggerType": "${escapeStringForJson(triggerId)}",
   "ownerName": "${escapeStringForJson(ownerName)}",
   "contacts": ${contacts},
   "location": {
