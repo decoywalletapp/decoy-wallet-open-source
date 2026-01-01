@@ -1145,6 +1145,50 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
+                                              getJsonField(
+                                                (_model.alertResult1
+                                                        ?.jsonBody ??
+                                                    ''),
+                                                r'''$.kicked''',
+                                              ).toString(),
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              (_model.alertResult1
+                                                          ?.statusCode ??
+                                                      200)
+                                                  .toString(),
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
                                               '3',
                                               style: TextStyle(
                                                 color:
