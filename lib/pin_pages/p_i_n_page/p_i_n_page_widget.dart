@@ -1079,7 +1079,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            '1',
+                                            'BEFORE CONDITIONAL',
                                             style: TextStyle(
                                               color:
                                                   FlutterFlowTheme.of(context)
@@ -1100,7 +1100,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              '2',
+                                              'ABOUT TO CALL DECOY ALERT API',
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1141,29 +1141,47 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   .lastName!),
                                         );
 
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              getJsonField(
-                                                (_model.alertResult1
-                                                        ?.jsonBody ??
-                                                    ''),
-                                                r'''$.kicked''',
-                                              ).toString(),
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
+                                        if ((_model.alertResult1?.succeeded ??
+                                            true)) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'DECOY ALERT SUCCESSFULLY',
+                                                style: TextStyle(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                ),
                                               ),
+                                              duration:
+                                                  Duration(milliseconds: 4000),
+                                              backgroundColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
                                             ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'DECOY ALERT  FAILED',
+                                                style: TextStyle(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                ),
+                                              ),
+                                              duration:
+                                                  Duration(milliseconds: 4000),
+                                              backgroundColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                            ),
+                                          );
+                                        }
+
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
@@ -1189,7 +1207,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              '3',
+                                              (_model.alertResult1?.jsonBody ??
+                                                      '')
+                                                  .toString(),
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1234,7 +1254,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              '555555',
+                                              'FALSE BRANCH',
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
