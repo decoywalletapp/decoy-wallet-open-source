@@ -34,6 +34,10 @@ class CreatePinModel extends FlutterFlowModel<CreatePinWidget> {
 
   String? joinedPinConfirm;
 
+  int cpnotificationValue = 0;
+
+  int cpconfirmValue = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (setPIN)] action in Button widget.

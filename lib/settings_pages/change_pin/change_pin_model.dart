@@ -46,6 +46,12 @@ class ChangePinModel extends FlutterFlowModel<ChangePinWidget> {
 
   String? joinedOldPin;
 
+  int oldpNotificationValue = 0;
+
+  int chngpNotifValue = 0;
+
+  int? chngpConfirmValue = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (setPIN)] action in Button widget.

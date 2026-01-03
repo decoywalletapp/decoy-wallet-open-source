@@ -37,6 +37,8 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
 
   LatLng? emergencyLocation;
 
+  int ppNotificationValue = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
