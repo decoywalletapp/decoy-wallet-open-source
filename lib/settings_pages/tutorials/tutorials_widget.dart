@@ -65,19 +65,23 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 20.0,
-                    borderWidth: 1.0,
-                    buttonSize: 40.0,
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      size: 24.0,
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                    child: FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 20.0,
+                      borderWidth: 1.0,
+                      buttonSize: 40.0,
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        size: 24.0,
+                      ),
+                      onPressed: () async {
+                        context.safePop();
+                      },
                     ),
-                    onPressed: () async {
-                      context.safePop();
-                    },
                   ),
                 ],
               ),
@@ -1168,7 +1172,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                   ),
                 ),
               ),
-            ],
+            ].addToStart(SizedBox(height: 24.0)),
           ),
         ),
       ),

@@ -89,10 +89,11 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                       EdgeInsetsDirectional.fromSTEB(24.0, 20.0, 24.0, 40.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Column(
@@ -479,89 +480,93 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                               Column(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Stack(
-                                    children: [
-                                      if (_model.ppNotificationValue
-                                              .toString() ==
-                                          '2')
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 1.0),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 20.0),
-                                            child: Text(
-                                              'INVALID PIN - TRY AGAIN',
-                                              textAlign: TextAlign.center,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font: GoogleFonts.inter(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 40.0,
+                                        decoration: BoxDecoration(),
+                                        child: Stack(
+                                          children: [
+                                            if (_model.ppNotificationValue
+                                                    .toString() ==
+                                                '1')
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, -1.0),
+                                                child: Text(
+                                                  'PLEASE ENTER AT LEAST FOUR DIGITS',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                                ),
+                                              ),
+                                            if (_model.ppNotificationValue
+                                                    .toString() ==
+                                                '2')
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, -1.0),
+                                                child: Text(
+                                                  'INVALID PIN - TRY AGAIN',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                                ),
+                                              ),
+                                          ],
                                         ),
-                                      if (_model.ppNotificationValue
-                                              .toString() ==
-                                          '1')
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 1.0),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 20.0),
-                                            child: Text(
-                                              'PLEASE ENTER AT LEAST FOUR DIGITS',
-                                              textAlign: TextAlign.center,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font: GoogleFonts.inter(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                    ],
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -570,511 +575,536 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                         ].divide(SizedBox(height: 32.0)),
                       ),
                       Expanded(
-                        child: GridView(
-                          padding: EdgeInsets.zero,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
-                            childAspectRatio: 1.25,
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, -1.0),
+                          child: GridView(
+                            padding: EdgeInsets.zero,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10.0,
+                              mainAxisSpacing: 10.0,
+                              childAspectRatio: 1.25,
+                            ),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            children: [
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add1
+                                  _model.addToPinInput('1');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '1',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add2
+                                  _model.addToPinInput('2');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '2',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add3
+                                  _model.addToPinInput('3');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '3',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add4
+                                  _model.addToPinInput('4');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '4',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add5
+                                  _model.addToPinInput('5');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '5',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add6
+                                  _model.addToPinInput('6');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '6',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add7
+                                  _model.addToPinInput('7');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '7',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add8
+                                  _model.addToPinInput('8');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '8',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add9
+                                  _model.addToPinInput('9');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '9',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  safeSetState(() {});
+                                },
+                                text: '',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: Color(0x001D2428),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: Color(0xFF1D2428),
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 0.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  // Add0
+                                  _model.addToPinInput('0');
+                                  safeSetState(() {});
+                                  if (_model.pinInput.toList().length > 8) {
+                                    _model.removeAtIndexFromPinInput(
+                                        _model.pinInput.toList().length - 1);
+                                    safeSetState(() {});
+                                  }
+                                },
+                                text: '0',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 2.0,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              FlutterFlowIconButton(
+                                borderRadius: 35.0,
+                                buttonSize: 70.0,
+                                icon: Icon(
+                                  Icons.backspace_outlined,
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  size: 28.0,
+                                ),
+                                onPressed: () async {
+                                  // RemoveFromList
+                                  _model.removeAtIndexFromPinInput(
+                                      _model.pinInput.toList().length - 1);
+                                  safeSetState(() {});
+                                },
+                              ),
+                            ],
                           ),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add1
-                                _model.addToPinInput('1');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '1',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add2
-                                _model.addToPinInput('2');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '2',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add3
-                                _model.addToPinInput('3');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '3',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add4
-                                _model.addToPinInput('4');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '4',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add5
-                                _model.addToPinInput('5');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '5',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add6
-                                _model.addToPinInput('6');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '6',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add7
-                                _model.addToPinInput('7');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '7',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add8
-                                _model.addToPinInput('8');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '8',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add9
-                                _model.addToPinInput('9');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '9',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                safeSetState(() {});
-                              },
-                              text: '',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Color(0x001D2428),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: Color(0xFF1D2428),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 0.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () async {
-                                // Add0
-                                _model.addToPinInput('0');
-                                safeSetState(() {});
-                                if (_model.pinInput.toList().length > 8) {
-                                  _model.removeAtIndexFromPinInput(
-                                      _model.pinInput.toList().length - 1);
-                                  safeSetState(() {});
-                                }
-                              },
-                              text: '0',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 2.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            FlutterFlowIconButton(
-                              borderRadius: 35.0,
-                              buttonSize: 70.0,
-                              icon: Icon(
-                                Icons.backspace_outlined,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                size: 28.0,
-                              ),
-                              onPressed: () async {
-                                // RemoveFromList
-                                _model.removeAtIndexFromPinInput(
-                                    _model.pinInput.toList().length - 1);
-                                safeSetState(() {});
-                              },
-                            ),
-                          ],
                         ),
                       ),
                       Align(
@@ -1263,7 +1293,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                         safeSetState(() {});
                                         await Future.delayed(
                                           Duration(
-                                            milliseconds: 4000,
+                                            milliseconds: 2500,
                                           ),
                                         );
                                         _model.ppNotificationValue = 0;
@@ -1296,7 +1326,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                   safeSetState(() {});
                                   await Future.delayed(
                                     Duration(
-                                      milliseconds: 4000,
+                                      milliseconds: 2500,
                                     ),
                                   );
                                   _model.ppNotificationValue = 0;

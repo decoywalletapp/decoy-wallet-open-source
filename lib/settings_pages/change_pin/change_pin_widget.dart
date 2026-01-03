@@ -4,7 +4,6 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
-import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -1442,18 +1441,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                         ''),
                                                   ) ==
                                                   true) {
-                                                context.pushNamed(
-                                                  SettingsWidget.routeName,
-                                                  extra: <String, dynamic>{
-                                                    kTransitionInfoKey:
-                                                        TransitionInfo(
-                                                      hasTransition: true,
-                                                      transitionType:
-                                                          PageTransitionType
-                                                              .fade,
-                                                    ),
-                                                  },
-                                                );
+                                                context.safePop();
                                               } else {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
@@ -1521,7 +1509,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                             safeSetState(() {});
                                             await Future.delayed(
                                               Duration(
-                                                milliseconds: 4000,
+                                                milliseconds: 2500,
                                               ),
                                             );
                                             _model.chngpConfirmValue = 0;
@@ -1531,14 +1519,13 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                         } else {
                                           _model.confirmedNewPinInput =
                                               [].toList().cast<String>();
-                                          _model.newPinInput =
-                                              [].toList().cast<String>();
+                                          _model.joinedConfirmNewPin = '';
                                           safeSetState(() {});
                                           _model.chngpConfirmValue = 1;
                                           safeSetState(() {});
                                           await Future.delayed(
                                             Duration(
-                                              milliseconds: 4000,
+                                              milliseconds: 2500,
                                             ),
                                           );
                                           _model.chngpConfirmValue = 0;
@@ -3011,7 +2998,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                 safeSetState(() {});
                                                 await Future.delayed(
                                                   Duration(
-                                                    milliseconds: 4000,
+                                                    milliseconds: 2500,
                                                   ),
                                                 );
                                                 _model.chngpNotifValue = 0;
@@ -3052,7 +3039,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                             safeSetState(() {});
                                             await Future.delayed(
                                               Duration(
-                                                milliseconds: 4000,
+                                                milliseconds: 2500,
                                               ),
                                             );
                                             _model.chngpNotifValue = 0;
@@ -4500,7 +4487,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                               safeSetState(() {});
                                               await Future.delayed(
                                                 Duration(
-                                                  milliseconds: 4000,
+                                                  milliseconds: 2500,
                                                 ),
                                               );
                                               _model.oldpNotificationValue = 0;
@@ -4536,7 +4523,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           safeSetState(() {});
                                           await Future.delayed(
                                             Duration(
-                                              milliseconds: 4000,
+                                              milliseconds: 2500,
                                             ),
                                           );
                                           _model.oldpNotificationValue = 0;

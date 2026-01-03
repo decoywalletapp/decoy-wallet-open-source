@@ -1410,30 +1410,15 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                             _model.currentStep = 2;
                                             safeSetState(() {});
                                           } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'Please enter at least 4 digits to continue',
-                                                  style: GoogleFonts.roboto(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                duration: Duration(
-                                                    milliseconds: 4000),
-                                                backgroundColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondary,
-                                              ),
-                                            );
+                                            _model.joinedPin = '';
+                                            _model.pinInput =
+                                                [].toList().cast<String>();
+                                            safeSetState(() {});
                                             _model.cpnotificationValue = 1;
                                             safeSetState(() {});
                                             await Future.delayed(
                                               Duration(
-                                                milliseconds: 4000,
+                                                milliseconds: 2500,
                                               ),
                                             );
                                             _model.cpnotificationValue = 0;
@@ -2907,18 +2892,22 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                             safeSetState(() {});
                                             await Future.delayed(
                                               Duration(
-                                                milliseconds: 4000,
+                                                milliseconds: 2500,
                                               ),
                                             );
                                             _model.cpnotificationValue = 0;
                                             safeSetState(() {});
                                           }
                                         } else {
+                                          _model.confirmedPinInput =
+                                              [].toList().cast<String>();
+                                          _model.joinedPinConfirm = '';
+                                          safeSetState(() {});
                                           _model.cpconfirmValue = 1;
                                           safeSetState(() {});
                                           await Future.delayed(
                                             Duration(
-                                              milliseconds: 4000,
+                                              milliseconds: 2500,
                                             ),
                                           );
                                           _model.cpconfirmValue = 0;

@@ -1651,7 +1651,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                   safeSetState(() {});
                                                   await Future.delayed(
                                                     Duration(
-                                                      milliseconds: 3000,
+                                                      milliseconds: 2500,
                                                     ),
                                                   );
                                                   _model.notificationValue = 0;
@@ -1661,11 +1661,15 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                   safeSetState(() {});
                                                 }
                                               } else {
+                                                _model.pinDecoyInput =
+                                                    [].toList().cast<String>();
+                                                _model.joinedPin = "";
+                                                safeSetState(() {});
                                                 _model.notificationValue = 2;
                                                 safeSetState(() {});
                                                 await Future.delayed(
                                                   Duration(
-                                                    milliseconds: 3000,
+                                                    milliseconds: 2500,
                                                   ),
                                                 );
                                                 _model.notificationValue = 0;
@@ -3326,7 +3330,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                 safeSetState(() {});
                                                 await Future.delayed(
                                                   Duration(
-                                                    milliseconds: 4000,
+                                                    milliseconds: 2500,
                                                   ),
                                                 );
                                                 _model.confirmNotificationValue =
@@ -3335,12 +3339,16 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                 safeSetState(() {});
                                               }
                                             } else {
+                                              _model.confirmedDecoyPinInput =
+                                                  [].toList().cast<String>();
+                                              _model.joinedDecoyConfirm = '';
+                                              safeSetState(() {});
                                               _model.confirmNotificationValue =
                                                   2;
                                               safeSetState(() {});
                                               await Future.delayed(
                                                 Duration(
-                                                  milliseconds: 4000,
+                                                  milliseconds: 2500,
                                                 ),
                                               );
                                               _model.confirmNotificationValue =
