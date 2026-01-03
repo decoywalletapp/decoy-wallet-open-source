@@ -257,7 +257,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                         borderRadius: 40.0,
                         buttonSize: 40.0,
                         icon: Icon(
-                          Icons.settings_rounded,
+                          Icons.menu,
                           color: FlutterFlowTheme.of(context).info,
                           size: 24.0,
                         ),

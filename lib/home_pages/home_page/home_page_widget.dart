@@ -455,7 +455,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  'Create Decoy Seed ',
+                                                  'Create Decoy Wallet',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .titleMedium

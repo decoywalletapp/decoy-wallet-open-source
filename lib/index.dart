@@ -90,3 +90,4 @@ export '/welcom_pages/payment_return/payment_return_widget.dart'
     show PaymentReturnWidget;
 export '/settings_pages/manage_subscription/manage_subscription_widget.dart'
     show ManageSubscriptionWidget;
+export '/settings_pages/tutorials/tutorials_widget.dart' show TutorialsWidget;

@@ -1058,7 +1058,7 @@ class _DecoyPinSystemValuesWidgetState
                             );
                             await Future.delayed(
                               Duration(
-                                milliseconds: 100,
+                                milliseconds: 1000,
                               ),
                             );
 

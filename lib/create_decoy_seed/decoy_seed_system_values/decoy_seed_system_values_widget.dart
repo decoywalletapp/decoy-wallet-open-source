@@ -725,7 +725,7 @@ class _DecoySeedSystemValuesWidgetState
                             );
                             await Future.delayed(
                               Duration(
-                                milliseconds: 100,
+                                milliseconds: 1000,
                               ),
                             );
 

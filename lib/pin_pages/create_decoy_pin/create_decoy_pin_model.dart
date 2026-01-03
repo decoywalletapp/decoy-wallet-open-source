@@ -43,6 +43,10 @@ class CreateDecoyPinModel extends FlutterFlowModel<CreateDecoyPinWidget> {
 
   String? hashedDecoyPIN;
 
+  int notificationValue = 0;
+
+  int confirmNotificationValue = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.

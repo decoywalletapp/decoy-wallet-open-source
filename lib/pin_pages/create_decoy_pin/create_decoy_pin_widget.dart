@@ -43,6 +43,8 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
       _model.joinedPin = "";
       _model.confirmedDecoyPinInput = [].toList().cast<String>();
       _model.joinedPinConfirm = "";
+      _model.notificationValue = 0;
+      _model.confirmNotificationValue = 0;
       safeSetState(() {});
     });
 
@@ -83,7 +85,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                 decoration: BoxDecoration(),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 20.0, 24.0, 40.0),
+                                      18.0, 20.0, 18.0, 40.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -128,30 +130,18 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                   ),
                                                 ],
                                               ),
-                                              Text(
-                                                'Create a DECOY PIN for Emergency Services',
-                                                textAlign: TextAlign.center,
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .headlineMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .interTight(
-                                                            fontWeight:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .headlineMedium
-                                                                    .fontWeight,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .headlineMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          letterSpacing: 0.0,
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Text(
+                                                  'Create a DECOY PIN for Emergency Services',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .headlineMedium
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .interTight(
                                                           fontWeight:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -163,6 +153,22 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                   .headlineMedium
                                                                   .fontStyle,
                                                         ),
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .headlineMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .headlineMedium
+                                                                .fontStyle,
+                                                      ),
+                                                ),
                                               ),
                                               Stack(
                                                 children: [
@@ -656,49 +662,216 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    20.0),
-                                                        child: Text(
-                                                          'Enter a 4 - 8 digit DECOY PIN ',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodySmall
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight: FlutterFlowTheme.of(
+                                                      Stack(
+                                                        children: [
+                                                          if (_model
+                                                                  .notificationValue
+                                                                  .toString() ==
+                                                              '0')
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            20.0),
+                                                                child: Text(
+                                                                  'Enter a 4 - 8 digit DECOY PIN ',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodySmall
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmall
-                                                                      .fontStyle,
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryBackground,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontWeight,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontStyle,
+                                                                      ),
                                                                 ),
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBackground,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodySmall
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodySmall
-                                                                    .fontStyle,
                                                               ),
-                                                        ),
+                                                            ),
+                                                          if (_model
+                                                                  .notificationValue
+                                                                  .toString() ==
+                                                              '1')
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            20.0),
+                                                                child:
+                                                                    AnimatedDefaultTextStyle(
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontWeight,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontStyle,
+                                                                      ),
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          750),
+                                                                  curve: Curves
+                                                                      .easeIn,
+                                                                  child: Text(
+                                                                    'DECOY PIN CANNOT BE  THE SAME AS ACCOUNT ENTRY PIN',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          if (_model
+                                                                  .notificationValue
+                                                                  .toString() ==
+                                                              '2')
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            20.0),
+                                                                child:
+                                                                    AnimatedDefaultTextStyle(
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontWeight,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontStyle,
+                                                                      ),
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          750),
+                                                                  curve: Curves
+                                                                      .easeIn,
+                                                                  child: Text(
+                                                                    'PLEASE ENTER AT LEAST 4 DIGITS TO CONTINUE',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          if (_model
+                                                                  .confirmNotificationValue ==
+                                                              3)
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            20.0),
+                                                                child: Text(
+                                                                  'PINS DO NOT MATCH - PLEASE TRY AGAIN',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryBackground,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontWeight,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontStyle,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                        ],
                                                       ),
                                                     ].divide(
                                                         SizedBox(height: 24.0)),
@@ -1463,52 +1636,29 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                       .cast<String>();
                                                   _model.joinedPin = "";
                                                   safeSetState(() {});
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                        'DECOY PIN CANNOT MATCH ACCOUNT ENTRY PIN',
-                                                        style: TextStyle(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryText,
-                                                        ),
-                                                      ),
-                                                      duration: Duration(
-                                                          milliseconds: 4000),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
+                                                  _model.notificationValue = 1;
+                                                  safeSetState(() {});
+                                                  await Future.delayed(
+                                                    Duration(
+                                                      milliseconds: 3000,
                                                     ),
                                                   );
+                                                  _model.notificationValue = 0;
+                                                  safeSetState(() {});
                                                 } else {
                                                   _model.currentStep = 2;
                                                   safeSetState(() {});
                                                 }
                                               } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Please enter at least 4 digits to continue',
-                                                      style: GoogleFonts.roboto(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
+                                                _model.notificationValue = 2;
+                                                safeSetState(() {});
+                                                await Future.delayed(
+                                                  Duration(
+                                                    milliseconds: 3000,
                                                   ),
                                                 );
+                                                _model.notificationValue = 0;
+                                                safeSetState(() {});
                                               }
 
                                               safeSetState(() {});
@@ -1573,7 +1723,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                 decoration: BoxDecoration(),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 20.0, 24.0, 40.0),
+                                      18.0, 20.0, 18.0, 40.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -2157,51 +2307,113 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      20.0),
-                                                          child: Text(
-                                                            'Enter the same 4 - 8 digits to confirm your DECOY PIN',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodySmall
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodySmall
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryBackground,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight: FlutterFlowTheme.of(
+                                                      Stack(
+                                                        children: [
+                                                          if (_model
+                                                                  .confirmNotificationValue
+                                                                  .toString() ==
+                                                              '0')
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            20.0),
+                                                                child: Text(
+                                                                  'Enter the same 4 - 8 digits to confirm your DECOY PIN',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodySmall
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmall
-                                                                      .fontStyle,
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryBackground,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontWeight,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontStyle,
+                                                                      ),
                                                                 ),
-                                                          ),
-                                                        ),
+                                                              ),
+                                                            ),
+                                                          if (_model
+                                                                  .confirmNotificationValue
+                                                                  .toString() ==
+                                                              '2')
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            20.0),
+                                                                child:
+                                                                    AnimatedDefaultTextStyle(
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontWeight,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontStyle,
+                                                                      ),
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          750),
+                                                                  curve: Curves
+                                                                      .easeIn,
+                                                                  child: Text(
+                                                                    'PIN MUST BE AT LEAST 4 DIGITS',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                        ],
                                                       ),
                                                     ].divide(
                                                         SizedBox(height: 24.0)),
@@ -3026,7 +3238,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                         .showSnackBar(
                                                       SnackBar(
                                                         content: Text(
-                                                          'FAILED',
+                                                          'FAILED. PLEASE CONTACT DECOY SUPPORT.',
                                                           style: TextStyle(
                                                             color: FlutterFlowTheme
                                                                     .of(context)
@@ -3058,7 +3270,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                       .showSnackBar(
                                                     SnackBar(
                                                       content: Text(
-                                                        'PIN NOT SAVED',
+                                                        'PIN NOT SAVED. PLEASE CONTACT DECOY SUPPORT.',
                                                         style: TextStyle(
                                                           color: FlutterFlowTheme
                                                                   .of(context)
@@ -3077,28 +3289,6 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                   );
                                                 }
                                               } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'PINs do not match. Please try again.',
-                                                      style: TextStyle(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                  ),
-                                                );
                                                 _model.confirmedDecoyPinInput =
                                                     [].toList().cast<String>();
                                                 _model.pinDecoyInput =
@@ -3106,29 +3296,32 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                 safeSetState(() {});
                                                 _model.currentStep = 1;
                                                 safeSetState(() {});
+                                                _model.notificationValue = 9;
+                                                _model.confirmNotificationValue =
+                                                    3;
+                                                safeSetState(() {});
+                                                await Future.delayed(
+                                                  Duration(
+                                                    milliseconds: 4000,
+                                                  ),
+                                                );
+                                                _model.confirmNotificationValue =
+                                                    0;
+                                                _model.notificationValue = 0;
+                                                safeSetState(() {});
                                               }
                                             } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'PIN must be at least 4 digits.',
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
+                                              _model.confirmNotificationValue =
+                                                  2;
+                                              safeSetState(() {});
+                                              await Future.delayed(
+                                                Duration(
+                                                  milliseconds: 4000,
                                                 ),
                                               );
+                                              _model.confirmNotificationValue =
+                                                  0;
+                                              safeSetState(() {});
                                             }
 
                                             safeSetState(() {});
