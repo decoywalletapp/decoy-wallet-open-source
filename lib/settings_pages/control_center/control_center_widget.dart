@@ -46,6 +46,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
   late ControlCenterModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
 
   @override
   void initState() {
@@ -68,6 +69,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
           _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPin911Enabled;
       FFAppState().decoyPinContactsEnabled =
           _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPinContactsEnabled;
+      FFAppState().locationEnabled =
+          _model.decoyWalletRow!.elementAtOrNull(0)!.useCurrentLocation;
       safeSetState(() {});
     });
 
@@ -1621,9 +1624,375 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: AlignmentDirectional(0.0, 1.0),
-                        child: Container(),
+                      Material(
+                        color: Colors.transparent,
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(
+                              color: FlutterFlowTheme.of(context).primary,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Location Services',
+                                  style: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        font: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleMedium
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        fontSize: 22.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .fontStyle,
+                                      ),
+                                ),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: SwitchListTile(
+                                    value: _model.locationSwitchTileValue ??=
+                                        FFAppState().locationEnabled,
+                                    onChanged: (FFAppState()
+                                                .hasActiveSubscription ==
+                                            false)
+                                        ? null
+                                        : (newValue) async {
+                                            safeSetState(() =>
+                                                _model.locationSwitchTileValue =
+                                                    newValue);
+                                          },
+                                    title: Text(
+                                      'Enable Current Location',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            fontSize: 18.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                    subtitle: Text(
+                                      'Use your location to support emergency alerts',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodySmall
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodySmall
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodySmall
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                    activeColor:
+                                        FlutterFlowTheme.of(context).primary,
+                                    activeTrackColor:
+                                        FlutterFlowTheme.of(context).accent1,
+                                    dense: false,
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing,
+                                    contentPadding: EdgeInsets.all(0.0),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'Switch Value:',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.inter(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  fontSize: 16.0,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Stack(
+                                            children: [
+                                              if (_model
+                                                      .locationSwitchTileValue ==
+                                                  true)
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: Text(
+                                                    'ENABLE',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font:
+                                                              GoogleFonts.inter(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          fontSize: 16.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                ),
+                                              if (_model
+                                                      .locationSwitchTileValue ==
+                                                  false)
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: Text(
+                                                    'DISABLE',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font:
+                                                              GoogleFonts.inter(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          fontSize: 16.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Expanded(
+                                          child: Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Text(
+                                              'System Status:',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Stack(
+                                              children: [
+                                                if (FFAppState()
+                                                        .locationEnabled ==
+                                                    true)
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Text(
+                                                      'ACTIVATED',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            font: GoogleFonts
+                                                                .inter(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                            ),
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .success,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                if (FFAppState()
+                                                        .locationEnabled ==
+                                                    false)
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Text(
+                                                      'DEACTIVATED',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            font: GoogleFonts
+                                                                .inter(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                            ),
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .error,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ].divide(SizedBox(height: 16.0)),
+                            ),
+                          ),
+                        ),
                       ),
                     ].divide(SizedBox(height: 20.0)),
                   ),
@@ -1653,6 +2022,10 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                             true))
                                     ? null
                                     : () async {
+                                        currentUserLocationValue =
+                                            await getCurrentUserLocation(
+                                                defaultLocation:
+                                                    LatLng(0.0, 0.0));
                                         if ((FFAppState()
                                                     .hasActiveSubscription ==
                                                 true) &&
@@ -1668,6 +2041,10 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 _model.pINEContactsTileValue!;
                                             FFAppState().decoySeedArmed =
                                                 _model.seedMonitorArmTileValue!;
+                                            FFAppState().locationEnabled =
+                                                _model.locationSwitchTileValue!;
+                                            FFAppState().lastKnownLocation =
+                                                currentUserLocationValue;
                                             safeSetState(() {});
                                             await DecoyWalletTable().update(
                                               data: {
@@ -1681,6 +2058,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 'decoy_pin_contacts_enabled':
                                                     FFAppState()
                                                         .decoyPinContactsEnabled,
+                                                'use_current_location':
+                                                    FFAppState()
+                                                        .locationEnabled,
                                               },
                                               matchingRows: (rows) =>
                                                   rows.eqOrNull(
@@ -1733,6 +2113,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 FFAppState().decoySeedArmed =
                                                     _model
                                                         .seedMonitorArmTileValue!;
+                                                FFAppState().locationEnabled =
+                                                    _model
+                                                        .locationSwitchTileValue!;
+                                                FFAppState().lastKnownLocation =
+                                                    currentUserLocationValue;
                                                 safeSetState(() {});
                                                 await DecoyWalletTable().update(
                                                   data: {
@@ -1748,6 +2133,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     'decoy_pin_contacts_enabled':
                                                         FFAppState()
                                                             .decoyPinContactsEnabled,
+                                                    'use_current_location':
+                                                        FFAppState()
+                                                            .locationEnabled,
                                                   },
                                                   matchingRows: (rows) =>
                                                       rows.eqOrNull(
@@ -1794,6 +2182,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 FFAppState().decoySeedArmed =
                                                     _model
                                                         .seedMonitorArmTileValue!;
+                                                FFAppState().locationEnabled =
+                                                    _model
+                                                        .locationSwitchTileValue!;
+                                                FFAppState().lastKnownLocation =
+                                                    currentUserLocationValue;
                                                 safeSetState(() {});
                                                 await DecoyWalletTable().update(
                                                   data: {
@@ -1809,6 +2202,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     'decoy_pin_contacts_enabled':
                                                         FFAppState()
                                                             .decoyPinContactsEnabled,
+                                                    'use_current_location':
+                                                        FFAppState()
+                                                            .locationEnabled,
                                                   },
                                                   matchingRows: (rows) =>
                                                       rows.eqOrNull(
@@ -1837,6 +2233,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               FFAppState().decoySeedArmed =
                                                   _model
                                                       .seedMonitorArmTileValue!;
+                                              FFAppState().locationEnabled =
+                                                  _model
+                                                      .locationSwitchTileValue!;
+                                              FFAppState().lastKnownLocation =
+                                                  currentUserLocationValue;
                                               safeSetState(() {});
                                               await DecoyWalletTable().update(
                                                 data: {
@@ -1852,6 +2253,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                   'decoy_pin_contacts_enabled':
                                                       FFAppState()
                                                           .decoyPinContactsEnabled,
+                                                  'use_current_location':
+                                                      FFAppState()
+                                                          .locationEnabled,
                                                 },
                                                 matchingRows: (rows) =>
                                                     rows.eqOrNull(

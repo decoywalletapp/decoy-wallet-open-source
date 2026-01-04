@@ -106,30 +106,42 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                 color: FlutterFlowTheme.of(context).primary,
                                 size: 80.0,
                               ),
-                              Text(
-                                'ENTER PIN',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .fontStyle,
-                                    ),
+                              Container(
+                                width: double.infinity,
+                                height: 70.0,
+                                decoration: BoxDecoration(),
+                                child: Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Text(
+                                    'ENTER PIN',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .headlineMedium
+                                        .override(
+                                          font: GoogleFonts.interTight(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .headlineMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .headlineMedium
+                                                    .fontStyle,
+                                          ),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                ),
                               ),
                               Column(
                                 mainAxisSize: MainAxisSize.max,
@@ -477,45 +489,34 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                   ),
                                 ],
                               ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
+                              Align(
+                                alignment: AlignmentDirectional(0.0, -1.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 20.0),
                                       child: Container(
                                         width: double.infinity,
-                                        height: 40.0,
+                                        height: 15.0,
                                         decoration: BoxDecoration(),
                                         child: Stack(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
                                           children: [
                                             if (_model.ppNotificationValue
                                                     .toString() ==
                                                 '1')
-                                              Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, -1.0),
-                                                child: Text(
-                                                  'PLEASE ENTER AT LEAST FOUR DIGITS',
-                                                  textAlign: TextAlign.center,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        letterSpacing: 0.0,
+                                              Text(
+                                                'PLEASE ENTER AT LEAST FOUR DIGITS',
+                                                textAlign: TextAlign.center,
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      font: GoogleFonts.inter(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         fontStyle:
@@ -524,7 +525,19 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                 .bodyMedium
                                                                 .fontStyle,
                                                       ),
-                                                ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .fontStyle,
+                                                    ),
                                               ),
                                             if (_model.ppNotificationValue
                                                     .toString() ==
@@ -567,10 +580,10 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ].divide(SizedBox(height: 24.0)),
+                            ].divide(SizedBox(height: 16.0)),
                           ),
                         ].divide(SizedBox(height: 32.0)),
                       ),

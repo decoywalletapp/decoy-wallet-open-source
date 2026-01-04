@@ -522,3 +522,15 @@ double lngFromLatLng(LatLng? location) {
 
   return location.longitude;
 }
+
+int countCompleted3(
+  bool personalDone,
+  bool addressDone,
+  bool contactsDone,
+) {
+  int count = 0;
+  if (personalDone) count++;
+  if (addressDone) count++;
+  if (contactsDone) count++;
+  return count;
+}

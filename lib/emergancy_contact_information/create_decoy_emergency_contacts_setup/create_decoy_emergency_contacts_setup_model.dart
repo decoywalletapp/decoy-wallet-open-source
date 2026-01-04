@@ -7,14 +7,24 @@ import 'package:flutter/material.dart';
 
 class CreateDecoyEmergencyContactsSetupModel
     extends FlutterFlowModel<CreateDecoyEmergencyContactsSetupWidget> {
+  ///  Local state fields for this page.
+
+  bool personalDone = false;
+
+  bool addressDone = false;
+
+  bool contactsDone = false;
+
+  int completedCount = 0;
+
+  double? progressValue = 0.0;
+
+  int progressPercent = 0;
+
   ///  State fields for stateful widgets in this page.
 
-  // State field(s) for Switch widget.
-  bool? switchValue;
-  // Stores action output result for [Backend Call - Update Row(s)] action in Switch widget.
-  List<DecoyWalletRow>? setLocationOn;
-  // Stores action output result for [Backend Call - Update Row(s)] action in Switch widget.
-  List<DecoyWalletRow>? setLocationOff;
+  // Stores action output result for [Backend Call - Query Rows] action in CreateDecoyEmergencyContactsSetup widget.
+  List<DecoyWalletRow>? numberQue;
 
   @override
   void initState(BuildContext context) {}

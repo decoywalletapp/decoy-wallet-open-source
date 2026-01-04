@@ -104,11 +104,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => CreateAccountWidget(),
       ),
       FFRoute(
-        name: TestWidget.routeName,
-        path: TestWidget.routePath,
-        builder: (context, params) => TestWidget(),
-      ),
-      FFRoute(
         name: ForgotPasswordPageWidget.routeName,
         path: ForgotPasswordPageWidget.routePath,
         builder: (context, params) => ForgotPasswordPageWidget(),
@@ -228,16 +223,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => CreateAccountB4ChangeWidget(),
       ),
       FFRoute(
-        name: PhoneNumberVerificationv1Widget.routeName,
-        path: PhoneNumberVerificationv1Widget.routePath,
-        builder: (context, params) => PhoneNumberVerificationv1Widget(
-          cleanPhone: params.getParam(
-            'cleanPhone',
-            ParamType.String,
-          ),
-        ),
-      ),
-      FFRoute(
         name: DuressScanQRWidget.routeName,
         path: DuressScanQRWidget.routePath,
         builder: (context, params) => DuressScanQRWidget(),
@@ -316,11 +301,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: ChangePinWidget.routeName,
         path: ChangePinWidget.routePath,
         builder: (context, params) => ChangePinWidget(),
-      ),
-      FFRoute(
-        name: BiometricSettingsPageWidget.routeName,
-        path: BiometricSettingsPageWidget.routePath,
-        builder: (context, params) => BiometricSettingsPageWidget(),
       ),
       FFRoute(
         name: SupportTicketWidget.routeName,
@@ -403,9 +383,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => TutorialsWidget(),
       ),
       FFRoute(
-        name: LocationAuthenticationWidget.routeName,
-        path: LocationAuthenticationWidget.routePath,
-        builder: (context, params) => LocationAuthenticationWidget(),
+        name: LocationAuthorizationWidget.routeName,
+        path: LocationAuthorizationWidget.routePath,
+        builder: (context, params) => LocationAuthorizationWidget(),
+      ),
+      FFRoute(
+        name: LetsssseeeeeoldemscontactWidget.routeName,
+        path: LetsssseeeeeoldemscontactWidget.routePath,
+        builder: (context, params) => LetsssseeeeeoldemscontactWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

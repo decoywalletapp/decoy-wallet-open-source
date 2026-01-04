@@ -3,15 +3,12 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'create_decoy_emergency_contacts_setup_model.dart';
-export 'create_decoy_emergency_contacts_setup_model.dart';
+import 'letsssseeeeeoldemscontact_model.dart';
+export 'letsssseeeeeoldemscontact_model.dart';
 
 /// Create Decoy Setup page
 /// Title: “Decoy Emergency Setup.” Show two large cards: “Add Home Address”
@@ -22,52 +19,28 @@ export 'create_decoy_emergency_contacts_setup_model.dart';
 /// “Save.” On press, persist the toggle locally and return to the main
 /// screen. Add an info note that contacts and address can be added later and
 /// that at least one contact is required for alerts to work.
-class CreateDecoyEmergencyContactsSetupWidget extends StatefulWidget {
-  const CreateDecoyEmergencyContactsSetupWidget({super.key});
+class LetsssseeeeeoldemscontactWidget extends StatefulWidget {
+  const LetsssseeeeeoldemscontactWidget({super.key});
 
-  static String routeName = 'CreateDecoyEmergencyContactsSetup';
-  static String routePath = '/createDecoyEmergencyContactsSetup';
+  static String routeName = 'letsssseeeeeoldemscontact';
+  static String routePath = '/letsssseeeeeoldemscontact';
 
   @override
-  State<CreateDecoyEmergencyContactsSetupWidget> createState() =>
-      _CreateDecoyEmergencyContactsSetupWidgetState();
+  State<LetsssseeeeeoldemscontactWidget> createState() =>
+      _LetsssseeeeeoldemscontactWidgetState();
 }
 
-class _CreateDecoyEmergencyContactsSetupWidgetState
-    extends State<CreateDecoyEmergencyContactsSetupWidget> {
-  late CreateDecoyEmergencyContactsSetupModel _model;
+class _LetsssseeeeeoldemscontactWidgetState
+    extends State<LetsssseeeeeoldemscontactWidget> {
+  late LetsssseeeeeoldemscontactModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
 
   @override
   void initState() {
     super.initState();
-    _model =
-        createModel(context, () => CreateDecoyEmergencyContactsSetupModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.numberQue = await DecoyWalletTable().queryRows(
-        queryFn: (q) => q.eqOrNull(
-          'user_id',
-          currentUserUid,
-        ),
-      );
-      _model.personalDone =
-          _model.numberQue!.elementAtOrNull(0)!.personalComplete!;
-      _model.addressDone =
-          _model.numberQue!.elementAtOrNull(0)!.addressComplete!;
-      _model.contactsDone =
-          _model.numberQue!.elementAtOrNull(0)!.contactsComplete!;
-      safeSetState(() {});
-      _model.completedCount = functions.countCompleted3(
-          _model.personalDone, _model.addressDone, _model.contactsDone);
-      safeSetState(() {});
-      _model.progressValue = _model.completedCount / 3;
-      safeSetState(() {});
-      _model.progressPercent = ((_model.progressValue!) * 100).round();
-      safeSetState(() {});
-    });
+    _model = createModel(context, () => LetsssseeeeeoldemscontactModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -106,13 +79,12 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
             ),
           );
         }
-        List<DecoyWalletRow>
-            createDecoyEmergencyContactsSetupDecoyWalletRowList =
+        List<DecoyWalletRow> letsssseeeeeoldemscontactDecoyWalletRowList =
             snapshot.data!;
 
-        final createDecoyEmergencyContactsSetupDecoyWalletRow =
-            createDecoyEmergencyContactsSetupDecoyWalletRowList.isNotEmpty
-                ? createDecoyEmergencyContactsSetupDecoyWalletRowList.first
+        final letsssseeeeeoldemscontactDecoyWalletRow =
+            letsssseeeeeoldemscontactDecoyWalletRowList.isNotEmpty
+                ? letsssseeeeeoldemscontactDecoyWalletRowList.first
                 : null;
 
         return GestureDetector(
@@ -250,7 +222,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 BorderRadius.circular(16.0),
                                             border: Border.all(
                                               color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                letsssseeeeeoldemscontactDecoyWalletRow
                                                             ?.personalComplete ==
                                                         true
                                                     ? FlutterFlowTheme.of(
@@ -435,7 +407,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             elevation: 3.0,
                                             borderSide: BorderSide(
                                               color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                letsssseeeeeoldemscontactDecoyWalletRow
                                                             ?.personalComplete ==
                                                         true
                                                     ? FlutterFlowTheme.of(
@@ -484,7 +456,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 BorderRadius.circular(16.0),
                                             border: Border.all(
                                               color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                letsssseeeeeoldemscontactDecoyWalletRow
                                                             ?.addressComplete ==
                                                         true
                                                     ? FlutterFlowTheme.of(
@@ -667,7 +639,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             elevation: 3.0,
                                             borderSide: BorderSide(
                                               color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                letsssseeeeeoldemscontactDecoyWalletRow
                                                             ?.addressComplete ==
                                                         true
                                                     ? FlutterFlowTheme.of(
@@ -716,7 +688,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 BorderRadius.circular(16.0),
                                             border: Border.all(
                                               color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                letsssseeeeeoldemscontactDecoyWalletRow
                                                             ?.contactsComplete ==
                                                         true
                                                     ? FlutterFlowTheme.of(
@@ -900,7 +872,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             elevation: 3.0,
                                             borderSide: BorderSide(
                                               color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                letsssseeeeeoldemscontactDecoyWalletRow
                                                             ?.contactsComplete ==
                                                         true
                                                     ? FlutterFlowTheme.of(
@@ -920,45 +892,83 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                       ),
                                     ],
                                   ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                  Stack(
                                     children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 0.0, 0.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, 0.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Text(
-                                                        'Progress',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
+                                      Material(
+                                        color: Colors.transparent,
+                                        elevation: 3.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
+                                        ),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 120.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                blurRadius: 4.0,
+                                                color: Color(0x1A000000),
+                                                offset: Offset(
+                                                  0.0,
+                                                  2.0,
+                                                ),
+                                              )
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(16.0),
+                                            border: Border.all(
+                                              color: valueOrDefault<Color>(
+                                                letsssseeeeeoldemscontactDecoyWalletRow!
+                                                        .useCurrentLocation
+                                                    ? FlutterFlowTheme.of(
+                                                            context)
+                                                        .success
+                                                    : FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                              ),
+                                              width: 1.2,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(20.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .location_on_outlined,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            size: 28.0,
+                                                          ),
+                                                          Text(
+                                                            'Use Current Location',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
                                                                 .titleLarge
                                                                 .override(
                                                                   font: GoogleFonts
@@ -981,155 +991,45 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       .titleLarge
                                                                       .fontStyle,
                                                                 ),
+                                                          ),
+                                                        ].divide(SizedBox(
+                                                            width: 12.0)),
                                                       ),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(width: 12.0)),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 0.0, 0.0, 2.0),
-                                                  child: LinearPercentIndicator(
-                                                    percent:
-                                                        _model.progressValue!,
-                                                    width: 120.0,
-                                                    lineHeight: 25.0,
-                                                    animation: true,
-                                                    animateFromLastPercent:
-                                                        true,
-                                                    progressColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary,
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .accent4,
-                                                    barRadius:
-                                                        Radius.circular(8.0),
-                                                    padding: EdgeInsets.zero,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    8.0,
+                                                                    0.0,
+                                                                    0.0),
                                                         child: Text(
-                                                          _model.completedCount
-                                                              .toString(),
+                                                          'No background tracking occurs. Location is only accessed when emergency is triggered.',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
-                                                              .bodyMedium
+                                                              .bodySmall
                                                               .override(
                                                                 font:
                                                                     GoogleFonts
                                                                         .inter(
                                                                   fontWeight: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .bodyMedium
+                                                                      .bodySmall
                                                                       .fontWeight,
                                                                   fontStyle: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .bodyMedium
+                                                                      .bodySmall
                                                                       .fontStyle,
                                                                 ),
                                                                 letterSpacing:
                                                                     0.0,
                                                                 fontWeight: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyMedium
+                                                                    .bodySmall
                                                                     .fontWeight,
                                                                 fontStyle: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Text(
-                                                          ' of 3 ',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Text(
-                                                          'Complete',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
+                                                                    .bodySmall
                                                                     .fontStyle,
                                                               ),
                                                         ),
@@ -1137,8 +1037,74 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            ].divide(SizedBox(height: 24.0)),
+                                                Switch(
+                                                  value: _model.switchValue ??=
+                                                      letsssseeeeeoldemscontactDecoyWalletRow
+                                                          .useCurrentLocation,
+                                                  onChanged: (newValue) async {
+                                                    safeSetState(() =>
+                                                        _model.switchValue =
+                                                            newValue);
+                                                    if (newValue) {
+                                                      currentUserLocationValue =
+                                                          await getCurrentUserLocation(
+                                                              defaultLocation:
+                                                                  LatLng(0.0,
+                                                                      0.0));
+                                                      FFAppState()
+                                                              .lastKnownLocation =
+                                                          currentUserLocationValue;
+                                                      safeSetState(() {});
+                                                      await DecoyWalletTable()
+                                                          .update(
+                                                        data: {
+                                                          'use_current_location':
+                                                              true,
+                                                        },
+                                                        matchingRows: (rows) =>
+                                                            rows.eqOrNull(
+                                                          'user_id',
+                                                          currentUserUid,
+                                                        ),
+                                                      );
+
+                                                      safeSetState(() {});
+                                                    } else {
+                                                      await DecoyWalletTable()
+                                                          .update(
+                                                        data: {
+                                                          'use_current_location':
+                                                              false,
+                                                        },
+                                                        matchingRows: (rows) =>
+                                                            rows.eqOrNull(
+                                                          'user_id',
+                                                          currentUserUid,
+                                                        ),
+                                                      );
+
+                                                      safeSetState(() {});
+                                                    }
+                                                  },
+                                                  activeColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  activeTrackColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primaryText,
+                                                  inactiveTrackColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primaryBackground,
+                                                  inactiveThumbColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -1152,7 +1118,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                       ),
                     ],
                   ),
-                ].divide(SizedBox(height: 24.0)),
+                ].divide(SizedBox(height: 16.0)),
               ),
             ),
           ),

@@ -1,37 +1,37 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:local_auth/local_auth.dart';
-import 'biometric_verification_model.dart';
-export 'biometric_verification_model.dart';
+import 'location_authorization_model.dart';
+export 'location_authorization_model.dart';
 
 /// create a page that prompts the user to toggle biometeric verification use
 /// for the app
-class BiometricVerificationWidget extends StatefulWidget {
-  const BiometricVerificationWidget({super.key});
+class LocationAuthorizationWidget extends StatefulWidget {
+  const LocationAuthorizationWidget({super.key});
 
-  static String routeName = 'BiometricVerification';
-  static String routePath = '/biometricVerification';
+  static String routeName = 'LocationAuthorization';
+  static String routePath = '/locationAuthorization';
 
   @override
-  State<BiometricVerificationWidget> createState() =>
-      _BiometricVerificationWidgetState();
+  State<LocationAuthorizationWidget> createState() =>
+      _LocationAuthorizationWidgetState();
 }
 
-class _BiometricVerificationWidgetState
-    extends State<BiometricVerificationWidget> {
-  late BiometricVerificationModel _model;
+class _LocationAuthorizationWidgetState
+    extends State<LocationAuthorizationWidget> {
+  late LocationAuthorizationModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => BiometricVerificationModel());
+    _model = createModel(context, () => LocationAuthorizationModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -72,14 +72,14 @@ class _BiometricVerificationWidgetState
                         width: 120.0,
                         height: 120.0,
                         decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).accent1,
+                          color: Color(0xFF147EFB),
                           shape: BoxShape.circle,
                         ),
                         child: Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
                           child: Icon(
-                            Icons.fingerprint,
-                            color: FlutterFlowTheme.of(context).primary,
+                            FFIcons.klocation,
+                            color: FlutterFlowTheme.of(context).info,
                             size: 64.0,
                           ),
                         ),
@@ -90,7 +90,7 @@ class _BiometricVerificationWidgetState
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Enable Biometric Authentication',
+                          'Enable Location\nServices',
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
@@ -113,7 +113,7 @@ class _BiometricVerificationWidgetState
                               ),
                         ),
                         Text(
-                          'Use your fingerprint or face ID to quickly and securely access your account without entering your password every time.',
+                          'Allow your location to be included automatically during an emergency so trusted contacts and responders can act faster. Location is never tracked in the background and is only accessed if an emergency is triggered.',
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
@@ -145,10 +145,11 @@ class _BiometricVerificationWidgetState
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(20.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 0.0, 20.0, 0.0),
                         child: Material(
                           color: Colors.transparent,
                           elevation: 3.0,
@@ -170,20 +171,20 @@ class _BiometricVerificationWidgetState
                               color: Colors.transparent,
                               child: SwitchListTile(
                                 value: _model.switchListTileValue ??=
-                                    _model.wantsBiometrics,
+                                    _model.wantsLocation,
                                 onChanged: (newValue) async {
                                   safeSetState(() =>
                                       _model.switchListTileValue = newValue);
                                   if (newValue) {
-                                    _model.wantsBiometrics = true;
+                                    _model.wantsLocation = true;
                                     safeSetState(() {});
                                   } else {
-                                    _model.wantsBiometrics = false;
+                                    _model.wantsLocation = false;
                                     safeSetState(() {});
                                   }
                                 },
                                 title: Text(
-                                  'Enable Biometric Authentication',
+                                  'Enable Location Services',
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
@@ -208,7 +209,7 @@ class _BiometricVerificationWidgetState
                                       ),
                                 ),
                                 subtitle: Text(
-                                  'Use fingerprint or face ID to sign in',
+                                  'Use your location to support emergency alerts',
                                   style: FlutterFlowTheme.of(context)
                                       .bodySmall
                                       .override(
@@ -247,7 +248,7 @@ class _BiometricVerificationWidgetState
                           ),
                         ),
                       ),
-                    ].divide(SizedBox(height: 24.0)),
+                    ].divide(SizedBox(height: 0.0)),
                   ),
                 ),
                 Align(
@@ -405,45 +406,37 @@ class _BiometricVerificationWidgetState
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    if (_model.wantsBiometrics)
+                    if (_model.wantsLocation)
                       FFButtonWidget(
                         onPressed: () async {
-                          if (_model.wantsBiometrics == true) {
-                            final _localAuth = LocalAuthentication();
-                            bool _isBiometricSupported =
-                                await _localAuth.isDeviceSupported();
-
-                            if (_isBiometricSupported) {
-                              try {
-                                _model.enableBioResult =
-                                    await _localAuth.authenticate(
-                                        localizedReason:
-                                            'Please authenticate to enable biometric unlock for Decoy Wallet');
-                              } on PlatformException {
-                                _model.enableBioResult = false;
-                              }
-                              safeSetState(() {});
-                            }
-
-                            if (_model.enableBioResult == true) {
-                              FFAppState().biometricsEnabled = true;
-                              safeSetState(() {});
-
-                              context.goNamed(
-                                  LocationAuthorizationWidget.routeName);
-                            } else {
-                              FFAppState().biometricsEnabled = false;
-                              safeSetState(() {});
-
-                              context.goNamed(
-                                  LocationAuthorizationWidget.routeName);
-                            }
-                          } else {
-                            FFAppState().biometricsEnabled = false;
+                          if (_model.wantsLocation == true) {
+                            FFAppState().locationEnabled = true;
                             safeSetState(() {});
+                            await DecoyWalletTable().update(
+                              data: {
+                                'use_current_location': true,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
 
-                            context
-                                .goNamed(LocationAuthorizationWidget.routeName);
+                            context.goNamed(CreatePinWidget.routeName);
+                          } else {
+                            FFAppState().locationEnabled = false;
+                            safeSetState(() {});
+                            await DecoyWalletTable().update(
+                              data: {
+                                'use_current_location': false,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+
+                            context.goNamed(CreatePinWidget.routeName);
                           }
 
                           safeSetState(() {});
@@ -486,9 +479,10 @@ class _BiometricVerificationWidgetState
                     FFButtonWidget(
                       onPressed: () async {
                         FFAppState().biometricsEnabled = false;
+                        FFAppState().locationEnabled = false;
                         safeSetState(() {});
 
-                        context.goNamed(LocationAuthorizationWidget.routeName);
+                        context.goNamed(CreatePinWidget.routeName);
                       },
                       text: 'Skip for Now',
                       options: FFButtonOptions(
@@ -532,8 +526,8 @@ class _BiometricVerificationWidgetState
                 ),
               ]
                   .divide(SizedBox(height: 32.0))
-                  .addToStart(SizedBox(height: 40.0))
-                  .addToEnd(SizedBox(height: 40.0)),
+                  .addToStart(SizedBox(height: 32.0))
+                  .addToEnd(SizedBox(height: 32.0)),
             ),
           ),
         ),

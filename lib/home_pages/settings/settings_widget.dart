@@ -844,8 +844,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             Opacity(
                               opacity: 0.0,
                               child: FFButtonWidget(
-                                onPressed: () {
-                                  print('Button pressed ...');
+                                onPressed: () async {
+                                  context.pushNamed(TutorialsWidget.routeName);
                                 },
                                 text: '',
                                 options: FFButtonOptions(

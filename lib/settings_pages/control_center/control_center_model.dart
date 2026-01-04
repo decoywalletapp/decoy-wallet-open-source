@@ -21,6 +21,8 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
   bool? seedMonitorArmTileValue;
   // State field(s) for BioSwitchTile widget.
   bool? bioSwitchTileValue;
+  // State field(s) for LocationSwitchTile widget.
+  bool? locationSwitchTileValue;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? saveDecoySeedSettingspt2;
   bool settingsBioResult = false;

@@ -102,6 +102,10 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getBool('ff_prevHasActiveSubscription') ??
               _prevHasActiveSubscription;
     });
+    await _safeInitAsync(() async {
+      _locationEnabled =
+          await secureStorage.getBool('ff_locationEnabled') ?? _locationEnabled;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -436,6 +440,17 @@ class FFAppState extends ChangeNotifier {
 
   void deletePrevHasActiveSubscription() {
     secureStorage.delete(key: 'ff_prevHasActiveSubscription');
+  }
+
+  bool _locationEnabled = false;
+  bool get locationEnabled => _locationEnabled;
+  set locationEnabled(bool value) {
+    _locationEnabled = value;
+    secureStorage.setBool('ff_locationEnabled', value);
+  }
+
+  void deleteLocationEnabled() {
+    secureStorage.delete(key: 'ff_locationEnabled');
   }
 }
 

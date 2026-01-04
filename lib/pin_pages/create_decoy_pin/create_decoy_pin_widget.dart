@@ -727,7 +727,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                             0.0,
                                                                             20.0),
                                                                 child: Text(
-                                                                  'DECOY PIN CANNOT BE  THE SAME AS ACCOUNT ENTRY PIN',
+                                                                  'DECOY PIN CANNOT BE THE SAME AS ACCOUNT ENTRY PIN',
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
