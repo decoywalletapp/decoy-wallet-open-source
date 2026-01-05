@@ -405,32 +405,46 @@ class _BiometricVerificationWidgetState
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    if (_model.wantsBiometrics)
-                      FFButtonWidget(
-                        onPressed: () async {
-                          if (_model.wantsBiometrics == true) {
-                            final _localAuth = LocalAuthentication();
-                            bool _isBiometricSupported =
-                                await _localAuth.isDeviceSupported();
+                    Container(
+                      width: double.infinity,
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                      ),
+                      child: Visibility(
+                        visible: _model.wantsBiometrics,
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            if (_model.wantsBiometrics == true) {
+                              final _localAuth = LocalAuthentication();
+                              bool _isBiometricSupported =
+                                  await _localAuth.isDeviceSupported();
 
-                            if (_isBiometricSupported) {
-                              try {
-                                _model.enableBioResult =
-                                    await _localAuth.authenticate(
-                                        localizedReason:
-                                            'Please authenticate to enable biometric unlock for Decoy Wallet');
-                              } on PlatformException {
-                                _model.enableBioResult = false;
+                              if (_isBiometricSupported) {
+                                try {
+                                  _model.enableBioResult =
+                                      await _localAuth.authenticate(
+                                          localizedReason:
+                                              'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                } on PlatformException {
+                                  _model.enableBioResult = false;
+                                }
+                                safeSetState(() {});
                               }
-                              safeSetState(() {});
-                            }
 
-                            if (_model.enableBioResult == true) {
-                              FFAppState().biometricsEnabled = true;
-                              safeSetState(() {});
+                              if (_model.enableBioResult == true) {
+                                FFAppState().biometricsEnabled = true;
+                                safeSetState(() {});
 
-                              context.goNamed(
-                                  LocationAuthorizationWidget.routeName);
+                                context.goNamed(
+                                    LocationAuthorizationWidget.routeName);
+                              } else {
+                                FFAppState().biometricsEnabled = false;
+                                safeSetState(() {});
+
+                                context.goNamed(
+                                    LocationAuthorizationWidget.routeName);
+                              }
                             } else {
                               FFAppState().biometricsEnabled = false;
                               safeSetState(() {});
@@ -438,37 +452,22 @@ class _BiometricVerificationWidgetState
                               context.goNamed(
                                   LocationAuthorizationWidget.routeName);
                             }
-                          } else {
-                            FFAppState().biometricsEnabled = false;
+
                             safeSetState(() {});
-
-                            context
-                                .goNamed(LocationAuthorizationWidget.routeName);
-                          }
-
-                          safeSetState(() {});
-                        },
-                        text: 'Continue',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 50.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
+                          },
+                          text: 'Continue',
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 50.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                24.0, 0.0, 24.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
+                                  font: GoogleFonts.interTight(
                                     fontWeight: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .fontWeight,
@@ -476,33 +475,61 @@ class _BiometricVerificationWidgetState
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
+                                  color: Colors.white,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontStyle,
+                                ),
+                            elevation: 3.0,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                    FFButtonWidget(
-                      onPressed: () async {
-                        FFAppState().biometricsEnabled = false;
-                        safeSetState(() {});
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                      ),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          FFAppState().biometricsEnabled = false;
+                          safeSetState(() {});
 
-                        context.goNamed(LocationAuthorizationWidget.routeName);
-                      },
-                      text: 'Skip for Now',
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 50.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .titleSmall
-                            .override(
-                              font: GoogleFonts.interTight(
+                          context
+                              .goNamed(LocationAuthorizationWidget.routeName);
+                        },
+                        text: 'Skip for Now',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 50.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          textStyle: FlutterFlowTheme.of(context)
+                              .titleSmall
+                              .override(
+                                font: GoogleFonts.interTight(
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontStyle,
+                                ),
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                letterSpacing: 0.0,
                                 fontWeight: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .fontWeight,
@@ -510,22 +537,14 @@ class _BiometricVerificationWidgetState
                                     .titleSmall
                                     .fontStyle,
                               ),
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .fontStyle,
-                            ),
-                        elevation: 3.0,
-                        borderSide: BorderSide(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          width: 1.0,
+                          elevation: 3.0,
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
                         ),
-                        borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
                   ].divide(SizedBox(height: 16.0)),

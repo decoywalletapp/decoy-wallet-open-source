@@ -27,6 +27,7 @@ class _LocationAuthorizationWidgetState
   late LocationAuthorizationModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
 
   @override
   void initState() {
@@ -406,62 +407,66 @@ class _LocationAuthorizationWidgetState
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    if (_model.wantsLocation)
-                      FFButtonWidget(
-                        onPressed: () async {
-                          if (_model.wantsLocation == true) {
-                            FFAppState().locationEnabled = true;
+                    Container(
+                      width: double.infinity,
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                      ),
+                      child: Visibility(
+                        visible: _model.wantsLocation,
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            currentUserLocationValue =
+                                await getCurrentUserLocation(
+                                    defaultLocation: LatLng(0.0, 0.0));
+                            if (_model.wantsLocation == true) {
+                              FFAppState().locationEnabled = true;
+                              FFAppState().lastKnownLocation =
+                                  currentUserLocationValue;
+                              safeSetState(() {});
+                              await DecoyWalletTable().update(
+                                data: {
+                                  'use_current_location': true,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              );
+
+                              context.goNamed(CreatePinWidget.routeName);
+                            } else {
+                              FFAppState().locationEnabled = false;
+                              safeSetState(() {});
+                              await DecoyWalletTable().update(
+                                data: {
+                                  'use_current_location': false,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              );
+
+                              context.goNamed(CreatePinWidget.routeName);
+                            }
+
                             safeSetState(() {});
-                            await DecoyWalletTable().update(
-                              data: {
-                                'use_current_location': true,
-                              },
-                              matchingRows: (rows) => rows.eqOrNull(
-                                'user_id',
-                                currentUserUid,
-                              ),
-                            );
-
-                            context.goNamed(CreatePinWidget.routeName);
-                          } else {
-                            FFAppState().locationEnabled = false;
-                            safeSetState(() {});
-                            await DecoyWalletTable().update(
-                              data: {
-                                'use_current_location': false,
-                              },
-                              matchingRows: (rows) => rows.eqOrNull(
-                                'user_id',
-                                currentUserUid,
-                              ),
-                            );
-
-                            context.goNamed(CreatePinWidget.routeName);
-                          }
-
-                          safeSetState(() {});
-                        },
-                        text: 'Continue',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 50.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
+                          },
+                          text: 'Continue',
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 50.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                24.0, 0.0, 24.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
+                                  font: GoogleFonts.interTight(
                                     fontWeight: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .fontWeight,
@@ -469,34 +474,61 @@ class _LocationAuthorizationWidgetState
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
+                                  color: Colors.white,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontStyle,
+                                ),
+                            elevation: 3.0,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                    FFButtonWidget(
-                      onPressed: () async {
-                        FFAppState().biometricsEnabled = false;
-                        FFAppState().locationEnabled = false;
-                        safeSetState(() {});
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                      ),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          FFAppState().biometricsEnabled = false;
+                          FFAppState().locationEnabled = false;
+                          safeSetState(() {});
 
-                        context.goNamed(CreatePinWidget.routeName);
-                      },
-                      text: 'Skip for Now',
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 50.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .titleSmall
-                            .override(
-                              font: GoogleFonts.interTight(
+                          context.goNamed(CreatePinWidget.routeName);
+                        },
+                        text: 'Skip for Now',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 50.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          textStyle: FlutterFlowTheme.of(context)
+                              .titleSmall
+                              .override(
+                                font: GoogleFonts.interTight(
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontStyle,
+                                ),
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                letterSpacing: 0.0,
                                 fontWeight: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .fontWeight,
@@ -504,22 +536,14 @@ class _LocationAuthorizationWidgetState
                                     .titleSmall
                                     .fontStyle,
                               ),
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .fontStyle,
-                            ),
-                        elevation: 3.0,
-                        borderSide: BorderSide(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          width: 1.0,
+                          elevation: 3.0,
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
                         ),
-                        borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
                   ].divide(SizedBox(height: 16.0)),

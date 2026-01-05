@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -500,7 +501,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               size: 24.0,
             ),
             onPressed: () async {
-              context.safePop();
+              context.goNamed(
+                CreateDecoyEmergencyContactsSetupWidget.routeName,
+                extra: <String, dynamic>{
+                  kTransitionInfoKey: TransitionInfo(
+                    hasTransition: true,
+                    transitionType: PageTransitionType.leftToRight,
+                  ),
+                },
+              );
             },
           ),
           title: Text(
@@ -1007,7 +1016,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
-                                child: Container(
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds: 2000),
+                                  curve: Curves.easeInOut,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)

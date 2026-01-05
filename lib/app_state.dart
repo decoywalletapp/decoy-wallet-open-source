@@ -106,6 +106,10 @@ class FFAppState extends ChangeNotifier {
       _locationEnabled =
           await secureStorage.getBool('ff_locationEnabled') ?? _locationEnabled;
     });
+    await _safeInitAsync(() async {
+      _refreshCounter =
+          await secureStorage.getInt('ff_refreshCounter') ?? _refreshCounter;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -451,6 +455,17 @@ class FFAppState extends ChangeNotifier {
 
   void deleteLocationEnabled() {
     secureStorage.delete(key: 'ff_locationEnabled');
+  }
+
+  int _refreshCounter = 0;
+  int get refreshCounter => _refreshCounter;
+  set refreshCounter(int value) {
+    _refreshCounter = value;
+    secureStorage.setInt('ff_refreshCounter', value);
+  }
+
+  void deleteRefreshCounter() {
+    secureStorage.delete(key: 'ff_refreshCounter');
   }
 }
 

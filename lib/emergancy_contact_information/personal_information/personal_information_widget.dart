@@ -268,7 +268,16 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                               size: 24.0,
                             ),
                             onPressed: () async {
-                              context.safePop();
+                              context.goNamed(
+                                HomePageWidget.routeName,
+                                extra: <String, dynamic>{
+                                  kTransitionInfoKey: TransitionInfo(
+                                    hasTransition: true,
+                                    transitionType:
+                                        PageTransitionType.leftToRight,
+                                  ),
+                                },
+                              );
                             },
                           ),
                         ),
@@ -1053,6 +1062,9 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           ? true
                                           : false,
                                     });
+                                    FFAppState().refreshCounter =
+                                        FFAppState().refreshCounter + 1;
+                                    FFAppState().update(() {});
                                     _model.personalSaved =
                                         _model.personalSaved + 1;
                                     safeSetState(() {});
