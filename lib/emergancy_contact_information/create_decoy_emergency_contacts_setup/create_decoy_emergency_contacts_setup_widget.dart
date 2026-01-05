@@ -1016,7 +1016,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                         border: Border.all(
                                                           color: valueOrDefault<
                                                               Color>(
-                                                            (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true) &&
+                                                            (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
                                                                     (createDecoyEmergencyContactsSetupDecoyWalletRow
                                                                             ?.addressComplete ==
                                                                         true) &&
@@ -1044,7 +1044,11 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                             LinearPercentIndicator(
                                                           percent: _model
                                                               .progressValue!,
-                                                          width: 120.0,
+                                                          width:
+                                                              MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .width *
+                                                                  1.0,
                                                           lineHeight: 25.0,
                                                           animation: true,
                                                           animateFromLastPercent:
@@ -1052,7 +1056,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                           progressColor:
                                                               valueOrDefault<
                                                                   Color>(
-                                                            (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true) &&
+                                                            (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
                                                                     (createDecoyEmergencyContactsSetupDecoyWalletRow
                                                                             ?.addressComplete ==
                                                                         true) &&
@@ -1122,7 +1126,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                   color:
                                                                       valueOrDefault<
                                                                           Color>(
-                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true) &&
+                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete ==
                                                                                 true) &&
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete ==
@@ -1173,7 +1177,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                   color:
                                                                       valueOrDefault<
                                                                           Color>(
-                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true) &&
+                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete ==
                                                                                 true) &&
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete ==
@@ -1226,7 +1230,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                   color:
                                                                       valueOrDefault<
                                                                           Color>(
-                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true) &&
+                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete ==
                                                                                 true) &&
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete ==
