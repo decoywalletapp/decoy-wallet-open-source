@@ -9,8 +9,6 @@ class SettingsModel extends FlutterFlowModel<SettingsWidget> {
 
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<UserEntitlementsRow>? settingsQue;
-  // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
-  String? loutResult;
 
   @override
   void initState(BuildContext context) {}

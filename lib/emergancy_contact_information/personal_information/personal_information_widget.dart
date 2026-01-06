@@ -13,7 +13,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:provider/provider.dart';
 import 'personal_information_model.dart';
 export 'personal_information_model.dart';
 
@@ -230,8 +229,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -901,49 +898,146 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                 _model.personalJson = _model.personalJsonOut;
                                 safeSetState(() {});
                                 _model.jwtOut = await actions.getSupabaseJwt();
-                                FFAppState().authJwt = _model.jwtOut!;
-                                safeSetState(() {});
-                                _model.keyOut =
-                                    await actions.generateDataKeyIfMissing();
-                                _model.dataKeyB64 = _model.keyOut;
-                                safeSetState(() {});
-                                _model.enc = await actions.aesGcmEncryptString(
-                                  _model.personalJson!,
-                                  _model.dataKeyB64!,
-                                );
-                                _model.ctB64 = getJsonField(
-                                  _model.enc,
-                                  r'''$.ciphertextB64''',
-                                ).toString();
-                                _model.nonceB64 = getJsonField(
-                                  _model.enc,
-                                  r'''$.nonceB64''',
-                                ).toString();
-                                safeSetState(() {});
-                                _model.wrap = await WrapDataKeyCall.call(
-                                  dataKeyB64: _model.dataKeyB64,
-                                  jwt: FFAppState().authJwt,
-                                );
-
-                                if ((_model.wrap?.succeeded ?? true)) {
-                                  _model.wrappedB64 = getJsonField(
-                                    (_model.wrap?.jsonBody ?? ''),
-                                    r'''$.wrappedB64''',
+                                if (_model.jwtOut != null &&
+                                    _model.jwtOut != '') {
+                                  _model.keyOut =
+                                      await actions.generateDataKeyIfMissing();
+                                  _model.dataKeyB64 = _model.keyOut;
+                                  safeSetState(() {});
+                                  _model.enc =
+                                      await actions.aesGcmEncryptString(
+                                    _model.personalJson!,
+                                    _model.dataKeyB64!,
+                                  );
+                                  _model.ctB64 = getJsonField(
+                                    _model.enc,
+                                    r'''$.ciphertextB64''',
+                                  ).toString();
+                                  _model.nonceB64 = getJsonField(
+                                    _model.enc,
+                                    r'''$.nonceB64''',
                                   ).toString();
                                   safeSetState(() {});
-                                  _model.supaRows =
-                                      await DecoyWalletTable().queryRows(
-                                    queryFn: (q) => q
-                                        .eqOrNull(
+                                  _model.wrap = await WrapDataKeyCall.call(
+                                    dataKeyB64: _model.dataKeyB64,
+                                    jwt: _model.jwtOut,
+                                  );
+
+                                  if ((_model.wrap?.succeeded ?? true)) {
+                                    _model.wrappedB64 = getJsonField(
+                                      (_model.wrap?.jsonBody ?? ''),
+                                      r'''$.wrappedB64''',
+                                    ).toString();
+                                    safeSetState(() {});
+                                    _model.supaRows =
+                                        await DecoyWalletTable().queryRows(
+                                      queryFn: (q) => q
+                                          .eqOrNull(
+                                            'user_id',
+                                            currentUserUid,
+                                          )
+                                          .order('updated_at'),
+                                    );
+                                    if (_model.supaRows != null &&
+                                        (_model.supaRows)!.isNotEmpty) {
+                                      await DecoyWalletTable().update(
+                                        data: {
+                                          'personal_ciphertext': _model.ctB64,
+                                          'personal_nonce': _model.nonceB64,
+                                          'personal_version': 1,
+                                          'wrapped_datakey': _model.wrappedB64,
+                                          'first_name': _model
+                                              .firstNameTextController.text,
+                                          'last_name': _model
+                                              .lastNameTextController.text,
+                                          'updated_at': supaSerialize<DateTime>(
+                                              getCurrentTimestamp),
+                                          'personal_complete': (_model.firstNameTextController
+                                                              .text !=
+                                                          '') &&
+                                                  (_model.lastNameTextController
+                                                              .text !=
+                                                          '')
+                                              ? true
+                                              : false,
+                                        },
+                                        matchingRows: (rows) => rows.eqOrNull(
                                           'user_id',
                                           currentUserUid,
-                                        )
-                                        .order('updated_at'),
-                                  );
-                                  if (_model.supaRows != null &&
-                                      (_model.supaRows)!.isNotEmpty) {
-                                    await DecoyWalletTable().update(
-                                      data: {
+                                        ),
+                                      );
+                                      _model.personalSaved =
+                                          _model.personalSaved + 1;
+                                      safeSetState(() {});
+                                      _model.changedEmail =
+                                          functions.normalizeEmail(
+                                              _model.emailTextController.text);
+                                      _model.changedPhone =
+                                          functions.sanitizePhoneNumber(
+                                              _model.phoneTextController.text);
+                                      safeSetState(() {});
+                                      if ((_model.origEmail !=
+                                              _model.changedEmail) &&
+                                          (_model.changedEmail != null &&
+                                              _model.changedEmail != '')) {
+                                        await DecoyWalletTable().update(
+                                          data: {
+                                            'pending_email':
+                                                _model.changedEmail,
+                                            'email_verified': false,
+                                            'email_verified_at':
+                                                supaSerialize<DateTime>(
+                                                    getCurrentTimestamp),
+                                          },
+                                          matchingRows: (rows) => rows.eqOrNull(
+                                            'user_id',
+                                            currentUserUid,
+                                          ),
+                                        );
+                                        FFAppState().userEmail =
+                                            functions.normalizeEmail(
+                                                _model.changedEmail);
+                                        safeSetState(() {});
+                                        if (_model.changedEmail!.isEmpty) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Email required!',
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        await authManager.updateEmail(
+                                          email: _model.changedEmail!,
+                                          context: context,
+                                        );
+                                        safeSetState(() {});
+
+                                        context.pushNamed(
+                                            ConfirmEmailPageWidget.routeName);
+                                      } else {
+                                        if (_model.origPhone !=
+                                            _model.changedPhone) {
+                                          context.pushNamed(
+                                              PhoneNumberInputWidget.routeName);
+                                        } else {
+                                          await Future.delayed(
+                                            Duration(
+                                              milliseconds: 250,
+                                            ),
+                                          );
+                                          _model.personalSaved =
+                                              _model.personalSaved + -1;
+                                          safeSetState(() {});
+                                          context.safePop();
+                                        }
+                                      }
+                                    } else {
+                                      _model.supaNameInserts =
+                                          await DecoyWalletTable().insert({
                                         'personal_ciphertext': _model.ctB64,
                                         'personal_nonce': _model.nonceB64,
                                         'personal_version': 1,
@@ -952,8 +1046,14 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.firstNameTextController.text,
                                         'last_name':
                                             _model.lastNameTextController.text,
+                                        'phone_number':
+                                            functions.sanitizePhoneNumber(_model
+                                                .phoneTextController.text),
+                                        'email':
+                                            _model.emailTextController.text,
                                         'updated_at': supaSerialize<DateTime>(
                                             getCurrentTimestamp),
+                                        'user_id': currentUserUid,
                                         'personal_complete': (_model.firstNameTextController
                                                             .text !=
                                                         '') &&
@@ -962,138 +1062,42 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                         '')
                                             ? true
                                             : false,
-                                      },
-                                      matchingRows: (rows) => rows.eqOrNull(
-                                        'user_id',
-                                        currentUserUid,
-                                      ),
-                                    );
-                                    _model.personalSaved =
-                                        _model.personalSaved + 1;
-                                    safeSetState(() {});
-                                    _model.changedEmail =
-                                        functions.normalizeEmail(
-                                            _model.emailTextController.text);
-                                    _model.changedPhone =
-                                        functions.sanitizePhoneNumber(
-                                            _model.phoneTextController.text);
-                                    safeSetState(() {});
-                                    if ((_model.origEmail !=
-                                            _model.changedEmail) &&
-                                        (_model.changedEmail != null &&
-                                            _model.changedEmail != '')) {
-                                      await DecoyWalletTable().update(
-                                        data: {
-                                          'pending_email': _model.changedEmail,
-                                          'email_verified': false,
-                                          'email_verified_at':
-                                              supaSerialize<DateTime>(
-                                                  getCurrentTimestamp),
-                                        },
-                                        matchingRows: (rows) => rows.eqOrNull(
-                                          'user_id',
-                                          currentUserUid,
+                                      });
+                                      FFAppState().refreshCounter =
+                                          FFAppState().refreshCounter + 1;
+                                      FFAppState().update(() {});
+                                      _model.personalSaved =
+                                          _model.personalSaved + 1;
+                                      safeSetState(() {});
+                                      await Future.delayed(
+                                        Duration(
+                                          milliseconds: 250,
                                         ),
                                       );
-                                      FFAppState().userEmail = functions
-                                          .normalizeEmail(_model.changedEmail);
+                                      _model.personalSaved =
+                                          _model.personalSaved + -1;
                                       safeSetState(() {});
-                                      if (_model.changedEmail!.isEmpty) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Email required!',
-                                            ),
-                                          ),
-                                        );
-                                        return;
-                                      }
-
-                                      await authManager.updateEmail(
-                                        email: _model.changedEmail!,
-                                        context: context,
-                                      );
-                                      safeSetState(() {});
-
-                                      context.pushNamed(
-                                          ConfirmEmailPageWidget.routeName);
-                                    } else {
-                                      if (_model.origPhone !=
-                                          _model.changedPhone) {
-                                        context.pushNamed(
-                                            PhoneNumberInputWidget.routeName);
-                                      } else {
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 250,
-                                          ),
-                                        );
-                                        _model.personalSaved =
-                                            _model.personalSaved + -1;
-                                        safeSetState(() {});
-                                        context.safePop();
-                                      }
+                                      context.safePop();
                                     }
                                   } else {
-                                    _model.supaNameInserts =
-                                        await DecoyWalletTable().insert({
-                                      'personal_ciphertext': _model.ctB64,
-                                      'personal_nonce': _model.nonceB64,
-                                      'personal_version': 1,
-                                      'wrapped_datakey': _model.wrappedB64,
-                                      'first_name':
-                                          _model.firstNameTextController.text,
-                                      'last_name':
-                                          _model.lastNameTextController.text,
-                                      'phone_number':
-                                          functions.sanitizePhoneNumber(
-                                              _model.phoneTextController.text),
-                                      'email': _model.emailTextController.text,
-                                      'updated_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
-                                      'user_id': currentUserUid,
-                                      'personal_complete': (_model.firstNameTextController
-                                                          .text !=
-                                                      '') &&
-                                              (_model.lastNameTextController
-                                                          .text !=
-                                                      '')
-                                          ? true
-                                          : false,
-                                    });
-                                    FFAppState().refreshCounter =
-                                        FFAppState().refreshCounter + 1;
-                                    FFAppState().update(() {});
-                                    _model.personalSaved =
-                                        _model.personalSaved + 1;
-                                    safeSetState(() {});
-                                    await Future.delayed(
-                                      Duration(
-                                        milliseconds: 250,
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'FAILED',
+                                          style: TextStyle(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondary,
                                       ),
                                     );
-                                    _model.personalSaved =
-                                        _model.personalSaved + -1;
-                                    safeSetState(() {});
-                                    context.safePop();
                                   }
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'FAILED',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
+                                  context.goNamed(LoginPageWidget.routeName);
                                 }
 
                                 safeSetState(() {});

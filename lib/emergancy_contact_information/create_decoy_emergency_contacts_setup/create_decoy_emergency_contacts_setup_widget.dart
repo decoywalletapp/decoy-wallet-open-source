@@ -1012,7 +1012,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                             .secondaryBackground,
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(8.0),
+                                                                .circular(12.0),
                                                         border: Border.all(
                                                           color: valueOrDefault<
                                                               Color>(
@@ -1079,7 +1079,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                   .accent4,
                                                           barRadius:
                                                               Radius.circular(
-                                                                  8.0),
+                                                                  16.0),
                                                           padding:
                                                               EdgeInsets.zero,
                                                         ),

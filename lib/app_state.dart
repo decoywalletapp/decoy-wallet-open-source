@@ -133,12 +133,6 @@ class FFAppState extends ChangeNotifier {
     _phoneNumber = value;
   }
 
-  String _authJwt = '';
-  String get authJwt => _authJwt;
-  set authJwt(String value) {
-    _authJwt = value;
-  }
-
   bool _fakeSeeded = false;
   bool get fakeSeeded => _fakeSeeded;
   set fakeSeeded(bool value) {

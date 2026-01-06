@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Custom Action - getSupabaseJwt] action in LoginPage widget.
-  String? currentJwtToken;
   bool loginBioResult = false;
   // State field(s) for emailAddressLogin widget.
   FocusNode? emailAddressLoginFocusNode;
@@ -19,8 +17,6 @@ class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
   TextEditingController? passwordLoginTextController;
   late bool passwordLoginVisibility;
   String? Function(BuildContext, String?)? passwordLoginTextControllerValidator;
-  // Stores action output result for [Custom Action - getSupabaseJwt] action in Login widget.
-  String? result;
 
   @override
   void initState(BuildContext context) {

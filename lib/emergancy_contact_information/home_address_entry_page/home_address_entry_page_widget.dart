@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'home_address_entry_page_model.dart';
 export 'home_address_entry_page_model.dart';
 
@@ -151,8 +150,6 @@ class _HomeAddressEntryPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -1000,47 +997,84 @@ class _HomeAddressEntryPageWidgetState
                             _model.addressJson = _model.playload;
                             safeSetState(() {});
                             _model.jwtOut = await actions.getSupabaseJwt();
-                            FFAppState().authJwt = _model.jwtOut!;
-                            safeSetState(() {});
-                            _model.keyOut =
-                                await actions.generateDataKeyIfMissing();
-                            _model.dataKeyB64 = _model.keyOut;
-                            safeSetState(() {});
-                            _model.enc = await actions.aesGcmEncryptString(
-                              _model.addressJson!,
-                              _model.dataKeyB64!,
-                            );
-                            _model.ctB64 = getJsonField(
-                              _model.enc,
-                              r'''$.ciphertextB64''',
-                            ).toString();
-                            _model.nonceB64 = getJsonField(
-                              _model.enc,
-                              r'''$.nonceB64''',
-                            ).toString();
-                            safeSetState(() {});
-                            _model.wrap = await WrapDataKeyCall.call(
-                              dataKeyB64: _model.dataKeyB64,
-                              jwt: FFAppState().authJwt,
-                            );
-
-                            if ((_model.wrap?.succeeded ?? true)) {
-                              _model.wrappedB64 = getJsonField(
-                                (_model.wrap?.jsonBody ?? ''),
-                                r'''$.wrappedB64''',
+                            if (_model.jwtOut != null && _model.jwtOut != '') {
+                              _model.keyOut =
+                                  await actions.generateDataKeyIfMissing();
+                              _model.dataKeyB64 = _model.keyOut;
+                              safeSetState(() {});
+                              _model.enc = await actions.aesGcmEncryptString(
+                                _model.addressJson!,
+                                _model.dataKeyB64!,
+                              );
+                              _model.ctB64 = getJsonField(
+                                _model.enc,
+                                r'''$.ciphertextB64''',
+                              ).toString();
+                              _model.nonceB64 = getJsonField(
+                                _model.enc,
+                                r'''$.nonceB64''',
                               ).toString();
                               safeSetState(() {});
-                              _model.supaRows =
-                                  await DecoyWalletTable().queryRows(
-                                queryFn: (q) => q.eqOrNull(
-                                  'user_id',
-                                  currentUserUid,
-                                ),
+                              _model.wrap = await WrapDataKeyCall.call(
+                                dataKeyB64: _model.dataKeyB64,
+                                jwt: _model.jwtOut,
                               );
-                              if (_model.supaRows != null &&
-                                  (_model.supaRows)!.isNotEmpty) {
-                                await DecoyWalletTable().update(
-                                  data: {
+
+                              if ((_model.wrap?.succeeded ?? true)) {
+                                _model.wrappedB64 = getJsonField(
+                                  (_model.wrap?.jsonBody ?? ''),
+                                  r'''$.wrappedB64''',
+                                ).toString();
+                                safeSetState(() {});
+                                _model.supaRows =
+                                    await DecoyWalletTable().queryRows(
+                                  queryFn: (q) => q.eqOrNull(
+                                    'user_id',
+                                    currentUserUid,
+                                  ),
+                                );
+                                if (_model.supaRows != null &&
+                                    (_model.supaRows)!.isNotEmpty) {
+                                  await DecoyWalletTable().update(
+                                    data: {
+                                      'wrapped_datakey': _model.wrappedB64,
+                                      'address_ciphertext': _model.ctB64,
+                                      'address_nonce': _model.nonceB64,
+                                      'address_version': 1,
+                                      'updated_at': supaSerialize<DateTime>(
+                                          getCurrentTimestamp),
+                                      'address_complete': (_model.streetAddressTextController
+                                                          .text !=
+                                                      '') &&
+                                              (_model.cityTextController
+                                                          .text !=
+                                                      '') &&
+                                              (_model.stateTextController
+                                                          .text !=
+                                                      '') &&
+                                              (_model.zipTextController
+                                                          .text !=
+                                                      '')
+                                          ? true
+                                          : false,
+                                    },
+                                    matchingRows: (rows) => rows.eqOrNull(
+                                      'user_id',
+                                      currentUserUid,
+                                    ),
+                                  );
+                                  _model.addressSaved = 1;
+                                  safeSetState(() {});
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 2000,
+                                    ),
+                                  );
+                                  context.safePop();
+                                } else {
+                                  _model.insRow =
+                                      await DecoyWalletTable().insert({
+                                    'user_id': currentUserUid,
                                     'wrapped_datakey': _model.wrappedB64,
                                     'address_ciphertext': _model.ctB64,
                                     'address_nonce': _model.nonceB64,
@@ -1060,66 +1094,34 @@ class _HomeAddressEntryPageWidgetState
                                                     '')
                                         ? true
                                         : false,
-                                  },
-                                  matchingRows: (rows) => rows.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
-                                );
-                                _model.addressSaved = 1;
-                                safeSetState(() {});
-                                await Future.delayed(
-                                  Duration(
-                                    milliseconds: 2000,
-                                  ),
-                                );
-                                context.safePop();
+                                  });
+                                  _model.addressSaved = 1;
+                                  safeSetState(() {});
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 2000,
+                                    ),
+                                  );
+                                  context.safePop();
+                                }
                               } else {
-                                _model.insRow =
-                                    await DecoyWalletTable().insert({
-                                  'user_id': currentUserUid,
-                                  'wrapped_datakey': _model.wrappedB64,
-                                  'address_ciphertext': _model.ctB64,
-                                  'address_nonce': _model.nonceB64,
-                                  'address_version': 1,
-                                  'updated_at': supaSerialize<DateTime>(
-                                      getCurrentTimestamp),
-                                  'address_complete': (_model.streetAddressTextController
-                                                      .text !=
-                                                  '') &&
-                                          (_model.cityTextController.text !=
-                                                  '') &&
-                                          (_model.stateTextController.text !=
-                                                  '') &&
-                                          (_model.zipTextController.text !=
-                                                  '')
-                                      ? true
-                                      : false,
-                                });
-                                _model.addressSaved = 1;
-                                safeSetState(() {});
-                                await Future.delayed(
-                                  Duration(
-                                    milliseconds: 2000,
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'ADDRESS NOT SAVED',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
-                                context.safePop();
                               }
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'ADDRESS NOT SAVED',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                    ),
-                                  ),
-                                  duration: Duration(milliseconds: 4000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).secondary,
-                                ),
-                              );
+                              context.goNamed(LoginPageWidget.routeName);
                             }
 
                             safeSetState(() {});

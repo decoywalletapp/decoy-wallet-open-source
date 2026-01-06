@@ -3,7 +3,6 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -924,17 +923,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    _model.loutResult = await actions.getSupabaseJwt();
-                    FFAppState().authJwt = '';
-                    safeSetState(() {});
                     GoRouter.of(context).prepareAuthEvent();
                     await authManager.signOut();
                     GoRouter.of(context).clearRedirectLocation();
 
                     context.goNamedAuth(
                         LoginPageWidget.routeName, context.mounted);
-
-                    safeSetState(() {});
                   },
                   text: 'Log Out',
                   options: FFButtonOptions(

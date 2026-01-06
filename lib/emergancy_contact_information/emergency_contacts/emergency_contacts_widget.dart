@@ -2877,54 +2877,94 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                               _model.contactsJson = _model.contactsPayload!;
                               safeSetState(() {});
                               _model.jwtOut = await actions.getSupabaseJwt();
-                              FFAppState().authJwt = _model.jwtOut!;
-                              safeSetState(() {});
-                              _model.keyOut =
-                                  await actions.generateDataKeyIfMissing();
-                              _model.dataKeyB64 = _model.keyOut!;
-                              safeSetState(() {});
-                              _model.enc = await actions.aesGcmEncryptString(
-                                _model.contactsJson,
-                                _model.dataKeyB64,
-                              );
-                              _model.ctB64 = getJsonField(
-                                _model.enc,
-                                r'''$.ciphertextB64''',
-                              ).toString();
-                              _model.nonceB64 = getJsonField(
-                                _model.enc,
-                                r'''$.nonceB64''',
-                              ).toString();
-                              safeSetState(() {});
-                              _model.wrap = await WrapDataKeyCall.call(
-                                jwt: FFAppState().authJwt,
-                                dataKeyB64: _model.dataKeyB64,
-                              );
-
-                              if ((_model.wrap?.succeeded ?? true)) {
-                                _model.wrappedB64 = getJsonField(
-                                  (_model.wrap?.jsonBody ?? ''),
-                                  r'''$.wrappedB64''',
+                              if (_model.jwtOut != null &&
+                                  _model.jwtOut != '') {
+                                _model.keyOut =
+                                    await actions.generateDataKeyIfMissing();
+                                _model.dataKeyB64 = _model.keyOut!;
+                                safeSetState(() {});
+                                _model.enc = await actions.aesGcmEncryptString(
+                                  _model.contactsJson,
+                                  _model.dataKeyB64,
+                                );
+                                _model.ctB64 = getJsonField(
+                                  _model.enc,
+                                  r'''$.ciphertextB64''',
+                                ).toString();
+                                _model.nonceB64 = getJsonField(
+                                  _model.enc,
+                                  r'''$.nonceB64''',
                                 ).toString();
                                 safeSetState(() {});
-                                _model.upd = await DecoyWalletTable().queryRows(
-                                  queryFn: (q) => q.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
+                                _model.wrap = await WrapDataKeyCall.call(
+                                  dataKeyB64: _model.dataKeyB64,
+                                  jwt: _model.jwtOut,
                                 );
-                                if (_model.upd != null &&
-                                    (_model.upd)!.isNotEmpty) {
-                                  await DecoyWalletTable().update(
-                                    data: {
+
+                                if ((_model.wrap?.succeeded ?? true)) {
+                                  _model.wrappedB64 = getJsonField(
+                                    (_model.wrap?.jsonBody ?? ''),
+                                    r'''$.wrappedB64''',
+                                  ).toString();
+                                  safeSetState(() {});
+                                  _model.upd =
+                                      await DecoyWalletTable().queryRows(
+                                    queryFn: (q) => q.eqOrNull(
+                                      'user_id',
+                                      currentUserUid,
+                                    ),
+                                  );
+                                  if (_model.upd != null &&
+                                      (_model.upd)!.isNotEmpty) {
+                                    await DecoyWalletTable().update(
+                                      data: {
+                                        'wrapped_datakey': _model.wrappedB64,
+                                        'updated_at': supaSerialize<DateTime>(
+                                            getCurrentTimestamp),
+                                        'contacts_ciphertext': _model.ctB64,
+                                        'contacts_nonce': _model.nonceB64,
+                                        'contacts_version': 1,
+                                        'created_at': supaSerialize<DateTime>(
+                                            getCurrentTimestamp),
+                                        'contacts_complete': (_model
+                                                            .c1PhoneTFTextController
+                                                            .text !=
+                                                        '') ||
+                                                (_model
+                                                            .c2PhoneTFTextController
+                                                            .text !=
+                                                        '') ||
+                                                (_model.c3PhoneTFTextController
+                                                            .text !=
+                                                        '') ||
+                                                (_model.c4PhoneTFTextController
+                                                            .text !=
+                                                        '') ||
+                                                (_model.c5PhoneTFTextController
+                                                            .text !=
+                                                        '')
+                                            ? true
+                                            : false,
+                                      },
+                                      matchingRows: (rows) => rows.eqOrNull(
+                                        'user_id',
+                                        currentUserUid,
+                                      ),
+                                    );
+                                    FFAppState().emergencyContactsIncrement =
+                                        _model.contactIncrement;
+                                    safeSetState(() {});
+                                    context.safePop();
+                                  } else {
+                                    _model.insRow =
+                                        await DecoyWalletTable().insert({
                                       'wrapped_datakey': _model.wrappedB64,
                                       'updated_at': supaSerialize<DateTime>(
                                           getCurrentTimestamp),
                                       'contacts_ciphertext': _model.ctB64,
                                       'contacts_nonce': _model.nonceB64,
                                       'contacts_version': 1,
-                                      'created_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
+                                      'user_id': currentUserUid,
                                       'contacts_complete': (_model.c1PhoneTFTextController
                                                           .text !=
                                                       '') ||
@@ -2943,63 +2983,31 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       '')
                                           ? true
                                           : false,
-                                    },
-                                    matchingRows: (rows) => rows.eqOrNull(
-                                      'user_id',
-                                      currentUserUid,
+                                    });
+                                    FFAppState().emergencyContactsIncrement =
+                                        _model.contactIncrement;
+                                    safeSetState(() {});
+                                    context.safePop();
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Couldn\'t secure key',
+                                        style: TextStyle(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 4000),
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .secondary,
                                     ),
                                   );
-                                  FFAppState().emergencyContactsIncrement =
-                                      _model.contactIncrement;
-                                  safeSetState(() {});
-                                  context.safePop();
-                                } else {
-                                  _model.insRow =
-                                      await DecoyWalletTable().insert({
-                                    'wrapped_datakey': _model.wrappedB64,
-                                    'updated_at': supaSerialize<DateTime>(
-                                        getCurrentTimestamp),
-                                    'contacts_ciphertext': _model.ctB64,
-                                    'contacts_nonce': _model.nonceB64,
-                                    'contacts_version': 1,
-                                    'user_id': currentUserUid,
-                                    'contacts_complete': (_model.c1PhoneTFTextController.text !=
-                                                    '') ||
-                                            (_model.c2PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c3PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c4PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c5PhoneTFTextController
-                                                        .text !=
-                                                    '')
-                                        ? true
-                                        : false,
-                                  });
-                                  FFAppState().emergencyContactsIncrement =
-                                      _model.contactIncrement;
-                                  safeSetState(() {});
-                                  context.safePop();
                                 }
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Couldn\'t secure key',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
+                                context.goNamed(LoginPageWidget.routeName);
                               }
 
                               safeSetState(() {});

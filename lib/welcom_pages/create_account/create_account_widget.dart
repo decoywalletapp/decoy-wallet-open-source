@@ -209,6 +209,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           autofillHints: [AutofillHints.email],
                                           textCapitalization:
                                               TextCapitalization.none,
+                                          textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText: 'Email',
@@ -329,6 +330,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           autofillHints: [
                                             AutofillHints.password
                                           ],
+                                          textInputAction: TextInputAction.next,
                                           obscureText: !_model
                                               .passwordCreateAccountVisibility,
                                           decoration: InputDecoration(
@@ -451,6 +453,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           autofillHints: [
                                             AutofillHints.password
                                           ],
+                                          textInputAction: TextInputAction.done,
                                           obscureText:
                                               !_model.passwordConfirmVisibility,
                                           decoration: InputDecoration(
@@ -562,10 +565,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                     ),
                                     FFButtonWidget(
                                       onPressed: () async {
-                                        _model.caResult =
-                                            await actions.getSupabaseJwt();
-                                        FFAppState().authJwt = _model.caResult!;
-                                        safeSetState(() {});
                                         FFAppState().userEmail = _model
                                             .emailAddressTextController.text;
                                         safeSetState(() {});

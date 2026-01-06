@@ -2,7 +2,6 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -347,66 +346,37 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
             ],
           ),
           Spacer(),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
-            child: Text(
-              'App Versions',
-              style: FlutterFlowTheme.of(context).titleLarge.override(
-                    font: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w500,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                    ),
-                    color: FlutterFlowTheme.of(context).primaryBackground,
-                    fontSize: 22.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w500,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                  ),
+          Expanded(
+            child: Align(
+              alignment: AlignmentDirectional(0.0, 0.0),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                child: Text(
+                  'App Versions',
+                  style: FlutterFlowTheme.of(context).titleLarge.override(
+                        font: GoogleFonts.outfit(
+                          fontWeight: FontWeight.w500,
+                          fontStyle:
+                              FlutterFlowTheme.of(context).titleLarge.fontStyle,
+                        ),
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        fontSize: 22.0,
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w500,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).titleLarge.fontStyle,
+                      ),
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 0.0, 0.0),
-            child: Text(
-              'v4.9.0',
-              style: FlutterFlowTheme.of(context).labelMedium.override(
-                    font: GoogleFonts.plusJakartaSans(
-                      fontWeight: FontWeight.w500,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                    ),
-                    color: FlutterFlowTheme.of(context).primaryBackground,
-                    fontSize: 14.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w500,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                  ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 0.0, 0.0),
-            child: FFButtonWidget(
-              onPressed: () async {
-                _model.dloutResult = await actions.getSupabaseJwt();
-                FFAppState().authJwt = '';
-                safeSetState(() {});
-                GoRouter.of(context).prepareAuthEvent();
-                await authManager.signOut();
-                GoRouter.of(context).clearRedirectLocation();
-
-                context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
-
-                safeSetState(() {});
-              },
-              text: 'Log Out',
-              options: FFButtonOptions(
-                height: 40.0,
-                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                color: Color(0x001D2428),
-                textStyle: FlutterFlowTheme.of(context).labelMedium.override(
+          Align(
+            alignment: AlignmentDirectional(0.0, 0.0),
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 0.0, 0.0),
+              child: Text(
+                'v4.9.0',
+                style: FlutterFlowTheme.of(context).labelMedium.override(
                       font: GoogleFonts.plusJakartaSans(
                         fontWeight: FontWeight.w500,
                         fontStyle:
@@ -419,12 +389,56 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                       fontStyle:
                           FlutterFlowTheme.of(context).labelMedium.fontStyle,
                     ),
-                elevation: 0.0,
-                borderSide: BorderSide(
-                  color: FlutterFlowTheme.of(context).primaryBackground,
-                  width: 1.0,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Align(
+              alignment: AlignmentDirectional(0.0, 0.0),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 0.0, 0.0),
+                child: FFButtonWidget(
+                  onPressed: () async {
+                    GoRouter.of(context).prepareAuthEvent();
+                    await authManager.signOut();
+                    GoRouter.of(context).clearRedirectLocation();
+
+                    context.goNamedAuth(
+                        LoginPageWidget.routeName, context.mounted);
+                  },
+                  text: 'Log Out',
+                  options: FFButtonOptions(
+                    height: 40.0,
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: Color(0x001D2428),
+                    textStyle: FlutterFlowTheme.of(context)
+                        .labelMedium
+                        .override(
+                          font: GoogleFonts.plusJakartaSans(
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .labelMedium
+                                .fontStyle,
+                          ),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          fontSize: 14.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FlutterFlowTheme.of(context)
+                              .labelMedium
+                              .fontStyle,
+                        ),
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: FlutterFlowTheme.of(context).primaryBackground,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(50.0),
               ),
             ),
           ),

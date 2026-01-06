@@ -1,7 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -36,9 +35,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.currentJwtToken = await actions.getSupabaseJwt();
-      FFAppState().authJwt = _model.currentJwtToken!;
-      safeSetState(() {});
       FFAppState().isLocked = true;
       safeSetState(() {});
       if ((FFAppState().biometricsEnabled == true) &&
@@ -243,6 +239,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         _model.emailAddressLoginFocusNode,
                                     autofocus: true,
                                     autofillHints: [AutofillHints.email],
+                                    textInputAction: TextInputAction.next,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       labelText: 'Email',
@@ -337,6 +334,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     focusNode: _model.passwordLoginFocusNode,
                                     autofocus: true,
                                     autofillHints: [AutofillHints.password],
+                                    textInputAction: TextInputAction.done,
                                     obscureText:
                                         !_model.passwordLoginVisibility,
                                     decoration: InputDecoration(
@@ -449,16 +447,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     return;
                                   }
 
-                                  _model.result =
-                                      await actions.getSupabaseJwt();
-                                  FFAppState().authJwt = _model.result!;
-                                  safeSetState(() {});
-
                                   context.goNamedAuth(
                                       AuthRouterWidget.routeName,
                                       context.mounted);
-
-                                  safeSetState(() {});
                                 },
                                 text: 'Log in',
                                 options: FFButtonOptions(
