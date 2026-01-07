@@ -262,6 +262,7 @@ class VerifyPINCall {
     final ffApiRequestBody = '''
 {
   "pin": "${pin}",
+  "jwt": "${jwt}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'verifyPIN',
