@@ -3246,6 +3246,29 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                             .decoyPinContactsEnabled =
                                                         false;
                                                     safeSetState(() {});
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          (_model.verifyResp
+                                                                      ?.jsonBody ??
+                                                                  '')
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryText,
+                                                          ),
+                                                        ),
+                                                        duration: Duration(
+                                                            milliseconds: 4000),
+                                                        backgroundColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                      ),
+                                                    );
 
                                                     context.pushNamed(
                                                       DecoyPinSystemValuesWidget

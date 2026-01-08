@@ -223,6 +223,7 @@ class SetPINCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,

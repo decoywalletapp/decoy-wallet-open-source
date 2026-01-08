@@ -4469,6 +4469,29 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       ''),
                                                 ) ==
                                                 true) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    (_model.verifyOldPinResp
+                                                                ?.jsonBody ??
+                                                            '')
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                ),
+                                              );
                                               _model.currentStep =
                                                   _model.currentStep! + 1;
                                               _model.newPinInput =
