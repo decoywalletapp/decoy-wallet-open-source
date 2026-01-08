@@ -4457,6 +4457,27 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                             jwt: currentJwtToken,
                                           );
 
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                (_model.verifyOldPinResp
+                                                            ?.jsonBody ??
+                                                        '')
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                ),
+                                              ),
+                                              duration:
+                                                  Duration(milliseconds: 4000),
+                                              backgroundColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                            ),
+                                          );
                                           if (VerifyPINCall.ok(
                                                 (_model.verifyOldPinResp
                                                         ?.jsonBody ??

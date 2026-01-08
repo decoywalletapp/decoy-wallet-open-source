@@ -2797,6 +2797,27 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                               jwt: currentJwtToken,
                                             );
 
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  (_model.setPinResp
+                                                              ?.jsonBody ??
+                                                          '')
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryText,
+                                                  ),
+                                                ),
+                                                duration: Duration(
+                                                    milliseconds: 4000),
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                              ),
+                                            );
                                             if (SetPINCall.ok(
                                                   (_model.setPinResp
                                                           ?.jsonBody ??

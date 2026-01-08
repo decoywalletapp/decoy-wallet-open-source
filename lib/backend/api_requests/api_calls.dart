@@ -214,8 +214,7 @@ class SetPINCall {
     final ffApiRequestBody = '''
 {
   "type": "${escapeStringForJson(type)}",
-  "pin": "${escapeStringForJson(pin)}",
-  "jwt": "${escapeStringForJson(jwt)}"
+  "pin": "${escapeStringForJson(pin)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'setPIN',
@@ -262,8 +261,7 @@ class VerifyPINCall {
   }) async {
     final ffApiRequestBody = '''
 {
-  "pin": "${pin}",
-  "jwt": "${jwt}"
+  "pin": "${pin}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'verifyPIN',
