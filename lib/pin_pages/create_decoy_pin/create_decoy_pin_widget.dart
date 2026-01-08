@@ -1636,6 +1636,29 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                   jwt: currentJwtToken,
                                                 );
 
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      (_model.verifyMe
+                                                                  ?.jsonBody ??
+                                                              '')
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
                                                 if (VerifyPINCall.isAccount(
                                                       (_model.verifyMe
                                                               ?.jsonBody ??
@@ -3217,10 +3240,57 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                 _model.setPinResp =
                                                     await SetPINCall.call(
                                                   type: 'decoy',
-                                                  pin: _model.joinedDecoyPin,
+                                                  pin:
+                                                      _model.joinedDecoyConfirm,
                                                   jwt: currentJwtToken,
                                                 );
 
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      (_model.setPinResp
+                                                                  ?.statusCode ??
+                                                              200)
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      (_model.setPinResp
+                                                                  ?.jsonBody ??
+                                                              '')
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
                                                 if (SetPINCall.ok(
                                                       (_model.setPinResp
                                                               ?.jsonBody ??
@@ -3233,6 +3303,28 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                     jwt: currentJwtToken,
                                                   );
 
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        (_model.verifyResp
+                                                                    ?.jsonBody ??
+                                                                '')
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
                                                   if (VerifyPINCall.isDecoy(
                                                         (_model.verifyResp
                                                                 ?.jsonBody ??
