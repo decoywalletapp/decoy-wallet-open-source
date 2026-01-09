@@ -1293,26 +1293,6 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                         _model.pinInput =
                                             [].toList().cast<String>();
                                         safeSetState(() {});
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              (_model.verifyResp?.jsonBody ??
-                                                      '')
-                                                  .toString(),
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
 
                                         context
                                             .goNamed(HomePageWidget.routeName);
@@ -1338,38 +1318,6 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                       SnackBar(
                                         content: Text(
                                           'SOMETHING WENT WRONG - CONTACT THE SUPPORT TEAM FOR FURTHER ASSISTANCE',
-                                          style: TextStyle(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                          ),
-                                        ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          (_model.verifyResp?.jsonBody ?? '')
-                                              .toString(),
-                                          style: TextStyle(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                          ),
-                                        ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          (_model.verifyResp?.statusCode ?? 200)
-                                              .toString(),
                                           style: TextStyle(
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,

@@ -131,7 +131,6 @@ Future<dynamic> createAndRegisterDecoy(
   return {
     'ok': ok,
     'decoyId': decoyId,
-    'mnemonic': mnemonic,
     'xpub': xpub,
     'addresses': <String>[],
   };

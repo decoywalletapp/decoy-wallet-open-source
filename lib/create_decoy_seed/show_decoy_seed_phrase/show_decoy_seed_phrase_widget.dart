@@ -20,10 +20,10 @@ export 'show_decoy_seed_phrase_model.dart';
 class ShowDecoySeedPhraseWidget extends StatefulWidget {
   const ShowDecoySeedPhraseWidget({
     super.key,
-    required this.mnemonic,
+    this.decoyId,
   });
 
-  final String? mnemonic;
+  final String? decoyId;
 
   static String routeName = 'ShowDecoySeedPhrase';
   static String routePath = '/showDecoySeedPhrase';
@@ -45,8 +45,11 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.mnemonicOut = await actions.loadDecoyMnemonicFromStorage(
+        widget.decoyId!,
+      );
       _model.splitOut = await actions.splitMnemonicAction(
-        widget.mnemonic!,
+        _model.mnemonicOut!,
       );
       _model.words = _model.splitOut!.toList().cast<String>();
       safeSetState(() {});
@@ -997,8 +1000,8 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                           context.pushNamed(
                             SeedPhraseVerificationWidget.routeName,
                             queryParameters: {
-                              'mnemonic': serializeParam(
-                                widget.mnemonic,
+                              'decoyId': serializeParam(
+                                widget.decoyId,
                                 ParamType.String,
                               ),
                             }.withoutNulls,

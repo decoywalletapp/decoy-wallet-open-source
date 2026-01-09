@@ -266,15 +266,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                             ),
                             onPressed: () async {
                               context.goNamed(
-                                HomePageWidget.routeName,
-                                extra: <String, dynamic>{
-                                  kTransitionInfoKey: TransitionInfo(
-                                    hasTransition: true,
-                                    transitionType:
-                                        PageTransitionType.leftToRight,
-                                  ),
-                                },
-                              );
+                                  CreateDecoyEmergencyContactsSetupWidget
+                                      .routeName);
                             },
                           ),
                         ),

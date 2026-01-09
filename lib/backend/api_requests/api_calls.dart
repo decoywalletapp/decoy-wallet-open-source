@@ -177,34 +177,6 @@ class BtcChartOneYearCall {
       ) as List?;
 }
 
-class SetPhoneAuthCall {
-  static Future<ApiCallResponse> call({
-    String? cleanPhone = '',
-    String? jwt = '',
-  }) async {
-    final ffApiRequestBody = '''
-{ "phone": "${escapeStringForJson(cleanPhone)}" }''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'setPhoneAuth',
-      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/set-phone',
-      callType: ApiCallType.POST,
-      headers: {
-        'Authorization': 'Bearer <Id token (JWT token)>',
-        'Content-Type': 'application/json',
-      },
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-}
-
 class SetPINCall {
   static Future<ApiCallResponse> call({
     String? type = '',
@@ -335,37 +307,6 @@ class WrapDataKeyCall {
         response,
         r'''$.wrappedB64''',
       ));
-}
-
-class UpdateEmailViaProxyCall {
-  static Future<ApiCallResponse> call({
-    String? newEmail = '',
-    String? authJwt = '',
-  }) async {
-    final ffApiRequestBody = '''
-{
-  "email": "${escapeStringForJson(newEmail)}",
-  "jwt": "${escapeStringForJson(authJwt)}"
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'UpdateEmailViaProxy',
-      apiUrl:
-          'https://decoy-verify-866378207353.us-central1.run.app/update-email',
-      callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
 }
 
 class SendSupportTicketCall {

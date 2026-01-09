@@ -168,11 +168,6 @@ class _GenerateDecoySeedPhraseWidgetState
                                   r'''$.decoyId''',
                                 ).toString();
                                 safeSetState(() {});
-                                _model.tempMnemonic = getJsonField(
-                                  _model.createDecoy,
-                                  r'''$.mnemonic''',
-                                ).toString();
-                                safeSetState(() {});
                                 FFAppState().decoySeedArmed = false;
                                 safeSetState(() {});
                                 await DecoyWalletTable().update(
@@ -192,10 +187,10 @@ class _GenerateDecoySeedPhraseWidgetState
                                 context.pushNamed(
                                   ShowDecoySeedPhraseWidget.routeName,
                                   queryParameters: {
-                                    'mnemonic': serializeParam(
+                                    'decoyId': serializeParam(
                                       getJsonField(
                                         _model.createDecoy,
-                                        r'''$.mnemonic''',
+                                        r'''$.decoyId''',
                                       ).toString(),
                                       ParamType.String,
                                     ),

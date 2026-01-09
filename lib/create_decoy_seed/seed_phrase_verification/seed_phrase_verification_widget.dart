@@ -27,10 +27,10 @@ export 'seed_phrase_verification_model.dart';
 class SeedPhraseVerificationWidget extends StatefulWidget {
   const SeedPhraseVerificationWidget({
     super.key,
-    required this.mnemonic,
+    required this.decoyId,
   });
 
-  final String? mnemonic;
+  final String? decoyId;
 
   static String routeName = 'SeedPhraseVerification';
   static String routePath = '/seedPhraseVerification';
@@ -53,8 +53,11 @@ class _SeedPhraseVerificationWidgetState
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.mnemonicOut = await actions.loadDecoyMnemonicFromStorage(
+        widget.decoyId!,
+      );
       _model.splitOut = await actions.splitMnemonicAction(
-        widget.mnemonic!,
+        _model.mnemonicOut!,
       );
       _model.words = _model.splitOut!.toList().cast<String>();
       _model.quizIndices = [];
@@ -472,13 +475,6 @@ class _SeedPhraseVerificationWidgetState
                                                         context.pushNamed(
                                                           ShowDecoySeedPhraseWidget
                                                               .routeName,
-                                                          queryParameters: {
-                                                            'mnemonic':
-                                                                serializeParam(
-                                                              widget.mnemonic,
-                                                              ParamType.String,
-                                                            ),
-                                                          }.withoutNulls,
                                                           extra: <String,
                                                               dynamic>{
                                                             kTransitionInfoKey:
@@ -699,13 +695,6 @@ class _SeedPhraseVerificationWidgetState
                                                         context.pushNamed(
                                                           ShowDecoySeedPhraseWidget
                                                               .routeName,
-                                                          queryParameters: {
-                                                            'mnemonic':
-                                                                serializeParam(
-                                                              widget.mnemonic,
-                                                              ParamType.String,
-                                                            ),
-                                                          }.withoutNulls,
                                                           extra: <String,
                                                               dynamic>{
                                                             kTransitionInfoKey:
@@ -926,13 +915,6 @@ class _SeedPhraseVerificationWidgetState
                                                         context.pushNamed(
                                                           ShowDecoySeedPhraseWidget
                                                               .routeName,
-                                                          queryParameters: {
-                                                            'mnemonic':
-                                                                serializeParam(
-                                                              widget.mnemonic,
-                                                              ParamType.String,
-                                                            ),
-                                                          }.withoutNulls,
                                                           extra: <String,
                                                               dynamic>{
                                                             kTransitionInfoKey:

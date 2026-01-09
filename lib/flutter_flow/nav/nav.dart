@@ -196,8 +196,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: ShowDecoySeedPhraseWidget.routeName,
         path: ShowDecoySeedPhraseWidget.routePath,
         builder: (context, params) => ShowDecoySeedPhraseWidget(
-          mnemonic: params.getParam(
-            'mnemonic',
+          decoyId: params.getParam(
+            'decoyId',
             ParamType.String,
           ),
         ),
@@ -246,8 +246,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: SeedPhraseVerificationWidget.routeName,
         path: SeedPhraseVerificationWidget.routePath,
         builder: (context, params) => SeedPhraseVerificationWidget(
-          mnemonic: params.getParam(
-            'mnemonic',
+          decoyId: params.getParam(
+            'decoyId',
             ParamType.String,
           ),
         ),

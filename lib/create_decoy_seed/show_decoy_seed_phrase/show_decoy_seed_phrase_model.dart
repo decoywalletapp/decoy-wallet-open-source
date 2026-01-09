@@ -22,6 +22,8 @@ class ShowDecoySeedPhraseModel
 
   ///  State fields for stateful widgets in this page.
 
+  // Stores action output result for [Custom Action - loadDecoyMnemonicFromStorage] action in ShowDecoySeedPhrase widget.
+  String? mnemonicOut;
   // Stores action output result for [Custom Action - splitMnemonicAction] action in ShowDecoySeedPhrase widget.
   List<String>? splitOut;
 
