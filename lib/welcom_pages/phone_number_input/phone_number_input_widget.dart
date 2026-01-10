@@ -37,6 +37,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.cleanPhone =
           functions.toE164US(_model.phoneNumberFieldTextController.text);
+      _model.notificationInt = 0;
       safeSetState(() {});
       if (functions.formatUSPhone(_model.phoneNumberFieldTextController.text) !=
           _model.phoneNumberFieldTextController.text) {
@@ -427,6 +428,81 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   ),
                                 ].divide(SizedBox(width: 8.0)),
                               ),
+                              Expanded(
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 40.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      if (_model.notificationInt.toString() ==
+                                          '1')
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'INVALID PHONE NUMBER',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.inter(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      if (_model.notificationInt == 2)
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'ENTER VALID PHONE NUMBER',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.inter(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ].divide(SizedBox(height: 8.0)),
                           ),
                         ].divide(SizedBox(height: 24.0)),
@@ -460,36 +536,26 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                               }.withoutNulls,
                             );
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Enter Valid Phone Number',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
+                            _model.notificationInt = 2;
+                            safeSetState(() {});
+                            await Future.delayed(
+                              Duration(
+                                milliseconds: 3000,
                               ),
                             );
+                            _model.notificationInt = 0;
+                            safeSetState(() {});
                           }
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Invalid Phone Number',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
+                          _model.notificationInt = 1;
+                          safeSetState(() {});
+                          await Future.delayed(
+                            Duration(
+                              milliseconds: 3000,
                             ),
                           );
+                          _model.notificationInt = 0;
+                          safeSetState(() {});
                         }
 
                         safeSetState(() {});

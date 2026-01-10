@@ -15,6 +15,8 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
 
   String? pnDigits10;
 
+  int notificationInt = 0;
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();

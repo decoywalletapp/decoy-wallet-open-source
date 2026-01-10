@@ -2832,7 +2832,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      'FAILED - PLEASE CONTACT DECOY SUPPORT FOR FURTHER ASSISTANCE',
+                                                      'ERROR #005 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                       style: TextStyle(
                                                         color:
                                                             FlutterFlowTheme.of(
@@ -2862,7 +2862,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'PIN NOT SAVED - PLEASE CONTACT DECOY SUPPORT FOR FURTHER ASSISTANCE',
+                                                    'ERROR #004 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                     style: TextStyle(
                                                       color:
                                                           FlutterFlowTheme.of(

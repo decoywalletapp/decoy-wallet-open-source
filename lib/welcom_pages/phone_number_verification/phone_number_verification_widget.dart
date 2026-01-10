@@ -327,26 +327,6 @@ class _PhoneNumberVerificationWidgetState
                                                 });
                                                 _model.invalidcodeState = 1;
                                                 safeSetState(() {});
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      '\'phone: \' + cleanPhone +\'\\ncode: \' + otpCode +\'\\nresp: \' + getJsonField(checkCodeRes.jsonBody, r\'\$\')',
-                                                      style: TextStyle(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                  ),
-                                                );
 
                                                 context.pushNamed(
                                                     BiometricVerificationWidget

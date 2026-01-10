@@ -27,6 +27,7 @@ class SendEmergencyAlertsCall {
     double? lng,
     dynamic contactsJson,
     String? ownerName = '',
+    String? jwt = '',
   }) async {
     final baseUrl = DecoyAlertGroup.getBaseUrl();
 
@@ -48,6 +49,7 @@ class SendEmergencyAlertsCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,

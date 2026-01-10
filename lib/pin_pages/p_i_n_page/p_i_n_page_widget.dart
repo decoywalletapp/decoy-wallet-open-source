@@ -1243,6 +1243,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                               _model.walletRow!
                                                   .elementAtOrNull(0)!
                                                   .lastName!),
+                                          jwt: currentJwtToken,
                                         );
 
                                         unawaited(
