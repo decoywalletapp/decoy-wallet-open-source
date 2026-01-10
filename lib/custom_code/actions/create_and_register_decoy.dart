@@ -11,13 +11,6 @@ import 'package:flutter/material.dart';
 import '/custom_code/actions/index.dart';
 import '/flutter_flow/custom_functions.dart';
 
-// Action: createAndRegisterDecoy (TANK VERSION)
-// Inputs: pin (unused), serverRegistrationUrl
-// Auth: Supabase session access token (Authorization: Bearer <jwt>)
-// Returns: JSON with ok(bool), decoyId, xpub, addresses([])
-//
-// DEBUG PATCH: if register-decoy fails, throw Exception with status code + response body
-
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:math';
@@ -66,80 +59,111 @@ Future<void> _saveEncryptedLocally(
   await _storage.write(key: '${baseKey}_salt', value: enc['salt'] ?? '');
 }
 
-// ---------------- Backend registration (JWT header auth) ----------------
-Future<bool> _registerDecoy({
+// ---------------- Backend registration (never throws) ----------------
+Future<Map<String, dynamic>> _registerDecoy({
   required String serverRegistrationUrl,
   required String decoyId,
   required String xpub,
   required String derivationPath,
 }) async {
-  final jwt = Supabase.instance.client.auth.currentSession?.accessToken;
-  if (jwt == null || jwt.isEmpty) {
-    throw Exception('Missing Supabase session token');
+  try {
+    final jwt = Supabase.instance.client.auth.currentSession?.accessToken;
+    if (jwt == null || jwt.isEmpty) {
+      return {
+        'ok': false,
+        'status': -1,
+        'error': 'Missing Supabase session token',
+      };
+    }
+
+    final body = jsonEncode({
+      'id': decoyId,
+      'xpub': xpub,
+      'derivation_path': derivationPath,
+    });
+
+    final resp = await http.post(
+      Uri.parse(serverRegistrationUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwt',
+      },
+      body: body,
+    );
+
+    final ok = resp.statusCode == 200 || resp.statusCode == 201;
+    return {
+      'ok': ok,
+      'status': resp.statusCode,
+      'body': resp.body,
+    };
+  } catch (e) {
+    return {
+      'ok': false,
+      'status': -1,
+      'error': e.toString(),
+    };
   }
-
-  final body = jsonEncode({
-    'id': decoyId,
-    'xpub': xpub,
-    'derivation_path': derivationPath,
-  });
-
-  final resp = await http.post(
-    Uri.parse(serverRegistrationUrl),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $jwt',
-    },
-    body: body,
-  );
-
-  final ok = resp.statusCode == 200 || resp.statusCode == 201;
-  if (ok) return true;
-
-  // DEBUG: surface the server response so we know exactly why it failed
-  final text = resp.body;
-  throw Exception('register-decoy failed ${resp.statusCode}: $text');
 }
 
 // ---------------- Main action ----------------
 Future<dynamic> createAndRegisterDecoy(
-  String pin, // unused for device-key mode; pass "" from caller
+  String pin, // unused; keep for now to avoid rewiring
   String serverRegistrationUrl,
 ) async {
-  if (serverRegistrationUrl.isEmpty) {
-    throw Exception('Missing serverRegistrationUrl');
+  // Never throw; always return a JSON result
+  try {
+    if (serverRegistrationUrl.isEmpty) {
+      return {
+        'ok': false,
+        'regStatus': -1,
+        'regError': 'Missing serverRegistrationUrl',
+      };
+    }
+
+    // 1) Generate mnemonic + seed
+    final mnemonic = bip39.generateMnemonic();
+    final seed = bip39.mnemonicToSeed(mnemonic);
+
+    // 2) Derive BIP84 account (mainnet): m/84'/0'/0'
+    final derivationPath = "m/84'/0'/0'";
+    final root = bip32.BIP32.fromSeed(seed);
+    final account = root.derivePath(derivationPath);
+
+    // 3) xpub (neutered)
+    final xpub = account.neutered().toBase58();
+
+    // 4) Encrypt mnemonic with device key and store locally
+    final enc = await _encryptMnemonicDeviceKey(mnemonic);
+    final decoyId = const Uuid().v4();
+    await _saveEncryptedLocally(decoyId, enc);
+
+    // 5) Register with backend
+    final reg = await _registerDecoy(
+      serverRegistrationUrl: serverRegistrationUrl,
+      decoyId: decoyId,
+      xpub: xpub,
+      derivationPath: derivationPath,
+    );
+
+    final ok = reg['ok'] == true;
+
+    // 6) Return payload (no mnemonic)
+    return {
+      'ok': ok,
+      'decoyId': decoyId,
+      'xpub': xpub,
+      'addresses': <String>[],
+      // Debug info so your snack bar can show WHY it failed
+      'regStatus': reg['status'],
+      'regBody': reg['body'] ?? '',
+      'regError': reg['error'] ?? '',
+    };
+  } catch (e) {
+    return {
+      'ok': false,
+      'regStatus': -1,
+      'regError': e.toString(),
+    };
   }
-
-  // 1) Generate mnemonic + seed
-  final mnemonic = bip39.generateMnemonic();
-  final seed = bip39.mnemonicToSeed(mnemonic);
-
-  // 2) Derive BIP84 account (mainnet): m/84'/0'/0'
-  final derivationPath = "m/84'/0'/0'";
-  final root = bip32.BIP32.fromSeed(seed);
-  final account = root.derivePath(derivationPath);
-
-  // 3) xpub (neutered)
-  final xpub = account.neutered().toBase58();
-
-  // 4) Encrypt mnemonic with device key and store locally
-  final enc = await _encryptMnemonicDeviceKey(mnemonic);
-  final decoyId = const Uuid().v4();
-  await _saveEncryptedLocally(decoyId, enc);
-
-  // 5) Register with backend
-  final ok = await _registerDecoy(
-    serverRegistrationUrl: serverRegistrationUrl,
-    decoyId: decoyId,
-    xpub: xpub,
-    derivationPath: derivationPath,
-  );
-
-  // 6) Return payload (no mnemonic)
-  return {
-    'ok': ok,
-    'decoyId': decoyId,
-    'xpub': xpub,
-    'addresses': <String>[],
-  };
 }
