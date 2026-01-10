@@ -631,7 +631,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     controller: _model.phoneTextController,
                                     focusNode: _model.phoneFocusNode,
                                     autofocus: false,
-                                    textInputAction: TextInputAction.done,
+                                    textInputAction: TextInputAction.next,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       hintText: 'Enter phone number',
@@ -913,7 +913,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                   safeSetState(() {});
                                   _model.wrap = await WrapDataKeyCall.call(
                                     dataKeyB64: _model.dataKeyB64,
-                                    jwt: _model.jwtOut,
+                                    jwt: currentJwtToken,
                                   );
 
                                   if ((_model.wrap?.succeeded ?? true)) {

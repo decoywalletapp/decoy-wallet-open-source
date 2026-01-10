@@ -4,6 +4,10 @@ import 'create_account_widget.dart' show CreateAccountWidget;
 import 'package:flutter/material.dart';
 
 class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
+  ///  Local state fields for this page.
+
+  int notificationState = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for EmailAddress widget.

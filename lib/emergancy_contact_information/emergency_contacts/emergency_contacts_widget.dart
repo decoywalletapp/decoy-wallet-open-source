@@ -2898,7 +2898,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 safeSetState(() {});
                                 _model.wrap = await WrapDataKeyCall.call(
                                   dataKeyB64: _model.dataKeyB64,
-                                  jwt: _model.jwtOut,
+                                  jwt: currentJwtToken,
                                 );
 
                                 if ((_model.wrap?.succeeded ?? true)) {

@@ -4,6 +4,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'create_account_model.dart';
@@ -28,6 +29,12 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CreateAccountModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.notificationState = 0;
+      safeSetState(() {});
+    });
 
     _model.emailAddressTextController ??= TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
@@ -588,24 +595,15 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                     .routeName);
                                           }
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'PASSWORDS DON\'T MATCH',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
+                                          _model.notificationState = 1;
+                                          safeSetState(() {});
+                                          await Future.delayed(
+                                            Duration(
+                                              milliseconds: 3000,
                                             ),
                                           );
+                                          _model.notificationState = 0;
+                                          safeSetState(() {});
                                         }
 
                                         safeSetState(() {});
@@ -650,7 +648,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                     ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 24.0, 0.0, 0.0),
+                                          0.0, 12.0, 0.0, 0.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
@@ -678,7 +676,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 6.0,
+                                                            .fromSTEB(0.0, 12.0,
                                                                 0.0, 12.0),
                                                     child: InkWell(
                                                       splashColor:
@@ -778,6 +776,46 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                             ),
                                           ),
                                         ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 25.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'PASSWORDS DO NOT MATCH',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.inter(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  fontSize: 16.0,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],

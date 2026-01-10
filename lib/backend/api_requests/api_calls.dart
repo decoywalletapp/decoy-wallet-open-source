@@ -280,8 +280,7 @@ class WrapDataKeyCall {
   }) async {
     final ffApiRequestBody = '''
 {
-  "dataKeyB64": "${escapeStringForJson(dataKeyB64)}",
-  "jwt": "${escapeStringForJson(jwt)}"
+  "dataKeyB64": "${escapeStringForJson(dataKeyB64)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'WrapDataKey',
@@ -289,6 +288,7 @@ class WrapDataKeyCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -445,6 +445,36 @@ class CreateBillingPortalSessionCall {
         response,
         r'''$.url''',
       ));
+}
+
+class WrapDataKeyUnwrapCall {
+  static Future<ApiCallResponse> call({
+    String? wrappedB64 = '',
+    String? jwt = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "wrappedB64": "${escapeStringForJson(wrappedB64)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'WrapDataKeyUnwrap',
+      apiUrl: 'https://wrapdatakey-866378207353.us-central1.run.app',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
 }
 
 String _toEncodable(dynamic item) {
