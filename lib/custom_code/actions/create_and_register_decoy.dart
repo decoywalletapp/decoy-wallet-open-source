@@ -8,9 +8,13 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-// Action: createAndRegisterDecoy
-// Inputs: userId, pin, serverRegistrationUrl, serverAuthKey
-// Returns: JSON with ok(bool), decoyId, mnemonic, xpub, addresses([])
+import '/custom_code/actions/index.dart';
+import '/flutter_flow/custom_functions.dart';
+
+// Action: createAndRegisterDecoy (TANK VERSION)
+// Inputs: pin (unused), serverRegistrationUrl
+// Auth: Supabase session access token (Authorization: Bearer <jwt>)
+// Returns: JSON with ok(bool), decoyId, xpub, addresses([])
 
 import 'dart:convert';
 import 'dart:typed_data';
@@ -21,6 +25,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pointycastle/export.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // ---------------- Device-key helpers (Option B) ----------------
 const _storage = FlutterSecureStorage();
@@ -45,7 +50,7 @@ Future<Map<String, String>> _encryptMnemonicDeviceKey(String mnemonic) async {
     ..init(true, AEADParameters(KeyParameter(key), 128, iv, Uint8List(0)));
   final ct = cipher.process(Uint8List.fromList(utf8.encode(mnemonic)));
   return {
-    'salt': '', // not used in device-key mode
+    'salt': '',
     'iv': base64Encode(iv),
     'ciphertext': base64Encode(ct),
   };
@@ -59,28 +64,30 @@ Future<void> _saveEncryptedLocally(
   await _storage.write(key: '${baseKey}_salt', value: enc['salt'] ?? '');
 }
 
-// ---------------- Backend registration ----------------
+// ---------------- Backend registration (JWT header auth) ----------------
 Future<bool> _registerDecoy({
   required String serverRegistrationUrl,
-  required String serverAuthKey,
   required String decoyId,
-  required String userId,
   required String xpub,
   required String derivationPath,
 }) async {
+  // Supabase access token from current session
+  final jwt = Supabase.instance.client.auth.currentSession?.accessToken;
+  if (jwt == null || jwt.isEmpty) {
+    throw Exception('Missing Supabase session token');
+  }
+
   final body = jsonEncode({
     'id': decoyId,
-    'user_id': userId,
     'xpub': xpub,
     'derivation_path': derivationPath,
-    'addresses': <String>[], // client sends none; server derives
   });
 
   final resp = await http.post(
     Uri.parse(serverRegistrationUrl),
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $serverAuthKey',
+      'Authorization': 'Bearer $jwt',
     },
     body: body,
   );
@@ -90,15 +97,12 @@ Future<bool> _registerDecoy({
 
 // ---------------- Main action ----------------
 Future<dynamic> createAndRegisterDecoy(
-  String userId,
-  String pin, // unused for Option B; pass "" from caller
+  String pin, // unused for device-key mode; pass "" from caller
   String serverRegistrationUrl,
-  String serverAuthKey,
 ) async {
-  if (userId.isEmpty) throw Exception('Missing userId');
-  if (serverRegistrationUrl.isEmpty)
+  if (serverRegistrationUrl.isEmpty) {
     throw Exception('Missing serverRegistrationUrl');
-  if (serverAuthKey.isEmpty) throw Exception('Missing serverAuthKey');
+  }
 
   // 1) Generate mnemonic + seed
   final mnemonic = bip39.generateMnemonic(); // 12 words
@@ -120,14 +124,12 @@ Future<dynamic> createAndRegisterDecoy(
   // 5) Register with backend (server derives addresses & deactivates old decoy)
   final ok = await _registerDecoy(
     serverRegistrationUrl: serverRegistrationUrl,
-    serverAuthKey: serverAuthKey,
     decoyId: decoyId,
-    userId: userId,
     xpub: xpub,
     derivationPath: derivationPath,
   );
 
-  // 6) Return payload (simple version, just bool ok)
+  // 6) Return payload (no mnemonic)
   return {
     'ok': ok,
     'decoyId': decoyId,

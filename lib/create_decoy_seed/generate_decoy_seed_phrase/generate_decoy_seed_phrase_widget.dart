@@ -154,10 +154,8 @@ class _GenerateDecoySeedPhraseWidgetState
                             onPressed: () async {
                               _model.createDecoy =
                                   await actions.createAndRegisterDecoy(
-                                currentUserUid,
                                 '',
                                 FFAppState().serverRegistrationUrl,
-                                FFAppState().registerDecoyKey,
                               );
                               if (getJsonField(
                                 _model.createDecoy,
@@ -170,6 +168,20 @@ class _GenerateDecoySeedPhraseWidgetState
                                 safeSetState(() {});
                                 FFAppState().decoySeedArmed = false;
                                 safeSetState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.createDecoy!.toString(),
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
                                 await DecoyWalletTable().update(
                                   data: {
                                     'decoy_seed_decoy_id': getJsonField(
@@ -201,6 +213,20 @@ class _GenerateDecoySeedPhraseWidgetState
                                   SnackBar(
                                     content: Text(
                                       'REGISTRATION FAILED',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.createDecoy!.toString(),
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
