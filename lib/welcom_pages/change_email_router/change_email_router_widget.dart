@@ -55,23 +55,11 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
       _model.hasRow = _model.dwQuery != null && (_model.dwQuery)!.isNotEmpty;
       _model.needPhone = !_model.dwQuery!.elementAtOrNull(0)!.isPhoneVerified!;
       safeSetState(() {});
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '1',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).primaryText,
-            ),
-          ),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: FlutterFlowTheme.of(context).secondary,
-        ),
-      );
       if (_model.hasRow == false) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'No Decoy Wallet Row',
+              'ERROR #001 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
               style: TextStyle(
                 color: FlutterFlowTheme.of(context).primaryText,
               ),

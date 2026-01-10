@@ -133,12 +133,11 @@ Future<dynamic> createAndRegisterDecoy(
     // 3) xpub (neutered)
     final xpub = account.neutered().toBase58();
 
-    // 4) Encrypt mnemonic with device key and store locally
+    // 4) Encrypt mnemonic with device key (DO NOT SAVE YET)
     final enc = await _encryptMnemonicDeviceKey(mnemonic);
     final decoyId = const Uuid().v4();
-    await _saveEncryptedLocally(decoyId, enc);
 
-    // 5) Register with backend
+    // 5) Register with backend FIRST
     final reg = await _registerDecoy(
       serverRegistrationUrl: serverRegistrationUrl,
       decoyId: decoyId,
@@ -148,13 +147,18 @@ Future<dynamic> createAndRegisterDecoy(
 
     final ok = reg['ok'] == true;
 
-    // 6) Return payload (no mnemonic)
+    // 6) Save locally ONLY on success (tank cleanup)
+    if (ok) {
+      await _saveEncryptedLocally(decoyId, enc);
+    }
+
+    // 7) Return payload (no mnemonic)
     return {
       'ok': ok,
       'decoyId': decoyId,
       'xpub': xpub,
       'addresses': <String>[],
-      // Debug info so your snack bar can show WHY it failed
+      // Debug info (remove from UI later)
       'regStatus': reg['status'],
       'regBody': reg['body'] ?? '',
       'regError': reg['error'] ?? '',
