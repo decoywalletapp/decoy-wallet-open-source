@@ -68,8 +68,6 @@ class PersonalInformationModel
   String? Function(BuildContext, String?)? emailTextControllerValidator;
   // Stores action output result for [Custom Action - buildPersonalJson] action in Button widget.
   String? personalJsonOut;
-  // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
-  String? jwtOut;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
   String? keyOut;
   // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.

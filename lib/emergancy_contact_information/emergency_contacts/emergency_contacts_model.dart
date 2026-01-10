@@ -105,8 +105,6 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   String? Function(BuildContext, String?)? c5PhoneTFTextControllerValidator;
   // Stores action output result for [Custom Action - buildContactsPayloadV2] action in Button widget.
   String? contactsPayload;
-  // Stores action output result for [Custom Action - getSupabaseJwt] action in Button widget.
-  String? jwtOut;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
   String? keyOut;
   // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.

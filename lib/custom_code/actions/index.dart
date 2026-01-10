@@ -14,7 +14,6 @@ export 'verify_all_selections_action.dart' show verifyAllSelectionsAction;
 export 'generate_data_key_if_missing.dart' show generateDataKeyIfMissing;
 export 'aes_gcm_encrypt_string.dart' show aesGcmEncryptString;
 export 'build_contacts_json.dart' show buildContactsJson;
-export 'get_supabase_jwt.dart' show getSupabaseJwt;
 export 'build_contacts_payload_v2.dart' show buildContactsPayloadV2;
 export 'build_address_payload_v1.dart' show buildAddressPayloadV1;
 export 'aes_gcm_decrypt_to_map.dart' show aesGcmDecryptToMap;

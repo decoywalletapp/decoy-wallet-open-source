@@ -996,8 +996,7 @@ class _HomeAddressEntryPageWidgetState
                             );
                             _model.addressJson = _model.playload;
                             safeSetState(() {});
-                            _model.jwtOut = await actions.getSupabaseJwt();
-                            if (_model.jwtOut != null && _model.jwtOut != '') {
+                            if (loggedIn == true) {
                               _model.keyOut =
                                   await actions.generateDataKeyIfMissing();
                               _model.dataKeyB64 = _model.keyOut;
