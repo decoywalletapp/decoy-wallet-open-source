@@ -15,6 +15,8 @@ import '/flutter_flow/custom_functions.dart';
 // Inputs: pin (unused), serverRegistrationUrl
 // Auth: Supabase session access token (Authorization: Bearer <jwt>)
 // Returns: JSON with ok(bool), decoyId, xpub, addresses([])
+//
+// DEBUG PATCH: if register-decoy fails, throw Exception with status code + response body
 
 import 'dart:convert';
 import 'dart:typed_data';
@@ -27,7 +29,7 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-// ---------------- Device-key helpers (Option B) ----------------
+// ---------------- Device-key helpers ----------------
 const _storage = FlutterSecureStorage();
 final _rnd = Random.secure();
 
@@ -71,7 +73,6 @@ Future<bool> _registerDecoy({
   required String xpub,
   required String derivationPath,
 }) async {
-  // Supabase access token from current session
   final jwt = Supabase.instance.client.auth.currentSession?.accessToken;
   if (jwt == null || jwt.isEmpty) {
     throw Exception('Missing Supabase session token');
@@ -92,7 +93,12 @@ Future<bool> _registerDecoy({
     body: body,
   );
 
-  return resp.statusCode == 200 || resp.statusCode == 201;
+  final ok = resp.statusCode == 200 || resp.statusCode == 201;
+  if (ok) return true;
+
+  // DEBUG: surface the server response so we know exactly why it failed
+  final text = resp.body;
+  throw Exception('register-decoy failed ${resp.statusCode}: $text');
 }
 
 // ---------------- Main action ----------------
@@ -105,7 +111,7 @@ Future<dynamic> createAndRegisterDecoy(
   }
 
   // 1) Generate mnemonic + seed
-  final mnemonic = bip39.generateMnemonic(); // 12 words
+  final mnemonic = bip39.generateMnemonic();
   final seed = bip39.mnemonicToSeed(mnemonic);
 
   // 2) Derive BIP84 account (mainnet): m/84'/0'/0'
@@ -121,7 +127,7 @@ Future<dynamic> createAndRegisterDecoy(
   final decoyId = const Uuid().v4();
   await _saveEncryptedLocally(decoyId, enc);
 
-  // 5) Register with backend (server derives addresses & deactivates old decoy)
+  // 5) Register with backend
   final ok = await _registerDecoy(
     serverRegistrationUrl: serverRegistrationUrl,
     decoyId: decoyId,
