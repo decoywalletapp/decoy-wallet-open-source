@@ -284,7 +284,7 @@ class FFAppState extends ChangeNotifier {
   }
 
   String _serverRegistrationUrl =
-      'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/register-decoy';
+      'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/register-decoy';
   String get serverRegistrationUrl => _serverRegistrationUrl;
   set serverRegistrationUrl(String value) {
     _serverRegistrationUrl = value;
