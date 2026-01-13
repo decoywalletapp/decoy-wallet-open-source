@@ -260,6 +260,7 @@ class _PhoneNumberVerificationWidgetState
                                                     .call(
                                               cleanPhone: widget.cleanPhone,
                                               code: _model.otpCode,
+                                              jwt: currentJwtToken,
                                             );
 
                                             await Future.delayed(
@@ -284,6 +285,7 @@ class _PhoneNumberVerificationWidgetState
                                               _model.phoneHashResp =
                                                   await GetPhoneHashCall.call(
                                                 cleanPhone: widget.cleanPhone,
+                                                jwt: currentJwtToken,
                                               );
 
                                               _model.verifyUpdate =

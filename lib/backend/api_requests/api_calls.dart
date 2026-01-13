@@ -114,6 +114,7 @@ class CheckVerificationCodeCall {
   static Future<ApiCallResponse> call({
     String? cleanPhone = '',
     String? code = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -127,6 +128,7 @@ class CheckVerificationCodeCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -484,6 +486,7 @@ class WrapDataKeyUnwrapCall {
 class GetPhoneHashCall {
   static Future<ApiCallResponse> call({
     String? cleanPhone = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -496,6 +499,7 @@ class GetPhoneHashCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
