@@ -10,6 +10,8 @@ class DuressSendBTCModel extends FlutterFlowModel<DuressSendBTCWidget> {
 
   bool? sendMax;
 
+  int notificationValue = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for Switch widget.

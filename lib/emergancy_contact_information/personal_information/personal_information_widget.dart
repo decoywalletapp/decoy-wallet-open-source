@@ -1074,7 +1074,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'FAILED',
+                                          'ERROR #011 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                           style: TextStyle(
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,

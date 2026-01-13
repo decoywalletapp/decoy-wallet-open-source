@@ -9,7 +9,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'create_decoy_emergency_contacts_setup_model.dart';
 export 'create_decoy_emergency_contacts_setup_model.dart';
 
@@ -998,94 +997,183 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                         SizedBox(width: 12.0)),
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      height: 30.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12.0),
-                                                        border: Border.all(
-                                                          color: valueOrDefault<
-                                                              Color>(
-                                                            (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
-                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                            ?.addressComplete ==
-                                                                        true) &&
-                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                            ?.contactsComplete ==
-                                                                        true)
-                                                                ? FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .success
-                                                                : FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                          width: 2.0,
-                                                        ),
-                                                      ),
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child:
-                                                            LinearPercentIndicator(
-                                                          percent: _model
-                                                              .progressValue!,
-                                                          width:
-                                                              MediaQuery.sizeOf(
+                                                Stack(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        height: 20.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0),
+                                                          border: Border.all(
+                                                            color:
+                                                                valueOrDefault<
+                                                                    Color>(
+                                                              (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
+                                                                      (createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                                              ?.addressComplete ==
+                                                                          true) &&
+                                                                      (createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                                              ?.contactsComplete ==
+                                                                          true)
+                                                                  ? FlutterFlowTheme.of(
                                                                           context)
-                                                                      .width *
-                                                                  1.0,
-                                                          lineHeight: 25.0,
-                                                          animation: true,
-                                                          animateFromLastPercent:
-                                                              true,
-                                                          progressColor:
-                                                              valueOrDefault<
-                                                                  Color>(
-                                                            (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
-                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                            ?.addressComplete ==
-                                                                        true) &&
-                                                                    (createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                            ?.contactsComplete ==
-                                                                        true)
-                                                                ? FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .success
-                                                                : FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                          backgroundColor:
+                                                                      .success
+                                                                  : FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primary,
                                                               FlutterFlowTheme.of(
                                                                       context)
-                                                                  .accent4,
-                                                          barRadius:
-                                                              Radius.circular(
-                                                                  16.0),
-                                                          padding:
-                                                              EdgeInsets.zero,
+                                                                  .primary,
+                                                            ),
+                                                            width: 2.0,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
+                                                      child: Container(
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .width *
+                                                                0.3,
+                                                        height: 20.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .success,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    12.0),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    12.0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                          ),
+                                                          shape: BoxShape
+                                                              .rectangle,
+                                                          border: Border.all(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .success,
+                                                            width: 2.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                      child: Container(
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .width *
+                                                                0.3,
+                                                        height: 20.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .success,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                          ),
+                                                          shape: BoxShape
+                                                              .rectangle,
+                                                          border: Border.all(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .success,
+                                                            width: 2.0,
+                                                          ),
+                                                        ),
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              1.0, 0.0),
+                                                      child: Container(
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .width *
+                                                                0.3,
+                                                        height: 20.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .success,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    12.0),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    0.0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    12.0),
+                                                          ),
+                                                          shape: BoxShape
+                                                              .rectangle,
+                                                          border: Border.all(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .success,
+                                                            width: 2.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                                 Expanded(
                                                   child: Align(

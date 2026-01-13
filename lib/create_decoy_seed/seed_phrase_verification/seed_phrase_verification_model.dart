@@ -65,6 +65,8 @@ class SeedPhraseVerificationModel
 
   int attemptCount = 0;
 
+  int notificationState = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Custom Action - loadDecoyMnemonicFromStorage] action in SeedPhraseVerification widget.

@@ -53,6 +53,8 @@ class _SeedPhraseVerificationWidgetState
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.notificationState = 0;
+      safeSetState(() {});
       _model.mnemonicOut = await actions.loadDecoyMnemonicFromStorage(
         widget.decoyId!,
       );
@@ -450,27 +452,17 @@ class _SeedPhraseVerificationWidgetState
                                                           r'''$.displayIndex''',
                                                         );
                                                         safeSetState(() {});
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                              'NOT QUITE - TRY AGAIN',
-                                                              style: TextStyle(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                              ),
-                                                            ),
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    4000),
-                                                            backgroundColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
+                                                        _model.notificationState =
+                                                            1;
+                                                        safeSetState(() {});
+                                                        await Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 2000,
                                                           ),
                                                         );
+                                                        _model.notificationState =
+                                                            0;
+                                                        safeSetState(() {});
                                                       } else {
                                                         context.pushNamed(
                                                           ShowDecoySeedPhraseWidget
@@ -670,27 +662,17 @@ class _SeedPhraseVerificationWidgetState
                                                           r'''$.displayIndex''',
                                                         );
                                                         safeSetState(() {});
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                              'NOT QUITE - TRY AGAIN',
-                                                              style: TextStyle(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                              ),
-                                                            ),
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    4000),
-                                                            backgroundColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
+                                                        _model.notificationState =
+                                                            1;
+                                                        safeSetState(() {});
+                                                        await Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 2000,
                                                           ),
                                                         );
+                                                        _model.notificationState =
+                                                            0;
+                                                        safeSetState(() {});
                                                       } else {
                                                         context.pushNamed(
                                                           ShowDecoySeedPhraseWidget
@@ -890,27 +872,17 @@ class _SeedPhraseVerificationWidgetState
                                                           r'''$.displayIndex''',
                                                         );
                                                         safeSetState(() {});
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                              'NOT QUITE - TRY AGAIN',
-                                                              style: TextStyle(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                              ),
-                                                            ),
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    4000),
-                                                            backgroundColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
+                                                        _model.notificationState =
+                                                            1;
+                                                        safeSetState(() {});
+                                                        await Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 2000,
                                                           ),
                                                         );
+                                                        _model.notificationState =
+                                                            0;
+                                                        safeSetState(() {});
                                                       } else {
                                                         context.pushNamed(
                                                           ShowDecoySeedPhraseWidget
@@ -1007,6 +979,47 @@ class _SeedPhraseVerificationWidgetState
                       ].divide(SizedBox(height: 24.0)),
                     ),
                   ].divide(SizedBox(height: 32.0)),
+                ),
+                Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 40.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                      ),
+                      child: Visibility(
+                        visible: _model.notificationState == 1,
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 16.0, 0.0, 0.0),
+                            child: Text(
+                              'NOT QUITE - TRY AGAIN',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w500,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

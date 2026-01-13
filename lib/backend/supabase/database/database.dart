@@ -7,9 +7,12 @@ export 'table.dart';
 
 export 'tables/armed_decoy_seeds.dart';
 export 'tables/decoy_wallet.dart';
+export 'tables/decoy_seed_scan_state.dart';
 export 'tables/user_consents.dart';
 export 'tables/user_entitlements.dart';
+export 'tables/decoy_seen_txs.dart';
 export 'tables/decoy_triggers.dart';
+export 'tables/decoy_seed_baselines.dart';
 export 'tables/emergency_contacts.dart';
 export 'tables/decoys.dart';
 export 'tables/sms_queue.dart';

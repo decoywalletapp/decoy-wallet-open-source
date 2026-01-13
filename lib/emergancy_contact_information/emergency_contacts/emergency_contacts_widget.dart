@@ -384,6 +384,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               );
             });
           }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'ERROR #008 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
         }
       } else {
         _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
@@ -2991,7 +3004,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        'Couldn\'t secure key',
+                                        'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                         style: TextStyle(
                                           color: FlutterFlowTheme.of(context)
                                               .primaryText,

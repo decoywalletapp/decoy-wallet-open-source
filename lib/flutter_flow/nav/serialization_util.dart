@@ -209,12 +209,18 @@ dynamic deserializeParam<T>(
             return ArmedDecoySeedsRow(data);
           case DecoyWalletRow:
             return DecoyWalletRow(data);
+          case DecoySeedScanStateRow:
+            return DecoySeedScanStateRow(data);
           case UserConsentsRow:
             return UserConsentsRow(data);
           case UserEntitlementsRow:
             return UserEntitlementsRow(data);
+          case DecoySeenTxsRow:
+            return DecoySeenTxsRow(data);
           case DecoyTriggersRow:
             return DecoyTriggersRow(data);
+          case DecoySeedBaselinesRow:
+            return DecoySeedBaselinesRow(data);
           case EmergencyContactsRow:
             return EmergencyContactsRow(data);
           case DecoysRow:

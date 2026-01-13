@@ -479,6 +479,44 @@ class WrapDataKeyUnwrapCall {
   }
 }
 
+class GetPhoneHashCall {
+  static Future<ApiCallResponse> call({
+    String? cleanPhone = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "cleanPhone": "${escapeStringForJson(cleanPhone)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'getPhoneHash',
+      apiUrl:
+          'https://us-central1-decoywallet-a283b.cloudfunctions.net/getPhoneHash',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static String? phoneHash(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.phoneHash''',
+      ));
+  static bool? success(dynamic response) => castToType<bool>(getJsonField(
+        response,
+        r'''$.success''',
+      ));
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

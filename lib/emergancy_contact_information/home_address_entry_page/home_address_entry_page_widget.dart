@@ -1107,7 +1107,7 @@ class _HomeAddressEntryPageWidgetState
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'ADDRESS NOT SAVED',
+                                      'ERROR #010 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,

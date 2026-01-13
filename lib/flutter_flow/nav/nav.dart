@@ -238,11 +238,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => GenerateDecoySeedPhraseWidget(),
       ),
       FFRoute(
-        name: DecoySeedActiveWidget.routeName,
-        path: DecoySeedActiveWidget.routePath,
-        builder: (context, params) => DecoySeedActiveWidget(),
-      ),
-      FFRoute(
         name: SeedPhraseVerificationWidget.routeName,
         path: SeedPhraseVerificationWidget.routePath,
         builder: (context, params) => SeedPhraseVerificationWidget(

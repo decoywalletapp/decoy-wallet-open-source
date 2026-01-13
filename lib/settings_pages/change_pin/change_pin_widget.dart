@@ -1447,7 +1447,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      'FAILED - ERROR STATE',
+                                                      'ERROR #015 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                       style: TextStyle(
                                                         color:
                                                             FlutterFlowTheme.of(
@@ -1477,7 +1477,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'PIN NOT SAVED - ERROR STATE',
+                                                    'ERROR #014 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                     style: TextStyle(
                                                       color:
                                                           FlutterFlowTheme.of(
@@ -3013,7 +3013,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'ERROR STATE MESSAGE',
+                                                    'ERROR #013 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                     style: TextStyle(
                                                       color:
                                                           FlutterFlowTheme.of(
@@ -4498,7 +4498,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                 .showSnackBar(
                                               SnackBar(
                                                 content: Text(
-                                                  'ERROR CODE MESSAGE',
+                                                  'ERROR #012 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                   style: TextStyle(
                                                     color: FlutterFlowTheme.of(
                                                             context)

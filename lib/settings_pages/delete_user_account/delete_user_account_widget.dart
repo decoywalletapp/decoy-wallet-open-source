@@ -610,6 +610,27 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                               context.goNamedAuth(
                                                   LoginPageWidget.routeName,
                                                   context.mounted);
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'ERROR #016 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                ),
+                                              );
                                             }
                                           }
 

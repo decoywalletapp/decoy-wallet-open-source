@@ -281,6 +281,11 @@ class _PhoneNumberVerificationWidgetState
                                                           ''),
                                                     ) ==
                                                     'approved')) {
+                                              _model.phoneHashResp =
+                                                  await GetPhoneHashCall.call(
+                                                cleanPhone: widget.cleanPhone,
+                                              );
+
                                               _model.verifyUpdate =
                                                   await DecoyWalletTable()
                                                       .update(
@@ -289,8 +294,13 @@ class _PhoneNumberVerificationWidgetState
                                                   'verified_at':
                                                       supaSerialize<DateTime>(
                                                           getCurrentTimestamp),
-                                                  'phone_number':
-                                                      widget.cleanPhone,
+                                                  'phone_e164_hash':
+                                                      GetPhoneHashCall
+                                                          .phoneHash(
+                                                    (_model.phoneHashResp
+                                                            ?.jsonBody ??
+                                                        ''),
+                                                  ),
                                                 },
                                                 matchingRows: (rows) =>
                                                     rows.eqOrNull(
@@ -309,13 +319,18 @@ class _PhoneNumberVerificationWidgetState
                                                 _model.verifyInsert =
                                                     await DecoyWalletTable()
                                                         .insert({
-                                                  'phone_number':
-                                                      widget.cleanPhone,
                                                   'is_phone_verified': true,
                                                   'verified_at':
                                                       supaSerialize<DateTime>(
                                                           getCurrentTimestamp),
                                                   'user_id': currentUserUid,
+                                                  'phone_e164_hash':
+                                                      GetPhoneHashCall
+                                                          .phoneHash(
+                                                    (_model.phoneHashResp
+                                                            ?.jsonBody ??
+                                                        ''),
+                                                  ),
                                                 });
                                                 _model.code = '\"\"';
                                                 _model.otpCode = '\"\"';

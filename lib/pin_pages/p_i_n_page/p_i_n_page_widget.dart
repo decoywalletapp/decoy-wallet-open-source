@@ -1318,7 +1318,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'SOMETHING WENT WRONG - CONTACT THE SUPPORT TEAM FOR FURTHER ASSISTANCE',
+                                          'ERROR #006 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                           style: TextStyle(
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,

@@ -191,4 +191,12 @@ class DecoyWalletRow extends SupabaseDataRow {
   DateTime? get lastTeardownAt => getField<DateTime>('last_teardown_at');
   set lastTeardownAt(DateTime? value) =>
       setField<DateTime>('last_teardown_at', value);
+
+  DateTime? get decoySeedArmedAt => getField<DateTime>('decoy_seed_armed_at');
+  set decoySeedArmedAt(DateTime? value) =>
+      setField<DateTime>('decoy_seed_armed_at', value);
+
+  String? get phoneE164Hash => getField<String>('phone_e164_hash');
+  set phoneE164Hash(String? value) =>
+      setField<String>('phone_e164_hash', value);
 }

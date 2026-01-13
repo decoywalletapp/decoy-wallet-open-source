@@ -2156,7 +2156,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      'BIOMETRIC VERIFICATION FAILED. YOUR SETTING WAS NOT CHANGED.',
+                                                      'ERROR #021 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                       style: TextStyle(
                                                         color:
                                                             FlutterFlowTheme.of(

@@ -264,6 +264,28 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                 ''),
                                                           )!,
                                                         );
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              'ERROR #018 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                              style: TextStyle(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryText,
+                                                              ),
+                                                            ),
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    4000),
+                                                            backgroundColor:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondary,
+                                                          ),
+                                                        );
                                                       }
 
                                                       safeSetState(() {});
@@ -413,7 +435,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         .showSnackBar(
                                                       SnackBar(
                                                         content: Text(
-                                                          'No active Stripe subscription found.',
+                                                          'ERROR #019 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                           style: TextStyle(
                                                             color: FlutterFlowTheme
                                                                     .of(context)
@@ -623,7 +645,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                       .showSnackBar(
                                                     SnackBar(
                                                       content: Text(
-                                                        'No active Stripe subscription found.',
+                                                        'ERROR #017 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                         style: TextStyle(
                                                           color: FlutterFlowTheme
                                                                   .of(context)

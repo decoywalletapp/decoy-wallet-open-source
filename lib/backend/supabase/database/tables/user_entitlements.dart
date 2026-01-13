@@ -46,4 +46,8 @@ class UserEntitlementsRow extends SupabaseDataRow {
   DateTime? get currentPeriodEnd => getField<DateTime>('current_period_end');
   set currentPeriodEnd(DateTime? value) =>
       setField<DateTime>('current_period_end', value);
+
+  bool? get cancelAtPeriodEnd => getField<bool>('cancel_at_period_end');
+  set cancelAtPeriodEnd(bool? value) =>
+      setField<bool>('cancel_at_period_end', value);
 }

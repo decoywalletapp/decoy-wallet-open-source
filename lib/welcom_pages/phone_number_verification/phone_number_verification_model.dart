@@ -42,6 +42,8 @@ class PhoneNumberVerificationModel
   String? Function(BuildContext, String?)? phoneCodeTextControllerValidator;
   // Stores action output result for [Backend Call - API (CheckVerificationCode)] action in PhoneCode widget.
   ApiCallResponse? checkCodeRes;
+  // Stores action output result for [Backend Call - API (getPhoneHash)] action in PhoneCode widget.
+  ApiCallResponse? phoneHashResp;
   // Stores action output result for [Backend Call - Update Row(s)] action in PhoneCode widget.
   List<DecoyWalletRow>? verifyUpdate;
   // Stores action output result for [Backend Call - Insert Row] action in PhoneCode widget.

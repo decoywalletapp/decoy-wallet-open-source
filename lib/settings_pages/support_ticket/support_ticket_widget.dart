@@ -522,7 +522,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                             ),
                           if (_model.ticketSaved.toString() == '2')
                             Text(
-                              'Ticket Submitted',
+                              'Support Ticket Sent to Decoy Team',
                               style: FlutterFlowTheme.of(context)
                                   .bodyLarge
                                   .override(
@@ -563,6 +563,21 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                               ),
                             );
                             context.safePop();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'ERROR #020 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
                           }
 
                           safeSetState(() {});

@@ -45,4 +45,8 @@ class DecoysRow extends SupabaseDataRow {
   DateTime? get lastActivityAt => getField<DateTime>('last_activity_at');
   set lastActivityAt(DateTime? value) =>
       setField<DateTime>('last_activity_at', value);
+
+  String? get derivationPath => getField<String>('derivation_path');
+  set derivationPath(String? value) =>
+      setField<String>('derivation_path', value);
 }

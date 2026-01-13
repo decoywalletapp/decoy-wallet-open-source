@@ -198,7 +198,7 @@ class _GenerateDecoySeedPhraseWidgetState
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'REGISTRATION FAILED',
+                                      'ERROR #001 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
