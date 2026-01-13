@@ -69,6 +69,7 @@ class SendEmergencyAlertsCall {
 class SendVerificationCodeCall {
   static Future<ApiCallResponse> call({
     String? cleanPhone = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -81,6 +82,7 @@ class SendVerificationCodeCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,

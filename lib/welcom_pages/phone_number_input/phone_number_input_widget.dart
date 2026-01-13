@@ -1,3 +1,4 @@
+import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -523,6 +524,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         if (_model.cleanPhone != '') {
                           _model.sendRes = await SendVerificationCodeCall.call(
                             cleanPhone: _model.cleanPhone,
+                            jwt: currentJwtToken,
                           );
 
                           if ((_model.sendRes?.succeeded ?? true)) {
