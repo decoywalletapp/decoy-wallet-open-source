@@ -120,9 +120,6 @@ class DecoyWalletRow extends SupabaseDataRow {
   String? get lastName => getField<String>('last_name');
   set lastName(String? value) => setField<String>('last_name', value);
 
-  String? get email => getField<String>('email');
-  set email(String? value) => setField<String>('email', value);
-
   String? get personalCiphertext => getField<String>('personal_ciphertext');
   set personalCiphertext(String? value) =>
       setField<String>('personal_ciphertext', value);
@@ -196,4 +193,7 @@ class DecoyWalletRow extends SupabaseDataRow {
   String? get phoneE164Hash => getField<String>('phone_e164_hash');
   set phoneE164Hash(String? value) =>
       setField<String>('phone_e164_hash', value);
+
+  String? get emailHash => getField<String>('email_hash');
+  set emailHash(String? value) => setField<String>('email_hash', value);
 }

@@ -64,10 +64,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
-        safeSetState(() {
-          _model.emailTextController?.text =
-              _model.rows!.elementAtOrNull(0)!.email!;
-        });
         _model.personalObj = await actions.aesGcmDecryptToMap(
           _model.rowCipherB64!,
           _model.rowNonceB64!,
@@ -1014,8 +1010,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.firstNameTextController.text,
                                         'last_name':
                                             _model.lastNameTextController.text,
-                                        'email':
-                                            _model.emailTextController.text,
                                         'updated_at': supaSerialize<DateTime>(
                                             getCurrentTimestamp),
                                         'user_id': currentUserUid,

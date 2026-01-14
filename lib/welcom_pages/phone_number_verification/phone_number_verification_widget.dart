@@ -288,6 +288,12 @@ class _PhoneNumberVerificationWidgetState
                                                 jwt: currentJwtToken,
                                               );
 
+                                              _model.emailHashResp =
+                                                  await GetEmailHashCall.call(
+                                                email: currentUserEmail,
+                                                jwt: currentJwtToken,
+                                              );
+
                                               _model.dataKeyB64 = await actions
                                                   .generateDataKeyIfMissing();
                                               _model.wrapResp =
@@ -341,6 +347,13 @@ class _PhoneNumberVerificationWidgetState
                                                     _model.encPersonal,
                                                     r'''$.nonceB64''',
                                                   ).toString(),
+                                                  'personal_version': 1,
+                                                  'email_hash': GetEmailHashCall
+                                                      .emailHash(
+                                                    (_model.emailHashResp
+                                                            ?.jsonBody ??
+                                                        ''),
+                                                  ).toString(),
                                                 },
                                                 matchingRows: (rows) =>
                                                     rows.eqOrNull(
@@ -371,6 +384,17 @@ class _PhoneNumberVerificationWidgetState
                                                             ?.jsonBody ??
                                                         ''),
                                                   ),
+                                                  'personal_ciphertext':
+                                                      getJsonField(
+                                                    _model.encPersonal,
+                                                    r'''$.ciphertextB64''',
+                                                  ).toString(),
+                                                  'personal_nonce':
+                                                      getJsonField(
+                                                    _model.encPersonal,
+                                                    r'''$.nonceB64''',
+                                                  ).toString(),
+                                                  'personal_version': 1,
                                                 });
                                                 _model.code = '\"\"';
                                                 _model.otpCode = '\"\"';

@@ -51,13 +51,12 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
       );
       _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
       _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
-      _model.authEmail = _model.query1?.elementAtOrNull(0)?.email;
+      _model.authEmail = currentUserEmail;
       _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
       safeSetState(() {});
       if (_model.hasRow == false) {
         _model.firstInsert = await DecoyWalletTable().insert({
           'user_id': currentUserUid,
-          'email': currentUserEmail,
           'email_verified': false,
           'email_verified_at': supaSerialize<DateTime>(null),
           'is_phone_verified': false,
@@ -77,7 +76,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           data: {
             'email_verified': true,
             'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
-            'email': currentUserEmail,
           },
           matchingRows: (rows) => rows.eqOrNull(
             'user_id',

@@ -50,7 +50,7 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
             .order('created_at'),
       );
       _model.dwList = _model.dwQuery!.toList().cast<DecoyWalletRow>();
-      _model.authEmail = _model.dwQuery?.elementAtOrNull(0)?.email;
+      _model.authEmail = currentUserEmail;
       _model.pendingEmail = _model.dwQuery?.elementAtOrNull(0)?.pendingEmail;
       _model.hasRow = _model.dwQuery != null && (_model.dwQuery)!.isNotEmpty;
       _model.needPhone = !_model.dwQuery!.elementAtOrNull(0)!.isPhoneVerified!;
@@ -72,7 +72,6 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
         if (_model.pendingEmail != null && _model.pendingEmail != '') {
           await DecoyWalletTable().update(
             data: {
-              'email': _model.pendingEmail,
               'pending_email': null,
               'email_verified': true,
               'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),

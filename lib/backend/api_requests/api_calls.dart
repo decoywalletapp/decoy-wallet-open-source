@@ -523,6 +523,46 @@ class GetPhoneHashCall {
       ));
 }
 
+class GetEmailHashCall {
+  static Future<ApiCallResponse> call({
+    String? email = '',
+    String? jwt = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "email": "${escapeStringForJson(email)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'getEmailHash',
+      apiUrl:
+          'https://us-central1-decoywallet-a283b.cloudfunctions.net/getEmailHash',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static dynamic emailHash(dynamic response) => getJsonField(
+        response,
+        r'''$.emailHash''',
+      );
+  static dynamic success(dynamic response) => getJsonField(
+        response,
+        r'''$.success''',
+      );
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

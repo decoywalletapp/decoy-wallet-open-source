@@ -44,6 +44,8 @@ class PhoneNumberVerificationModel
   ApiCallResponse? checkCodeRes;
   // Stores action output result for [Backend Call - API (getPhoneHash)] action in PhoneCode widget.
   ApiCallResponse? phoneHashResp;
+  // Stores action output result for [Backend Call - API (getEmailHash)] action in PhoneCode widget.
+  ApiCallResponse? emailHashResp;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in PhoneCode widget.
   String? dataKeyB64;
   // Stores action output result for [Backend Call - API (WrapDataKey)] action in PhoneCode widget.
