@@ -38,9 +38,6 @@ class DecoyWalletRow extends SupabaseDataRow {
   String? get decoyType => getField<String>('decoy_type');
   set decoyType(String? value) => setField<String>('decoy_type', value);
 
-  String? get phoneNumber => getField<String>('phone_number');
-  set phoneNumber(String? value) => setField<String>('phone_number', value);
-
   String? get encryptedPin => getField<String>('encrypted_pin');
   set encryptedPin(String? value) => setField<String>('encrypted_pin', value);
 

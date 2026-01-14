@@ -60,20 +60,10 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
         _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
         _model.origEmail = currentUserEmail;
-        _model.origPhone = _model.rows?.elementAtOrNull(0)?.phoneNumber;
         safeSetState(() {});
         _model.dataKeyOut = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut;
         safeSetState(() {});
-        safeSetState(() {
-          _model.phoneTextController?.text = functions
-              .displayUSPhone(_model.rows?.elementAtOrNull(0)?.phoneNumber);
-          _model.phoneMask.updateMask(
-            newValue: TextEditingValue(
-              text: _model.phoneTextController!.text,
-            ),
-          );
-        });
         safeSetState(() {
           _model.emailTextController?.text =
               _model.rows!.elementAtOrNull(0)!.email!;
@@ -83,6 +73,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           _model.rowNonceB64!,
           _model.dataKeyB64!,
         );
+        _model.origPhone = getJsonField(
+          _model.personalObj,
+          r'''$.phone''',
+        ).toString();
+        safeSetState(() {});
         if (getJsonField(
               _model.personalObj,
               r'''$.firstName''',
@@ -117,13 +112,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           });
         }
 
-        if ((getJsonField(
-                  _model.personalObj,
-                  r'''$.phone''',
-                ) ==
-                null) &&
-            (_model.rows?.elementAtOrNull(0)?.phoneNumber == null ||
-                _model.rows?.elementAtOrNull(0)?.phoneNumber == '')) {
+        if (getJsonField(
+              _model.personalObj,
+              r'''$.phone''',
+            ) ==
+            null) {
           safeSetState(() {
             _model.phoneTextController?.text = '';
             _model.phoneMask.updateMask(
@@ -133,34 +126,18 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
             );
           });
         } else {
-          if (getJsonField(
-                _model.personalObj,
-                r'''$.phone''',
-              ) ==
-              null) {
-            safeSetState(() {
-              _model.phoneTextController?.text = functions
-                  .displayUSPhone(_model.rows?.elementAtOrNull(0)?.phoneNumber);
-              _model.phoneMask.updateMask(
-                newValue: TextEditingValue(
-                  text: _model.phoneTextController!.text,
-                ),
-              );
-            });
-          } else {
-            safeSetState(() {
-              _model.phoneTextController?.text =
-                  functions.displayUSPhone(getJsonField(
-                _model.personalObj,
-                r'''$.phone''',
-              ).toString());
-              _model.phoneMask.updateMask(
-                newValue: TextEditingValue(
-                  text: _model.phoneTextController!.text,
-                ),
-              );
-            });
-          }
+          safeSetState(() {
+            _model.phoneTextController?.text =
+                functions.displayUSPhone(getJsonField(
+              _model.personalObj,
+              r'''$.phone''',
+            ).toString());
+            _model.phoneMask.updateMask(
+              newValue: TextEditingValue(
+                text: _model.phoneTextController!.text,
+              ),
+            );
+          });
         }
 
         if ((getJsonField(
@@ -1037,9 +1014,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.firstNameTextController.text,
                                         'last_name':
                                             _model.lastNameTextController.text,
-                                        'phone_number':
-                                            functions.sanitizePhoneNumber(_model
-                                                .phoneTextController.text),
                                         'email':
                                             _model.emailTextController.text,
                                         'updated_at': supaSerialize<DateTime>(
