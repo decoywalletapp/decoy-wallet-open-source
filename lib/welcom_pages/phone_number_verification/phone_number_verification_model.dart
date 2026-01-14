@@ -44,6 +44,14 @@ class PhoneNumberVerificationModel
   ApiCallResponse? checkCodeRes;
   // Stores action output result for [Backend Call - API (getPhoneHash)] action in PhoneCode widget.
   ApiCallResponse? phoneHashResp;
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in PhoneCode widget.
+  String? dataKeyB64;
+  // Stores action output result for [Backend Call - API (WrapDataKey)] action in PhoneCode widget.
+  ApiCallResponse? wrapResp;
+  // Stores action output result for [Custom Action - buildPersonalJson] action in PhoneCode widget.
+  String? personalJson;
+  // Stores action output result for [Custom Action - aesGcmEncryptString] action in PhoneCode widget.
+  dynamic encPersonal;
   // Stores action output result for [Backend Call - Update Row(s)] action in PhoneCode widget.
   List<DecoyWalletRow>? verifyUpdate;
   // Stores action output result for [Backend Call - Insert Row] action in PhoneCode widget.

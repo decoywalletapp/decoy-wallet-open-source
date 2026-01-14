@@ -288,6 +288,27 @@ class _PhoneNumberVerificationWidgetState
                                                 jwt: currentJwtToken,
                                               );
 
+                                              _model.dataKeyB64 = await actions
+                                                  .generateDataKeyIfMissing();
+                                              _model.wrapResp =
+                                                  await WrapDataKeyCall.call(
+                                                dataKeyB64: _model.dataKeyB64,
+                                                jwt: currentJwtToken,
+                                              );
+
+                                              _model.personalJson =
+                                                  await actions
+                                                      .buildPersonalJson(
+                                                '',
+                                                '',
+                                                widget.cleanPhone,
+                                                currentUserEmail,
+                                              );
+                                              _model.encPersonal = await actions
+                                                  .aesGcmEncryptString(
+                                                _model.personalJson!,
+                                                _model.dataKeyB64!,
+                                              );
                                               _model.verifyUpdate =
                                                   await DecoyWalletTable()
                                                       .update(
@@ -303,6 +324,23 @@ class _PhoneNumberVerificationWidgetState
                                                             ?.jsonBody ??
                                                         ''),
                                                   ),
+                                                  'wrapped_datakey':
+                                                      WrapDataKeyCall
+                                                          .wrappedB64(
+                                                    (_model.wrapResp
+                                                            ?.jsonBody ??
+                                                        ''),
+                                                  ),
+                                                  'personal_ciphertext':
+                                                      getJsonField(
+                                                    _model.encPersonal,
+                                                    r'''$.ciphertextB64''',
+                                                  ).toString(),
+                                                  'personal_nonce':
+                                                      getJsonField(
+                                                    _model.encPersonal,
+                                                    r'''$.nonceB64''',
+                                                  ).toString(),
                                                 },
                                                 matchingRows: (rows) =>
                                                     rows.eqOrNull(
