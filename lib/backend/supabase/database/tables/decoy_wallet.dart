@@ -114,12 +114,6 @@ class DecoyWalletRow extends SupabaseDataRow {
   int? get personalVersion => getField<int>('personal_version');
   set personalVersion(int? value) => setField<int>('personal_version', value);
 
-  String? get firstName => getField<String>('first_name');
-  set firstName(String? value) => setField<String>('first_name', value);
-
-  String? get lastName => getField<String>('last_name');
-  set lastName(String? value) => setField<String>('last_name', value);
-
   String? get personalCiphertext => getField<String>('personal_ciphertext');
   set personalCiphertext(String? value) =>
       setField<String>('personal_ciphertext', value);

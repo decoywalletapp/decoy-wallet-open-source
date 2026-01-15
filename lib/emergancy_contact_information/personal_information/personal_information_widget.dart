@@ -910,10 +910,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           'personal_nonce': _model.nonceB64,
                                           'personal_version': 1,
                                           'wrapped_datakey': _model.wrappedB64,
-                                          'first_name': _model
-                                              .firstNameTextController.text,
-                                          'last_name': _model
-                                              .lastNameTextController.text,
                                           'updated_at': supaSerialize<DateTime>(
                                               getCurrentTimestamp),
                                           'personal_complete': (_model.firstNameTextController
@@ -1006,10 +1002,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         'personal_nonce': _model.nonceB64,
                                         'personal_version': 1,
                                         'wrapped_datakey': _model.wrappedB64,
-                                        'first_name':
-                                            _model.firstNameTextController.text,
-                                        'last_name':
-                                            _model.lastNameTextController.text,
                                         'updated_at': supaSerialize<DateTime>(
                                             getCurrentTimestamp),
                                         'user_id': currentUserUid,

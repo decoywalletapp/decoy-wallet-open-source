@@ -51,6 +51,8 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
   String? dataKeyB64;
   // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in Button widget.
   dynamic contactObj;
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in Button widget.
+  dynamic personalObj;
   // Stores action output result for [Backend Call - API (SendEmergencyAlerts)] action in Button widget.
   ApiCallResponse? alertResult1;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.

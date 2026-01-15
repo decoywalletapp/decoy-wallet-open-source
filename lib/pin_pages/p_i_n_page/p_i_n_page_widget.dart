@@ -1215,6 +1215,16 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .contactsNonce!,
                                         _model.dataKeyB64!,
                                       );
+                                      _model.personalObj =
+                                          await actions.aesGcmDecryptToMap(
+                                        _model.walletRow!
+                                            .elementAtOrNull(0)!
+                                            .personalCiphertext!,
+                                        _model.walletRow!
+                                            .elementAtOrNull(0)!
+                                            .personalNonce!,
+                                        _model.dataKeyB64!,
+                                      );
                                       if (FFAppState()
                                               .decoyPinContactsEnabled ==
                                           true) {
@@ -1237,12 +1247,14 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   String lastName) {
                                             return firstName + " " + lastName;
                                           }(
-                                              _model.walletRow!
-                                                  .elementAtOrNull(0)!
-                                                  .firstName!,
-                                              _model.walletRow!
-                                                  .elementAtOrNull(0)!
-                                                  .lastName!),
+                                              getJsonField(
+                                                _model.personalObj,
+                                                r'''$.firstName''',
+                                              ).toString(),
+                                              getJsonField(
+                                                _model.personalObj,
+                                                r'''$.lastName''',
+                                              ).toString()),
                                           jwt: currentJwtToken,
                                         );
 
