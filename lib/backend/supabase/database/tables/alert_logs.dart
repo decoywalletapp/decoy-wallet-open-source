@@ -40,4 +40,14 @@ class AlertLogsRow extends SupabaseDataRow {
 
   String? get txid => getField<String>('txid');
   set txid(String? value) => setField<String>('txid', value);
+
+  String? get locationCiphertext => getField<String>('location_ciphertext');
+  set locationCiphertext(String? value) =>
+      setField<String>('location_ciphertext', value);
+
+  String? get locationNonce => getField<String>('location_nonce');
+  set locationNonce(String? value) => setField<String>('location_nonce', value);
+
+  int? get locationVersion => getField<int>('location_version');
+  set locationVersion(int? value) => setField<int>('location_version', value);
 }

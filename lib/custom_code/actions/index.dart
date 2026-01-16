@@ -24,3 +24,4 @@ export 'delete_current_user_account.dart' show deleteCurrentUserAccount;
 export 'open_external_url.dart' show openExternalUrl;
 export 'load_decoy_mnemonic_from_storage.dart'
     show loadDecoyMnemonicFromStorage;
+export 'build_location_json_string.dart' show buildLocationJsonString;

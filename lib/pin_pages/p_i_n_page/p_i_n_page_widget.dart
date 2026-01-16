@@ -89,7 +89,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                       EdgeInsetsDirectional.fromSTEB(24.0, 20.0, 24.0, 40.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.max,
@@ -1258,6 +1258,15 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                           jwt: currentJwtToken,
                                         );
 
+                                        _model.locationJson = await actions
+                                            .buildLocationJsonString(
+                                          _model.emergencyLocation,
+                                        );
+                                        _model.encLoc =
+                                            await actions.aesGcmEncryptString(
+                                          _model.locationJson!,
+                                          _model.dataKeyB64!,
+                                        );
                                         unawaited(
                                           () async {
                                             _model.logResult =
@@ -1281,6 +1290,16 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   _model.emergencyLocation),
                                               'lng': functions.lngFromLatLng(
                                                   _model.emergencyLocation),
+                                              'location_ciphertext':
+                                                  getJsonField(
+                                                _model.encLoc,
+                                                r'''$.ciphertextB64''',
+                                              ).toString(),
+                                              'location_nonce': getJsonField(
+                                                _model.encLoc,
+                                                r'''$.nonceB64''',
+                                              ).toString(),
+                                              'location_version': 1,
                                             });
                                           }(),
                                         );
