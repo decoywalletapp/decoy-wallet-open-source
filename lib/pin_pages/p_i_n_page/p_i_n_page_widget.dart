@@ -1260,18 +1260,18 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
                                         _model.locationJson = await actions
                                             .buildLocationJsonString(
-                                          currentUserLocationValue,
+                                          _model.emergencyLocation,
                                         );
                                         _model.encLoc =
                                             await actions.aesGcmEncryptString(
-                                          _model.locationJson!,
+                                          _model.locationJson!.toString(),
                                           _model.dataKeyB64!,
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              _model.locationJson!,
+                                              _model.locationJson!.toString(),
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)

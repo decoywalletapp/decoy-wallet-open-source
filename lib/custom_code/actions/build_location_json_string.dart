@@ -8,13 +8,15 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-String buildLocationJsonString(LatLng? emergencyLocation) {
+Future<dynamic> buildLocationJsonString(LatLng? emergencyLocation) async {
+  // Add your function code here!
+
   if (emergencyLocation == null) {
-    return '{"lat":null,"lng":null}';
+    return {'lat': null, 'lng': null};
   }
 
-  return '{"lat":${emergencyLocation.latitude},"lng":${emergencyLocation.longitude}}';
+  return {
+    'lat': emergencyLocation.latitude,
+    'lng': emergencyLocation.longitude,
+  };
 }
-
-// Set your action name, define your arguments and return parameter,
-// and then add the boilerplate code using the green button on the right!

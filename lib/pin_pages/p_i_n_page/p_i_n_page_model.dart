@@ -56,7 +56,7 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
   // Stores action output result for [Backend Call - API (SendEmergencyAlerts)] action in Button widget.
   ApiCallResponse? alertResult1;
   // Stores action output result for [Custom Action - buildLocationJsonString] action in Button widget.
-  String? locationJson;
+  dynamic locationJson;
   // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.
   dynamic encLoc;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
