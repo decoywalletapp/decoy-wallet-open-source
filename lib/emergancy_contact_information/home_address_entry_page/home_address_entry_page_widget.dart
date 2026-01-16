@@ -171,15 +171,7 @@ class _HomeAddressEntryPageWidgetState
               size: 24.0,
             ),
             onPressed: () async {
-              context.goNamed(
-                CreateDecoyEmergencyContactsSetupWidget.routeName,
-                extra: <String, dynamic>{
-                  kTransitionInfoKey: TransitionInfo(
-                    hasTransition: true,
-                    transitionType: PageTransitionType.leftToRight,
-                  ),
-                },
-              );
+              context.safePop();
             },
           ),
           actions: [],

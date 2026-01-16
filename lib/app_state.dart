@@ -110,6 +110,10 @@ class FFAppState extends ChangeNotifier {
       _refreshCounter =
           await secureStorage.getInt('ff_refreshCounter') ?? _refreshCounter;
     });
+    await _safeInitAsync(() async {
+      _contactsDoneInc =
+          await secureStorage.getInt('ff_contactsDoneInc') ?? _contactsDoneInc;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -460,6 +464,17 @@ class FFAppState extends ChangeNotifier {
 
   void deleteRefreshCounter() {
     secureStorage.delete(key: 'ff_refreshCounter');
+  }
+
+  int _contactsDoneInc = 0;
+  int get contactsDoneInc => _contactsDoneInc;
+  set contactsDoneInc(int value) {
+    _contactsDoneInc = value;
+    secureStorage.setInt('ff_contactsDoneInc', value);
+  }
+
+  void deleteContactsDoneInc() {
+    secureStorage.delete(key: 'ff_contactsDoneInc');
   }
 }
 
