@@ -2954,6 +2954,21 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                         currentUserUid,
                                       ),
                                     );
+                                    if (_model.updRow
+                                            ?.elementAtOrNull(0)
+                                            ?.contactsComplete ==
+                                        true) {
+                                      FFAppState().contactsDoneInc =
+                                          FFAppState().contactsDoneInc + 1;
+                                      safeSetState(() {});
+                                    } else {
+                                      if (FFAppState().contactsDoneInc > 0) {
+                                        FFAppState().contactsDoneInc =
+                                            FFAppState().contactsDoneInc + -1;
+                                        safeSetState(() {});
+                                      }
+                                    }
+
                                     FFAppState().emergencyContactsIncrement =
                                         _model.contactIncrement;
                                     safeSetState(() {});
@@ -2987,6 +3002,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           ? true
                                           : false,
                                     });
+                                    if (_model.insRow?.contactsComplete ==
+                                        true) {
+                                      FFAppState().contactsDoneInc =
+                                          FFAppState().contactsDoneInc + 1;
+                                      safeSetState(() {});
+                                    } else {
+                                      if (FFAppState().contactsDoneInc > 0) {
+                                        FFAppState().contactsDoneInc =
+                                            FFAppState().contactsDoneInc + -1;
+                                        safeSetState(() {});
+                                      }
+                                    }
+
                                     FFAppState().emergencyContactsIncrement =
                                         _model.contactIncrement;
                                     safeSetState(() {});

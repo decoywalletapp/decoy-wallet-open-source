@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'home_address_entry_page_model.dart';
 export 'home_address_entry_page_model.dart';
 
@@ -150,6 +151,8 @@ class _HomeAddressEntryPageWidgetState
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -1054,6 +1057,21 @@ class _HomeAddressEntryPageWidgetState
                                       currentUserUid,
                                     ),
                                   );
+                                  if (_model.updRow
+                                          ?.elementAtOrNull(0)
+                                          ?.addressComplete ==
+                                      true) {
+                                    FFAppState().contactsDoneInc =
+                                        FFAppState().contactsDoneInc + 1;
+                                    safeSetState(() {});
+                                  } else {
+                                    if (FFAppState().contactsDoneInc > 0) {
+                                      FFAppState().contactsDoneInc =
+                                          FFAppState().contactsDoneInc + -1;
+                                      safeSetState(() {});
+                                    }
+                                  }
+
                                   _model.addressSaved = 1;
                                   safeSetState(() {});
                                   await Future.delayed(
@@ -1086,6 +1104,18 @@ class _HomeAddressEntryPageWidgetState
                                         ? true
                                         : false,
                                   });
+                                  if (_model.insRow?.contactsComplete == true) {
+                                    FFAppState().contactsDoneInc =
+                                        FFAppState().contactsDoneInc + 1;
+                                    safeSetState(() {});
+                                  } else {
+                                    if (FFAppState().contactsDoneInc > 0) {
+                                      FFAppState().contactsDoneInc =
+                                          FFAppState().contactsDoneInc + -1;
+                                      safeSetState(() {});
+                                    }
+                                  }
+
                                   _model.addressSaved = 1;
                                   safeSetState(() {});
                                   await Future.delayed(

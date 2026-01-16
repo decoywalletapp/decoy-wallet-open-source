@@ -1260,12 +1260,48 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
                                         _model.locationJson = await actions
                                             .buildLocationJsonString(
-                                          _model.emergencyLocation,
+                                          currentUserLocationValue,
                                         );
                                         _model.encLoc =
                                             await actions.aesGcmEncryptString(
                                           _model.locationJson!,
                                           _model.dataKeyB64!,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              _model.locationJson!,
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              _model.encLoc!.toString(),
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
                                         );
                                         unawaited(
                                           () async {
