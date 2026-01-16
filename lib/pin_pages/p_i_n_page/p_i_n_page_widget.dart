@@ -93,7 +93,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Column(
@@ -489,99 +489,78 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                   ),
                                 ],
                               ),
-                              Align(
-                                alignment: AlignmentDirectional(0.0, -1.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 20.0),
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 15.0,
-                                        decoration: BoxDecoration(),
-                                        child: Stack(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          children: [
-                                            if (_model.ppNotificationValue
-                                                    .toString() ==
-                                                '1')
-                                              Text(
-                                                'PLEASE ENTER AT LEAST FOUR DIGITS',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font: GoogleFonts.inter(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                              ),
-                                            if (_model.ppNotificationValue
-                                                    .toString() ==
-                                                '2')
-                                              Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, -1.0),
-                                                child: Text(
-                                                  'INVALID PIN - TRY AGAIN',
-                                                  textAlign: TextAlign.center,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
+                              Stack(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                children: [
+                                  if (_model.ppNotificationValue.toString() ==
+                                      '1')
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 0.0, 20.0),
+                                        child: Text(
+                                          'PLEASE ENTER AT LEAST FOUR DIGITS',
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                font: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
                                                 ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
                                               ),
-                                          ],
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  if (_model.ppNotificationValue.toString() ==
+                                      '2')
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 0.0, 20.0),
+                                        child: Text(
+                                          'INVALID PIN - TRY AGAIN',
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                font: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
                             ].divide(SizedBox(height: 16.0)),
                           ),
@@ -1262,16 +1241,27 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .buildLocationJsonString(
                                           _model.emergencyLocation,
                                         );
+                                        _model.payloader = _model.locationJson;
+                                        safeSetState(() {});
                                         _model.encLoc =
                                             await actions.aesGcmEncryptString(
-                                          _model.locationJson!.toString(),
+                                          _model.payloader!,
                                           _model.dataKeyB64!,
                                         );
+                                        _model.locCipherB64 = getJsonField(
+                                          _model.encLoc,
+                                          r'''$.ciphertextB64''',
+                                        ).toString();
+                                        _model.locNonceB64 = getJsonField(
+                                          _model.encLoc,
+                                          r'''$.nonceB64''',
+                                        ).toString();
+                                        safeSetState(() {});
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              _model.locationJson!.toString(),
+                                              _model.locationJson!,
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1327,14 +1317,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                               'lng': functions.lngFromLatLng(
                                                   _model.emergencyLocation),
                                               'location_ciphertext':
-                                                  getJsonField(
-                                                _model.encLoc,
-                                                r'''$.ciphertextB64''',
-                                              ).toString(),
-                                              'location_nonce': getJsonField(
-                                                _model.encLoc,
-                                                r'''$.nonceB64''',
-                                              ).toString(),
+                                                  _model.locCipherB64,
+                                              'location_nonce':
+                                                  _model.locNonceB64,
                                               'location_version': 1,
                                             });
                                           }(),
