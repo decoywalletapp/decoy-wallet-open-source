@@ -1,0 +1,16 @@
+{
+  "name": "decoy-alert",
+  "version": "1.0.0",
+  "description": "Decoy Wallet emergency SMS alert service (Cloud Run)",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.87.1",
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "twilio": "^5.3.3"
+  }
+}
