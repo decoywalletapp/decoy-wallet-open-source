@@ -1322,22 +1322,11 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             });
                                           }(),
                                         );
-                                        _model.latestAlert =
-                                            await AlertLogsTable().queryRows(
-                                          queryFn: (q) => q
-                                              .eqOrNull(
-                                                'user_id',
-                                                currentUserUid,
-                                              )
-                                              .order('created_at'),
-                                        );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              _model.latestAlert!
-                                                  .elementAtOrNull(0)!
-                                                  .locationCiphertext!,
+                                              'INSERT DONE',
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1350,6 +1339,15 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                 FlutterFlowTheme.of(context)
                                                     .secondary,
                                           ),
+                                        );
+                                        _model.latestAlert =
+                                            await AlertLogsTable().queryRows(
+                                          queryFn: (q) => q
+                                              .eqOrNull(
+                                                'user_id',
+                                                currentUserUid,
+                                              )
+                                              .order('created_at'),
                                         );
                                       }
                                       if ((FFAppState().fakeSeeded == false) ||

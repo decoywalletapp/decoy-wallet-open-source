@@ -245,35 +245,29 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                             },
                           ),
                         ),
-                        Align(
-                          alignment: AlignmentDirectional(0.0, -1.0),
-                          child: Text(
-                            'Personal Contact Information',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
-                                .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .headlineSmall
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .headlineSmall
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .fontStyle,
+                        Stack(
+                          children: [
+                            Material(
+                              color: Colors.transparent,
+                              elevation: 3.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Container(
+                                width: 100.0,
+                                height: 100.0,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
-                          ),
-                        ),
-                        Icon(
-                          Icons.person,
-                          color: FlutterFlowTheme.of(context).primary,
-                          size: 100.0,
+                              ),
+                            ),
+                            Icon(
+                              Icons.person,
+                              color: FlutterFlowTheme.of(context).info,
+                              size: 100.0,
+                            ),
+                          ],
                         ),
                         Form(
                           key: _model.formKey,
