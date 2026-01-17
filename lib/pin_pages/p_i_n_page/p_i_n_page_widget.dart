@@ -4,7 +4,6 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
@@ -92,12 +91,12 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Column(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -1237,117 +1236,6 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                 r'''$.lastName''',
                                               ).toString()),
                                           jwt: currentJwtToken,
-                                        );
-
-                                        _model.locationJson = await actions
-                                            .buildLocationJsonString(
-                                          _model.emergencyLocation,
-                                        );
-                                        _model.payloader = _model.locationJson;
-                                        safeSetState(() {});
-                                        _model.encLoc =
-                                            await actions.aesGcmEncryptString(
-                                          _model.payloader!,
-                                          _model.keyOut!,
-                                        );
-                                        _model.locCipherB64 = getJsonField(
-                                          _model.encLoc,
-                                          r'''$.ciphertextB64''',
-                                        ).toString();
-                                        _model.locNonceB64 = getJsonField(
-                                          _model.encLoc,
-                                          r'''$.nonceB64''',
-                                        ).toString();
-                                        safeSetState(() {});
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              _model.locCipherB64!,
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              _model.locNonceB64!,
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
-                                        unawaited(
-                                          () async {
-                                            _model.logResult1 =
-                                                await AlertLogsTable().insert({
-                                              'user_id': currentUserUid,
-                                              'trigger_type': _model
-                                                  .newTriggerRow?.triggerType,
-                                              'success': getJsonField(
-                                                (_model.alertResult1
-                                                        ?.jsonBody ??
-                                                    ''),
-                                                r'''$.ok''',
-                                              ),
-                                              'error_message':
-                                                  'ENC_PATH_REACHED',
-                                              'lat': functions.latFromLatLng(
-                                                  _model.emergencyLocation),
-                                              'lng': functions.lngFromLatLng(
-                                                  _model.emergencyLocation),
-                                              'location_ciphertext':
-                                                  'ENC_TEST_CIPHER',
-                                              'location_nonce':
-                                                  'ENC_TEST_NONCE',
-                                              'location_version': 1,
-                                            });
-                                          }(),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'INSERT DONE',
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
-                                        _model.latestAlert =
-                                            await AlertLogsTable().queryRows(
-                                          queryFn: (q) => q
-                                              .eqOrNull(
-                                                'user_id',
-                                                currentUserUid,
-                                              )
-                                              .order('created_at'),
                                         );
                                       }
                                       if ((FFAppState().fakeSeeded == false) ||

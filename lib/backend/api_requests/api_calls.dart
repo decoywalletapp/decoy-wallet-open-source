@@ -563,6 +563,51 @@ class GetEmailHashCall {
       );
 }
 
+class InsertAlertLogRestCall {
+  static Future<ApiCallResponse> call({
+    String? userId = '',
+    double? lat,
+    double? lng,
+    String? locCipherB64 = '',
+    String? locNonceB64 = '',
+    String? jwt = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "user_id": "${escapeStringForJson(userId)}",
+  "trigger_type": "PIN_DECOY",
+  "success": true,
+  "lat": ${lat},
+  "lng": ${lng},
+  "location_ciphertext": "${escapeStringForJson(locCipherB64)}",
+  "location_nonce": "${escapeStringForJson(locNonceB64)}",
+  "location_version": 1
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'insertAlertLogRest',
+      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/rest/v1/alert_logs',
+      callType: ApiCallType.POST,
+      headers: {
+        'apikey':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bXJ0aHl1bXpyZmd0dXZqcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMDY2NDksImV4cCI6MjA2NTc4MjY0OX0.ZBjqtz7DKRkxnR3-rYtvtmz0JJb4-pDL4ux89qVBASc',
+        'Authorization': 'Bearer ${jwt}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }
