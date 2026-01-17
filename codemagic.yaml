@@ -38,7 +38,7 @@ workflows:
 
           need_install="1"
           if [ -x "$HOME/flutter/bin/flutter" ]; then
-            have="$($HOME/flutter/bin/flutter --version | head -n1 | awk '{print $2}')"
+            have="$($HOME/flutter/bin/flutter --version --no-color | head -n1 | awk '{print $2}')"
             if [ "$have" = "$WANT" ]; then
               need_install="0"
             else
@@ -57,12 +57,12 @@ workflows:
           fi
 
           echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
-          flutter --version
+          flutter --version --no-color   # Fixed: --no-color prevents broken pipe in CI
 
       - name: Show tool versions
         script: |
           set -euxo pipefail
-          flutter --version
+          flutter --version --no-color   # Also safe here if needed
           xcodebuild -version
           cm version || true
 
