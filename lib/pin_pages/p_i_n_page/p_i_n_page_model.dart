@@ -51,8 +51,6 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
 
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.
   ApiCallResponse? verifyResp;
-  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
-  DecoyTriggersRow? newTriggerRow;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<DecoyWalletRow>? walletRow;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
