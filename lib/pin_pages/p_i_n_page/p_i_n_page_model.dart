@@ -68,7 +68,9 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
   // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.
   dynamic encLoc;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
-  AlertLogsRow? logResult;
+  AlertLogsRow? logResult1;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<AlertLogsRow>? latestAlert;
 
   @override
   void initState(BuildContext context) {}
