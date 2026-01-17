@@ -21,51 +21,37 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Set Flutter version reliably for scripts
-        script: |
-          set -euxo pipefail
-          echo "FLUTTER_VERSION=$FLUTTER_VERSION" >> $CM_ENV
-          echo "DEBUG: Set FLUTTER_VERSION to $FLUTTER_VERSION"
-
       - name: Install Flutter (force exact version)
         script: |
           set -euxo pipefail
 
-          WANT="$FLUTTER_VERSION"
-          echo "DEBUG: Using WANT=$WANT"
-
+          WANT="${FLUTTER_VERSION}"
           URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${WANT}-stable.zip"
 
-          need_install="1"
-          if [ -x "$HOME/flutter/bin/flutter" ]; then
-            have="$($HOME/flutter/bin/flutter --version --no-color | head -n1 | awk '{print $2}')"
-            if [ "$have" = "$WANT" ]; then
-              need_install="0"
-            else
-              rm -rf "$HOME/flutter"
-            fi
+          # Force clean install of exact version (bypasses crashing version check)
+          if [ -d "$HOME/flutter" ]; then
+            rm -rf "$HOME/flutter"
           fi
 
-          if [ "$need_install" = "1" ]; then
-            cd "$HOME"
-            rm -f flutter.zip
-            for i in $(seq 1 10); do
-              curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
-            done
-            unzip -q flutter.zip
-            rm -f flutter.zip
-          fi
+          cd "$HOME"
+          rm -f flutter.zip
+          for i in $(seq 1 10); do
+            curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
+          done
+          unzip -q flutter.zip
+          rm -f flutter.zip
 
           echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
-          flutter --version --no-color   # Fixed: --no-color prevents broken pipe in CI
+          flutter --version --no-color   # Safe now, not piped
 
       - name: Show tool versions
         script: |
           set -euxo pipefail
-          flutter --version --no-color   # Also safe here if needed
+          flutter --version --no-color
           xcodebuild -version
           cm version || true
 
+      # The rest is unchanged from your working example
       - name: Initialize keychain & import Distribution .p12
         script: |
           set -euxo pipefail
