@@ -45,6 +45,8 @@ class PINPageModel extends FlutterFlowModel<PINPageWidget> {
 
   String? payloader;
 
+  String? keyOut;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (verifyPIN)] action in Button widget.

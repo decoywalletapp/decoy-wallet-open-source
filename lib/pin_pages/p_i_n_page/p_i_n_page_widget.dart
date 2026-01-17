@@ -4,7 +4,6 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
@@ -92,7 +91,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                        mainAxisSize: MainAxisSize.max,
+                        mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -1184,6 +1183,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                       );
                                       _model.dataKeyB64 = await actions
                                           .generateDataKeyIfMissing();
+                                      _model.keyOut = _model.dataKeyB64;
+                                      safeSetState(() {});
                                       _model.contactObj =
                                           await actions.aesGcmDecryptToMap(
                                         _model.walletRow!
@@ -1246,7 +1247,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                         _model.encLoc =
                                             await actions.aesGcmEncryptString(
                                           _model.payloader!,
-                                          _model.dataKeyB64!,
+                                          _model.keyOut!,
                                         );
                                         _model.locCipherB64 = getJsonField(
                                           _model.encLoc,
@@ -1261,7 +1262,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              _model.locationJson!,
+                                              _model.locCipherB64!,
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1279,7 +1280,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              _model.encLoc!.toString(),
+                                              _model.locNonceB64!,
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1293,37 +1294,30 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                     .secondary,
                                           ),
                                         );
-                                        unawaited(
-                                          () async {
-                                            _model.logResult =
-                                                await AlertLogsTable().insert({
-                                              'user_id': currentUserUid,
-                                              'trigger_type': _model
-                                                  .newTriggerRow?.triggerType,
-                                              'success': getJsonField(
-                                                (_model.alertResult1
-                                                        ?.jsonBody ??
-                                                    ''),
-                                                r'''$.ok''',
-                                              ),
-                                              'error_message': getJsonField(
-                                                (_model.alertResult1
-                                                        ?.jsonBody ??
-                                                    ''),
-                                                r'''$.error''',
-                                              ).toString(),
-                                              'lat': functions.latFromLatLng(
-                                                  _model.emergencyLocation),
-                                              'lng': functions.lngFromLatLng(
-                                                  _model.emergencyLocation),
-                                              'location_ciphertext':
-                                                  _model.locCipherB64,
-                                              'location_nonce':
-                                                  _model.locNonceB64,
-                                              'location_version': 1,
-                                            });
-                                          }(),
-                                        );
+                                        _model.logResult =
+                                            await AlertLogsTable().insert({
+                                          'user_id': currentUserUid,
+                                          'trigger_type':
+                                              _model.newTriggerRow?.triggerType,
+                                          'success': getJsonField(
+                                            (_model.alertResult1?.jsonBody ??
+                                                ''),
+                                            r'''$.ok''',
+                                          ),
+                                          'error_message': getJsonField(
+                                            (_model.alertResult1?.jsonBody ??
+                                                ''),
+                                            r'''$.error''',
+                                          ).toString(),
+                                          'lat': functions.latFromLatLng(
+                                              _model.emergencyLocation),
+                                          'lng': functions.lngFromLatLng(
+                                              _model.emergencyLocation),
+                                          'location_ciphertext':
+                                              _model.locCipherB64,
+                                          'location_nonce': _model.locNonceB64,
+                                          'location_version': 1,
+                                        });
                                       }
                                       if ((FFAppState().fakeSeeded == false) ||
                                           (FFAppState().fakeBtcBalance <=
