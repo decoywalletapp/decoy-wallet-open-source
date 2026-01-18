@@ -95,47 +95,32 @@ class _PhoneNumberVerificationWidgetState
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            automaticallyImplyLeading: false,
-            leading: FlutterFlowIconButton(
-              borderColor: Colors.transparent,
-              borderRadius: 30.0,
-              borderWidth: 1.0,
-              buttonSize: 60.0,
-              icon: Icon(
-                Icons.chevron_left_outlined,
-                color: FlutterFlowTheme.of(context).primaryText,
-                size: 24.0,
-              ),
-              onPressed: () async {
-                context.safePop();
-              },
-            ),
-            title: Text(
-              'Verify Phone',
-              style: FlutterFlowTheme.of(context).headlineMedium.override(
-                    font: GoogleFonts.interTight(
-                      fontWeight: FontWeight.w600,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                    ),
-                    fontSize: 18.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w600,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                  ),
-            ),
-            actions: [],
-            centerTitle: true,
-            elevation: 0.0,
-          ),
           body: SafeArea(
             top: true,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Align(
+                  alignment: AlignmentDirectional(-1.0, 0.0),
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                    child: FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 30.0,
+                      borderWidth: 1.0,
+                      buttonSize: 60.0,
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        size: 24.0,
+                      ),
+                      onPressed: () async {
+                        context.safePop();
+                      },
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                   child: Column(
@@ -145,10 +130,29 @@ class _PhoneNumberVerificationWidgetState
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Icon(
-                            Icons.phone_android_rounded,
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 64.0,
+                          Stack(
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                elevation: 3.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Icon(
+                                    Icons.phone_android_rounded,
+                                    color: FlutterFlowTheme.of(context).info,
+                                    size: 64.0,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           Text(
                             'Enter Verification Code',
@@ -220,7 +224,7 @@ class _PhoneNumberVerificationWidgetState
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        ].divide(SizedBox(height: 16.0)),
+                        ].divide(SizedBox(height: 24.0)),
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.max,
@@ -927,8 +931,8 @@ class _PhoneNumberVerificationWidgetState
                         ),
                       ),
                     ]
-                        .divide(SizedBox(height: 32.0))
-                        .addToStart(SizedBox(height: 40.0)),
+                        .divide(SizedBox(height: 24.0))
+                        .addToStart(SizedBox(height: 32.0)),
                   ),
                 ),
               ],

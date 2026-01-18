@@ -69,8 +69,6 @@ class SeedPhraseVerificationModel
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Custom Action - loadDecoyMnemonicFromStorage] action in SeedPhraseVerification widget.
-  String? mnemonicOut;
   // Stores action output result for [Custom Action - splitMnemonicAction] action in SeedPhraseVerification widget.
   List<String>? splitOut;
   // Stores action output result for [Custom Action - makeQuizIndicesAction] action in SeedPhraseVerification widget.

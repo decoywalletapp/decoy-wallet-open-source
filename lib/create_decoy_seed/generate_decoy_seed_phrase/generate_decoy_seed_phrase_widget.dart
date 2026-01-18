@@ -157,6 +157,11 @@ class _GenerateDecoySeedPhraseWidgetState
                                 '',
                                 FFAppState().serverRegistrationUrl,
                               );
+                              _model.tempMnemonic = getJsonField(
+                                _model.createDecoy,
+                                r'''$.mnemonic''',
+                              ).toString();
+                              safeSetState(() {});
                               if (getJsonField(
                                 _model.createDecoy,
                                 r'''$.ok''',
@@ -185,6 +190,10 @@ class _GenerateDecoySeedPhraseWidgetState
                                 context.pushNamed(
                                   ShowDecoySeedPhraseWidget.routeName,
                                   queryParameters: {
+                                    'mnemonic': serializeParam(
+                                      _model.tempMnemonic,
+                                      ParamType.String,
+                                    ),
                                     'decoyId': serializeParam(
                                       getJsonField(
                                         _model.createDecoy,
@@ -251,18 +260,21 @@ class _GenerateDecoySeedPhraseWidgetState
                   ],
                 ),
               ),
-              FlutterFlowIconButton(
-                borderColor: Colors.transparent,
-                borderRadius: 20.0,
-                buttonSize: 40.0,
-                icon: Icon(
-                  Icons.arrow_back_rounded,
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  size: 24.0,
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                child: FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 20.0,
+                  buttonSize: 40.0,
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    context.safePop();
+                  },
                 ),
-                onPressed: () async {
-                  context.safePop();
-                },
               ),
             ],
           ),

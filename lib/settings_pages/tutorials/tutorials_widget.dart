@@ -67,7 +67,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                 children: [
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                     child: FlutterFlowIconButton(
                       borderColor: Colors.transparent,
                       borderRadius: 20.0,
@@ -1172,7 +1172,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                   ),
                 ),
               ),
-            ].addToStart(SizedBox(height: 24.0)),
+            ].addToStart(SizedBox(height: 0.0)),
           ),
         ),
       ),
