@@ -135,7 +135,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   child: Container(
-                                    width: 350.0,
+                                    width: 300.0,
                                     height: 120.0,
                                     decoration: BoxDecoration(
                                       color:

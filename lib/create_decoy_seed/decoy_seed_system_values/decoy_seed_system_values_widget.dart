@@ -94,24 +94,70 @@ class _DecoySeedSystemValuesWidgetState
                           ),
                         ),
                       ),
-                      Text(
-                        'Decoy Seed Generated',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              font: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .fontStyle,
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            16.0, 0.0, 16.0, 0.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  elevation: 3.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Container(
+                                    width: 300.0,
+                                    height: 110.0,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8.0, 12.0, 8.0, 12.0),
+                                        child: Text(
+                                          'Decoy Seed Generated',
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                font: GoogleFonts.bebasNeue(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .info,
+                                                fontSize: 48.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                                lineHeight: 1.0,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .headlineMedium
-                                  .fontStyle,
                             ),
+                          ],
+                        ),
                       ),
                       Align(
                         alignment: AlignmentDirectional(0.0, 0.0),
@@ -772,7 +818,7 @@ class _DecoySeedSystemValuesWidgetState
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                    ].divide(SizedBox(height: 16.0)),
+                    ].divide(SizedBox(height: 24.0)),
                   ),
                 ),
               ].divide(SizedBox(height: 40.0)),

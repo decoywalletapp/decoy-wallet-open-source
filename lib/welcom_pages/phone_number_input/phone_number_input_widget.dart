@@ -96,14 +96,33 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          child: Icon(
-                            Icons.phone_rounded,
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 64.0,
-                          ),
+                        Stack(
+                          children: [
+                            Material(
+                              color: Colors.transparent,
+                              elevation: 3.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Container(
+                                width: 100.0,
+                                height: 100.0,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  child: Icon(
+                                    Icons.phone_rounded,
+                                    color: FlutterFlowTheme.of(context).info,
+                                    size: 64.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           'Add Your Phone Number',

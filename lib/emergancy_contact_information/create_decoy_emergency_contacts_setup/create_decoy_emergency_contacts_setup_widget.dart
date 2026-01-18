@@ -9,7 +9,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'create_decoy_emergency_contacts_setup_model.dart';
 export 'create_decoy_emergency_contacts_setup_model.dart';
 
@@ -81,8 +80,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return FutureBuilder<List<DecoyWalletRow>>(
       future: DecoyWalletTable().querySingleRow(
         queryFn: (q) => q.eqOrNull(
@@ -1030,8 +1027,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                               ),
                                                             ),
                                                           ),
-                                                          if (FFAppState()
-                                                                  .contactsDoneInc >=
+                                                          if (_model
+                                                                  .completedCount >=
                                                               1)
                                                             Align(
                                                               alignment:
@@ -1101,8 +1098,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       0.0, 0.0),
                                                             ),
                                                           ),
-                                                          if (FFAppState()
-                                                                  .contactsDoneInc >=
+                                                          if (_model
+                                                                  .completedCount >=
                                                               2)
                                                             Align(
                                                               alignment:
@@ -1172,8 +1169,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                               ),
                                                             ),
                                                           ),
-                                                          if (FFAppState()
-                                                                  .contactsDoneInc >=
+                                                          if (_model
+                                                                  .completedCount >=
                                                               3)
                                                             Align(
                                                               alignment:

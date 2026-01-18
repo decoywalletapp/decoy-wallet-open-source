@@ -217,34 +217,39 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           top: true,
           child: Align(
             alignment: AlignmentDirectional(0.0, -1.0),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional(-1.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                      child: FlutterFlowIconButton(
+                        borderRadius: 20.0,
+                        buttonSize: 40.0,
+                        icon: Icon(
+                          Icons.arrow_back_rounded,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          size: 24.0,
+                        ),
+                        onPressed: () async {
+                          context.safePop();
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                    child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Align(
-                          alignment: AlignmentDirectional(-1.0, 0.0),
-                          child: FlutterFlowIconButton(
-                            borderRadius: 20.0,
-                            buttonSize: 40.0,
-                            icon: Icon(
-                              Icons.arrow_back_rounded,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              size: 24.0,
-                            ),
-                            onPressed: () async {
-                              context.safePop();
-                            },
-                          ),
-                        ),
                         Stack(
                           children: [
                             Material(
@@ -946,8 +951,10 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           functions.sanitizePhoneNumber(
                                               _model.phoneTextController.text);
                                       safeSetState(() {});
-                                      if ((_model.origEmail !=
-                                              _model.changedEmail) &&
+                                      if ((functions.normalizeEmail(
+                                                  _model.origEmail) !=
+                                              functions.normalizeEmail(
+                                                  _model.changedEmail)) &&
                                           (_model.changedEmail != null &&
                                               _model.changedEmail != '')) {
                                         await DecoyWalletTable().update(
@@ -987,7 +994,14 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         safeSetState(() {});
 
                                         context.pushNamed(
-                                            ConfirmEmailPageWidget.routeName);
+                                          ConfirmEmailPageWidget.routeName,
+                                          queryParameters: {
+                                            'userEmail': serializeParam(
+                                              _model.changedEmail,
+                                              ParamType.String,
+                                            ),
+                                          }.withoutNulls,
+                                        );
                                       } else {
                                         if (_model.origPhone !=
                                             _model.changedPhone) {
@@ -1098,10 +1112,12 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                             ),
                           ),
                         ),
-                      ].divide(SizedBox(height: 24.0)),
+                      ]
+                          .divide(SizedBox(height: 24.0))
+                          .addToStart(SizedBox(height: 24.0)),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

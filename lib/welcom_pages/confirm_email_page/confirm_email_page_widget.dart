@@ -4,7 +4,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'confirm_email_page_model.dart';
 export 'confirm_email_page_model.dart';
 
@@ -15,7 +14,12 @@ export 'confirm_email_page_model.dart';
 /// it.Paste the email address that the user entered in in the previous page
 /// to tell the user that that's the email it's sending the confirmation to.
 class ConfirmEmailPageWidget extends StatefulWidget {
-  const ConfirmEmailPageWidget({super.key});
+  const ConfirmEmailPageWidget({
+    super.key,
+    required this.userEmail,
+  });
+
+  final String? userEmail;
 
   static String routeName = 'confirmEmailPage';
   static String routePath = '/confirmEmailPage';
@@ -53,8 +57,6 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -201,7 +203,10 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Text(
-                                FFAppState().userEmail,
+                                valueOrDefault<String>(
+                                  widget.userEmail,
+                                  'Auth Email',
+                                ),
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyLarge

@@ -74,64 +74,87 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).info,
-        appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).info,
-          automaticallyImplyLeading: false,
-          leading: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-            child: FlutterFlowIconButton(
-              borderRadius: 20.0,
-              buttonSize: 40.0,
-              icon: Icon(
-                Icons.arrow_back,
-                color: FlutterFlowTheme.of(context).primaryText,
-                size: 24.0,
-              ),
-              onPressed: () {
-                print('IconButton pressed ...');
-              },
-            ),
-          ),
-          actions: [],
-          centerTitle: false,
-          elevation: 0.0,
-        ),
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(24.0, 20.0, 24.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Row(
+                    alignment: AlignmentDirectional(-1.0, 0.0),
+                    child: FlutterFlowIconButton(
+                      borderRadius: 20.0,
+                      buttonSize: 40.0,
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        size: 24.0,
+                      ),
+                      onPressed: () {
+                        print('IconButton pressed ...');
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 0.0),
+                    child: Column(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Your Decoy Seed Phrase',
-                          style: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .override(
-                                font: GoogleFonts.interTight(
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .fontStyle,
-                                ),
-                                fontSize: 24.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .fontStyle,
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Material(
+                              color: Colors.transparent,
+                              elevation: 3.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
+                              child: Container(
+                                width: double.infinity,
+                                height: 72.0,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        8.0, 12.0, 8.0, 12.0),
+                                    child: Text(
+                                      'YOUR DECOY SEED',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.bebasNeue(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .info,
+                                            fontSize: 48.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                            lineHeight: 1.125,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),

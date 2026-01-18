@@ -219,7 +219,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: ConfirmEmailPageWidget.routeName,
         path: ConfirmEmailPageWidget.routePath,
-        builder: (context, params) => ConfirmEmailPageWidget(),
+        builder: (context, params) => ConfirmEmailPageWidget(
+          userEmail: params.getParam(
+            'userEmail',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
         name: CreateAccountB4ChangeWidget.routeName,

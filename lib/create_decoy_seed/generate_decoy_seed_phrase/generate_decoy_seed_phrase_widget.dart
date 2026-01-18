@@ -261,7 +261,7 @@ class _GenerateDecoySeedPhraseWidgetState
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
                 child: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
                   borderRadius: 20.0,

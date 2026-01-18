@@ -102,7 +102,15 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           context.pop();
         }
         context.pushNamedAuth(
-            ConfirmEmailPageWidget.routeName, context.mounted);
+          ConfirmEmailPageWidget.routeName,
+          context.mounted,
+          queryParameters: {
+            'userEmail': serializeParam(
+              currentUserEmail,
+              ParamType.String,
+            ),
+          }.withoutNulls,
+        );
       } else {
         if (_model.needPhone == true) {
           if (Navigator.of(context).canPop()) {
