@@ -50,4 +50,12 @@ class AlertLogsRow extends SupabaseDataRow {
 
   int? get locationVersion => getField<int>('location_version');
   set locationVersion(int? value) => setField<int>('location_version', value);
+
+  String? get locationWrappedDatakey =>
+      getField<String>('location_wrapped_datakey');
+  set locationWrappedDatakey(String? value) =>
+      setField<String>('location_wrapped_datakey', value);
+
+  String? get txidHmac => getField<String>('txid_hmac');
+  set txidHmac(String? value) => setField<String>('txid_hmac', value);
 }

@@ -1153,14 +1153,26 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                   _model.changedEmail)) &&
                                           (_model.changedEmail != null &&
                                               _model.changedEmail != '')) {
+                                        _model.changedEmailHash =
+                                            await GetEmailHashCall.call(
+                                          jwt: currentJwtToken,
+                                          email: functions.normalizeEmail(
+                                              _model.changedEmail),
+                                        );
+
                                         await DecoyWalletTable().update(
                                           data: {
-                                            'pending_email':
-                                                _model.changedEmail,
+                                            'pending_email': null,
                                             'email_verified': false,
                                             'email_verified_at':
                                                 supaSerialize<DateTime>(
                                                     getCurrentTimestamp),
+                                            'pending_email_hash':
+                                                GetEmailHashCall.emailHash(
+                                              (_model.changedEmailHash
+                                                      ?.jsonBody ??
+                                                  ''),
+                                            ).toString(),
                                           },
                                           matchingRows: (rows) => rows.eqOrNull(
                                             'user_id',

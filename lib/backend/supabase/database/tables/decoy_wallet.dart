@@ -190,4 +190,8 @@ class DecoyWalletRow extends SupabaseDataRow {
 
   String? get emailHash => getField<String>('email_hash');
   set emailHash(String? value) => setField<String>('email_hash', value);
+
+  String? get pendingEmailHash => getField<String>('pending_email_hash');
+  set pendingEmailHash(String? value) =>
+      setField<String>('pending_email_hash', value);
 }

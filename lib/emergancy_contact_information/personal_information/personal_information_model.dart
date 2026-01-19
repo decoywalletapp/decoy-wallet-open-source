@@ -78,6 +78,8 @@ class PersonalInformationModel
   List<DecoyWalletRow>? supaRows;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? supaNameUpdate;
+  // Stores action output result for [Backend Call - API (getEmailHash)] action in Button widget.
+  ApiCallResponse? changedEmailHash;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? cngEmail;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.

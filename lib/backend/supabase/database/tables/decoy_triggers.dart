@@ -36,6 +36,6 @@ class DecoyTriggersRow extends SupabaseDataRow {
   String? get userId => getField<String>('user_id');
   set userId(String? value) => setField<String>('user_id', value);
 
-  dynamic get location => getField<dynamic>('location');
-  set location(dynamic value) => setField<dynamic>('location', value);
+  String? get txidHmac => getField<String>('txid_hmac');
+  set txidHmac(String? value) => setField<String>('txid_hmac', value);
 }

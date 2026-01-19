@@ -3,6 +3,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -46,18 +47,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         jwt: currentJwtToken,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            (_model.authUserResp?.jsonBody ?? '').toString(),
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).primaryText,
-            ),
-          ),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: FlutterFlowTheme.of(context).secondary,
-        ),
+      _model.emailHashResp = await GetEmailHashCall.call(
+        jwt: currentJwtToken,
+        email: functions.normalizeEmail(getJsonField(
+          (_model.authUserResp?.jsonBody ?? ''),
+          r'''$.email''',
+        ).toString()),
       );
+
       FFAppState().isLocked = true;
       safeSetState(() {});
       _model.query1 = await DecoyWalletTable().queryRows(
@@ -80,6 +77,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           'email_verified_at': supaSerialize<DateTime>(null),
           'is_phone_verified': false,
           'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          'email_hash': GetEmailHashCall.emailHash(
+            (_model.emailHashResp?.jsonBody ?? ''),
+          ).toString(),
         });
         _model.query2 = await DecoyWalletTable().queryRows(
           queryFn: (q) => q.eqOrNull(
@@ -95,6 +95,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           data: {
             'email_verified': true,
             'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+            'email_hash': GetEmailHashCall.emailHash(
+              (_model.emailHashResp?.jsonBody ?? ''),
+            ).toString(),
           },
           matchingRows: (rows) => rows.eqOrNull(
             'user_id',

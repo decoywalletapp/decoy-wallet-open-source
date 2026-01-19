@@ -5,6 +5,7 @@ export '../supabase.dart';
 export 'row.dart';
 export 'table.dart';
 
+export 'tables/armed_decoy_seeds.dart';
 export 'tables/decoy_wallet.dart';
 export 'tables/decoy_seed_scan_state.dart';
 export 'tables/user_consents.dart';

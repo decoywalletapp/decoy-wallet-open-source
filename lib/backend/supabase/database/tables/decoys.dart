@@ -23,9 +23,6 @@ class DecoysRow extends SupabaseDataRow {
   String? get decoyName => getField<String>('decoy_name');
   set decoyName(String? value) => setField<String>('decoy_name', value);
 
-  String get xpub => getField<String>('xpub')!;
-  set xpub(String value) => setField<String>('xpub', value);
-
   List<String> get addresses => getListField<String>('addresses');
   set addresses(List<String> value) => setListField<String>('addresses', value);
 

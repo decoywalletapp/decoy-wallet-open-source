@@ -17,9 +17,9 @@ class DecoySeenTxsRow extends SupabaseDataRow {
   String get decoyId => getField<String>('decoy_id')!;
   set decoyId(String value) => setField<String>('decoy_id', value);
 
-  String get txid => getField<String>('txid')!;
-  set txid(String value) => setField<String>('txid', value);
-
   DateTime get firstSeenAt => getField<DateTime>('first_seen_at')!;
   set firstSeenAt(DateTime value) => setField<DateTime>('first_seen_at', value);
+
+  String get txidHmac => getField<String>('txid_hmac')!;
+  set txidHmac(String value) => setField<String>('txid_hmac', value);
 }
