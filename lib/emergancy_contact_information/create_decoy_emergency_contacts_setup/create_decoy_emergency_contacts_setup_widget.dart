@@ -3,12 +3,12 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'create_decoy_emergency_contacts_setup_model.dart';
 export 'create_decoy_emergency_contacts_setup_model.dart';
 
@@ -59,13 +59,45 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
       _model.contactsDone =
           _model.numberQue!.elementAtOrNull(0)!.contactsComplete!;
       safeSetState(() {});
-      _model.completedCount = functions.countCompleted3(
-          _model.personalDone, _model.addressDone, _model.contactsDone);
-      safeSetState(() {});
       _model.progressValue = _model.completedCount / 3;
       safeSetState(() {});
       _model.progressPercent = ((_model.progressValue!) * 100).round();
       safeSetState(() {});
+      if (_model.personalDone == true) {
+        if (FFAppState().contactsDoneInc < 3) {
+          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + 1;
+          safeSetState(() {});
+        }
+      } else {
+        if (FFAppState().contactsDoneInc > 0) {
+          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + -1;
+          safeSetState(() {});
+        }
+      }
+
+      if (_model.addressDone == true) {
+        if (FFAppState().contactsDoneInc < 3) {
+          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + 1;
+          safeSetState(() {});
+        }
+      } else {
+        if (FFAppState().contactsDoneInc > 0) {
+          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + -1;
+          safeSetState(() {});
+        }
+      }
+
+      if (_model.contactsDone == true) {
+        if (FFAppState().contactsDoneInc < 3) {
+          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + 1;
+          safeSetState(() {});
+        }
+      } else {
+        if (FFAppState().contactsDoneInc > 0) {
+          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + -1;
+          safeSetState(() {});
+        }
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -80,6 +112,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return FutureBuilder<List<DecoyWalletRow>>(
       future: DecoyWalletTable().querySingleRow(
         queryFn: (q) => q.eqOrNull(
@@ -1224,8 +1258,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
                                                             child: Text(
-                                                              _model
-                                                                  .completedCount
+                                                              FFAppState()
+                                                                  .contactsDoneInc
                                                                   .toString(),
                                                               style: FlutterFlowTheme
                                                                       .of(context)

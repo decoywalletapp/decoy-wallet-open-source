@@ -608,6 +608,30 @@ class InsertAlertLogRestCall {
   }
 }
 
+class GetAuthUserCall {
+  static Future<ApiCallResponse> call({
+    String? jwt = '',
+  }) async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'GetAuthUser',
+      apiUrl: 'https://vxmrthyumzrfgtuvjqmr.supabase.co/auth/v1/user',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization': 'Bearer ${jwt}',
+        'apikey':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bXJ0aHl1bXpyZmd0dXZqcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMDY2NDksImV4cCI6MjA2NTc4MjY0OX0.ZBjqtz7DKRkxnR3-rYtvtmz0JJb4-pDL4ux89qVBASc',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

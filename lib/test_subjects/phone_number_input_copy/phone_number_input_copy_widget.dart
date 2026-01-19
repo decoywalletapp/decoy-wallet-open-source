@@ -9,30 +9,32 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'phone_number_input_model.dart';
-export 'phone_number_input_model.dart';
+import 'phone_number_input_copy_model.dart';
+export 'phone_number_input_copy_model.dart';
 
 /// This page asks the user to enter their phone number which will save to
 /// their account profile in supabase
-class PhoneNumberInputWidget extends StatefulWidget {
-  const PhoneNumberInputWidget({super.key});
+class PhoneNumberInputCopyWidget extends StatefulWidget {
+  const PhoneNumberInputCopyWidget({super.key});
 
-  static String routeName = 'phoneNumberInput';
-  static String routePath = '/phoneNumberInput';
+  static String routeName = 'phoneNumberInputCopy';
+  static String routePath = '/phoneNumberInputCopy';
 
   @override
-  State<PhoneNumberInputWidget> createState() => _PhoneNumberInputWidgetState();
+  State<PhoneNumberInputCopyWidget> createState() =>
+      _PhoneNumberInputCopyWidgetState();
 }
 
-class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
-  late PhoneNumberInputModel _model;
+class _PhoneNumberInputCopyWidgetState
+    extends State<PhoneNumberInputCopyWidget> {
+  late PhoneNumberInputCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => PhoneNumberInputModel());
+    _model = createModel(context, () => PhoneNumberInputCopyModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -400,6 +402,178 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                 ),
                                           ),
                                         ),
+                                      if (_model.notificationInt == 0)
+                                        Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.check_circle_rounded,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .success,
+                                                    size: 16.0,
+                                                  ),
+                                                  Text(
+                                                    'No spam or marketing messages',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodySmall
+                                                        .override(
+                                                          font:
+                                                              GoogleFonts.inter(
+                                                            fontWeight:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontWeight,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                ].divide(SizedBox(width: 8.0)),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(
+                                                    Icons.check_circle_rounded,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .success,
+                                                    size: 16.0,
+                                                  ),
+                                                  Text(
+                                                    'Used for account security only',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodySmall
+                                                        .override(
+                                                          font:
+                                                              GoogleFonts.inter(
+                                                            fontWeight:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontWeight,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                ].divide(SizedBox(width: 8.0)),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Icon(
+                                                      Icons
+                                                          .check_circle_rounded,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .success,
+                                                      size: 16.0,
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Text(
+                                                      'Your number will be kept private',
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodySmall
+                                                              .override(
+                                                                font:
+                                                                    GoogleFonts
+                                                                        .inter(
+                                                                  fontWeight: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .fontWeight,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .fontStyle,
+                                                                ),
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondaryText,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontWeight,
+                                                                fontStyle: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .fontStyle,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                ].divide(SizedBox(width: 8.0)),
+                                              ),
+                                            ),
+                                          ].divide(SizedBox(height: 4.0)),
+                                        ),
                                     ],
                                   ),
                                 ].divide(SizedBox(height: 0.0)),
@@ -427,6 +601,20 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                             jwt: currentJwtToken,
                           );
 
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                (_model.sendRes?.jsonBody ?? '').toString(),
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
                           if ((_model.sendRes?.succeeded ?? true)) {
                             context.pushNamed(
                               PhoneNumberVerificationWidget.routeName,

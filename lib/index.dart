@@ -88,3 +88,5 @@ export '/welcom_pages/location_authorization/location_authorization_widget.dart'
     show LocationAuthorizationWidget;
 export '/test_subjects/letsssseeeeeoldemscontact/letsssseeeeeoldemscontact_widget.dart'
     show LetsssseeeeeoldemscontactWidget;
+export '/test_subjects/phone_number_input_copy/phone_number_input_copy_widget.dart'
+    show PhoneNumberInputCopyWidget;

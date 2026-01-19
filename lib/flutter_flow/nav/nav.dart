@@ -401,6 +401,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => LetsssseeeeeoldemscontactWidget(),
       ),
       FFRoute(
+        name: PhoneNumberInputCopyWidget.routeName,
+        path: PhoneNumberInputCopyWidget.routePath,
+        builder: (context, params) => PhoneNumberInputCopyWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>
