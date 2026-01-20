@@ -80,6 +80,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           'email_hash': GetEmailHashCall.emailHash(
             (_model.emailHashResp?.jsonBody ?? ''),
           ).toString(),
+          'pending_email_hash': null,
         });
         _model.query2 = await DecoyWalletTable().queryRows(
           queryFn: (q) => q.eqOrNull(
@@ -98,6 +99,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             'email_hash': GetEmailHashCall.emailHash(
               (_model.emailHashResp?.jsonBody ?? ''),
             ).toString(),
+            'pending_email_hash': null,
           },
           matchingRows: (rows) => rows.eqOrNull(
             'user_id',
