@@ -370,12 +370,12 @@ class _CreateAccountB4ChangeWidgetState
                                         filled: true,
                                         fillColor: Color(0xF1FFFFFF),
                                         suffixIcon: InkWell(
-                                          onTap: () => safeSetState(
-                                            () => _model
+                                          onTap: () async {
+                                            safeSetState(() => _model
                                                     .passwordCreateAccountVisibility =
                                                 !_model
-                                                    .passwordCreateAccountVisibility,
-                                          ),
+                                                    .passwordCreateAccountVisibility);
+                                          },
                                           focusNode:
                                               FocusNode(skipTraversal: true),
                                           child: Icon(
@@ -482,12 +482,12 @@ class _CreateAccountB4ChangeWidgetState
                                         filled: true,
                                         fillColor: Color(0xF1FFFFFF),
                                         suffixIcon: InkWell(
-                                          onTap: () => safeSetState(
-                                            () => _model
+                                          onTap: () async {
+                                            safeSetState(() => _model
                                                     .passwordConfirmVisibility =
                                                 !_model
-                                                    .passwordConfirmVisibility,
-                                          ),
+                                                    .passwordConfirmVisibility);
+                                          },
                                           focusNode:
                                               FocusNode(skipTraversal: true),
                                           child: Icon(

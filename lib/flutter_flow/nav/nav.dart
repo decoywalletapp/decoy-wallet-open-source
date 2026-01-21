@@ -219,12 +219,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: ConfirmEmailPageWidget.routeName,
         path: ConfirmEmailPageWidget.routePath,
-        builder: (context, params) => ConfirmEmailPageWidget(
-          userEmail: params.getParam(
-            'userEmail',
-            ParamType.String,
-          ),
-        ),
+        builder: (context, params) => ConfirmEmailPageWidget(),
       ),
       FFRoute(
         name: CreateAccountB4ChangeWidget.routeName,
@@ -404,6 +399,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: PhoneNumberInputCopyWidget.routeName,
         path: PhoneNumberInputCopyWidget.routePath,
         builder: (context, params) => PhoneNumberInputCopyWidget(),
+      ),
+      FFRoute(
+        name: ConfirmPendingEmailPageWidget.routeName,
+        path: ConfirmPendingEmailPageWidget.routePath,
+        builder: (context, params) => ConfirmPendingEmailPageWidget(
+          userChangedEmail: params.getParam(
+            'userChangedEmail',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

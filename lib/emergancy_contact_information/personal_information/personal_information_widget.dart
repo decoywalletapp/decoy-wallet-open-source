@@ -1202,10 +1202,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         safeSetState(() {});
 
                                         context.pushNamed(
-                                          ConfirmEmailPageWidget.routeName,
+                                          ConfirmPendingEmailPageWidget
+                                              .routeName,
                                           queryParameters: {
-                                            'userEmail': serializeParam(
-                                              _model.changedEmail,
+                                            'userChangedEmail': serializeParam(
+                                              _model.emailTextController.text,
                                               ParamType.String,
                                             ),
                                           }.withoutNulls,

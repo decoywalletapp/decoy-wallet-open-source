@@ -275,10 +275,11 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                             EdgeInsetsDirectional.fromSTEB(
                                                 24.0, 24.0, 20.0, 24.0),
                                         suffixIcon: InkWell(
-                                          onTap: () => safeSetState(
-                                            () => _model.passwordVisibility =
-                                                !_model.passwordVisibility,
-                                          ),
+                                          onTap: () async {
+                                            safeSetState(() =>
+                                                _model.passwordVisibility =
+                                                    !_model.passwordVisibility);
+                                          },
                                           focusNode:
                                               FocusNode(skipTraversal: true),
                                           child: Icon(
@@ -416,12 +417,12 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                             EdgeInsetsDirectional.fromSTEB(
                                                 24.0, 24.0, 20.0, 24.0),
                                         suffixIcon: InkWell(
-                                          onTap: () => safeSetState(
-                                            () => _model
+                                          onTap: () async {
+                                            safeSetState(() => _model
                                                     .confirmUpdatedPasswordVisibility =
                                                 !_model
-                                                    .confirmUpdatedPasswordVisibility,
-                                          ),
+                                                    .confirmUpdatedPasswordVisibility);
+                                          },
                                           focusNode:
                                               FocusNode(skipTraversal: true),
                                           child: Icon(

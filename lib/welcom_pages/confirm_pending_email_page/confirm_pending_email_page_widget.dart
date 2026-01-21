@@ -1,12 +1,11 @@
-import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'confirm_email_page_model.dart';
-export 'confirm_email_page_model.dart';
+import 'confirm_pending_email_page_model.dart';
+export 'confirm_pending_email_page_model.dart';
 
 /// Create a page that prompts the user to check their email that they used to
 /// sign up with to confirm their email address.
@@ -14,25 +13,32 @@ export 'confirm_email_page_model.dart';
 /// Allow the user to resend the email confirmation if they have not received
 /// it.Paste the email address that the user entered in in the previous page
 /// to tell the user that that's the email it's sending the confirmation to.
-class ConfirmEmailPageWidget extends StatefulWidget {
-  const ConfirmEmailPageWidget({super.key});
+class ConfirmPendingEmailPageWidget extends StatefulWidget {
+  const ConfirmPendingEmailPageWidget({
+    super.key,
+    required this.userChangedEmail,
+  });
 
-  static String routeName = 'confirmEmailPage';
-  static String routePath = '/confirmEmailPage';
+  final String? userChangedEmail;
+
+  static String routeName = 'confirmPendingEmailPage';
+  static String routePath = '/confirmPendingEmailPage';
 
   @override
-  State<ConfirmEmailPageWidget> createState() => _ConfirmEmailPageWidgetState();
+  State<ConfirmPendingEmailPageWidget> createState() =>
+      _ConfirmPendingEmailPageWidgetState();
 }
 
-class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
-  late ConfirmEmailPageModel _model;
+class _ConfirmPendingEmailPageWidgetState
+    extends State<ConfirmPendingEmailPageWidget> {
+  late ConfirmPendingEmailPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ConfirmEmailPageModel());
+    _model = createModel(context, () => ConfirmPendingEmailPageModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -197,7 +203,10 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Text(
-                                currentUserEmail,
+                                valueOrDefault<String>(
+                                  widget.userChangedEmail,
+                                  'Email',
+                                ),
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyLarge

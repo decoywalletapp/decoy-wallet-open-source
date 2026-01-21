@@ -393,10 +393,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       suffixIcon: InkWell(
-                                        onTap: () => safeSetState(
-                                          () => _model.passwordLoginVisibility =
-                                              !_model.passwordLoginVisibility,
-                                        ),
+                                        onTap: () async {
+                                          safeSetState(() => _model
+                                                  .passwordLoginVisibility =
+                                              !_model.passwordLoginVisibility);
+                                        },
                                         focusNode:
                                             FocusNode(skipTraversal: true),
                                         child: Icon(
