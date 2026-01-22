@@ -646,8 +646,16 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           );
                                           if (_model.ctResult == 'ok') {
                                             context.pushNamed(
-                                                ConfirmEmailPageWidget
-                                                    .routeName);
+                                              ConfirmEmailPageWidget.routeName,
+                                              queryParameters: {
+                                                'emailEntry': serializeParam(
+                                                  _model
+                                                      .emailAddressTextController
+                                                      .text,
+                                                  ParamType.String,
+                                                ),
+                                              }.withoutNulls,
+                                            );
                                           }
                                         } else {
                                           _model.notificationState = 1;

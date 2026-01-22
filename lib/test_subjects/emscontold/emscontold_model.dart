@@ -2,11 +2,11 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'emergency_contacts_widget.dart' show EmergencyContactsWidget;
+import 'emscontold_widget.dart' show EmscontoldWidget;
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
+class EmscontoldModel extends FlutterFlowModel<EmscontoldWidget> {
   ///  Local state fields for this page.
 
   int contactIncrement = 0;
@@ -27,27 +27,16 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   String? rowNonceB64;
 
-  List<dynamic> contactsList = [];
-  void addToContactsList(dynamic item) => contactsList.add(item);
-  void removeFromContactsList(dynamic item) => contactsList.remove(item);
-  void removeAtIndexFromContactsList(int index) => contactsList.removeAt(index);
-  void insertAtIndexInContactsList(int index, dynamic item) =>
-      contactsList.insert(index, item);
-  void updateContactsListAtIndex(int index, Function(dynamic) updateFn) =>
-      contactsList[index] = updateFn(contactsList[index]);
-
-  int contactsCount = 0;
-
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
-  // Stores action output result for [Backend Call - Query Rows] action in EmergencyContacts widget.
+  // Stores action output result for [Backend Call - Query Rows] action in EMSCONTOLD widget.
   List<DecoyWalletRow>? rows;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EMSCONTOLD widget.
   String? dataKeyOut;
-  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EMSCONTOLD widget.
   dynamic contactsObj;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EMSCONTOLD widget.
   String? dataKeyOut2;
   // State field(s) for c1FirstTF widget.
   FocusNode? c1FirstTFFocusNode;

@@ -14,34 +14,33 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
-import 'emergency_contacts_model.dart';
-export 'emergency_contacts_model.dart';
+import 'emscontold_model.dart';
+export 'emscontold_model.dart';
 
 /// generate a page that allows the user to add up to five emergency
 /// contacts...
 ///
 /// the emergency contacts will have first name last name and phone number...
 /// save button at the bottom
-class EmergencyContactsWidget extends StatefulWidget {
-  const EmergencyContactsWidget({super.key});
+class EmscontoldWidget extends StatefulWidget {
+  const EmscontoldWidget({super.key});
 
-  static String routeName = 'EmergencyContacts';
-  static String routePath = '/emergencyContacts';
+  static String routeName = 'EMSCONTOLD';
+  static String routePath = '/emscontold';
 
   @override
-  State<EmergencyContactsWidget> createState() =>
-      _EmergencyContactsWidgetState();
+  State<EmscontoldWidget> createState() => _EmscontoldWidgetState();
 }
 
-class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
-  late EmergencyContactsModel _model;
+class _EmscontoldWidgetState extends State<EmscontoldWidget> {
+  late EmscontoldModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => EmergencyContactsModel());
+    _model = createModel(context, () => EmscontoldModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -71,42 +70,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             _model.dataKeyB64,
           );
           _model.contactsJson = _model.contactsObj!.toString();
-          safeSetState(() {});
-          _model.contactsCount = () {
-            if (getJsonField(
-                  _model.contactsObj,
-                  r'''$.contacts[4].first''',
-                ) !=
-                null) {
-              return (5);
-            } else if (getJsonField(
-                  _model.contactsObj,
-                  r'''$.contacts[3].first''',
-                ) !=
-                null) {
-              return (4);
-            } else if (getJsonField(
-                  _model.contactsObj,
-                  r'''$.contacts[2].first''',
-                ) !=
-                null) {
-              return (3);
-            } else if (getJsonField(
-                  _model.contactsObj,
-                  r'''$.contacts[1].first''',
-                ) !=
-                null) {
-              return (2);
-            } else if (getJsonField(
-                  _model.contactsObj,
-                  r'''$.contacts[0].first''',
-                ) !=
-                null) {
-              return (1);
-            } else {
-              return 0;
-            }
-          }();
           safeSetState(() {});
           if (getJsonField(
                 _model.contactsObj,
@@ -635,7 +598,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  if (_model.contactsCount >= 1)
+                                  if (_model.contactIncrement >= 1)
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 16.0, 16.0, 0.0),
@@ -715,6 +678,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         size: 16.0,
                                                       ),
                                                       onPressed: () async {
+                                                        _model.contactIncrement =
+                                                            _model.contactIncrement +
+                                                                -1;
+                                                        safeSetState(() {});
                                                         safeSetState(() {
                                                           _model
                                                               .c1FirstTFTextController
@@ -1164,7 +1131,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                         ),
                                       ),
                                     ),
-                                  if (_model.contactsCount >= 2)
+                                  if (_model.contactIncrement >= 2)
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 16.0, 16.0, 0.0),
@@ -1247,113 +1214,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         size: 16.0,
                                                       ),
                                                       onPressed: () async {
-                                                        safeSetState(() {
-                                                          _model.c2FirstTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c3FirstTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c2LastTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c3LastTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c2PhoneTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c3PhoneTFTextController
-                                                                  .text;
-                                                          _model.c2PhoneTFMask
-                                                              .updateMask(
-                                                            newValue:
-                                                                TextEditingValue(
-                                                              text: _model
-                                                                  .c2PhoneTFTextController!
-                                                                  .text,
-                                                            ),
-                                                          );
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c3FirstTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c4FirstTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c3LastTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c4LastTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c3PhoneTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c4PhoneTFTextController
-                                                                  .text;
-                                                          _model.c3PhoneTFMask
-                                                              .updateMask(
-                                                            newValue:
-                                                                TextEditingValue(
-                                                              text: _model
-                                                                  .c3PhoneTFTextController!
-                                                                  .text,
-                                                            ),
-                                                          );
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c4FirstTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c5FirstTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c4LastTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c5LastTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c4PhoneTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c5PhoneTFTextController
-                                                                  .text;
-                                                          _model.c4PhoneTFMask
-                                                              .updateMask(
-                                                            newValue:
-                                                                TextEditingValue(
-                                                              text: _model
-                                                                  .c4PhoneTFTextController!
-                                                                  .text,
-                                                            ),
-                                                          );
-                                                        });
-                                                        safeSetState(() {
-                                                          _model
-                                                              .c5PhoneTFTextController
-                                                              ?.clear();
-                                                          _model.c5PhoneTFMask
-                                                              .clear();
-                                                          _model
-                                                              .c5LastTFTextController
-                                                              ?.clear();
-                                                          _model
-                                                              .c5FirstTFTextController
-                                                              ?.clear();
-                                                        });
-                                                        _model.contactsCount =
-                                                            _model.contactsCount -
-                                                                1;
+                                                        _model.contactIncrement =
+                                                            _model.contactIncrement +
+                                                                -1;
                                                         safeSetState(() {});
+                                                        safeSetState(() {
+                                                          _model
+                                                              .c2FirstTFTextController
+                                                              ?.clear();
+                                                          _model
+                                                              .c2LastTFTextController
+                                                              ?.clear();
+                                                          _model
+                                                              .c2PhoneTFTextController
+                                                              ?.clear();
+                                                          _model.c2PhoneTFMask
+                                                              .clear();
+                                                        });
                                                       },
                                                     ),
                                                   ],
@@ -1790,7 +1667,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                         ),
                                       ),
                                     ),
-                                  if (_model.contactsCount >= 3)
+                                  if (_model.contactIncrement >= 3)
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 16.0, 16.0, 0.0),
@@ -1870,6 +1747,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         size: 16.0,
                                                       ),
                                                       onPressed: () async {
+                                                        _model.contactIncrement =
+                                                            _model.contactIncrement +
+                                                                -1;
+                                                        safeSetState(() {});
                                                         safeSetState(() {
                                                           _model
                                                               .c3FirstTFTextController
@@ -2319,7 +2200,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                         ),
                                       ),
                                     ),
-                                  if (_model.contactsCount >= 4)
+                                  if (_model.contactIncrement >= 4)
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 16.0, 16.0, 0.0),
@@ -2399,6 +2280,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         size: 16.0,
                                                       ),
                                                       onPressed: () async {
+                                                        _model.contactIncrement =
+                                                            _model.contactIncrement +
+                                                                -1;
+                                                        safeSetState(() {});
                                                         safeSetState(() {
                                                           _model
                                                               .c4FirstTFTextController
@@ -2848,7 +2733,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                         ),
                                       ),
                                     ),
-                                  if (_model.contactsCount >= 5)
+                                  if (_model.contactIncrement >= 5)
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 16.0, 16.0, 0.0),
@@ -2928,6 +2813,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         size: 16.0,
                                                       ),
                                                       onPressed: () async {
+                                                        _model.contactIncrement =
+                                                            _model.contactIncrement +
+                                                                -1;
+                                                        safeSetState(() {});
                                                         safeSetState(() {
                                                           _model
                                                               .c5FirstTFTextController
