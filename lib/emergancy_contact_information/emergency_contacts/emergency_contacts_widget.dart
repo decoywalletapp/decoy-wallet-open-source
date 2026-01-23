@@ -614,6 +614,36 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                   ),
                 ),
               ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Text(
+                        _model.contactsCount.toString(),
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              font: GoogleFonts.inter(
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                              letterSpacing: 0.0,
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,
@@ -732,9 +762,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c1PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c2PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c2PhoneTFTextController
+                                                                      .text);
                                                           _model.c1PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -762,9 +793,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c2PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c3PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c3PhoneTFTextController
+                                                                      .text);
                                                           _model.c2PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -792,9 +824,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c3PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c4PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c4PhoneTFTextController
+                                                                      .text);
                                                           _model.c3PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -822,9 +855,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c4PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c5PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  functions.sanitizePhoneDigits(_model
+                                                                      .c5PhoneTFTextController
+                                                                      .text));
                                                           _model.c4PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -1388,9 +1422,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c2PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c3PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c3PhoneTFTextController
+                                                                      .text);
                                                           _model.c2PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -1418,9 +1453,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c3PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c4PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c4PhoneTFTextController
+                                                                      .text);
                                                           _model.c3PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -1448,9 +1484,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c4PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c5PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c5PhoneTFTextController
+                                                                      .text);
                                                           _model.c4PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -2011,9 +2048,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c3PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c4PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c4PhoneTFTextController
+                                                                      .text);
                                                           _model.c3PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -2041,9 +2079,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c4PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c5PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c5PhoneTFTextController
+                                                                      .text);
                                                           _model.c4PhoneTFMask
                                                               .updateMask(
                                                             newValue:
@@ -2604,9 +2643,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         safeSetState(() {
                                                           _model.c4PhoneTFTextController
                                                                   ?.text =
-                                                              _model
-                                                                  .c5PhoneTFTextController
-                                                                  .text;
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c5PhoneTFTextController
+                                                                      .text);
                                                           _model.c4PhoneTFMask
                                                               .updateMask(
                                                             newValue:
