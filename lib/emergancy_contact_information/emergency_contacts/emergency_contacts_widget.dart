@@ -45,8 +45,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.contactIncrement = FFAppState().emergencyContactsIncrement;
-      safeSetState(() {});
       _model.rows = await DecoyWalletTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
@@ -437,8 +435,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       } else {
         _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
         _model.dataKeyB64 = _model.dataKeyOut2!;
-        safeSetState(() {});
-        _model.contactIncrement = 1;
         safeSetState(() {});
         safeSetState(() {
           _model.c1FirstTFTextController?.clear();
@@ -3680,7 +3676,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                         _model.c5FirstTFTextController.text,
                                         _model.c5LastTFTextController.text,
                                         _model.c5PhoneTFTextController.text,
-                                        _model.contactIncrement,
+                                        _model.contactsCount,
                                       );
                                       _model.contactsJson =
                                           _model.contactsPayload!;
@@ -3787,7 +3783,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                             FFAppState()
                                                     .emergencyContactsIncrement =
-                                                _model.contactIncrement;
+                                                _model.contactsCount;
                                             safeSetState(() {});
                                             context.safePop();
                                           } else {
@@ -3843,7 +3839,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                             FFAppState()
                                                     .emergencyContactsIncrement =
-                                                _model.contactIncrement;
+                                                _model.contactsCount;
                                             safeSetState(() {});
                                             context.safePop();
                                           }
