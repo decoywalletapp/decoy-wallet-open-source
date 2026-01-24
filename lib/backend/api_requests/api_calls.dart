@@ -677,8 +677,8 @@ class CommitDecoyCall {
 
     final ffApiRequestBody = '''
 {
-  "id": "${escapeStringForJson(decoyId)}",
-  "derivation_path": "${escapeStringForJson(derivationPath)}",
+  "id": "${decoyId}",
+  "derivation_path": "${derivationPath}",
   "addresses": ${addresses}
 }''';
     return ApiManager.instance.makeApiCall(
