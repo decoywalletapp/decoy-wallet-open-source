@@ -638,6 +638,36 @@ class _DecoySeedSystemValuesWidgetState
                               addressesList: FFAppState().draftAddresses,
                             );
 
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  (_model.commitResp?.jsonBody ?? '')
+                                      .toString(),
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  (_model.commitResp?.statusCode ?? 200)
+                                      .toString(),
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
                             if ((_model.commitResp?.succeeded ?? true)) {
                               FFAppState().decoySeedArmed =
                                   _model.seedMonitorArmTileValue!;

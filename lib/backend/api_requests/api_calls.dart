@@ -677,7 +677,7 @@ class CommitDecoyCall {
 
     final ffApiRequestBody = '''
 {
-  "id": "${decoyId}",
+  "decoyId": "${decoyId}",
   "derivation_path": "${derivationPath}",
   "addresses": ${addresses}
 }''';
