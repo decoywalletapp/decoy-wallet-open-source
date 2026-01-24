@@ -38,6 +38,26 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   int contactsCount = 0;
 
+  String? pn1Digits10;
+
+  String cleanPhone1 = '\"\"';
+
+  String cleanPhone2 = '\"\"';
+
+  String cleanPhone3 = '\"\"';
+
+  String cleanPhone4 = '\"\"';
+
+  String cleanPhone5 = '\"\"';
+
+  String? pn2Digits10;
+
+  String? pn3Digits10;
+
+  String? pn4Digits10;
+
+  String? pn5Digits10;
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
