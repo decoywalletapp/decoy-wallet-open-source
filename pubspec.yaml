@@ -185,6 +185,10 @@ flutter:
 
     - assets/environment_values/
   fonts:
+    - family: 'DECOY BEBAS'
+      fonts:
+        - asset: assets/fonts/BebasNeue-Regular.ttf
+
     - family: MyFlutterApp
       fonts:
         - asset: assets/fonts/MyFlutterApp.ttf
