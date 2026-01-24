@@ -684,7 +684,7 @@ class CommitDecoyCall {
     return ApiManager.instance.makeApiCall(
       callName: 'commitDecoy',
       apiUrl:
-          'URL: https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/commit-decoy',
+          'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/commit-decoy',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
