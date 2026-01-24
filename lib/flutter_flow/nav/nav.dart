@@ -411,6 +411,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => EmscontoldWidget(),
       ),
       FFRoute(
+        name: EmergencyContactsCopyWidget.routeName,
+        path: EmergencyContactsCopyWidget.routePath,
+        builder: (context, params) => EmergencyContactsCopyWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

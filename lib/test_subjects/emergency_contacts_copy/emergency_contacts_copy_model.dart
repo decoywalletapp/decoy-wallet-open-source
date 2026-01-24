@@ -2,11 +2,12 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'emergency_contacts_widget.dart' show EmergencyContactsWidget;
+import 'emergency_contacts_copy_widget.dart' show EmergencyContactsCopyWidget;
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
+class EmergencyContactsCopyModel
+    extends FlutterFlowModel<EmergencyContactsCopyWidget> {
   ///  Local state fields for this page.
 
   int contactIncrement = 0;
@@ -38,26 +39,36 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   int contactsCount = 0;
 
-  String? c1PhoneDigits;
+  String? pn1Digits10;
 
-  String? c2PhoneDigits;
+  String cleanPhone1 = '\"\"';
 
-  String? c3PhoneDigits;
+  String cleanPhone2 = '\"\"';
 
-  String? c4PhoneDigits;
+  String cleanPhone3 = '\"\"';
 
-  String? c5PhoneDigits;
+  String cleanPhone4 = '\"\"';
+
+  String cleanPhone5 = '\"\"';
+
+  String? pn2Digits10;
+
+  String? pn3Digits10;
+
+  String? pn4Digits10;
+
+  String? pn5Digits10;
 
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
-  // Stores action output result for [Backend Call - Query Rows] action in EmergencyContacts widget.
+  // Stores action output result for [Backend Call - Query Rows] action in EmergencyContactsCopy widget.
   List<DecoyWalletRow>? rows;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContactsCopy widget.
   String? dataKeyOut;
-  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EmergencyContactsCopy widget.
   dynamic contactsObj;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContactsCopy widget.
   String? dataKeyOut2;
   // State field(s) for c1FirstTF widget.
   FocusNode? c1FirstTFFocusNode;

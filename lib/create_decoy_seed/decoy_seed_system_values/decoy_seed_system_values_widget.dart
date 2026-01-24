@@ -255,7 +255,7 @@ class _DecoySeedSystemValuesWidgetState
                                                       ),
                                             ),
                                             subtitle: Text(
-                                              'ARMED - ACTIVELY WATHCING SEED',
+                                              'ARM TO ACTIVELY MONITOR OUTBOUND TRANSACTIONS',
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodySmall
