@@ -1,0 +1,156 @@
+workflows:
+  ios_release:
+    name: iOS Release (TestFlight)
+
+    environment:
+      groups:
+        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER
+        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
+      xcode: latest
+      vars:
+        TEAM_ID: 8Y7L4NZ5ZX
+        BUNDLE_ID: com.decoywalletapp.app
+        IOS_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
+        FLUTTER_VERSION: 3.32.4
+
+    cache:
+      cache_paths:
+        - $HOME/flutter
+        - $HOME/.pub-cache
+        - ios/Pods
+
+    scripts:
+      - name: Install Flutter (force exact version)
+        script: |
+          set -euxo pipefail
+
+          WANT="${FLUTTER_VERSION}"
+          URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${WANT}-stable.zip"
+
+          need_install="1"
+          if [ -x "$HOME/flutter/bin/flutter" ]; then
+            have="$($HOME/flutter/bin/flutter --version | head -n1 | awk '{print $2}')"
+            if [ "$have" = "$WANT" ]; then
+              need_install="0"
+            else
+              rm -rf "$HOME/flutter"
+            fi
+          fi
+
+          if [ "$need_install" = "1" ]; then
+            cd "$HOME"
+            rm -f flutter.zip
+            for i in $(seq 1 10); do
+              curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
+            done
+            unzip -q flutter.zip
+            rm -f flutter.zip
+          fi
+
+          echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
+          flutter --version
+
+      - name: Show tool versions
+        script: |
+          set -euxo pipefail
+          flutter --version
+          xcodebuild -version
+          cm version || true
+
+      - name: Initialize keychain & import Distribution .p12
+        script: |
+          set -euxo pipefail
+          keychain initialize
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          security find-identity -v -p codesigning || true
+
+      - name: Install provisioning profile
+        script: |
+          set -euxo pipefail
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILE_DIR"
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
+          ls -lah "$PROFILE_DIR" || true
+          /usr/bin/security cms -D -i "$PROFILE_DIR/appstore.mobileprovision" > /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile.plist
+
+      - name: Verify provisioning profile kind
+        script: |
+          set -euxo pipefail
+          /usr/bin/security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision" > /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :ProvisionsAllDevices" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:get-task-allow" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:beta-reports-active" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :ExpirationDate" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :UUID" /tmp/profile.plist || true
+
+      - name: Create exportOptions.plist (manual signing)
+        script: |
+          set -euxo pipefail
+          plist=exportOptions.plist
+          rm -f "$plist"
+          /usr/libexec/PlistBuddy -c "Add :method string app-store" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$BUNDLE_ID string $IOS_PROFILE_SPECIFIER" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :manageAppVersionAndBuildNumber bool false" "$plist"
+          /usr/libexec/PlistBuddy -c "Print" "$plist"
+
+      - name: Bump build number (UTC timestamp)
+        script: |
+          set -euxo pipefail
+          BN="$(date -u +%Y%m%d%H%M)"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist
+          perl -i -pe "s/^version:\s*([0-9]+\.[0-9]+\.[0-9]+)(?:\+\d+)?/version: \${1}+$BN/m" pubspec.yaml
+          grep -n '^version:' pubspec.yaml || true
+
+      - name: Set encryption flag in Info.plist
+        script: |
+          set -euxo pipefail
+          /usr/libexec/PlistBuddy -c "Delete :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool NO" ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist
+
+      - name: Point Xcode project to installed profile(s) (manual signing)
+        script: |
+          set -euxo pipefail
+          xcode-project use-profiles --warn-only
+
+      - name: Build IPA (Flutter)
+        script: |
+          set -euxo pipefail
+          flutter clean
+          flutter pub get
+          flutter build ipa --release --export-options-plist exportOptions.plist
+
+      - name: Verify IPA has embedded provisioning profile (SIGPIPE safe)
+        script: |
+          set -euxo pipefail
+          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          test -n "$IPA"
+          set +o pipefail
+          zipinfo -1 "$IPA" | grep -q 'embedded\.mobileprovision'
+          rc=$?
+          set -o pipefail
+          if [ $rc -ne 0 ]; then
+            echo "embedded.mobileprovision missing — aborting upload"
+            exit 1
+          fi
+          echo "IPA ready: $IPA"
+
+      - name: Upload to App Store Connect (CLI)
+        script: |
+          set -euxo pipefail
+          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          app-store-connect publish \
+            --path "$IPA" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY
+
+    artifacts:
+      - build/ios/ipa/*.ipa
