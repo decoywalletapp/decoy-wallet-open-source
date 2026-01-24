@@ -632,6 +632,77 @@ class GetAuthUserCall {
   }
 }
 
+class RegisterDecoyCall {
+  static Future<ApiCallResponse> call({
+    String? jwt = '',
+    String? decoyId = '',
+    String? addr0 = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "id": "${escapeStringForJson(decoyId)}",
+  "derivation_path": "m/84'/0'/0'",
+  "addresses": "${escapeStringForJson(addr0)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'registerDecoy',
+      apiUrl:
+          'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/register-decoy',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class CommitDecoyCall {
+  static Future<ApiCallResponse> call({
+    String? jwt = '',
+    String? decoyId = '',
+    String? derivationPath = '',
+    List<String>? addressesList,
+  }) async {
+    final addresses = _serializeList(addressesList);
+
+    final ffApiRequestBody = '''
+{
+  "id": "${escapeStringForJson(decoyId)}",
+  "derivation_path": "${escapeStringForJson(derivationPath)}",
+  "addresses": ${addresses}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'commitDecoy',
+      apiUrl:
+          'URL: https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/commit-decoy',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

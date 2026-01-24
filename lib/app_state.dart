@@ -114,6 +114,16 @@ class FFAppState extends ChangeNotifier {
       _contactsDoneInc =
           await secureStorage.getInt('ff_contactsDoneInc') ?? _contactsDoneInc;
     });
+    await _safeInitAsync(() async {
+      _draftAddresses =
+          await secureStorage.getStringList('ff_draftAddresses') ??
+              _draftAddresses;
+    });
+    await _safeInitAsync(() async {
+      _draftDerivationPath =
+          await secureStorage.getString('ff_draftDerivationPath') ??
+              _draftDerivationPath;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -475,6 +485,56 @@ class FFAppState extends ChangeNotifier {
 
   void deleteContactsDoneInc() {
     secureStorage.delete(key: 'ff_contactsDoneInc');
+  }
+
+  List<String> _draftAddresses = [];
+  List<String> get draftAddresses => _draftAddresses;
+  set draftAddresses(List<String> value) {
+    _draftAddresses = value;
+    secureStorage.setStringList('ff_draftAddresses', value);
+  }
+
+  void deleteDraftAddresses() {
+    secureStorage.delete(key: 'ff_draftAddresses');
+  }
+
+  void addToDraftAddresses(String value) {
+    draftAddresses.add(value);
+    secureStorage.setStringList('ff_draftAddresses', _draftAddresses);
+  }
+
+  void removeFromDraftAddresses(String value) {
+    draftAddresses.remove(value);
+    secureStorage.setStringList('ff_draftAddresses', _draftAddresses);
+  }
+
+  void removeAtIndexFromDraftAddresses(int index) {
+    draftAddresses.removeAt(index);
+    secureStorage.setStringList('ff_draftAddresses', _draftAddresses);
+  }
+
+  void updateDraftAddressesAtIndex(
+    int index,
+    String Function(String) updateFn,
+  ) {
+    draftAddresses[index] = updateFn(_draftAddresses[index]);
+    secureStorage.setStringList('ff_draftAddresses', _draftAddresses);
+  }
+
+  void insertAtIndexInDraftAddresses(int index, String value) {
+    draftAddresses.insert(index, value);
+    secureStorage.setStringList('ff_draftAddresses', _draftAddresses);
+  }
+
+  String _draftDerivationPath = '';
+  String get draftDerivationPath => _draftDerivationPath;
+  set draftDerivationPath(String value) {
+    _draftDerivationPath = value;
+    secureStorage.setString('ff_draftDerivationPath', value);
+  }
+
+  void deleteDraftDerivationPath() {
+    secureStorage.delete(key: 'ff_draftDerivationPath');
   }
 }
 

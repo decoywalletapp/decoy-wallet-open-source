@@ -1,4 +1,3 @@
-import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'generate_decoy_seed_phrase_widget.dart'
@@ -21,10 +20,8 @@ class GenerateDecoySeedPhraseModel
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Custom Action - createAndRegisterDecoy] action in Button widget.
-  dynamic createDecoy;
-  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
-  List<DecoyWalletRow>? linkDecoySeedToWallet;
+  // Stores action output result for [Custom Action - generateDecoyDraft] action in Button widget.
+  dynamic decoyDraftOut;
 
   @override
   void initState(BuildContext context) {}

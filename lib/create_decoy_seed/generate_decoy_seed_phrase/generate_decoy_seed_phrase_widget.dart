@@ -1,5 +1,3 @@
-import '/auth/supabase_auth/auth_util.dart';
-import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -7,8 +5,6 @@ import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'generate_decoy_seed_phrase_model.dart';
 export 'generate_decoy_seed_phrase_model.dart';
 
@@ -51,8 +47,6 @@ class _GenerateDecoySeedPhraseWidgetState
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -106,21 +100,12 @@ class _GenerateDecoySeedPhraseWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .headlineMedium
                                     .override(
-                                      font: GoogleFonts.interTight(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .headlineMediumFamily,
                                       letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .fontStyle,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .headlineMediumIsCustom,
                                     ),
                               ),
                               Text(
@@ -129,63 +114,56 @@ class _GenerateDecoySeedPhraseWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
-                                      font: GoogleFonts.inter(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .bodyMediumFamily,
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryText,
                                       letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .bodyMediumIsCustom,
                                     ),
                               ),
                             ].divide(SizedBox(height: 16.0)),
                           ),
                           FFButtonWidget(
                             onPressed: () async {
-                              _model.createDecoy =
-                                  await actions.createAndRegisterDecoy(
-                                '',
-                                FFAppState().serverRegistrationUrl,
-                              );
+                              _model.decoyDraftOut =
+                                  await actions.generateDecoyDraft();
                               _model.tempMnemonic = getJsonField(
-                                _model.createDecoy,
+                                _model.decoyDraftOut,
                                 r'''$.mnemonic''',
+                              ).toString();
+                              _model.tempDecoyId = getJsonField(
+                                _model.decoyDraftOut,
+                                r'''$.decoyId''',
                               ).toString();
                               safeSetState(() {});
                               if (getJsonField(
-                                _model.createDecoy,
+                                _model.decoyDraftOut,
                                 r'''$.ok''',
                               )) {
                                 FFAppState().decoyActiveId = getJsonField(
-                                  _model.createDecoy,
+                                  _model.decoyDraftOut,
                                   r'''$.decoyId''',
+                                ).toString();
+                                FFAppState().draftAddresses = (getJsonField(
+                                  _model.decoyDraftOut,
+                                  r'''$.addresses''',
+                                  true,
+                                ) as List?)!
+                                    .map<String>((e) => e.toString())
+                                    .toList()
+                                    .cast<String>()
+                                    .toList()
+                                    .cast<String>();
+                                FFAppState().draftDerivationPath = getJsonField(
+                                  _model.decoyDraftOut,
+                                  r'''$.derivation_path''',
                                 ).toString();
                                 safeSetState(() {});
                                 FFAppState().decoySeedArmed = false;
                                 safeSetState(() {});
-                                await DecoyWalletTable().update(
-                                  data: {
-                                    'decoy_seed_decoy_id': getJsonField(
-                                      _model.createDecoy,
-                                      r'''$.decoyId''',
-                                    ).toString(),
-                                    'has_decoy_seed_ack': true,
-                                  },
-                                  matchingRows: (rows) => rows.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
-                                );
 
                                 context.pushNamed(
                                   ShowDecoySeedPhraseWidget.routeName,
@@ -195,10 +173,7 @@ class _GenerateDecoySeedPhraseWidgetState
                                       ParamType.String,
                                     ),
                                     'decoyId': serializeParam(
-                                      getJsonField(
-                                        _model.createDecoy,
-                                        r'''$.decoyId''',
-                                      ).toString(),
+                                      _model.tempDecoyId,
                                       ParamType.String,
                                     ),
                                   }.withoutNulls,
@@ -233,19 +208,15 @@ class _GenerateDecoySeedPhraseWidgetState
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: FlutterFlowTheme.of(context)
+                                        .titleMediumFamily,
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
+                                    useGoogleFonts:
+                                        !FlutterFlowTheme.of(context)
+                                            .titleMediumIsCustom,
                                   ),
                               elevation: 3.0,
                               borderSide: BorderSide(

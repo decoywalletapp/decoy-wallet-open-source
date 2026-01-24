@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -10,6 +11,8 @@ class DecoySeedSystemValuesModel
 
   // State field(s) for SeedMonitorArmTile widget.
   bool? seedMonitorArmTileValue;
+  // Stores action output result for [Backend Call - API (commitDecoy)] action in Button widget.
+  ApiCallResponse? commitResp;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? saveDecoySeedSettings;
 
