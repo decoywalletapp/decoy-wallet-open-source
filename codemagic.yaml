@@ -4,15 +4,14 @@ workflows:
 
     environment:
       groups:
-        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER
-        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
+        - signing_cert
+        - app_store_connect
       xcode: latest
       vars:
         TEAM_ID: 8Y7L4NZ5ZX
         BUNDLE_ID: com.decoywalletapp.app
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
-        FLUTTER_VERSION: 3.32.4
 
     cache:
       cache_paths:
@@ -21,35 +20,21 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Install Flutter (force exact version)
+      - name: Install Flutter (force 3.32.4 every build)
         script: |
           set -euxo pipefail
+          cd "$HOME"
+          rm -rf "$HOME/flutter" "$HOME/flutter.zip"
 
-          WANT="${FLUTTER_VERSION}"
-          URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${WANT}-stable.zip"
-
-          need_install="1"
-          if [ -x "$HOME/flutter/bin/flutter" ]; then
-            have="$($HOME/flutter/bin/flutter --version | head -n1 | awk '{print $2}')"
-            if [ "$have" = "$WANT" ]; then
-              need_install="0"
-            else
-              rm -rf "$HOME/flutter"
-            fi
-          fi
-
-          if [ "$need_install" = "1" ]; then
-            cd "$HOME"
-            rm -f flutter.zip
-            for i in $(seq 1 10); do
-              curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
-            done
-            unzip -q flutter.zip
-            rm -f flutter.zip
-          fi
+          URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_3.32.4-stable.zip"
+          for i in $(seq 1 10); do
+            curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
+          done
+          unzip -q flutter.zip
+          rm -f flutter.zip
 
           echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
-          flutter --version
+          "$HOME/flutter/bin/flutter" --version
 
       - name: Show tool versions
         script: |
