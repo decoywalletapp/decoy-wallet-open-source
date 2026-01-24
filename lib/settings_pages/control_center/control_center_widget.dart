@@ -847,7 +847,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                           ),
                                     ),
                                     subtitle: Text(
-                                      'Armed = Trigger is active and monitoring',
+                                      'Armed = Trigger is active and monitoring outbound transactions',
                                       style: FlutterFlowTheme.of(context)
                                           .bodySmall
                                           .override(

@@ -988,7 +988,9 @@ class _HomeAddressEntryPageWidgetState
                                             ? true
                                             : false,
                                       });
-                                      if (_model.insRow?.contactsComplete ==
+                                      if (_model.updRow
+                                              ?.elementAtOrNull(0)
+                                              ?.addressComplete ==
                                           true) {
                                         FFAppState().contactsDoneInc =
                                             FFAppState().contactsDoneInc + 1;

@@ -78,33 +78,32 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          leading: FlutterFlowIconButton(
-            borderRadius: 20.0,
-            buttonSize: 40.0,
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).primaryText,
-              size: 24.0,
-            ),
-            onPressed: () async {
-              context.safePop();
-            },
-          ),
-          actions: [],
-          centerTitle: false,
-          elevation: 0.0,
-        ),
         body: SafeArea(
           top: true,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Align(
+                alignment: AlignmentDirectional(-1.0, 0.0),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                  child: FlutterFlowIconButton(
+                    borderRadius: 20.0,
+                    buttonSize: 40.0,
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      size: 24.0,
+                    ),
+                    onPressed: () async {
+                      context.safePop();
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,8 +503,8 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                     ].divide(SizedBox(height: 16.0)),
                   ),
                 ),
-              ].divide(SizedBox(height: 24.0)),
-            ),
+              ),
+            ].divide(SizedBox(height: 24.0)),
           ),
         ),
       ),

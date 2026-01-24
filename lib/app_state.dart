@@ -54,9 +54,6 @@ class FFAppState extends ChangeNotifier {
               _serverRegistrationUrl;
     });
     await _safeInitAsync(() async {
-      _decoyId = await secureStorage.getString('ff_decoyId') ?? _decoyId;
-    });
-    await _safeInitAsync(() async {
       _decoyActiveId =
           await secureStorage.getString('ff_decoyActiveId') ?? _decoyActiveId;
     });
@@ -105,10 +102,6 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _locationEnabled =
           await secureStorage.getBool('ff_locationEnabled') ?? _locationEnabled;
-    });
-    await _safeInitAsync(() async {
-      _refreshCounter =
-          await secureStorage.getInt('ff_refreshCounter') ?? _refreshCounter;
     });
     await _safeInitAsync(() async {
       _contactsDoneInc =
@@ -309,17 +302,6 @@ class FFAppState extends ChangeNotifier {
     secureStorage.delete(key: 'ff_serverRegistrationUrl');
   }
 
-  String _decoyId = '';
-  String get decoyId => _decoyId;
-  set decoyId(String value) {
-    _decoyId = value;
-    secureStorage.setString('ff_decoyId', value);
-  }
-
-  void deleteDecoyId() {
-    secureStorage.delete(key: 'ff_decoyId');
-  }
-
   String _decoyActiveId = '';
   String get decoyActiveId => _decoyActiveId;
   set decoyActiveId(String value) {
@@ -463,17 +445,6 @@ class FFAppState extends ChangeNotifier {
 
   void deleteLocationEnabled() {
     secureStorage.delete(key: 'ff_locationEnabled');
-  }
-
-  int _refreshCounter = 0;
-  int get refreshCounter => _refreshCounter;
-  set refreshCounter(int value) {
-    _refreshCounter = value;
-    secureStorage.setInt('ff_refreshCounter', value);
-  }
-
-  void deleteRefreshCounter() {
-    secureStorage.delete(key: 'ff_refreshCounter');
   }
 
   int _contactsDoneInc = 0;

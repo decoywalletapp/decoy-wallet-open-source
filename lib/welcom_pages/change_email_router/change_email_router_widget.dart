@@ -123,7 +123,7 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
                 child: Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(6.0, 0.0, 0.0, 0.0),
+                    padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(5.0),
                       child: Image.asset(

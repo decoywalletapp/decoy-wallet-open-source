@@ -933,9 +933,21 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             ? true
                                             : false,
                                       });
-                                      FFAppState().refreshCounter =
-                                          FFAppState().refreshCounter + 1;
-                                      FFAppState().update(() {});
+                                      if (_model.supaNameUpdate
+                                              ?.elementAtOrNull(0)
+                                              ?.personalComplete ==
+                                          true) {
+                                        FFAppState().contactsDoneInc =
+                                            FFAppState().contactsDoneInc + 1;
+                                        safeSetState(() {});
+                                      } else {
+                                        if (FFAppState().contactsDoneInc > 0) {
+                                          FFAppState().contactsDoneInc =
+                                              FFAppState().contactsDoneInc + -1;
+                                          safeSetState(() {});
+                                        }
+                                      }
+
                                       _model.personalSaved =
                                           _model.personalSaved + 1;
                                       safeSetState(() {});

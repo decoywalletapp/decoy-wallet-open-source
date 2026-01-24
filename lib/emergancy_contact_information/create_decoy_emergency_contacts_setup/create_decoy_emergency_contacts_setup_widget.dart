@@ -953,8 +953,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                               ),
                                                             ),
                                                           ),
-                                                          if (_model
-                                                                  .completedCount >=
+                                                          if (FFAppState()
+                                                                  .contactsDoneInc >=
                                                               1)
                                                             Align(
                                                               alignment:
@@ -1024,8 +1024,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       0.0, 0.0),
                                                             ),
                                                           ),
-                                                          if (_model
-                                                                  .completedCount >=
+                                                          if (FFAppState()
+                                                                  .contactsDoneInc >=
                                                               2)
                                                             Align(
                                                               alignment:
@@ -1095,8 +1095,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                               ),
                                                             ),
                                                           ),
-                                                          if (_model
-                                                                  .completedCount >=
+                                                          if (FFAppState()
+                                                                  .contactsDoneInc >=
                                                               3)
                                                             Align(
                                                               alignment:
