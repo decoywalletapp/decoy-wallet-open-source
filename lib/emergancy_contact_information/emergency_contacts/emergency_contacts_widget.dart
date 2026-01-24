@@ -2439,6 +2439,43 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     .c3PhoneTFTextController,
                                                 focusNode:
                                                     _model.c3PhoneTFFocusNode,
+                                                onChanged: (_) =>
+                                                    EasyDebounce.debounce(
+                                                  '_model.c3PhoneTFTextController',
+                                                  Duration(milliseconds: 2000),
+                                                  () async {
+                                                    _model.c3PhoneDigits = functions
+                                                        .sanitizePhoneDigits(_model
+                                                            .c3PhoneTFTextController
+                                                            .text);
+                                                    safeSetState(() {});
+                                                    if ((_model.c3PhoneDigits !=
+                                                                null &&
+                                                            _model.c3PhoneDigits !=
+                                                                '') &&
+                                                        ((_model.c3PhoneDigits!)
+                                                                .length ==
+                                                            10)) {
+                                                      safeSetState(() {
+                                                        _model.c3PhoneTFTextController
+                                                                ?.text =
+                                                            functions
+                                                                .formatAsUsPhone(
+                                                                    _model
+                                                                        .c3PhoneDigits!);
+                                                        _model.c3PhoneTFMask
+                                                            .updateMask(
+                                                          newValue:
+                                                              TextEditingValue(
+                                                            text: _model
+                                                                .c3PhoneTFTextController!
+                                                                .text,
+                                                          ),
+                                                        );
+                                                      });
+                                                    }
+                                                  },
+                                                ),
                                                 autofocus: false,
                                                 textInputAction:
                                                     TextInputAction.next,
@@ -2999,6 +3036,45 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       .c4PhoneTFTextController,
                                                   focusNode:
                                                       _model.c4PhoneTFFocusNode,
+                                                  onChanged: (_) =>
+                                                      EasyDebounce.debounce(
+                                                    '_model.c4PhoneTFTextController',
+                                                    Duration(
+                                                        milliseconds: 2000),
+                                                    () async {
+                                                      _model.c4PhoneDigits = functions
+                                                          .sanitizePhoneDigits(
+                                                              _model
+                                                                  .c4PhoneTFTextController
+                                                                  .text);
+                                                      safeSetState(() {});
+                                                      if ((_model.c4PhoneDigits !=
+                                                                  null &&
+                                                              _model.c4PhoneDigits !=
+                                                                  '') &&
+                                                          ((_model.c4PhoneDigits!)
+                                                                  .length ==
+                                                              10)) {
+                                                        safeSetState(() {
+                                                          _model.c4PhoneTFTextController
+                                                                  ?.text =
+                                                              functions
+                                                                  .formatAsUsPhone(
+                                                                      _model
+                                                                          .c4PhoneDigits!);
+                                                          _model.c4PhoneTFMask
+                                                              .updateMask(
+                                                            newValue:
+                                                                TextEditingValue(
+                                                              text: _model
+                                                                  .c4PhoneTFTextController!
+                                                                  .text,
+                                                            ),
+                                                          );
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
                                                   autofocus: false,
                                                   textInputAction:
                                                       TextInputAction.next,
@@ -3532,6 +3608,45 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       .c5PhoneTFTextController,
                                                   focusNode:
                                                       _model.c5PhoneTFFocusNode,
+                                                  onChanged: (_) =>
+                                                      EasyDebounce.debounce(
+                                                    '_model.c5PhoneTFTextController',
+                                                    Duration(
+                                                        milliseconds: 2000),
+                                                    () async {
+                                                      _model.c5PhoneDigits = functions
+                                                          .sanitizePhoneDigits(
+                                                              _model
+                                                                  .c5PhoneTFTextController
+                                                                  .text);
+                                                      safeSetState(() {});
+                                                      if ((_model.c5PhoneDigits !=
+                                                                  null &&
+                                                              _model.c5PhoneDigits !=
+                                                                  '') &&
+                                                          ((_model.c5PhoneDigits!)
+                                                                  .length ==
+                                                              10)) {
+                                                        safeSetState(() {
+                                                          _model.c4PhoneTFTextController
+                                                                  ?.text =
+                                                              functions
+                                                                  .formatAsUsPhone(
+                                                                      _model
+                                                                          .c4PhoneDigits!);
+                                                          _model.c4PhoneTFMask
+                                                              .updateMask(
+                                                            newValue:
+                                                                TextEditingValue(
+                                                              text: _model
+                                                                  .c4PhoneTFTextController!
+                                                                  .text,
+                                                            ),
+                                                          );
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
                                                   autofocus: false,
                                                   textInputAction:
                                                       TextInputAction.done,
