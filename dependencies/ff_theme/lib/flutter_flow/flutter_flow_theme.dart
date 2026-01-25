@@ -237,122 +237,122 @@ class MobileTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'InterTight';
+  String get displayLargeFamily => 'robot';
   bool get displayLargeIsCustom => true;
   TextStyle get displayLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 64.0,
       );
-  String get displayMediumFamily => 'InterTight';
+  String get displayMediumFamily => 'robot';
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 44.0,
       );
-  String get displaySmallFamily => 'InterTight';
+  String get displaySmallFamily => 'robot';
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 36.0,
       );
-  String get headlineLargeFamily => 'InterTight';
+  String get headlineLargeFamily => 'robot';
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 32.0,
       );
-  String get headlineMediumFamily => 'InterTight';
+  String get headlineMediumFamily => 'robot';
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 28.0,
       );
-  String get headlineSmallFamily => 'InterTight';
+  String get headlineSmallFamily => 'robot';
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 24.0,
       );
-  String get titleLargeFamily => 'InterTight';
+  String get titleLargeFamily => 'robot';
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
       );
-  String get titleMediumFamily => 'DECOY BEBAS';
+  String get titleMediumFamily => 'robot';
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => TextStyle(
-        fontFamily: 'DECOY BEBAS',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
       );
-  String get titleSmallFamily => 'InterTight';
+  String get titleSmallFamily => 'robot';
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
       );
-  String get labelLargeFamily => 'hello';
+  String get labelLargeFamily => 'robot';
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
-  String get labelMediumFamily => 'hello';
+  String get labelMediumFamily => 'robot';
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
-  String get labelSmallFamily => 'hello';
+  String get labelSmallFamily => 'robot';
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
       );
-  String get bodyLargeFamily => 'hello';
+  String get bodyLargeFamily => 'robot';
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
-  String get bodyMediumFamily => 'hello';
+  String get bodyMediumFamily => 'robot';
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
-  String get bodySmallFamily => 'hello';
+  String get bodySmallFamily => 'robot';
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
@@ -364,122 +364,122 @@ class TabletTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'InterTight';
+  String get displayLargeFamily => 'robot';
   bool get displayLargeIsCustom => true;
   TextStyle get displayLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 64.0,
       );
-  String get displayMediumFamily => 'InterTight';
+  String get displayMediumFamily => 'robot';
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 44.0,
       );
-  String get displaySmallFamily => 'InterTight';
+  String get displaySmallFamily => 'robot';
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 36.0,
       );
-  String get headlineLargeFamily => 'InterTight';
+  String get headlineLargeFamily => 'robot';
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 32.0,
       );
-  String get headlineMediumFamily => 'InterTight';
+  String get headlineMediumFamily => 'robot';
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 28.0,
       );
-  String get headlineSmallFamily => 'InterTight';
+  String get headlineSmallFamily => 'robot';
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 24.0,
       );
-  String get titleLargeFamily => 'InterTight';
+  String get titleLargeFamily => 'robot';
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
       );
-  String get titleMediumFamily => 'InterTight';
+  String get titleMediumFamily => 'robot';
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
       );
-  String get titleSmallFamily => 'InterTight';
+  String get titleSmallFamily => 'robot';
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
       );
-  String get labelLargeFamily => 'hello';
+  String get labelLargeFamily => 'robot';
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
-  String get labelMediumFamily => 'hello';
+  String get labelMediumFamily => 'robot';
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
-  String get labelSmallFamily => 'hello';
+  String get labelSmallFamily => 'robot';
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
       );
-  String get bodyLargeFamily => 'hello';
+  String get bodyLargeFamily => 'robot';
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
-  String get bodyMediumFamily => 'hello';
+  String get bodyMediumFamily => 'robot';
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
-  String get bodySmallFamily => 'hello';
+  String get bodySmallFamily => 'robot';
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
@@ -491,122 +491,122 @@ class DesktopTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'InterTight';
+  String get displayLargeFamily => 'robot';
   bool get displayLargeIsCustom => true;
   TextStyle get displayLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 64.0,
       );
-  String get displayMediumFamily => 'InterTight';
+  String get displayMediumFamily => 'robot';
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 44.0,
       );
-  String get displaySmallFamily => 'InterTight';
+  String get displaySmallFamily => 'robot';
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 36.0,
       );
-  String get headlineLargeFamily => 'InterTight';
+  String get headlineLargeFamily => 'robot';
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 32.0,
       );
-  String get headlineMediumFamily => 'InterTight';
+  String get headlineMediumFamily => 'robot';
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 28.0,
       );
-  String get headlineSmallFamily => 'InterTight';
+  String get headlineSmallFamily => 'robot';
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 24.0,
       );
-  String get titleLargeFamily => 'InterTight';
+  String get titleLargeFamily => 'robot';
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
       );
-  String get titleMediumFamily => 'InterTight';
+  String get titleMediumFamily => 'robot';
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
       );
-  String get titleSmallFamily => 'InterTight';
+  String get titleSmallFamily => 'robot';
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => TextStyle(
-        fontFamily: 'InterTight',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
       );
-  String get labelLargeFamily => 'hello';
+  String get labelLargeFamily => 'robot';
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
-  String get labelMediumFamily => 'hello';
+  String get labelMediumFamily => 'robot';
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
-  String get labelSmallFamily => 'hello';
+  String get labelSmallFamily => 'robot';
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.secondaryText,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
       );
-  String get bodyLargeFamily => 'hello';
+  String get bodyLargeFamily => 'robot';
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
-  String get bodyMediumFamily => 'hello';
+  String get bodyMediumFamily => 'robot';
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
-  String get bodySmallFamily => 'hello';
+  String get bodySmallFamily => 'robot';
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => TextStyle(
-        fontFamily: 'hello',
+        fontFamily: 'robot',
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,

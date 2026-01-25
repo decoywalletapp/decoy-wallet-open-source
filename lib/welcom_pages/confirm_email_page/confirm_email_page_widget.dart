@@ -137,11 +137,8 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .headlineMediumFamily,
+                                  fontFamily: 'robot',
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .headlineMediumIsCustom,
                                 ),
                           ),
                         ),
@@ -158,6 +155,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                                       .bodyMediumFamily,
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryText,
+                                  fontSize: 15.0,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .bodyMediumIsCustom,
@@ -192,15 +190,11 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .bodyLarge
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyLargeFamily,
+                                      fontFamily: 'robot',
                                       color:
                                           FlutterFlowTheme.of(context).primary,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.w600,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyLargeIsCustom,
                                     ),
                               ),
                             ),

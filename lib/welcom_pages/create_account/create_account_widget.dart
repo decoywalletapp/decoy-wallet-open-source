@@ -149,13 +149,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .headlineMedium
                                             .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .headlineMediumFamily,
+                                              fontFamily: 'robot',
                                               letterSpacing: 0.0,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .headlineMediumIsCustom,
                                             ),
                                       ),
                                     ),
@@ -178,7 +173,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                         .labelMedium
                                                         .override(
                                                           font: GoogleFonts
-                                                              .plusJakartaSans(
+                                                              .interTight(
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                             fontStyle:
@@ -225,7 +220,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                           FlutterFlowTheme.of(
                                                                   context)
                                                               .primary,
-                                                      fontSize: 16.0,
+                                                      fontSize: 14.0,
                                                       letterSpacing: 0.0,
                                                       fontWeight:
                                                           FontWeight.w500,
@@ -321,8 +316,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
-                                                font:
-                                                    GoogleFonts.plusJakartaSans(
+                                                font: GoogleFonts.interTight(
                                                   fontWeight: FontWeight.w500,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
@@ -459,8 +453,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
-                                                font:
-                                                    GoogleFonts.plusJakartaSans(
+                                                font: GoogleFonts.interTight(
                                                   fontWeight: FontWeight.w500,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
@@ -582,8 +575,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
-                                                font:
-                                                    GoogleFonts.plusJakartaSans(
+                                                font: GoogleFonts.interTight(
                                                   fontWeight: FontWeight.w500,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
@@ -666,21 +658,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
-                                              font: GoogleFonts.plusJakartaSans(
-                                                fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .fontStyle,
-                                              ),
+                                              fontFamily: 'robot',
                                               color: Colors.white,
                                               fontSize: 16.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.w500,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .fontStyle,
                                             ),
                                         elevation: 3.0,
                                         borderSide: BorderSide(
@@ -790,7 +772,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                               .labelLarge
                                                               .override(
                                                                 font: GoogleFonts
-                                                                    .plusJakartaSans(
+                                                                    .interTight(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,

@@ -154,22 +154,12 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.bebasNeue(
-                                            fontWeight: FontWeight.normal,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'DECOY BEBAS',
                                           color:
                                               FlutterFlowTheme.of(context).info,
                                           fontSize: 52.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
                                           lineHeight: 1.05,
                                         ),
                                   ),
@@ -186,22 +176,12 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.bebasNeue(
-                                            fontWeight: FontWeight.normal,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'DECOY BEBAS',
                                           color:
                                               FlutterFlowTheme.of(context).info,
                                           fontSize: 52.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
                                           lineHeight: 1.05,
                                         ),
                                   ),
@@ -250,16 +230,12 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleMediumFamily,
+                                        fontFamily: 'InterTight',
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleMediumIsCustom,
                                       ),
                                 ),
                                 Material(
@@ -281,15 +257,10 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
+                                            fontFamily: 'InterTight',
                                             fontSize: 18.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
                                           ),
                                     ),
                                     subtitle: Text(
@@ -555,15 +526,10 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
+                                            fontFamily: 'InterTight',
                                             fontSize: 18.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
                                           ),
                                     ),
                                     subtitle: Text(
@@ -837,16 +803,12 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleMediumFamily,
+                                        fontFamily: 'InterTight',
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleMediumIsCustom,
                                       ),
                                 ),
                                 Material(
@@ -868,15 +830,10 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
+                                            fontFamily: 'InterTight',
                                             fontSize: 18.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
                                           ),
                                     ),
                                     subtitle: Text(
@@ -1150,16 +1107,12 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleMediumFamily,
+                                        fontFamily: 'InterTight',
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleMediumIsCustom,
                                       ),
                                 ),
                                 Material(
@@ -1181,15 +1134,10 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
+                                            fontFamily: 'InterTight',
                                             fontSize: 18.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
                                           ),
                                     ),
                                     subtitle: Text(

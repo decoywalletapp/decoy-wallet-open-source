@@ -1212,14 +1212,10 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .titleMediumFamily,
+                                      fontFamily: 'InterTight',
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .titleMediumIsCustom,
                                     ),
                                 elevation: 3.0,
                                 borderSide: BorderSide(

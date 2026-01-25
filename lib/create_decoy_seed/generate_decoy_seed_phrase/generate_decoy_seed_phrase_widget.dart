@@ -5,6 +5,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'generate_decoy_seed_phrase_model.dart';
 export 'generate_decoy_seed_phrase_model.dart';
 
@@ -100,12 +101,21 @@ class _GenerateDecoySeedPhraseWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .headlineMedium
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .headlineMediumFamily,
+                                      font: GoogleFonts.robotoCondensed(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .headlineMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .headlineMedium
+                                            .fontStyle,
+                                      ),
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .headlineMediumIsCustom,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .headlineMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .headlineMedium
+                                          .fontStyle,
                                     ),
                               ),
                               Text(
@@ -208,15 +218,11 @@ class _GenerateDecoySeedPhraseWidgetState
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .titleMediumFamily,
+                                    fontFamily: 'robot',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .titleMediumIsCustom,
                                   ),
                               elevation: 3.0,
                               borderSide: BorderSide(

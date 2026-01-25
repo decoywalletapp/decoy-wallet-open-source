@@ -255,13 +255,10 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         textAlign: TextAlign.start,
                         style:
                             FlutterFlowTheme.of(context).displayMedium.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .displayMediumFamily,
+                                  fontFamily: 'InterTight',
                                   color: FlutterFlowTheme.of(context).primary,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w600,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .displayMediumIsCustom,
                                 ),
                       ),
                     ),

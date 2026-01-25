@@ -94,11 +94,8 @@ class _BiometricVerificationWidgetState
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .headlineMediumFamily,
+                                fontFamily: 'InterTight',
                                 letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .headlineMediumIsCustom,
                               ),
                         ),
                         Text(
@@ -107,14 +104,12 @@ class _BiometricVerificationWidgetState
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .bodyMediumFamily,
+                                fontFamily: 'robot',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 14.0,
                                 letterSpacing: 0.0,
                                 lineHeight: 1.5,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .bodyMediumIsCustom,
                               ),
                         ),
                       ].divide(SizedBox(height: 12.0)),
@@ -166,13 +161,9 @@ class _BiometricVerificationWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleMediumFamily,
+                                        fontFamily: 'robot',
                                         fontSize: 16.0,
                                         letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleMediumIsCustom,
                                       ),
                                 ),
                                 subtitle: Text(
@@ -182,6 +173,7 @@ class _BiometricVerificationWidgetState
                                       .override(
                                         fontFamily: FlutterFlowTheme.of(context)
                                             .bodySmallFamily,
+                                        fontSize: 12.0,
                                         letterSpacing: 0.0,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
@@ -231,7 +223,9 @@ class _BiometricVerificationWidgetState
                                           .bodyMediumFamily,
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,
@@ -246,7 +240,9 @@ class _BiometricVerificationWidgetState
                                           .bodyMediumFamily,
                                       color:
                                           FlutterFlowTheme.of(context).primary,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,
@@ -270,7 +266,9 @@ class _BiometricVerificationWidgetState
                                           .bodyMediumFamily,
                                       color:
                                           FlutterFlowTheme.of(context).primary,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,
@@ -286,7 +284,9 @@ class _BiometricVerificationWidgetState
                                           .bodyMediumFamily,
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,
@@ -301,7 +301,9 @@ class _BiometricVerificationWidgetState
                                           .bodyMediumFamily,
                                       color:
                                           FlutterFlowTheme.of(context).primary,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,

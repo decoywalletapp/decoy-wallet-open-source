@@ -1047,14 +1047,10 @@ class _HomeAddressEntryPageWidgetState
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .titleMediumFamily,
+                                      fontFamily: 'robot',
                                       color: Colors.white,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.w600,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .titleMediumIsCustom,
                                     ),
                                 elevation: 3.0,
                                 borderSide: BorderSide(

@@ -107,12 +107,9 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
                         textAlign: TextAlign.start,
                         style:
                             FlutterFlowTheme.of(context).displayMedium.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .displayMediumFamily,
+                                  fontFamily: 'InterTight',
                                   color: FlutterFlowTheme.of(context).primary,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .displayMediumIsCustom,
                                 ),
                       ),
                     ),

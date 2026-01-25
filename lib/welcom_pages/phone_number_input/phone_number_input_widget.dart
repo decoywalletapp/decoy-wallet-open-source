@@ -129,11 +129,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .headlineMediumFamily,
+                                fontFamily: 'robot',
                                 letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .headlineMediumIsCustom,
                               ),
                         ),
                         Padding(
@@ -273,14 +270,10 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyLargeFamily,
+                                        fontFamily: 'robot',
                                         fontSize: 18.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyLargeIsCustom,
                                       ),
                                   keyboardType: TextInputType.phone,
                                   cursorColor:

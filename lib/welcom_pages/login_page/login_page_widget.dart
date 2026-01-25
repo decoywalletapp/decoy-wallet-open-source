@@ -135,14 +135,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .displayMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .displayMediumFamily,
+                                        fontFamily: 'InterTight',
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
                                         letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .displayMediumIsCustom,
                                       ),
                                 ),
                               ),
@@ -166,13 +162,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .headlineLarge
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .headlineLargeFamily,
+                                        fontFamily: 'InterTight',
                                         fontSize: 36.0,
                                         letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .headlineLargeIsCustom,
                                       ),
                                 ),
                               ),
@@ -186,21 +178,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'robot',
                                           color: Colors.black,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
+                                          fontWeight: FontWeight.normal,
                                         ),
                                   ),
                                 ),
@@ -278,21 +260,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'InterTight',
                                           color: Color(0xFF101213),
                                           fontSize: 14.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
                                         ),
                                     keyboardType: TextInputType.emailAddress,
                                     validator: _model
@@ -390,21 +362,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'robot',
                                           color: Color(0xFF101213),
                                           fontSize: 14.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
                                         ),
                                     validator: _model
                                         .passwordLoginTextControllerValidator
@@ -442,20 +404,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.plusJakartaSans(
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .fontStyle,
-                                        ),
+                                        fontFamily: 'robot',
                                         color: Colors.white,
-                                        fontSize: 16.0,
+                                        fontSize: 18.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w500,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                   elevation: 3.0,
                                   borderSide: BorderSide(
@@ -521,21 +474,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
-                                              font: GoogleFonts.plusJakartaSans(
-                                                fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
+                                              fontFamily: 'robot',
                                               color: Color(0xFF101213),
-                                              fontSize: 14.0,
+                                              fontSize: 16.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.w500,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
                                             ),
                                       ),
                                     ),
@@ -596,21 +539,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
-                                              font: GoogleFonts.plusJakartaSans(
-                                                fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
+                                              fontFamily: 'robot',
                                               color: Color(0xFF101213),
-                                              fontSize: 14.0,
+                                              fontSize: 16.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.w500,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
                                             ),
                                       ),
                                     ),

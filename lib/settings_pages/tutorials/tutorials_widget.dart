@@ -2,7 +2,6 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'tutorials_model.dart';
 export 'tutorials_model.dart';
 
@@ -85,66 +84,80 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                   ),
                 ],
               ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                    child: Align(
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-                        child: Material(
-                          color: Colors.transparent,
-                          elevation: 3.0,
-                          shape: RoundedRectangleBorder(
+                      child: Material(
+                        color: Colors.transparent,
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Container(
+                          width: 200.0,
+                          height: 72.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context).primary,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          child: Container(
-                            width: 200.0,
-                            height: 72.0,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).primary,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    8.0, 12.0, 8.0, 12.0),
-                                child: Text(
-                                  'Tutorials',
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.bebasNeue(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 12.0, 8.0, 12.0),
+                                  child: Text(
+                                    'Tutorials',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DECOY BEBAS',
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 48.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          lineHeight: 1.125,
                                         ),
-                                        color:
-                                            FlutterFlowTheme.of(context).info,
-                                        fontSize: 48.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                        lineHeight: 1.125,
-                                      ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              Align(
+                                alignment: AlignmentDirectional(-0.1, -0.1),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 12.0, 8.0, 12.0),
+                                  child: Text(
+                                    'Tutorials',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DECOY BEBAS',
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 48.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          lineHeight: 1.125,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -200,18 +213,12 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .titleMedium
                                               .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMediumFamily,
+                                                fontFamily: 'InterTight',
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .info,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w600,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .titleMediumIsCustom,
                                               ),
                                         ),
                                       ],
@@ -348,18 +355,12 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .titleMedium
                                               .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMediumFamily,
+                                                fontFamily: 'InterTight',
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .info,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w600,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .titleMediumIsCustom,
                                               ),
                                         ),
                                       ],
@@ -496,18 +497,12 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .titleMedium
                                               .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMediumFamily,
+                                                fontFamily: 'InterTight',
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .info,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w600,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .titleMediumIsCustom,
                                               ),
                                         ),
                                         Icon(
