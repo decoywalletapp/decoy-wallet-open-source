@@ -188,6 +188,103 @@ flutter:
     - family: 'DECOY BEBAS'
       fonts:
         - asset: assets/fonts/BebasNeue-Regular.ttf
+    - family: 'InterTight'
+      fonts:
+        - asset: assets/fonts/InterTight-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/InterTight-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/InterTight-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/InterTight-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/InterTight-Light.ttf
+          weight: 300
+        - asset: assets/fonts/InterTight-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/InterTight-Regular.ttf
+        - asset: assets/fonts/InterTight-Italic.ttf
+          style: italic
+        - asset: assets/fonts/InterTight-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/InterTight-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/InterTight-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/InterTight-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/InterTight-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/InterTight-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/InterTight-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/InterTight-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/InterTight-Black.ttf
+          weight: 900
+        - asset: assets/fonts/InterTight-BlackItalic.ttf
+          weight: 900
+          style: italic
+    - family: 'Outterbox'
+      fonts:
+        - asset: assets/fonts/Outfit-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Outfit-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Outfit-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Outfit-Regular.ttf
+        - asset: assets/fonts/Outfit-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Outfit-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Outfit-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Outfit-Black.ttf
+          weight: 900
+    - family: 'hello'
+      fonts:
+        - asset: assets/fonts/Inter_24pt-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Inter_24pt-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/Inter_24pt-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Inter_24pt-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/Inter_24pt-Regular.ttf
+        - asset: assets/fonts/Inter_24pt-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter_24pt-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/Inter_24pt-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter_24pt-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/Inter_28pt-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter_28pt-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/Inter_28pt-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Inter_28pt-BlackItalic.ttf
+          weight: 900
+          style: italic
 
     - family: MyFlutterApp
       fonts:

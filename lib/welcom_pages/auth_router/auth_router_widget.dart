@@ -259,6 +259,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                                       .displayMediumFamily,
                                   color: FlutterFlowTheme.of(context).primary,
                                   letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .displayMediumIsCustom,
                                 ),

@@ -241,29 +241,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                           context)
                                                       .titleMedium
                                                       .override(
-                                                        font: GoogleFonts
-                                                            .bebasNeue(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
+                                                        fontFamily:
+                                                            'DECOY BEBAS',
                                                         fontSize: 24.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleMedium
-                                                                .fontStyle,
+                                                            FontWeight.normal,
                                                       ),
                                                 ),
                                                 Text(
@@ -281,6 +264,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                     context)
                                                                 .primaryText,
                                                         letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
                                                         lineHeight: 1.3,
                                                         useGoogleFonts:
                                                             !FlutterFlowTheme
@@ -436,7 +421,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         font: GoogleFonts
                                                             .bebasNeue(
                                                           fontWeight:
-                                                              FontWeight.w600,
+                                                              FontWeight.normal,
                                                           fontStyle:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -446,7 +431,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         fontSize: 24.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
-                                                            FontWeight.w600,
+                                                            FontWeight.normal,
                                                         fontStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -623,7 +608,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         font: GoogleFonts
                                                             .bebasNeue(
                                                           fontWeight:
-                                                              FontWeight.w600,
+                                                              FontWeight.normal,
                                                           fontStyle:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -633,7 +618,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         fontSize: 24.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
-                                                            FontWeight.w600,
+                                                            FontWeight.normal,
                                                         fontStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
