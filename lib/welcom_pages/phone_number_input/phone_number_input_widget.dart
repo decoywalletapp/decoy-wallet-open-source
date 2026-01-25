@@ -1,5 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -345,6 +346,31 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                 ),
                                           ),
                                         ),
+                                      if (_model.notificationInt == 3)
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'PHONE NUMBER ALREADY IN USE',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumFamily,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  useGoogleFonts:
+                                                      !FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumIsCustom,
+                                                ),
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ].divide(SizedBox(height: 0.0)),
@@ -366,24 +392,57 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         _model.cleanPhone = functions.toE164USpt2(
                             _model.phoneNumberFieldTextController.text);
                         safeSetState(() {});
-                        if (_model.cleanPhone != '') {
-                          _model.sendRes = await SendVerificationCodeCall.call(
-                            cleanPhone: _model.cleanPhone,
-                            jwt: currentJwtToken,
-                          );
+                        _model.phoneHashResp = await GetPhoneHashCall.call(
+                          cleanPhone: _model.cleanPhone,
+                          jwt: currentJwtToken,
+                        );
 
-                          if ((_model.sendRes?.succeeded ?? true)) {
-                            context.pushNamed(
-                              PhoneNumberVerificationWidget.routeName,
-                              queryParameters: {
-                                'cleanPhone': serializeParam(
-                                  _model.cleanPhone,
-                                  ParamType.String,
-                                ),
-                              }.withoutNulls,
+                        _model.phoneHash = GetPhoneHashCall.phoneHash(
+                          (_model.phoneHashResp?.jsonBody ?? ''),
+                        );
+                        safeSetState(() {});
+                        _model.phoneLookupRows =
+                            await DecoyWalletTable().queryRows(
+                          queryFn: (q) => q.eqOrNull(
+                            'phone_e164_hash',
+                            _model.phoneHash,
+                          ),
+                        );
+                        if (_model.phoneLookupRows != null &&
+                            (_model.phoneLookupRows)!.isNotEmpty) {
+                          _model.notificationInt = 3;
+                          safeSetState(() {});
+                        } else {
+                          if (_model.cleanPhone != '') {
+                            _model.sendRes =
+                                await SendVerificationCodeCall.call(
+                              cleanPhone: _model.cleanPhone,
+                              jwt: currentJwtToken,
                             );
+
+                            if ((_model.sendRes?.succeeded ?? true)) {
+                              context.pushNamed(
+                                PhoneNumberVerificationWidget.routeName,
+                                queryParameters: {
+                                  'cleanPhone': serializeParam(
+                                    _model.cleanPhone,
+                                    ParamType.String,
+                                  ),
+                                }.withoutNulls,
+                              );
+                            } else {
+                              _model.notificationInt = 2;
+                              safeSetState(() {});
+                              await Future.delayed(
+                                Duration(
+                                  milliseconds: 3000,
+                                ),
+                              );
+                              _model.notificationInt = 0;
+                              safeSetState(() {});
+                            }
                           } else {
-                            _model.notificationInt = 2;
+                            _model.notificationInt = 1;
                             safeSetState(() {});
                             await Future.delayed(
                               Duration(
@@ -393,16 +452,6 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                             _model.notificationInt = 0;
                             safeSetState(() {});
                           }
-                        } else {
-                          _model.notificationInt = 1;
-                          safeSetState(() {});
-                          await Future.delayed(
-                            Duration(
-                              milliseconds: 3000,
-                            ),
-                          );
-                          _model.notificationInt = 0;
-                          safeSetState(() {});
                         }
 
                         safeSetState(() {});
@@ -433,6 +482,40 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
+                    if (_model.notificationInt.toString() == '3')
+                      FFButtonWidget(
+                        onPressed: () async {
+                          context.goNamed(LoginPageWidget.routeName);
+                        },
+                        text: 'Back to Login',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 52.0,
+                          padding: EdgeInsets.all(8.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          textStyle: FlutterFlowTheme.of(context)
+                              .titleMedium
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .titleMediumFamily,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w600,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .titleMediumIsCustom,
+                              ),
+                          elevation: 3.0,
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
                   ].divide(SizedBox(height: 16.0)),
                 ),
               ],

@@ -354,9 +354,10 @@ class _PhoneNumberVerificationWidgetState
                                               if (_model.verifyUpdate != null &&
                                                   (_model.verifyUpdate)!
                                                       .isNotEmpty) {
-                                                context.pushNamed(
+                                                context.pushNamedAuth(
                                                     BiometricVerificationWidget
-                                                        .routeName);
+                                                        .routeName,
+                                                    context.mounted);
                                               } else {
                                                 _model.verifyInsert =
                                                     await DecoyWalletTable()
@@ -395,10 +396,15 @@ class _PhoneNumberVerificationWidgetState
                                                 });
                                                 _model.invalidcodeState = 1;
                                                 safeSetState(() {});
+                                                GoRouter.of(context)
+                                                    .prepareAuthEvent();
+                                                await authManager.signOut();
+                                                GoRouter.of(context)
+                                                    .clearRedirectLocation();
 
-                                                context.pushNamed(
-                                                    BiometricVerificationWidget
-                                                        .routeName);
+                                                context.goNamedAuth(
+                                                    LoginPageWidget.routeName,
+                                                    context.mounted);
                                               }
                                             } else {
                                               await Future.wait([

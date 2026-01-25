@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'phone_number_input_widget.dart' show PhoneNumberInputWidget;
@@ -17,6 +18,8 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
 
   int notificationInt = 0;
 
+  String? phoneHash;
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -25,6 +28,10 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
   TextEditingController? phoneNumberFieldTextController;
   String? Function(BuildContext, String?)?
       phoneNumberFieldTextControllerValidator;
+  // Stores action output result for [Backend Call - API (getPhoneHash)] action in Button widget.
+  ApiCallResponse? phoneHashResp;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? phoneLookupRows;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Button widget.
   ApiCallResponse? sendRes;
 
