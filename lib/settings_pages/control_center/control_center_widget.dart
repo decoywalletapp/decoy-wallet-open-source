@@ -141,34 +141,73 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 12.0, 8.0, 12.0),
-                              child: Text(
-                                'Control Center',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.bebasNeue(
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context).info,
-                                      fontSize: 52.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                      lineHeight: 1.05,
-                                    ),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 12.0, 8.0, 12.0),
+                                  child: Text(
+                                    'Control Center',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.bebasNeue(
+                                            fontWeight: FontWeight.normal,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 52.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                          lineHeight: 1.05,
+                                        ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              Align(
+                                alignment: AlignmentDirectional(-0.1, -0.1),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 12.0, 8.0, 12.0),
+                                  child: Text(
+                                    'Control Center',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.bebasNeue(
+                                            fontWeight: FontWeight.normal,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 52.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                          lineHeight: 1.05,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
