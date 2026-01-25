@@ -67,7 +67,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
             icon: Icon(
               Icons.arrow_back_rounded,
               color: Color(0xFF15161E),
-              size: 30.0,
+              size: 24.0,
             ),
             onPressed: () async {
               context.safePop();

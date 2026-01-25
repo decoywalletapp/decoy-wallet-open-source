@@ -302,7 +302,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                           email: _model.emailAddressTextController.text,
                           context: context,
                           redirectTo:
-                              "https://decoywallet-a283b.web.app/updatePasswordPage",
+                              "https://decoy-verify-866378207353.us-central1.run.app/verify?type=recovery",
                         );
                       },
                       text: 'Send Link',
