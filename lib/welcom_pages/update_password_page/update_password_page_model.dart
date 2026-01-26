@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 
 class UpdatePasswordPageModel
     extends FlutterFlowModel<UpdatePasswordPageWidget> {
+  ///  Local state fields for this page.
+
+  int notificationState = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for Password widget.

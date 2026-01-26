@@ -111,7 +111,20 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: UpdatePasswordPageWidget.routeName,
         path: UpdatePasswordPageWidget.routePath,
-        builder: (context, params) => UpdatePasswordPageWidget(),
+        builder: (context, params) => UpdatePasswordPageWidget(
+          type: params.getParam(
+            'type',
+            ParamType.String,
+          ),
+          accessToken: params.getParam(
+            'accessToken',
+            ParamType.String,
+          ),
+          refreshToken: params.getParam(
+            'refreshToken',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
         name: SettingsWidget.routeName,
@@ -291,6 +304,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => AuthRouterWidget(
           type: params.getParam(
             'type',
+            ParamType.String,
+          ),
+          accessToken: params.getParam(
+            'accessToken',
+            ParamType.String,
+          ),
+          refreshToken: params.getParam(
+            'refreshToken',
             ParamType.String,
           ),
         ),

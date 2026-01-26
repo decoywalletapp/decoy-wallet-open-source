@@ -18,9 +18,13 @@ class AuthRouterWidget extends StatefulWidget {
   const AuthRouterWidget({
     super.key,
     this.type,
+    this.accessToken,
+    this.refreshToken,
   });
 
   final String? type;
+  final String? accessToken;
+  final String? refreshToken;
 
   static String routeName = 'AuthRouter';
   static String routePath = '/authRouter';
@@ -41,6 +45,22 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (widget.type == 'recovery') {
+        context.goNamedAuth(
+          UpdatePasswordPageWidget.routeName,
+          context.mounted,
+          queryParameters: {
+            'accessToken': serializeParam(
+              widget.accessToken,
+              ParamType.String,
+            ),
+            'refreshToken': serializeParam(
+              widget.refreshToken,
+              ParamType.String,
+            ),
+          }.withoutNulls,
+        );
+      }
       _model.refreshOut = await actions.refreshSupabaseSession();
       _model.authUserResp = await GetAuthUserCall.call(
         jwt: currentJwtToken,

@@ -601,9 +601,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                     ),
                                     FFButtonWidget(
                                       onPressed: () async {
-                                        FFAppState().userEmail = _model
-                                            .emailAddressTextController.text;
-                                        safeSetState(() {});
                                         if (_model
                                                 .passwordCreateAccountTextController
                                                 .text ==
