@@ -127,7 +127,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                     children: [
                                       Align(
                                         alignment:
-                                            AlignmentDirectional(-0.1, -0.1),
+                                            AlignmentDirectional(-0.05, -0.05),
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
@@ -152,7 +152,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                       ),
                                       Align(
                                         alignment:
-                                            AlignmentDirectional(0.0, 0.0),
+                                            AlignmentDirectional(0.05, 0.05),
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(

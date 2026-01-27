@@ -86,12 +86,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
           title: Text(
             'Send Bitcoin',
             style: FlutterFlowTheme.of(context).titleLarge.override(
-                  fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                  fontFamily: 'hello',
                   color: FlutterFlowTheme.of(context).primaryBackground,
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w600,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).titleLargeIsCustom,
                 ),
           ),
           actions: [],
@@ -111,12 +109,9 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                     'Enter the amount you want to send',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).bodyMediumFamily,
+                          fontFamily: 'hello',
                           color: FlutterFlowTheme.of(context).primaryBackground,
                           letterSpacing: 0.0,
-                          useGoogleFonts:
-                              !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                         ),
                   ),
                 ].divide(SizedBox(height: 16.0)),
@@ -134,29 +129,23 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         textAlign: TextAlign.center,
                         style:
                             FlutterFlowTheme.of(context).displayMedium.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .displayMediumFamily,
+                                  fontFamily: 'hello',
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   fontSize: 48.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .displayMediumIsCustom,
                                 ),
                       ),
                       Text(
                         'BTC',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).bodyLargeFamily,
+                              fontFamily: 'hello',
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w500,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .bodyLargeIsCustom,
                             ),
                       ),
                     ].divide(SizedBox(height: 8.0)),
@@ -178,15 +167,11 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
+                                        fontFamily: 'hello',
                                         color: FlutterFlowTheme.of(context)
                                             .primaryBackground,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyMediumIsCustom,
                                       ),
                                 ),
                               ),
@@ -198,15 +183,11 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
+                                        fontFamily: 'hello',
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyMediumIsCustom,
                                       ),
                                 ),
                               ),
@@ -222,8 +203,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .bodyMediumFamily,
+                                  fontFamily: 'hello',
                                   color: functions.amountToDouble(
                                               _model.amountText) >
                                           FFAppState().fakeBtcBalance
@@ -233,8 +213,6 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                   fontSize: 18.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w500,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .bodyMediumIsCustom,
                                 ),
                           ),
                           Switch.adaptive(
@@ -306,13 +284,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -335,13 +310,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -364,13 +336,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -393,13 +362,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -422,13 +388,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -451,13 +414,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -480,13 +440,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -509,13 +466,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -538,13 +492,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -567,13 +518,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -596,13 +544,10 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'hello',
                                   color: Colors.white,
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 5.0,
                             borderRadius: BorderRadius.circular(8.0),
@@ -677,14 +622,11 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                         color: FlutterFlowTheme.of(context).primary,
                         textStyle:
                             FlutterFlowTheme.of(context).titleMedium.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleMediumFamily,
+                                  fontFamily: 'hello',
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w600,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleMediumIsCustom,
                                 ),
                         elevation: 5.0,
                         borderSide: BorderSide(

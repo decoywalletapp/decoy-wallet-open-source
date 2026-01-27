@@ -144,7 +144,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
+                                alignment: AlignmentDirectional(0.05, 0.05),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -166,7 +166,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(-0.1, -0.1),
+                                alignment: AlignmentDirectional(-0.05, -0.05),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),

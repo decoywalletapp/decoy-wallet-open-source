@@ -130,8 +130,10 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
-                                fontFamily: 'robot',
+                                fontFamily: 'InterTight',
+                                fontSize: 24.0,
                                 letterSpacing: 0.0,
+                                fontWeight: FontWeight.bold,
                               ),
                         ),
                         Padding(

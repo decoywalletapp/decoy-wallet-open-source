@@ -274,13 +274,10 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                         'Your Bitcoin Balance',
                         style:
                             FlutterFlowTheme.of(context).headlineLarge.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .headlineLargeFamily,
+                                  fontFamily: 'hello',
                                   color: FlutterFlowTheme.of(context).info,
                                   fontSize: 16.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .headlineLargeIsCustom,
                                 ),
                       ),
                       Text(
@@ -294,13 +291,10 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                         )}',
                         style:
                             FlutterFlowTheme.of(context).displayMedium.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .displayMediumFamily,
+                                  fontFamily: 'hello',
                                   color: FlutterFlowTheme.of(context).info,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.bold,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .displayMediumIsCustom,
                                 ),
                       ),
                       Text(
@@ -313,13 +307,10 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                           '0',
                         )}',
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).bodyLargeFamily,
+                              fontFamily: 'hello',
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
                               letterSpacing: 0.0,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .bodyLargeIsCustom,
                             ),
                       ),
                     ].divide(SizedBox(height: 8.0)),
@@ -401,16 +392,11 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleMediumFamily,
+                                            fontFamily: 'hello',
                                             color: FlutterFlowTheme.of(context)
                                                 .info,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .titleMediumIsCustom,
                                           ),
                                     ),
                                     Text(
@@ -425,16 +411,11 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
+                                            fontFamily: 'hello',
                                             color: FlutterFlowTheme.of(context)
                                                 .primary,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w500,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
                                           ),
                                     ),
                                   ],
@@ -580,13 +561,9 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleSmallFamily,
+                                        fontFamily: 'hello',
                                         color: Colors.white,
                                         letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleSmallIsCustom,
                                       ),
                                   elevation: 3.0,
                                   borderRadius: BorderRadius.circular(16.0),
@@ -673,13 +650,9 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleSmallFamily,
+                                        fontFamily: 'hello',
                                         color: Colors.white,
                                         letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleSmallIsCustom,
                                       ),
                                   elevation: 3.0,
                                   borderRadius: BorderRadius.circular(16.0),

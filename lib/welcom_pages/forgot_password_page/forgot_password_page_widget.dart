@@ -293,8 +293,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                         await authManager.resetPassword(
                           email: _model.emailAddressTextController.text,
                           context: context,
-                          redirectTo:
-                              "https://decoy-verify-866378207353.us-central1.run.app/verify?type=recovery",
+                          redirectTo: "decoywalletapp://authRouter",
                         );
                       },
                       text: 'Send Link',

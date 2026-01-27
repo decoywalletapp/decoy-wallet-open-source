@@ -108,7 +108,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
+                                alignment: AlignmentDirectional(0.1, 0.1),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -121,7 +121,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           fontFamily: 'DECOY BEBAS',
                                           color:
                                               FlutterFlowTheme.of(context).info,
-                                          fontSize: 48.0,
+                                          fontSize: 52.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           lineHeight: 1.125,
@@ -143,7 +143,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           fontFamily: 'DECOY BEBAS',
                                           color:
                                               FlutterFlowTheme.of(context).info,
-                                          fontSize: 48.0,
+                                          fontSize: 52.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.normal,
                                           lineHeight: 1.125,

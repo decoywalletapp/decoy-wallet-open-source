@@ -5,7 +5,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'duress_settings_page_model.dart';
 export 'duress_settings_page_model.dart';
 
@@ -48,18 +47,21 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
       appBar: AppBar(
         backgroundColor: Color(0x001D2428),
         automaticallyImplyLeading: false,
-        leading: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30.0,
-          buttonSize: 46.0,
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: FlutterFlowTheme.of(context).primaryBackground,
-            size: 25.0,
+        leading: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+          child: FlutterFlowIconButton(
+            borderColor: Colors.transparent,
+            borderRadius: 30.0,
+            buttonSize: 40.0,
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: FlutterFlowTheme.of(context).primaryBackground,
+              size: 25.0,
+            ),
+            onPressed: () async {
+              context.pop();
+            },
           ),
-          onPressed: () async {
-            context.pop();
-          },
         ),
         actions: [],
         centerTitle: false,
@@ -76,18 +78,11 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               child: Text(
                 'Settings Page',
                 style: FlutterFlowTheme.of(context).headlineSmall.override(
-                      font: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FlutterFlowTheme.of(context)
-                            .headlineSmall
-                            .fontStyle,
-                      ),
+                      fontFamily: 'hello',
                       color: FlutterFlowTheme.of(context).primaryBackground,
-                      fontSize: 22.0,
+                      fontSize: 24.0,
                       letterSpacing: 0.0,
                       fontWeight: FontWeight.bold,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                     ),
               ),
             ),
@@ -112,20 +107,12 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                           'My Subscription',
                           style:
                               FlutterFlowTheme.of(context).titleLarge.override(
-                                    font: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: 'hello',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
                                   ),
                         ),
                         Icon(
@@ -153,20 +140,12 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                           'Getting Started',
                           style:
                               FlutterFlowTheme.of(context).titleLarge.override(
-                                    font: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: 'hello',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
                                   ),
                         ),
                         Icon(
@@ -194,20 +173,12 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                           'About Us',
                           style:
                               FlutterFlowTheme.of(context).titleLarge.override(
-                                    font: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: 'hello',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
                                   ),
                         ),
                         Icon(
@@ -235,20 +206,12 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                           'Help',
                           style:
                               FlutterFlowTheme.of(context).titleLarge.override(
-                                    font: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: 'hello',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
                                   ),
                         ),
                         Icon(
@@ -276,20 +239,12 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                           'Privacy Policy',
                           style:
                               FlutterFlowTheme.of(context).titleLarge.override(
-                                    font: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: 'hello',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
                                   ),
                         ),
                         Icon(
@@ -317,20 +272,12 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                           'Terms & Conditions',
                           style:
                               FlutterFlowTheme.of(context).titleLarge.override(
-                                    font: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: 'hello',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                     fontSize: 22.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
                                   ),
                         ),
                         Icon(
@@ -354,17 +301,11 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                 child: Text(
                   'App Versions',
                   style: FlutterFlowTheme.of(context).titleLarge.override(
-                        font: GoogleFonts.outfit(
-                          fontWeight: FontWeight.w500,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                        ),
+                        fontFamily: 'hello',
                         color: FlutterFlowTheme.of(context).primaryBackground,
                         fontSize: 22.0,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w500,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).titleLarge.fontStyle,
                       ),
                 ),
               ),
@@ -377,17 +318,11 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               child: Text(
                 'v4.9.0',
                 style: FlutterFlowTheme.of(context).labelMedium.override(
-                      font: GoogleFonts.plusJakartaSans(
-                        fontWeight: FontWeight.w500,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                      ),
+                      fontFamily: 'hello',
                       color: FlutterFlowTheme.of(context).primaryBackground,
                       fontSize: 14.0,
                       letterSpacing: 0.0,
                       fontWeight: FontWeight.w500,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).labelMedium.fontStyle,
                     ),
               ),
             ),
@@ -417,19 +352,11 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                     textStyle: FlutterFlowTheme.of(context)
                         .labelMedium
                         .override(
-                          font: GoogleFonts.plusJakartaSans(
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .fontStyle,
-                          ),
+                          fontFamily: 'hello',
                           color: FlutterFlowTheme.of(context).primaryBackground,
                           fontSize: 14.0,
                           letterSpacing: 0.0,
                           fontWeight: FontWeight.w500,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontStyle,
                         ),
                     elevation: 0.0,
                     borderSide: BorderSide(
