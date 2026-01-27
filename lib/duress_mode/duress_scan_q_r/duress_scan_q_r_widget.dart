@@ -179,13 +179,9 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .titleSmallFamily,
+                                      fontFamily: 'hello',
                                       color: Colors.white,
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .titleSmallIsCustom,
                                     ),
                                 elevation: 0.0,
                                 borderRadius: BorderRadius.circular(8.0),
@@ -214,18 +210,14 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                       children: [
                         Text(
                           'Or enter address manually',
-                          style: FlutterFlowTheme.of(context)
-                              .titleMedium
-                              .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleMediumFamily,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.w600,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .titleMediumIsCustom,
-                              ),
+                          style:
+                              FlutterFlowTheme.of(context).titleMedium.override(
+                                    fontFamily: 'hello',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         TextFormField(
                           controller: _model.walletAddressTextController,
@@ -281,15 +273,11 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                               size: 24.0,
                             ),
                           ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .bodyMediumFamily,
-                                letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .bodyMediumIsCustom,
-                              ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'hello',
+                                    letterSpacing: 0.0,
+                                  ),
                           maxLines: 3,
                           minLines: 1,
                           cursorColor: FlutterFlowTheme.of(context).primary,
@@ -322,13 +310,10 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                     textStyle: FlutterFlowTheme.of(context)
                         .titleMedium
                         .override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).titleMediumFamily,
+                          fontFamily: 'hello',
                           color: FlutterFlowTheme.of(context).primaryBackground,
                           letterSpacing: 0.0,
                           fontWeight: FontWeight.w600,
-                          useGoogleFonts:
-                              !FlutterFlowTheme.of(context).titleMediumIsCustom,
                         ),
                     elevation: 5.0,
                     borderSide: BorderSide(

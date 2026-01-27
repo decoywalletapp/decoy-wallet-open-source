@@ -115,11 +115,8 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .headlineMediumFamily,
+                                fontFamily: 'InterTight',
                                 letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .headlineMediumIsCustom,
                               ),
                         ),
                       ),

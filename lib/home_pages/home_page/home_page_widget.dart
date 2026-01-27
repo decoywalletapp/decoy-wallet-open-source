@@ -239,7 +239,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                     Align(
                                                       alignment:
                                                           AlignmentDirectional(
-                                                              -1.01, -0.01),
+                                                              -1.0, -0.01),
                                                       child: Text(
                                                         'Create Decoy PIN',
                                                         textAlign:

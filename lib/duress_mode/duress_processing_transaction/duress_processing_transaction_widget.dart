@@ -154,14 +154,11 @@ class _DuressProcessingTransactionWidgetState
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .headlineMediumFamily,
+                                fontFamily: 'hello',
                                 color: FlutterFlowTheme.of(context)
                                     .primaryBackground,
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.w600,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .headlineMediumIsCustom,
                               ),
                         ),
                         Padding(
@@ -172,14 +169,11 @@ class _DuressProcessingTransactionWidgetState
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .bodyMediumFamily,
+                                  fontFamily: 'hello',
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   letterSpacing: 0.0,
                                   lineHeight: 1.4,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .bodyMediumIsCustom,
                                 ),
                           ),
                         ),
@@ -208,16 +202,11 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
                                         ),
                                   ),
                                   Text(
@@ -225,16 +214,11 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmallFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .primary,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodySmallIsCustom,
                                         ),
                                   ),
                                 ],
@@ -249,16 +233,11 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
                                         ),
                                   ),
                                   Text(
@@ -266,15 +245,10 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmallFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryText,
                                           letterSpacing: 0.0,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodySmallIsCustom,
                                         ),
                                   ),
                                 ],
@@ -289,16 +263,11 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
                                         ),
                                   ),
                                   Text(
@@ -306,15 +275,10 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmallFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryText,
                                           letterSpacing: 0.0,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodySmallIsCustom,
                                         ),
                                   ),
                                 ],
@@ -334,16 +298,11 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .primaryBackground,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
                                         ),
                                   ),
                                   Text(
@@ -351,16 +310,11 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmallFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .primary,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodySmallIsCustom,
                                         ),
                                   ),
                                 ],
@@ -382,13 +336,9 @@ class _DuressProcessingTransactionWidgetState
                               style: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .labelMediumFamily,
+                                    fontFamily: 'hello',
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .labelMediumIsCustom,
                                   ),
                             ),
                             Text(
@@ -399,14 +349,10 @@ class _DuressProcessingTransactionWidgetState
                               style: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .labelMediumFamily,
+                                    fontFamily: 'hello',
                                     color: FlutterFlowTheme.of(context).primary,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .labelMediumIsCustom,
                                   ),
                             ),
                           ],
@@ -471,15 +417,10 @@ class _DuressProcessingTransactionWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmallFamily,
+                                          fontFamily: 'hello',
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryText,
                                           letterSpacing: 0.0,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodySmallIsCustom,
                                         ),
                                   ),
                                 ),
@@ -506,14 +447,10 @@ class _DuressProcessingTransactionWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodySmallFamily,
+                                      fontFamily: 'hello',
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryText,
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodySmallIsCustom,
                                     ),
                               ),
                             ].divide(SizedBox(width: 8.0)),
@@ -536,15 +473,11 @@ class _DuressProcessingTransactionWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodySmallFamily,
+                                      fontFamily: 'hello',
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryText,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.w500,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodySmallIsCustom,
                                     ),
                               ),
                             ].divide(SizedBox(width: 8.0)),
@@ -567,14 +500,10 @@ class _DuressProcessingTransactionWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodySmallFamily,
+                                      fontFamily: 'hello',
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryText,
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodySmallIsCustom,
                                     ),
                               ),
                             ].divide(SizedBox(width: 8.0)),
@@ -602,18 +531,14 @@ class _DuressProcessingTransactionWidgetState
                         iconPadding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         color: FlutterFlowTheme.of(context).primary,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .titleSmall
-                            .override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).titleSmallFamily,
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w600,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .titleSmallIsCustom,
-                            ),
+                        textStyle:
+                            FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'hello',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
                         elevation: 3.0,
                         borderSide: BorderSide(
                           color: Colors.transparent,
