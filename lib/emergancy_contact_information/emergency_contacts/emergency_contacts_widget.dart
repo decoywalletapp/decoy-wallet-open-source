@@ -12,7 +12,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'emergency_contacts_model.dart';
@@ -577,33 +576,45 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            8.0, 12.0, 8.0, 12.0),
-                        child: Text(
-                          'Emergency Contacts',
-                          textAlign: TextAlign.center,
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    font: GoogleFonts.bebasNeue(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context).info,
-                                    fontSize: 48.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                    lineHeight: 1.0,
-                                  ),
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              8.0, 12.0, 8.0, 12.0),
+                          child: Text(
+                            'Emergency Contacts',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'DECOY BEBAS',
+                                  color: FlutterFlowTheme.of(context).info,
+                                  fontSize: 48.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.normal,
+                                  lineHeight: 1.0,
+                                ),
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              8.0, 12.0, 8.0, 12.0),
+                          child: Text(
+                            'Emergency Contacts',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'DECOY BEBAS',
+                                  color: FlutterFlowTheme.of(context).info,
+                                  fontSize: 48.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.normal,
+                                  lineHeight: 1.0,
+                                ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
