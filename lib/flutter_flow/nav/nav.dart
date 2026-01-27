@@ -96,7 +96,20 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: LoginPageWidget.routeName,
         path: LoginPageWidget.routePath,
-        builder: (context, params) => LoginPageWidget(),
+        builder: (context, params) => LoginPageWidget(
+          type: params.getParam(
+            'type',
+            ParamType.String,
+          ),
+          accessToken: params.getParam(
+            'accessToken',
+            ParamType.String,
+          ),
+          refreshToken: params.getParam(
+            'refreshToken',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
         name: CreateAccountWidget.routeName,

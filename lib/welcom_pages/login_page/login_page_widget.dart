@@ -14,7 +14,16 @@ import 'login_page_model.dart';
 export 'login_page_model.dart';
 
 class LoginPageWidget extends StatefulWidget {
-  const LoginPageWidget({super.key});
+  const LoginPageWidget({
+    super.key,
+    this.type,
+    this.accessToken,
+    this.refreshToken,
+  });
+
+  final String? type;
+  final String? accessToken;
+  final String? refreshToken;
 
   static String routeName = 'LoginPage';
   static String routePath = '/loginPage';
@@ -35,6 +44,21 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (widget.type == 'recovery') {
+        context.goNamed(
+          UpdatePasswordPageWidget.routeName,
+          queryParameters: {
+            'accessToken': serializeParam(
+              widget.accessToken,
+              ParamType.String,
+            ),
+            'refreshToken': serializeParam(
+              widget.refreshToken,
+              ParamType.String,
+            ),
+          }.withoutNulls,
+        );
+      }
       FFAppState().isLocked = true;
       safeSetState(() {});
       if ((FFAppState().biometricsEnabled == true) &&

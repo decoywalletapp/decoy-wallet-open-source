@@ -259,19 +259,11 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                             24.0, 24.0, 20.0, 24.0),
                       ),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            font: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
+                            fontFamily: 'robot',
                             color: Color(0xFF15161E),
                             fontSize: 14.0,
                             letterSpacing: 0.0,
                             fontWeight: FontWeight.w500,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontStyle,
                           ),
                       maxLines: null,
                       keyboardType: TextInputType.emailAddress,
