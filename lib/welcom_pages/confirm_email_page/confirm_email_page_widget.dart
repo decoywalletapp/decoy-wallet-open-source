@@ -73,7 +73,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                 children: [
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                     child: FlutterFlowIconButton(
                       borderColor: Colors.transparent,
                       borderRadius: 20.0,
@@ -190,7 +190,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                                 style: FlutterFlowTheme.of(context)
                                     .bodyLarge
                                     .override(
-                                      fontFamily: 'robot',
+                                      fontFamily: 'InterTight',
                                       color:
                                           FlutterFlowTheme.of(context).primary,
                                       letterSpacing: 0.0,

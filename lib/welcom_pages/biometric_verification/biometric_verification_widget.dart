@@ -392,12 +392,9 @@ class _BiometricVerificationWidgetState
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'InterTight',
                                   color: Colors.white,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 3.0,
                             borderSide: BorderSide(
@@ -434,13 +431,10 @@ class _BiometricVerificationWidgetState
                           textStyle: FlutterFlowTheme.of(context)
                               .titleSmall
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleSmallFamily,
+                                fontFamily: 'InterTight',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                                 letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .titleSmallIsCustom,
                               ),
                           elevation: 3.0,
                           borderSide: BorderSide(

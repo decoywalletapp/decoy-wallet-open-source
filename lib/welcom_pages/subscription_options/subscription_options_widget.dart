@@ -81,7 +81,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                         borderColor: Colors.transparent,
                         borderRadius: 22.0,
                         borderWidth: 1.0,
-                        buttonSize: 44.0,
+                        buttonSize: 40.0,
                         icon: Icon(
                           Icons.arrow_back_rounded,
                           color: FlutterFlowTheme.of(context).primaryText,

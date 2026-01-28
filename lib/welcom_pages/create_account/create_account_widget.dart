@@ -149,7 +149,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .headlineMedium
                                             .override(
-                                              fontFamily: 'robot',
+                                              fontFamily: 'InterTight',
                                               letterSpacing: 0.0,
                                             ),
                                       ),
@@ -172,26 +172,12 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                     FlutterFlowTheme.of(context)
                                                         .labelMedium
                                                         .override(
-                                                          font: GoogleFonts
-                                                              .interTight(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                          fontFamily: 'robot',
                                                           color: Colors.black,
                                                           fontSize: 14.0,
                                                           letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelMedium
-                                                                  .fontStyle,
                                                         ),
                                               ),
                                             ),
@@ -316,22 +302,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
-                                                font: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
+                                                fontFamily: 'robot',
                                                 color: Color(0xFF101213),
                                                 fontSize: 14.0,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
                                               ),
                                           keyboardType:
                                               TextInputType.emailAddress,
@@ -453,22 +428,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
-                                                font: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
+                                                fontFamily: 'robot',
                                                 color: Color(0xFF101213),
                                                 fontSize: 14.0,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
                                               ),
                                           validator: _model
                                               .passwordCreateAccountTextControllerValidator
@@ -575,22 +539,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
-                                                font: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
+                                                fontFamily: 'robot',
                                                 color: Color(0xFF101213),
                                                 fontSize: 14.0,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
                                               ),
                                           minLines: 1,
                                           validator: _model
@@ -655,7 +608,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
-                                              fontFamily: 'robot',
+                                              fontFamily: 'InterTight',
                                               color: Colors.white,
                                               fontSize: 16.0,
                                               letterSpacing: 0.0,
@@ -768,16 +721,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                                   .of(context)
                                                               .labelLarge
                                                               .override(
-                                                                font: GoogleFonts
-                                                                    .interTight(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
+                                                                fontFamily:
+                                                                    'InterTight',
                                                                 color: Color(
                                                                     0xFFFA5E00),
                                                                 fontSize: 16.0,
@@ -786,10 +731,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
                                                               ),
                                                         ),
                                                       ),

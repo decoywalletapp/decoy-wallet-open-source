@@ -45,44 +45,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (widget.type == 'recovery') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              widget.accessToken!,
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              widget.refreshToken!,
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-
-        context.goNamed(
-          UpdatePasswordPageWidget.routeName,
-          queryParameters: {
-            'accessToken': serializeParam(
-              widget.accessToken,
-              ParamType.String,
-            ),
-            'refreshToken': serializeParam(
-              widget.refreshToken,
-              ParamType.String,
-            ),
-          }.withoutNulls,
-        );
+        context.goNamed(UpdatePasswordPageWidget.routeName);
       }
       FFAppState().isLocked = true;
       safeSetState(() {});
@@ -264,7 +227,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             ),
                                             color: Color(0xFF57636C),
                                             fontSize: 14.0,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             fontWeight: FontWeight.w500,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
@@ -350,7 +313,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             ),
                                             color: Color(0xFF57636C),
                                             fontSize: 14.0,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             fontWeight: FontWeight.w500,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)

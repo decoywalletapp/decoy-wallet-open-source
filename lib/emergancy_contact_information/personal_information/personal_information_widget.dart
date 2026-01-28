@@ -69,10 +69,10 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           _model.rowNonceB64!,
           _model.dataKeyB64!,
         );
-        _model.origPhone = getJsonField(
+        _model.origPhone = functions.sanitizePhoneNumber(getJsonField(
           _model.personalObj,
           r'''$.phone''',
-        ).toString();
+        ).toString());
         safeSetState(() {});
         if (getJsonField(
               _model.personalObj,

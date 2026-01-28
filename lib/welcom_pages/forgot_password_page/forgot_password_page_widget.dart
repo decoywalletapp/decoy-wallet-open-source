@@ -262,7 +262,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                             fontFamily: 'robot',
                             color: Color(0xFF15161E),
                             fontSize: 14.0,
-                            letterSpacing: 0.0,
+                            letterSpacing: 0.25,
                             fontWeight: FontWeight.w500,
                           ),
                       maxLines: null,
@@ -294,7 +294,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                           email: _model.emailAddressTextController.text,
                           context: context,
                           redirectTo:
-                              "decoywalletapp://authRouter?type=recovery",
+                              "decoywalletapp://decoywalletapp.com/authRouter?type=recovery",
                         );
                       },
                       text: 'Send Link',

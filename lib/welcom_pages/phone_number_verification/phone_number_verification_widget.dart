@@ -108,7 +108,7 @@ class _PhoneNumberVerificationWidgetState
                       borderColor: Colors.transparent,
                       borderRadius: 30.0,
                       borderWidth: 1.0,
-                      buttonSize: 60.0,
+                      buttonSize: 40.0,
                       icon: Icon(
                         Icons.arrow_back,
                         color: FlutterFlowTheme.of(context).primaryText,
