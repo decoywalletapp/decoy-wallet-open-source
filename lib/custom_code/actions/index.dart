@@ -31,3 +31,5 @@ export 'finalize_register_decoy.dart' show finalizeRegisterDecoy;
 export 'supa_update_password.dart' show supaUpdatePassword;
 export 'supa_send_reset_password_email.dart' show supaSendResetPasswordEmail;
 export 'supa_email_login.dart' show supaEmailLogin;
+export 'supa_recovery_update_password.dart' show supaRecoveryUpdatePassword;
+export 'refresh_supabase_session2.dart' show refreshSupabaseSession2;

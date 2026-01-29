@@ -219,8 +219,7 @@ class _GenerateDecoySeedPhraseWidgetState
                                   .titleMedium
                                   .override(
                                     fontFamily: 'robot',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
+                                    color: FlutterFlowTheme.of(context).info,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                   ),

@@ -4,6 +4,10 @@ import 'login_page_widget.dart' show LoginPageWidget;
 import 'package:flutter/material.dart';
 
 class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
+  ///  Local state fields for this page.
+
+  int notificationValue = 0;
+
   ///  State fields for stateful widgets in this page.
 
   bool loginBioResult = false;

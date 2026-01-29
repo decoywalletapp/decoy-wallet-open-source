@@ -45,6 +45,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.notificationValue = 0;
+      safeSetState(() {});
       if (widget.type == 'recovery') {
         context.goNamed(UpdatePasswordPageWidget.routeName);
       }
@@ -387,6 +389,53 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   ),
                                 ),
                               ),
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 20.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                        ),
+                                        child: Visibility(
+                                          visible:
+                                              _model.notificationValue == 1,
+                                          child: Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Text(
+                                              'INVALID LOGIN',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMediumFamily,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMediumIsCustom,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               FFButtonWidget(
                                 onPressed: () async {
                                   _model.decoyLogin =
@@ -396,6 +445,16 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   );
                                   if (_model.decoyLogin == true) {
                                     context.goNamed(AuthRouterWidget.routeName);
+                                  } else {
+                                    _model.notificationValue = 1;
+                                    safeSetState(() {});
+                                    await Future.delayed(
+                                      Duration(
+                                        milliseconds: 2000,
+                                      ),
+                                    );
+                                    _model.notificationValue = 0;
+                                    safeSetState(() {});
                                   }
 
                                   safeSetState(() {});
@@ -572,7 +631,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   ),
                                 ),
                               ),
-                            ].divide(SizedBox(height: 1.0)),
+                            ].divide(SizedBox(height: 6.0)),
                           ),
                         ),
                       ),

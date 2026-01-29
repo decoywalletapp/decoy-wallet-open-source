@@ -46,121 +46,179 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (widget.type == 'recovery') {
-        context.goNamedAuth(
-            UpdatePasswordPageWidget.routeName, context.mounted);
-      }
-      _model.refreshOut = await actions.refreshSupabaseSession();
-      _model.authUserResp = await GetAuthUserCall.call(
-        jwt: currentJwtToken,
-      );
-
-      _model.emailHashResp = await GetEmailHashCall.call(
-        jwt: currentJwtToken,
-        email: functions.normalizeEmail(getJsonField(
-          (_model.authUserResp?.jsonBody ?? ''),
-          r'''$.email''',
-        ).toString()),
-      );
-
-      FFAppState().isLocked = true;
-      safeSetState(() {});
-      _model.query1 = await DecoyWalletTable().queryRows(
-        queryFn: (q) => q
-            .eqOrNull(
-              'user_id',
-              currentUserUid,
-            )
-            .order('created_at'),
-      );
-      _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
-      _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
-      _model.authEmail = currentUserEmail;
-      _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
-      safeSetState(() {});
-      if (_model.hasRow == false) {
-        _model.firstInsert = await DecoyWalletTable().insert({
-          'user_id': currentUserUid,
-          'email_verified': false,
-          'email_verified_at': supaSerialize<DateTime>(null),
-          'is_phone_verified': false,
-          'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
-          'email_hash': GetEmailHashCall.emailHash(
-            (_model.emailHashResp?.jsonBody ?? ''),
-          ).toString(),
-          'pending_email_hash': null,
-        });
-        _model.query2 = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
+        _model.refreshingOuuu = await actions.refreshSupabaseSession2(
+          widget.accessToken!,
+          widget.refreshToken!,
         );
-        _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
-        safeSetState(() {});
+        if (_model.refreshingOuuu == true) {
+          context.goNamedAuth(
+              UpdatePasswordPageWidget.routeName, context.mounted);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'ERROR #024 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
+        }
       } else {
-        await DecoyWalletTable().update(
-          data: {
-            'email_verified': true,
-            'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+        _model.refreshOut = await actions.refreshSupabaseSession();
+        _model.authUserResp = await GetAuthUserCall.call(
+          jwt: currentJwtToken,
+        );
+
+        _model.emailHashResp = await GetEmailHashCall.call(
+          jwt: currentJwtToken,
+          email: functions.normalizeEmail(getJsonField(
+            (_model.authUserResp?.jsonBody ?? ''),
+            r'''$.email''',
+          ).toString()),
+        );
+
+        FFAppState().isLocked = true;
+        safeSetState(() {});
+        _model.query1 = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .order('created_at'),
+        );
+        _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
+        _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
+        _model.authEmail = currentUserEmail;
+        _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
+        safeSetState(() {});
+        if (_model.hasRow == false) {
+          _model.firstInsert = await DecoyWalletTable().insert({
+            'user_id': currentUserUid,
+            'email_verified': false,
+            'email_verified_at': supaSerialize<DateTime>(null),
+            'is_phone_verified': false,
+            'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
             'email_hash': GetEmailHashCall.emailHash(
               (_model.emailHashResp?.jsonBody ?? ''),
             ).toString(),
             'pending_email_hash': null,
-          },
-          matchingRows: (rows) => rows.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-        _model.query3 = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-        _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
-        safeSetState(() {});
-      }
-
-      _model.verifiedViaEmail =
-          _model.dwList.elementAtOrNull(0)!.emailVerified!;
-      _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
-      safeSetState(() {});
-      if (_model.verifiedViaEmail == false) {
-        if (Navigator.of(context).canPop()) {
-          context.pop();
+          });
+          _model.query2 = await DecoyWalletTable().queryRows(
+            queryFn: (q) => q.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
+          _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
+          safeSetState(() {});
+        } else {
+          await DecoyWalletTable().update(
+            data: {
+              'email_verified': true,
+              'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+              'email_hash': GetEmailHashCall.emailHash(
+                (_model.emailHashResp?.jsonBody ?? ''),
+              ).toString(),
+              'pending_email_hash': null,
+            },
+            matchingRows: (rows) => rows.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.query3 = await DecoyWalletTable().queryRows(
+            queryFn: (q) => q.eqOrNull(
+              'user_id',
+              currentUserUid,
+            ),
+          );
+          _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
+          _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
+          safeSetState(() {});
         }
-        context.pushNamedAuth(
-            ConfirmEmailPageWidget.routeName, context.mounted);
-      } else {
-        if (_model.needPhone == true) {
+
+        _model.verifiedViaEmail =
+            _model.dwList.elementAtOrNull(0)!.emailVerified!;
+        _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
+        safeSetState(() {});
+        if (_model.verifiedViaEmail == false) {
           if (Navigator.of(context).canPop()) {
             context.pop();
           }
           context.pushNamedAuth(
-              PhoneNumberInputWidget.routeName, context.mounted);
+              ConfirmEmailPageWidget.routeName, context.mounted);
         } else {
-          if (FFAppState().biometricsEnabled == true) {
-            final _localAuth = LocalAuthentication();
-            bool _isBiometricSupported = await _localAuth.isDeviceSupported();
-
-            if (_isBiometricSupported) {
-              try {
-                _model.authRouterBioResult = await _localAuth.authenticate(
-                    localizedReason:
-                        'Please authenticate to unlock your wallet');
-              } on PlatformException {
-                _model.authRouterBioResult = false;
-              }
-              safeSetState(() {});
+          if (_model.needPhone == true) {
+            if (Navigator.of(context).canPop()) {
+              context.pop();
             }
+            context.pushNamedAuth(
+                PhoneNumberInputWidget.routeName, context.mounted);
+          } else {
+            if (FFAppState().biometricsEnabled == true) {
+              final _localAuth = LocalAuthentication();
+              bool _isBiometricSupported = await _localAuth.isDeviceSupported();
 
-            if (_model.authRouterBioResult == true) {
+              if (_isBiometricSupported) {
+                try {
+                  _model.authRouterBioResult = await _localAuth.authenticate(
+                      localizedReason:
+                          'Please authenticate to unlock your wallet');
+                } on PlatformException {
+                  _model.authRouterBioResult = false;
+                }
+                safeSetState(() {});
+              }
+
+              if (_model.authRouterBioResult == true) {
+                FFAppState().isLocked = false;
+                safeSetState(() {});
+                _model.entitlementRow1 =
+                    await UserEntitlementsTable().queryRows(
+                  queryFn: (q) => q
+                      .eqOrNull(
+                        'user_id',
+                        currentUserUid,
+                      )
+                      .eqOrNull(
+                        'entitlement',
+                        'decoy_wallet',
+                      ),
+                );
+                FFAppState().hasActiveSubscription =
+                    (_model.entitlementRow1 != null &&
+                            (_model.entitlementRow1)!.isNotEmpty) &&
+                        (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
+                            true);
+                safeSetState(() {});
+                if (FFAppState().hasActiveSubscription == true) {
+                  context.pushNamedAuth(
+                      PINPageWidget.routeName, context.mounted);
+                } else {
+                  context.pushNamedAuth(
+                      HomePageWidget.routeName, context.mounted);
+                }
+              } else {
+                GoRouter.of(context).prepareAuthEvent();
+                await authManager.signOut();
+                GoRouter.of(context).clearRedirectLocation();
+
+                FFAppState().isLocked = false;
+                safeSetState(() {});
+
+                context.pushNamedAuth(
+                    LoginPageWidget.routeName, context.mounted);
+              }
+            } else {
               FFAppState().isLocked = false;
               safeSetState(() {});
-              _model.entitlementRow1 = await UserEntitlementsTable().queryRows(
+              _model.entitlementRow2 = await UserEntitlementsTable().queryRows(
                 queryFn: (q) => q
                     .eqOrNull(
                       'user_id',
@@ -172,9 +230,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     ),
               );
               FFAppState().hasActiveSubscription =
-                  (_model.entitlementRow1 != null &&
-                          (_model.entitlementRow1)!.isNotEmpty) &&
-                      (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
+                  (_model.entitlementRow2 != null &&
+                          (_model.entitlementRow2)!.isNotEmpty) &&
+                      (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
                           true);
               safeSetState(() {});
               if (FFAppState().hasActiveSubscription == true) {
@@ -183,39 +241,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 context.pushNamedAuth(
                     HomePageWidget.routeName, context.mounted);
               }
-            } else {
-              GoRouter.of(context).prepareAuthEvent();
-              await authManager.signOut();
-              GoRouter.of(context).clearRedirectLocation();
-
-              FFAppState().isLocked = false;
-              safeSetState(() {});
-
-              context.pushNamedAuth(LoginPageWidget.routeName, context.mounted);
-            }
-          } else {
-            FFAppState().isLocked = false;
-            safeSetState(() {});
-            _model.entitlementRow2 = await UserEntitlementsTable().queryRows(
-              queryFn: (q) => q
-                  .eqOrNull(
-                    'user_id',
-                    currentUserUid,
-                  )
-                  .eqOrNull(
-                    'entitlement',
-                    'decoy_wallet',
-                  ),
-            );
-            FFAppState().hasActiveSubscription = (_model.entitlementRow2 !=
-                        null &&
-                    (_model.entitlementRow2)!.isNotEmpty) &&
-                (_model.entitlementRow2?.elementAtOrNull(0)?.isActive == true);
-            safeSetState(() {});
-            if (FFAppState().hasActiveSubscription == true) {
-              context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
-            } else {
-              context.pushNamedAuth(HomePageWidget.routeName, context.mounted);
             }
           }
         }

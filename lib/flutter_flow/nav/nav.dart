@@ -450,6 +450,24 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => EmergencyContactsCopyWidget(),
       ),
       FFRoute(
+        name: AuthRouterCopyWidget.routeName,
+        path: AuthRouterCopyWidget.routePath,
+        builder: (context, params) => AuthRouterCopyWidget(
+          type: params.getParam(
+            'type',
+            ParamType.String,
+          ),
+          accessToken: params.getParam(
+            'accessToken',
+            ParamType.String,
+          ),
+          refreshToken: params.getParam(
+            'refreshToken',
+            ParamType.String,
+          ),
+        ),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

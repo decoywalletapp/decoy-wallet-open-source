@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 
 class ForgotPasswordPageModel
     extends FlutterFlowModel<ForgotPasswordPageWidget> {
+  ///  Local state fields for this page.
+
+  int notifValue = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for emailAddress widget.
