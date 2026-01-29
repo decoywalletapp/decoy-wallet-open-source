@@ -1,6 +1,7 @@
-import '/auth/supabase_auth/auth_util.dart';
+import '/auth/base_auth_user_provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -388,21 +389,16 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  GoRouter.of(context).prepareAuthEvent();
-
-                                  final user =
-                                      await authManager.signInWithEmail(
-                                    context,
+                                  _model.decoyLogin =
+                                      await actions.supaEmailLogin(
                                     _model.emailAddressLoginTextController.text,
                                     _model.passwordLoginTextController.text,
                                   );
-                                  if (user == null) {
-                                    return;
+                                  if (_model.decoyLogin == true) {
+                                    context.goNamed(AuthRouterWidget.routeName);
                                   }
 
-                                  context.goNamedAuth(
-                                      AuthRouterWidget.routeName,
-                                      context.mounted);
+                                  safeSetState(() {});
                                 },
                                 text: 'Log in',
                                 options: FFButtonOptions(

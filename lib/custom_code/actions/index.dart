@@ -30,3 +30,4 @@ export 'generate_decoy_draft.dart' show generateDecoyDraft;
 export 'finalize_register_decoy.dart' show finalizeRegisterDecoy;
 export 'supa_update_password.dart' show supaUpdatePassword;
 export 'supa_send_reset_password_email.dart' show supaSendResetPasswordEmail;
+export 'supa_email_login.dart' show supaEmailLogin;
