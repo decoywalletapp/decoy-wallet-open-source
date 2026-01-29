@@ -509,7 +509,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                               ),
                             );
 
-                            context.goNamed(LoginPageWidget.routeName);
+                            context.goNamed(AuthRouterWidget.routeName);
                           } else {
                             _model.notificationState = 1;
                             safeSetState(() {});
