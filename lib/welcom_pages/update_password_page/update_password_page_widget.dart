@@ -1,7 +1,7 @@
-import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -490,14 +490,12 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                           if (_model.passwordTextController.text ==
                               _model
                                   .confirmUpdatedPasswordTextController.text) {
-                            await authManager.updatePassword(
-                              newPassword: _model.passwordTextController.text,
-                              context: context,
+                            _model.passUpdate =
+                                await actions.supaUpdatePassword(
+                              _model.passwordTextController.text,
                             );
-                            safeSetState(() {});
 
-                            context.goNamedAuth(
-                                LoginPageWidget.routeName, context.mounted);
+                            context.goNamed(LoginPageWidget.routeName);
                           } else {
                             _model.notificationState = 1;
                             safeSetState(() {});
@@ -509,6 +507,8 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                             _model.notificationState = 0;
                             safeSetState(() {});
                           }
+
+                          safeSetState(() {});
                         },
                         text: 'Update Password',
                         options: FFButtonOptions(

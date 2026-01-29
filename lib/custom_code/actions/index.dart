@@ -28,3 +28,5 @@ export 'build_location_json_string.dart' show buildLocationJsonString;
 export 'refresh_supabase_session.dart' show refreshSupabaseSession;
 export 'generate_decoy_draft.dart' show generateDecoyDraft;
 export 'finalize_register_decoy.dart' show finalizeRegisterDecoy;
+export 'supa_update_password.dart' show supaUpdatePassword;
+export 'supa_send_reset_password_email.dart' show supaSendResetPasswordEmail;
