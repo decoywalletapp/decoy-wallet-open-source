@@ -494,6 +494,20 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                 await actions.supaUpdatePassword(
                               _model.passwordTextController.text,
                             );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  _model.passUpdate!,
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
 
                             context.goNamed(LoginPageWidget.routeName);
                           } else {

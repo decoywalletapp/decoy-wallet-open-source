@@ -13,19 +13,33 @@ import '/flutter_flow/custom_functions.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Updates the currently-authenticated user's password.
+/// Returns:
+/// - "ok" on success
+/// - "ERR: <message>" on failure
 Future<String> supaUpdatePassword(String newPassword) async {
   try {
     final client = Supabase.instance.client;
 
-    final pw = newPassword.trim();
-    if (pw.isEmpty) return 'ERR: missing password';
-    if (pw.length < 8) return 'ERR: password too short';
+    final p = newPassword.trim();
+    if (p.isEmpty) {
+      return 'ERR: missing new password';
+    }
+    if (p.length < 8) {
+      return 'ERR: password too short';
+    }
 
-    // This updates the currently active Supabase session user.
-    await client.auth.updateUser(
-      UserAttributes(password: pw),
+    final session = client.auth.currentSession;
+    if (session == null) {
+      return 'ERR: no active session (recovery session not set)';
+    }
+
+    final resp = await client.auth.updateUser(
+      UserAttributes(password: p),
     );
 
+    // Supabase sometimes returns user/session null even when successful,
+    // but if no exception was thrown, treat as ok.
     return 'ok';
   } on AuthException catch (ae) {
     return 'ERR: ${ae.message}';
