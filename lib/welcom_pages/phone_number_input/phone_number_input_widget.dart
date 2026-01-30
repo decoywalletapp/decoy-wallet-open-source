@@ -405,10 +405,15 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         safeSetState(() {});
                         _model.phoneLookupRows =
                             await DecoyWalletTable().queryRows(
-                          queryFn: (q) => q.eqOrNull(
-                            'phone_e164_hash',
-                            _model.phoneHash,
-                          ),
+                          queryFn: (q) => q
+                              .eqOrNull(
+                                'phone_e164_hash',
+                                _model.phoneHash,
+                              )
+                              .neqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
                         );
                         if (_model.phoneLookupRows != null &&
                             (_model.phoneLookupRows)!.isNotEmpty) {

@@ -23,7 +23,7 @@ class UpdatePasswordPageModel
   String? Function(BuildContext, String?)?
       confirmUpdatedPasswordTextControllerValidator;
   // Stores action output result for [Custom Action - supaUpdatePassword] action in UpdatePassword widget.
-  String? passUpdate;
+  bool? passUpdate;
 
   @override
   void initState(BuildContext context) {

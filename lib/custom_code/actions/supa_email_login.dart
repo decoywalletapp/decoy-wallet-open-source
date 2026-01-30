@@ -18,18 +18,18 @@ Future<bool> supaEmailLogin(
     final client = Supabase.instance.client;
 
     final e = email.trim();
-    final p = password;
+    final p = password.trim();
 
-    if (e.isEmpty || p.isEmpty) {
-      return false;
-    }
+    if (e.isEmpty || p.isEmpty) return false;
+
+    // Match your Supabase minimum password length
+    if (p.length < 10) return false;
 
     final res = await client.auth.signInWithPassword(
       email: e,
       password: p,
     );
 
-    // Success if session exists
     return res.session != null;
   } on AuthException {
     return false;
