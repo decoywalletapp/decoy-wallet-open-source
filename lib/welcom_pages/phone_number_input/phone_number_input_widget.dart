@@ -403,6 +403,19 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           (_model.phoneHashResp?.jsonBody ?? ''),
                         );
                         safeSetState(() {});
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              _model.phoneHash!,
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
                         _model.phoneLookupRows =
                             await DecoyWalletTable().queryRows(
                           queryFn: (q) => q
