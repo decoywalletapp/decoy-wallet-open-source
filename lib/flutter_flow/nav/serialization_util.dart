@@ -215,6 +215,8 @@ dynamic deserializeParam<T>(
             return UserConsentsRow(data);
           case UserEntitlementsRow:
             return UserEntitlementsRow(data);
+          case RecoveryExchangeCodesRow:
+            return RecoveryExchangeCodesRow(data);
           case DecoySeenTxsRow:
             return DecoySeenTxsRow(data);
           case DecoyTriggersRow:

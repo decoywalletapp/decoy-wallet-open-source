@@ -703,6 +703,42 @@ class CommitDecoyCall {
   }
 }
 
+class CheckPhoneTakenCall {
+  static Future<ApiCallResponse> call({
+    String? jwt = '',
+    String? phoneHash = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+"phoneHash": "${escapeStringForJson(phoneHash)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'checkPhoneTaken',
+      apiUrl:
+          'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/check_phone_taken',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static dynamic taken(dynamic response) => getJsonField(
+        response,
+        r'''$.taken''',
+      );
+}
+
 String _toEncodable(dynamic item) {
   return item;
 }

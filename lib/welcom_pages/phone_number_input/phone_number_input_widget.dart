@@ -403,6 +403,24 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           (_model.phoneHashResp?.jsonBody ?? ''),
                         );
                         safeSetState(() {});
+                        _model.phoneTakenResp = await CheckPhoneTakenCall.call(
+                          jwt: currentJwtToken,
+                          phoneHash: _model.phoneHash,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              currentJwtToken,
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondary,
+                          ),
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -416,42 +434,54 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                 FlutterFlowTheme.of(context).secondary,
                           ),
                         );
-                        _model.phoneLookupRows =
-                            await DecoyWalletTable().queryRows(
-                          queryFn: (q) => q
-                              .eqOrNull(
-                                'phone_e164_hash',
-                                _model.phoneHash,
-                              )
-                              .neqOrNull(
-                                'user_id',
-                                currentUserUid,
-                              ),
-                        );
-                        if (_model.phoneLookupRows != null &&
-                            (_model.phoneLookupRows)!.isNotEmpty) {
-                          _model.notificationInt = 3;
-                          safeSetState(() {});
-                        } else {
-                          if (_model.cleanPhone != '') {
-                            _model.sendRes =
-                                await SendVerificationCodeCall.call(
-                              cleanPhone: _model.cleanPhone,
-                              jwt: currentJwtToken,
-                            );
-
-                            if ((_model.sendRes?.succeeded ?? true)) {
-                              context.pushNamed(
-                                PhoneNumberVerificationWidget.routeName,
-                                queryParameters: {
-                                  'cleanPhone': serializeParam(
-                                    _model.cleanPhone,
-                                    ParamType.String,
-                                  ),
-                                }.withoutNulls,
+                        if (!(_model.phoneHashResp == null)) {
+                          _model.phoneLookupRows =
+                              await DecoyWalletTable().queryRows(
+                            queryFn: (q) => q
+                                .eqOrNull(
+                                  'phone_e164_hash',
+                                  _model.phoneHash,
+                                )
+                                .neqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                          );
+                          if (_model.phoneLookupRows != null &&
+                              (_model.phoneLookupRows)!.isNotEmpty) {
+                            _model.notificationInt = 3;
+                            safeSetState(() {});
+                          } else {
+                            if (_model.cleanPhone != '') {
+                              _model.sendRes =
+                                  await SendVerificationCodeCall.call(
+                                cleanPhone: _model.cleanPhone,
+                                jwt: currentJwtToken,
                               );
+
+                              if ((_model.sendRes?.succeeded ?? true)) {
+                                context.pushNamed(
+                                  PhoneNumberVerificationWidget.routeName,
+                                  queryParameters: {
+                                    'cleanPhone': serializeParam(
+                                      _model.cleanPhone,
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              } else {
+                                _model.notificationInt = 2;
+                                safeSetState(() {});
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 3000,
+                                  ),
+                                );
+                                _model.notificationInt = 0;
+                                safeSetState(() {});
+                              }
                             } else {
-                              _model.notificationInt = 2;
+                              _model.notificationInt = 1;
                               safeSetState(() {});
                               await Future.delayed(
                                 Duration(
@@ -461,16 +491,6 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                               _model.notificationInt = 0;
                               safeSetState(() {});
                             }
-                          } else {
-                            _model.notificationInt = 1;
-                            safeSetState(() {});
-                            await Future.delayed(
-                              Duration(
-                                milliseconds: 3000,
-                              ),
-                            );
-                            _model.notificationInt = 0;
-                            safeSetState(() {});
                           }
                         }
 
