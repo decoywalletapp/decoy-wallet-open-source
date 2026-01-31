@@ -733,10 +733,10 @@ class CheckPhoneTakenCall {
     );
   }
 
-  static dynamic taken(dynamic response) => getJsonField(
+  static bool? taken(dynamic response) => castToType<bool>(getJsonField(
         response,
         r'''$.taken''',
-      );
+      ));
 }
 
 String _toEncodable(dynamic item) {
