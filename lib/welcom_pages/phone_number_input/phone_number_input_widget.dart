@@ -519,7 +519,12 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                     if (_model.notificationInt.toString() == '3')
                       FFButtonWidget(
                         onPressed: () async {
-                          context.goNamed(LoginPageWidget.routeName);
+                          GoRouter.of(context).prepareAuthEvent();
+                          await authManager.signOut();
+                          GoRouter.of(context).clearRedirectLocation();
+
+                          context.goNamedAuth(
+                              LoginPageWidget.routeName, context.mounted);
                         },
                         text: 'Back to Login',
                         options: FFButtonOptions(

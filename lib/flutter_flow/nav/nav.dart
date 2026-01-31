@@ -468,6 +468,24 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
+        name: LoginPageB44444Widget.routeName,
+        path: LoginPageB44444Widget.routePath,
+        builder: (context, params) => LoginPageB44444Widget(
+          type: params.getParam(
+            'type',
+            ParamType.String,
+          ),
+          accessToken: params.getParam(
+            'accessToken',
+            ParamType.String,
+          ),
+          refreshToken: params.getParam(
+            'refreshToken',
+            ParamType.String,
+          ),
+        ),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>
