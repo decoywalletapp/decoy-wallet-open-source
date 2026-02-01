@@ -1,5 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -2452,7 +2453,21 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                         ''),
                                                   ) ==
                                                   true) {
-                                                context.pushNamed(
+                                                await DecoyWalletTable().update(
+                                                  data: {
+                                                    'setup_complete': true,
+                                                    'setup_completed_at':
+                                                        supaSerialize<DateTime>(
+                                                            getCurrentTimestamp),
+                                                  },
+                                                  matchingRows: (rows) =>
+                                                      rows.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+
+                                                context.goNamed(
                                                   HomePageWidget.routeName,
                                                   extra: <String, dynamic>{
                                                     kTransitionInfoKey:

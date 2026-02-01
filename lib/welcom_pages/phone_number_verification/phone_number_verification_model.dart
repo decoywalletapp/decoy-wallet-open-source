@@ -56,6 +56,8 @@ class PhoneNumberVerificationModel
   dynamic encPersonal;
   // Stores action output result for [Backend Call - Update Row(s)] action in PhoneCode widget.
   List<DecoyWalletRow>? verifyUpdate;
+  // Stores action output result for [Backend Call - Query Rows] action in PhoneCode widget.
+  List<DecoyWalletRow>? dwSetupRows;
   // Stores action output result for [Backend Call - Insert Row] action in PhoneCode widget.
   DecoyWalletRow? verifyInsert;
   // Stores action output result for [Backend Call - API (SendVerificationCode)] action in Icon widget.

@@ -351,10 +351,53 @@ class _PhoneNumberVerificationWidgetState
                                               if (_model.verifyUpdate != null &&
                                                   (_model.verifyUpdate)!
                                                       .isNotEmpty) {
-                                                context.pushNamedAuth(
-                                                    BiometricVerificationWidget
-                                                        .routeName,
-                                                    context.mounted);
+                                                _model.dwSetupRows =
+                                                    await DecoyWalletTable()
+                                                        .queryRows(
+                                                  queryFn: (q) => q.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+                                                if (_model.dwSetupRows !=
+                                                        null &&
+                                                    (_model.dwSetupRows)!
+                                                        .isNotEmpty) {
+                                                  if (_model.dwSetupRows
+                                                          ?.elementAtOrNull(0)
+                                                          ?.setupComplete ==
+                                                      true) {
+                                                    context.goNamedAuth(
+                                                        HomePageWidget
+                                                            .routeName,
+                                                        context.mounted);
+                                                  } else {
+                                                    context.goNamedAuth(
+                                                        BiometricVerificationWidget
+                                                            .routeName,
+                                                        context.mounted);
+                                                  }
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'ERROR #025 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                }
                                               } else {
                                                 _model.verifyInsert =
                                                     await DecoyWalletTable()

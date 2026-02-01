@@ -1,10 +1,11 @@
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'duress_home_page_widget.dart' show DuressHomePageWidget;
+import 'duress_home_page_copy_widget.dart' show DuressHomePageCopyWidget;
 import 'package:flutter/material.dart';
 
-class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
+class DuressHomePageCopyModel
+    extends FlutterFlowModel<DuressHomePageCopyWidget> {
   ///  Local state fields for this page.
 
   List<double> btcPrices = [];
@@ -49,12 +50,18 @@ class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
   void updateBtcDatesAtIndex(int index, Function(dynamic) updateFn) =>
       btcDates[index] = updateFn(btcDates[index]);
 
-  bool chartReady = false;
+  bool? chartReady;
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
-  ApiCallResponse? btcResp;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePageCopy widget.
+  ApiCallResponse? priceResult;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePageCopy widget.
+  ApiCallResponse? priceResult2;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePageCopy widget.
+  ApiCallResponse? priceResult3;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePageCopy widget.
+  ApiCallResponse? priceResult4;
 
   @override
   void initState(BuildContext context) {}

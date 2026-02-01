@@ -194,4 +194,11 @@ class DecoyWalletRow extends SupabaseDataRow {
   String? get pendingEmailHash => getField<String>('pending_email_hash');
   set pendingEmailHash(String? value) =>
       setField<String>('pending_email_hash', value);
+
+  bool get setupComplete => getField<bool>('setup_complete')!;
+  set setupComplete(bool value) => setField<bool>('setup_complete', value);
+
+  DateTime? get setupCompletedAt => getField<DateTime>('setup_completed_at');
+  set setupCompletedAt(DateTime? value) =>
+      setField<DateTime>('setup_completed_at', value);
 }

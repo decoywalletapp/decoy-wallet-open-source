@@ -3,6 +3,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -412,6 +413,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                               (_model.phoneTakenResp?.jsonBody ?? ''),
                             ) ==
                             true) {
+                          await actions.dismissKeyboard(
+                            context,
+                          );
                           _model.notificationInt = 3;
                           safeSetState(() {});
                           safeSetState(() {
@@ -436,6 +440,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           );
                           if (_model.phoneLookupRows != null &&
                               (_model.phoneLookupRows)!.isNotEmpty) {
+                            await actions.dismissKeyboard(
+                              context,
+                            );
                             _model.notificationInt = 3;
                             safeSetState(() {});
                             safeSetState(() {

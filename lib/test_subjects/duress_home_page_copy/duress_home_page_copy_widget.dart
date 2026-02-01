@@ -9,8 +9,8 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'duress_home_page_model.dart';
-export 'duress_home_page_model.dart';
+import 'duress_home_page_copy_model.dart';
+export 'duress_home_page_copy_model.dart';
 
 /// Create a homepage that displays the amount of Bitcoin the user has at the
 /// top.
@@ -23,45 +23,53 @@ export 'duress_home_page_model.dart';
 /// I want a container on the bottom left that says receive button with a
 /// download arrow And then in the bottom right, I want a container to have a
 /// send button with another QR code logo.
-class DuressHomePageWidget extends StatefulWidget {
-  const DuressHomePageWidget({super.key});
+class DuressHomePageCopyWidget extends StatefulWidget {
+  const DuressHomePageCopyWidget({super.key});
 
-  static String routeName = 'DuressHomePage';
-  static String routePath = '/duressHomePage';
+  static String routeName = 'DuressHomePageCopy';
+  static String routePath = '/duressHomePageCopy';
 
   @override
-  State<DuressHomePageWidget> createState() => _DuressHomePageWidgetState();
+  State<DuressHomePageCopyWidget> createState() =>
+      _DuressHomePageCopyWidgetState();
 }
 
-class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
-  late DuressHomePageModel _model;
+class _DuressHomePageCopyWidgetState extends State<DuressHomePageCopyWidget> {
+  late DuressHomePageCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DuressHomePageModel());
+    _model = createModel(context, () => DuressHomePageCopyModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.chartReady = false;
-      _model.btcPrices = [].toList().cast<double>();
-      _model.btcEpochMs = [].toList().cast<double>();
-      safeSetState(() {});
-      _model.btcResp = await BtcChartOneYearCall.call();
+      _model.priceResult = await BtcChartOneYearCall.call();
 
-      if ((_model.btcResp?.statusCode ?? 200) == 200) {
+      await Future.delayed(
+        Duration(
+          milliseconds: 1000,
+        ),
+      );
+      if ((_model.priceResult?.statusCode ?? 200) == 200) {
+        _model.prices1y = getJsonField(
+          (_model.priceResult?.jsonBody ?? ''),
+          r'''$.prices''',
+          true,
+        )!
+            .toList()
+            .cast<dynamic>();
+        safeSetState(() {});
         _model.btcPrices = functions
-            .extractPriceList((_model.btcResp?.jsonBody ?? ''))
+            .extractPriceList(_model.prices1y.toList())
             .toList()
             .cast<double>();
         _model.btcEpochMs = functions
-            .extractEpochMsList((_model.btcResp?.jsonBody ?? ''))
+            .extractEpochMsList(_model.prices1y.toList())
             .toList()
             .cast<double>();
-        safeSetState(() {});
-        _model.chartReady = true;
         safeSetState(() {});
         _model.firstPrice = _model.btcPrices.firstOrNull;
         _model.currentPrice = _model.btcPrices.lastOrNull;
@@ -77,11 +85,136 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         FFAppState().update(() {});
         FFAppState().fakeSeeded = true;
         safeSetState(() {});
-      } else {
-        _model.chartReady = false;
-        _model.btcPrices = [].toList().cast<double>();
-        _model.btcEpochMs = [].toList().cast<double>();
         safeSetState(() {});
+      } else {
+        _model.priceResult2 = await BtcChartOneYearCall.call();
+
+        await Future.delayed(
+          Duration(
+            milliseconds: 1000,
+          ),
+        );
+        if ((_model.priceResult2?.statusCode ?? 200) == 200) {
+          await Future.delayed(
+            Duration(
+              milliseconds: 300,
+            ),
+          );
+          _model.prices1y = getJsonField(
+            (_model.priceResult?.jsonBody ?? ''),
+            r'''$.prices''',
+            true,
+          )!
+              .toList()
+              .cast<dynamic>();
+          safeSetState(() {});
+          _model.btcPrices = functions
+              .extractPriceList(_model.prices1y.toList())
+              .toList()
+              .cast<double>();
+          _model.btcEpochMs = functions
+              .extractEpochMsList(_model.prices1y.toList())
+              .toList()
+              .cast<double>();
+          _model.firstPrice = _model.btcPrices.firstOrNull;
+          _model.currentPrice = _model.btcPrices.lastOrNull;
+          _model.pctChange1y = functions.percentageChange(
+              _model.firstPrice, _model.currentPrice);
+          FFAppState().fakeUsdValue = valueOrDefault<double>(
+            functions.usdFromBtc(
+                FFAppState().fakeBtcBalance, _model.currentPrice!),
+            0.0,
+          );
+          FFAppState().fakeSeeded = true;
+          safeSetState(() {});
+          safeSetState(() {});
+        } else {
+          _model.priceResult3 = await BtcChartOneYearCall.call();
+
+          await Future.delayed(
+            Duration(
+              milliseconds: 1000,
+            ),
+          );
+          if ((_model.priceResult3?.statusCode ?? 200) == 200) {
+            await Future.delayed(
+              Duration(
+                milliseconds: 300,
+              ),
+            );
+            _model.prices1y = getJsonField(
+              (_model.priceResult?.jsonBody ?? ''),
+              r'''$.prices''',
+              true,
+            )!
+                .toList()
+                .cast<dynamic>();
+            safeSetState(() {});
+            _model.btcPrices = functions
+                .extractPriceList(_model.prices1y.toList())
+                .toList()
+                .cast<double>();
+            _model.btcEpochMs = functions
+                .extractEpochMsList(_model.prices1y.toList())
+                .toList()
+                .cast<double>();
+            _model.firstPrice = _model.btcPrices.firstOrNull;
+            _model.currentPrice = _model.btcPrices.lastOrNull;
+            _model.pctChange1y = functions.percentageChange(
+                _model.firstPrice, _model.currentPrice);
+            FFAppState().fakeUsdValue = valueOrDefault<double>(
+              functions.usdFromBtc(
+                  FFAppState().fakeBtcBalance, _model.currentPrice!),
+              0.0,
+            );
+            FFAppState().fakeSeeded = true;
+            safeSetState(() {});
+            safeSetState(() {});
+          } else {
+            _model.priceResult4 = await BtcChartOneYearCall.call();
+
+            await Future.delayed(
+              Duration(
+                milliseconds: 1000,
+              ),
+            );
+            if ((_model.priceResult4?.statusCode ?? 200) == 200) {
+              await Future.delayed(
+                Duration(
+                  milliseconds: 300,
+                ),
+              );
+              _model.prices1y = getJsonField(
+                (_model.priceResult?.jsonBody ?? ''),
+                r'''$.prices''',
+                true,
+              )!
+                  .toList()
+                  .cast<dynamic>();
+              safeSetState(() {});
+              _model.btcPrices = functions
+                  .extractPriceList(_model.prices1y.toList())
+                  .toList()
+                  .cast<double>();
+              _model.btcEpochMs = functions
+                  .extractEpochMsList(_model.prices1y.toList())
+                  .toList()
+                  .cast<double>();
+              _model.firstPrice = _model.btcPrices.firstOrNull;
+              _model.currentPrice = _model.btcPrices.lastOrNull;
+              _model.pctChange1y = functions.percentageChange(
+                  _model.firstPrice, _model.currentPrice);
+              FFAppState().fakeUsdValue = valueOrDefault<double>(
+                functions.usdFromBtc(
+                    FFAppState().fakeBtcBalance, _model.currentPrice!),
+                0.0,
+              );
+              FFAppState().fakeSeeded = true;
+              safeSetState(() {});
+              safeSetState(() {});
+            }
+          }
+        }
       }
     });
 
@@ -302,46 +435,43 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                   ),
                                   child: Stack(
                                     children: [
-                                      if (_model.chartReady == true)
-                                        Container(
-                                          width: 370.0,
-                                          height: 230.0,
-                                          child: FlutterFlowLineChart(
-                                            data: [
-                                              FFLineChartData(
-                                                xData: _model.btcEpochMs,
-                                                yData: _model.btcPrices,
-                                                settings: LineChartBarData(
+                                      Container(
+                                        width: 370.0,
+                                        height: 230.0,
+                                        child: FlutterFlowLineChart(
+                                          data: [
+                                            FFLineChartData(
+                                              xData: _model.btcEpochMs,
+                                              yData: _model.btcPrices,
+                                              settings: LineChartBarData(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                barWidth: 2.0,
+                                                isCurved: true,
+                                                dotData: FlDotData(show: false),
+                                                belowBarData: BarAreaData(
+                                                  show: true,
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .primary,
-                                                  barWidth: 2.0,
-                                                  isCurved: true,
-                                                  dotData:
-                                                      FlDotData(show: false),
-                                                  belowBarData: BarAreaData(
-                                                    show: true,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .accent1,
-                                                  ),
+                                                      .accent1,
                                                 ),
-                                              )
-                                            ],
-                                            chartStylingInfo: ChartStylingInfo(
-                                              backgroundColor:
-                                                  Color(0x4D000000),
-                                              showBorder: false,
-                                            ),
-                                            axisBounds: AxisBounds(),
-                                            xAxisLabelInfo: AxisLabelInfo(
-                                              reservedSize: 32.0,
-                                            ),
-                                            yAxisLabelInfo: AxisLabelInfo(
-                                              reservedSize: 40.0,
-                                            ),
+                                              ),
+                                            )
+                                          ],
+                                          chartStylingInfo: ChartStylingInfo(
+                                            backgroundColor: Color(0x4D000000),
+                                            showBorder: false,
+                                          ),
+                                          axisBounds: AxisBounds(),
+                                          xAxisLabelInfo: AxisLabelInfo(
+                                            reservedSize: 32.0,
+                                          ),
+                                          yAxisLabelInfo: AxisLabelInfo(
+                                            reservedSize: 40.0,
                                           ),
                                         ),
+                                      ),
                                     ],
                                   ),
                                 ),
