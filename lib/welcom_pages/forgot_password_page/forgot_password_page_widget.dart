@@ -303,14 +303,10 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                               _model.emailAddressTextController.text,
                               'https://decoy-verify-866378207353.us-central1.run.app/verify',
                             );
-                            _model.notifValue = 1;
-                            safeSetState(() {});
-                            await Future.delayed(
-                              Duration(
-                                milliseconds: 3000,
-                              ),
+                            await actions.dismissKeyboard(
+                              context,
                             );
-                            _model.notifValue = 0;
+                            _model.notifValue = 1;
                             safeSetState(() {});
 
                             safeSetState(() {});

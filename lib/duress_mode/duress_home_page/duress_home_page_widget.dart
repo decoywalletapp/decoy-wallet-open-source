@@ -51,7 +51,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       safeSetState(() {});
       _model.btcResp = await BtcChartOneYearCall.call();
 
-      if ((_model.btcResp?.statusCode ?? 200) == 200) {
+      if ((_model.btcResp?.succeeded ?? true) == true) {
         _model.btcPrices = functions
             .extractPriceList((_model.btcResp?.jsonBody ?? ''))
             .toList()
@@ -63,6 +63,30 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         safeSetState(() {});
         _model.chartReady = true;
         safeSetState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _model.btcPrices.length.toString(),
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _model.btcEpochMs.length.toString(),
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
         _model.firstPrice = _model.btcPrices.firstOrNull;
         _model.currentPrice = _model.btcPrices.lastOrNull;
         safeSetState(() {});

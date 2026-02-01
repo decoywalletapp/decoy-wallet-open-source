@@ -62,41 +62,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
       safeSetState(() {});
       _model.progressPercent = ((_model.progressValue!) * 100).round();
       safeSetState(() {});
-      if (_model.personalDone == true) {
-        if (FFAppState().contactsDoneInc < 3) {
-          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + 1;
-          safeSetState(() {});
-        }
-      } else {
-        if (FFAppState().contactsDoneInc > 0) {
-          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + -1;
-          safeSetState(() {});
-        }
-      }
-
-      if (_model.addressDone == true) {
-        if (FFAppState().contactsDoneInc < 3) {
-          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + 1;
-          safeSetState(() {});
-        }
-      } else {
-        if (FFAppState().contactsDoneInc > 0) {
-          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + -1;
-          safeSetState(() {});
-        }
-      }
-
-      if (_model.contactsDone == true) {
-        if (FFAppState().contactsDoneInc < 3) {
-          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + 1;
-          safeSetState(() {});
-        }
-      } else {
-        if (FFAppState().contactsDoneInc > 0) {
-          FFAppState().contactsDoneInc = FFAppState().contactsDoneInc + -1;
-          safeSetState(() {});
-        }
-      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

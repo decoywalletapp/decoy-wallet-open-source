@@ -7,7 +7,6 @@ import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
@@ -784,32 +783,46 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               child: Stack(
                                 children: [
                                   Align(
-                                    alignment: AlignmentDirectional(0.0, -1.0),
+                                    alignment: AlignmentDirectional(0.01, -1.0),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           0.0, 50.0, 0.0, 0.0),
                                       child: Text(
                                         'TIME TO GET ACCESS!',
+                                        textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
-                                              font: GoogleFonts.bebasNeue(
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
+                                              fontFamily: 'DECOY BEBAS',
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .info,
-                                              fontSize: 40.0,
+                                              fontSize: 44.0,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w600,
-                                              fontStyle:
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment:
+                                        AlignmentDirectional(-0.01, -1.0),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 50.0, 0.0, 0.0),
+                                      child: Text(
+                                        'TIME TO GET ACCESS!',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DECOY BEBAS',
+                                              color:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
+                                                      .info,
+                                              fontSize: 44.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.normal,
                                             ),
                                       ),
                                     ),
