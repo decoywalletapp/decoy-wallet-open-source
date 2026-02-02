@@ -52,12 +52,20 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       _model.btcResp = await BtcChartOneYearCall.call();
 
       if ((_model.btcResp?.succeeded ?? true) == true) {
+        _model.prices1y = getJsonField(
+          (_model.btcResp?.jsonBody ?? ''),
+          r'''$.prices''',
+          true,
+        )!
+            .toList()
+            .cast<dynamic>();
+        safeSetState(() {});
         _model.btcPrices = functions
-            .extractPriceList((_model.btcResp?.jsonBody ?? ''))
+            .extractPriceList(_model.prices1y.toList())
             .toList()
             .cast<double>();
         _model.btcEpochMs = functions
-            .extractEpochMsList((_model.btcResp?.jsonBody ?? ''))
+            .extractEpochMsList(_model.prices1y.toList())
             .toList()
             .cast<double>();
         safeSetState(() {});
@@ -106,6 +114,42 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         _model.btcPrices = [].toList().cast<double>();
         _model.btcEpochMs = [].toList().cast<double>();
         safeSetState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '123456789',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _model.btcPrices.length.toString(),
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _model.btcEpochMs.length.toString(),
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
       }
     });
 
@@ -326,46 +370,43 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                   ),
                                   child: Stack(
                                     children: [
-                                      if (_model.chartReady == true)
-                                        Container(
-                                          width: 370.0,
-                                          height: 230.0,
-                                          child: FlutterFlowLineChart(
-                                            data: [
-                                              FFLineChartData(
-                                                xData: _model.btcEpochMs,
-                                                yData: _model.btcPrices,
-                                                settings: LineChartBarData(
+                                      Container(
+                                        width: 370.0,
+                                        height: 230.0,
+                                        child: FlutterFlowLineChart(
+                                          data: [
+                                            FFLineChartData(
+                                              xData: _model.btcEpochMs,
+                                              yData: _model.btcPrices,
+                                              settings: LineChartBarData(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                barWidth: 2.0,
+                                                isCurved: true,
+                                                dotData: FlDotData(show: false),
+                                                belowBarData: BarAreaData(
+                                                  show: true,
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .primary,
-                                                  barWidth: 2.0,
-                                                  isCurved: true,
-                                                  dotData:
-                                                      FlDotData(show: false),
-                                                  belowBarData: BarAreaData(
-                                                    show: true,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .accent1,
-                                                  ),
+                                                      .accent1,
                                                 ),
-                                              )
-                                            ],
-                                            chartStylingInfo: ChartStylingInfo(
-                                              backgroundColor:
-                                                  Color(0x4D000000),
-                                              showBorder: false,
-                                            ),
-                                            axisBounds: AxisBounds(),
-                                            xAxisLabelInfo: AxisLabelInfo(
-                                              reservedSize: 32.0,
-                                            ),
-                                            yAxisLabelInfo: AxisLabelInfo(
-                                              reservedSize: 40.0,
-                                            ),
+                                              ),
+                                            )
+                                          ],
+                                          chartStylingInfo: ChartStylingInfo(
+                                            backgroundColor: Color(0x4D000000),
+                                            showBorder: false,
+                                          ),
+                                          axisBounds: AxisBounds(),
+                                          xAxisLabelInfo: AxisLabelInfo(
+                                            reservedSize: 32.0,
+                                          ),
+                                          yAxisLabelInfo: AxisLabelInfo(
+                                            reservedSize: 40.0,
                                           ),
                                         ),
+                                      ),
                                     ],
                                   ),
                                 ),

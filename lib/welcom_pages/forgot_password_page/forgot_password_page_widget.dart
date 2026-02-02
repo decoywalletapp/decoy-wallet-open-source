@@ -63,7 +63,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
             borderColor: Colors.transparent,
             borderRadius: 24.0,
             borderWidth: 1.0,
-            buttonSize: 60.0,
+            buttonSize: 40.0,
             icon: Icon(
               Icons.arrow_back_rounded,
               color: Color(0xFF15161E),
