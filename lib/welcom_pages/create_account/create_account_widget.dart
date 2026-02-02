@@ -288,7 +288,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               fontFamily: 'robot',
                                               color: Color(0xFF101213),
                                               fontSize: 14.0,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               fontWeight: FontWeight.w500,
                                             ),
                                         keyboardType:
@@ -407,7 +407,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               fontFamily: 'robot',
                                               color: Color(0xFF101213),
                                               fontSize: 14.0,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               fontWeight: FontWeight.w500,
                                             ),
                                         validator: _model
@@ -511,7 +511,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               fontFamily: 'robot',
                                               color: Color(0xFF101213),
                                               fontSize: 14.0,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               fontWeight: FontWeight.w500,
                                             ),
                                         minLines: 1,

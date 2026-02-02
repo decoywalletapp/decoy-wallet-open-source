@@ -433,157 +433,176 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                           ),
                         ],
                       ),
-                    ].divide(SizedBox(height: 0.0)),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 25.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Stack(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  children: [
-                                    if (_model.notificationState == 1)
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Text(
-                                          'PASSWORDS DO NOT MATCH',
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                fontSize: 14.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w500,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMediumIsCustom,
-                                              ),
-                                        ),
-                                      ),
-                                    if (_model.notificationState == 2)
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Text(
-                                          'INVALID PASSWORD - MUST BE 10 CHARACTERS LONG',
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                fontSize: 14.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w500,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMediumIsCustom,
-                                              ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          if (_model.passwordTextController.text ==
-                              _model
-                                  .confirmUpdatedPasswordTextController.text) {
-                            _model.passUpdate =
-                                await actions.supaUpdatePassword(
-                              _model.passwordTextController.text,
-                            );
-                            if (_model.passUpdate == true) {
-                              context.goNamed(AuthRouterWidget.routeName);
-                            } else {
-                              _model.notificationState = 2;
-                              safeSetState(() {});
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 5000,
-                                ),
-                              );
-                              _model.notificationState = 0;
-                              safeSetState(() {});
-                            }
-                          } else {
-                            _model.notificationState = 1;
-                            safeSetState(() {});
-                            await Future.delayed(
-                              Duration(
-                                milliseconds: 2000,
-                              ),
-                            );
-                            _model.notificationState = 0;
-                            safeSetState(() {});
-                          }
-
-                          safeSetState(() {});
-                        },
-                        text: 'Update Password',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 50.0,
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFFFA5E00),
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
+                              16.0, 12.0, 16.0, 0.0),
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              await actions.dismissKeyboard(
+                                context,
+                              );
+                              if (_model.passwordTextController.text ==
+                                  _model.confirmUpdatedPasswordTextController
+                                      .text) {
+                                _model.passUpdate =
+                                    await actions.supaUpdatePassword(
+                                  _model.passwordTextController.text,
+                                );
+                                if (_model.passUpdate == true) {
+                                  context.goNamed(AuthRouterWidget.routeName);
+                                } else {
+                                  _model.notificationState = 2;
+                                  safeSetState(() {});
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 5000,
+                                    ),
+                                  );
+                                  _model.notificationState = 0;
+                                  safeSetState(() {});
+                                }
+                              } else {
+                                _model.notificationState = 1;
+                                safeSetState(() {});
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 2000,
+                                  ),
+                                );
+                                _model.notificationState = 0;
+                                safeSetState(() {});
+                              }
+
+                              safeSetState(() {});
+                            },
+                            text: 'Update Password',
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 50.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: Color(0xFFFA5E00),
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
                                     fontFamily: 'InterTight',
                                     color: Colors.white,
                                     fontSize: 16.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
                                   ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
+                              elevation: 3.0,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                    ),
+                      Expanded(
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          child: Container(
+                            width: double.infinity,
+                            height: 35.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 12.0, 0.0, 0.0),
+                                        child: Stack(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          children: [
+                                            if (_model.notificationState == 1)
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Text(
+                                                  'PASSWORDS DO NOT MATCH',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMediumFamily,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        fontSize: 14.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts:
+                                                            !FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMediumIsCustom,
+                                                      ),
+                                                ),
+                                              ),
+                                            if (_model.notificationState == 2)
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Text(
+                                                  'INVALID PASSWORD - MUST BE 10 CHARACTERS LONG',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMediumFamily,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        fontSize: 14.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts:
+                                                            !FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMediumIsCustom,
+                                                      ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ].divide(SizedBox(height: 12.0)),
                   ),
                 ].divide(SizedBox(height: 12.0)),
               ),

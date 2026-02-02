@@ -48,6 +48,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       _model.chartReady = false;
       _model.btcPrices = [].toList().cast<double>();
       _model.btcEpochMs = [].toList().cast<double>();
+      _model.retryCount = 0;
       safeSetState(() {});
       _model.btcResp = await BtcChartOneYearCall.call();
 
@@ -114,42 +115,182 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         _model.btcPrices = [].toList().cast<double>();
         _model.btcEpochMs = [].toList().cast<double>();
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '123456789',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
+        if (_model.retryCount < 2) {
+          _model.retryCount = _model.retryCount + 1;
+          safeSetState(() {});
+          _model.btcResp2 = await BtcChartOneYearCall.call();
+
+          if ((_model.btcResp2?.succeeded ?? true) == true) {
+            _model.prices1y = getJsonField(
+              (_model.btcResp2?.jsonBody ?? ''),
+              r'''$.prices''',
+              true,
+            )!
+                .toList()
+                .cast<dynamic>();
+            safeSetState(() {});
+            _model.btcPrices = functions
+                .extractPriceList(_model.prices1y.toList())
+                .toList()
+                .cast<double>();
+            _model.btcEpochMs = functions
+                .extractEpochMsList(_model.prices1y.toList())
+                .toList()
+                .cast<double>();
+            safeSetState(() {});
+            _model.chartReady = true;
+            safeSetState(() {});
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  _model.btcPrices.length.toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
               ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.btcPrices.length.toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  _model.btcEpochMs.length.toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
               ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.btcEpochMs.length.toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
+            );
+            _model.firstPrice = _model.btcPrices.firstOrNull;
+            _model.currentPrice = _model.btcPrices.lastOrNull;
+            safeSetState(() {});
+            _model.pctChange1y = functions.percentageChange(
+                _model.firstPrice, _model.currentPrice);
+            safeSetState(() {});
+            FFAppState().fakeUsdValue = valueOrDefault<double>(
+              functions.usdFromBtc(
+                  FFAppState().fakeBtcBalance, _model.currentPrice!),
+              0.0,
+            );
+            FFAppState().update(() {});
+            FFAppState().fakeSeeded = true;
+            safeSetState(() {});
+          } else {
+            _model.chartReady = false;
+            _model.btcPrices = [].toList().cast<double>();
+            _model.btcEpochMs = [].toList().cast<double>();
+            safeSetState(() {});
+            if (_model.retryCount < 2) {
+              _model.retryCount = _model.retryCount + 1;
+              safeSetState(() {});
+              _model.btcResp3 = await BtcChartOneYearCall.call();
+
+              if ((_model.btcResp3?.succeeded ?? true) == true) {
+                _model.prices1y = getJsonField(
+                  (_model.btcResp3?.jsonBody ?? ''),
+                  r'''$.prices''',
+                  true,
+                )!
+                    .toList()
+                    .cast<dynamic>();
+                safeSetState(() {});
+                _model.btcPrices = functions
+                    .extractPriceList(_model.prices1y.toList())
+                    .toList()
+                    .cast<double>();
+                _model.btcEpochMs = functions
+                    .extractEpochMsList(_model.prices1y.toList())
+                    .toList()
+                    .cast<double>();
+                safeSetState(() {});
+                _model.chartReady = true;
+                safeSetState(() {});
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _model.btcPrices.length.toString(),
+                      style: TextStyle(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                      ),
+                    ),
+                    duration: Duration(milliseconds: 4000),
+                    backgroundColor: FlutterFlowTheme.of(context).secondary,
+                  ),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _model.btcEpochMs.length.toString(),
+                      style: TextStyle(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                      ),
+                    ),
+                    duration: Duration(milliseconds: 4000),
+                    backgroundColor: FlutterFlowTheme.of(context).secondary,
+                  ),
+                );
+                _model.firstPrice = _model.btcPrices.firstOrNull;
+                _model.currentPrice = _model.btcPrices.lastOrNull;
+                safeSetState(() {});
+                _model.pctChange1y = functions.percentageChange(
+                    _model.firstPrice, _model.currentPrice);
+                safeSetState(() {});
+                FFAppState().fakeUsdValue = valueOrDefault<double>(
+                  functions.usdFromBtc(
+                      FFAppState().fakeBtcBalance, _model.currentPrice!),
+                  0.0,
+                );
+                FFAppState().update(() {});
+                FFAppState().fakeSeeded = true;
+                safeSetState(() {});
+              } else {
+                _model.chartReady = false;
+                _model.btcPrices = [].toList().cast<double>();
+                _model.btcEpochMs = [].toList().cast<double>();
+                safeSetState(() {});
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'false',
+                      style: TextStyle(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                      ),
+                    ),
+                    duration: Duration(milliseconds: 4000),
+                    backgroundColor: FlutterFlowTheme.of(context).secondary,
+                  ),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _model.btcPrices.length.toString(),
+                      style: TextStyle(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                      ),
+                    ),
+                    duration: Duration(milliseconds: 4000),
+                    backgroundColor: FlutterFlowTheme.of(context).secondary,
+                  ),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _model.btcEpochMs.length.toString(),
+                      style: TextStyle(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                      ),
+                    ),
+                    duration: Duration(milliseconds: 4000),
+                    backgroundColor: FlutterFlowTheme.of(context).secondary,
+                  ),
+                );
+              }
+            }
+          }
+        }
       }
     });
 
@@ -407,6 +548,164 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                           ),
                                         ),
                                       ),
+                                      if (_model.chartReady == false)
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: FlutterFlowIconButton(
+                                            borderRadius: 8.0,
+                                            buttonSize: 60.0,
+                                            fillColor: Color(0x4D000000),
+                                            icon: Icon(
+                                              Icons.refresh,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              size: 32.0,
+                                            ),
+                                            onPressed: () async {
+                                              if (_model.isLoadingChart !=
+                                                  true) {
+                                                _model.isLoadingChart = true;
+                                                safeSetState(() {});
+                                                _model.chartReady = false;
+                                                _model.btcPrices =
+                                                    [].toList().cast<double>();
+                                                _model.btcEpochMs =
+                                                    [].toList().cast<double>();
+                                                safeSetState(() {});
+                                                _model.btcResp4 =
+                                                    await BtcChartOneYearCall
+                                                        .call();
+
+                                                if ((_model.btcResp4
+                                                            ?.succeeded ??
+                                                        true) ==
+                                                    true) {
+                                                  _model.prices1y =
+                                                      getJsonField(
+                                                    (_model.btcResp4
+                                                            ?.jsonBody ??
+                                                        ''),
+                                                    r'''$.prices''',
+                                                    true,
+                                                  )!
+                                                          .toList()
+                                                          .cast<dynamic>();
+                                                  safeSetState(() {});
+                                                  _model.btcPrices = functions
+                                                      .extractPriceList(_model
+                                                          .prices1y
+                                                          .toList())
+                                                      .toList()
+                                                      .cast<double>();
+                                                  _model.btcEpochMs = functions
+                                                      .extractEpochMsList(_model
+                                                          .prices1y
+                                                          .toList())
+                                                      .toList()
+                                                      .cast<double>();
+                                                  safeSetState(() {});
+                                                  _model.chartReady = true;
+                                                  safeSetState(() {});
+                                                  _model.firstPrice = _model
+                                                      .btcPrices.firstOrNull;
+                                                  _model.currentPrice = _model
+                                                      .btcPrices.lastOrNull;
+                                                  safeSetState(() {});
+                                                  _model.pctChange1y = functions
+                                                      .percentageChange(
+                                                          _model.firstPrice,
+                                                          _model.currentPrice);
+                                                  safeSetState(() {});
+                                                  FFAppState().fakeUsdValue =
+                                                      valueOrDefault<double>(
+                                                    functions.usdFromBtc(
+                                                        FFAppState()
+                                                            .fakeBtcBalance,
+                                                        _model.currentPrice!),
+                                                    0.0,
+                                                  );
+                                                  FFAppState().update(() {});
+                                                  FFAppState().fakeSeeded =
+                                                      true;
+                                                  safeSetState(() {});
+                                                } else {
+                                                  _model.btcResp5 =
+                                                      await BtcChartOneYearCall
+                                                          .call();
+
+                                                  if ((_model.btcResp5
+                                                              ?.succeeded ??
+                                                          true) ==
+                                                      true) {
+                                                    _model.prices1y =
+                                                        getJsonField(
+                                                      (_model.btcResp5
+                                                              ?.jsonBody ??
+                                                          ''),
+                                                      r'''$.prices''',
+                                                      true,
+                                                    )!
+                                                            .toList()
+                                                            .cast<dynamic>();
+                                                    safeSetState(() {});
+                                                    _model.btcPrices = functions
+                                                        .extractPriceList(_model
+                                                            .prices1y
+                                                            .toList())
+                                                        .toList()
+                                                        .cast<double>();
+                                                    _model.btcEpochMs =
+                                                        functions
+                                                            .extractEpochMsList(
+                                                                _model.prices1y
+                                                                    .toList())
+                                                            .toList()
+                                                            .cast<double>();
+                                                    safeSetState(() {});
+                                                    _model.chartReady = true;
+                                                    safeSetState(() {});
+                                                    _model.firstPrice = _model
+                                                        .btcPrices.firstOrNull;
+                                                    _model.currentPrice = _model
+                                                        .btcPrices.lastOrNull;
+                                                    safeSetState(() {});
+                                                    _model.pctChange1y = functions
+                                                        .percentageChange(
+                                                            _model.firstPrice,
+                                                            _model
+                                                                .currentPrice);
+                                                    safeSetState(() {});
+                                                    FFAppState().fakeUsdValue =
+                                                        valueOrDefault<double>(
+                                                      functions.usdFromBtc(
+                                                          FFAppState()
+                                                              .fakeBtcBalance,
+                                                          _model.currentPrice!),
+                                                      0.0,
+                                                    );
+                                                    FFAppState().update(() {});
+                                                    FFAppState().fakeSeeded =
+                                                        true;
+                                                    safeSetState(() {});
+                                                  } else {
+                                                    _model.chartReady = false;
+                                                    _model.btcPrices = []
+                                                        .toList()
+                                                        .cast<double>();
+                                                    _model.btcEpochMs = []
+                                                        .toList()
+                                                        .cast<double>();
+                                                    safeSetState(() {});
+                                                  }
+                                                }
+                                              }
+
+                                              safeSetState(() {});
+                                            },
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),

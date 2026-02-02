@@ -390,6 +390,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                   children: [
                     FFButtonWidget(
                       onPressed: () async {
+                        await actions.dismissKeyboard(
+                          context,
+                        );
                         _model.pnDigits10 = functions.normalizeToTenDigits(
                             _model.phoneNumberFieldTextController.text);
                         _model.cleanPhone = functions.toE164USpt2(

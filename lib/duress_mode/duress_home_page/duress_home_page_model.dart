@@ -51,10 +51,24 @@ class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
 
   bool chartReady = false;
 
+  int retryCount = 0;
+
+  int refreshChart = 0;
+
+  bool isLoadingChart = false;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
   ApiCallResponse? btcResp;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
+  ApiCallResponse? btcResp2;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in DuressHomePage widget.
+  ApiCallResponse? btcResp3;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in IconButton widget.
+  ApiCallResponse? btcResp4;
+  // Stores action output result for [Backend Call - API (btcChartOneYear)] action in IconButton widget.
+  ApiCallResponse? btcResp5;
 
   @override
   void initState(BuildContext context) {}
