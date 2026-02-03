@@ -394,6 +394,7 @@ class _BiometricVerificationWidgetState
                                 .override(
                                   fontFamily: 'InterTight',
                                   color: Colors.white,
+                                  fontSize: 18.0,
                                   letterSpacing: 0.0,
                                 ),
                             elevation: 3.0,
@@ -434,6 +435,7 @@ class _BiometricVerificationWidgetState
                                 fontFamily: 'InterTight',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 18.0,
                                 letterSpacing: 0.0,
                               ),
                           elevation: 3.0,

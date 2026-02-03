@@ -162,11 +162,11 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                           children: [
                                             Align(
                                               alignment: AlignmentDirectional(
-                                                  -0.5, -0.5),
+                                                  0.04, 0.0),
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
-                                                        8.0, 12.0, 8.0, 12.0),
+                                                        0.0, 12.0, 0.0, 12.0),
                                                 child: Text(
                                                   'Choose Access Method',
                                                   textAlign: TextAlign.center,
@@ -191,7 +191,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                             ),
                                             Align(
                                               alignment: AlignmentDirectional(
-                                                  0.5, 0.5),
+                                                  -0.04, 0.0),
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(

@@ -98,26 +98,53 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                8.0, 12.0, 8.0, 12.0),
-                            child: Text(
-                              'Settings',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'DECOY BEBAS',
-                                    color: FlutterFlowTheme.of(context).info,
-                                    fontSize: 52.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.normal,
-                                    lineHeight: 1.05,
-                                  ),
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(0.05, 0.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    8.0, 12.0, 8.0, 12.0),
+                                child: Text(
+                                  'Settings',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DECOY BEBAS',
+                                        color:
+                                            FlutterFlowTheme.of(context).info,
+                                        fontSize: 52.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.normal,
+                                        lineHeight: 1.05,
+                                      ),
+                                ),
+                              ),
                             ),
-                          ),
+                            Align(
+                              alignment: AlignmentDirectional(-0.05, 0.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    8.0, 12.0, 8.0, 12.0),
+                                child: Text(
+                                  'Settings',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DECOY BEBAS',
+                                        color:
+                                            FlutterFlowTheme.of(context).info,
+                                        fontSize: 52.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.normal,
+                                        lineHeight: 1.05,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -192,7 +219,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        fontFamily: 'InterTight',
+                                        fontFamily: 'robot',
                                         color: Colors.white,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
@@ -758,34 +785,21 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 Text(
                   'App Version',
                   style: FlutterFlowTheme.of(context).titleLarge.override(
-                        font: GoogleFonts.outfit(
-                          fontWeight: FontWeight.w500,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                        ),
+                        fontFamily: 'InterTight',
                         color: Color(0xFF15161E),
                         fontSize: 22.0,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w500,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).titleLarge.fontStyle,
                       ),
                 ),
                 Text(
                   'v0.0.1',
                   style: FlutterFlowTheme.of(context).labelMedium.override(
-                        font: GoogleFonts.plusJakartaSans(
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontStyle,
-                        ),
+                        fontFamily: 'InterTight',
                         color: Color(0xFF606A85),
                         fontSize: 14.0,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w500,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).labelMedium.fontStyle,
                       ),
                 ),
                 FFButtonWidget(
@@ -807,19 +821,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     color: Colors.white,
                     textStyle:
                         FlutterFlowTheme.of(context).labelMedium.override(
-                              font: GoogleFonts.plusJakartaSans(
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .fontStyle,
-                              ),
+                              fontFamily: 'InterTight',
                               color: FlutterFlowTheme.of(context).primary,
                               fontSize: 14.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .fontStyle,
                             ),
                     elevation: 3.0,
                     borderSide: BorderSide(

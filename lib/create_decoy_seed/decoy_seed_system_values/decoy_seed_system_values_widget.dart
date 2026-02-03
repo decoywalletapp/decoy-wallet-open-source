@@ -6,7 +6,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'decoy_seed_system_values_model.dart';
 export 'decoy_seed_system_values_model.dart';
@@ -130,24 +129,13 @@ class _DecoySeedSystemValuesWidgetState
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
-                                                font: GoogleFonts.bebasNeue(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
+                                                fontFamily: 'DECOY BEBAS',
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .info,
                                                 fontSize: 48.0,
                                                 letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
+                                                fontWeight: FontWeight.normal,
                                                 lineHeight: 1.0,
                                               ),
                                         ),

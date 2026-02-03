@@ -389,6 +389,7 @@ class _LocationAuthorizationWidgetState
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .titleSmallFamily,
                                   color: Colors.white,
+                                  fontSize: 18.0,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .titleSmallIsCustom,
@@ -432,6 +433,7 @@ class _LocationAuthorizationWidgetState
                                     .titleSmallFamily,
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 18.0,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !FlutterFlowTheme.of(context)
                                     .titleSmallIsCustom,

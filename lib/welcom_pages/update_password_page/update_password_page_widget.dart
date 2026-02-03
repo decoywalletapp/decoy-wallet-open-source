@@ -203,30 +203,22 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                         .labelMedium
                                         .override(
                                           fontFamily: 'robot',
-                                          color: Color(0xFF606A85),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           fontSize: 14.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                         ),
                                     hintText: 'Enter new password',
                                     hintStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                          color: Color(0xFF606A85),
+                                          fontFamily: 'robot',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
                                           fontSize: 14.0,
                                           letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
                                         ),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -272,7 +264,8 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                         _model.passwordVisibility
                                             ? Icons.visibility_outlined
                                             : Icons.visibility_off_outlined,
-                                        color: Color(0xFF757575),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         size: 22.0,
                                       ),
                                     ),
@@ -280,20 +273,12 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.plusJakartaSans(
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        color: Color(0xFF15161E),
+                                        fontFamily: 'robot',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 14.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
                                       ),
                                   cursorColor: Color(0xFF6F61EF),
                                   validator: _model
@@ -335,9 +320,10 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                     .labelMedium
                                                     .fontStyle,
                                           ),
-                                          color: Color(0xFF606A85),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           fontSize: 14.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
@@ -348,21 +334,12 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                     hintStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                          color: Color(0xFF606A85),
+                                          fontFamily: 'robot',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
                                           fontSize: 14.0,
                                           letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
                                         ),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -409,7 +386,8 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                         _model.confirmUpdatedPasswordVisibility
                                             ? Icons.visibility_outlined
                                             : Icons.visibility_off_outlined,
-                                        color: Color(0xFF757575),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         size: 22.0,
                                       ),
                                     ),
@@ -418,7 +396,8 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                       .bodyMedium
                                       .override(
                                         fontFamily: 'robot',
-                                        color: Color(0xFF15161E),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 14.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,

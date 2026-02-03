@@ -213,21 +213,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                          color: Color(0xFF57636C),
+                                          fontFamily: 'robot',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
                                           fontSize: 14.0,
                                           letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
                                         ),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -263,8 +254,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'InterTight',
-                                        color: Color(0xFF101213),
+                                        fontFamily: 'robot',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 14.0,
                                         letterSpacing: 0.25,
                                         fontWeight: FontWeight.w500,
@@ -290,21 +282,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                          color: Color(0xFF57636C),
+                                          fontFamily: 'robot',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
                                           fontSize: 14.0,
                                           letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
                                         ),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -347,7 +330,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         _model.passwordLoginVisibility
                                             ? Icons.visibility_outlined
                                             : Icons.visibility_off_outlined,
-                                        color: Color(0xFF57636C),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
                                         size: 24.0,
                                       ),
                                     ),
@@ -452,7 +436,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         color: Colors.white,
                                         fontSize: 18.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                   elevation: 3.0,
                                   borderSide: BorderSide(
