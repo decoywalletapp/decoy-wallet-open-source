@@ -99,3 +99,5 @@ export '/test_subjects/login_page_b44444/login_page_b44444_widget.dart'
     show LoginPageB44444Widget;
 export '/test_subjects/duress_home_page_copy/duress_home_page_copy_widget.dart'
     show DuressHomePageCopyWidget;
+export '/test_subjects/create_decoy_emergency_contacts_setup_copy/create_decoy_emergency_contacts_setup_copy_widget.dart'
+    show CreateDecoyEmergencyContactsSetupCopyWidget;

@@ -76,11 +76,9 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
           title: Text(
             'Privacy Policy',
             style: FlutterFlowTheme.of(context).titleLarge.override(
-                  fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                  fontFamily: 'InterTight',
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w600,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).titleLargeIsCustom,
                 ),
           ),
           actions: [],

@@ -154,7 +154,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +190,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                           color: Color(0xFF15161E),
                                           fontSize: 22.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                   ),
                                   Icon(
@@ -254,11 +254,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleLarge
                                         .override(
-                                          fontFamily: 'Outterbox',
+                                          fontFamily: 'InterTight',
                                           color: Color(0xFF15161E),
                                           fontSize: 22.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                   ),
                                   Icon(
@@ -326,7 +326,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         color: Color(0xFF15161E),
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                 ),
                                 Icon(
@@ -389,11 +389,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleLarge
                                       .override(
-                                        fontFamily: 'Outterbox',
+                                        fontFamily: 'InterTight',
                                         color: Color(0xFF15161E),
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                 ),
                                 Icon(
@@ -460,21 +460,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleLarge
                                         .override(
-                                          font: GoogleFonts.outfit(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontStyle,
-                                          ),
-                                          color: Color(0xFF15161E),
+                                          fontFamily: 'InterTight',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           fontSize: 22.0,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleLarge
-                                                  .fontStyle,
                                         ),
                                   ),
                                   Icon(
@@ -565,20 +556,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleLarge
                                       .override(
-                                        font: GoogleFonts.outfit(
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleLarge
-                                                  .fontStyle,
-                                        ),
+                                        fontFamily: 'InterTight',
                                         color: Color(0xFF15161E),
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleLarge
-                                            .fontStyle,
                                       ),
                                 ),
                                 Icon(

@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:provider/provider.dart';
 import 'personal_information_model.dart';
 export 'personal_information_model.dart';
 
@@ -202,8 +201,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -809,21 +806,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           currentUserUid,
                                         ),
                                       );
-                                      if (_model.supaNameUpdate
-                                              ?.elementAtOrNull(0)
-                                              ?.personalComplete ==
-                                          true) {
-                                        FFAppState().contactsDoneInc =
-                                            FFAppState().contactsDoneInc + 1;
-                                        safeSetState(() {});
-                                      } else {
-                                        if (FFAppState().contactsDoneInc > 0) {
-                                          FFAppState().contactsDoneInc =
-                                              FFAppState().contactsDoneInc + -1;
-                                          safeSetState(() {});
-                                        }
-                                      }
-
+                                      _model.refreshedDecoyWallet1 =
+                                          await DecoyWalletTable().queryRows(
+                                        queryFn: (q) => q.eqOrNull(
+                                          'user_id',
+                                          currentUserUid,
+                                        ),
+                                      );
                                       _model.personalSaved =
                                           _model.personalSaved + 1;
                                       safeSetState(() {});
@@ -933,21 +922,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             ? true
                                             : false,
                                       });
-                                      if (_model.supaNameUpdate
-                                              ?.elementAtOrNull(0)
-                                              ?.personalComplete ==
-                                          true) {
-                                        FFAppState().contactsDoneInc =
-                                            FFAppState().contactsDoneInc + 1;
-                                        safeSetState(() {});
-                                      } else {
-                                        if (FFAppState().contactsDoneInc > 0) {
-                                          FFAppState().contactsDoneInc =
-                                              FFAppState().contactsDoneInc + -1;
-                                          safeSetState(() {});
-                                        }
-                                      }
-
+                                      _model.refreshedDecoyWallet2 =
+                                          await DecoyWalletTable().queryRows(
+                                        queryFn: (q) => q.eqOrNull(
+                                          'user_id',
+                                          currentUserUid,
+                                        ),
+                                      );
                                       _model.personalSaved =
                                           _model.personalSaved + 1;
                                       safeSetState(() {});

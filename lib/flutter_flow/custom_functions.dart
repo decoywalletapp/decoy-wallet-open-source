@@ -526,3 +526,27 @@ double lngFromLatLng(LatLng? location) {
 String sanitizePhoneDigits(String input) {
   return input.replaceAll(RegExp(r'[^0-9]'), '');
 }
+
+double computeEmergencyProgress(
+  bool? personalComplete,
+  bool? addressComplete,
+  bool? contactsComplete,
+) {
+  final count = ((personalComplete ?? false) ? 1 : 0) +
+      ((addressComplete ?? false) ? 1 : 0) +
+      ((contactsComplete ?? false) ? 1 : 0);
+
+  return count / 3.0;
+}
+
+int computeEmergencyPercent(
+  bool? personalComplete,
+  bool? addressComplete,
+  bool? contactsComplete,
+) {
+  final count = ((personalComplete ?? false) ? 1 : 0) +
+      ((addressComplete ?? false) ? 1 : 0) +
+      ((contactsComplete ?? false) ? 1 : 0);
+
+  return ((count / 3.0) * 100).round();
+}

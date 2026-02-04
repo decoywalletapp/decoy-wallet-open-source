@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:provider/provider.dart';
 import 'emergency_contacts_model.dart';
 export 'emergency_contacts_model.dart';
 
@@ -520,8 +519,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -3479,25 +3476,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 currentUserUid,
                                               ),
                                             );
-                                            if (_model.updRow
-                                                    ?.elementAtOrNull(0)
-                                                    ?.contactsComplete ==
-                                                true) {
-                                              FFAppState().contactsDoneInc =
-                                                  FFAppState().contactsDoneInc +
-                                                      1;
-                                              safeSetState(() {});
-                                            } else {
-                                              if (FFAppState().contactsDoneInc >
-                                                  0) {
-                                                FFAppState().contactsDoneInc =
-                                                    FFAppState()
-                                                            .contactsDoneInc +
-                                                        -1;
-                                                safeSetState(() {});
-                                              }
-                                            }
-
+                                            _model.decoyWalletRefresh1 =
+                                                await DecoyWalletTable()
+                                                    .queryRows(
+                                              queryFn: (q) => q.eqOrNull(
+                                                'user_id',
+                                                currentUserUid,
+                                              ),
+                                            );
                                             FFAppState()
                                                     .emergencyContactsIncrement =
                                                 _model.contactsCount;
@@ -3536,24 +3522,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   ? true
                                                   : false,
                                             });
-                                            if (_model
-                                                    .insRow?.contactsComplete ==
-                                                true) {
-                                              FFAppState().contactsDoneInc =
-                                                  FFAppState().contactsDoneInc +
-                                                      1;
-                                              safeSetState(() {});
-                                            } else {
-                                              if (FFAppState().contactsDoneInc >
-                                                  0) {
-                                                FFAppState().contactsDoneInc =
-                                                    FFAppState()
-                                                            .contactsDoneInc +
-                                                        -1;
-                                                safeSetState(() {});
-                                              }
-                                            }
-
+                                            _model.decoyWalletRefresh2 =
+                                                await DecoyWalletTable()
+                                                    .queryRows(
+                                              queryFn: (q) => q.eqOrNull(
+                                                'user_id',
+                                                currentUserUid,
+                                              ),
+                                            );
                                             FFAppState()
                                                     .emergencyContactsIncrement =
                                                 _model.contactsCount;

@@ -104,19 +104,23 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 20.0,
-                    borderWidth: 1.0,
-                    buttonSize: 40.0,
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      size: 24.0,
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                    child: FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 20.0,
+                      borderWidth: 1.0,
+                      buttonSize: 40.0,
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        size: 24.0,
+                      ),
+                      onPressed: () async {
+                        context.safePop();
+                      },
                     ),
-                    onPressed: () async {
-                      context.safePop();
-                    },
                   ),
                 ],
               ),
@@ -144,7 +148,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.05, 0.05),
+                                alignment: AlignmentDirectional(0.04, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -166,7 +170,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(-0.05, -0.05),
+                                alignment: AlignmentDirectional(-0.04, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),

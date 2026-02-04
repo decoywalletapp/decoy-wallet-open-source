@@ -136,8 +136,12 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   List<DecoyWalletRow>? upd;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? updRow;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? decoyWalletRefresh1;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
   DecoyWalletRow? insRow;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? decoyWalletRefresh2;
 
   @override
   void initState(BuildContext context) {}

@@ -108,7 +108,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.1, 0.1),
+                                alignment: AlignmentDirectional(0.05, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -130,7 +130,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(-0.1, -0.1),
+                                alignment: AlignmentDirectional(-0.05, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
