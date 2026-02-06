@@ -880,14 +880,19 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                             MainAxisSize.max,
                                                         children: [
                                                           Container(
-                                                            width:
-                                                                double.infinity,
+                                                            width: 300.0,
                                                             height: 25.0,
                                                             decoration:
                                                                 BoxDecoration(
                                                               color: FlutterFlowTheme
                                                                       .of(context)
                                                                   .secondaryBackground,
+                                                              border:
+                                                                  Border.all(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primary,
+                                                              ),
                                                             ),
                                                             child:
                                                                 LinearPercentIndicator(
@@ -907,8 +912,18 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                               animation: true,
                                                               animateFromLastPercent:
                                                                   true,
-                                                              progressColor:
-                                                                  FlutterFlowTheme.of(
+                                                              progressColor: functions.computeEmergencyPercent(
+                                                                          createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                                              ?.personalComplete,
+                                                                          createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                                              ?.addressComplete,
+                                                                          createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                                              ?.contactsComplete) ==
+                                                                      100
+                                                                  ? FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .success
+                                                                  : FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary,
                                                               backgroundColor:

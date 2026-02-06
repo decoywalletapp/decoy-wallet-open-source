@@ -17,7 +17,7 @@ import '/index.dart';
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
 
-const kTransitionInfoKey = '__transition_info__';
+const kTransitionInfoKey = '__transition_info__cartesian_chart_library_syxakz';
 
 GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 

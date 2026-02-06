@@ -189,7 +189,7 @@ class _LocationAuthorizationWidgetState
                                       ),
                                 ),
                                 tileColor: Colors.transparent,
-                                activeColor:
+                                activeThumbColor:
                                     FlutterFlowTheme.of(context).primary,
                                 activeTrackColor:
                                     FlutterFlowTheme.of(context).accent1,

@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:equatable/equatable.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/browser_client.dart' if (dart.library.io) 'browser_client_stub.dart';
 
 import 'package:ff_commons/flutter_flow/uploaded_file.dart';
 
@@ -227,6 +229,28 @@ class ApiManager {
   static ApiManager? _instance;
   static ApiManager get instance => _instance ??= ApiManager._();
 
+
+  /// Get HTTP client with optional credentials support for web
+  /// 
+  /// Parameters:
+  ///   - withCredentials: Whether to include credentials (cookies) with requests
+  ///     Only applies to web platform (BrowserClient)
+  ///     Default: false
+  /// 
+  /// Returns a platform-specific HTTP client:
+  ///   - Web: BrowserClient with credentials setting applied
+  ///   - Mobile/Desktop: Standard http.Client
+  static http.Client getClient({bool withCredentials = false}) {
+    // For web platform, return BrowserClient with appropriate settings
+    if (kIsWeb) {
+      return BrowserClient()..withCredentials = withCredentials;
+    }
+
+    // For mobile/desktop, return standard http.Client
+    // (credentials are handled differently on these platforms)
+    return http.Client();
+  }
+
   // If your API calls need authentication, populate this field once
   // the user has authenticated. Alter this as needed.
   static String? _accessToken;
@@ -273,6 +297,7 @@ class ApiManager {
         streamedResponse: streamedResponse,
       );
     }
+    
     final makeRequest = callType == ApiCallType.GET
         ? (client != null ? client.get : http.get)
         : (client != null ? client.delete : http.delete);
@@ -319,7 +344,7 @@ class ApiManager {
 
     if (bodyType == BodyType.MULTIPART) {
       return multipartRequest(type, apiUrl, headers, params, returnBody,
-          decodeUtf8, alwaysAllowBody);
+          decodeUtf8, alwaysAllowBody,client);
     }
 
     final requestFn = {
@@ -341,6 +366,7 @@ class ApiManager {
     bool returnBody,
     bool decodeUtf8,
     bool alwaysAllowBody,
+    http.Client? client,
   ) async {
     assert(
       {ApiCallType.POST, ApiCallType.PUT, ApiCallType.PATCH}.contains(type) ||
@@ -380,7 +406,8 @@ class ApiManager {
       ..files.addAll(files);
     nonFileParams.forEach((key, value) => request.fields[key] = value);
 
-    final response = await http.Response.fromStream(await request.send());
+    final response = await http.Response.fromStream(
+        await (client != null ? client.send(request) : request.send()));
     return ApiCallResponse.fromHttpResponse(response, returnBody, decodeUtf8);
   }
 

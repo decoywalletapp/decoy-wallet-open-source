@@ -2470,7 +2470,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                 context.goNamed(
                                                   HomePageWidget.routeName,
                                                   extra: <String, dynamic>{
-                                                    kTransitionInfoKey:
+                                                    '__transition_info__':
                                                         TransitionInfo(
                                                       hasTransition: true,
                                                       transitionType:

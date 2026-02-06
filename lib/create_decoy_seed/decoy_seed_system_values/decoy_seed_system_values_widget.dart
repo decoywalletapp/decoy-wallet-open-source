@@ -252,7 +252,7 @@ class _DecoySeedSystemValuesWidgetState
                                                             .bodySmallIsCustom,
                                                   ),
                                             ),
-                                            activeColor:
+                                            activeThumbColor:
                                                 FlutterFlowTheme.of(context)
                                                     .success,
                                             activeTrackColor:

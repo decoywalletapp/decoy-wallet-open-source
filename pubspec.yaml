@@ -57,8 +57,8 @@ dependencies:
   flutter_animate: 4.5.0
   flutter_barcode_scanner: 
     git:
-      url: https://github.com/decodevM/flutter_barcode_scanner
-      ref: flutter-3.29
+      url: https://github.com/FlutterFlow/flutter_barcode_scanner
+      ref: 3b315cdeb48e06d1758c5110b3d2dbc3e922a7ce
   flutter_cache_manager: 3.4.1
   flutter_plugin_android_lifecycle: 2.0.28
   flutter_secure_storage: 10.0.0-beta.4
@@ -77,7 +77,7 @@ dependencies:
   geolocator_web: 4.1.3
   geolocator_windows: 0.2.5
   go_router: 12.1.3
-  google_fonts: 6.1.0
+  google_fonts: 6.3.3
   gotrue: 2.12.0
   hive: 2.2.3
   http: 1.4.0

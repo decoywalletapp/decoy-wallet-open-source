@@ -205,7 +205,7 @@ class _DecoyPinSystemValuesWidgetState
                                                               .bodySmallIsCustom,
                                                     ),
                                               ),
-                                              activeColor:
+                                              activeThumbColor:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                               activeTrackColor:
@@ -509,7 +509,7 @@ class _DecoyPinSystemValuesWidgetState
                                                               .bodySmallIsCustom,
                                                     ),
                                               ),
-                                              activeColor:
+                                              activeThumbColor:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                               activeTrackColor:

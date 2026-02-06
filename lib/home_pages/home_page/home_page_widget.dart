@@ -905,7 +905,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         context.pushNamed(
                           SettingsWidget.routeName,
                           extra: <String, dynamic>{
-                            kTransitionInfoKey: TransitionInfo(
+                            '__transition_info__': TransitionInfo(
                               hasTransition: true,
                               transitionType: PageTransitionType.leftToRight,
                             ),

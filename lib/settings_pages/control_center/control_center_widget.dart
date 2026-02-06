@@ -285,7 +285,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     .bodySmallIsCustom,
                                           ),
                                     ),
-                                    activeColor:
+                                    activeThumbColor:
                                         FlutterFlowTheme.of(context).primary,
                                     activeTrackColor:
                                         FlutterFlowTheme.of(context).accent1,
@@ -553,7 +553,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     .bodySmallIsCustom,
                                           ),
                                     ),
-                                    activeColor:
+                                    activeThumbColor:
                                         FlutterFlowTheme.of(context).primary,
                                     activeTrackColor:
                                         FlutterFlowTheme.of(context).accent1,
@@ -857,7 +857,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     .bodySmallIsCustom,
                                           ),
                                     ),
-                                    activeColor:
+                                    activeThumbColor:
                                         FlutterFlowTheme.of(context).success,
                                     activeTrackColor:
                                         FlutterFlowTheme.of(context).accent2,
@@ -1161,7 +1161,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     .bodySmallIsCustom,
                                           ),
                                     ),
-                                    activeColor:
+                                    activeThumbColor:
                                         FlutterFlowTheme.of(context).primary,
                                     activeTrackColor:
                                         FlutterFlowTheme.of(context).accent1,
@@ -1472,7 +1472,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     .bodySmallIsCustom,
                                           ),
                                     ),
-                                    activeColor:
+                                    activeThumbColor:
                                         FlutterFlowTheme.of(context).primary,
                                     activeTrackColor:
                                         FlutterFlowTheme.of(context).accent1,

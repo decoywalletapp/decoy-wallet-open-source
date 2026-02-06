@@ -965,7 +965,7 @@ class _LetsssseeeeeoldemscontactWidgetState
                                                       safeSetState(() {});
                                                     }
                                                   },
-                                                  activeColor:
+                                                  activeThumbColor:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .primary,

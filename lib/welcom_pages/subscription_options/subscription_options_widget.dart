@@ -92,7 +92,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                             context.pushNamed(
                               HomePageWidget.routeName,
                               extra: <String, dynamic>{
-                                kTransitionInfoKey: TransitionInfo(
+                                '__transition_info__': TransitionInfo(
                                   hasTransition: true,
                                   transitionType:
                                       PageTransitionType.leftToRight,
@@ -103,7 +103,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                             context.goNamed(
                               LoginPageWidget.routeName,
                               extra: <String, dynamic>{
-                                kTransitionInfoKey: TransitionInfo(
+                                '__transition_info__': TransitionInfo(
                                   hasTransition: true,
                                   transitionType: PageTransitionType.fade,
                                   duration: Duration(milliseconds: 0),

@@ -181,7 +181,7 @@ class _BiometricVerificationWidgetState
                                       ),
                                 ),
                                 tileColor: Colors.transparent,
-                                activeColor:
+                                activeThumbColor:
                                     FlutterFlowTheme.of(context).primary,
                                 activeTrackColor:
                                     FlutterFlowTheme.of(context).accent1,
