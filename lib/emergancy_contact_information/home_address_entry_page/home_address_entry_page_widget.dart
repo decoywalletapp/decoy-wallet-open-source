@@ -166,7 +166,7 @@ class _HomeAddressEntryPageWidgetState
               Align(
                 alignment: AlignmentDirectional(-1.0, 0.0),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                   child: FlutterFlowIconButton(
                     borderColor: Colors.transparent,
                     borderRadius: 20.0,
@@ -248,7 +248,7 @@ class _HomeAddressEntryPageWidgetState
                                             .bodyMediumFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
-                                        letterSpacing: 0.0,
+                                        letterSpacing: 0.25,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodyMediumIsCustom,
@@ -310,7 +310,7 @@ class _HomeAddressEntryPageWidgetState
                                           .bodyMediumFamily,
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
-                                      letterSpacing: 0.0,
+                                      letterSpacing: 0.25,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,
@@ -343,7 +343,7 @@ class _HomeAddressEntryPageWidgetState
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primaryText,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .bodyMediumIsCustom,
@@ -414,7 +414,7 @@ class _HomeAddressEntryPageWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -446,7 +446,7 @@ class _HomeAddressEntryPageWidgetState
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primaryText,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .bodyMediumIsCustom,
@@ -517,7 +517,7 @@ class _HomeAddressEntryPageWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -573,7 +573,7 @@ class _HomeAddressEntryPageWidgetState
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primaryText,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .bodyMediumIsCustom,
@@ -644,7 +644,7 @@ class _HomeAddressEntryPageWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -676,7 +676,7 @@ class _HomeAddressEntryPageWidgetState
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primaryText,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .bodyMediumIsCustom,
@@ -747,7 +747,7 @@ class _HomeAddressEntryPageWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -777,7 +777,7 @@ class _HomeAddressEntryPageWidgetState
                                             .bodyMediumFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
-                                        letterSpacing: 0.0,
+                                        letterSpacing: 0.25,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodyMediumIsCustom,
@@ -839,7 +839,7 @@ class _HomeAddressEntryPageWidgetState
                                           .bodyMediumFamily,
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
-                                      letterSpacing: 0.0,
+                                      letterSpacing: 0.25,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,

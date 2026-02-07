@@ -150,6 +150,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                             .headlineMedium
                                             .override(
                                               fontFamily: 'InterTight',
+                                              fontSize: 32.0,
                                               letterSpacing: 0.0,
                                             ),
                                       ),
@@ -715,14 +716,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                             .override(
                                               fontFamily: 'InterTight',
                                               color: Colors.white,
-                                              fontSize: 16.0,
+                                              fontSize: 18.0,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                         elevation: 3.0,
                                         borderSide: BorderSide(
                                           color: Colors.transparent,
-                                          width: 1.0,
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(16.0),
@@ -834,7 +834,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         ),
                                       ),
                                     ),
-                                  ].divide(SizedBox(height: 18.0)),
+                                  ].divide(SizedBox(height: 24.0)),
                                 ),
                               ),
                             ),

@@ -277,7 +277,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
                                         fontSize: 14.0,
-                                        letterSpacing: 0.0,
+                                        letterSpacing: 0.25,
                                         fontWeight: FontWeight.w500,
                                       ),
                                   cursorColor: Color(0xFF6F61EF),
@@ -313,22 +313,12 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'robot',
                                           color: FlutterFlowTheme.of(context)
                                               .primaryText,
                                           fontSize: 14.0,
                                           letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
                                         ),
                                     hintText: 'Confirm new password',
                                     hintStyle: FlutterFlowTheme.of(context)
@@ -399,7 +389,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
                                         fontSize: 14.0,
-                                        letterSpacing: 0.0,
+                                        letterSpacing: 0.25,
                                         fontWeight: FontWeight.w500,
                                       ),
                                   cursorColor: Color(0xFF6F61EF),
@@ -470,16 +460,16 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                   .override(
                                     fontFamily: 'InterTight',
                                     color: Colors.white,
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18.0,
+                                    letterSpacing: 0.25,
+                                    fontWeight: FontWeight.w600,
                                   ),
                               elevation: 3.0,
                               borderSide: BorderSide(
                                 color: Colors.transparent,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(12.0),
+                              borderRadius: BorderRadius.circular(16.0),
                             ),
                           ),
                         ),

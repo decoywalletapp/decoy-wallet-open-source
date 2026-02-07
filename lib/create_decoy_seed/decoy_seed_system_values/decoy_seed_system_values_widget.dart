@@ -100,50 +100,168 @@ class _DecoySeedSystemValuesWidgetState
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Expanded(
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  elevation: 3.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Container(
-                                    width: 300.0,
-                                    height: 110.0,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Align(
                                     alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8.0, 12.0, 8.0, 12.0),
-                                        child: Text(
-                                          'Decoy Seed Generated',
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'DECOY BEBAS',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .info,
-                                                fontSize: 48.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.normal,
-                                                lineHeight: 1.0,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      elevation: 3.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      child: Container(
+                                        width: 300.0,
+                                        height: 110.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 12.0, 0.0, 0.0),
+                                              child: Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -0.01, 0.0),
+                                                    child: Text(
+                                                      'DECOY SEED',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'DECOY BEBAS',
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                fontSize: 48.0,
+                                                                letterSpacing:
+                                                                    0.5,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                                lineHeight: 1.0,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.01, 0.0),
+                                                    child: Text(
+                                                      'DECOY SEED',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'DECOY BEBAS',
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                fontSize: 48.0,
+                                                                letterSpacing:
+                                                                    0.5,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                                lineHeight: 1.0,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
+                                            ),
+                                            Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Stack(
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.01, 0.0),
+                                                      child: Text(
+                                                        'GENERATED',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'DECOY BEBAS',
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .info,
+                                                              fontSize: 48.0,
+                                                              letterSpacing:
+                                                                  0.5,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              lineHeight: 1.0,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -0.01, 0.0),
+                                                      child: Text(
+                                                        'GENERATED',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'DECOY BEBAS',
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .info,
+                                                              fontSize: 48.0,
+                                                              letterSpacing:
+                                                                  0.5,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              lineHeight: 1.0,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           ],
                         ),
@@ -164,7 +282,7 @@ class _DecoySeedSystemValuesWidgetState
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: Container(
-                                  width: double.infinity,
+                                  width: 400.0,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12.0),
@@ -181,25 +299,24 @@ class _DecoySeedSystemValuesWidgetState
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Decoy Seed Triggers',
-                                          style: FlutterFlowTheme.of(context)
-                                              .titleMedium
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMediumFamily,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                fontSize: 22.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .titleMediumIsCustom,
-                                              ),
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'Decoy Seed Triggers',
+                                            textAlign: TextAlign.start,
+                                            style: FlutterFlowTheme.of(context)
+                                                .titleMedium
+                                                .override(
+                                                  fontFamily: 'InterTight',
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  fontSize: 22.0,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
                                         ),
                                         Material(
                                           color: Colors.transparent,
@@ -527,7 +644,9 @@ class _DecoySeedSystemValuesWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
+                                            fontSize: 15.0,
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -543,7 +662,9 @@ class _DecoySeedSystemValuesWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primary,
+                                            fontSize: 15.0,
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -568,7 +689,9 @@ class _DecoySeedSystemValuesWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primary,
+                                            fontSize: 15.0,
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -585,7 +708,9 @@ class _DecoySeedSystemValuesWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
+                                            fontSize: 15.0,
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -601,7 +726,9 @@ class _DecoySeedSystemValuesWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primary,
+                                            fontSize: 15.0,
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -709,23 +836,18 @@ class _DecoySeedSystemValuesWidgetState
                         },
                         text: 'Save & Go Home',
                         options: FFButtonOptions(
-                          width: double.infinity,
+                          width: 400.0,
                           height: 50.0,
                           padding: EdgeInsets.all(0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           color: FlutterFlowTheme.of(context).primary,
-                          textStyle: FlutterFlowTheme.of(context)
-                              .titleMedium
-                              .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleMediumFamily,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .titleMediumIsCustom,
-                              ),
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleMedium.override(
+                                    fontFamily: 'InterTight',
+                                    color: FlutterFlowTheme.of(context).info,
+                                    letterSpacing: 0.0,
+                                  ),
                           elevation: 3.0,
                           borderSide: BorderSide(
                             color: Colors.transparent,

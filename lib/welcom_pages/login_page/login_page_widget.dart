@@ -340,7 +340,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       .bodyMedium
                                       .override(
                                         fontFamily: 'robot',
-                                        color: Color(0xFF101213),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 14.0,
                                         letterSpacing: 0.25,
                                         fontWeight: FontWeight.w500,
@@ -502,7 +503,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             color: Color(0xFF101213),
                                             fontSize: 16.0,
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.normal,
                                           ),
                                     ),
                                   ),
@@ -562,7 +563,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             color: Color(0xFF101213),
                                             fontSize: 16.0,
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.normal,
                                           ),
                                     ),
                                   ),

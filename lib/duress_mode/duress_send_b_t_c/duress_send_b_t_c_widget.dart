@@ -71,17 +71,20 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
         appBar: AppBar(
           backgroundColor: Color(0x001D2428),
           automaticallyImplyLeading: false,
-          leading: FlutterFlowIconButton(
-            borderRadius: 20.0,
-            buttonSize: 40.0,
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).primaryBackground,
-              size: 24.0,
+          leading: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+            child: FlutterFlowIconButton(
+              borderRadius: 20.0,
+              buttonSize: 40.0,
+              icon: Icon(
+                Icons.arrow_back_rounded,
+                color: FlutterFlowTheme.of(context).primaryBackground,
+                size: 24.0,
+              ),
+              onPressed: () async {
+                context.safePop();
+              },
             ),
-            onPressed: () async {
-              context.safePop();
-            },
           ),
           title: Text(
             'Send Bitcoin',

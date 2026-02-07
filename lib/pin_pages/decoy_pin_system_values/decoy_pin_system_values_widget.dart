@@ -129,26 +129,24 @@ class _DecoyPinSystemValuesWidgetState
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Decoy PIN Triggers',
-                                            style: FlutterFlowTheme.of(context)
-                                                .titleMedium
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleMediumFamily,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  fontSize: 22.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  useGoogleFonts:
-                                                      !FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleMediumIsCustom,
-                                                ),
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Text(
+                                              'Decoy PIN Triggers',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .titleMedium
+                                                  .override(
+                                                    fontFamily: 'InterTight',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontSize: 22.0,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            ),
                                           ),
                                           Material(
                                             color: Colors.transparent,
@@ -183,7 +181,7 @@ class _DecoyPinSystemValuesWidgetState
                                                         ),
                                               ),
                                               subtitle: Text(
-                                                'Enable Decoy PIN to call emergency services',
+                                                'Toggle ON to enable DECOY PIN to contact emergency services',
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodySmall
@@ -487,7 +485,7 @@ class _DecoyPinSystemValuesWidgetState
                                                         ),
                                               ),
                                               subtitle: Text(
-                                                'Send alerts to emergency contacts via Decoy PIN',
+                                                'Toggle ON to enable DECOY PIN to contact emergency contacts',
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodySmall
@@ -780,7 +778,9 @@ class _DecoyPinSystemValuesWidgetState
                                             .bodyMediumFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primaryBackground,
+                                        fontSize: 15.0,
                                         letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodyMediumIsCustom,
@@ -795,7 +795,9 @@ class _DecoyPinSystemValuesWidgetState
                                             .bodyMediumFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
+                                        fontSize: 15.0,
                                         letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodyMediumIsCustom,
@@ -819,7 +821,9 @@ class _DecoyPinSystemValuesWidgetState
                                             .bodyMediumFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
+                                        fontSize: 15.0,
                                         letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodyMediumIsCustom,
@@ -835,7 +839,9 @@ class _DecoyPinSystemValuesWidgetState
                                             .bodyMediumFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primaryBackground,
+                                        fontSize: 15.0,
                                         letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodyMediumIsCustom,
@@ -850,7 +856,9 @@ class _DecoyPinSystemValuesWidgetState
                                             .bodyMediumFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
+                                        fontSize: 15.0,
                                         letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodyMediumIsCustom,
@@ -908,12 +916,9 @@ class _DecoyPinSystemValuesWidgetState
                           textStyle: FlutterFlowTheme.of(context)
                               .titleMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleMediumFamily,
+                                fontFamily: 'InterTight',
                                 color: FlutterFlowTheme.of(context).primaryText,
                                 letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .titleMediumIsCustom,
                               ),
                           elevation: 3.0,
                           borderSide: BorderSide(

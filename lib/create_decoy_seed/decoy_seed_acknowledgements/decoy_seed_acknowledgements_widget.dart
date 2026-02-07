@@ -129,7 +129,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                       children: [
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(-0.04, 0.0),
+                                              AlignmentDirectional(-0.03, 0.0),
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -156,7 +156,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                         ),
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(0.04, 0.0),
+                                              AlignmentDirectional(0.03, 0.0),
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(

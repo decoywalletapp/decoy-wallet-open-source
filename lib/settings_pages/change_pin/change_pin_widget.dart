@@ -70,7 +70,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: FlutterFlowTheme.of(context).info,
           body: SafeArea(
             top: true,
             child: Stack(
@@ -1375,14 +1375,9 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMediumFamily,
+                                              fontFamily: 'InterTight',
                                               color: Colors.white,
                                               letterSpacing: 0.0,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .titleMediumIsCustom,
                                             ),
                                         elevation: 3.0,
                                         borderSide: BorderSide(
@@ -3984,14 +3979,9 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMediumFamily,
+                                              fontFamily: 'InterTight',
                                               color: Colors.white,
                                               letterSpacing: 0.0,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .titleMediumIsCustom,
                                             ),
                                         elevation: 3.0,
                                         borderSide: BorderSide(

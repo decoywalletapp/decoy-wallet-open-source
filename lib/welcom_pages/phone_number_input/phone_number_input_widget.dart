@@ -221,7 +221,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                           fontFamily:
                                               FlutterFlowTheme.of(context)
                                                   .labelLargeFamily,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .labelLargeIsCustom,
@@ -276,7 +276,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                       .override(
                                         fontFamily: 'robot',
                                         fontSize: 18.0,
-                                        letterSpacing: 0.0,
+                                        letterSpacing: 0.25,
                                         fontWeight: FontWeight.w500,
                                       ),
                                   keyboardType: TextInputType.phone,
@@ -510,13 +510,10 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         color: FlutterFlowTheme.of(context).primary,
                         textStyle:
                             FlutterFlowTheme.of(context).titleMedium.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleMediumFamily,
+                                  fontFamily: 'InterTight',
                                   color: Colors.white,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w600,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleMediumIsCustom,
                                 ),
                         elevation: 3.0,
                         borderSide: BorderSide(
@@ -547,14 +544,11 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           textStyle: FlutterFlowTheme.of(context)
                               .titleMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleMediumFamily,
+                                fontFamily: 'InterTight',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.w600,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .titleMediumIsCustom,
                               ),
                           elevation: 3.0,
                           borderSide: BorderSide(

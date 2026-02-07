@@ -5,7 +5,6 @@ import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'generate_decoy_seed_phrase_model.dart';
 export 'generate_decoy_seed_phrase_model.dart';
 
@@ -101,21 +100,8 @@ class _GenerateDecoySeedPhraseWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .headlineMedium
                                     .override(
-                                      font: GoogleFonts.robotoCondensed(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                      ),
+                                      fontFamily: 'InterTight',
                                       letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .fontStyle,
                                     ),
                               ),
                               Text(
@@ -209,7 +195,7 @@ class _GenerateDecoySeedPhraseWidgetState
                             },
                             text: 'Generate Seed Phrase',
                             options: FFButtonOptions(
-                              width: double.infinity,
+                              width: 400.0,
                               height: 56.0,
                               padding: EdgeInsets.all(8.0),
                               iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -218,7 +204,7 @@ class _GenerateDecoySeedPhraseWidgetState
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
-                                    fontFamily: 'robot',
+                                    fontFamily: 'InterTight',
                                     color: FlutterFlowTheme.of(context).info,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
@@ -237,7 +223,7 @@ class _GenerateDecoySeedPhraseWidgetState
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                 child: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
                   borderRadius: 20.0,

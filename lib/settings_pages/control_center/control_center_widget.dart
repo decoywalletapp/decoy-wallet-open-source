@@ -8,7 +8,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'control_center_model.dart';
@@ -148,7 +147,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.04, 0.0),
+                                alignment: AlignmentDirectional(0.03, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -170,7 +169,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(-0.04, 0.0),
+                                alignment: AlignmentDirectional(-0.03, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -214,7 +213,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Container(
-                          width: double.infinity,
+                          width: 400.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12.0),
@@ -229,18 +228,52 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Decoy PIN Triggers',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        fontFamily: 'InterTight',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        fontSize: 22.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Text(
+                                    'Decoy PIN Triggers',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          fontFamily: 'InterTight',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          fontSize: 24.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 12.0, 0.0, 0.0),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      elevation: 3.0,
+                                      shape: const CircleBorder(),
+                                      child: Container(
+                                        width: 60.0,
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Icon(
+                                            Icons.pin,
+                                            color: FlutterFlowTheme.of(context)
+                                                .info,
+                                            size: 32.0,
+                                          ),
+                                        ),
                                       ),
+                                    ),
+                                  ),
                                 ),
                                 Material(
                                   color: Colors.transparent,
@@ -268,7 +301,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                           ),
                                     ),
                                     subtitle: Text(
-                                      'Enable Decoy PIN to call emergency services',
+                                      'Toggle ON to enable DECOY PIN to contact emergency services',
                                       style: FlutterFlowTheme.of(context)
                                           .bodySmall
                                           .override(
@@ -509,7 +542,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   thickness: 0.5,
                                   indent: 0.0,
                                   endIndent: 0.0,
-                                  color: FlutterFlowTheme.of(context).alternate,
+                                  color: FlutterFlowTheme.of(context).primary,
                                 ),
                                 Material(
                                   color: Colors.transparent,
@@ -537,7 +570,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                           ),
                                     ),
                                     subtitle: Text(
-                                      'Send alerts to emergency contacts via Decoy PIN',
+                                      'Toggle ON to enable DECOY PIN to contact emergency contacts',
                                       style: FlutterFlowTheme.of(context)
                                           .bodySmall
                                           .override(
@@ -787,7 +820,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Container(
-                          width: double.infinity,
+                          width: 400.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12.0),
@@ -802,18 +835,52 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Decoy Seed Triggers',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        fontFamily: 'InterTight',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        fontSize: 22.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Text(
+                                    'Decoy Seed Triggers',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          fontFamily: 'InterTight',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          fontSize: 24.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 12.0, 0.0, 0.0),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      elevation: 3.0,
+                                      shape: const CircleBorder(),
+                                      child: Container(
+                                        width: 60.0,
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Icon(
+                                            Icons.key,
+                                            color: FlutterFlowTheme.of(context)
+                                                .info,
+                                            size: 32.0,
+                                          ),
+                                        ),
                                       ),
+                                    ),
+                                  ),
                                 ),
                                 Material(
                                   color: Colors.transparent,
@@ -1091,7 +1158,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Container(
-                          width: double.infinity,
+                          width: 400.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12.0),
@@ -1106,18 +1173,52 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Biometric Verification',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        fontFamily: 'InterTight',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        fontSize: 22.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Text(
+                                    'Biometric Verification',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          fontFamily: 'InterTight',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          fontSize: 24.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 12.0, 0.0, 0.0),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      elevation: 3.0,
+                                      shape: const CircleBorder(),
+                                      child: Container(
+                                        width: 60.0,
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .accent1,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Icon(
+                                            Icons.fingerprint,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            size: 32.0,
+                                          ),
+                                        ),
                                       ),
+                                    ),
+                                  ),
                                 ),
                                 Material(
                                   color: Colors.transparent,
@@ -1393,7 +1494,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Container(
-                          width: double.infinity,
+                          width: 400.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12.0),
@@ -1408,22 +1509,47 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Location Services',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleMediumFamily,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        fontSize: 22.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleMediumIsCustom,
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Text(
+                                    'Location Services',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          fontFamily: 'InterTight',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          fontSize: 24.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    elevation: 3.0,
+                                    shape: const CircleBorder(),
+                                    child: Container(
+                                      width: 60.0,
+                                      height: 60.0,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF147EFB),
+                                        shape: BoxShape.circle,
                                       ),
+                                      child: Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Icon(
+                                          FFIcons.klocation,
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          size: 32.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 Material(
                                   color: Colors.transparent,
@@ -1998,20 +2124,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        font: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .fontStyle,
-                                        ),
+                                        fontFamily: 'InterTight',
                                         color: Colors.white,
-                                        fontSize: 16.0,
-                                        letterSpacing: 0.0,
+                                        fontSize: 18.0,
+                                        letterSpacing: 0.25,
                                         fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
                                       ),
                                   elevation: 3.0,
                                   borderSide: BorderSide(

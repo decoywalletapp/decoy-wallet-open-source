@@ -161,7 +161,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                         style: FlutterFlowTheme.of(context)
                             .headlineMedium
                             .override(
-                              fontFamily: 'robot',
+                              fontFamily: 'InterTight',
                               color: Color(0xFF15161E),
                               fontSize: 24.0,
                               letterSpacing: 0.0,
@@ -178,19 +178,11 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                           'We will send you an email with a link to reset your password, please enter the email associated with your account below.',
                           style:
                               FlutterFlowTheme.of(context).labelMedium.override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
+                                    fontFamily: 'robot',
                                     color: Color(0xFF606A85),
                                     fontSize: 14.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
                         ),
                       ),
@@ -312,16 +304,16 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                                 .override(
                                   fontFamily: 'robot',
                                   color: Colors.white,
-                                  fontSize: 16.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.0,
+                                  letterSpacing: 0.25,
+                                  fontWeight: FontWeight.w600,
                                 ),
                             elevation: 3.0,
                             borderSide: BorderSide(
                               color: Colors.transparent,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(14.0),
                           ),
                         ),
                       ),

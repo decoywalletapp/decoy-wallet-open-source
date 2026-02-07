@@ -137,7 +137,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium
                                 .override(
-                                  fontFamily: 'robot',
+                                  fontFamily: 'InterTight',
                                   letterSpacing: 0.0,
                                 ),
                           ),

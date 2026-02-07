@@ -96,11 +96,8 @@ class _LocationAuthorizationWidgetState
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .headlineMediumFamily,
+                                fontFamily: 'InterTight',
                                 letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .headlineMediumIsCustom,
                               ),
                         ),
                         Text(
@@ -166,13 +163,9 @@ class _LocationAuthorizationWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleMediumFamily,
+                                        fontFamily: 'InterTight',
                                         fontSize: 16.0,
                                         letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleMediumIsCustom,
                                       ),
                                 ),
                                 subtitle: Text(
@@ -230,7 +223,9 @@ class _LocationAuthorizationWidgetState
                                       fontFamily: 'robot',
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                     ),
                               ),
                               Text(
@@ -241,7 +236,9 @@ class _LocationAuthorizationWidgetState
                                       fontFamily: 'robot',
                                       color:
                                           FlutterFlowTheme.of(context).primary,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                     ),
                               ),
                             ],
@@ -259,19 +256,16 @@ class _LocationAuthorizationWidgetState
                                     .bodyMedium
                                     .override(
                                       font: GoogleFonts.roboto(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
+                                        fontWeight: FontWeight.w500,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .fontStyle,
                                       ),
                                       color:
                                           FlutterFlowTheme.of(context).primary,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .fontStyle,
@@ -284,19 +278,16 @@ class _LocationAuthorizationWidgetState
                                     .bodyMedium
                                     .override(
                                       font: GoogleFonts.roboto(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
+                                        fontWeight: FontWeight.w500,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .fontStyle,
                                       ),
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .fontStyle,
@@ -311,7 +302,9 @@ class _LocationAuthorizationWidgetState
                                           .bodyMediumFamily,
                                       color:
                                           FlutterFlowTheme.of(context).primary,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .bodyMediumIsCustom,
@@ -386,13 +379,10 @@ class _LocationAuthorizationWidgetState
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
+                                  fontFamily: 'InterTight',
                                   color: Colors.white,
                                   fontSize: 18.0,
                                   letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .titleSmallIsCustom,
                                 ),
                             elevation: 3.0,
                             borderSide: BorderSide(
@@ -429,14 +419,11 @@ class _LocationAuthorizationWidgetState
                           textStyle: FlutterFlowTheme.of(context)
                               .titleSmall
                               .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleSmallFamily,
+                                fontFamily: 'InterTight',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                                 fontSize: 18.0,
                                 letterSpacing: 0.0,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .titleSmallIsCustom,
                               ),
                           elevation: 3.0,
                           borderSide: BorderSide(

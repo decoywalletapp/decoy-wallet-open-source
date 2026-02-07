@@ -481,7 +481,7 @@ class _PhoneNumberVerificationWidgetState
                                               fontFamily:
                                                   FlutterFlowTheme.of(context)
                                                       .labelMediumFamily,
-                                              letterSpacing: 0.0,
+                                              letterSpacing: 0.25,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .labelMediumIsCustom,
@@ -544,7 +544,7 @@ class _PhoneNumberVerificationWidgetState
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMediumFamily,
                                             fontSize: 20.0,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             fontWeight: FontWeight.bold,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
@@ -654,6 +654,7 @@ class _PhoneNumberVerificationWidgetState
                                                     color: FlutterFlowTheme.of(
                                                             context)
                                                         .info,
+                                                    fontSize: 16.0,
                                                     letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     useGoogleFonts:

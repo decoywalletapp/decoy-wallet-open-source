@@ -223,7 +223,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                     alignment: AlignmentDirectional(-1.0, 0.0),
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                       child: FlutterFlowIconButton(
                         borderRadius: 20.0,
                         buttonSize: 40.0,
@@ -290,7 +290,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           fontFamily:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
@@ -315,7 +315,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -370,7 +370,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
                                           fontSize: 16.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .bodyMediumIsCustom,
@@ -408,7 +408,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           fontFamily:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
@@ -433,7 +433,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -488,7 +488,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
                                           fontSize: 16.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .bodyMediumIsCustom,
@@ -526,7 +526,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           fontFamily:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
@@ -549,7 +549,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -604,7 +604,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
                                           fontSize: 16.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .bodyMediumIsCustom,
@@ -631,7 +631,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           fontFamily:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
@@ -653,7 +653,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryText,
-                                            letterSpacing: 0.0,
+                                            letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
                                                     .bodyMediumIsCustom,
@@ -708,7 +708,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
                                           fontSize: 16.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.25,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .bodyMediumIsCustom,
@@ -980,6 +980,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                       fontFamily: FlutterFlowTheme.of(context)
                                           .titleSmallFamily,
                                       color: Colors.white,
+                                      fontSize: 18.0,
                                       letterSpacing: 0.0,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)

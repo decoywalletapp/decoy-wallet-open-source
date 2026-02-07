@@ -59,7 +59,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: FlutterFlowTheme.of(context).info,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderRadius: 20.0,
@@ -91,7 +91,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).primaryBackground,
+              color: FlutterFlowTheme.of(context).info,
             ),
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 24.0),

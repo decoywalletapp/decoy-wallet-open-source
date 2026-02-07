@@ -101,7 +101,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         child: Stack(
                           children: [
                             Align(
-                              alignment: AlignmentDirectional(0.05, 0.0),
+                              alignment: AlignmentDirectional(0.03, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     8.0, 12.0, 8.0, 12.0),
@@ -123,7 +123,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               ),
                             ),
                             Align(
-                              alignment: AlignmentDirectional(-0.05, 0.0),
+                              alignment: AlignmentDirectional(-0.03, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     8.0, 12.0, 8.0, 12.0),

@@ -161,7 +161,7 @@ class _BiometricVerificationWidgetState
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
-                                        fontFamily: 'robot',
+                                        fontFamily: 'InterTight',
                                         fontSize: 16.0,
                                         letterSpacing: 0.0,
                                       ),
