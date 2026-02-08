@@ -458,7 +458,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleSmall
                                   .override(
-                                    fontFamily: 'InterTight',
+                                    fontFamily: 'robot',
                                     color: Colors.white,
                                     fontSize: 18.0,
                                     letterSpacing: 0.25,

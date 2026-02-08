@@ -147,9 +147,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -168,9 +169,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -189,9 +191,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -210,9 +213,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -231,9 +235,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -252,9 +257,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -273,9 +279,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -294,9 +301,10 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       width: 16.0,
                                                       height: 16.0,
                                                       decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       alignment:
@@ -1150,7 +1158,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           height: 100.0,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                                .info,
                                           ),
                                         ),
                                         FFButtonWidget(
@@ -1375,7 +1383,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
-                                              fontFamily: 'InterTight',
+                                              fontFamily: 'robot',
                                               color: Colors.white,
                                               letterSpacing: 0.0,
                                             ),
@@ -3803,7 +3811,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           height: 100.0,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                                .info,
                                           ),
                                         ),
                                         FFButtonWidget(
@@ -3979,7 +3987,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
-                                              fontFamily: 'InterTight',
+                                              fontFamily: 'robot',
                                               color: Colors.white,
                                               letterSpacing: 0.0,
                                             ),

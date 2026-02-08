@@ -594,16 +594,17 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                               iconPadding: EdgeInsetsDirectional
                                                   .fromSTEB(0.0, 0.0, 0.0, 0.0),
                                               color: Color(0xFFFF4444),
-                                              textStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .titleSmall
-                                                  .override(
-                                                    fontFamily: 'InterTight',
-                                                    color: Colors.white,
-                                                    fontSize: 18.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
+                                              textStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        fontFamily: 'robot',
+                                                        color: Colors.white,
+                                                        fontSize: 18.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                               elevation: 3.0,
                                               borderSide: BorderSide(
                                                 color: Colors.transparent,

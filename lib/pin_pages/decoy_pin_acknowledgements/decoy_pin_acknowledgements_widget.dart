@@ -117,7 +117,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                 ),
                                 child: Container(
                                   width: double.infinity,
-                                  height: 72.0,
+                                  height: 70.0,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primary,
                                     borderRadius: BorderRadius.circular(8.0),
@@ -914,7 +914,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      fontFamily: 'InterTight',
+                                      fontFamily: 'robot',
                                       color: FlutterFlowTheme.of(context)
                                           .primaryBackground,
                                       letterSpacing: 0.0,

@@ -916,7 +916,7 @@ class _DecoyPinSystemValuesWidgetState
                           textStyle: FlutterFlowTheme.of(context)
                               .titleMedium
                               .override(
-                                fontFamily: 'InterTight',
+                                fontFamily: 'robot',
                                 color: FlutterFlowTheme.of(context).primaryText,
                                 letterSpacing: 0.0,
                               ),

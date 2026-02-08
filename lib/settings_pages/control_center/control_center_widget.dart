@@ -138,7 +138,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                         ),
                         child: Container(
                           width: 300.0,
-                          height: 72.0,
+                          height: 71.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).primary,
                             borderRadius: BorderRadius.circular(8.0),
@@ -147,7 +147,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.03, 0.0),
+                                alignment: AlignmentDirectional(0.1, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -169,7 +169,51 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(-0.03, 0.0),
+                                alignment: AlignmentDirectional(-0.1, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 12.0, 8.0, 12.0),
+                                  child: Text(
+                                    'Control Center',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DECOY BEBAS',
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 52.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          lineHeight: 1.05,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.1),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 12.0, 8.0, 12.0),
+                                  child: Text(
+                                    'Control Center',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DECOY BEBAS',
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 52.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          lineHeight: 1.05,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(0.0, -0.1),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       8.0, 12.0, 8.0, 12.0),
@@ -2124,7 +2168,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
-                                        fontFamily: 'InterTight',
+                                        fontFamily: 'robot',
                                         color: Colors.white,
                                         fontSize: 18.0,
                                         letterSpacing: 0.25,

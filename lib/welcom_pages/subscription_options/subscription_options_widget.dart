@@ -173,7 +173,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     Align(
                                                       alignment:
                                                           AlignmentDirectional(
-                                                              -0.02, 0.0),
+                                                              -0.01, 0.0),
                                                       child: Text(
                                                         'Choose Access',
                                                         textAlign:
@@ -200,7 +200,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     Align(
                                                       alignment:
                                                           AlignmentDirectional(
-                                                              0.02, 0.0),
+                                                              0.01, 0.0),
                                                       child: Text(
                                                         'Choose Access',
                                                         textAlign:
@@ -235,7 +235,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       Align(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                0.01, 0.0),
+                                                                0.0, 0.0),
                                                         child: Text(
                                                           'METHOD',
                                                           textAlign:
@@ -262,7 +262,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       Align(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                -0.01, 0.0),
+                                                                0.0, 0.0),
                                                         child: Text(
                                                           'METHOD',
                                                           textAlign:
@@ -421,7 +421,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                                   .titleMedium
                                                                   .override(
                                                                     fontFamily:
-                                                                        'InterTight',
+                                                                        'robot',
                                                                     color: FlutterFlowTheme.of(
                                                                             context)
                                                                         .info,
@@ -594,7 +594,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                                   .titleMedium
                                                                   .override(
                                                                     fontFamily:
-                                                                        'InterTight',
+                                                                        'robot',
                                                                     color: FlutterFlowTheme.of(
                                                                             context)
                                                                         .info,

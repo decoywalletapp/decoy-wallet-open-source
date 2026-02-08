@@ -977,17 +977,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .titleSmallFamily,
+                                      fontFamily: 'robot',
                                       color: Colors.white,
                                       fontSize: 18.0,
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .titleSmallIsCustom,
                                     ),
                                 elevation: 3.0,
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(12.0),
                               ),
                             ),
                           ),

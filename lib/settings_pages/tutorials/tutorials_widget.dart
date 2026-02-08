@@ -99,7 +99,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                         ),
                         child: Container(
                           width: 200.0,
-                          height: 72.0,
+                          height: 70.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).primary,
                             borderRadius: BorderRadius.circular(8.0),
@@ -109,46 +109,36 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                             children: [
                               Align(
                                 alignment: AlignmentDirectional(0.03, 0.0),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8.0, 12.0, 8.0, 12.0),
-                                  child: Text(
-                                    'Tutorials',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'DECOY BEBAS',
-                                          color:
-                                              FlutterFlowTheme.of(context).info,
-                                          fontSize: 52.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          lineHeight: 1.125,
-                                        ),
-                                  ),
+                                child: Text(
+                                  'Tutorials',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DECOY BEBAS',
+                                        color:
+                                            FlutterFlowTheme.of(context).info,
+                                        fontSize: 52.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                 ),
                               ),
                               Align(
                                 alignment: AlignmentDirectional(-0.03, 0.0),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8.0, 12.0, 8.0, 12.0),
-                                  child: Text(
-                                    'Tutorials',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'DECOY BEBAS',
-                                          color:
-                                              FlutterFlowTheme.of(context).info,
-                                          fontSize: 52.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          lineHeight: 1.125,
-                                        ),
-                                  ),
+                                child: Text(
+                                  'Tutorials',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DECOY BEBAS',
+                                        color:
+                                            FlutterFlowTheme.of(context).info,
+                                        fontSize: 52.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                 ),
                               ),
                             ],

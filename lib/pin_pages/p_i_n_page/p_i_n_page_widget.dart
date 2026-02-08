@@ -1006,14 +1006,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                             // Customize what your widget looks like when it's loading.
                             if (!snapshot.hasData) {
                               return Center(
-                                child: SizedBox(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      FlutterFlowTheme.of(context).primary,
-                                    ),
-                                  ),
+                                child: LinearProgressIndicator(
+                                  color: FlutterFlowTheme.of(context).primary,
                                 ),
                               );
                             }
@@ -1212,7 +1206,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
-                                      fontFamily: 'InterTight',
+                                      fontFamily: 'robot',
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
                                       letterSpacing: 0.0,

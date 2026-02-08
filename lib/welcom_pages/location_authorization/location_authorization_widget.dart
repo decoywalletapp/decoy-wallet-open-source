@@ -379,7 +379,7 @@ class _LocationAuthorizationWidgetState
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: 'InterTight',
+                                  fontFamily: 'robot',
                                   color: Colors.white,
                                   fontSize: 18.0,
                                   letterSpacing: 0.0,
@@ -419,7 +419,7 @@ class _LocationAuthorizationWidgetState
                           textStyle: FlutterFlowTheme.of(context)
                               .titleSmall
                               .override(
-                                fontFamily: 'InterTight',
+                                fontFamily: 'robot',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                                 fontSize: 18.0,

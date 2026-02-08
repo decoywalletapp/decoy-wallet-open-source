@@ -77,6 +77,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
             'Privacy Policy',
             style: FlutterFlowTheme.of(context).titleLarge.override(
                   fontFamily: 'InterTight',
+                  fontSize: 24.0,
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w600,
                 ),

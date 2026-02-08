@@ -215,7 +215,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            0.01, 0.0),
+                                                            0.0, 0.0),
                                                     child: Text(
                                                       'METHOD',
                                                       textAlign:
@@ -243,7 +243,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            -0.01, 0.0),
+                                                            0.0, 0.0),
                                                     child: Text(
                                                       'METHOD',
                                                       textAlign:
@@ -411,7 +411,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                               .titleMedium
                                                               .override(
                                                                 fontFamily:
-                                                                    'InterTight',
+                                                                    'robot',
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
                                                                     .info,
@@ -555,8 +555,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           .of(context)
                                                       .titleMedium
                                                       .override(
-                                                        fontFamily:
-                                                            'InterTight',
+                                                        fontFamily: 'robot',
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -743,19 +742,18 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .error,
-                                                textStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .titleMedium
-                                                    .override(
-                                                      fontFamily: 'InterTight',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
+                                                textStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleMedium
+                                                        .override(
+                                                          fontFamily: 'robot',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
                                                               .info,
-                                                      letterSpacing: 0.25,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
+                                                          letterSpacing: 0.25,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(
                                                   color: Colors.transparent,

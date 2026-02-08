@@ -92,14 +92,8 @@ class _CreateDecoyEmergencyContactsSetupCopyWidgetState
           return Scaffold(
             backgroundColor: Colors.white,
             body: Center(
-              child: SizedBox(
-                width: 50.0,
-                height: 50.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    FlutterFlowTheme.of(context).primary,
-                  ),
-                ),
+              child: LinearProgressIndicator(
+                color: FlutterFlowTheme.of(context).primary,
               ),
             ),
           );

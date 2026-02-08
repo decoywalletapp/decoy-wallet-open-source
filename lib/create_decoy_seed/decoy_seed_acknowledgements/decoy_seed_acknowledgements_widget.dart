@@ -117,7 +117,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                 ),
                                 child: Container(
                                   width: double.infinity,
-                                  height: 72.0,
+                                  height: 70.0,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primary,
                                     borderRadius: BorderRadius.circular(8.0),

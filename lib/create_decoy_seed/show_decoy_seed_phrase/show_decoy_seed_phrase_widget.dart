@@ -1023,7 +1023,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                           color: FlutterFlowTheme.of(context).primary,
                           textStyle:
                               FlutterFlowTheme.of(context).titleMedium.override(
-                                    fontFamily: 'InterTight',
+                                    fontFamily: 'robot',
                                     color: Colors.white,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,

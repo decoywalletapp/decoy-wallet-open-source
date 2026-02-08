@@ -91,14 +91,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
           return Scaffold(
             backgroundColor: Colors.white,
             body: Center(
-              child: SizedBox(
-                width: 50.0,
-                height: 50.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    FlutterFlowTheme.of(context).primary,
-                  ),
-                ),
+              child: LinearProgressIndicator(
+                color: FlutterFlowTheme.of(context).primary,
               ),
             ),
           );
@@ -178,27 +172,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                       children: [
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(-0.02, 0.0),
-                                          child: Text(
-                                            'DECOY EMERGENCY',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'DECOY BEBAS',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .info,
-                                                  fontSize: 48.0,
-                                                  letterSpacing: 0.5,
-                                                  fontWeight: FontWeight.normal,
-                                                  lineHeight: 1.0,
-                                                ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.02, 0.0),
+                                              AlignmentDirectional(0.0, 0.0),
                                           child: Text(
                                             'DECOY EMERGENCY',
                                             textAlign: TextAlign.center,
@@ -226,29 +200,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                         children: [
                                           Align(
                                             alignment:
-                                                AlignmentDirectional(0.01, 0.0),
-                                            child: Text(
-                                              'SETUP',
-                                              textAlign: TextAlign.center,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'DECOY BEBAS',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .info,
-                                                    fontSize: 48.0,
-                                                    letterSpacing: 0.5,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    lineHeight: 1.0,
-                                                  ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                -0.01, 0.0),
+                                                AlignmentDirectional(0.0, 0.0),
                                             child: Text(
                                               'SETUP',
                                               textAlign: TextAlign.center,
@@ -1001,8 +953,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       ?.addressComplete,
                                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                                       ?.contactsComplete),
-                                                              width: 250.0,
-                                                              lineHeight: 20.0,
+                                                              width: 300.0,
+                                                              lineHeight: 25.0,
                                                               animation: false,
                                                               animateFromLastPercent:
                                                                   true,
