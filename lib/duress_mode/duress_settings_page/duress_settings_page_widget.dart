@@ -95,7 +95,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                 child: Container(
-                  width: double.infinity,
+                  width: 400.0,
                   decoration: BoxDecoration(),
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
@@ -128,7 +128,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                 child: Container(
-                  width: double.infinity,
+                  width: 400.0,
                   decoration: BoxDecoration(),
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
@@ -161,7 +161,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                 child: Container(
-                  width: double.infinity,
+                  width: 400.0,
                   decoration: BoxDecoration(),
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
@@ -194,7 +194,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                 child: Container(
-                  width: double.infinity,
+                  width: 400.0,
                   decoration: BoxDecoration(),
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
@@ -227,7 +227,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                 child: Container(
-                  width: double.infinity,
+                  width: 400.0,
                   decoration: BoxDecoration(),
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
@@ -260,7 +260,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                 child: Container(
-                  width: double.infinity,
+                  width: 400.0,
                   decoration: BoxDecoration(),
                   child: Padding(
                     padding: EdgeInsets.all(16.0),

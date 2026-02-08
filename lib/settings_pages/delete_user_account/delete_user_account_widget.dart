@@ -72,560 +72,576 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.all(24.0),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.warning_rounded,
-                                          color: Color(0xFFFF4444),
-                                          size: 64.0,
-                                        ),
-                                        Text(
-                                          'This action is permanent',
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .headlineMedium
-                                              .override(
-                                                fontFamily: 'InterTight',
-                                                color: Color(0xFF1A1A1A),
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                        Text(
-                                          'Deleting your Decoy Wallet account will permanently remove your account, emergency contacts, alert routing settings, and all app configurations. This action cannot be undone.',
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily,
-                                                color: Color(0xFF666666),
-                                                letterSpacing: 0.0,
-                                                lineHeight: 1.5,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMediumIsCustom,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(height: 16.0)),
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'What will be deleted',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .titleMedium
-                                                  .override(
-                                                    fontFamily: 'InterTight',
-                                                    color: Color(0xFF1A1A1A),
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                            ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  2.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Icon(
-                                                        Icons.close_rounded,
-                                                        color:
-                                                            Color(0xFFFF4444),
-                                                        size: 16.0,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        'Your Decoy Wallet account and profile',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmallFamily,
-                                                                  color: Color(
-                                                                      0xFF666666),
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmallIsCustom,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(width: 8.0)),
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Container(
+                        width: 400.0,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.all(24.0),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.warning_rounded,
+                                            color: Color(0xFFFF4444),
+                                            size: 64.0,
+                                          ),
+                                          Text(
+                                            'This action is permanent',
+                                            textAlign: TextAlign.center,
+                                            style: FlutterFlowTheme.of(context)
+                                                .headlineMedium
+                                                .override(
+                                                  fontFamily: 'InterTight',
+                                                  color: Color(0xFF1A1A1A),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  2.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Icon(
-                                                        Icons.close_rounded,
-                                                        color:
-                                                            Color(0xFFFF4444),
-                                                        size: 16.0,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        'Emergency contacts and alert settings',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmallFamily,
-                                                                  color: Color(
-                                                                      0xFF666666),
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmallIsCustom,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(width: 8.0)),
+                                          ),
+                                          Text(
+                                            'Deleting your Decoy Wallet account will permanently remove your account, emergency contacts, alert routing settings, and all app configurations. This action cannot be undone.',
+                                            textAlign: TextAlign.center,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumFamily,
+                                                  color: Color(0xFF666666),
+                                                  letterSpacing: 0.0,
+                                                  lineHeight: 1.5,
+                                                  useGoogleFonts:
+                                                      !FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumIsCustom,
                                                 ),
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  2.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Icon(
-                                                        Icons.close_rounded,
-                                                        color:
-                                                            Color(0xFFFF4444),
-                                                        size: 16.0,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        'App preferences and configurations',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmallFamily,
-                                                                  color: Color(
-                                                                      0xFF666666),
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmallIsCustom,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(width: 8.0)),
-                                                ),
-                                              ].divide(SizedBox(height: 4.0)),
-                                            ),
-                                          ].divide(SizedBox(height: 8.0)),
-                                        ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'What will not be deleted',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .titleMedium
-                                                  .override(
-                                                    fontFamily:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleMediumFamily,
-                                                    color: Color(0xFF1A1A1A),
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    useGoogleFonts:
-                                                        !FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleMediumIsCustom,
-                                                  ),
-                                            ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  2.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Icon(
-                                                        Icons.check_rounded,
-                                                        color:
-                                                            Color(0xFF00AA44),
-                                                        size: 16.0,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        'Your Bitcoin funds remain safe in your external wallet',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmallFamily,
-                                                                  color: Color(
-                                                                      0xFF666666),
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmallIsCustom,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(width: 8.0)),
-                                                ),
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  2.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Icon(
-                                                        Icons.check_rounded,
-                                                        color:
-                                                            Color(0xFF00AA44),
-                                                        size: 16.0,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        'Wallet seed phrases and private keys',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmallFamily,
-                                                                  color: Color(
-                                                                      0xFF666666),
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmallIsCustom,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(width: 8.0)),
-                                                ),
-                                              ].divide(SizedBox(height: 4.0)),
-                                            ),
-                                          ].divide(SizedBox(height: 8.0)),
-                                        ),
-                                      ].divide(SizedBox(height: 16.0)),
-                                    ),
-                                    Container(
-                                      width: double.infinity,
-                                      height: 1.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFEEEEEE),
+                                          ),
+                                        ].divide(SizedBox(height: 16.0)),
                                       ),
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Theme(
-                                              data: ThemeData(
-                                                checkboxTheme:
-                                                    CheckboxThemeData(
-                                                  visualDensity:
-                                                      VisualDensity.compact,
-                                                  materialTapTargetSize:
-                                                      MaterialTapTargetSize
-                                                          .shrinkWrap,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0),
-                                                  ),
-                                                ),
-                                                unselectedWidgetColor:
-                                                    Color(0xFF999999),
-                                              ),
-                                              child: Checkbox(
-                                                value: _model.checkboxValue ??=
-                                                    false,
-                                                onChanged: (newValue) async {
-                                                  safeSetState(() =>
-                                                      _model.checkboxValue =
-                                                          newValue!);
-                                                },
-                                                side: (Color(0xFF999999) !=
-                                                        null)
-                                                    ? BorderSide(
-                                                        width: 2,
-                                                        color:
-                                                            Color(0xFF999999),
-                                                      )
-                                                    : null,
-                                                activeColor: Color(0xFFFF4444),
-                                                checkColor: Colors.white,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                'I understand this action is permanent and cannot be undone',
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'What will be deleted',
                                                 style: FlutterFlowTheme.of(
                                                         context)
-                                                    .bodyMedium
+                                                    .titleMedium
+                                                    .override(
+                                                      fontFamily: 'InterTight',
+                                                      color: Color(0xFF1A1A1A),
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              ),
+                                              Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    2.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Icon(
+                                                          Icons.close_rounded,
+                                                          color:
+                                                              Color(0xFFFF4444),
+                                                          size: 16.0,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          'Your Decoy Wallet account and profile',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodySmall
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmallFamily,
+                                                                color: Color(
+                                                                    0xFF666666),
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodySmallIsCustom,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ].divide(
+                                                        SizedBox(width: 8.0)),
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    2.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Icon(
+                                                          Icons.close_rounded,
+                                                          color:
+                                                              Color(0xFFFF4444),
+                                                          size: 16.0,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          'Emergency contacts and alert settings',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodySmall
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmallFamily,
+                                                                color: Color(
+                                                                    0xFF666666),
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodySmallIsCustom,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ].divide(
+                                                        SizedBox(width: 8.0)),
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    2.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Icon(
+                                                          Icons.close_rounded,
+                                                          color:
+                                                              Color(0xFFFF4444),
+                                                          size: 16.0,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          'App preferences and configurations',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodySmall
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmallFamily,
+                                                                color: Color(
+                                                                    0xFF666666),
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodySmallIsCustom,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ].divide(
+                                                        SizedBox(width: 8.0)),
+                                                  ),
+                                                ].divide(SizedBox(height: 4.0)),
+                                              ),
+                                            ].divide(SizedBox(height: 8.0)),
+                                          ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'What will not be deleted',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .titleMedium
                                                     .override(
                                                       fontFamily:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .bodyMediumFamily,
-                                                      color: Color(0xFF666666),
+                                                              .titleMediumFamily,
+                                                      color: Color(0xFF1A1A1A),
                                                       letterSpacing: 0.0,
-                                                      lineHeight: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       useGoogleFonts:
                                                           !FlutterFlowTheme.of(
                                                                   context)
-                                                              .bodyMediumIsCustom,
+                                                              .titleMediumIsCustom,
                                                     ),
                                               ),
-                                            ),
-                                          ].divide(SizedBox(width: 12.0)),
-                                        ),
-                                      ].divide(SizedBox(height: 16.0)),
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Opacity(
-                                          opacity: _model.checkboxValue!
-                                              ? 100.0
-                                              : 0.0,
-                                          child: FFButtonWidget(
-                                            onPressed: !_model.checkboxValue!
-                                                ? null
-                                                : () async {
-                                                    if (_model.checkboxValue ==
-                                                        true) {
-                                                      _model.deleteResult =
-                                                          await actions
-                                                              .deleteCurrentUserAccount();
-                                                      if (_model.deleteResult ==
-                                                          true) {
-                                                        GoRouter.of(context)
-                                                            .prepareAuthEvent();
-                                                        await authManager
-                                                            .signOut();
-                                                        GoRouter.of(context)
-                                                            .clearRedirectLocation();
-
-                                                        FFAppState()
-                                                                .hasDecoyPin =
-                                                            false;
-                                                        FFAppState()
-                                                                .biometricsEnabled =
-                                                            false;
-                                                        FFAppState().isLocked =
-                                                            true;
-                                                        FFAppState()
-                                                                .decoyPin911Enabled =
-                                                            false;
-                                                        FFAppState()
-                                                                .decoyPinContactsEnabled =
-                                                            false;
-                                                        FFAppState()
-                                                                .decoySeedArmed =
-                                                            false;
-                                                        FFAppState()
-                                                            .fakeSeeded = false;
-                                                        FFAppState()
-                                                                .lastKnownLocation =
-                                                            LatLng(0.0, 0.0);
-                                                        safeSetState(() {});
-
-                                                        context.goNamedAuth(
-                                                            LoginPageWidget
-                                                                .routeName,
-                                                            context.mounted);
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                              'ERROR #016 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                              style: TextStyle(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                              ),
-                                                            ),
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    4000),
-                                                            backgroundColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
-                                                          ),
-                                                        );
-                                                      }
-                                                    }
-
-                                                    safeSetState(() {});
-                                                  },
-                                            text: 'Delete my account',
-                                            options: FFButtonOptions(
-                                              width: double.infinity,
-                                              height: 48.0,
-                                              padding: EdgeInsets.all(8.0),
-                                              iconPadding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                              color: Color(0xFFFF4444),
-                                              textStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .override(
-                                                        fontFamily: 'robot',
-                                                        color: Colors.white,
-                                                        fontSize: 18.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                              Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    2.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Icon(
+                                                          Icons.check_rounded,
+                                                          color:
+                                                              Color(0xFF00AA44),
+                                                          size: 16.0,
+                                                        ),
                                                       ),
-                                              elevation: 3.0,
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                width: 1.0,
+                                                      Expanded(
+                                                        child: Text(
+                                                          'Your Bitcoin funds remain safe in your external wallet',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodySmall
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmallFamily,
+                                                                color: Color(
+                                                                    0xFF666666),
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodySmallIsCustom,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ].divide(
+                                                        SizedBox(width: 8.0)),
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    2.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Icon(
+                                                          Icons.check_rounded,
+                                                          color:
+                                                              Color(0xFF00AA44),
+                                                          size: 16.0,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          'Wallet seed phrases and private keys',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodySmall
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodySmallFamily,
+                                                                color: Color(
+                                                                    0xFF666666),
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodySmallIsCustom,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ].divide(
+                                                        SizedBox(width: 8.0)),
+                                                  ),
+                                                ].divide(SizedBox(height: 4.0)),
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              disabledColor: Color(0xFFCCCCCC),
-                                              disabledTextColor:
-                                                  Color(0xFF999999),
+                                            ].divide(SizedBox(height: 8.0)),
+                                          ),
+                                        ].divide(SizedBox(height: 16.0)),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 1.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFEEEEEE),
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Theme(
+                                                data: ThemeData(
+                                                  checkboxTheme:
+                                                      CheckboxThemeData(
+                                                    visualDensity:
+                                                        VisualDensity.compact,
+                                                    materialTapTargetSize:
+                                                        MaterialTapTargetSize
+                                                            .shrinkWrap,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.0),
+                                                    ),
+                                                  ),
+                                                  unselectedWidgetColor:
+                                                      Color(0xFF999999),
+                                                ),
+                                                child: Checkbox(
+                                                  value: _model
+                                                      .checkboxValue ??= false,
+                                                  onChanged: (newValue) async {
+                                                    safeSetState(() =>
+                                                        _model.checkboxValue =
+                                                            newValue!);
+                                                  },
+                                                  side: (Color(0xFF999999) !=
+                                                          null)
+                                                      ? BorderSide(
+                                                          width: 2,
+                                                          color: Color(
+                                                              0xFF999999),
+                                                        )
+                                                      : null,
+                                                  activeColor:
+                                                      Color(0xFFFF4444),
+                                                  checkColor: Colors.white,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  'I understand this action is permanent and cannot be undone',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMediumFamily,
+                                                        color:
+                                                            Color(0xFF666666),
+                                                        letterSpacing: 0.0,
+                                                        lineHeight: 1.4,
+                                                        useGoogleFonts:
+                                                            !FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMediumIsCustom,
+                                                      ),
+                                                ),
+                                              ),
+                                            ].divide(SizedBox(width: 12.0)),
+                                          ),
+                                        ].divide(SizedBox(height: 16.0)),
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Opacity(
+                                            opacity: _model.checkboxValue!
+                                                ? 100.0
+                                                : 0.0,
+                                            child: FFButtonWidget(
+                                              onPressed: !_model.checkboxValue!
+                                                  ? null
+                                                  : () async {
+                                                      if (_model
+                                                              .checkboxValue ==
+                                                          true) {
+                                                        _model.deleteResult =
+                                                            await actions
+                                                                .deleteCurrentUserAccount();
+                                                        if (_model
+                                                                .deleteResult ==
+                                                            true) {
+                                                          GoRouter.of(context)
+                                                              .prepareAuthEvent();
+                                                          await authManager
+                                                              .signOut();
+                                                          GoRouter.of(context)
+                                                              .clearRedirectLocation();
+
+                                                          FFAppState()
+                                                                  .hasDecoyPin =
+                                                              false;
+                                                          FFAppState()
+                                                                  .biometricsEnabled =
+                                                              false;
+                                                          FFAppState()
+                                                              .isLocked = true;
+                                                          FFAppState()
+                                                                  .decoyPin911Enabled =
+                                                              false;
+                                                          FFAppState()
+                                                                  .decoyPinContactsEnabled =
+                                                              false;
+                                                          FFAppState()
+                                                                  .decoySeedArmed =
+                                                              false;
+                                                          FFAppState()
+                                                                  .fakeSeeded =
+                                                              false;
+                                                          FFAppState()
+                                                                  .lastKnownLocation =
+                                                              LatLng(0.0, 0.0);
+                                                          safeSetState(() {});
+
+                                                          context.goNamedAuth(
+                                                              LoginPageWidget
+                                                                  .routeName,
+                                                              context.mounted);
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                'ERROR #016 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                                ),
+                                                              ),
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      4000),
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondary,
+                                                            ),
+                                                          );
+                                                        }
+                                                      }
+
+                                                      safeSetState(() {});
+                                                    },
+                                              text: 'Delete my account',
+                                              options: FFButtonOptions(
+                                                width: double.infinity,
+                                                height: 48.0,
+                                                padding: EdgeInsets.all(14.0),
+                                                iconPadding:
+                                                    EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                            0.0, 0.0, 0.0, 0.0),
+                                                color: Color(0xFFFF4444),
+                                                textStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmall
+                                                        .override(
+                                                          fontFamily: 'robot',
+                                                          color: Colors.white,
+                                                          fontSize: 18.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                elevation: 3.0,
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                disabledColor:
+                                                    Color(0xFFCCCCCC),
+                                                disabledTextColor:
+                                                    Color(0xFF999999),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ].divide(SizedBox(height: 12.0)),
-                                    ),
-                                  ].divide(SizedBox(height: 24.0)),
+                                        ].divide(SizedBox(height: 12.0)),
+                                      ),
+                                    ].divide(SizedBox(height: 24.0)),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

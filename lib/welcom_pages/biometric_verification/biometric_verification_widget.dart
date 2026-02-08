@@ -59,70 +59,80 @@ class _BiometricVerificationWidgetState
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      elevation: 3.0,
-                      shape: const CircleBorder(),
-                      child: Container(
-                        width: 120.0,
-                        height: 120.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).accent1,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Icon(
-                            Icons.fingerprint,
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 64.0,
+                Container(
+                  width: 400.0,
+                  height: 300.0,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        elevation: 3.0,
+                        shape: const CircleBorder(),
+                        child: Container(
+                          width: 120.0,
+                          height: 120.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context).accent1,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Icon(
+                              Icons.fingerprint,
+                              color: FlutterFlowTheme.of(context).primary,
+                              size: 64.0,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Enable Biometric Authentication',
-                          textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .override(
-                                fontFamily: 'InterTight',
-                                letterSpacing: 0.0,
-                              ),
-                        ),
-                        Text(
-                          'Use your fingerprint or face ID to quickly and securely access your account without entering your password every time.',
-                          textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'robot',
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 14.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
-                        ),
-                      ].divide(SizedBox(height: 12.0)),
-                    ),
-                  ].divide(SizedBox(height: 24.0)),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Enable Biometric Authentication',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .headlineMedium
+                                .override(
+                                  fontFamily: 'InterTight',
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Text(
+                              'Use your fingerprint or face ID to quickly and securely access your account without entering your password every time.',
+                              textAlign: TextAlign.center,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'robot',
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    fontSize: 14.0,
+                                    letterSpacing: 0.0,
+                                    lineHeight: 1.5,
+                                  ),
+                            ),
+                          ),
+                        ].divide(SizedBox(height: 12.0)),
+                      ),
+                    ].divide(SizedBox(height: 24.0)),
+                  ),
                 ),
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.all(20.0),
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
                         child: Material(
                           color: Colors.transparent,
                           elevation: 3.0,
@@ -130,7 +140,7 @@ class _BiometricVerificationWidgetState
                             borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Container(
-                            width: double.infinity,
+                            width: 275.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
@@ -140,56 +150,60 @@ class _BiometricVerificationWidgetState
                                 width: 2.0,
                               ),
                             ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: SwitchListTile(
-                                value: _model.switchListTileValue ??=
-                                    _model.wantsBiometrics,
-                                onChanged: (newValue) async {
-                                  safeSetState(() =>
-                                      _model.switchListTileValue = newValue);
-                                  if (newValue) {
-                                    _model.wantsBiometrics = true;
-                                    safeSetState(() {});
-                                  } else {
-                                    _model.wantsBiometrics = false;
-                                    safeSetState(() {});
-                                  }
-                                },
-                                title: Text(
-                                  'Enable Biometric Authentication',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        fontFamily: 'InterTight',
-                                        fontSize: 16.0,
-                                        letterSpacing: 0.0,
-                                      ),
-                                ),
-                                subtitle: Text(
-                                  'Use fingerprint or face ID to sign in',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodySmall
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodySmallFamily,
-                                        fontSize: 12.0,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodySmallIsCustom,
-                                      ),
-                                ),
-                                tileColor: Colors.transparent,
-                                activeThumbColor:
-                                    FlutterFlowTheme.of(context).primary,
-                                activeTrackColor:
-                                    FlutterFlowTheme.of(context).accent1,
-                                dense: false,
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: SwitchListTile(
+                                  value: _model.switchListTileValue ??=
+                                      _model.wantsBiometrics,
+                                  onChanged: (newValue) async {
+                                    safeSetState(() =>
+                                        _model.switchListTileValue = newValue);
+                                    if (newValue) {
+                                      _model.wantsBiometrics = true;
+                                      safeSetState(() {});
+                                    } else {
+                                      _model.wantsBiometrics = false;
+                                      safeSetState(() {});
+                                    }
+                                  },
+                                  title: Text(
+                                    'Enable Biometric Authentication',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          fontFamily: 'InterTight',
+                                          fontSize: 16.0,
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  subtitle: Text(
+                                    'Use fingerprint or face ID to sign in',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodySmall
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodySmallFamily,
+                                          fontSize: 12.0,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .bodySmallIsCustom,
+                                        ),
+                                  ),
+                                  tileColor: Colors.transparent,
+                                  activeThumbColor:
+                                      FlutterFlowTheme.of(context).primary,
+                                  activeTrackColor:
+                                      FlutterFlowTheme.of(context).accent1,
+                                  dense: false,
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -320,7 +334,7 @@ class _BiometricVerificationWidgetState
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
-                      width: double.infinity,
+                      width: 400.0,
                       height: 50.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -382,7 +396,7 @@ class _BiometricVerificationWidgetState
                           },
                           text: 'Continue',
                           options: FFButtonOptions(
-                            width: double.infinity,
+                            width: 400.0,
                             height: 50.0,
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 24.0, 0.0, 24.0, 0.0),
@@ -392,7 +406,7 @@ class _BiometricVerificationWidgetState
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: 'InterTight',
+                                  fontFamily: 'robot',
                                   color: Colors.white,
                                   fontSize: 18.0,
                                   letterSpacing: 0.0,
@@ -401,13 +415,13 @@ class _BiometricVerificationWidgetState
                             borderSide: BorderSide(
                               color: Colors.transparent,
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(14.0),
                           ),
                         ),
                       ),
                     ),
                     Container(
-                      width: double.infinity,
+                      width: 400.0,
                       height: 50.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -422,7 +436,7 @@ class _BiometricVerificationWidgetState
                         },
                         text: 'Skip for Now',
                         options: FFButtonOptions(
-                          width: double.infinity,
+                          width: 400.0,
                           height: 50.0,
                           padding: EdgeInsetsDirectional.fromSTEB(
                               24.0, 0.0, 24.0, 0.0),
@@ -432,7 +446,7 @@ class _BiometricVerificationWidgetState
                           textStyle: FlutterFlowTheme.of(context)
                               .titleSmall
                               .override(
-                                fontFamily: 'InterTight',
+                                fontFamily: 'robot',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                                 fontSize: 18.0,
@@ -444,7 +458,7 @@ class _BiometricVerificationWidgetState
                                 .secondaryBackground,
                             width: 1.0,
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
+                          borderRadius: BorderRadius.circular(14.0),
                         ),
                       ),
                     ),
@@ -453,7 +467,7 @@ class _BiometricVerificationWidgetState
               ]
                   .divide(SizedBox(height: 32.0))
                   .addToStart(SizedBox(height: 40.0))
-                  .addToEnd(SizedBox(height: 40.0)),
+                  .addToEnd(SizedBox(height: 32.0)),
             ),
           ),
         ),

@@ -106,7 +106,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Align(
                         alignment: AlignmentDirectional(0.0, 0.0),
@@ -120,290 +120,347 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                               ),
                         ),
                       ),
-                      Text(
-                        'We\'re here to help! Submit a support ticket and we\'ll get back to you as soon as possible.',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).bodyMediumFamily,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              letterSpacing: 0.0,
-                              lineHeight: 1.4,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .bodyMediumIsCustom,
-                            ),
-                      ),
-                      Form(
-                        key: _model.formKey,
-                        autovalidateMode: AutovalidateMode.disabled,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Subject ',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleSmallFamily,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleSmallIsCustom,
-                                      ),
-                                ),
-                                TextFormField(
-                                  controller: _model.subjectFieldTextController,
-                                  focusNode: _model.subjectFieldFocusNode,
-                                  autofocus: false,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  textInputAction: TextInputAction.next,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        'Title the problem you are experiencing',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    contentPadding:
-                                        EdgeInsetsDirectional.fromSTEB(
-                                            16.0, 14.0, 16.0, 14.0),
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
-                                        letterSpacing: 0.25,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyMediumIsCustom,
-                                      ),
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .subjectFieldTextControllerValidator
-                                      .asValidator(context),
-                                  inputFormatters: [
-                                    if (!isAndroid && !isiOS)
-                                      TextInputFormatter.withFunction(
-                                          (oldValue, newValue) {
-                                        return TextEditingValue(
-                                          selection: newValue.selection,
-                                          text: newValue.text.toCapitalization(
-                                              TextCapitalization.sentences),
-                                        );
-                                      }),
-                                  ],
-                                ),
-                              ].divide(SizedBox(height: 8.0)),
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Message ',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleSmallFamily,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleSmallIsCustom,
-                                      ),
-                                ),
-                                TextFormField(
-                                  controller: _model.messageFieldTextController,
-                                  focusNode: _model.messageFieldFocusNode,
-                                  autofocus: false,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  textInputAction: TextInputAction.done,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        'Write a detailed description of the problem you are experiencing',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    contentPadding:
-                                        EdgeInsetsDirectional.fromSTEB(
-                                            16.0, 14.0, 16.0, 14.0),
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
-                                        letterSpacing: 0.25,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyMediumIsCustom,
-                                      ),
-                                  maxLines: 16,
-                                  keyboardType: TextInputType.multiline,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .messageFieldTextControllerValidator
-                                      .asValidator(context),
-                                  inputFormatters: [
-                                    if (!isAndroid && !isiOS)
-                                      TextInputFormatter.withFunction(
-                                          (oldValue, newValue) {
-                                        return TextEditingValue(
-                                          selection: newValue.selection,
-                                          text: newValue.text.toCapitalization(
-                                              TextCapitalization.sentences),
-                                        );
-                                      }),
-                                  ],
-                                ),
-                              ].divide(SizedBox(height: 8.0)),
-                            ),
-                          ].divide(SizedBox(height: 20.0)),
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: Text(
+                          'We\'re here to help! Submit a support ticket and we\'ll get back to you as soon as possible.',
+                          textAlign: TextAlign.center,
+                          style: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .bodyMediumFamily,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                letterSpacing: 0.0,
+                                lineHeight: 1.4,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .bodyMediumIsCustom,
+                              ),
                         ),
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'You may also reach out to ',
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyMediumIsCustom,
+                      Container(
+                        width: 400.0,
+                        child: Form(
+                          key: _model.formKey,
+                          autovalidateMode: AutovalidateMode.disabled,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Subject ',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmallFamily,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .titleSmallIsCustom,
+                                        ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Container(
+                                      width: 400.0,
+                                      child: TextFormField(
+                                        controller:
+                                            _model.subjectFieldTextController,
+                                        focusNode: _model.subjectFieldFocusNode,
+                                        autofocus: false,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              'Title the problem you are experiencing',
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 14.0, 16.0, 14.0),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              letterSpacing: 0.25,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        validator: _model
+                                            .subjectFieldTextControllerValidator
+                                            .asValidator(context),
+                                        inputFormatters: [
+                                          if (!isAndroid && !isiOS)
+                                            TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return TextEditingValue(
+                                                selection: newValue.selection,
+                                                text: newValue.text
+                                                    .toCapitalization(
+                                                        TextCapitalization
+                                                            .sentences),
+                                              );
+                                            }),
+                                        ],
                                       ),
-                                ),
-                              ],
-                            ),
+                                    ),
+                                  ),
+                                ].divide(SizedBox(height: 8.0)),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Message ',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmallFamily,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .titleSmallIsCustom,
+                                        ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Container(
+                                      width: 400.0,
+                                      child: TextFormField(
+                                        controller:
+                                            _model.messageFieldTextController,
+                                        focusNode: _model.messageFieldFocusNode,
+                                        autofocus: false,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
+                                        textInputAction: TextInputAction.done,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              'Write a detailed description of the problem you are experiencing',
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 14.0, 16.0, 14.0),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              letterSpacing: 0.25,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                        maxLines: 16,
+                                        keyboardType: TextInputType.multiline,
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        validator: _model
+                                            .messageFieldTextControllerValidator
+                                            .asValidator(context),
+                                        inputFormatters: [
+                                          if (!isAndroid && !isiOS)
+                                            TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return TextEditingValue(
+                                                selection: newValue.selection,
+                                                text: newValue.text
+                                                    .toCapitalization(
+                                                        TextCapitalization
+                                                            .sentences),
+                                              );
+                                            }),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ].divide(SizedBox(height: 8.0)),
+                              ),
+                            ].divide(SizedBox(height: 20.0)),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'support@decoywalletapp.com ',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyMediumIsCustom,
-                                      ),
-                                ),
-                                Text(
-                                  'for futher assistance',
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .bodyMediumIsCustom,
-                                      ),
-                                ),
-                              ],
+                        ),
+                      ),
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'You may also reach out to ',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .bodyMediumIsCustom,
+                                        ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'support@decoywalletapp.com ',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .bodyMediumIsCustom,
+                                        ),
+                                  ),
+                                  Text(
+                                    'for futher assistance',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .bodyMediumIsCustom,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.max,
@@ -419,78 +476,87 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                               ),
                             ),
                           if (_model.ticketSaved.toString() == '2')
-                            Text(
-                              'Support Ticket Sent to Decoy Team',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyLarge
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .bodyLargeFamily,
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    letterSpacing: 0.0,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .bodyLargeIsCustom,
-                                  ),
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Support Ticket Sent to Decoy Team',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyLarge
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .bodyLargeFamily,
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .bodyLargeIsCustom,
+                                    ),
+                              ),
                             ),
                         ].divide(SizedBox(width: 5.0)),
                       ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          _model.sendTicket = await SendSupportTicketCall.call(
-                            userEmail: currentUserEmail,
-                            subject: _model.subjectFieldTextController.text,
-                            message: _model.messageFieldTextController.text,
-                          );
-
-                          if ((_model.sendTicket?.succeeded ?? true)) {
-                            _model.ticketSaved = 2;
-                            safeSetState(() {});
-                            await Future.delayed(
-                              Duration(
-                                milliseconds: 2000,
-                              ),
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            _model.sendTicket =
+                                await SendSupportTicketCall.call(
+                              userEmail: currentUserEmail,
+                              subject: _model.subjectFieldTextController.text,
+                              message: _model.messageFieldTextController.text,
                             );
-                            context.safePop();
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'ERROR #020 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
+
+                            if ((_model.sendTicket?.succeeded ?? true)) {
+                              _model.ticketSaved = 2;
+                              safeSetState(() {});
+                              await Future.delayed(
+                                Duration(
+                                  milliseconds: 2000,
                                 ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
-                          }
-
-                          safeSetState(() {});
-                        },
-                        text: 'Submit Ticket',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 50.0,
-                          padding: EdgeInsets.all(8.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleMedium.override(
-                                    fontFamily: 'robot',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
+                              );
+                              context.safePop();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'ERROR #020 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
                                   ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
+                            }
+
+                            safeSetState(() {});
+                          },
+                          text: 'Submit Ticket',
+                          options: FFButtonOptions(
+                            width: 400.0,
+                            height: 50.0,
+                            padding: EdgeInsets.all(8.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .override(
+                                  fontFamily: 'robot',
+                                  color: Colors.white,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                            elevation: 3.0,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                            borderRadius: BorderRadius.circular(14.0),
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
                     ].divide(SizedBox(height: 16.0)),

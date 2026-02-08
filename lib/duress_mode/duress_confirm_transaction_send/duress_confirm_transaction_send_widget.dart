@@ -138,93 +138,98 @@ class _DuressConfirmTransactionSendWidgetState
                             ),
                           ].divide(SizedBox(height: 16.0)),
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(24.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Color(0x9D343739),
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '${functions.formatBtcTrim(FFAppState().sendAmountBtc)}',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .displayMedium
-                                                .override(
-                                                  fontFamily: 'hello',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryBackground,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'BTC',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .displayMedium
-                                                .override(
-                                                  fontFamily: 'hello',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryBackground,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        '≈ ${formatNumber(
-                                          FFAppState().fakeUsdValue,
-                                          formatType: FormatType.decimal,
-                                          decimalType:
-                                              DecimalType.periodDecimal,
-                                          currency: '\$',
-                                        )} USD',
-                                        textAlign: TextAlign.center,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyLarge
-                                            .override(
-                                              fontFamily: 'hello',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              letterSpacing: 0.0,
+                        Align(
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          child: Padding(
+                            padding: EdgeInsets.all(24.0),
+                            child: Container(
+                              width: 300.0,
+                              decoration: BoxDecoration(
+                                color: Color(0x9D343739),
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '${functions.formatBtcTrim(FFAppState().sendAmountBtc)}',
+                                              textAlign: TextAlign.center,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .displayMedium
+                                                  .override(
+                                                    fontFamily: 'hello',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryBackground,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
-                                      ),
-                                    ].divide(SizedBox(height: 8.0)),
-                                  ),
-                                ].divide(SizedBox(height: 24.0)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'BTC',
+                                              textAlign: TextAlign.center,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .displayMedium
+                                                  .override(
+                                                    fontFamily: 'hello',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryBackground,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          '≈ ${formatNumber(
+                                            FFAppState().fakeUsdValue,
+                                            formatType: FormatType.decimal,
+                                            decimalType:
+                                                DecimalType.periodDecimal,
+                                            currency: '\$',
+                                          )} USD',
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyLarge
+                                              .override(
+                                                fontFamily: 'hello',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
+                                      ].divide(SizedBox(height: 8.0)),
+                                    ),
+                                  ].divide(SizedBox(height: 24.0)),
+                                ),
                               ),
                             ),
                           ),
@@ -232,7 +237,7 @@ class _DuressConfirmTransactionSendWidgetState
                         Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Container(
-                            width: double.infinity,
+                            width: 350.0,
                             decoration: BoxDecoration(
                               color: Color(0x9D343739),
                               borderRadius: BorderRadius.circular(12.0),

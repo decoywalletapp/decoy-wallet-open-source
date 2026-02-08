@@ -104,21 +104,24 @@ class _GenerateDecoySeedPhraseWidgetState
                                       letterSpacing: 0.0,
                                     ),
                               ),
-                              Text(
-                                'Create a decoy seed phrase to protect your wallet. This will help secure your funds by providing an alternative phrase that can be used if compromised.',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
-                                    ),
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Text(
+                                  'Create a decoy seed phrase to protect your wallet. This will help secure your funds by providing an alternative phrase that can be used if compromised.',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        letterSpacing: 0.0,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                ),
                               ),
                             ].divide(SizedBox(height: 16.0)),
                           ),

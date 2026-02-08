@@ -172,7 +172,27 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                       children: [
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(0.0, 0.0),
+                                              AlignmentDirectional(0.01, 0.0),
+                                          child: Text(
+                                            'DECOY EMERGENCY',
+                                            textAlign: TextAlign.center,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'DECOY BEBAS',
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .info,
+                                                  fontSize: 48.0,
+                                                  letterSpacing: 0.5,
+                                                  fontWeight: FontWeight.normal,
+                                                  lineHeight: 1.0,
+                                                ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(-0.01, 0.0),
                                           child: Text(
                                             'DECOY EMERGENCY',
                                             textAlign: TextAlign.center,
@@ -198,6 +218,28 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                     children: [
                                       Stack(
                                         children: [
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Text(
+                                              'SETUP',
+                                              textAlign: TextAlign.center,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'DECOY BEBAS',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .info,
+                                                    fontSize: 48.0,
+                                                    letterSpacing: 0.5,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    lineHeight: 1.0,
+                                                  ),
+                                            ),
+                                          ),
                                           Align(
                                             alignment:
                                                 AlignmentDirectional(0.0, 0.0),
@@ -384,60 +426,63 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                       ),
                                       Opacity(
                                         opacity: 0.0,
-                                        child: FFButtonWidget(
-                                          onPressed: () async {
-                                            context.pushNamed(
-                                                PersonalInformationWidget
-                                                    .routeName);
-                                          },
-                                          text: '',
-                                          options: FFButtonOptions(
-                                            width: double.infinity,
-                                            height: 120.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleSmall
-                                                    .override(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmallFamily,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                      letterSpacing: 0.0,
-                                                      useGoogleFonts:
-                                                          !FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmallIsCustom,
-                                                    ),
-                                            elevation: 3.0,
-                                            borderSide: BorderSide(
-                                              color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                            ?.personalComplete ==
-                                                        true
-                                                    ? FlutterFlowTheme.of(
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: FFButtonWidget(
+                                            onPressed: () async {
+                                              context.pushNamed(
+                                                  PersonalInformationWidget
+                                                      .routeName);
+                                            },
+                                            text: '',
+                                            options: FFButtonOptions(
+                                              width: 400.0,
+                                              height: 120.0,
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      16.0, 0.0, 16.0, 0.0),
+                                              iconPadding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .titleSmall
+                                                  .override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmallFamily,
+                                                    color: FlutterFlowTheme.of(
                                                             context)
-                                                        .success
-                                                    : FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
+                                                        .secondary,
+                                                    letterSpacing: 0.0,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmallIsCustom,
+                                                  ),
+                                              elevation: 3.0,
+                                              borderSide: BorderSide(
+                                                color: valueOrDefault<Color>(
+                                                  createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                              ?.personalComplete ==
+                                                          true
+                                                      ? FlutterFlowTheme.of(
+                                                              context)
+                                                          .success
+                                                      : FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(16.0),
                                           ),
                                         ),
                                       ),
@@ -586,57 +631,61 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                       ),
                                       Opacity(
                                         opacity: 0.0,
-                                        child: FFButtonWidget(
-                                          onPressed: () async {
-                                            context.pushNamed(
-                                                HomeAddressEntryPageWidget
-                                                    .routeName);
-                                          },
-                                          text: '',
-                                          options: FFButtonOptions(
-                                            width: double.infinity,
-                                            height: 120.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleSmall
-                                                    .override(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmallFamily,
-                                                      color: Colors.white,
-                                                      letterSpacing: 0.0,
-                                                      useGoogleFonts:
-                                                          !FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmallIsCustom,
-                                                    ),
-                                            elevation: 3.0,
-                                            borderSide: BorderSide(
-                                              color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                            ?.addressComplete ==
-                                                        true
-                                                    ? FlutterFlowTheme.of(
-                                                            context)
-                                                        .success
-                                                    : FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: FFButtonWidget(
+                                            onPressed: () async {
+                                              context.pushNamed(
+                                                  HomeAddressEntryPageWidget
+                                                      .routeName);
+                                            },
+                                            text: '',
+                                            options: FFButtonOptions(
+                                              width: 400.0,
+                                              height: 120.0,
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      16.0, 0.0, 16.0, 0.0),
+                                              iconPadding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmallFamily,
+                                                        color: Colors.white,
+                                                        letterSpacing: 0.0,
+                                                        useGoogleFonts:
+                                                            !FlutterFlowTheme
+                                                                    .of(context)
+                                                                .titleSmallIsCustom,
+                                                      ),
+                                              elevation: 3.0,
+                                              borderSide: BorderSide(
+                                                color: valueOrDefault<Color>(
+                                                  createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                              ?.addressComplete ==
+                                                          true
+                                                      ? FlutterFlowTheme.of(
+                                                              context)
+                                                          .success
+                                                      : FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(16.0),
                                           ),
                                         ),
                                       ),
@@ -785,57 +834,61 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                       ),
                                       Opacity(
                                         opacity: 0.0,
-                                        child: FFButtonWidget(
-                                          onPressed: () async {
-                                            context.pushNamed(
-                                                EmergencyContactsWidget
-                                                    .routeName);
-                                          },
-                                          text: '',
-                                          options: FFButtonOptions(
-                                            width: double.infinity,
-                                            height: 120.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleSmall
-                                                    .override(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmallFamily,
-                                                      color: Colors.white,
-                                                      letterSpacing: 0.0,
-                                                      useGoogleFonts:
-                                                          !FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmallIsCustom,
-                                                    ),
-                                            elevation: 3.0,
-                                            borderSide: BorderSide(
-                                              color: valueOrDefault<Color>(
-                                                createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                            ?.contactsComplete ==
-                                                        true
-                                                    ? FlutterFlowTheme.of(
-                                                            context)
-                                                        .success
-                                                    : FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: FFButtonWidget(
+                                            onPressed: () async {
+                                              context.pushNamed(
+                                                  EmergencyContactsWidget
+                                                      .routeName);
+                                            },
+                                            text: '',
+                                            options: FFButtonOptions(
+                                              width: 400.0,
+                                              height: 120.0,
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      16.0, 0.0, 16.0, 0.0),
+                                              iconPadding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmallFamily,
+                                                        color: Colors.white,
+                                                        letterSpacing: 0.0,
+                                                        useGoogleFonts:
+                                                            !FlutterFlowTheme
+                                                                    .of(context)
+                                                                .titleSmallIsCustom,
+                                                      ),
+                                              elevation: 3.0,
+                                              borderSide: BorderSide(
+                                                color: valueOrDefault<Color>(
+                                                  createDecoyEmergencyContactsSetupDecoyWalletRow
+                                                              ?.contactsComplete ==
+                                                          true
+                                                      ? FlutterFlowTheme.of(
+                                                              context)
+                                                          .success
+                                                      : FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(16.0),
                                           ),
                                         ),
                                       ),

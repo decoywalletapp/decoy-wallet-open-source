@@ -108,37 +108,45 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.03, 0.0),
-                                child: Text(
-                                  'Tutorials',
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'DECOY BEBAS',
-                                        color:
-                                            FlutterFlowTheme.of(context).info,
-                                        fontSize: 52.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 4.0, 0.0, 0.0),
+                                  child: Text(
+                                    'Tutorials',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DECOY BEBAS',
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 52.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                  ),
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(-0.03, 0.0),
-                                child: Text(
-                                  'Tutorials',
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'DECOY BEBAS',
-                                        color:
-                                            FlutterFlowTheme.of(context).info,
-                                        fontSize: 52.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 4.0, 0.0, 0.0),
+                                  child: Text(
+                                    'Tutorials',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DECOY BEBAS',
+                                          color:
+                                              FlutterFlowTheme.of(context).info,
+                                          fontSize: 52.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                  ),
                                 ),
                               ),
                             ],

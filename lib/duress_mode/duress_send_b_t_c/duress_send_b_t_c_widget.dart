@@ -251,7 +251,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Container(
-                  width: double.infinity,
+                  width: 400.0,
                   decoration: BoxDecoration(
                     color: Color(0x9D343739),
                     borderRadius: BorderRadius.circular(16.0),

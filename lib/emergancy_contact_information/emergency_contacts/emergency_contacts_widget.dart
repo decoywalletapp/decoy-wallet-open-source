@@ -704,7 +704,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               BorderRadius.circular(12.0),
                                         ),
                                         child: Container(
-                                          width: double.infinity,
+                                          width: 400.0,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
@@ -1303,21 +1303,591 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                       ),
                                     ),
                                   if (_model.contactsCount >= 2)
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16.0, 16.0, 16.0, 0.0),
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        elevation: 3.0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 16.0, 16.0, 0.0),
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          elevation: 3.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          child: AnimatedContainer(
+                                            duration:
+                                                Duration(milliseconds: 2000),
+                                            curve: Curves.easeInOut,
+                                            width: 400.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                              border: Border.all(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                width: 2.5,
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(16.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Contact 2',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleMediumFamily,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleMediumIsCustom,
+                                                                ),
+                                                      ),
+                                                      FlutterFlowIconButton(
+                                                        borderRadius: 16.0,
+                                                        buttonSize: 32.0,
+                                                        fillColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        icon: Icon(
+                                                          Icons.delete_outline,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .info,
+                                                          size: 16.0,
+                                                        ),
+                                                        onPressed: () async {
+                                                          safeSetState(() {
+                                                            _model.c2FirstTFTextController
+                                                                    ?.text =
+                                                                _model
+                                                                    .c3FirstTFTextController
+                                                                    .text;
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c2LastTFTextController
+                                                                    ?.text =
+                                                                _model
+                                                                    .c3LastTFTextController
+                                                                    .text;
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c2PhoneTFTextController
+                                                                    ?.text =
+                                                                functions.sanitizePhoneDigits(
+                                                                    _model
+                                                                        .c3PhoneTFTextController
+                                                                        .text);
+                                                            _model.c2PhoneTFMask
+                                                                .updateMask(
+                                                              newValue:
+                                                                  TextEditingValue(
+                                                                text: _model
+                                                                    .c2PhoneTFTextController!
+                                                                    .text,
+                                                              ),
+                                                            );
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c3FirstTFTextController
+                                                                    ?.text =
+                                                                _model
+                                                                    .c4FirstTFTextController
+                                                                    .text;
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c3LastTFTextController
+                                                                    ?.text =
+                                                                _model
+                                                                    .c4LastTFTextController
+                                                                    .text;
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c3PhoneTFTextController
+                                                                    ?.text =
+                                                                functions.sanitizePhoneDigits(
+                                                                    _model
+                                                                        .c4PhoneTFTextController
+                                                                        .text);
+                                                            _model.c3PhoneTFMask
+                                                                .updateMask(
+                                                              newValue:
+                                                                  TextEditingValue(
+                                                                text: _model
+                                                                    .c3PhoneTFTextController!
+                                                                    .text,
+                                                              ),
+                                                            );
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c4FirstTFTextController
+                                                                    ?.text =
+                                                                _model
+                                                                    .c5FirstTFTextController
+                                                                    .text;
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c4LastTFTextController
+                                                                    ?.text =
+                                                                _model
+                                                                    .c5LastTFTextController
+                                                                    .text;
+                                                          });
+                                                          safeSetState(() {
+                                                            _model.c4PhoneTFTextController
+                                                                    ?.text =
+                                                                functions.sanitizePhoneDigits(
+                                                                    _model
+                                                                        .c5PhoneTFTextController
+                                                                        .text);
+                                                            _model.c4PhoneTFMask
+                                                                .updateMask(
+                                                              newValue:
+                                                                  TextEditingValue(
+                                                                text: _model
+                                                                    .c4PhoneTFTextController!
+                                                                    .text,
+                                                              ),
+                                                            );
+                                                          });
+                                                          safeSetState(() {
+                                                            _model
+                                                                .c5PhoneTFTextController
+                                                                ?.clear();
+                                                            _model.c5PhoneTFMask
+                                                                .clear();
+                                                            _model
+                                                                .c5LastTFTextController
+                                                                ?.clear();
+                                                            _model
+                                                                .c5FirstTFTextController
+                                                                ?.clear();
+                                                          });
+                                                          _model.contactsCount =
+                                                              _model.contactsCount -
+                                                                  1;
+                                                          safeSetState(() {});
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  TextFormField(
+                                                    controller: _model
+                                                        .c2FirstTFTextController,
+                                                    focusNode: _model
+                                                        .c2FirstTFFocusNode,
+                                                    autofocus: false,
+                                                    textCapitalization:
+                                                        TextCapitalization
+                                                            .words,
+                                                    textInputAction:
+                                                        TextInputAction.next,
+                                                    obscureText: false,
+                                                    decoration: InputDecoration(
+                                                      hintText: 'First Name',
+                                                      hintStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMediumIsCustom,
+                                                              ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color:
+                                                              Color(0x00000000),
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color:
+                                                              Color(0x00000000),
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      filled: true,
+                                                      fillColor: Colors.white,
+                                                    ),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMediumFamily,
+                                                          letterSpacing: 0.25,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMediumIsCustom,
+                                                        ),
+                                                    keyboardType:
+                                                        TextInputType.name,
+                                                    cursorColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primaryText,
+                                                    validator: _model
+                                                        .c2FirstTFTextControllerValidator
+                                                        .asValidator(context),
+                                                    inputFormatters: [
+                                                      if (!isAndroid && !isiOS)
+                                                        TextInputFormatter
+                                                            .withFunction(
+                                                                (oldValue,
+                                                                    newValue) {
+                                                          return TextEditingValue(
+                                                            selection: newValue
+                                                                .selection,
+                                                            text: newValue.text
+                                                                .toCapitalization(
+                                                                    TextCapitalization
+                                                                        .words),
+                                                          );
+                                                        }),
+                                                    ],
+                                                  ),
+                                                  TextFormField(
+                                                    controller: _model
+                                                        .c2LastTFTextController,
+                                                    focusNode: _model
+                                                        .c2LastTFFocusNode,
+                                                    autofocus: false,
+                                                    textCapitalization:
+                                                        TextCapitalization
+                                                            .words,
+                                                    textInputAction:
+                                                        TextInputAction.next,
+                                                    obscureText: false,
+                                                    decoration: InputDecoration(
+                                                      hintText: 'Last Name',
+                                                      hintStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMediumIsCustom,
+                                                              ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color:
+                                                              Color(0x00000000),
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color:
+                                                              Color(0x00000000),
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      filled: true,
+                                                      fillColor: Colors.white,
+                                                    ),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMediumFamily,
+                                                          letterSpacing: 0.25,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMediumIsCustom,
+                                                        ),
+                                                    keyboardType:
+                                                        TextInputType.name,
+                                                    cursorColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primaryText,
+                                                    validator: _model
+                                                        .c2LastTFTextControllerValidator
+                                                        .asValidator(context),
+                                                    inputFormatters: [
+                                                      if (!isAndroid && !isiOS)
+                                                        TextInputFormatter
+                                                            .withFunction(
+                                                                (oldValue,
+                                                                    newValue) {
+                                                          return TextEditingValue(
+                                                            selection: newValue
+                                                                .selection,
+                                                            text: newValue.text
+                                                                .toCapitalization(
+                                                                    TextCapitalization
+                                                                        .words),
+                                                          );
+                                                        }),
+                                                    ],
+                                                  ),
+                                                  TextFormField(
+                                                    controller: _model
+                                                        .c2PhoneTFTextController,
+                                                    focusNode: _model
+                                                        .c2PhoneTFFocusNode,
+                                                    onChanged: (_) =>
+                                                        EasyDebounce.debounce(
+                                                      '_model.c2PhoneTFTextController',
+                                                      Duration(
+                                                          milliseconds: 2000),
+                                                      () async {
+                                                        _model.c2PhoneDigits = functions
+                                                            .sanitizePhoneDigits(
+                                                                _model
+                                                                    .c2PhoneTFTextController
+                                                                    .text);
+                                                        safeSetState(() {});
+                                                        if ((_model.c2PhoneDigits !=
+                                                                    null &&
+                                                                _model.c2PhoneDigits !=
+                                                                    '') &&
+                                                            ((_model.c2PhoneDigits!)
+                                                                    .length ==
+                                                                10)) {
+                                                          safeSetState(() {
+                                                            _model.c2PhoneTFTextController
+                                                                    ?.text =
+                                                                functions
+                                                                    .formatAsUsPhone(
+                                                                        _model
+                                                                            .c2PhoneDigits!);
+                                                            _model.c2PhoneTFMask
+                                                                .updateMask(
+                                                              newValue:
+                                                                  TextEditingValue(
+                                                                text: _model
+                                                                    .c2PhoneTFTextController!
+                                                                    .text,
+                                                              ),
+                                                            );
+                                                          });
+                                                        }
+                                                      },
+                                                    ),
+                                                    autofocus: false,
+                                                    textInputAction:
+                                                        TextInputAction.next,
+                                                    obscureText: false,
+                                                    decoration: InputDecoration(
+                                                      hintText: 'Phone Number',
+                                                      hintStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMediumIsCustom,
+                                                              ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color:
+                                                              Color(0x00000000),
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color:
+                                                              Color(0x00000000),
+                                                          width: 1.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                      filled: true,
+                                                      fillColor: Colors.white,
+                                                    ),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMediumFamily,
+                                                          letterSpacing: 0.25,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMediumIsCustom,
+                                                        ),
+                                                    keyboardType:
+                                                        TextInputType.phone,
+                                                    cursorColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primaryText,
+                                                    validator: _model
+                                                        .c2PhoneTFTextControllerValidator
+                                                        .asValidator(context),
+                                                    inputFormatters: [
+                                                      _model.c2PhoneTFMask
+                                                    ],
+                                                  ),
+                                                ].divide(
+                                                    SizedBox(height: 12.0)),
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        child: AnimatedContainer(
-                                          duration:
-                                              Duration(milliseconds: 2000),
-                                          curve: Curves.easeInOut,
-                                          width: double.infinity,
+                                      ),
+                                    ),
+                                  if (_model.contactsCount >= 3)
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 16.0, 16.0, 0.0),
+                                        child: Container(
+                                          width: 400.0,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
@@ -1343,7 +1913,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                      'Contact 2',
+                                                      'Contact 3',
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .titleMedium
@@ -1377,37 +1947,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         size: 16.0,
                                                       ),
                                                       onPressed: () async {
-                                                        safeSetState(() {
-                                                          _model.c2FirstTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c3FirstTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c2LastTFTextController
-                                                                  ?.text =
-                                                              _model
-                                                                  .c3LastTFTextController
-                                                                  .text;
-                                                        });
-                                                        safeSetState(() {
-                                                          _model.c2PhoneTFTextController
-                                                                  ?.text =
-                                                              functions.sanitizePhoneDigits(
-                                                                  _model
-                                                                      .c3PhoneTFTextController
-                                                                      .text);
-                                                          _model.c2PhoneTFMask
-                                                              .updateMask(
-                                                            newValue:
-                                                                TextEditingValue(
-                                                              text: _model
-                                                                  .c2PhoneTFTextController!
-                                                                  .text,
-                                                            ),
-                                                          );
-                                                        });
                                                         safeSetState(() {
                                                           _model.c3FirstTFTextController
                                                                   ?.text =
@@ -1493,9 +2032,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 ),
                                                 TextFormField(
                                                   controller: _model
-                                                      .c2FirstTFTextController,
+                                                      .c3FirstTFTextController,
                                                   focusNode:
-                                                      _model.c2FirstTFFocusNode,
+                                                      _model.c3FirstTFFocusNode,
                                                   autofocus: false,
                                                   textCapitalization:
                                                       TextCapitalization.words,
@@ -1593,7 +2132,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               context)
                                                           .primaryText,
                                                   validator: _model
-                                                      .c2FirstTFTextControllerValidator
+                                                      .c3FirstTFTextControllerValidator
                                                       .asValidator(context),
                                                   inputFormatters: [
                                                     if (!isAndroid && !isiOS)
@@ -1614,9 +2153,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 ),
                                                 TextFormField(
                                                   controller: _model
-                                                      .c2LastTFTextController,
+                                                      .c3LastTFTextController,
                                                   focusNode:
-                                                      _model.c2LastTFFocusNode,
+                                                      _model.c3LastTFFocusNode,
                                                   autofocus: false,
                                                   textCapitalization:
                                                       TextCapitalization.words,
@@ -1714,7 +2253,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               context)
                                                           .primaryText,
                                                   validator: _model
-                                                      .c2LastTFTextControllerValidator
+                                                      .c3LastTFTextControllerValidator
                                                       .asValidator(context),
                                                   inputFormatters: [
                                                     if (!isAndroid && !isiOS)
@@ -1735,41 +2274,41 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 ),
                                                 TextFormField(
                                                   controller: _model
-                                                      .c2PhoneTFTextController,
+                                                      .c3PhoneTFTextController,
                                                   focusNode:
-                                                      _model.c2PhoneTFFocusNode,
+                                                      _model.c3PhoneTFFocusNode,
                                                   onChanged: (_) =>
                                                       EasyDebounce.debounce(
-                                                    '_model.c2PhoneTFTextController',
+                                                    '_model.c3PhoneTFTextController',
                                                     Duration(
                                                         milliseconds: 2000),
                                                     () async {
-                                                      _model.c2PhoneDigits = functions
+                                                      _model.c3PhoneDigits = functions
                                                           .sanitizePhoneDigits(
                                                               _model
-                                                                  .c2PhoneTFTextController
+                                                                  .c3PhoneTFTextController
                                                                   .text);
                                                       safeSetState(() {});
-                                                      if ((_model.c2PhoneDigits !=
+                                                      if ((_model.c3PhoneDigits !=
                                                                   null &&
-                                                              _model.c2PhoneDigits !=
+                                                              _model.c3PhoneDigits !=
                                                                   '') &&
-                                                          ((_model.c2PhoneDigits!)
+                                                          ((_model.c3PhoneDigits!)
                                                                   .length ==
                                                               10)) {
                                                         safeSetState(() {
-                                                          _model.c2PhoneTFTextController
+                                                          _model.c3PhoneTFTextController
                                                                   ?.text =
                                                               functions
                                                                   .formatAsUsPhone(
                                                                       _model
-                                                                          .c2PhoneDigits!);
-                                                          _model.c2PhoneTFMask
+                                                                          .c3PhoneDigits!);
+                                                          _model.c3PhoneTFMask
                                                               .updateMask(
                                                             newValue:
                                                                 TextEditingValue(
                                                               text: _model
-                                                                  .c2PhoneTFTextController!
+                                                                  .c3PhoneTFTextController!
                                                                   .text,
                                                             ),
                                                           );
@@ -1872,535 +2411,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               context)
                                                           .primaryText,
                                                   validator: _model
-                                                      .c2PhoneTFTextControllerValidator
+                                                      .c3PhoneTFTextControllerValidator
                                                       .asValidator(context),
                                                   inputFormatters: [
-                                                    _model.c2PhoneTFMask
+                                                    _model.c3PhoneTFMask
                                                   ],
                                                 ),
                                               ].divide(SizedBox(height: 12.0)),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  if (_model.contactsCount >= 3)
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16.0, 16.0, 16.0, 0.0),
-                                      child: Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          border: Border.all(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            width: 2.5,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Contact 3',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .titleMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleMediumFamily,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .titleMediumIsCustom,
-                                                        ),
-                                                  ),
-                                                  FlutterFlowIconButton(
-                                                    borderRadius: 16.0,
-                                                    buttonSize: 32.0,
-                                                    fillColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary,
-                                                    icon: Icon(
-                                                      Icons.delete_outline,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      size: 16.0,
-                                                    ),
-                                                    onPressed: () async {
-                                                      safeSetState(() {
-                                                        _model.c3FirstTFTextController
-                                                                ?.text =
-                                                            _model
-                                                                .c4FirstTFTextController
-                                                                .text;
-                                                      });
-                                                      safeSetState(() {
-                                                        _model.c3LastTFTextController
-                                                                ?.text =
-                                                            _model
-                                                                .c4LastTFTextController
-                                                                .text;
-                                                      });
-                                                      safeSetState(() {
-                                                        _model.c3PhoneTFTextController
-                                                                ?.text =
-                                                            functions
-                                                                .sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c4PhoneTFTextController
-                                                                        .text);
-                                                        _model.c3PhoneTFMask
-                                                            .updateMask(
-                                                          newValue:
-                                                              TextEditingValue(
-                                                            text: _model
-                                                                .c3PhoneTFTextController!
-                                                                .text,
-                                                          ),
-                                                        );
-                                                      });
-                                                      safeSetState(() {
-                                                        _model.c4FirstTFTextController
-                                                                ?.text =
-                                                            _model
-                                                                .c5FirstTFTextController
-                                                                .text;
-                                                      });
-                                                      safeSetState(() {
-                                                        _model.c4LastTFTextController
-                                                                ?.text =
-                                                            _model
-                                                                .c5LastTFTextController
-                                                                .text;
-                                                      });
-                                                      safeSetState(() {
-                                                        _model.c4PhoneTFTextController
-                                                                ?.text =
-                                                            functions
-                                                                .sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c5PhoneTFTextController
-                                                                        .text);
-                                                        _model.c4PhoneTFMask
-                                                            .updateMask(
-                                                          newValue:
-                                                              TextEditingValue(
-                                                            text: _model
-                                                                .c4PhoneTFTextController!
-                                                                .text,
-                                                          ),
-                                                        );
-                                                      });
-                                                      safeSetState(() {
-                                                        _model
-                                                            .c5PhoneTFTextController
-                                                            ?.clear();
-                                                        _model.c5PhoneTFMask
-                                                            .clear();
-                                                        _model
-                                                            .c5LastTFTextController
-                                                            ?.clear();
-                                                        _model
-                                                            .c5FirstTFTextController
-                                                            ?.clear();
-                                                      });
-                                                      _model.contactsCount =
-                                                          _model.contactsCount -
-                                                              1;
-                                                      safeSetState(() {});
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              TextFormField(
-                                                controller: _model
-                                                    .c3FirstTFTextController,
-                                                focusNode:
-                                                    _model.c3FirstTFFocusNode,
-                                                autofocus: false,
-                                                textCapitalization:
-                                                    TextCapitalization.words,
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                obscureText: false,
-                                                decoration: InputDecoration(
-                                                  hintText: 'First Name',
-                                                  hintStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                            letterSpacing: 0.0,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumIsCustom,
-                                                          ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Color(0x00000000),
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  focusedErrorBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Color(0x00000000),
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                ),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          letterSpacing: 0.25,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMediumIsCustom,
-                                                        ),
-                                                keyboardType:
-                                                    TextInputType.name,
-                                                cursorColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                validator: _model
-                                                    .c3FirstTFTextControllerValidator
-                                                    .asValidator(context),
-                                                inputFormatters: [
-                                                  if (!isAndroid && !isiOS)
-                                                    TextInputFormatter
-                                                        .withFunction((oldValue,
-                                                            newValue) {
-                                                      return TextEditingValue(
-                                                        selection:
-                                                            newValue.selection,
-                                                        text: newValue.text
-                                                            .toCapitalization(
-                                                                TextCapitalization
-                                                                    .words),
-                                                      );
-                                                    }),
-                                                ],
-                                              ),
-                                              TextFormField(
-                                                controller: _model
-                                                    .c3LastTFTextController,
-                                                focusNode:
-                                                    _model.c3LastTFFocusNode,
-                                                autofocus: false,
-                                                textCapitalization:
-                                                    TextCapitalization.words,
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                obscureText: false,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Last Name',
-                                                  hintStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                            letterSpacing: 0.0,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumIsCustom,
-                                                          ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Color(0x00000000),
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  focusedErrorBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Color(0x00000000),
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                ),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          letterSpacing: 0.25,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMediumIsCustom,
-                                                        ),
-                                                keyboardType:
-                                                    TextInputType.name,
-                                                cursorColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                validator: _model
-                                                    .c3LastTFTextControllerValidator
-                                                    .asValidator(context),
-                                                inputFormatters: [
-                                                  if (!isAndroid && !isiOS)
-                                                    TextInputFormatter
-                                                        .withFunction((oldValue,
-                                                            newValue) {
-                                                      return TextEditingValue(
-                                                        selection:
-                                                            newValue.selection,
-                                                        text: newValue.text
-                                                            .toCapitalization(
-                                                                TextCapitalization
-                                                                    .words),
-                                                      );
-                                                    }),
-                                                ],
-                                              ),
-                                              TextFormField(
-                                                controller: _model
-                                                    .c3PhoneTFTextController,
-                                                focusNode:
-                                                    _model.c3PhoneTFFocusNode,
-                                                onChanged: (_) =>
-                                                    EasyDebounce.debounce(
-                                                  '_model.c3PhoneTFTextController',
-                                                  Duration(milliseconds: 2000),
-                                                  () async {
-                                                    _model.c3PhoneDigits = functions
-                                                        .sanitizePhoneDigits(_model
-                                                            .c3PhoneTFTextController
-                                                            .text);
-                                                    safeSetState(() {});
-                                                    if ((_model.c3PhoneDigits !=
-                                                                null &&
-                                                            _model.c3PhoneDigits !=
-                                                                '') &&
-                                                        ((_model.c3PhoneDigits!)
-                                                                .length ==
-                                                            10)) {
-                                                      safeSetState(() {
-                                                        _model.c3PhoneTFTextController
-                                                                ?.text =
-                                                            functions
-                                                                .formatAsUsPhone(
-                                                                    _model
-                                                                        .c3PhoneDigits!);
-                                                        _model.c3PhoneTFMask
-                                                            .updateMask(
-                                                          newValue:
-                                                              TextEditingValue(
-                                                            text: _model
-                                                                .c3PhoneTFTextController!
-                                                                .text,
-                                                          ),
-                                                        );
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                                autofocus: false,
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                obscureText: false,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Phone Number',
-                                                  hintStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                            letterSpacing: 0.0,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumIsCustom,
-                                                          ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Color(0x00000000),
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  focusedErrorBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Color(0x00000000),
-                                                      width: 1.5,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                ),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          letterSpacing: 0.25,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMediumIsCustom,
-                                                        ),
-                                                keyboardType:
-                                                    TextInputType.phone,
-                                                cursorColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                validator: _model
-                                                    .c3PhoneTFTextControllerValidator
-                                                    .asValidator(context),
-                                                inputFormatters: [
-                                                  _model.c3PhoneTFMask
-                                                ],
-                                              ),
-                                            ].divide(SizedBox(height: 12.0)),
                                           ),
                                         ),
                                       ),
@@ -2417,7 +2435,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               BorderRadius.circular(12.0),
                                         ),
                                         child: Container(
-                                          width: double.infinity,
+                                          width: 400.0,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
@@ -2934,7 +2952,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               BorderRadius.circular(12.0),
                                         ),
                                         child: Container(
-                                          width: double.infinity,
+                                          width: 400.0,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
@@ -3423,75 +3441,136 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                       safeSetState(() {});
                                     },
                                   ),
-                                  FFButtonWidget(
-                                    onPressed: () async {
-                                      await actions.dismissKeyboard(
-                                        context,
-                                      );
-                                      _model.contactsPayload =
-                                          await actions.buildContactsPayloadV2(
-                                        _model.c1FirstTFTextController.text,
-                                        _model.c1LastTFTextController.text,
-                                        _model.c1PhoneTFTextController.text,
-                                        _model.c2FirstTFTextController.text,
-                                        _model.c2LastTFTextController.text,
-                                        _model.c2PhoneTFTextController.text,
-                                        _model.c3FirstTFTextController.text,
-                                        _model.c3LastTFTextController.text,
-                                        _model.c3PhoneTFTextController.text,
-                                        _model.c4FirstTFTextController.text,
-                                        _model.c4LastTFTextController.text,
-                                        _model.c4PhoneTFTextController.text,
-                                        _model.c5FirstTFTextController.text,
-                                        _model.c5LastTFTextController.text,
-                                        _model.c5PhoneTFTextController.text,
-                                        _model.contactsCount,
-                                      );
-                                      _model.contactsJson =
-                                          _model.contactsPayload!;
-                                      safeSetState(() {});
-                                      if (loggedIn == true) {
-                                        _model.keyOut = await actions
-                                            .generateDataKeyIfMissing();
-                                        _model.dataKeyB64 = _model.keyOut!;
-                                        safeSetState(() {});
-                                        _model.enc =
-                                            await actions.aesGcmEncryptString(
-                                          _model.contactsJson,
-                                          _model.dataKeyB64,
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: FFButtonWidget(
+                                      onPressed: () async {
+                                        await actions.dismissKeyboard(
+                                          context,
                                         );
-                                        _model.ctB64 = getJsonField(
-                                          _model.enc,
-                                          r'''$.ciphertextB64''',
-                                        ).toString();
-                                        _model.nonceB64 = getJsonField(
-                                          _model.enc,
-                                          r'''$.nonceB64''',
-                                        ).toString();
-                                        safeSetState(() {});
-                                        _model.wrap =
-                                            await WrapDataKeyCall.call(
-                                          dataKeyB64: _model.dataKeyB64,
-                                          jwt: currentJwtToken,
+                                        _model.contactsPayload = await actions
+                                            .buildContactsPayloadV2(
+                                          _model.c1FirstTFTextController.text,
+                                          _model.c1LastTFTextController.text,
+                                          _model.c1PhoneTFTextController.text,
+                                          _model.c2FirstTFTextController.text,
+                                          _model.c2LastTFTextController.text,
+                                          _model.c2PhoneTFTextController.text,
+                                          _model.c3FirstTFTextController.text,
+                                          _model.c3LastTFTextController.text,
+                                          _model.c3PhoneTFTextController.text,
+                                          _model.c4FirstTFTextController.text,
+                                          _model.c4LastTFTextController.text,
+                                          _model.c4PhoneTFTextController.text,
+                                          _model.c5FirstTFTextController.text,
+                                          _model.c5LastTFTextController.text,
+                                          _model.c5PhoneTFTextController.text,
+                                          _model.contactsCount,
                                         );
-
-                                        if ((_model.wrap?.succeeded ?? true)) {
-                                          _model.wrappedB64 = getJsonField(
-                                            (_model.wrap?.jsonBody ?? ''),
-                                            r'''$.wrappedB64''',
+                                        _model.contactsJson =
+                                            _model.contactsPayload!;
+                                        safeSetState(() {});
+                                        if (loggedIn == true) {
+                                          _model.keyOut = await actions
+                                              .generateDataKeyIfMissing();
+                                          _model.dataKeyB64 = _model.keyOut!;
+                                          safeSetState(() {});
+                                          _model.enc =
+                                              await actions.aesGcmEncryptString(
+                                            _model.contactsJson,
+                                            _model.dataKeyB64,
+                                          );
+                                          _model.ctB64 = getJsonField(
+                                            _model.enc,
+                                            r'''$.ciphertextB64''',
+                                          ).toString();
+                                          _model.nonceB64 = getJsonField(
+                                            _model.enc,
+                                            r'''$.nonceB64''',
                                           ).toString();
                                           safeSetState(() {});
-                                          _model.upd = await DecoyWalletTable()
-                                              .queryRows(
-                                            queryFn: (q) => q.eqOrNull(
-                                              'user_id',
-                                              currentUserUid,
-                                            ),
+                                          _model.wrap =
+                                              await WrapDataKeyCall.call(
+                                            dataKeyB64: _model.dataKeyB64,
+                                            jwt: currentJwtToken,
                                           );
-                                          if (_model.upd != null &&
-                                              (_model.upd)!.isNotEmpty) {
-                                            await DecoyWalletTable().update(
-                                              data: {
+
+                                          if ((_model.wrap?.succeeded ??
+                                              true)) {
+                                            _model.wrappedB64 = getJsonField(
+                                              (_model.wrap?.jsonBody ?? ''),
+                                              r'''$.wrappedB64''',
+                                            ).toString();
+                                            safeSetState(() {});
+                                            _model.upd =
+                                                await DecoyWalletTable()
+                                                    .queryRows(
+                                              queryFn: (q) => q.eqOrNull(
+                                                'user_id',
+                                                currentUserUid,
+                                              ),
+                                            );
+                                            if (_model.upd != null &&
+                                                (_model.upd)!.isNotEmpty) {
+                                              await DecoyWalletTable().update(
+                                                data: {
+                                                  'wrapped_datakey':
+                                                      _model.wrappedB64,
+                                                  'updated_at':
+                                                      supaSerialize<DateTime>(
+                                                          getCurrentTimestamp),
+                                                  'contacts_ciphertext':
+                                                      _model.ctB64,
+                                                  'contacts_nonce':
+                                                      _model.nonceB64,
+                                                  'contacts_version': 1,
+                                                  'created_at':
+                                                      supaSerialize<DateTime>(
+                                                          getCurrentTimestamp),
+                                                  'contacts_complete': (_model
+                                                                      .c1PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model
+                                                                      .c2PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model
+                                                                      .c3PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model.c4PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model.c5PhoneTFTextController
+                                                                      .text !=
+                                                                  '')
+                                                      ? true
+                                                      : false,
+                                                },
+                                                matchingRows: (rows) =>
+                                                    rows.eqOrNull(
+                                                  'user_id',
+                                                  currentUserUid,
+                                                ),
+                                              );
+                                              _model.decoyWalletRefresh1 =
+                                                  await DecoyWalletTable()
+                                                      .queryRows(
+                                                queryFn: (q) => q.eqOrNull(
+                                                  'user_id',
+                                                  currentUserUid,
+                                                ),
+                                              );
+                                              FFAppState()
+                                                      .emergencyContactsIncrement =
+                                                  _model.contactsCount;
+                                              safeSetState(() {});
+                                              context.safePop();
+                                            } else {
+                                              _model.insRow =
+                                                  await DecoyWalletTable()
+                                                      .insert({
                                                 'wrapped_datakey':
                                                     _model.wrappedB64,
                                                 'updated_at':
@@ -3502,9 +3581,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 'contacts_nonce':
                                                     _model.nonceB64,
                                                 'contacts_version': 1,
-                                                'created_at':
-                                                    supaSerialize<DateTime>(
-                                                        getCurrentTimestamp),
+                                                'user_id': currentUserUid,
                                                 'contacts_complete': (_model.c1PhoneTFTextController
                                                                     .text !=
                                                                 '') ||
@@ -3524,131 +3601,82 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 '')
                                                     ? true
                                                     : false,
-                                              },
-                                              matchingRows: (rows) =>
-                                                  rows.eqOrNull(
-                                                'user_id',
-                                                currentUserUid,
-                                              ),
-                                            );
-                                            _model.decoyWalletRefresh1 =
-                                                await DecoyWalletTable()
-                                                    .queryRows(
-                                              queryFn: (q) => q.eqOrNull(
-                                                'user_id',
-                                                currentUserUid,
-                                              ),
-                                            );
-                                            FFAppState()
-                                                    .emergencyContactsIncrement =
-                                                _model.contactsCount;
-                                            safeSetState(() {});
-                                            context.safePop();
+                                              });
+                                              _model.decoyWalletRefresh2 =
+                                                  await DecoyWalletTable()
+                                                      .queryRows(
+                                                queryFn: (q) => q.eqOrNull(
+                                                  'user_id',
+                                                  currentUserUid,
+                                                ),
+                                              );
+                                              FFAppState()
+                                                      .emergencyContactsIncrement =
+                                                  _model.contactsCount;
+                                              safeSetState(() {});
+                                              context.safePop();
+                                            }
                                           } else {
-                                            _model.insRow =
-                                                await DecoyWalletTable()
-                                                    .insert({
-                                              'wrapped_datakey':
-                                                  _model.wrappedB64,
-                                              'updated_at':
-                                                  supaSerialize<DateTime>(
-                                                      getCurrentTimestamp),
-                                              'contacts_ciphertext':
-                                                  _model.ctB64,
-                                              'contacts_nonce': _model.nonceB64,
-                                              'contacts_version': 1,
-                                              'user_id': currentUserUid,
-                                              'contacts_complete': (_model.c1PhoneTFTextController
-                                                                  .text !=
-                                                              '') ||
-                                                      (_model
-                                                                  .c2PhoneTFTextController
-                                                                  .text !=
-                                                              '') ||
-                                                      (_model.c3PhoneTFTextController
-                                                                  .text !=
-                                                              '') ||
-                                                      (_model.c4PhoneTFTextController
-                                                                  .text !=
-                                                              '') ||
-                                                      (_model.c5PhoneTFTextController
-                                                                  .text !=
-                                                              '')
-                                                  ? true
-                                                  : false,
-                                            });
-                                            _model.decoyWalletRefresh2 =
-                                                await DecoyWalletTable()
-                                                    .queryRows(
-                                              queryFn: (q) => q.eqOrNull(
-                                                'user_id',
-                                                currentUserUid,
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                  style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryText,
+                                                  ),
+                                                ),
+                                                duration: Duration(
+                                                    milliseconds: 4000),
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
                                               ),
                                             );
-                                            FFAppState()
-                                                    .emergencyContactsIncrement =
-                                                _model.contactsCount;
-                                            safeSetState(() {});
-                                            context.safePop();
                                           }
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                            ),
-                                          );
+                                          context.goNamed(
+                                              LoginPageWidget.routeName);
                                         }
-                                      } else {
-                                        context
-                                            .goNamed(LoginPageWidget.routeName);
-                                      }
 
-                                      safeSetState(() {});
-                                    },
-                                    text: 'Save',
-                                    options: FFButtonOptions(
-                                      width: 280.0,
-                                      height: 56.0,
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16.0, 0.0, 16.0, 0.0),
-                                      iconPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 0.0, 0.0, 0.0),
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleSmallFamily,
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w600,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .titleSmallIsCustom,
-                                          ),
-                                      elevation: 3.0,
-                                      borderSide: BorderSide(
-                                        color: Colors.transparent,
-                                        width: 1.0,
+                                        safeSetState(() {});
+                                      },
+                                      text: 'Save',
+                                      options: FFButtonOptions(
+                                        width: 280.0,
+                                        height: 56.0,
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 0.0, 16.0, 0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmallFamily,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .info,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w600,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .titleSmallIsCustom,
+                                            ),
+                                        elevation: 3.0,
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
                                       ),
-                                      borderRadius: BorderRadius.circular(12.0),
                                     ),
                                   ),
                                 ]

@@ -86,34 +86,41 @@ class _LocationAuthorizationWidgetState
                         ),
                       ),
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Enable Location\nServices',
-                          textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .override(
-                                fontFamily: 'InterTight',
-                                letterSpacing: 0.0,
-                              ),
-                        ),
-                        Text(
-                          'Allow your location to be included automatically during an emergency so trusted contacts and responders can act faster. Location is never tracked in the background and is only accessed if an emergency is triggered.',
-                          textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'robot',
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
-                        ),
-                      ].divide(SizedBox(height: 12.0)),
+                    Container(
+                      width: 400.0,
+                      height: 175.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Enable Location\nServices',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .headlineMedium
+                                .override(
+                                  fontFamily: 'InterTight',
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                          Text(
+                            'Allow your location to be included automatically during an emergency so trusted contacts and responders can act faster. Location is never tracked in the background and is only accessed if an emergency is triggered.',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'robot',
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  letterSpacing: 0.0,
+                                  lineHeight: 1.5,
+                                ),
+                          ),
+                        ].divide(SizedBox(height: 12.0)),
+                      ),
                     ),
                   ].divide(SizedBox(height: 24.0)),
                 ),
@@ -132,7 +139,7 @@ class _LocationAuthorizationWidgetState
                             borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Container(
-                            width: double.infinity,
+                            width: 300.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
@@ -321,7 +328,7 @@ class _LocationAuthorizationWidgetState
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
-                      width: double.infinity,
+                      width: 400.0,
                       height: 50.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -369,7 +376,7 @@ class _LocationAuthorizationWidgetState
                           },
                           text: 'Continue',
                           options: FFButtonOptions(
-                            width: double.infinity,
+                            width: 400.0,
                             height: 50.0,
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 24.0, 0.0, 24.0, 0.0),
@@ -388,13 +395,13 @@ class _LocationAuthorizationWidgetState
                             borderSide: BorderSide(
                               color: Colors.transparent,
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(14.0),
                           ),
                         ),
                       ),
                     ),
                     Container(
-                      width: double.infinity,
+                      width: 400.0,
                       height: 50.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -409,7 +416,7 @@ class _LocationAuthorizationWidgetState
                         },
                         text: 'Skip for Now',
                         options: FFButtonOptions(
-                          width: double.infinity,
+                          width: 400.0,
                           height: 50.0,
                           padding: EdgeInsetsDirectional.fromSTEB(
                               24.0, 0.0, 24.0, 0.0),
@@ -431,7 +438,7 @@ class _LocationAuthorizationWidgetState
                                 .secondaryBackground,
                             width: 1.0,
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
+                          borderRadius: BorderRadius.circular(14.0),
                         ),
                       ),
                     ),

@@ -111,7 +111,7 @@ class _DecoyPinSystemValuesWidgetState
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Container(
-                                    width: double.infinity,
+                                    width: 400.0,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(12.0),
@@ -907,7 +907,7 @@ class _DecoyPinSystemValuesWidgetState
                         },
                         text: 'Save & Go Home',
                         options: FFButtonOptions(
-                          width: double.infinity,
+                          width: 400.0,
                           height: 50.0,
                           padding: EdgeInsets.all(0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -924,7 +924,7 @@ class _DecoyPinSystemValuesWidgetState
                           borderSide: BorderSide(
                             color: Colors.transparent,
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
+                          borderRadius: BorderRadius.circular(14.0),
                         ),
                       ),
                     ].divide(SizedBox(height: 40.0)),

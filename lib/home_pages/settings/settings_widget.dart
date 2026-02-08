@@ -6,7 +6,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'settings_model.dart';
 export 'settings_model.dart';
 
@@ -101,7 +100,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         child: Stack(
                           children: [
                             Align(
-                              alignment: AlignmentDirectional(0.03, 0.0),
+                              alignment: AlignmentDirectional(0.02, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     8.0, 12.0, 8.0, 12.0),
@@ -123,7 +122,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               ),
                             ),
                             Align(
-                              alignment: AlignmentDirectional(-0.03, 0.0),
+                              alignment: AlignmentDirectional(-0.02, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     8.0, 12.0, 8.0, 12.0),
@@ -154,7 +153,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -187,10 +186,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         .titleLarge
                                         .override(
                                           fontFamily: 'InterTight',
-                                          color: Color(0xFF15161E),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           fontSize: 22.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                   ),
                                   Icon(
@@ -222,7 +222,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         fontFamily: 'robot',
                                         color: Colors.white,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w900,
                                       ),
                                   elevation: 0.0,
                                   borderRadius: BorderRadius.circular(8.0),
@@ -255,10 +255,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         .titleLarge
                                         .override(
                                           fontFamily: 'InterTight',
-                                          color: Color(0xFF15161E),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           fontSize: 22.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                   ),
                                   Icon(
@@ -322,11 +323,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleLarge
                                       .override(
-                                        fontFamily: 'Outterbox',
-                                        color: Color(0xFF15161E),
+                                        fontFamily: 'InterTight',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                 ),
                                 Icon(
@@ -390,10 +392,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                       .titleLarge
                                       .override(
                                         fontFamily: 'InterTight',
-                                        color: Color(0xFF15161E),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                 ),
                                 Icon(
@@ -465,7 +468,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                               .primaryText,
                                           fontSize: 22.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                   ),
                                   Icon(
@@ -557,10 +560,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                       .titleLarge
                                       .override(
                                         fontFamily: 'InterTight',
-                                        color: Color(0xFF15161E),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                 ),
                                 Icon(
@@ -623,20 +627,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .titleLarge
                                       .override(
-                                        font: GoogleFonts.outfit(
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleLarge
-                                                  .fontStyle,
-                                        ),
-                                        color: Color(0xFF15161E),
+                                        fontFamily: 'InterTight',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w500,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleLarge
-                                            .fontStyle,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                 ),
                                 Icon(
@@ -702,21 +698,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleLarge
                                         .override(
-                                          font: GoogleFonts.outfit(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontStyle,
-                                          ),
-                                          color: Color(0xFF15161E),
+                                          fontFamily: 'InterTight',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           fontSize: 22.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleLarge
-                                                  .fontStyle,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                   ),
                                   Icon(
@@ -764,25 +751,229 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     ),
                   ],
                 ),
-                Text(
-                  'App Version',
-                  style: FlutterFlowTheme.of(context).titleLarge.override(
-                        fontFamily: 'InterTight',
-                        color: Color(0xFF15161E),
-                        fontSize: 22.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w500,
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Container(
+                              width: 60.0,
+                              height: 60.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.asset(
+                                  'assets/images/xlogo.png',
+                                  width: 200.86,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Opacity(
+                            opacity: 0.0,
+                            child: FFButtonWidget(
+                              onPressed: () async {
+                                await launchURL(
+                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                              },
+                              text: 'Button',
+                              options: FFButtonOptions(
+                                width: 60.0,
+                                height: 60.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 16.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .titleSmallFamily,
+                                      color: Colors.white,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .titleSmallIsCustom,
+                                    ),
+                                elevation: 0.0,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                ),
-                Text(
-                  'v0.0.1',
-                  style: FlutterFlowTheme.of(context).labelMedium.override(
-                        fontFamily: 'InterTight',
-                        color: Color(0xFF606A85),
-                        fontSize: 14.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w500,
+                      Stack(
+                        children: [
+                          Container(
+                            width: 60.0,
+                            height: 60.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.asset(
+                                'assets/images/YouTubeLogo.png',
+                                width: 60.0,
+                                height: 60.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Opacity(
+                            opacity: 0.0,
+                            child: FFButtonWidget(
+                              onPressed: () async {
+                                await launchURL(
+                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                              },
+                              text: 'Button',
+                              options: FFButtonOptions(
+                                width: 60.0,
+                                height: 60.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 16.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .titleSmallFamily,
+                                      color: Colors.white,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .titleSmallIsCustom,
+                                    ),
+                                elevation: 0.0,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      Stack(
+                        children: [
+                          Container(
+                            width: 60.0,
+                            height: 60.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.asset(
+                                'assets/images/rumble.jpg',
+                                width: 200.0,
+                                height: 200.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Opacity(
+                            opacity: 0.0,
+                            child: FFButtonWidget(
+                              onPressed: () async {
+                                await launchURL(
+                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                              },
+                              text: 'Button',
+                              options: FFButtonOptions(
+                                width: 60.0,
+                                height: 60.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 16.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .titleSmallFamily,
+                                      color: Colors.white,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .titleSmallIsCustom,
+                                    ),
+                                elevation: 0.0,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Stack(
+                        children: [
+                          Container(
+                            width: 60.0,
+                            height: 60.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.asset(
+                                'assets/images/instalogo.png',
+                                width: 200.0,
+                                height: 200.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Opacity(
+                            opacity: 0.0,
+                            child: FFButtonWidget(
+                              onPressed: () async {
+                                await launchURL(
+                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                              },
+                              text: 'Button',
+                              options: FFButtonOptions(
+                                width: 60.0,
+                                height: 60.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 16.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .titleSmallFamily,
+                                      color: Colors.white,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .titleSmallIsCustom,
+                                    ),
+                                elevation: 0.0,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ].divide(SizedBox(width: 24.0)),
+                  ),
                 ),
                 FFButtonWidget(
                   onPressed: () async {

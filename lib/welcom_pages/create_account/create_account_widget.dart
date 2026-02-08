@@ -714,7 +714,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
-                                              fontFamily: 'InterTight',
+                                              fontFamily: 'robot',
                                               color: Colors.white,
                                               fontSize: 18.0,
                                               letterSpacing: 0.0,
@@ -725,7 +725,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           color: Colors.transparent,
                                         ),
                                         borderRadius:
-                                            BorderRadius.circular(16.0),
+                                            BorderRadius.circular(12.0),
                                       ),
                                     ),
                                     Column(

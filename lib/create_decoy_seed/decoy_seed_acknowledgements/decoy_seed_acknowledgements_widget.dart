@@ -108,7 +108,7 @@ class _DecoySeedAcknowledgementsWidgetState
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 12.0, 0.0, 12.0),
+                                  0.0, 10.0, 0.0, 10.0),
                               child: Material(
                                 color: Colors.transparent,
                                 elevation: 3.0,
@@ -116,7 +116,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: Container(
-                                  width: double.infinity,
+                                  width: 400.0,
                                   height: 70.0,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primary,
@@ -129,7 +129,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                       children: [
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(-0.03, 0.0),
+                                              AlignmentDirectional(-0.02, 0.0),
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -156,7 +156,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                         ),
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(0.03, 0.0),
+                                              AlignmentDirectional(0.02, 0.0),
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -214,7 +214,7 @@ class _DecoySeedAcknowledgementsWidgetState
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: Container(
-                              width: double.infinity,
+                              width: 400.0,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF9F9F9),
                                 borderRadius: BorderRadius.circular(12.0),
@@ -814,7 +814,7 @@ class _DecoySeedAcknowledgementsWidgetState
                               },
                               text: 'Continue',
                               options: FFButtonOptions(
-                                width: double.infinity,
+                                width: 400.0,
                                 height: 52.0,
                                 padding: EdgeInsets.all(8.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -825,8 +825,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                     .override(
                                       fontFamily: FlutterFlowTheme.of(context)
                                           .titleMediumFamily,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
+                                      color: FlutterFlowTheme.of(context).info,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.w600,
                                       useGoogleFonts:
@@ -835,6 +834,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                     ),
                                 elevation: 3.0,
                                 borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).primary,
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(12.0),

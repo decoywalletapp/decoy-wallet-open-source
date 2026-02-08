@@ -166,7 +166,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 8.0, 0.0, 0.0),
                           child: Container(
-                            width: double.infinity,
+                            width: 400.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
@@ -200,24 +200,32 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 24.0, 0.0, 0.0),
-                          child: Text(
-                            'Click the link in the email to confirm your account. If you don\'t see the email, check your spam folder.',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .bodyMediumFamily,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .bodyMediumIsCustom,
-                                ),
+                        Container(
+                          width: 400.0,
+                          height: 75.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context).info,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 20.0, 0.0, 0.0),
+                            child: Text(
+                              'Click the link in the email to confirm your account. If you don\'t see the email, check your spam folder.',
+                              textAlign: TextAlign.center,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: FlutterFlowTheme.of(context)
+                                        .bodyMediumFamily,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    letterSpacing: 0.0,
+                                    lineHeight: 1.5,
+                                    useGoogleFonts:
+                                        !FlutterFlowTheme.of(context)
+                                            .bodyMediumIsCustom,
+                                  ),
+                            ),
                           ),
                         ),
                       ],

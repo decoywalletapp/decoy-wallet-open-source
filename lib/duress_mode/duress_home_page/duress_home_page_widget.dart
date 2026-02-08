@@ -72,30 +72,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
         safeSetState(() {});
         _model.chartReady = true;
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.btcPrices.length.toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _model.btcEpochMs.length.toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         _model.firstPrice = _model.btcPrices.firstOrNull;
         _model.currentPrice = _model.btcPrices.lastOrNull;
         safeSetState(() {});
@@ -140,30 +116,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             safeSetState(() {});
             _model.chartReady = true;
             safeSetState(() {});
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  _model.btcPrices.length.toString(),
-                  style: TextStyle(
-                    color: FlutterFlowTheme.of(context).primaryText,
-                  ),
-                ),
-                duration: Duration(milliseconds: 4000),
-                backgroundColor: FlutterFlowTheme.of(context).secondary,
-              ),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  _model.btcEpochMs.length.toString(),
-                  style: TextStyle(
-                    color: FlutterFlowTheme.of(context).primaryText,
-                  ),
-                ),
-                duration: Duration(milliseconds: 4000),
-                backgroundColor: FlutterFlowTheme.of(context).secondary,
-              ),
-            );
             _model.firstPrice = _model.btcPrices.firstOrNull;
             _model.currentPrice = _model.btcPrices.lastOrNull;
             safeSetState(() {});
@@ -208,30 +160,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                 safeSetState(() {});
                 _model.chartReady = true;
                 safeSetState(() {});
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      _model.btcPrices.length.toString(),
-                      style: TextStyle(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 4000),
-                    backgroundColor: FlutterFlowTheme.of(context).secondary,
-                  ),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      _model.btcEpochMs.length.toString(),
-                      style: TextStyle(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 4000),
-                    backgroundColor: FlutterFlowTheme.of(context).secondary,
-                  ),
-                );
                 _model.firstPrice = _model.btcPrices.firstOrNull;
                 _model.currentPrice = _model.btcPrices.lastOrNull;
                 safeSetState(() {});
@@ -251,42 +179,6 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                 _model.btcPrices = [].toList().cast<double>();
                 _model.btcEpochMs = [].toList().cast<double>();
                 safeSetState(() {});
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'false',
-                      style: TextStyle(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 4000),
-                    backgroundColor: FlutterFlowTheme.of(context).secondary,
-                  ),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      _model.btcPrices.length.toString(),
-                      style: TextStyle(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 4000),
-                    backgroundColor: FlutterFlowTheme.of(context).secondary,
-                  ),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      _model.btcEpochMs.length.toString(),
-                      style: TextStyle(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 4000),
-                    backgroundColor: FlutterFlowTheme.of(context).secondary,
-                  ),
-                );
               }
             }
           }
@@ -392,256 +284,215 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       ),
                     ].divide(SizedBox(height: 8.0)),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Container(
-                      width: double.infinity,
-                      height: 300.0,
-                      decoration: BoxDecoration(
-                        color: Color(0x9D343739),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 8.0,
-                            color: Color(0x1A000000),
-                            offset: Offset(
-                              0.0,
-                              2.0,
-                            ),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 20.0,
-                                  height: 20.0,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF7931A),
-                                    shape: BoxShape.circle,
+                  Align(
+                    alignment: AlignmentDirectional(0.0, 0.0),
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Container(
+                        width: 400.0,
+                        height: 300.0,
+                        decoration: BoxDecoration(
+                          color: Color(0x9D343739),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 8.0,
+                              color: Color(0x1A000000),
+                              offset: Offset(
+                                0.0,
+                                2.0,
+                              ),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF7931A),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text(
+                                          '₿',
+                                          style: FlutterFlowTheme.of(context)
+                                              .titleLarge
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleLargeFamily,
+                                                color: Color(0xFFF7931A),
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.bold,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .titleLargeIsCustom,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  child: Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        '₿',
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        valueOrDefault<String>(
+                                          formatNumber(
+                                            _model.currentPrice,
+                                            formatType: FormatType.decimal,
+                                            decimalType:
+                                                DecimalType.periodDecimal,
+                                            currency: '\$',
+                                          ),
+                                          '0',
+                                        ),
                                         style: FlutterFlowTheme.of(context)
-                                            .titleLarge
+                                            .titleMedium
                                             .override(
-                                              fontFamily:
+                                              fontFamily: 'hello',
+                                              color:
                                                   FlutterFlowTheme.of(context)
-                                                      .titleLargeFamily,
-                                              color: Color(0xFFF7931A),
+                                                      .info,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.bold,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .titleLargeIsCustom,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      valueOrDefault<String>(
-                                        formatNumber(
-                                          _model.currentPrice,
-                                          formatType: FormatType.decimal,
-                                          decimalType:
-                                              DecimalType.periodDecimal,
-                                          currency: '\$',
+                                      Text(
+                                        valueOrDefault<String>(
+                                          functions.formatpctLabel(
+                                              valueOrDefault<double>(
+                                            _model.pctChange1y,
+                                            0.0,
+                                          )),
+                                          '0',
                                         ),
-                                        '0',
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .override(
-                                            fontFamily: 'hello',
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                    ),
-                                    Text(
-                                      valueOrDefault<String>(
-                                        functions.formatpctLabel(
-                                            valueOrDefault<double>(
-                                          _model.pctChange1y,
-                                          0.0,
-                                        )),
-                                        '0',
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'hello',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 200.0,
-                                  decoration: BoxDecoration(
-                                    color: Color(0x4D000000),
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        width: 370.0,
-                                        height: 230.0,
-                                        child: FlutterFlowLineChart(
-                                          data: [
-                                            FFLineChartData(
-                                              xData: _model.btcEpochMs,
-                                              yData: _model.btcPrices,
-                                              settings: LineChartBarData(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                barWidth: 2.0,
-                                                isCurved: true,
-                                                dotData: FlDotData(show: false),
-                                                belowBarData: BarAreaData(
-                                                  show: true,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .accent1,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                          chartStylingInfo: ChartStylingInfo(
-                                            backgroundColor: Color(0x4D000000),
-                                            showBorder: false,
-                                          ),
-                                          axisBounds: AxisBounds(),
-                                          xAxisLabelInfo: AxisLabelInfo(
-                                            reservedSize: 32.0,
-                                          ),
-                                          yAxisLabelInfo: AxisLabelInfo(
-                                            reservedSize: 40.0,
-                                          ),
-                                        ),
-                                      ),
-                                      if (_model.chartReady == false)
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderRadius: 8.0,
-                                            buttonSize: 60.0,
-                                            fillColor: Color(0x4D000000),
-                                            icon: Icon(
-                                              Icons.refresh,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'hello',
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              size: 32.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
                                             ),
-                                            onPressed: () async {
-                                              if (_model.isLoadingChart !=
-                                                  true) {
-                                                _model.isLoadingChart = true;
-                                                safeSetState(() {});
-                                                _model.chartReady = false;
-                                                _model.btcPrices =
-                                                    [].toList().cast<double>();
-                                                _model.btcEpochMs =
-                                                    [].toList().cast<double>();
-                                                safeSetState(() {});
-                                                _model.btcResp4 =
-                                                    await BtcChartOneYearCall
-                                                        .call();
-
-                                                if ((_model.btcResp4
-                                                            ?.succeeded ??
-                                                        true) ==
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 200.0,
+                                    decoration: BoxDecoration(
+                                      color: Color(0x4D000000),
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Container(
+                                            width: 370.0,
+                                            height: 230.0,
+                                            child: FlutterFlowLineChart(
+                                              data: [
+                                                FFLineChartData(
+                                                  xData: _model.btcEpochMs,
+                                                  yData: _model.btcPrices,
+                                                  settings: LineChartBarData(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    barWidth: 2.0,
+                                                    isCurved: true,
+                                                    dotData:
+                                                        FlDotData(show: false),
+                                                    belowBarData: BarAreaData(
+                                                      show: true,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .accent1,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                              chartStylingInfo:
+                                                  ChartStylingInfo(
+                                                backgroundColor:
+                                                    Color(0x4D000000),
+                                                showBorder: false,
+                                              ),
+                                              axisBounds: AxisBounds(),
+                                              xAxisLabelInfo: AxisLabelInfo(
+                                                reservedSize: 32.0,
+                                              ),
+                                              yAxisLabelInfo: AxisLabelInfo(
+                                                reservedSize: 40.0,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        if (_model.chartReady == false)
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: FlutterFlowIconButton(
+                                              borderRadius: 8.0,
+                                              buttonSize: 60.0,
+                                              fillColor: Color(0x4D000000),
+                                              icon: Icon(
+                                                Icons.refresh,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                size: 32.0,
+                                              ),
+                                              onPressed: () async {
+                                                if (_model.isLoadingChart !=
                                                     true) {
-                                                  _model.prices1y =
-                                                      getJsonField(
-                                                    (_model.btcResp4
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                    r'''$.prices''',
-                                                    true,
-                                                  )!
-                                                          .toList()
-                                                          .cast<dynamic>();
+                                                  _model.isLoadingChart = true;
                                                   safeSetState(() {});
-                                                  _model.btcPrices = functions
-                                                      .extractPriceList(_model
-                                                          .prices1y
-                                                          .toList())
+                                                  _model.chartReady = false;
+                                                  _model.btcPrices = []
                                                       .toList()
                                                       .cast<double>();
-                                                  _model.btcEpochMs = functions
-                                                      .extractEpochMsList(_model
-                                                          .prices1y
-                                                          .toList())
+                                                  _model.btcEpochMs = []
                                                       .toList()
                                                       .cast<double>();
                                                   safeSetState(() {});
-                                                  _model.chartReady = true;
-                                                  safeSetState(() {});
-                                                  _model.firstPrice = _model
-                                                      .btcPrices.firstOrNull;
-                                                  _model.currentPrice = _model
-                                                      .btcPrices.lastOrNull;
-                                                  safeSetState(() {});
-                                                  _model.pctChange1y = functions
-                                                      .percentageChange(
-                                                          _model.firstPrice,
-                                                          _model.currentPrice);
-                                                  safeSetState(() {});
-                                                  FFAppState().fakeUsdValue =
-                                                      valueOrDefault<double>(
-                                                    functions.usdFromBtc(
-                                                        FFAppState()
-                                                            .fakeBtcBalance,
-                                                        _model.currentPrice!),
-                                                    0.0,
-                                                  );
-                                                  FFAppState().update(() {});
-                                                  FFAppState().fakeSeeded =
-                                                      true;
-                                                  safeSetState(() {});
-                                                } else {
-                                                  _model.btcResp5 =
+                                                  _model.btcResp4 =
                                                       await BtcChartOneYearCall
                                                           .call();
 
-                                                  if ((_model.btcResp5
+                                                  if ((_model.btcResp4
                                                               ?.succeeded ??
                                                           true) ==
                                                       true) {
                                                     _model.prices1y =
                                                         getJsonField(
-                                                      (_model.btcResp5
+                                                      (_model.btcResp4
                                                               ?.jsonBody ??
                                                           ''),
                                                       r'''$.prices''',
@@ -690,35 +541,104 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                                         true;
                                                     safeSetState(() {});
                                                   } else {
-                                                    _model.chartReady = false;
-                                                    _model.btcPrices = []
-                                                        .toList()
-                                                        .cast<double>();
-                                                    _model.btcEpochMs = []
-                                                        .toList()
-                                                        .cast<double>();
-                                                    safeSetState(() {});
+                                                    _model.btcResp5 =
+                                                        await BtcChartOneYearCall
+                                                            .call();
+
+                                                    if ((_model.btcResp5
+                                                                ?.succeeded ??
+                                                            true) ==
+                                                        true) {
+                                                      _model.prices1y =
+                                                          getJsonField(
+                                                        (_model.btcResp5
+                                                                ?.jsonBody ??
+                                                            ''),
+                                                        r'''$.prices''',
+                                                        true,
+                                                      )!
+                                                              .toList()
+                                                              .cast<dynamic>();
+                                                      safeSetState(() {});
+                                                      _model.btcPrices =
+                                                          functions
+                                                              .extractPriceList(
+                                                                  _model
+                                                                      .prices1y
+                                                                      .toList())
+                                                              .toList()
+                                                              .cast<double>();
+                                                      _model.btcEpochMs =
+                                                          functions
+                                                              .extractEpochMsList(
+                                                                  _model
+                                                                      .prices1y
+                                                                      .toList())
+                                                              .toList()
+                                                              .cast<double>();
+                                                      safeSetState(() {});
+                                                      _model.chartReady = true;
+                                                      safeSetState(() {});
+                                                      _model.firstPrice = _model
+                                                          .btcPrices
+                                                          .firstOrNull;
+                                                      _model.currentPrice =
+                                                          _model.btcPrices
+                                                              .lastOrNull;
+                                                      safeSetState(() {});
+                                                      _model.pctChange1y = functions
+                                                          .percentageChange(
+                                                              _model.firstPrice,
+                                                              _model
+                                                                  .currentPrice);
+                                                      safeSetState(() {});
+                                                      FFAppState()
+                                                              .fakeUsdValue =
+                                                          valueOrDefault<
+                                                              double>(
+                                                        functions.usdFromBtc(
+                                                            FFAppState()
+                                                                .fakeBtcBalance,
+                                                            _model
+                                                                .currentPrice!),
+                                                        0.0,
+                                                      );
+                                                      FFAppState()
+                                                          .update(() {});
+                                                      FFAppState().fakeSeeded =
+                                                          true;
+                                                      safeSetState(() {});
+                                                    } else {
+                                                      _model.chartReady = false;
+                                                      _model.btcPrices = []
+                                                          .toList()
+                                                          .cast<double>();
+                                                      _model.btcEpochMs = []
+                                                          .toList()
+                                                          .cast<double>();
+                                                      safeSetState(() {});
+                                                    }
                                                   }
                                                 }
-                                              }
 
-                                              safeSetState(() {});
-                                            },
+                                                safeSetState(() {});
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         width: 160.0,
@@ -781,27 +701,30 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                             ),
                             Opacity(
                               opacity: 0.0,
-                              child: FFButtonWidget(
-                                onPressed: () {
-                                  print('Button pressed ...');
-                                },
-                                text: '',
-                                options: FFButtonOptions(
-                                  width: 160.0,
-                                  height: 80.0,
-                                  padding: EdgeInsets.all(0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: Color(0xFF343739),
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'hello',
-                                        color: Colors.white,
-                                        letterSpacing: 0.0,
-                                      ),
-                                  elevation: 3.0,
-                                  borderRadius: BorderRadius.circular(16.0),
+                              child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: FFButtonWidget(
+                                  onPressed: () {
+                                    print('Button pressed ...');
+                                  },
+                                  text: '',
+                                  options: FFButtonOptions(
+                                    width: 160.0,
+                                    height: 80.0,
+                                    padding: EdgeInsets.all(0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: Color(0xFF343739),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'hello',
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                        ),
+                                    elevation: 3.0,
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -868,29 +791,32 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                             ),
                             Opacity(
                               opacity: 0.0,
-                              child: FFButtonWidget(
-                                onPressed: () async {
-                                  context
-                                      .pushNamed(DuressScanQRWidget.routeName);
-                                },
-                                text: '',
-                                options: FFButtonOptions(
-                                  width: 160.0,
-                                  height: 80.0,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 0.0, 16.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: Color(0xFF343739),
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'hello',
-                                        color: Colors.white,
-                                        letterSpacing: 0.0,
-                                      ),
-                                  elevation: 3.0,
-                                  borderRadius: BorderRadius.circular(16.0),
+                              child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    context.pushNamed(
+                                        DuressScanQRWidget.routeName);
+                                  },
+                                  text: '',
+                                  options: FFButtonOptions(
+                                    width: 160.0,
+                                    height: 80.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 0.0, 16.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: Color(0xFF343739),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'hello',
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                        ),
+                                    elevation: 3.0,
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
                                 ),
                               ),
                             ),

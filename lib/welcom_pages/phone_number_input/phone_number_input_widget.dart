@@ -159,228 +159,265 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         ),
                       ].divide(SizedBox(height: 16.0)),
                     ),
-                    Form(
-                      key: _model.formKey,
-                      autovalidateMode: AutovalidateMode.disabled,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Row(
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Container(
+                        width: 400.0,
+                        child: Form(
+                          key: _model.formKey,
+                          autovalidateMode: AutovalidateMode.disabled,
+                          child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller:
-                                      _model.phoneNumberFieldTextController,
-                                  focusNode: _model.phoneNumberFieldFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.phoneNumberFieldTextController',
-                                    Duration(milliseconds: 1000),
-                                    () async {
-                                      await Future.delayed(
-                                        Duration(
-                                          milliseconds: 10,
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      width: 400.0,
+                                      child: TextFormField(
+                                        controller: _model
+                                            .phoneNumberFieldTextController,
+                                        focusNode:
+                                            _model.phoneNumberFieldFocusNode,
+                                        onChanged: (_) => EasyDebounce.debounce(
+                                          '_model.phoneNumberFieldTextController',
+                                          Duration(milliseconds: 1000),
+                                          () async {
+                                            await Future.delayed(
+                                              Duration(
+                                                milliseconds: 10,
+                                              ),
+                                            );
+                                            _model.pnDigits10 = functions
+                                                .normalizeToTenDigits(_model
+                                                    .phoneNumberFieldTextController
+                                                    .text);
+                                            _model.cleanPhone =
+                                                functions.toE164USpt2(_model
+                                                    .phoneNumberFieldTextController
+                                                    .text);
+                                            safeSetState(() {});
+                                            if (_model.pnDigits10 != null &&
+                                                _model.pnDigits10 != '') {
+                                              safeSetState(() {
+                                                _model.phoneNumberFieldTextController
+                                                        ?.text =
+                                                    functions.formatAsUsPhone(
+                                                        _model.pnDigits10!);
+                                              });
+                                            } else {
+                                              safeSetState(() {
+                                                _model
+                                                    .phoneNumberFieldTextController
+                                                    ?.text = '';
+                                              });
+                                            }
+                                          },
                                         ),
-                                      );
-                                      _model.pnDigits10 =
-                                          functions.normalizeToTenDigits(_model
-                                              .phoneNumberFieldTextController
-                                              .text);
-                                      _model.cleanPhone = functions.toE164USpt2(
-                                          _model.phoneNumberFieldTextController
-                                              .text);
-                                      safeSetState(() {});
-                                      if (_model.pnDigits10 != null &&
-                                          _model.pnDigits10 != '') {
-                                        safeSetState(() {
-                                          _model.phoneNumberFieldTextController
-                                                  ?.text =
-                                              functions.formatAsUsPhone(
-                                                  _model.pnDigits10!);
-                                        });
-                                      } else {
-                                        safeSetState(() {
-                                          _model.phoneNumberFieldTextController
-                                              ?.text = '';
-                                        });
-                                      }
-                                    },
-                                  ),
-                                  autofocus: true,
-                                  autofillHints: [
-                                    AutofillHints.telephoneNumber
-                                  ],
-                                  textInputAction: TextInputAction.done,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    labelText: 'Phone Number',
-                                    hintText: '(555) 123-4567',
-                                    hintStyle: FlutterFlowTheme.of(context)
-                                        .labelLarge
-                                        .override(
-                                          fontFamily:
+                                        autofocus: true,
+                                        autofillHints: [
+                                          AutofillHints.telephoneNumber
+                                        ],
+                                        textInputAction: TextInputAction.done,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          labelText: 'Phone Number',
+                                          hintText: '(555) 123-4567',
+                                          hintStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .labelLarge
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelLargeFamily,
+                                                letterSpacing: 0.25,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .labelLargeIsCustom,
+                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 2.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 2.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 2.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 2.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          filled: true,
+                                          fillColor:
                                               FlutterFlowTheme.of(context)
-                                                  .labelLargeFamily,
-                                          letterSpacing: 0.25,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .labelLargeIsCustom,
+                                                  .secondaryBackground,
+                                          contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  20.0, 16.0, 20.0, 16.0),
+                                          prefixIcon: Icon(
+                                            Icons.phone_rounded,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            size: 20.0,
+                                          ),
                                         ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        width: 2.0,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyLarge
+                                            .override(
+                                              fontFamily: 'robot',
+                                              fontSize: 18.0,
+                                              letterSpacing: 0.25,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                        keyboardType: TextInputType.phone,
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        validator: _model
+                                            .phoneNumberFieldTextControllerValidator
+                                            .asValidator(context),
                                       ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        width: 2.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 2.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                        width: 2.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    filled: true,
-                                    fillColor: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    contentPadding:
-                                        EdgeInsetsDirectional.fromSTEB(
-                                            20.0, 16.0, 20.0, 16.0),
-                                    prefixIcon: Icon(
-                                      Icons.phone_rounded,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      size: 20.0,
                                     ),
                                   ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyLarge
-                                      .override(
-                                        fontFamily: 'robot',
-                                        fontSize: 18.0,
-                                        letterSpacing: 0.25,
-                                        fontWeight: FontWeight.w500,
+                                ],
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          if (_model.notificationInt
+                                                  .toString() ==
+                                              '1')
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Text(
+                                                'INVALID PHONE NUMBER',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                              ),
+                                            ),
+                                          if (_model.notificationInt == 2)
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Text(
+                                                'ENTER VALID PHONE NUMBER',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                              ),
+                                            ),
+                                          if (_model.notificationInt == 3)
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Text(
+                                                'PHONE NUMBER ALREADY IN USE',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                              ),
+                                            ),
+                                        ],
                                       ),
-                                  keyboardType: TextInputType.phone,
-                                  cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  validator: _model
-                                      .phoneNumberFieldTextControllerValidator
-                                      .asValidator(context),
+                                    ].divide(SizedBox(height: 0.0)),
+                                  ),
                                 ),
                               ),
-                            ],
+                            ].divide(SizedBox(height: 24.0)),
                           ),
-                          Expanded(
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Stack(
-                                    children: [
-                                      if (_model.notificationInt.toString() ==
-                                          '1')
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            'INVALID PHONE NUMBER',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumFamily,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts:
-                                                      !FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumIsCustom,
-                                                ),
-                                          ),
-                                        ),
-                                      if (_model.notificationInt == 2)
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            'ENTER VALID PHONE NUMBER',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumFamily,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts:
-                                                      !FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumIsCustom,
-                                                ),
-                                          ),
-                                        ),
-                                      if (_model.notificationInt == 3)
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            'PHONE NUMBER ALREADY IN USE',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumFamily,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts:
-                                                      !FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumIsCustom,
-                                                ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 0.0)),
-                              ),
-                            ),
-                          ),
-                        ].divide(SizedBox(height: 24.0)),
+                        ),
                       ),
                     ),
                   ].divide(SizedBox(height: 32.0)),
@@ -502,9 +539,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                       },
                       text: 'Save Phone Number',
                       options: FFButtonOptions(
-                        width: double.infinity,
+                        width: 400.0,
                         height: 52.0,
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(0.0),
                         iconPadding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         color: FlutterFlowTheme.of(context).primary,
@@ -520,7 +557,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           color: Colors.transparent,
                           width: 1.0,
                         ),
-                        borderRadius: BorderRadius.circular(12.0),
+                        borderRadius: BorderRadius.circular(14.0),
                       ),
                     ),
                     if (_model.notificationInt.toString() == '3')
@@ -535,9 +572,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         },
                         text: 'Back to Login',
                         options: FFButtonOptions(
-                          width: double.infinity,
+                          width: 400.0,
                           height: 52.0,
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           color: FlutterFlowTheme.of(context).primaryBackground,
@@ -556,7 +593,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                 .secondaryBackground,
                             width: 1.0,
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
+                          borderRadius: BorderRadius.circular(14.0),
                         ),
                       ),
                   ].divide(SizedBox(height: 16.0)),

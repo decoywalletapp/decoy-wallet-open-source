@@ -591,31 +591,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   ),
                 ),
               ),
-              if (responsiveVisibility(
-                context: context,
-                phone: false,
-                tablet: false,
-              ))
-                Expanded(
-                  flex: 6,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Container(
-                      width: 100.0,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: Image.network(
-                            'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1380&q=80',
-                          ).image,
-                        ),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                    ),
-                  ),
-                ),
             ],
           ),
         ),

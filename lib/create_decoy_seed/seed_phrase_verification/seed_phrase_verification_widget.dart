@@ -303,7 +303,7 @@ class _SeedPhraseVerificationWidgetState
                             Padding(
                               padding: EdgeInsets.all(20.0),
                               child: Container(
-                                width: double.infinity,
+                                width: 400.0,
                                 decoration: BoxDecoration(
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryBackground,
