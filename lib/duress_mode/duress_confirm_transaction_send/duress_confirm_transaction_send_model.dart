@@ -16,6 +16,8 @@ class DuressConfirmTransactionSendModel
 
   double slidePct = 0.0;
 
+  int orderProcessed = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for Slider widget.

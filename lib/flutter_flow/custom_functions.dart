@@ -550,3 +550,23 @@ int computeEmergencyPercent(
 
   return ((count / 3.0) * 100).round();
 }
+
+String btcToUsdDisplay(
+  String btcText,
+  double btcUsdPrice,
+) {
+  final raw = btcText.trim();
+  if (raw.isEmpty) return r'$0.00';
+
+  // If user is mid typing "1." treat it like "1" for math.
+  final normalized = raw.endsWith('.') ? raw.substring(0, raw.length - 1) : raw;
+
+  // Keep digits and dot only.
+  final cleaned =
+      normalized.replaceAll(',', '').replaceAll(RegExp(r'[^0-9.]'), '');
+
+  final btc = double.tryParse(cleaned) ?? 0.0;
+  final usd = btc * btcUsdPrice;
+
+  return NumberFormat.currency(symbol: r'$', decimalDigits: 2).format(usd);
+}

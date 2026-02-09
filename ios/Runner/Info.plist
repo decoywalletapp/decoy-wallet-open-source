@@ -53,11 +53,6 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
-	<key>UIDeviceFamily</key>
-	<array>
-		<integer>1</integer>
-	</array>
-
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Only used for emergency situations.</string>
 	<key>NSCameraUsageDescription</key>
@@ -65,20 +60,26 @@
 	<key>NSFaceIDUsageDescription</key>
     <string>Decoy uses Face ID or Touch ID to securely unlock your account and confirm it is really you.</string>
 
+
+
+
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 

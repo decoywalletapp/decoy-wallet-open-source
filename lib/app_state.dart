@@ -117,6 +117,11 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getString('ff_draftDerivationPath') ??
               _draftDerivationPath;
     });
+    await _safeInitAsync(() async {
+      _currentPriceMultiple =
+          await secureStorage.getDouble('ff_currentPriceMultiple') ??
+              _currentPriceMultiple;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -506,6 +511,17 @@ class FFAppState extends ChangeNotifier {
 
   void deleteDraftDerivationPath() {
     secureStorage.delete(key: 'ff_draftDerivationPath');
+  }
+
+  double _currentPriceMultiple = 0.0;
+  double get currentPriceMultiple => _currentPriceMultiple;
+  set currentPriceMultiple(double value) {
+    _currentPriceMultiple = value;
+    secureStorage.setDouble('ff_currentPriceMultiple', value);
+  }
+
+  void deleteCurrentPriceMultiple() {
+    secureStorage.delete(key: 'ff_currentPriceMultiple');
   }
 }
 

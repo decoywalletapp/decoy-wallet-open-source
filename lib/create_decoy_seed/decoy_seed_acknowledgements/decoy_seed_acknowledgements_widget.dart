@@ -146,7 +146,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                             context)
                                                         .info,
                                                     fontSize: 48.0,
-                                                    letterSpacing: 0.0,
+                                                    letterSpacing: 0.1,
                                                     fontWeight:
                                                         FontWeight.normal,
                                                     lineHeight: 1.125,
@@ -173,7 +173,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                             context)
                                                         .info,
                                                     fontSize: 48.0,
-                                                    letterSpacing: 0.0,
+                                                    letterSpacing: 0.1,
                                                     fontWeight:
                                                         FontWeight.normal,
                                                     lineHeight: 1.125,

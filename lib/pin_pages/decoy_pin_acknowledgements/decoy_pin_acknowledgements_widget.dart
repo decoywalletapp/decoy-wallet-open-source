@@ -129,7 +129,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                       children: [
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(-0.01, 0.0),
+                                              AlignmentDirectional(-0.02, 0.0),
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -146,7 +146,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                             context)
                                                         .info,
                                                     fontSize: 48.0,
-                                                    letterSpacing: 0.0,
+                                                    letterSpacing: 0.1,
                                                     fontWeight:
                                                         FontWeight.normal,
                                                     lineHeight: 1.125,
@@ -156,7 +156,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                         ),
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(0.01, 0.0),
+                                              AlignmentDirectional(0.02, 0.0),
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -173,7 +173,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                             context)
                                                         .info,
                                                     fontSize: 48.0,
-                                                    letterSpacing: 0.0,
+                                                    letterSpacing: 0.1,
                                                     fontWeight:
                                                         FontWeight.normal,
                                                     lineHeight: 1.125,

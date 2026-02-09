@@ -1,4 +1,3 @@
-import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/instant_timer.dart';
@@ -117,31 +116,6 @@ class _DuressProcessingTransactionWidgetState
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-                      child: FlutterFlowIconButton(
-                        borderRadius: 20.0,
-                        buttonSize: 40.0,
-                        icon: Icon(
-                          Icons.arrow_back_rounded,
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          size: 24.0,
-                        ),
-                        onPressed: () async {
-                          context.pushNamed(
-                              DuressConfirmTransactionSendWidget.routeName);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                 child: Column(
@@ -473,7 +447,7 @@ class _DuressProcessingTransactionWidgetState
                                       children: [
                                         AnimatedContainer(
                                           duration:
-                                              Duration(milliseconds: 2000),
+                                              Duration(milliseconds: 1670),
                                           curve: Curves.easeInOut,
                                           width: 8.0,
                                           height: 8.0,
@@ -514,7 +488,7 @@ class _DuressProcessingTransactionWidgetState
                                     children: [
                                       AnimatedContainer(
                                         duration: Duration(milliseconds: 2000),
-                                        curve: Curves.easeInOutQuint,
+                                        curve: Curves.easeInOut,
                                         width: 8.0,
                                         height: 8.0,
                                         decoration: BoxDecoration(
@@ -543,7 +517,9 @@ class _DuressProcessingTransactionWidgetState
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Container(
+                                      AnimatedContainer(
+                                        duration: Duration(milliseconds: 1370),
+                                        curve: Curves.easeInOut,
                                         width: 8.0,
                                         height: 8.0,
                                         decoration: BoxDecoration(
@@ -565,7 +541,7 @@ class _DuressProcessingTransactionWidgetState
                                                   FlutterFlowTheme.of(context)
                                                       .secondaryText,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.normal,
                                             ),
                                       ),
                                     ].divide(SizedBox(width: 8.0)),
@@ -573,7 +549,9 @@ class _DuressProcessingTransactionWidgetState
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Container(
+                                      AnimatedContainer(
+                                        duration: Duration(milliseconds: 1440),
+                                        curve: Curves.easeInOut,
                                         width: 8.0,
                                         height: 8.0,
                                         decoration: BoxDecoration(

@@ -963,78 +963,88 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                         mainAxisSize:
                                                             MainAxisSize.max,
                                                         children: [
-                                                          Container(
-                                                            width: 300.0,
-                                                            height: 25.0,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryBackground,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12.0),
-                                                              border:
-                                                                  Border.all(
-                                                                color:
-                                                                    valueOrDefault<
-                                                                        Color>(
-                                                                  (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
-                                                                          (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete ==
-                                                                              true) &&
-                                                                          (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete ==
-                                                                              true)
-                                                                      ? FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .success
-                                                                      : FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primary,
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primary,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            child:
-                                                                LinearPercentIndicator(
-                                                              percent: functions.computeEmergencyProgress(
-                                                                  createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                      ?.personalComplete,
-                                                                  createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                      ?.addressComplete,
-                                                                  createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                      ?.contactsComplete),
-                                                              width: 300.0,
-                                                              lineHeight: 25.0,
-                                                              animation: false,
-                                                              animateFromLastPercent:
-                                                                  true,
-                                                              progressColor: functions.computeEmergencyPercent(
+                                                          Expanded(
+                                                            child: Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Stack(
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        LinearPercentIndicator(
+                                                                      percent: functions.computeEmergencyProgress(
                                                                           createDecoyEmergencyContactsSetupDecoyWalletRow
                                                                               ?.personalComplete,
                                                                           createDecoyEmergencyContactsSetupDecoyWalletRow
                                                                               ?.addressComplete,
                                                                           createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                              ?.contactsComplete) ==
-                                                                      100
-                                                                  ? FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .success
-                                                                  : FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primary,
-                                                              backgroundColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .accent4,
-                                                              barRadius: Radius
-                                                                  .circular(
-                                                                      12.0),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .zero,
+                                                                              ?.contactsComplete),
+                                                                      width:
+                                                                          300.0,
+                                                                      lineHeight:
+                                                                          25.0,
+                                                                      animation:
+                                                                          true,
+                                                                      animateFromLastPercent:
+                                                                          true,
+                                                                      progressColor: functions.computeEmergencyPercent(createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete) ==
+                                                                              100
+                                                                          ? FlutterFlowTheme.of(context)
+                                                                              .success
+                                                                          : FlutterFlowTheme.of(context)
+                                                                              .primary,
+                                                                      backgroundColor:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .accent4,
+                                                                      barRadius:
+                                                                          Radius.circular(
+                                                                              12.0),
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .zero,
+                                                                    ),
+                                                                  ),
+                                                                  Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        Container(
+                                                                      width:
+                                                                          300.0,
+                                                                      height:
+                                                                          25.0,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .secondaryBackground,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(12.0),
+                                                                        border:
+                                                                            Border.all(
+                                                                          color:
+                                                                              valueOrDefault<Color>(
+                                                                            (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true)
+                                                                                ? FlutterFlowTheme.of(context).success
+                                                                                : FlutterFlowTheme.of(context).primary,
+                                                                            FlutterFlowTheme.of(context).primary,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
                                                         ],

@@ -99,7 +99,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                         ),
                         child: Container(
                           width: 200.0,
-                          height: 70.0,
+                          height: 71.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).primary,
                             borderRadius: BorderRadius.circular(8.0),
@@ -108,10 +108,10 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
+                                alignment: AlignmentDirectional(0.02, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 4.0, 0.0, 0.0),
+                                      0.0, 3.0, 0.0, 0.0),
                                   child: Text(
                                     'Tutorials',
                                     textAlign: TextAlign.center,
@@ -122,17 +122,17 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           color:
                                               FlutterFlowTheme.of(context).info,
                                           fontSize: 52.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.1,
                                           fontWeight: FontWeight.normal,
                                         ),
                                   ),
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
+                                alignment: AlignmentDirectional(-0.02, 0.0),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 4.0, 0.0, 0.0),
+                                      0.0, 3.0, 0.0, 0.0),
                                   child: Text(
                                     'Tutorials',
                                     textAlign: TextAlign.center,
@@ -143,7 +143,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           color:
                                               FlutterFlowTheme.of(context).info,
                                           fontSize: 52.0,
-                                          letterSpacing: 0.0,
+                                          letterSpacing: 0.1,
                                           fontWeight: FontWeight.normal,
                                         ),
                                   ),

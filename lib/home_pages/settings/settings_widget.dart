@@ -91,7 +91,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       ),
                       child: Container(
                         width: 175.0,
-                        height: 70.0,
+                        height: 71.0,
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context).primary,
                           borderRadius: BorderRadius.circular(8.0),
@@ -100,10 +100,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         child: Stack(
                           children: [
                             Align(
-                              alignment: AlignmentDirectional(0.02, 0.0),
+                              alignment: AlignmentDirectional(0.05, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    8.0, 12.0, 8.0, 12.0),
+                                    0.0, 12.0, 0.0, 12.0),
                                 child: Text(
                                   'Settings',
                                   textAlign: TextAlign.center,
@@ -114,7 +114,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         color:
                                             FlutterFlowTheme.of(context).info,
                                         fontSize: 52.0,
-                                        letterSpacing: 0.0,
+                                        letterSpacing: 0.1,
                                         fontWeight: FontWeight.normal,
                                         lineHeight: 1.05,
                                       ),
@@ -122,10 +122,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               ),
                             ),
                             Align(
-                              alignment: AlignmentDirectional(-0.02, 0.0),
+                              alignment: AlignmentDirectional(-0.05, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    8.0, 12.0, 8.0, 12.0),
+                                    0.0, 12.0, 0.0, 12.0),
                                 child: Text(
                                   'Settings',
                                   textAlign: TextAlign.center,
@@ -136,7 +136,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         color:
                                             FlutterFlowTheme.of(context).info,
                                         fontSize: 52.0,
-                                        letterSpacing: 0.0,
+                                        letterSpacing: 0.1,
                                         fontWeight: FontWeight.normal,
                                         lineHeight: 1.05,
                                       ),
@@ -752,7 +752,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 10.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -762,8 +763,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
-                              width: 60.0,
-                              height: 60.0,
+                              width: 50.0,
+                              height: 50.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
@@ -784,12 +785,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             child: FFButtonWidget(
                               onPressed: () async {
                                 await launchURL(
-                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                                    'https://x.com/decoywalletapp?s=21');
                               },
                               text: 'Button',
                               options: FFButtonOptions(
-                                width: 60.0,
-                                height: 60.0,
+                                width: 50.0,
+                                height: 50.0,
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -816,8 +817,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       Stack(
                         children: [
                           Container(
-                            width: 60.0,
-                            height: 60.0,
+                            width: 50.0,
+                            height: 50.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
@@ -837,12 +838,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             child: FFButtonWidget(
                               onPressed: () async {
                                 await launchURL(
-                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                                    'https://www.youtube.com/@DecoyWalletApp');
                               },
                               text: 'Button',
                               options: FFButtonOptions(
-                                width: 60.0,
-                                height: 60.0,
+                                width: 50.0,
+                                height: 50.0,
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -869,8 +870,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       Stack(
                         children: [
                           Container(
-                            width: 60.0,
-                            height: 60.0,
+                            width: 50.0,
+                            height: 50.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
@@ -890,12 +891,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             child: FFButtonWidget(
                               onPressed: () async {
                                 await launchURL(
-                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                                    'https://rumble.com/user/DecoyWalletApp');
                               },
                               text: 'Button',
                               options: FFButtonOptions(
-                                width: 60.0,
-                                height: 60.0,
+                                width: 50.0,
+                                height: 50.0,
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -922,8 +923,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       Stack(
                         children: [
                           Container(
-                            width: 60.0,
-                            height: 60.0,
+                            width: 50.0,
+                            height: 50.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
@@ -947,8 +948,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               },
                               text: 'Button',
                               options: FFButtonOptions(
-                                width: 60.0,
-                                height: 60.0,
+                                width: 50.0,
+                                height: 50.0,
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -1011,7 +1012,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ].divide(SizedBox(height: 16.0)),
             ),
           ),
-        ].divide(SizedBox(height: 8.0)).addToStart(SizedBox(height: 12.0)),
+        ].divide(SizedBox(height: 8.0)),
       ),
     );
   }
