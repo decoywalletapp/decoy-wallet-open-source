@@ -53,6 +53,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+	</array>
+
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Only used for emergency situations.</string>
 	<key>NSCameraUsageDescription</key>
