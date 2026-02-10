@@ -101,3 +101,5 @@ export '/test_subjects/duress_home_page_copy/duress_home_page_copy_widget.dart'
     show DuressHomePageCopyWidget;
 export '/test_subjects/create_decoy_emergency_contacts_setup_copy/create_decoy_emergency_contacts_setup_copy_widget.dart'
     show CreateDecoyEmergencyContactsSetupCopyWidget;
+export '/test_subjects/home_page_copy/home_page_copy_widget.dart'
+    show HomePageCopyWidget;

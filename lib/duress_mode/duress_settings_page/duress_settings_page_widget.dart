@@ -44,33 +44,31 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0x001D2428),
-      appBar: AppBar(
-        backgroundColor: Color(0x001D2428),
-        automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-          child: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30.0,
-            buttonSize: 40.0,
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).primaryBackground,
-              size: 25.0,
-            ),
-            onPressed: () async {
-              context.pop();
-            },
-          ),
-        ),
-        actions: [],
-        centerTitle: false,
-        elevation: 0.0,
-      ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                child: FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  buttonSize: 40.0,
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    size: 25.0,
+                  ),
+                  onPressed: () async {
+                    context.pop();
+                  },
+                ),
+              ),
+            ],
+          ),
           Align(
             alignment: AlignmentDirectional(0.0, 0.0),
             child: Padding(
@@ -369,7 +367,10 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               ),
             ),
           ),
-        ].divide(SizedBox(height: 20.0)).addToEnd(SizedBox(height: 64.0)),
+        ]
+            .divide(SizedBox(height: 20.0))
+            .addToStart(SizedBox(height: 24.0))
+            .addToEnd(SizedBox(height: 64.0)),
       ),
     );
   }

@@ -497,6 +497,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             CreateDecoyEmergencyContactsSetupCopyWidget(),
       ),
       FFRoute(
+        name: HomePageCopyWidget.routeName,
+        path: HomePageCopyWidget.routePath,
+        requireAuth: true,
+        builder: (context, params) => HomePageCopyWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

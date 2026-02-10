@@ -523,6 +523,12 @@ class FFAppState extends ChangeNotifier {
   void deleteCurrentPriceMultiple() {
     secureStorage.delete(key: 'ff_currentPriceMultiple');
   }
+
+  String _entitlementStatus = 'unpaid';
+  String get entitlementStatus => _entitlementStatus;
+  set entitlementStatus(String value) {
+    _entitlementStatus = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

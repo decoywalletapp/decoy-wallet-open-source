@@ -1157,7 +1157,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 LinearPercentIndicator(
-                                                  percent: 0.5,
+                                                  percent: 0.05,
                                                   width: 300.0,
                                                   lineHeight: 6.0,
                                                   animation: true,
@@ -1292,14 +1292,19 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                         Align(
                                           alignment:
                                               AlignmentDirectional(0.0, 0.0),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: Image.asset(
-                                              'assets/images/ChatGPT_Image_Feb_9,_2026,_12_38_23_PM.png',
-                                              width: 100.0,
-                                              height: 100.0,
-                                              fit: BoxFit.cover,
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 2.0, 0.0, 0.0),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.asset(
+                                                'assets/images/ChatGPT_Image_Feb_9,_2026,_12_38_23_PM.png',
+                                                width: 100.0,
+                                                height: 100.0,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
                                         ),

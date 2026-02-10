@@ -172,7 +172,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                       children: [
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(0.01, 0.0),
+                                              AlignmentDirectional(0.02, 0.0),
                                           child: Text(
                                             'DECOY EMERGENCY',
                                             textAlign: TextAlign.center,
@@ -192,7 +192,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                         ),
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(-0.01, 0.0),
+                                              AlignmentDirectional(-0.02, 0.0),
                                           child: Text(
                                             'DECOY EMERGENCY',
                                             textAlign: TextAlign.center,
@@ -1022,8 +1022,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           25.0,
                                                                       decoration:
                                                                           BoxDecoration(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .secondaryBackground,
                                                                         borderRadius:
                                                                             BorderRadius.circular(12.0),
                                                                         border:

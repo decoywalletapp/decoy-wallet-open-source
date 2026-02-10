@@ -214,7 +214,7 @@ class _DuressConfirmTransactionSendWidgetState
                                               ],
                                             ),
                                             Text(
-                                              '≈ ${functions.btcToUsdDisplay(FFAppState().sendAmountBtc, FFAppState().currentBtcPrice)} USD',
+                                              '≈ ${functions.btcToUsdDisplay(FFAppState().sendAmountBtc, FFAppState().currentPriceMultiple)} USD',
                                               textAlign: TextAlign.center,
                                               style:
                                                   FlutterFlowTheme.of(context)

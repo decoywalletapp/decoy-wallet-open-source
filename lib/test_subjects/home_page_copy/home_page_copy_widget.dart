@@ -8,29 +8,29 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'home_page_model.dart';
-export 'home_page_model.dart';
+import 'home_page_copy_model.dart';
+export 'home_page_copy_model.dart';
 
 /// Access settings, generate decoy seed, create duress PIN
-class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({super.key});
+class HomePageCopyWidget extends StatefulWidget {
+  const HomePageCopyWidget({super.key});
 
-  static String routeName = 'HomePage';
-  static String routePath = '/homePage';
+  static String routeName = 'HomePageCopy';
+  static String routePath = '/homePager';
 
   @override
-  State<HomePageWidget> createState() => _HomePageWidgetState();
+  State<HomePageCopyWidget> createState() => _HomePageCopyWidgetState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget> {
-  late HomePageModel _model;
+class _HomePageCopyWidgetState extends State<HomePageCopyWidget> {
+  late HomePageCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomePageModel());
+    _model = createModel(context, () => HomePageCopyModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -49,18 +49,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             ),
       );
       FFAppState().entitlementCheckCompleted = true;
-      FFAppState().entitlementStatus =
-          _model.entitlementRow!.elementAtOrNull(0)!.providerStatus!;
       safeSetState(() {});
       if ((_model.entitlementRow != null &&
               (_model.entitlementRow)!.isNotEmpty) &&
-          ((_model.entitlementRow?.elementAtOrNull(0)?.isActive == true) ||
-              (FFAppState().entitlementStatus == 'settled'))) {
+          (_model.entitlementRow?.elementAtOrNull(0)?.isActive == true)) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});
       } else {
         FFAppState().hasActiveSubscription = false;
-        FFAppState().entitlementStatus = 'unpaid';
         safeSetState(() {});
         if ((FFAppState().prevHasActiveSubscription == true) &&
             (FFAppState().hasActiveSubscription == false) &&
@@ -835,10 +831,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                         ].divide(SizedBox(height: 16.0)),
                       ),
-                      if ((FFAppState().hasActiveSubscription == false) &&
-                          (FFAppState().entitlementStatus != 'received') &&
-                          (FFAppState().entitlementStatus != 'processing') &&
-                          (FFAppState().entitlementStatus != 'settled'))
+                      if (FFAppState().hasActiveSubscription == false)
                         Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
                           child: Material(
