@@ -1263,52 +1263,113 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             _model.dataKeyB64!,
                                           );
                                           if (FFAppState()
-                                                  .decoyPinContactsEnabled ==
-                                              true) {
-                                            _model.alertResult1 =
-                                                await DecoyAlertGroup
-                                                    .sendEmergencyAlertsCall
-                                                    .call(
-                                              userId: currentUserUid,
-                                              triggerId: 'PIN_DECOY',
-                                              lat: functions.latFromLatLng(
-                                                  _model.emergencyLocation),
-                                              lng: functions.lngFromLatLng(
-                                                  _model.emergencyLocation),
-                                              contactsJson: getJsonField(
-                                                _model.contactObj,
-                                                r'''$.contacts''',
+                                                  .hasActiveSubscription ==
+                                              false) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Bitcoin payment confirming. Full protection activates after confirmation.',
+                                                  style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryText,
+                                                  ),
+                                                ),
+                                                duration: Duration(
+                                                    milliseconds: 4000),
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
                                               ),
-                                              ownerName: (String firstName,
-                                                      String lastName) {
-                                                return firstName +
-                                                    " " +
-                                                    lastName;
-                                              }(
-                                                  getJsonField(
-                                                    _model.personalObj,
-                                                    r'''$.firstName''',
-                                                  ).toString(),
-                                                  getJsonField(
-                                                    _model.personalObj,
-                                                    r'''$.lastName''',
-                                                  ).toString()),
-                                              jwt: currentJwtToken,
                                             );
-                                          }
-                                          if ((FFAppState().fakeSeeded ==
-                                                  false) ||
-                                              (FFAppState().fakeBtcBalance <=
-                                                  0.0)) {
-                                            FFAppState().fakeBtcBalance =
-                                                functions.randomBtc(
-                                                    1.0, 5.0, 8);
-                                            FFAppState().fakeSeeded = true;
-                                            safeSetState(() {});
-                                          }
+                                            if ((FFAppState().fakeSeeded ==
+                                                    false) ||
+                                                (FFAppState().fakeBtcBalance <=
+                                                    0.0)) {
+                                              FFAppState().fakeBtcBalance =
+                                                  functions.randomBtc(
+                                                      1.0, 5.0, 8);
+                                              FFAppState().fakeSeeded = true;
+                                              safeSetState(() {});
+                                            }
 
-                                          context.goNamed(
-                                              DuressHomePageWidget.routeName);
+                                            context.goNamed(
+                                                DuressHomePageWidget.routeName);
+                                          } else {
+                                            if (FFAppState()
+                                                    .decoyPinContactsEnabled ==
+                                                true) {
+                                              if (FFAppState()
+                                                      .hasActiveSubscription ==
+                                                  true) {
+                                                _model.alertResult1 =
+                                                    await DecoyAlertGroup
+                                                        .sendEmergencyAlertsCall
+                                                        .call(
+                                                  userId: currentUserUid,
+                                                  triggerId: 'PIN_DECOY',
+                                                  lat: functions.latFromLatLng(
+                                                      _model.emergencyLocation),
+                                                  lng: functions.lngFromLatLng(
+                                                      _model.emergencyLocation),
+                                                  contactsJson: getJsonField(
+                                                    _model.contactObj,
+                                                    r'''$.contacts''',
+                                                  ),
+                                                  ownerName: (String firstName,
+                                                          String lastName) {
+                                                    return firstName +
+                                                        " " +
+                                                        lastName;
+                                                  }(
+                                                      getJsonField(
+                                                        _model.personalObj,
+                                                        r'''$.firstName''',
+                                                      ).toString(),
+                                                      getJsonField(
+                                                        _model.personalObj,
+                                                        r'''$.lastName''',
+                                                      ).toString()),
+                                                  jwt: currentJwtToken,
+                                                );
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Bitcoin payment confirming. Full protection activates after confirmation.',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                            if ((FFAppState().fakeSeeded ==
+                                                    false) ||
+                                                (FFAppState().fakeBtcBalance <=
+                                                    0.0)) {
+                                              FFAppState().fakeBtcBalance =
+                                                  functions.randomBtc(
+                                                      1.0, 5.0, 8);
+                                              FFAppState().fakeSeeded = true;
+                                              safeSetState(() {});
+                                            }
+
+                                            context.goNamed(
+                                                DuressHomePageWidget.routeName);
+                                          }
                                         } else {
                                           if (VerifyPINCall.isAccount(
                                                 (_model.verifyResp?.jsonBody ??

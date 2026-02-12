@@ -369,7 +369,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
           ),
         ]
             .divide(SizedBox(height: 20.0))
-            .addToStart(SizedBox(height: 24.0))
+            .addToStart(SizedBox(height: 48.0))
             .addToEnd(SizedBox(height: 64.0)),
       ),
     );
