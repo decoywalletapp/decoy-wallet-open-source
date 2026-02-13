@@ -9,6 +9,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'auth/supabase_auth/supabase_user_provider.dart';
 import 'auth/supabase_auth/auth_util.dart';
 
+import 'backend/push_notifications/push_notifications_util.dart';
 import '/backend/supabase/supabase.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -82,6 +83,8 @@ class _MyAppState extends State<MyApp> {
           .toList();
   late Stream<BaseAuthUser> userStream;
 
+  final fcmTokenSub = fcmTokenUserStream.listen((_) {});
+
   @override
   void initState() {
     super.initState();
@@ -97,6 +100,12 @@ class _MyAppState extends State<MyApp> {
       Duration(milliseconds: 1000),
       () => _appStateNotifier.stopShowingSplashImage(),
     );
+  }
+
+  @override
+  void dispose() {
+    fcmTokenSub.cancel();
+    super.dispose();
   }
 
   void setThemeMode(ThemeMode mode) => safeSetState(() {
