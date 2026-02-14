@@ -9,8 +9,10 @@ workflows:
       xcode: latest
       vars:
         TEAM_ID: 8Y7L4NZ5ZX
-        APP_BUNDLE_ID: com.decoywalletapp.app
+        BUNDLE_ID: com.decoywalletapp.app
         EXT_BUNDLE_ID: com.decoywalletapp.app.ImageNotification
+        IOS_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
         FLUTTER_VERSION: 3.32.4
 
     cache:
@@ -22,15 +24,9 @@ workflows:
       - name: Install Flutter (exact)
         script: |
           set -euxo pipefail
+
           WANT="${FLUTTER_VERSION}"
           URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${WANT}-stable.zip"
-
-          if [ -d "$HOME/flutter" ]; then
-            have="$($HOME/flutter/bin/flutter --version | head -n1 | awk '{print $2}')"
-            if [ "$have" != "$WANT" ]; then
-              rm -rf "$HOME/flutter"
-            fi
-          fi
 
           if [ ! -x "$HOME/flutter/bin/flutter" ]; then
             cd "$HOME"
@@ -40,10 +36,10 @@ workflows:
             rm -f flutter.zip
           fi
 
-          echo 'export PATH="$HOME/flutter/bin:$PATH"' >> "$CM_ENV"
+          echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
           flutter --version
 
-      - name: Initialize keychain and import p12
+      - name: Initialize keychain and import Distribution p12
         script: |
           set -euxo pipefail
           keychain initialize
@@ -60,16 +56,16 @@ workflows:
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/runner.mobileprovision"
           echo "$IOS_PROVISIONING_PROFILE_IMAGE_NOTIFICATION" | base64 --decode > "$PROFILE_DIR/imagenotification.mobileprovision"
 
-          for f in "$PROFILE_DIR/runner.mobileprovision" "$PROFILE_DIR/imagenotification.mobileprovision"; do
-            /usr/bin/security cms -D -i "$f" > /tmp/profile.plist
-            echo "Profile file: $f"
-            /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist
-            /usr/libexec/PlistBuddy -c "Print :UUID" /tmp/profile.plist
-            /usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" /tmp/profile.plist
-            /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile.plist
-            /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile.plist || true
-            echo ""
-          done
+          /usr/bin/security cms -D -i "$PROFILE_DIR/runner.mobileprovision" > /tmp/profile_runner.plist
+          /usr/bin/security cms -D -i "$PROFILE_DIR/imagenotification.mobileprovision" > /tmp/profile_ext.plist
+
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_runner.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_runner.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_runner.plist || true
+
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_ext.plist || true
 
       - name: Create exportOptions.plist (manual signing)
         script: |
@@ -81,10 +77,11 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" "$plist"
           /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" "$plist"
           /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" "$plist"
-          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$APP_BUNDLE_ID string $IOS_PROFILE_SPECIFIER" "$plist"
-          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$EXT_BUNDLE_ID string $IOS_PROFILE_SPECIFIER_IMAGE_NOTIFICATION" "$plist"
-          /usr/libexec/PlistBuddy -c "Add :manageAppVersionAndBuildNumber bool false" "$plist"
 
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$BUNDLE_ID string $IOS_PROFILE_SPECIFIER" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$EXT_BUNDLE_ID string $IOS_PROFILE_SPECIFIER_IMAGE_NOTIFICATION" "$plist"
+
+          /usr/libexec/PlistBuddy -c "Add :manageAppVersionAndBuildNumber bool false" "$plist"
           /usr/libexec/PlistBuddy -c "Print" "$plist"
 
       - name: Bump build number (UTC timestamp)
@@ -102,29 +99,26 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool NO" ios/Runner/Info.plist
           /usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist
 
-      - name: Apply profiles to Xcode project
+      - name: Apply provisioning profiles to Xcode project
         script: |
           set -euxo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: Build iOS (no codesign) and archive with Xcode
+      - name: Build archive (Flutter)
         script: |
           set -euxo pipefail
           flutter clean
           flutter pub get
           flutter build ios --release --no-codesign
 
-          mkdir -p build/ios/archive
-
           xcodebuild \
-            -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
+            -workspace "$IOS_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
             -configuration Release \
             -sdk iphoneos \
             -archivePath build/ios/archive/Runner.xcarchive \
             archive \
-            DEVELOPMENT_TEAM="$TEAM_ID" \
-            CODE_SIGN_STYLE=Manual
+            CODE_SIGNING_ALLOWED=NO
 
       - name: Export IPA from xcarchive
         script: |
@@ -138,9 +132,10 @@ workflows:
             -exportOptionsPlist exportOptions.plist \
             -exportPath build/ios/ipa
 
-          echo "Export outputs:"
-          ls -lah build/ios/ipa || true
-          find build/ios/ipa -maxdepth 2 -type f -name '*.ipa' -print
+          ls -lah build/ios/ipa
+          IPA="$(find build/ios/ipa -maxdepth 2 -type f -name '*.ipa' | head -n 1)"
+          test -n "$IPA"
+          echo "IPA ready: $IPA"
 
       - name: Upload to App Store Connect (CLI)
         script: |
