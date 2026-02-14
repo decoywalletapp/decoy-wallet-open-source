@@ -1,0 +1,96 @@
+workflows:
+  ios_release:
+    name: iOS Release (TestFlight)
+
+    environment:
+      groups:
+        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER, EXT_IOS_PROVISIONING_PROFILE, EXT_IOS_PROFILE_SPECIFIER
+        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
+      xcode: latest
+      vars:
+        TEAM_ID: 8Y7L4NZ5ZX
+        BUNDLE_ID: com.decoywalletapp.app
+        EXT_BUNDLE_ID: com.decoywalletapp.app.ImageNotification
+        IOS_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
+        FLUTTER_VERSION: 3.32.4
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+        - ios/Pods
+
+    scripts:
+      - name: Install Flutter (force exact version)
+        script: |
+          set -euxo pipefail
+
+          WANT="${FLUTTER_VERSION}"
+          URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${WANT}-stable.zip"
+
+          need_install="1"
+          if [ -x "$HOME/flutter/bin/flutter" ]; then
+            have="$($HOME/flutter/bin/flutter --version | head -n1 | awk '{print $2}')"
+            if [ "$have" = "$WANT" ]; then
+              need_install="0"
+            else
+              rm -rf "$HOME/flutter"
+            fi
+          fi
+
+          if [ "$need_install" = "1" ]; then
+            cd "$HOME"
+            rm -f flutter.zip
+            for i in $(seq 1 10); do
+              curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
+            done
+            unzip -q flutter.zip
+            rm -f flutter.zip
+          fi
+
+          echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
+          flutter --version
+
+      - name: Show tool versions
+        script: |
+          set -euxo pipefail
+          flutter --version
+          xcodebuild -version
+          cm version || true
+
+      - name: Initialize keychain & import Distribution .p12
+        script: |
+          set -euxo pipefail
+          keychain initialize
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
+          keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          security find-identity -v -p codesigning || true
+
+      - name: Install provisioning profiles (app + ImageNotification)
+        script: |
+          set -euxo pipefail
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILE_DIR"
+
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
+          echo "$EXT_IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/imagenotification.mobileprovision"
+
+          ls -lah "$PROFILE_DIR" || true
+
+          /usr/bin/security cms -D -i "$PROFILE_DIR/appstore.mobileprovision" > /tmp/profile_app.plist
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_app.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_app.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_app.plist || true
+
+          /usr/bin/security cms -D -i "$PROFILE_DIR/imagenotification.mobileprovision" > /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_ext.plist || true
+
+      - name: Verify provisioning profile kind
+        script: |
+          set -euxo pipefail
+          /usr/bin/security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/appstore.mobileprovision" > /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :ProvisionsAllDevices" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:get-task-allow" /tmp/profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:b
