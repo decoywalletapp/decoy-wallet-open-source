@@ -4,12 +4,13 @@ workflows:
 
     environment:
       groups:
-        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER
+        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER, EXT_IOS_PROVISIONING_PROFILE, EXT_IOS_PROFILE_SPECIFIER
         - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
       xcode: latest
       vars:
         TEAM_ID: 8Y7L4NZ5ZX
         BUNDLE_ID: com.decoywalletapp.app
+        EXT_BUNDLE_ID: com.decoywalletapp.app.ImageNotification
         IOS_WORKSPACE: ios/Runner.xcworkspace
         XCODE_SCHEME: Runner
         FLUTTER_VERSION: 3.32.4
@@ -65,16 +66,26 @@ workflows:
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
           security find-identity -v -p codesigning || true
 
-      - name: Install provisioning profile
+      - name: Install provisioning profiles (app + ImageNotification)
         script: |
           set -euxo pipefail
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PROFILE_DIR"
+
           echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
+          echo "$EXT_IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/imagenotification.mobileprovision"
+
           ls -lah "$PROFILE_DIR" || true
-          /usr/bin/security cms -D -i "$PROFILE_DIR/appstore.mobileprovision" > /tmp/profile.plist
-          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist
-          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile.plist
+
+          /usr/bin/security cms -D -i "$PROFILE_DIR/appstore.mobileprovision" > /tmp/profile_app.plist
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_app.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_app.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_app.plist || true
+
+          /usr/bin/security cms -D -i "$PROFILE_DIR/imagenotification.mobileprovision" > /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_ext.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_ext.plist || true
 
       - name: Verify provisioning profile kind
         script: |
@@ -95,7 +106,10 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" "$plist"
           /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" "$plist"
           /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" "$plist"
+
           /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$BUNDLE_ID string $IOS_PROFILE_SPECIFIER" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$EXT_BUNDLE_ID string $EXT_IOS_PROFILE_SPECIFIER" "$plist"
+
           /usr/libexec/PlistBuddy -c "Add :manageAppVersionAndBuildNumber bool false" "$plist"
           /usr/libexec/PlistBuddy -c "Print" "$plist"
 
