@@ -21,16 +21,33 @@ workflows:
         - ios/Pods
 
     scripts:
-
       - name: Install Flutter (exact)
         script: |
           set -euxo pipefail
-          if [ ! -d "$HOME/flutter" ]; then
-            cd "$HOME"
-            curl -L -o flutter.zip https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${FLUTTER_VERSION}-stable.zip
-            unzip -q flutter.zip
-            rm flutter.zip
+
+          WANT="${FLUTTER_VERSION}"
+          URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${WANT}-stable.zip"
+
+          need_install="1"
+          if [ -x "$HOME/flutter/bin/flutter" ]; then
+            have="$($HOME/flutter/bin/flutter --version | head -n1 | awk '{print $2}')"
+            if [ "$have" = "$WANT" ]; then
+              need_install="0"
+            else
+              rm -rf "$HOME/flutter"
+            fi
           fi
+
+          if [ "$need_install" = "1" ]; then
+            cd "$HOME"
+            rm -f flutter.zip
+            for i in $(seq 1 10); do
+              curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
+            done
+            unzip -q flutter.zip
+            rm -f flutter.zip
+          fi
+
           echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
           flutter --version
 
@@ -40,34 +57,54 @@ workflows:
           flutter --version
           xcodebuild -version
 
-      - name: Initialize keychain and import Distribution p12
+      - name: Preflight env vars
+        script: |
+          set -euxo pipefail
+          test -n "${CM_CERTIFICATE}"
+          test -n "${CM_CERTIFICATE_PASSWORD}"
+          test -n "${IOS_PROVISIONING_PROFILE}"
+          test -n "${EXT_IOS_PROVISIONING_PROFILE}"
+          test -n "${IOS_PROFILE_SPECIFIER}"
+          test -n "${EXT_IOS_PROFILE_SPECIFIER}"
+          echo "Env vars present."
+
+      - name: Initialize keychain and import p12
         script: |
           set -euxo pipefail
           keychain initialize
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/dist.p12
-          keychain add-certificates \
-            --certificate /tmp/dist.p12 \
-            --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
           security find-identity -v -p codesigning
 
-      - name: Install provisioning profiles (Runner + ImageNotification)
+      - name: Install provisioning profiles (Runner and ImageNotification)
         script: |
           set -euxo pipefail
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PROFILE_DIR"
 
-          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/app.mobileprovision"
-          echo "$EXT_IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/ext.mobileprovision"
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/runner_appstore.mobileprovision"
+          echo "$EXT_IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/imagenotification_appstore.mobileprovision"
 
-          ls -lah "$PROFILE_DIR"
+          /usr/bin/security cms -D -i "$PROFILE_DIR/runner_appstore.mobileprovision" > /tmp/profile_runner.plist
+          /usr/bin/security cms -D -i "$PROFILE_DIR/imagenotification_appstore.mobileprovision" > /tmp/profile_ext.plist
 
-      - name: Create exportOptions.plist
+          echo "Runner profile name:"
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_runner.plist
+          echo "Runner app id:"
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_runner.plist
+
+          echo "Extension profile name:"
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_ext.plist
+          echo "Extension app id:"
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_ext.plist
+
+      - name: Create exportOptions.plist (manual signing)
         script: |
           set -euxo pipefail
           plist=exportOptions.plist
           rm -f "$plist"
 
-          /usr/libexec/PlistBuddy -c "Add :method string app-store-connect" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :method string app-store" "$plist"
           /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" "$plist"
           /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" "$plist"
           /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" "$plist"
@@ -83,40 +120,18 @@ workflows:
           set -euxo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: Clean and build archive
+      - name: Build IPA (Flutter)
         script: |
           set -euxo pipefail
           flutter clean
           flutter pub get
-          flutter build ios --release --no-codesign
+          flutter build ipa --release --export-options-plist exportOptions.plist
 
-          xcodebuild \
-            -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -configuration Release \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            archive \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=$TEAM_ID
-
-      - name: Export IPA
-        script: |
-          set -euxo pipefail
-          rm -rf build/ios/ipa
-          mkdir -p build/ios/ipa
-
-          xcodebuild \
-            -exportArchive \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            -exportOptionsPlist exportOptions.plist \
-            -exportPath build/ios/ipa
-
-          ls -lah build/ios/ipa
-
-      - name: Upload to App Store Connect
+      - name: Upload to App Store Connect (CLI)
         script: |
           set -euxo pipefail
           IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          test -n "$IPA"
           app-store-connect publish \
             --path "$IPA" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
