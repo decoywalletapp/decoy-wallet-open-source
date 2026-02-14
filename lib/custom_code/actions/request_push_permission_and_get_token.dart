@@ -14,7 +14,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<String?> requestPushPermissionAndGetToken() async {
   try {
-    // iOS: this triggers the system prompt the first time it is called
     final settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
       badge: true,
@@ -25,20 +24,21 @@ Future<String?> requestPushPermissionAndGetToken() async {
       criticalAlert: false,
     );
 
-    // If user denied, return null
-    if (settings.authorizationStatus == AuthorizationStatus.denied) {
+    final status = settings.authorizationStatus;
+
+    // Only treat "denied" as a hard stop.
+    // "authorized" and "provisional" can both receive tokens.
+    if (status == AuthorizationStatus.denied) {
       return null;
     }
 
-    // Ensure FCM is allowed to auto init
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-    // Get the device token (this is what you store in Supabase)
+    // On iOS, this will be non-null only if APNs + FCM are configured correctly.
     final token = await FirebaseMessaging.instance.getToken();
 
     return token;
   } catch (e) {
-    // If anything fails, return null so you can handle it in UI
     return null;
   }
 }
