@@ -4,15 +4,13 @@ workflows:
 
     environment:
       groups:
-        - signing_cert              # CM_CERTIFICATE, CM_CERTIFICATE_PASSWORD, IOS_PROVISIONING_PROFILE, IOS_PROFILE_SPECIFIER, EXT_IOS_PROVISIONING_PROFILE, EXT_IOS_PROFILE_SPECIFIER
-        - app_store_connect         # APP_STORE_CONNECT_PRIVATE_KEY, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER
+        - signing_cert
+        - app_store_connect
       xcode: latest
       vars:
         TEAM_ID: 8Y7L4NZ5ZX
-        BUNDLE_ID: com.decoywalletapp.app
+        APP_BUNDLE_ID: com.decoywalletapp.app
         EXT_BUNDLE_ID: com.decoywalletapp.app.ImageNotification
-        IOS_WORKSPACE: ios/Runner.xcworkspace
-        XCODE_SCHEME: Runner
         FLUTTER_VERSION: 3.32.4
 
     cache:
@@ -21,44 +19,31 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Install Flutter (force exact version)
+      - name: Install Flutter (exact)
         script: |
           set -euxo pipefail
-
           WANT="${FLUTTER_VERSION}"
           URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_${WANT}-stable.zip"
 
-          need_install="1"
-          if [ -x "$HOME/flutter/bin/flutter" ]; then
+          if [ -d "$HOME/flutter" ]; then
             have="$($HOME/flutter/bin/flutter --version | head -n1 | awk '{print $2}')"
-            if [ "$have" = "$WANT" ]; then
-              need_install="0"
-            else
+            if [ "$have" != "$WANT" ]; then
               rm -rf "$HOME/flutter"
             fi
           fi
 
-          if [ "$need_install" = "1" ]; then
+          if [ ! -x "$HOME/flutter/bin/flutter" ]; then
             cd "$HOME"
             rm -f flutter.zip
-            for i in $(seq 1 10); do
-              curl -L --fail --show-error --continue-at - --output flutter.zip "$URL" && break || sleep $((i*5))
-            done
+            curl -L --fail --show-error --output flutter.zip "$URL"
             unzip -q flutter.zip
             rm -f flutter.zip
           fi
 
-          echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
+          echo 'export PATH="$HOME/flutter/bin:$PATH"' >> "$CM_ENV"
           flutter --version
 
-      - name: Show tool versions
-        script: |
-          set -euxo pipefail
-          flutter --version
-          xcodebuild -version
-          cm version || true
-
-      - name: Initialize keychain & import Distribution .p12
+      - name: Initialize keychain and import p12
         script: |
           set -euxo pipefail
           keychain initialize
@@ -66,16 +51,25 @@ workflows:
           keychain add-certificates --certificate /tmp/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
           security find-identity -v -p codesigning || true
 
-      - name: Install provisioning profiles (app + ImageNotification)
+      - name: Install provisioning profiles (Runner + ImageNotification)
         script: |
           set -euxo pipefail
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PROFILE_DIR"
 
-          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/appstore.mobileprovision"
-          echo "$EXT_IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/imagenotification.mobileprovision"
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_DIR/runner.mobileprovision"
+          echo "$IOS_PROVISIONING_PROFILE_IMAGE_NOTIFICATION" | base64 --decode > "$PROFILE_DIR/imagenotification.mobileprovision"
 
-          ls -lah "$PROFILE_DIR" || true
+          for f in "$PROFILE_DIR/runner.mobileprovision" "$PROFILE_DIR/imagenotification.mobileprovision"; do
+            /usr/bin/security cms -D -i "$f" > /tmp/profile.plist
+            echo "Profile file: $f"
+            /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile.plist
+            /usr/libexec/PlistBuddy -c "Print :UUID" /tmp/profile.plist
+            /usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" /tmp/profile.plist
+            /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile.plist
+            /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile.plist || true
+            echo ""
+          done
 
       - name: Create exportOptions.plist (manual signing)
         script: |
@@ -83,15 +77,14 @@ workflows:
           plist=exportOptions.plist
           rm -f "$plist"
 
-          /usr/libexec/PlistBuddy -c "Add :method string app-store" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :method string app-store-connect" "$plist"
           /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" "$plist"
           /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" "$plist"
           /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" "$plist"
-
-          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$BUNDLE_ID string $IOS_PROFILE_SPECIFIER" "$plist"
-          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$EXT_BUNDLE_ID string $EXT_IOS_PROFILE_SPECIFIER" "$plist"
-
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$APP_BUNDLE_ID string $IOS_PROFILE_SPECIFIER" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$EXT_BUNDLE_ID string $IOS_PROFILE_SPECIFIER_IMAGE_NOTIFICATION" "$plist"
           /usr/libexec/PlistBuddy -c "Add :manageAppVersionAndBuildNumber bool false" "$plist"
+
           /usr/libexec/PlistBuddy -c "Print" "$plist"
 
       - name: Bump build number (UTC timestamp)
@@ -109,48 +102,45 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool NO" ios/Runner/Info.plist
           /usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist
 
-      - name: Point Xcode project to installed profile(s) (manual signing)
+      - name: Apply profiles to Xcode project
         script: |
           set -euxo pipefail
           xcode-project use-profiles --warn-only
 
-      - name: Build archive (Flutter)
+      - name: Build iOS (no codesign) and archive with Xcode
         script: |
           set -euxo pipefail
           flutter clean
           flutter pub get
-          flutter build ipa --release --export-options-plist exportOptions.plist || true
+          flutter build ios --release --no-codesign
 
-          echo "Build output folders:"
-          ls -lah build || true
-          ls -lah build/ios || true
-          ls -lah build/ios/archive || true
-          find build -maxdepth 6 -type d -name "*.xcarchive" -print || true
-          find build -maxdepth 8 -type f -name "*.ipa" -print || true
+          mkdir -p build/ios/archive
+
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            archive \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            CODE_SIGN_STYLE=Manual
 
       - name: Export IPA from xcarchive
         script: |
           set -euxo pipefail
+          rm -rf build/ios/ipa
+          mkdir -p build/ios/ipa
 
-          ARCHIVE_PATH="$(find build/ios/archive -maxdepth 2 -type d -name '*.xcarchive' | head -n 1)"
-          test -n "$ARCHIVE_PATH"
-          echo "Using archive: $ARCHIVE_PATH"
-
-          EXPORT_DIR="build/ios/ipa"
-          rm -rf "$EXPORT_DIR"
-          mkdir -p "$EXPORT_DIR"
-
-          xcodebuild -exportArchive \
-            -archivePath "$ARCHIVE_PATH" \
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/ios/archive/Runner.xcarchive \
             -exportOptionsPlist exportOptions.plist \
-            -exportPath "$EXPORT_DIR"
+            -exportPath build/ios/ipa
 
-          echo "Exported files:"
-          find "$EXPORT_DIR" -maxdepth 2 -type f -print
-
-          IPA="$(find "$EXPORT_DIR" -maxdepth 2 -type f -name '*.ipa' | head -n 1)"
-          test -n "$IPA"
-          echo "IPA ready: $IPA"
+          echo "Export outputs:"
+          ls -lah build/ios/ipa || true
+          find build/ios/ipa -maxdepth 2 -type f -name '*.ipa' -print
 
       - name: Upload to App Store Connect (CLI)
         script: |
@@ -162,7 +152,7 @@ workflows:
             --path "$IPA" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --key @env:APP_STORE_CONNECT_PRIVATE_KEY
+            --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY
 
     artifacts:
       - build/ios/ipa/*.ipa
