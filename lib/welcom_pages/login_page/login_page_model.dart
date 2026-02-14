@@ -8,6 +8,8 @@ class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
 
   int notificationValue = 0;
 
+  String? pushTokenResult;
+
   ///  State fields for stateful widgets in this page.
 
   bool loginBioResult = false;

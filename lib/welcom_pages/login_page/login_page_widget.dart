@@ -610,11 +610,43 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.pushTokenResult!,
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                _model.pushTokenResult = _model.buttonResult;
+                                safeSetState(() {});
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
                                       'token ok',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                _model.pushTokenResult = _model.buttonResult;
+                                safeSetState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.pushTokenResult!,
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
@@ -652,7 +684,22 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                        ],
+                          Text(
+                            valueOrDefault<String>(
+                              _model.pushTokenResult,
+                              '0',
+                            ),
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .bodyMediumFamily,
+                                  letterSpacing: 0.0,
+                                  useGoogleFonts: !FlutterFlowTheme.of(context)
+                                      .bodyMediumIsCustom,
+                                ),
+                          ),
+                        ].divide(SizedBox(height: 5.0)),
                       ),
                     ],
                   ),
