@@ -60,11 +60,6 @@
 	<key>NSFaceIDUsageDescription</key>
     <string>Decoy uses Face ID or Touch ID to securely unlock your account and confirm it is really you.</string>
 
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>fetch</string>
-        <string>remote-notification</string>
-    </array>
 
 
 
