@@ -64,7 +64,7 @@ dependencies:
   flutter_secure_storage_macos: 4.0.0
   flutter_secure_storage_platform_interface: 2.0.1
   flutter_secure_storage_web: 2.0.0
-  flutter_secure_storage_windows: 4.0.8
+  flutter_secure_storage_windows: ^4.1.0
   font_awesome_flutter: 10.7.0
   from_css_color: 2.0.0
   functions_client: 2.4.2
