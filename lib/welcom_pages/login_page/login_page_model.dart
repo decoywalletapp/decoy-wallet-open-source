@@ -23,6 +23,8 @@ class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
   String? Function(BuildContext, String?)? passwordLoginTextControllerValidator;
   // Stores action output result for [Custom Action - supaEmailLogin] action in Login widget.
   bool? decoyLogin;
+  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in Button widget.
+  String? buttonResult;
 
   @override
   void initState(BuildContext context) {

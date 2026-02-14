@@ -34,3 +34,5 @@ export 'supa_email_login.dart' show supaEmailLogin;
 export 'supa_recovery_update_password.dart' show supaRecoveryUpdatePassword;
 export 'refresh_supabase_session2.dart' show refreshSupabaseSession2;
 export 'lock_portrait.dart' show lockPortrait;
+export 'request_push_permission_and_get_token.dart'
+    show requestPushPermissionAndGetToken;
