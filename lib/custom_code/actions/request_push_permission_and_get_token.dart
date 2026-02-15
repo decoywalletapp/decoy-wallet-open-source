@@ -8,12 +8,13 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'dart:async';
+import '/custom_code/actions/index.dart';
+import '/flutter_flow/custom_functions.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-Future<String> requestPushPermissionAndGetToken() async {
+Future<String?> requestPushPermissionAndGetToken() async {
   try {
-    // Ask permission (iOS)
     final settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
       badge: true,
@@ -21,15 +22,13 @@ Future<String> requestPushPermissionAndGetToken() async {
       provisional: false,
     );
 
-    final status = settings.authorizationStatus;
-
-    // Note: "authorized" or "provisional" can both yield a token.
-    if (status == AuthorizationStatus.denied ||
-        status == AuthorizationStatus.notDetermined) {
-      return 'ERR_PERMISSION_$status';
+    if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      return 'DENIED';
     }
 
-    // Ensure APNs token exists first (iOS requirement path)
+    // Force registration and fetch APNs token first (iOS)
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+
     String? apns;
     try {
       apns = await FirebaseMessaging.instance.getAPNSToken();
@@ -37,23 +36,19 @@ Future<String> requestPushPermissionAndGetToken() async {
       apns = null;
     }
 
-    // Try to get FCM token with a hard timeout so we never hang forever
-    String? fcmToken;
-    try {
-      fcmToken = await FirebaseMessaging.instance
-          .getToken()
-          .timeout(const Duration(seconds: 8));
-    } on TimeoutException {
-      fcmToken = null;
+    // If APNs token is missing, return a clear debug string
+    if (apns == null || apns.isEmpty) {
+      return 'APNS_NULL';
     }
 
-    // If token not ready yet, return a diagnostic string instead of null
-    if (fcmToken == null || fcmToken.isEmpty) {
-      return 'ERR_NO_FCM_TOKEN_apns=${apns ?? "null"}_auth=$status';
+    final fcm = await FirebaseMessaging.instance.getToken();
+    if (fcm == null || fcm.isEmpty) {
+      return 'FCM_NULL';
     }
 
-    return fcmToken;
+    // Return both so you can see exactly what happened
+    return 'APNS:$apns\nFCM:$fcm';
   } catch (e) {
-    return 'ERR_EXCEPTION_${e.toString()}';
+    return 'ERR:$e';
   }
 }
