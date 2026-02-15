@@ -592,12 +592,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         children: [
                           FFButtonWidget(
                             onPressed: () async {
-                              _model.tokenOut = await actions
-                                  .requestPushPermissionAndGetToken();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    _model.tokenOut!,
+                                    'tap fire',
                                     style: TextStyle(
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
@@ -608,6 +606,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       FlutterFlowTheme.of(context).secondary,
                                 ),
                               );
+                              _model.tokenOut = await actions
+                                  .requestPushPermissionAndGetToken();
                               if (_model.tokenOut != null &&
                                   _model.tokenOut != '') {
                                 ScaffoldMessenger.of(context).showSnackBar(
