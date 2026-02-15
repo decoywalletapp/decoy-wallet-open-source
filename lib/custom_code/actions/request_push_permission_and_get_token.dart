@@ -14,7 +14,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<String?> requestPushPermissionAndGetToken() async {
   try {
-    // 1) Ask permission (shows the system prompt the first time)
     final settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
       badge: true,
@@ -25,37 +24,25 @@ Future<String?> requestPushPermissionAndGetToken() async {
       criticalAlert: false,
     );
 
-    // If user denied, return null
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
       return null;
     }
 
-    // 2) Ensure FCM can auto init
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-    // 3) iOS: check APNs token (helps diagnose why FCM token might be null)
-    // This can still be null immediately after the prompt
-    String? apnsToken;
-    try {
-      apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    } catch (_) {
-      apnsToken = null;
-    }
-
-    // 4) Try to get FCM token, with retries
-    String? fcmToken;
-    for (int i = 0; i < 6; i++) {
-      fcmToken = await FirebaseMessaging.instance.getToken();
-      if (fcmToken != null && fcmToken.trim().isNotEmpty) {
-        return fcmToken;
+    // iOS can take a moment to register with APNs/FCM after the prompt.
+    // Retry a few times before returning null.
+    String? token;
+    for (int i = 0; i < 8; i++) {
+      token = await FirebaseMessaging.instance.getToken();
+      if (token != null && token.isNotEmpty) {
+        return token;
       }
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(milliseconds: 750));
     }
 
-    // If APNs token exists but FCM is still null, that points to Firebase config
-    // If APNs token is null, that points to iOS registration not completing yet
     return null;
-  } catch (e) {
+  } catch (_) {
     return null;
   }
 }

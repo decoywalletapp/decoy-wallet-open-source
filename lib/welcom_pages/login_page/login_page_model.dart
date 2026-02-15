@@ -26,7 +26,7 @@ class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
   // Stores action output result for [Custom Action - supaEmailLogin] action in Login widget.
   bool? decoyLogin;
   // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in Button widget.
-  String? buttonResult;
+  String? tokenOut;
 
   @override
   void initState(BuildContext context) {

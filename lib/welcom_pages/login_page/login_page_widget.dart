@@ -592,12 +592,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         children: [
                           FFButtonWidget(
                             onPressed: () async {
-                              _model.buttonResult = await actions
+                              _model.tokenOut = await actions
                                   .requestPushPermissionAndGetToken();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    _model.buttonResult!,
+                                    _model.tokenOut!,
                                     style: TextStyle(
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
@@ -608,12 +608,26 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       FlutterFlowTheme.of(context).secondary,
                                 ),
                               );
-                              if (_model.buttonResult == null ||
-                                  _model.buttonResult == '') {
+                              if (_model.tokenOut != null &&
+                                  _model.tokenOut != '') {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'failed',
+                                      'saved',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.tokenOut!,
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
@@ -638,13 +652,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
-                                _model.pushTokenResult = _model.buttonResult;
+                                _model.pushTokenResult = _model.tokenOut;
                                 safeSetState(() {});
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'token ok',
+                                      'token empty',
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
@@ -655,7 +669,21 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
-                                _model.pushTokenResult = _model.buttonResult;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.tokenOut!,
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                _model.pushTokenResult = _model.tokenOut;
                                 safeSetState(() {});
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
