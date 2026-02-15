@@ -140,6 +140,33 @@ workflows:
           test -n "$IPA"
           echo "IPA ready: $IPA"
 
+      - name: Inspect embedded.mobileprovision (print aps-environment)
+        script: |
+          set -euxo pipefail
+
+          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          test -n "$IPA"
+
+          rm -rf /tmp/ipa_inspect
+          mkdir -p /tmp/ipa_inspect
+          cd /tmp/ipa_inspect
+
+          unzip -q "$IPA" "Payload/*.app/embedded.mobileprovision"
+
+          EMBED="$(ls -1 Payload/*.app/embedded.mobileprovision | head -n1)"
+          test -f "$EMBED"
+
+          /usr/bin/security cms -D -i "$EMBED" > /tmp/embedded_profile.plist
+
+          echo "embedded profile Name:"
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/embedded_profile.plist || true
+
+          echo "embedded profile app-id:"
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/embedded_profile.plist || true
+
+          echo "embedded profile aps-environment:"
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/embedded_profile.plist || true
+
       - name: Upload to App Store Connect (CLI)
         script: |
           set -euxo pipefail
