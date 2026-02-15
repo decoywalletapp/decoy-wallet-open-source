@@ -8,41 +8,52 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'index.dart'; // Imports other custom actions
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-Future<String?> requestPushPermissionAndGetToken() async {
+Future<String> requestPushPermissionAndGetToken() async {
   try {
+    // Ask permission (iOS)
     final settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
       badge: true,
       sound: true,
       provisional: false,
-      announcement: false,
-      carPlay: false,
-      criticalAlert: false,
     );
 
-    if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      return null;
+    final status = settings.authorizationStatus;
+
+    // Note: "authorized" or "provisional" can both yield a token.
+    if (status == AuthorizationStatus.denied ||
+        status == AuthorizationStatus.notDetermined) {
+      return 'ERR_PERMISSION_$status';
     }
 
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
-
-    // iOS can take a moment to register with APNs/FCM after the prompt.
-    // Retry a few times before returning null.
-    String? token;
-    for (int i = 0; i < 8; i++) {
-      token = await FirebaseMessaging.instance.getToken();
-      if (token != null && token.isNotEmpty) {
-        return token;
-      }
-      await Future.delayed(const Duration(milliseconds: 750));
+    // Ensure APNs token exists first (iOS requirement path)
+    String? apns;
+    try {
+      apns = await FirebaseMessaging.instance.getAPNSToken();
+    } catch (_) {
+      apns = null;
     }
 
-    return null;
-  } catch (_) {
-    return null;
+    // Try to get FCM token with a hard timeout so we never hang forever
+    String? fcmToken;
+    try {
+      fcmToken = await FirebaseMessaging.instance
+          .getToken()
+          .timeout(const Duration(seconds: 8));
+    } on TimeoutException {
+      fcmToken = null;
+    }
+
+    // If token not ready yet, return a diagnostic string instead of null
+    if (fcmToken == null || fcmToken.isEmpty) {
+      return 'ERR_NO_FCM_TOKEN_apns=${apns ?? "null"}_auth=$status';
+    }
+
+    return fcmToken;
+  } catch (e) {
+    return 'ERR_EXCEPTION_${e.toString()}';
   }
 }
