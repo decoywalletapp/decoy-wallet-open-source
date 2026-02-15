@@ -8,8 +8,11 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'package:firebase_messaging/firebase_messaging.dart';
+import '/custom_code/actions/index.dart';
+import '/flutter_flow/custom_functions.dart';
+
 import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<String?> requestPushPermissionAndGetToken() async {
   try {
@@ -21,38 +24,37 @@ Future<String?> requestPushPermissionAndGetToken() async {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      return 'DENIED';
+      return 'PERMISSION_DENIED';
     }
 
-    // Ensure FCM is allowed to initialize
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-    // iOS: APNs token may take a moment after permission is granted.
-    // Poll a few times for APNs token.
-    String? apns;
-    for (int i = 0; i < 10; i++) {
-      apns = await FirebaseMessaging.instance.getAPNSToken();
-      if (apns != null && apns.isNotEmpty) break;
-      await Future.delayed(const Duration(milliseconds: 500));
+    // iOS: make sure APNs token exists first
+    String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+
+    // APNs token can take a moment after the permission prompt / install
+    for (var i = 0; i < 6 && (apnsToken == null || apnsToken.isEmpty); i++) {
+      await Future.delayed(const Duration(seconds: 2));
+      apnsToken = await FirebaseMessaging.instance.getAPNSToken();
     }
 
-    if (apns == null || apns.isEmpty) {
+    if (apnsToken == null || apnsToken.isEmpty) {
       return 'APNS_NULL';
     }
 
-    // Now request the FCM token
-    String? fcm;
-    for (int i = 0; i < 10; i++) {
-      fcm = await FirebaseMessaging.instance.getToken();
-      if (fcm != null && fcm.isNotEmpty) break;
-      await Future.delayed(const Duration(milliseconds: 500));
+    // Now get the FCM token (this is what you store in Supabase)
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+    for (var i = 0; i < 6 && (fcmToken == null || fcmToken.isEmpty); i++) {
+      await Future.delayed(const Duration(seconds: 2));
+      fcmToken = await FirebaseMessaging.instance.getToken();
     }
 
-    if (fcm == null || fcm.isEmpty) {
+    if (fcmToken == null || fcmToken.isEmpty) {
       return 'FCM_NULL';
     }
 
-    return fcm;
+    return fcmToken;
   } catch (e) {
     return 'ERR_${e.toString()}';
   }
