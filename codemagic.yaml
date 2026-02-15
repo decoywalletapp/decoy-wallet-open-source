@@ -78,11 +78,15 @@ workflows:
           /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_app.plist
           echo "App profile app id:"
           /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_app.plist
+          echo "App profile aps-environment:"
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_app.plist || true
 
           echo "Ext profile name:"
           /usr/libexec/PlistBuddy -c "Print :Name" /tmp/profile_ext.plist
           echo "Ext profile app id:"
           /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/profile_ext.plist
+          echo "Ext profile aps-environment:"
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/profile_ext.plist || true
 
       - name: Create exportOptions.plist (manual signing)
         script: |
@@ -101,14 +105,12 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :compileBitcode bool false" "$plist"
           /usr/libexec/PlistBuddy -c "Add :uploadBitcode bool false" "$plist"
           /usr/libexec/PlistBuddy -c "Add :uploadSymbols bool true" "$plist"
-
           /usr/libexec/PlistBuddy -c "Print" "$plist"
 
       - name: Force build number (UTC timestamp) and set export compliance flag
         script: |
           set -euxo pipefail
           BN="$(date -u +%Y%m%d%H%M)"
-
           echo "BN=$BN" >> $CM_ENV
 
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" ios/Runner/Info.plist || true
@@ -136,41 +138,44 @@ workflows:
         script: |
           set -euxo pipefail
           ls -lah build/ios/ipa || true
-          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
-          test -n "$IPA"
-          echo "IPA ready: $IPA"
+          IPA_REL="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          test -n "$IPA_REL"
+          IPA_ABS="$(/usr/bin/python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$IPA_REL")"
+          echo "IPA_REL=$IPA_REL" >> $CM_ENV
+          echo "IPA_ABS=$IPA_ABS" >> $CM_ENV
+          echo "IPA ready: $IPA_ABS"
 
       - name: Inspect embedded.mobileprovision (print aps-environment)
         script: |
           set -euxo pipefail
-
-          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          IPA="${IPA_ABS:-}"
           test -n "$IPA"
+          test -f "$IPA"
 
           rm -rf /tmp/ipa_inspect
           mkdir -p /tmp/ipa_inspect
-          cd /tmp/ipa_inspect
 
-          unzip -q "$IPA" "Payload/*.app/embedded.mobileprovision"
+          # Pull embedded.mobileprovision out of the IPA safely (handles spaces, no cd needed)
+          unzip -p "$IPA" 'Payload/*.app/embedded.mobileprovision' > /tmp/ipa_inspect/embedded.mobileprovision
 
-          EMBED="$(ls -1 Payload/*.app/embedded.mobileprovision | head -n1)"
-          test -f "$EMBED"
-
-          /usr/bin/security cms -D -i "$EMBED" > /tmp/embedded_profile.plist
+          /usr/bin/security cms -D -i /tmp/ipa_inspect/embedded.mobileprovision > /tmp/ipa_inspect/embedded.plist
 
           echo "embedded profile Name:"
-          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/embedded_profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Name" /tmp/ipa_inspect/embedded.plist
 
           echo "embedded profile app-id:"
-          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/embedded_profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /tmp/ipa_inspect/embedded.plist
 
           echo "embedded profile aps-environment:"
-          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/embedded_profile.plist || true
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" /tmp/ipa_inspect/embedded.plist || true
 
       - name: Upload to App Store Connect (CLI)
         script: |
           set -euxo pipefail
-          IPA="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          IPA="${IPA_ABS:-}"
+          test -n "$IPA"
+          test -f "$IPA"
+
           app-store-connect publish \
             --path "$IPA" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
