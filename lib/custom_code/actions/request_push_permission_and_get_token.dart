@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import '/custom_code/actions/index.dart';
-import '/flutter_flow/custom_functions.dart';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:async';
 
 Future<String?> requestPushPermissionAndGetToken() async {
   try {
@@ -26,29 +24,36 @@ Future<String?> requestPushPermissionAndGetToken() async {
       return 'DENIED';
     }
 
-    // Force registration and fetch APNs token first (iOS)
+    // Ensure FCM is allowed to initialize
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
+    // iOS: APNs token may take a moment after permission is granted.
+    // Poll a few times for APNs token.
     String? apns;
-    try {
+    for (int i = 0; i < 10; i++) {
       apns = await FirebaseMessaging.instance.getAPNSToken();
-    } catch (_) {
-      apns = null;
+      if (apns != null && apns.isNotEmpty) break;
+      await Future.delayed(const Duration(milliseconds: 500));
     }
 
-    // If APNs token is missing, return a clear debug string
     if (apns == null || apns.isEmpty) {
       return 'APNS_NULL';
     }
 
-    final fcm = await FirebaseMessaging.instance.getToken();
+    // Now request the FCM token
+    String? fcm;
+    for (int i = 0; i < 10; i++) {
+      fcm = await FirebaseMessaging.instance.getToken();
+      if (fcm != null && fcm.isNotEmpty) break;
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+
     if (fcm == null || fcm.isEmpty) {
       return 'FCM_NULL';
     }
 
-    // Return both so you can see exactly what happened
-    return 'APNS:$apns\nFCM:$fcm';
+    return fcm;
   } catch (e) {
-    return 'ERR:$e';
+    return 'ERR_${e.toString()}';
   }
 }
