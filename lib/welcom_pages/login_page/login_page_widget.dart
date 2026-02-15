@@ -594,6 +594,20 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                             onPressed: () async {
                               _model.buttonResult = await actions
                                   .requestPushPermissionAndGetToken();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    _model.buttonResult!,
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
                               if (_model.buttonResult == null ||
                                   _model.buttonResult == '') {
                                 ScaffoldMessenger.of(context).showSnackBar(
