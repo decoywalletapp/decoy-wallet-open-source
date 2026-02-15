@@ -45,6 +45,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await actions.subscribeToTopic(
+        'test',
+      );
       _model.notificationValue = 0;
       safeSetState(() {});
       if (widget.type == 'recovery') {
