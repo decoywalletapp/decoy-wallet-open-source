@@ -1,10 +1,12 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import 'package:collection/collection.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -45,6 +47,41 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.pushTokenResult = await actions.requestPushPermissionAndGetToken();
+      if ((_model.pushTokenResult != null && _model.pushTokenResult != '') &&
+          (currentUserUid != '')) {
+        _model.userDocQuery = await queryUsersRecordOnce(
+          queryBuilder: (usersRecord) => usersRecord.where(
+            'user_id',
+            isEqualTo: currentUserUid,
+          ),
+          singleRecord: true,
+        ).then((s) => s.firstOrNull);
+        if (_model.userDocQuery != null) {
+          await _model.userDocQuery!.reference.update(createUsersRecordData(
+            fcmToken: _model.pushTokenResult,
+            fcmTokenUpdatedAt: getCurrentTimestamp,
+            uid: currentUserUid,
+            userId: currentUserUid,
+          ));
+        } else {
+          var usersRecordReference = UsersRecord.collection.doc(currentUserUid);
+          await usersRecordReference.set(createUsersRecordData(
+            fcmToken: _model.pushTokenResult,
+            fcmTokenUpdatedAt: getCurrentTimestamp,
+            uid: currentUserUid,
+            userId: currentUserUid,
+          ));
+          _model.createdUserDoc = UsersRecord.getDocumentFromData(
+              createUsersRecordData(
+                fcmToken: _model.pushTokenResult,
+                fcmTokenUpdatedAt: getCurrentTimestamp,
+                uid: currentUserUid,
+                userId: currentUserUid,
+              ),
+              usersRecordReference);
+        }
+      }
       if (widget.type == 'recovery') {
         _model.refreshingOuuu = await actions.refreshSupabaseSession2(
           widget.accessToken!,

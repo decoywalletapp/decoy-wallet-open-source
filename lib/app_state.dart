@@ -529,6 +529,12 @@ class FFAppState extends ChangeNotifier {
   set entitlementStatus(String value) {
     _entitlementStatus = value;
   }
+
+  String _fcmToken = '';
+  String get fcmToken => _fcmToken;
+  set fcmToken(String value) {
+    _fcmToken = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

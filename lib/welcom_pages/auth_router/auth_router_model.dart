@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -39,6 +40,12 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   ///  State fields for stateful widgets in this page.
 
+  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in AuthRouter widget.
+  String? pushTokenResult;
+  // Stores action output result for [Firestore Query - Query a collection] action in AuthRouter widget.
+  UsersRecord? userDocQuery;
+  // Stores action output result for [Backend Call - Create Document] action in AuthRouter widget.
+  UsersRecord? createdUserDoc;
   // Stores action output result for [Custom Action - refreshSupabaseSession2] action in AuthRouter widget.
   bool? refreshingOuuu;
   // Stores action output result for [Custom Action - refreshSupabaseSession] action in AuthRouter widget.

@@ -8,6 +8,8 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:ff_commons/flutter_flow/lat_lng.dart';
 import 'package:ff_commons/flutter_flow/place.dart';
 import 'package:ff_commons/flutter_flow/uploaded_file.dart';
+import '/backend/backend.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '/backend/supabase/supabase.dart';
 import '/auth/supabase_auth/auth_util.dart';
 
