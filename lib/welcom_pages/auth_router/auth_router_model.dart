@@ -39,6 +39,8 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   ///  State fields for stateful widgets in this page.
 
+  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in AuthRouter widget.
+  String? pushTokenResult;
   // Stores action output result for [Custom Action - refreshSupabaseSession2] action in AuthRouter widget.
   bool? refreshingOuuu;
   // Stores action output result for [Custom Action - refreshSupabaseSession] action in AuthRouter widget.

@@ -220,7 +220,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                         children: [
                                           Align(
                                             alignment:
-                                                AlignmentDirectional(0.0, 0.0),
+                                                AlignmentDirectional(0.01, 0.0),
                                             child: Text(
                                               'SETUP',
                                               textAlign: TextAlign.center,
@@ -241,8 +241,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             ),
                                           ),
                                           Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
+                                            alignment: AlignmentDirectional(
+                                                -0.01, 0.0),
                                             child: Text(
                                               'SETUP',
                                               textAlign: TextAlign.center,
@@ -985,7 +985,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           createDecoyEmergencyContactsSetupDecoyWalletRow
                                                                               ?.contactsComplete),
                                                                       width:
-                                                                          350.0,
+                                                                          325.0,
                                                                       lineHeight:
                                                                           25.0,
                                                                       animation:
