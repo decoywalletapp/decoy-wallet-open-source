@@ -256,6 +256,8 @@ dynamic deserializeParam<T>(
             return RecoveryExchangeCodesRow(data);
           case DecoySeenTxsRow:
             return DecoySeenTxsRow(data);
+          case UserDevicesRow:
+            return UserDevicesRow(data);
           case DecoyTriggersRow:
             return DecoyTriggersRow(data);
           case DecoySeedBaselinesRow:

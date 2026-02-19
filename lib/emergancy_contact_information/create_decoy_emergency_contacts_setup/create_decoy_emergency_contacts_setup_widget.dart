@@ -149,7 +149,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                               0.0, 0.0, 0.0, 20.0),
                           child: Material(
                             color: Colors.transparent,
-                            elevation: 3.0,
+                            elevation: 5.0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),

@@ -39,8 +39,6 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in AuthRouter widget.
-  String? pushTokenResult;
   // Stores action output result for [Custom Action - refreshSupabaseSession2] action in AuthRouter widget.
   bool? refreshingOuuu;
   // Stores action output result for [Custom Action - refreshSupabaseSession] action in AuthRouter widget.
@@ -59,6 +57,16 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
   List<DecoyWalletRow>? updateRows;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<DecoyWalletRow>? query3;
+  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in AuthRouter widget.
+  String? pushTokenResult;
+  // Stores action output result for [Custom Action - getOrCreateDeviceId] action in AuthRouter widget.
+  String? deviceIdResult;
+  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  List<UserDevicesRow>? userDevicesQuery;
+  // Stores action output result for [Backend Call - Update Row(s)] action in AuthRouter widget.
+  List<UserDevicesRow>? userDeviceUpdateResp;
+  // Stores action output result for [Backend Call - Insert Row] action in AuthRouter widget.
+  UserDevicesRow? userDevicInsertResp;
   bool authRouterBioResult = false;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<UserEntitlementsRow>? entitlementRow1;

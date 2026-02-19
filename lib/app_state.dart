@@ -535,6 +535,12 @@ class FFAppState extends ChangeNotifier {
   set fcmToken(String value) {
     _fcmToken = value;
   }
+
+  String _deviceId = '';
+  String get deviceId => _deviceId;
+  set deviceId(String value) {
+    _deviceId = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

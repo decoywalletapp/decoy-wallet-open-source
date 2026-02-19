@@ -561,7 +561,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
                 child: Material(
                   color: Colors.transparent,
-                  elevation: 3.0,
+                  elevation: 5.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -583,7 +583,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: AlignmentDirectional(-0.02, 0.0),
+                                alignment: AlignmentDirectional(-0.01, 0.0),
                                 child: Text(
                                   'EMERGENCY',
                                   textAlign: TextAlign.center,
@@ -601,7 +601,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 ),
                               ),
                               Align(
-                                alignment: AlignmentDirectional(0.02, 0.0),
+                                alignment: AlignmentDirectional(0.01, 0.0),
                                 child: Text(
                                   'EMERGENCY',
                                   textAlign: TextAlign.center,
@@ -627,7 +627,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                             Stack(
                               children: [
                                 Align(
-                                  alignment: AlignmentDirectional(0.02, 0.0),
+                                  alignment: AlignmentDirectional(0.01, 0.0),
                                   child: Text(
                                     'CONTACTS',
                                     textAlign: TextAlign.center,
@@ -645,7 +645,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                   ),
                                 ),
                                 Align(
-                                  alignment: AlignmentDirectional(-0.02, 0.0),
+                                  alignment: AlignmentDirectional(-0.01, 0.0),
                                   child: Text(
                                     'CONTACTS',
                                     textAlign: TextAlign.center,

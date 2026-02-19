@@ -9,9 +9,6 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import '/custom_code/actions/index.dart';
-import '/flutter_flow/custom_functions.dart';
-
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -43,7 +40,7 @@ Future<String?> requestPushPermissionAndGetToken() async {
       return 'APNS_NULL';
     }
 
-    // Now get the FCM token (this is what you store in Supabase)
+    // Now get the FCM token
     String? fcmToken = await FirebaseMessaging.instance.getToken();
 
     for (var i = 0; i < 6 && (fcmToken == null || fcmToken.isEmpty); i++) {
