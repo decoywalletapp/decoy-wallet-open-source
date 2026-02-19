@@ -2,6 +2,7 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
@@ -143,59 +144,12 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           safeSetState(() {});
         }
 
-        _model.pushTokenResult =
-            await actions.requestPushPermissionAndGetToken();
-        if ((_model.pushTokenResult != null && _model.pushTokenResult != '') &&
-            (_model.pushTokenResult != 'PERMISSION_DENIED') &&
-            (_model.pushTokenResult != 'APNS_NULL') &&
-            (_model.pushTokenResult != 'FCM_NULL')) {
-          _model.deviceIdResult = await actions.getOrCreateDeviceId();
-          FFAppState().deviceId = _model.deviceIdResult!;
-          safeSetState(() {});
-          _model.userDevicesQuery = await UserDevicesTable().queryRows(
-            queryFn: (q) => q
-                .eqOrNull(
-                  'user_id',
-                  currentUserUid,
-                )
-                .eqOrNull(
-                  'device_id',
-                  FFAppState().deviceId,
-                ),
-          );
-          if (_model.userDevicesQuery != null &&
-              (_model.userDevicesQuery)!.isNotEmpty) {
-            _model.userDeviceUpdateResp = await UserDevicesTable().update(
-              data: {
-                'fcm_token': _model.pushTokenResult,
-                'fcm_token_updated_at':
-                    supaSerialize<DateTime>(getCurrentTimestamp),
-                'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
-              },
-              matchingRows: (rows) => rows
-                  .eqOrNull(
-                    'user_id',
-                    currentUserUid,
-                  )
-                  .eqOrNull(
-                    'device_id',
-                    FFAppState().deviceId,
-                  ),
-              returnRows: true,
-            );
-            if (_model.userDeviceUpdateResp?.length == 0) {
-              _model.userDevicInsertResp = await UserDevicesTable().insert({
-                'fcm_token': _model.pushTokenResult,
-                'fcm_token_updated_at':
-                    supaSerialize<DateTime>(getCurrentTimestamp),
-                'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
-                'user_id': currentUserUid,
-                'device_id': FFAppState().deviceId,
-                'platform': 'ios',
-              });
-            }
-          }
-        }
+        unawaited(
+          () async {
+            _model.pushTokenResult =
+                await actions.requestPushPermissionAndGetToken();
+          }(),
+        );
         _model.verifiedViaEmail =
             _model.dwList.elementAtOrNull(0)!.emailVerified!;
         _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
