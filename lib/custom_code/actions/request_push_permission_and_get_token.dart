@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import '/custom_code/actions/index.dart';
+import '/flutter_flow/custom_functions.dart';
+
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -27,10 +30,9 @@ Future<String?> requestPushPermissionAndGetToken() async {
 
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-    // iOS: make sure APNs token exists first
+    // iOS: ensure APNs token exists first
     String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
 
-    // APNs token can take a moment after the permission prompt / install
     for (var i = 0; i < 6 && (apnsToken == null || apnsToken.isEmpty); i++) {
       await Future.delayed(const Duration(seconds: 2));
       apnsToken = await FirebaseMessaging.instance.getAPNSToken();
@@ -40,7 +42,7 @@ Future<String?> requestPushPermissionAndGetToken() async {
       return 'APNS_NULL';
     }
 
-    // Now get the FCM token
+    // Get FCM token
     String? fcmToken = await FirebaseMessaging.instance.getToken();
 
     for (var i = 0; i < 6 && (fcmToken == null || fcmToken.isEmpty); i++) {
@@ -51,6 +53,16 @@ Future<String?> requestPushPermissionAndGetToken() async {
     if (fcmToken == null || fcmToken.isEmpty) {
       return 'FCM_NULL';
     }
+
+    // Use FCM token itself as device_id
+    await SupaFlow.client.rpc(
+      'upsert_user_device',
+      params: {
+        'p_device_id': fcmToken,
+        'p_platform': 'mobile',
+        'p_fcm_token': fcmToken,
+      },
+    );
 
     return fcmToken;
   } catch (e) {

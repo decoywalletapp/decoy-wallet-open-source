@@ -1,3 +1,5 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
@@ -5,6 +7,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'biometric_verification_model.dart';
 export 'biometric_verification_model.dart';
 
@@ -44,6 +47,8 @@ class _BiometricVerificationWidgetState
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -363,9 +368,39 @@ class _BiometricVerificationWidgetState
                               if (_model.enableBioResult == true) {
                                 FFAppState().biometricsEnabled = true;
                                 safeSetState(() {});
+                                _model.bioInsertRows =
+                                    await UserSettingsTable().queryRows(
+                                  queryFn: (q) => q.eqOrNull(
+                                    'user_id',
+                                    currentUserUid,
+                                  ),
+                                );
+                                if (_model.bioInsertRows != null &&
+                                    (_model.bioInsertRows)!.isNotEmpty) {
+                                  await UserSettingsTable().update(
+                                    data: {
+                                      'biometrics_enabled':
+                                          FFAppState().biometricsEnabled,
+                                    },
+                                    matchingRows: (rows) => rows.eqOrNull(
+                                      'user_id',
+                                      currentUserUid,
+                                    ),
+                                  );
 
-                                context.goNamed(
-                                    EnableNotificationsWidget.routeName);
+                                  context.goNamed(
+                                      EnableNotificationsWidget.routeName);
+                                } else {
+                                  _model.bioInsertBE =
+                                      await UserSettingsTable().insert({
+                                    'user_id': currentUserUid,
+                                    'biometrics_enabled':
+                                        FFAppState().biometricsEnabled,
+                                  });
+
+                                  context.goNamed(
+                                      EnableNotificationsWidget.routeName);
+                                }
                               } else {
                                 FFAppState().biometricsEnabled = false;
                                 safeSetState(() {});
@@ -387,9 +422,39 @@ class _BiometricVerificationWidgetState
                             } else {
                               FFAppState().biometricsEnabled = false;
                               safeSetState(() {});
+                              _model.bioInsertRowsFB =
+                                  await UserSettingsTable().queryRows(
+                                queryFn: (q) => q.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              );
+                              if (_model.bioInsertRowsFB != null &&
+                                  (_model.bioInsertRowsFB)!.isNotEmpty) {
+                                await UserSettingsTable().update(
+                                  data: {
+                                    'biometrics_enabled':
+                                        FFAppState().biometricsEnabled,
+                                  },
+                                  matchingRows: (rows) => rows.eqOrNull(
+                                    'user_id',
+                                    currentUserUid,
+                                  ),
+                                );
 
-                              context
-                                  .goNamed(EnableNotificationsWidget.routeName);
+                                context.goNamed(
+                                    EnableNotificationsWidget.routeName);
+                              } else {
+                                _model.bioInsertBEFB =
+                                    await UserSettingsTable().insert({
+                                  'user_id': currentUserUid,
+                                  'biometrics_enabled':
+                                      FFAppState().biometricsEnabled,
+                                });
+
+                                context.goNamed(
+                                    EnableNotificationsWidget.routeName);
+                              }
                             }
 
                             safeSetState(() {});
@@ -430,8 +495,41 @@ class _BiometricVerificationWidgetState
                         onPressed: () async {
                           FFAppState().biometricsEnabled = false;
                           safeSetState(() {});
+                          _model.bioInsertRowsFBSkipper =
+                              await UserSettingsTable().queryRows(
+                            queryFn: (q) => q.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
+                          );
+                          if (_model.bioInsertRowsFBSkipper != null &&
+                              (_model.bioInsertRowsFBSkipper)!.isNotEmpty) {
+                            await UserSettingsTable().update(
+                              data: {
+                                'biometrics_enabled':
+                                    FFAppState().biometricsEnabled,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
 
-                          context.goNamed(EnableNotificationsWidget.routeName);
+                            context
+                                .goNamed(EnableNotificationsWidget.routeName);
+                          } else {
+                            _model.bioInsertBEFBSkipper =
+                                await UserSettingsTable().insert({
+                              'user_id': currentUserUid,
+                              'biometrics_enabled':
+                                  FFAppState().biometricsEnabled,
+                            });
+
+                            context
+                                .goNamed(EnableNotificationsWidget.routeName);
+                          }
+
+                          safeSetState(() {});
                         },
                         text: 'Skip for Now',
                         options: FFButtonOptions(

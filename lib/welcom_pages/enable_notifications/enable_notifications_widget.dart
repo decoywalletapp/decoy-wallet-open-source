@@ -6,6 +6,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'enable_notifications_model.dart';
 export 'enable_notifications_model.dart';
 
@@ -44,6 +45,8 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -156,7 +159,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                 color: Colors.transparent,
                                 child: SwitchListTile(
                                   value: _model.switchListTileValue ??=
-                                      _model.pushEnabledDraft,
+                                      FFAppState().pushEnabled,
                                   onChanged: (newValue) async {
                                     safeSetState(() =>
                                         _model.switchListTileValue = newValue);
@@ -175,89 +178,17 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                               'FCM_NULL')) {
                                         _model.pushEnabledDraft = true;
                                         safeSetState(() {});
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'true ran',
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              _model.pushTokenResultPS,
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
                                       } else {
                                         _model.pushEnabledDraft = false;
                                         _model.pushTokenResultPS = '';
                                         safeSetState(() {});
-                                        safeSetState(() {});
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'false ran',
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              _model.pushTokenResultPS,
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                          ),
-                                        );
                                       }
 
                                       safeSetState(() {});
                                     } else {
                                       _model.pushEnabledDraft = false;
                                       _model.pushTokenResultPS = '';
+                                      safeSetState(() {});
                                       safeSetState(() {});
                                     }
                                   },
@@ -436,6 +367,8 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                         visible: _model.pushEnabledDraft,
                         child: FFButtonWidget(
                           onPressed: () async {
+                            FFAppState().pushEnabled = _model.pushEnabledDraft;
+                            safeSetState(() {});
                             _model.userSettingsRows =
                                 await UserSettingsTable().queryRows(
                               queryFn: (q) => q.eqOrNull(
@@ -447,19 +380,75 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                               _model.userSettingsInsertResp =
                                   await UserSettingsTable().insert({
                                 'user_id': currentUserUid,
-                                'push_enabled': _model.pushEnabledDraft,
+                                'push_enabled': FFAppState().pushEnabled,
                               });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'true',
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    _model.pushTokenResultPS,
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
 
                               context.goNamed(
                                   LocationAuthorizationWidget.routeName);
                             } else {
                               await UserSettingsTable().update(
                                 data: {
-                                  'push_enabled': _model.pushEnabledDraft,
+                                  'push_enabled': FFAppState().pushEnabled,
                                 },
                                 matchingRows: (rows) => rows.eqOrNull(
                                   'user_id',
                                   currentUserUid,
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'false',
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    _model.pushTokenResultPS,
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
                                 ),
                               );
 
@@ -506,9 +495,40 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                           _model.pushEnabledDraft = false;
                           _model.pushTokenResultPS = '';
                           safeSetState(() {});
+                          FFAppState().pushEnabled = false;
+                          safeSetState(() {});
+                          _model.userSettingsRows1 =
+                              await UserSettingsTable().queryRows(
+                            queryFn: (q) => q.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
+                          );
+                          if (_model.userSettingsRows1?.length == 0) {
+                            _model.userSettingsInsertRespSkip =
+                                await UserSettingsTable().insert({
+                              'user_id': currentUserUid,
+                              'push_enabled': false,
+                            });
 
-                          context
-                              .goNamed(LocationAuthorizationWidget.routeName);
+                            context
+                                .goNamed(LocationAuthorizationWidget.routeName);
+                          } else {
+                            await UserSettingsTable().update(
+                              data: {
+                                'push_enabled': false,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+
+                            context
+                                .goNamed(LocationAuthorizationWidget.routeName);
+                          }
+
+                          safeSetState(() {});
                         },
                         text: 'Skip for Now',
                         options: FFButtonOptions(

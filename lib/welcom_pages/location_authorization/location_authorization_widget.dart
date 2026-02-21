@@ -6,6 +6,7 @@ import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'location_authorization_model.dart';
 export 'location_authorization_model.dart';
 
@@ -46,6 +47,8 @@ class _LocationAuthorizationWidgetState
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -354,6 +357,16 @@ class _LocationAuthorizationWidgetState
                                   currentUserUid,
                                 ),
                               );
+                              await UserSettingsTable().update(
+                                data: {
+                                  'location_enabled':
+                                      FFAppState().locationEnabled,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              );
 
                               context.goNamed(CreatePinWidget.routeName);
                             } else {
@@ -362,6 +375,16 @@ class _LocationAuthorizationWidgetState
                               await DecoyWalletTable().update(
                                 data: {
                                   'use_current_location': false,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              );
+                              await UserSettingsTable().update(
+                                data: {
+                                  'location_enabled':
+                                      FFAppState().locationEnabled,
                                 },
                                 matchingRows: (rows) => rows.eqOrNull(
                                   'user_id',
@@ -408,11 +431,39 @@ class _LocationAuthorizationWidgetState
                       ),
                       child: FFButtonWidget(
                         onPressed: () async {
-                          FFAppState().biometricsEnabled = false;
                           FFAppState().locationEnabled = false;
                           safeSetState(() {});
+                          _model.queLocal = await UserSettingsTable().queryRows(
+                            queryFn: (q) => q.eqOrNull(
+                              'user_id',
+                              currentUserUid,
+                            ),
+                          );
+                          if (_model.queLocal != null &&
+                              (_model.queLocal)!.isNotEmpty) {
+                            await UserSettingsTable().update(
+                              data: {
+                                'location_enabled':
+                                    FFAppState().locationEnabled,
+                              },
+                              matchingRows: (rows) => rows.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
 
-                          context.goNamed(CreatePinWidget.routeName);
+                            context.goNamed(CreatePinWidget.routeName);
+                          } else {
+                            _model.insertoFB =
+                                await UserSettingsTable().insert({
+                              'location_enabled': FFAppState().locationEnabled,
+                              'user_id': currentUserUid,
+                            });
+
+                            context.goNamed(CreatePinWidget.routeName);
+                          }
+
+                          safeSetState(() {});
                         },
                         text: 'Skip for Now',
                         options: FFButtonOptions(

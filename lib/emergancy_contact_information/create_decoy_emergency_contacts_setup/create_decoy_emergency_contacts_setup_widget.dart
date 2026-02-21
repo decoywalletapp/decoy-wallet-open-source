@@ -985,7 +985,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           createDecoyEmergencyContactsSetupDecoyWalletRow
                                                                               ?.contactsComplete),
                                                                       width:
-                                                                          340.0,
+                                                                          350.0,
                                                                       lineHeight:
                                                                           25.0,
                                                                       animation:
@@ -1017,7 +1017,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                     child:
                                                                         Container(
                                                                       width:
-                                                                          300.0,
+                                                                          325.0,
                                                                       height:
                                                                           25.0,
                                                                       decoration:

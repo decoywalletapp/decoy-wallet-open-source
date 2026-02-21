@@ -215,7 +215,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            0.01, 0.0),
+                                                            0.0, 0.0),
                                                     child: Text(
                                                       'METHOD',
                                                       textAlign:
@@ -243,7 +243,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            -0.01, 0.0),
+                                                            0.0, 0.0),
                                                     child: Text(
                                                       'METHOD',
                                                       textAlign:

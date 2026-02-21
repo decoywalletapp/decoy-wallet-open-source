@@ -17,7 +17,17 @@ class LocationAuthorizationModel
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? trueQue;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<UserSettingsRow>? updateLocalTB;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<DecoyWalletRow>? falseQue;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<UserSettingsRow>? updateLocalFB;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<UserSettingsRow>? queLocal;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<UserSettingsRow>? updaterTB;
+  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
+  UserSettingsRow? insertoFB;
 
   @override
   void initState(BuildContext context) {}

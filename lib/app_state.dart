@@ -122,6 +122,10 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getDouble('ff_currentPriceMultiple') ??
               _currentPriceMultiple;
     });
+    await _safeInitAsync(() async {
+      _pushEnabled =
+          await secureStorage.getBool('ff_pushEnabled') ?? _pushEnabled;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -540,6 +544,17 @@ class FFAppState extends ChangeNotifier {
   String get deviceId => _deviceId;
   set deviceId(String value) {
     _deviceId = value;
+  }
+
+  bool _pushEnabled = false;
+  bool get pushEnabled => _pushEnabled;
+  set pushEnabled(bool value) {
+    _pushEnabled = value;
+    secureStorage.setBool('ff_pushEnabled', value);
+  }
+
+  void deletePushEnabled() {
+    secureStorage.delete(key: 'ff_pushEnabled');
   }
 }
 

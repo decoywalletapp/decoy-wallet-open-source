@@ -24,6 +24,12 @@ class EnableNotificationsModel
   UserSettingsRow? userSettingsInsertResp;
   // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
   List<UserSettingsRow>? updPush;
+  // Stores action output result for [Backend Call - Query Rows] action in SkipButton widget.
+  List<UserSettingsRow>? userSettingsRows1;
+  // Stores action output result for [Backend Call - Insert Row] action in SkipButton widget.
+  UserSettingsRow? userSettingsInsertRespSkip;
+  // Stores action output result for [Backend Call - Update Row(s)] action in SkipButton widget.
+  List<UserSettingsRow>? updPushSkip;
 
   @override
   void initState(BuildContext context) {}
