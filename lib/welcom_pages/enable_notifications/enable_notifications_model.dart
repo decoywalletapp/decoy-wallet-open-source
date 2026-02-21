@@ -22,6 +22,8 @@ class EnableNotificationsModel
   List<UserSettingsRow>? userSettingsRows;
   // Stores action output result for [Backend Call - Insert Row] action in Button widget.
   UserSettingsRow? userSettingsInsertResp;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<UserSettingsRow>? updPush;
 
   @override
   void initState(BuildContext context) {}

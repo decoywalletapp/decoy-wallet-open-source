@@ -6,7 +6,6 @@ import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'enable_notifications_model.dart';
 export 'enable_notifications_model.dart';
 
@@ -32,13 +31,6 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => EnableNotificationsModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.pushEnabledDraft = false;
-      _model.pushTokenResultPS = '';
-      safeSetState(() {});
-    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -183,9 +175,83 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                               'FCM_NULL')) {
                                         _model.pushEnabledDraft = true;
                                         safeSetState(() {});
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'true ran',
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              _model.pushTokenResultPS,
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
                                       } else {
                                         _model.pushEnabledDraft = false;
+                                        _model.pushTokenResultPS = '';
                                         safeSetState(() {});
+                                        safeSetState(() {});
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'false ran',
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              _model.pushTokenResultPS,
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                          ),
+                                        );
                                       }
 
                                       safeSetState(() {});
@@ -381,9 +447,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                               _model.userSettingsInsertResp =
                                   await UserSettingsTable().insert({
                                 'user_id': currentUserUid,
-                                'push_enabled': false,
-                                'biometrics_enabled': false,
-                                'location_enabled': false,
+                                'push_enabled': _model.pushEnabledDraft,
                               });
 
                               context.goNamed(
