@@ -1,36 +1,44 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
-import 'biometric_verification_model.dart';
-export 'biometric_verification_model.dart';
+import 'package:flutter/scheduler.dart';
+import 'enable_notifications_model.dart';
+export 'enable_notifications_model.dart';
 
 /// create a page that prompts the user to toggle biometeric verification use
 /// for the app
-class BiometricVerificationWidget extends StatefulWidget {
-  const BiometricVerificationWidget({super.key});
+class EnableNotificationsWidget extends StatefulWidget {
+  const EnableNotificationsWidget({super.key});
 
-  static String routeName = 'BiometricVerification';
-  static String routePath = '/biometricVerification';
+  static String routeName = 'EnableNotifications';
+  static String routePath = '/enableNotifications';
 
   @override
-  State<BiometricVerificationWidget> createState() =>
-      _BiometricVerificationWidgetState();
+  State<EnableNotificationsWidget> createState() =>
+      _EnableNotificationsWidgetState();
 }
 
-class _BiometricVerificationWidgetState
-    extends State<BiometricVerificationWidget> {
-  late BiometricVerificationModel _model;
+class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
+  late EnableNotificationsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => BiometricVerificationModel());
+    _model = createModel(context, () => EnableNotificationsModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.pushEnabledDraft = false;
+      _model.pushTokenResultPS = '';
+      safeSetState(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -77,14 +85,14 @@ class _BiometricVerificationWidgetState
                           width: 120.0,
                           height: 120.0,
                           decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).accent1,
+                            color: FlutterFlowTheme.of(context).primary,
                             shape: BoxShape.circle,
                           ),
                           child: Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Icon(
-                              Icons.fingerprint,
-                              color: FlutterFlowTheme.of(context).primary,
+                              Icons.notification_add,
+                              color: FlutterFlowTheme.of(context).info,
                               size: 64.0,
                             ),
                           ),
@@ -95,7 +103,7 @@ class _BiometricVerificationWidgetState
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Enable Biometric Authentication',
+                            'Enable Push\nNotifications',
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium
@@ -107,7 +115,7 @@ class _BiometricVerificationWidgetState
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Text(
-                              'Use your fingerprint or face ID to quickly and securely access your account without entering your password every time.',
+                              'DecoyWallet uses notifications for critical security alerts and subscription reminders',
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -156,20 +164,39 @@ class _BiometricVerificationWidgetState
                                 color: Colors.transparent,
                                 child: SwitchListTile(
                                   value: _model.switchListTileValue ??=
-                                      _model.wantsBiometrics,
+                                      _model.pushEnabledDraft,
                                   onChanged: (newValue) async {
                                     safeSetState(() =>
                                         _model.switchListTileValue = newValue);
                                     if (newValue) {
-                                      _model.wantsBiometrics = true;
+                                      _model.pushTokenResult = await actions
+                                          .requestPushPermissionAndGetToken();
+                                      _model.pushTokenResultPS =
+                                          _model.pushTokenResult!;
+                                      safeSetState(() {});
+                                      if ((_model.pushTokenResultPS != '') &&
+                                          (_model.pushTokenResultPS !=
+                                              'PERMISSION_DENIED') &&
+                                          (_model.pushTokenResultPS !=
+                                              'APNS_NULL') &&
+                                          (_model.pushTokenResultPS !=
+                                              'FCM_NULL')) {
+                                        _model.pushEnabledDraft = true;
+                                        safeSetState(() {});
+                                      } else {
+                                        _model.pushEnabledDraft = false;
+                                        safeSetState(() {});
+                                      }
+
                                       safeSetState(() {});
                                     } else {
-                                      _model.wantsBiometrics = false;
+                                      _model.pushEnabledDraft = false;
+                                      _model.pushTokenResultPS = '';
                                       safeSetState(() {});
                                     }
                                   },
                                   title: Text(
-                                    'Enable Biometric Authentication',
+                                    'Enable Push Notifications',
                                     style: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .override(
@@ -179,7 +206,7 @@ class _BiometricVerificationWidgetState
                                         ),
                                   ),
                                   subtitle: Text(
-                                    'Use fingerprint or face ID to sign in',
+                                    'Allow subscription alerts directly to your device',
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
                                         .override(
@@ -340,56 +367,40 @@ class _BiometricVerificationWidgetState
                         color: FlutterFlowTheme.of(context).secondaryBackground,
                       ),
                       child: Visibility(
-                        visible: _model.wantsBiometrics,
+                        visible: _model.pushEnabledDraft,
                         child: FFButtonWidget(
                           onPressed: () async {
-                            if (_model.wantsBiometrics == true) {
-                              final _localAuth = LocalAuthentication();
-                              bool _isBiometricSupported =
-                                  await _localAuth.isDeviceSupported();
+                            _model.userSettingsRows =
+                                await UserSettingsTable().queryRows(
+                              queryFn: (q) => q.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+                            if (_model.userSettingsRows?.length == 0) {
+                              _model.userSettingsInsertResp =
+                                  await UserSettingsTable().insert({
+                                'user_id': currentUserUid,
+                                'push_enabled': false,
+                                'biometrics_enabled': false,
+                                'location_enabled': false,
+                              });
 
-                              if (_isBiometricSupported) {
-                                try {
-                                  _model.enableBioResult =
-                                      await _localAuth.authenticate(
-                                          localizedReason:
-                                              'Please authenticate to enable biometric unlock for Decoy Wallet');
-                                } on PlatformException {
-                                  _model.enableBioResult = false;
-                                }
-                                safeSetState(() {});
-                              }
-
-                              if (_model.enableBioResult == true) {
-                                FFAppState().biometricsEnabled = true;
-                                safeSetState(() {});
-
-                                context.goNamed(
-                                    EnableNotificationsWidget.routeName);
-                              } else {
-                                FFAppState().biometricsEnabled = false;
-                                safeSetState(() {});
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'ERROR #022 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
-                              }
+                              context.goNamed(
+                                  LocationAuthorizationWidget.routeName);
                             } else {
-                              FFAppState().biometricsEnabled = false;
-                              safeSetState(() {});
+                              await UserSettingsTable().update(
+                                data: {
+                                  'push_enabled': _model.pushEnabledDraft,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'user_id',
+                                  currentUserUid,
+                                ),
+                              );
 
-                              context
-                                  .goNamed(EnableNotificationsWidget.routeName);
+                              context.goNamed(
+                                  LocationAuthorizationWidget.routeName);
                             }
 
                             safeSetState(() {});
@@ -428,10 +439,12 @@ class _BiometricVerificationWidgetState
                       ),
                       child: FFButtonWidget(
                         onPressed: () async {
-                          FFAppState().biometricsEnabled = false;
+                          _model.pushEnabledDraft = false;
+                          _model.pushTokenResultPS = '';
                           safeSetState(() {});
 
-                          context.goNamed(EnableNotificationsWidget.routeName);
+                          context
+                              .goNamed(LocationAuthorizationWidget.routeName);
                         },
                         text: 'Skip for Now',
                         options: FFButtonOptions(

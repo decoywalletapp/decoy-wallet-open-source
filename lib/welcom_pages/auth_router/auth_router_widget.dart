@@ -2,7 +2,6 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
@@ -144,12 +143,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           safeSetState(() {});
         }
 
-        unawaited(
-          () async {
-            _model.pushTokenResult =
-                await actions.requestPushPermissionAndGetToken();
-          }(),
-        );
         _model.verifiedViaEmail =
             _model.dwList.elementAtOrNull(0)!.emailVerified!;
         _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;

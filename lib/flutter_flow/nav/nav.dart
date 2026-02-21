@@ -503,6 +503,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => HomePageCopyWidget(),
       ),
       FFRoute(
+        name: EnableNotificationsWidget.routeName,
+        path: EnableNotificationsWidget.routePath,
+        builder: (context, params) => EnableNotificationsWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

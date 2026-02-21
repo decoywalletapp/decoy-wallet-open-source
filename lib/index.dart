@@ -103,3 +103,5 @@ export '/test_subjects/create_decoy_emergency_contacts_setup_copy/create_decoy_e
     show CreateDecoyEmergencyContactsSetupCopyWidget;
 export '/test_subjects/home_page_copy/home_page_copy_widget.dart'
     show HomePageCopyWidget;
+export '/welcom_pages/enable_notifications/enable_notifications_widget.dart'
+    show EnableNotificationsWidget;
