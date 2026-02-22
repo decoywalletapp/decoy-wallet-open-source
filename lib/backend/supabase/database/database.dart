@@ -15,6 +15,7 @@ export 'tables/recovery_exchange_codes.dart';
 export 'tables/decoy_seen_txs.dart';
 export 'tables/user_devices.dart';
 export 'tables/decoy_triggers.dart';
+export 'tables/notification_jobs.dart';
 export 'tables/decoy_seed_baselines.dart';
 export 'tables/emergency_contacts.dart';
 export 'tables/decoys.dart';

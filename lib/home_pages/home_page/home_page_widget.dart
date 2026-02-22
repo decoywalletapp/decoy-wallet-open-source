@@ -34,60 +34,68 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      FFAppState().entitlementCheckCompleted = false;
-      FFAppState().hasActiveSubscription = false;
-      safeSetState(() {});
-      _model.entitlementRow = await UserEntitlementsTable().queryRows(
-        queryFn: (q) => q
-            .eqOrNull(
-              'user_id',
-              currentUserUid,
-            )
-            .eqOrNull(
-              'entitlement',
-              'decoy_wallet',
-            ),
-      );
-      FFAppState().entitlementCheckCompleted = true;
-      FFAppState().entitlementStatus =
-          _model.entitlementRow!.elementAtOrNull(0)!.providerStatus!;
-      safeSetState(() {});
-      if ((_model.entitlementRow != null &&
-              (_model.entitlementRow)!.isNotEmpty) &&
-          ((_model.entitlementRow?.elementAtOrNull(0)?.isActive == true) ||
-              (FFAppState().entitlementStatus == 'settled'))) {
-        FFAppState().hasActiveSubscription = true;
+      if (FFAppState().openRenewalFromPush == true) {
+        FFAppState().openRenewalFromPush = false;
         safeSetState(() {});
-      } else {
-        FFAppState().hasActiveSubscription = false;
-        FFAppState().entitlementStatus = 'unpaid';
-        safeSetState(() {});
-        if ((FFAppState().prevHasActiveSubscription == true) &&
-            (FFAppState().hasActiveSubscription == false) &&
-            (FFAppState().entitlementCheckCompleted == true)) {
-          await DecoyWalletTable().update(
-            data: {
-              'decoy_seed_armed': false,
-              'decoy_seed_contacts_enabled': false,
-              'decoy_pin_911_enabled': false,
-              'decoy_pin_contacts_enabled': false,
-              'last_teardown_at': supaSerialize<DateTime>(getCurrentTimestamp),
-            },
-            matchingRows: (rows) => rows.eqOrNull(
-              'user_id',
-              currentUserUid,
-            ),
-          );
-          FFAppState().decoyPin911Enabled = false;
-          FFAppState().decoyPinContactsEnabled = false;
-          FFAppState().decoySeedArmed = false;
-          safeSetState(() {});
-        }
-      }
 
-      FFAppState().prevHasActiveSubscription =
-          FFAppState().hasActiveSubscription;
-      safeSetState(() {});
+        context.goNamed(ManageSubscriptionWidget.routeName);
+      } else {
+        FFAppState().entitlementCheckCompleted = false;
+        FFAppState().hasActiveSubscription = false;
+        safeSetState(() {});
+        _model.entitlementRow = await UserEntitlementsTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .eqOrNull(
+                'entitlement',
+                'decoy_wallet',
+              ),
+        );
+        FFAppState().entitlementCheckCompleted = true;
+        FFAppState().entitlementStatus =
+            _model.entitlementRow!.elementAtOrNull(0)!.providerStatus!;
+        safeSetState(() {});
+        if ((_model.entitlementRow != null &&
+                (_model.entitlementRow)!.isNotEmpty) &&
+            ((_model.entitlementRow?.elementAtOrNull(0)?.isActive == true) ||
+                (FFAppState().entitlementStatus == 'settled'))) {
+          FFAppState().hasActiveSubscription = true;
+          safeSetState(() {});
+        } else {
+          FFAppState().hasActiveSubscription = false;
+          FFAppState().entitlementStatus = 'unpaid';
+          safeSetState(() {});
+          if ((FFAppState().prevHasActiveSubscription == true) &&
+              (FFAppState().hasActiveSubscription == false) &&
+              (FFAppState().entitlementCheckCompleted == true)) {
+            await DecoyWalletTable().update(
+              data: {
+                'decoy_seed_armed': false,
+                'decoy_seed_contacts_enabled': false,
+                'decoy_pin_911_enabled': false,
+                'decoy_pin_contacts_enabled': false,
+                'last_teardown_at':
+                    supaSerialize<DateTime>(getCurrentTimestamp),
+              },
+              matchingRows: (rows) => rows.eqOrNull(
+                'user_id',
+                currentUserUid,
+              ),
+            );
+            FFAppState().decoyPin911Enabled = false;
+            FFAppState().decoyPinContactsEnabled = false;
+            FFAppState().decoySeedArmed = false;
+            safeSetState(() {});
+          }
+        }
+
+        FFAppState().prevHasActiveSubscription =
+            FFAppState().hasActiveSubscription;
+        safeSetState(() {});
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

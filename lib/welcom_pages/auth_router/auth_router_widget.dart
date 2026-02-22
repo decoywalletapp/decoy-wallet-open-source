@@ -68,6 +68,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           );
         }
       } else {
+        _model.pushRoute = await actions.initPushTapListener(
+          context,
+        );
+        if ((_model.pushRoute != null && _model.pushRoute != '') &&
+            (_model.pushRoute == 'renew_btcpay')) {
+          FFAppState().openRenewalFromPush = true;
+          safeSetState(() {});
+        }
         _model.refreshOut = await actions.refreshSupabaseSession();
         _model.authUserResp = await GetAuthUserCall.call(
           jwt: currentJwtToken,

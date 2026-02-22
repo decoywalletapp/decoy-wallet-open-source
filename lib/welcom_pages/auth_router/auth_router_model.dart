@@ -41,6 +41,8 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   // Stores action output result for [Custom Action - refreshSupabaseSession2] action in AuthRouter widget.
   bool? refreshingOuuu;
+  // Stores action output result for [Custom Action - initPushTapListener] action in AuthRouter widget.
+  String? pushRoute;
   // Stores action output result for [Custom Action - refreshSupabaseSession] action in AuthRouter widget.
   dynamic refreshOut;
   // Stores action output result for [Backend Call - API (GetAuthUser)] action in AuthRouter widget.

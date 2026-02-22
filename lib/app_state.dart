@@ -126,6 +126,11 @@ class FFAppState extends ChangeNotifier {
       _pushEnabled =
           await secureStorage.getBool('ff_pushEnabled') ?? _pushEnabled;
     });
+    await _safeInitAsync(() async {
+      _openRenewalFromPush =
+          await secureStorage.getBool('ff_openRenewalFromPush') ??
+              _openRenewalFromPush;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -555,6 +560,17 @@ class FFAppState extends ChangeNotifier {
 
   void deletePushEnabled() {
     secureStorage.delete(key: 'ff_pushEnabled');
+  }
+
+  bool _openRenewalFromPush = false;
+  bool get openRenewalFromPush => _openRenewalFromPush;
+  set openRenewalFromPush(bool value) {
+    _openRenewalFromPush = value;
+    secureStorage.setBool('ff_openRenewalFromPush', value);
+  }
+
+  void deleteOpenRenewalFromPush() {
+    secureStorage.delete(key: 'ff_openRenewalFromPush');
   }
 }
 

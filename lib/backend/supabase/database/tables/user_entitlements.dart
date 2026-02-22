@@ -50,4 +50,14 @@ class UserEntitlementsRow extends SupabaseDataRow {
   bool? get cancelAtPeriodEnd => getField<bool>('cancel_at_period_end');
   set cancelAtPeriodEnd(bool? value) =>
       setField<bool>('cancel_at_period_end', value);
+
+  DateTime? get renewalReminderSentAt =>
+      getField<DateTime>('renewal_reminder_sent_at');
+  set renewalReminderSentAt(DateTime? value) =>
+      setField<DateTime>('renewal_reminder_sent_at', value);
+
+  DateTime? get activationNotifiedAt =>
+      getField<DateTime>('activation_notified_at');
+  set activationNotifiedAt(DateTime? value) =>
+      setField<DateTime>('activation_notified_at', value);
 }

@@ -38,3 +38,4 @@ export 'request_push_permission_and_get_token.dart'
     show requestPushPermissionAndGetToken;
 export 'subscribe_to_topic.dart' show subscribeToTopic;
 export 'get_or_create_device_id.dart' show getOrCreateDeviceId;
+export 'init_push_tap_listener.dart' show initPushTapListener;

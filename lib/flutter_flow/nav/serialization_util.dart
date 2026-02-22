@@ -262,6 +262,8 @@ dynamic deserializeParam<T>(
             return UserDevicesRow(data);
           case DecoyTriggersRow:
             return DecoyTriggersRow(data);
+          case NotificationJobsRow:
+            return NotificationJobsRow(data);
           case DecoySeedBaselinesRow:
             return DecoySeedBaselinesRow(data);
           case EmergencyContactsRow:
