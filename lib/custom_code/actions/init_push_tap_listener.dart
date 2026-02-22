@@ -9,41 +9,35 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import '/custom_code/actions/index.dart';
-import '/flutter_flow/custom_functions.dart';
-
+import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-bool _pushTapListenerInitialized = false;
-
-String? _routeFromMessage(RemoteMessage message) {
-  final type = message.data['type']?.toString();
-  if (type == 'entitlement_renewal_reminder') return 'renew_btcpay';
-  if (type == 'entitlement_activated') return 'activated_btcpay';
-  return null;
-}
+bool _tapListenerInitialized = false;
+String? _lastPushRoute;
 
 Future<String?> initPushTapListener(BuildContext context) async {
   try {
-    String? firstRoute;
+    if (_tapListenerInitialized) {
+      return _lastPushRoute;
+    }
+    _tapListenerInitialized = true;
 
+    // If app was opened by tapping a notification while terminated
     final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
-      firstRoute = _routeFromMessage(initialMessage);
+      final type = initialMessage.data['type']?.toString();
+      _lastPushRoute = type;
+      return _lastPushRoute;
     }
 
-    if (!_pushTapListenerInitialized) {
-      _pushTapListenerInitialized = true;
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        // We cannot return from a listener. This path will be handled
-        // by calling getInitialMessage on next cold start, OR you can
-        // run a second custom action on AuthRouter that checks again.
-      });
-    }
+    // If app is in background and user taps notification
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      final type = message.data['type']?.toString();
+      _lastPushRoute = type;
+    });
 
-    return firstRoute;
+    return _lastPushRoute;
   } catch (e) {
-    print('initPushTapListener error: $e');
     return null;
   }
 }
