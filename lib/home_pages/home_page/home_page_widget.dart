@@ -61,7 +61,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         if ((_model.entitlementRow != null &&
                 (_model.entitlementRow)!.isNotEmpty) &&
             ((_model.entitlementRow?.elementAtOrNull(0)?.isActive == true) ||
-                (FFAppState().entitlementStatus == 'settled'))) {
+                (_model.entitlementRow?.elementAtOrNull(0)?.providerStatus ==
+                    'settled'))) {
           FFAppState().hasActiveSubscription = true;
           safeSetState(() {});
         } else {
