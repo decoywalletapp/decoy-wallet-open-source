@@ -564,6 +564,9 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           FFAppState()
                                                                   .lastKnownLocation =
                                                               LatLng(0.0, 0.0);
+                                                          FFAppState()
+                                                                  .pushEnabled =
+                                                              false;
                                                           safeSetState(() {});
 
                                                           context.goNamedAuth(
