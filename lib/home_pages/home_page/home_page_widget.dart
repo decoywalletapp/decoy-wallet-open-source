@@ -67,7 +67,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           safeSetState(() {});
         } else {
           FFAppState().hasActiveSubscription = false;
-          FFAppState().entitlementStatus = 'unpaid';
           safeSetState(() {});
           if ((FFAppState().prevHasActiveSubscription == true) &&
               (FFAppState().hasActiveSubscription == false) &&
@@ -847,7 +846,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       if ((FFAppState().hasActiveSubscription == false) &&
                           (FFAppState().entitlementStatus != 'received') &&
                           (FFAppState().entitlementStatus != 'processing') &&
-                          (FFAppState().entitlementStatus != 'settled'))
+                          (FFAppState().entitlementStatus != 'settled') &&
+                          (FFAppState().entitlementCheckCompleted == true))
                         Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
                           child: Material(
