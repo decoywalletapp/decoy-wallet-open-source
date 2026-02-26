@@ -54,6 +54,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 'decoy_wallet',
               ),
         );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'ran',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
         FFAppState().entitlementCheckCompleted = true;
         FFAppState().entitlementStatus =
             _model.entitlementRow!.elementAtOrNull(0)!.providerStatus!;
@@ -171,7 +183,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (FFAppState().hasActiveSubscription == true)
+                          if (FFAppState().entitlementCheckCompleted == true)
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Material(
@@ -398,7 +410,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                               ),
                             ),
-                          if (FFAppState().hasActiveSubscription == true)
+                          if (FFAppState().entitlementCheckCompleted == true)
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Material(
@@ -621,7 +633,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                               ),
                             ),
-                          if (FFAppState().hasActiveSubscription == true)
+                          if (FFAppState().entitlementCheckCompleted == true)
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Material(
