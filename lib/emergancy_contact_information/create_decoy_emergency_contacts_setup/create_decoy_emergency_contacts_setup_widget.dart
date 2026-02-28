@@ -241,8 +241,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             ),
                                           ),
                                           Align(
-                                            alignment: AlignmentDirectional(
-                                                -0.01, 0.0),
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
                                             child: Text(
                                               'SETUP',
                                               textAlign: TextAlign.center,

@@ -572,3 +572,21 @@ String btcToUsdDisplay(
 
   return NumberFormat.currency(symbol: r'$', decimalDigits: 2).format(usd);
 }
+
+int daysLeftFromPeriodEnd(DateTime? currentPeriodEnd) {
+  if (currentPeriodEnd == null) return 0;
+
+  final now = DateTime.now().toUtc();
+  final end = currentPeriodEnd.toUtc();
+
+  final diff = end.difference(now);
+  if (diff.inSeconds <= 0) return 0;
+
+  // Ceil to avoid showing 0 when there are hours left
+  final hours = diff.inHours;
+  final hasRemainder = diff.inMinutes % 60 != 0 || diff.inSeconds % 60 != 0;
+  final totalHours = hours + (hasRemainder ? 1 : 0);
+
+  final days = (totalHours / 24.0).ceil();
+  return days < 0 ? 0 : days;
+}
