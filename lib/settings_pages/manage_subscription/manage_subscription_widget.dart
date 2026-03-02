@@ -501,10 +501,12 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                               ),
                                               FFButtonWidget(
                                                 onPressed: () async {
-                                                  if (_model.providerCustomerId !=
-                                                          null &&
-                                                      _model.providerCustomerId !=
-                                                          '') {
+                                                  if ((_model.providerCustomerId !=
+                                                              null &&
+                                                          _model.providerCustomerId !=
+                                                              '') &&
+                                                      (_model.provider ==
+                                                          'stripe')) {
                                                     _model.portalRespManage =
                                                         await CreateBillingPortalSessionCall
                                                             .call(
@@ -524,26 +526,6 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                       )!,
                                                     );
                                                   } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'ERROR #019 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
-                                                    );
                                                     _model.apiResult5g4 =
                                                         await CreateCheckoutSessionCall
                                                             .call(
