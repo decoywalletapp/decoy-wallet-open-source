@@ -64,6 +64,14 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
       _model.providerSubscriptionId =
           _model.manageQue?.elementAtOrNull(0)?.providerSubscriptionId;
       _model.isActive = _model.manageQue?.elementAtOrNull(0)?.isActive;
+      _model.pendingSwitchToStripe =
+          (_model.manageQue?.elementAtOrNull(0)?.pendingProvider == 'stripe') &&
+              (_model.manageQue?.elementAtOrNull(0)?.provider == 'btcpay') &&
+              (_model.manageQue?.elementAtOrNull(0)?.isActive == true) &&
+              ((_model.manageQue?.elementAtOrNull(0)?.pendingStartsAt !=
+                      null) &&
+                  (_model.manageQue!.elementAtOrNull(0)!.pendingStartsAt! >
+                      getCurrentTimestamp));
       safeSetState(() {});
     });
 
@@ -724,7 +732,9 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   (_model.manageQue
                                                           ?.elementAtOrNull(0)
                                                           ?.currentPeriodEnd !=
-                                                      null))
+                                                      null) &&
+                                                  (_model.pendingSwitchToStripe ==
+                                                      false))
                                                 Align(
                                                   alignment:
                                                       AlignmentDirectional(
@@ -766,7 +776,9 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   (_model.manageQue
                                                           ?.elementAtOrNull(0)
                                                           ?.currentPeriodEnd !=
-                                                      null))
+                                                      null) &&
+                                                  (_model.pendingSwitchToStripe ==
+                                                      false))
                                                 Text(
                                                   ' DAYS LEFT',
                                                   style:
@@ -825,6 +837,67 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                 .bodyMediumIsCustom,
                                                       ),
                                                 ),
+                                              ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            if (_model.pendingSwitchToStripe ==
+                                                true)
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Text(
+                                                  'Stripe will take over on ',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMediumFamily,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .error,
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        useGoogleFonts:
+                                                            !FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMediumIsCustom,
+                                                      ),
+                                                ),
+                                              ),
+                                            if (_model.pendingSwitchToStripe ==
+                                                true)
+                                              Text(
+                                                dateTimeFormat(
+                                                    "yMd",
+                                                    _model.manageQue!
+                                                        .elementAtOrNull(0)!
+                                                        .pendingStartsAt!),
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMediumFamily,
+                                                          letterSpacing: 0.0,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMediumIsCustom,
+                                                        ),
                                               ),
                                           ],
                                         ),

@@ -60,4 +60,31 @@ class UserEntitlementsRow extends SupabaseDataRow {
       getField<DateTime>('activation_notified_at');
   set activationNotifiedAt(DateTime? value) =>
       setField<DateTime>('activation_notified_at', value);
+
+  String? get pendingProvider => getField<String>('pending_provider');
+  set pendingProvider(String? value) =>
+      setField<String>('pending_provider', value);
+
+  String? get pendingProviderSubscriptionId =>
+      getField<String>('pending_provider_subscription_id');
+  set pendingProviderSubscriptionId(String? value) =>
+      setField<String>('pending_provider_subscription_id', value);
+
+  String? get pendingProviderCustomerId =>
+      getField<String>('pending_provider_customer_id');
+  set pendingProviderCustomerId(String? value) =>
+      setField<String>('pending_provider_customer_id', value);
+
+  DateTime? get pendingStartsAt => getField<DateTime>('pending_starts_at');
+  set pendingStartsAt(DateTime? value) =>
+      setField<DateTime>('pending_starts_at', value);
+
+  DateTime? get switchInitiatedAt => getField<DateTime>('switch_initiated_at');
+  set switchInitiatedAt(DateTime? value) =>
+      setField<DateTime>('switch_initiated_at', value);
+
+  DateTime? get teardownGraceUntil =>
+      getField<DateTime>('teardown_grace_until');
+  set teardownGraceUntil(DateTime? value) =>
+      setField<DateTime>('teardown_grace_until', value);
 }

@@ -16,6 +16,8 @@ class ManageSubscriptionModel
 
   String? providerSubscriptionId;
 
+  bool pendingSwitchToStripe = false;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.
