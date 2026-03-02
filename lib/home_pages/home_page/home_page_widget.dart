@@ -54,18 +54,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 'decoy_wallet',
               ),
         );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'ran',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         FFAppState().entitlementCheckCompleted = true;
         FFAppState().entitlementStatus =
             _model.entitlementRow!.elementAtOrNull(0)!.providerStatus!;

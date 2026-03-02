@@ -320,16 +320,14 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.personalComplete ==
                                                           true
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .success
+                                                      ? Color(0xFF159A13)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                                 ),
-                                                width: 1.2,
+                                                width: 2.0,
                                               ),
                                             ),
                                             child: Padding(
@@ -470,15 +468,14 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.personalComplete ==
                                                           true
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .success
+                                                      ? Color(0xFF159A13)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                                 ),
+                                                width: 2.0,
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
@@ -524,16 +521,14 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.addressComplete ==
                                                           true
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .success
+                                                      ? Color(0xFF159A13)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                                 ),
-                                                width: 1.2,
+                                                width: 2.0,
                                               ),
                                             ),
                                             child: Padding(
@@ -673,15 +668,14 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.addressComplete ==
                                                           true
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .success
+                                                      ? Color(0xFF159A13)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                                 ),
+                                                width: 2.0,
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
@@ -736,7 +730,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                                 ),
-                                                width: 1.2,
+                                                width: 2.0,
                                               ),
                                             ),
                                             child: Padding(
@@ -876,15 +870,14 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.contactsComplete ==
                                                           true
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .success
+                                                      ? Color(0xFF159A13)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                                 ),
+                                                width: 2.0,
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
@@ -933,7 +926,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'Progress',
+                                                            'PROGRESS',
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: FlutterFlowTheme
@@ -941,7 +934,10 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                 .titleLarge
                                                                 .override(
                                                                   fontFamily:
-                                                                      'InterTight',
+                                                                      'DECOY BEBAS',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primary,
                                                                   letterSpacing:
                                                                       0.0,
                                                                   fontWeight:
@@ -1029,10 +1025,12 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           color:
                                                                               valueOrDefault<Color>(
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true)
-                                                                                ? FlutterFlowTheme.of(context).success
+                                                                                ? Color(0xFF159A13)
                                                                                 : FlutterFlowTheme.of(context).primary,
                                                                             FlutterFlowTheme.of(context).primary,
                                                                           ),
+                                                                          width:
+                                                                              2.0,
                                                                         ),
                                                                       ),
                                                                       alignment:
@@ -1128,8 +1126,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                                   true) &&
                                                                               (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete ==
                                                                                   true)
-                                                                          ? FlutterFlowTheme.of(context)
-                                                                              .success
+                                                                          ? Color(
+                                                                              0xFF159A13)
                                                                           : FlutterFlowTheme.of(context)
                                                                               .primaryText,
                                                                       FlutterFlowTheme.of(

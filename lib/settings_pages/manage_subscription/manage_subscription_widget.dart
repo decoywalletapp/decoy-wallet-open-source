@@ -224,7 +224,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                       Align(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                0.01, 0.0),
+                                                                0.0, 0.0),
                                                         child: Text(
                                                           'METHOD',
                                                           textAlign:
@@ -251,7 +251,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                       Align(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                -0.01, 0.0),
+                                                                0.0, 0.0),
                                                         child: Text(
                                                           'METHOD',
                                                           textAlign:
@@ -544,6 +544,26 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                 .secondary,
                                                       ),
                                                     );
+                                                    _model.apiResult5g4 =
+                                                        await CreateCheckoutSessionCall
+                                                            .call(
+                                                      currentUserUid:
+                                                          currentUserUid,
+                                                    );
+
+                                                    if ((_model.apiResult5g4
+                                                            ?.succeeded ??
+                                                        true)) {
+                                                      await actions
+                                                          .openExternalUrl(
+                                                        CreateCheckoutSessionCall
+                                                            .url(
+                                                          (_model.apiResult5g4
+                                                                  ?.jsonBody ??
+                                                              ''),
+                                                        )!,
+                                                      );
+                                                    }
                                                   }
 
                                                   safeSetState(() {});

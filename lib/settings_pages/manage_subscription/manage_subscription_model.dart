@@ -24,6 +24,8 @@ class ManageSubscriptionModel
   ApiCallResponse? apiResultk1h;
   // Stores action output result for [Backend Call - API (CreateBillingPortalSession)] action in Button widget.
   ApiCallResponse? portalRespManage;
+  // Stores action output result for [Backend Call - API (CreateCheckoutSession)] action in Button widget.
+  ApiCallResponse? apiResult5g4;
   // Stores action output result for [Backend Call - API (CreateBillingPortalSession)] action in Button widget.
   ApiCallResponse? portalRespCancel;
 

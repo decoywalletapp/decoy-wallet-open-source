@@ -590,3 +590,26 @@ int daysLeftFromPeriodEnd(DateTime? currentPeriodEnd) {
   final days = (totalHours / 24.0).ceil();
   return days < 0 ? 0 : days;
 }
+
+bool isEntitlementCurrentlyActive(
+  bool isActive,
+  DateTime? currentPeriodEnd,
+) {
+  // If backend already says inactive, it is inactive
+  if (!isActive) {
+    return false;
+  }
+
+  // If no expiration date is set, treat as active
+  if (currentPeriodEnd == null) {
+    return true;
+  }
+
+  // If expiration date has passed, treat as inactive
+  if (currentPeriodEnd.isBefore(DateTime.now())) {
+    return false;
+  }
+
+  // Otherwise it is active
+  return true;
+}
