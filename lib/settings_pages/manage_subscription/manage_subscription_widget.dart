@@ -533,6 +533,43 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                             ''),
                                                       )!,
                                                     );
+                                                    await Future.delayed(
+                                                      Duration(
+                                                        milliseconds: 2000,
+                                                      ),
+                                                    );
+                                                    _model.requery3 =
+                                                        await UserEntitlementsTable()
+                                                            .queryRows(
+                                                      queryFn: (q) =>
+                                                          q.eqOrNull(
+                                                        'user_id',
+                                                        currentUserUid,
+                                                      ),
+                                                    );
+                                                    _model
+                                                        .pendingSwitchToStripe = (_model
+                                                                .requery3
+                                                                ?.elementAtOrNull(
+                                                                    0)
+                                                                ?.pendingProvider ==
+                                                            'stripe') &&
+                                                        (_model.requery3
+                                                                ?.elementAtOrNull(
+                                                                    0)
+                                                                ?.pendingStartsAt !=
+                                                            null) &&
+                                                        (_model.requery3!
+                                                                .elementAtOrNull(
+                                                                    0)!
+                                                                .pendingStartsAt! >
+                                                            getCurrentTimestamp);
+                                                    _model.provider = _model
+                                                        .requery3
+                                                        ?.elementAtOrNull(0)
+                                                        ?.provider;
+                                                    safeSetState(() {});
+                                                    safeSetState(() {});
                                                   } else {
                                                     _model.apiResult5g4 =
                                                         await CreateCheckoutSessionCall
@@ -544,30 +581,6 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                     if ((_model.apiResult5g4
                                                             ?.succeeded ??
                                                         true)) {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            (_model.apiResult5g4
-                                                                        ?.jsonBody ??
-                                                                    '')
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryText,
-                                                            ),
-                                                          ),
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  4000),
-                                                          backgroundColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .secondary,
-                                                        ),
-                                                      );
                                                       await actions
                                                           .openExternalUrl(
                                                         CreateCheckoutSessionCall
@@ -577,76 +590,43 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                               ''),
                                                         )!,
                                                       );
-                                                    } else {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            'false',
-                                                            style: TextStyle(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryText,
-                                                            ),
-                                                          ),
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  4000),
-                                                          backgroundColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .secondary,
+                                                      await Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 2000,
                                                         ),
                                                       );
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            (_model.apiResult5g4
-                                                                        ?.statusCode ??
-                                                                    200)
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryText,
-                                                            ),
-                                                          ),
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  4000),
-                                                          backgroundColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .secondary,
+                                                      _model.requery5 =
+                                                          await UserEntitlementsTable()
+                                                              .queryRows(
+                                                        queryFn: (q) =>
+                                                            q.eqOrNull(
+                                                          'user_id',
+                                                          currentUserUid,
                                                         ),
                                                       );
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            (_model.apiResult5g4
-                                                                        ?.jsonBody ??
-                                                                    '')
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryText,
-                                                            ),
-                                                          ),
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  4000),
-                                                          backgroundColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .secondary,
-                                                        ),
-                                                      );
+                                                      _model
+                                                          .pendingSwitchToStripe = (_model
+                                                                  .requery5
+                                                                  ?.elementAtOrNull(
+                                                                      0)
+                                                                  ?.pendingProvider ==
+                                                              'stripe') &&
+                                                          (_model.requery5
+                                                                  ?.elementAtOrNull(
+                                                                      0)
+                                                                  ?.pendingStartsAt !=
+                                                              null) &&
+                                                          (_model.requery5!
+                                                                  .elementAtOrNull(
+                                                                      0)!
+                                                                  .pendingStartsAt! >
+                                                              getCurrentTimestamp);
+                                                      _model.provider = _model
+                                                          .requery5
+                                                          ?.elementAtOrNull(0)
+                                                          ?.provider;
+                                                      safeSetState(() {});
+                                                      safeSetState(() {});
                                                     }
                                                   }
 
@@ -851,7 +831,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
-                                                  'Stripe will take over on ',
+                                                  'Stripe will take over on  ',
                                                   textAlign: TextAlign.center,
                                                   style: FlutterFlowTheme.of(
                                                           context)
@@ -864,7 +844,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .error,
+                                                                .primaryText,
                                                         fontSize: 16.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
@@ -884,20 +864,24 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                     _model.manageQue!
                                                         .elementAtOrNull(0)!
                                                         .pendingStartsAt!),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          letterSpacing: 0.0,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMediumIsCustom,
-                                                        ),
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .success,
+                                                      letterSpacing: 0.0,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
                                               ),
                                           ],
                                         ),
