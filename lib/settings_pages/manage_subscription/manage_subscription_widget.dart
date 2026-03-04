@@ -72,6 +72,38 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                       null) &&
                   (_model.manageQue!.elementAtOrNull(0)!.pendingStartsAt! >
                       getCurrentTimestamp));
+      _model.currentPeriodEnd =
+          _model.manageQue?.elementAtOrNull(0)?.currentPeriodEnd;
+      safeSetState(() {});
+      if ((_model.manageQue?.elementAtOrNull(0)?.pendingProvider == 'stripe') &&
+          (_model.manageQue?.elementAtOrNull(0)?.pendingStartsAt != null) &&
+          (_model.manageQue!.elementAtOrNull(0)!.pendingStartsAt! <=
+              getCurrentTimestamp)) {
+        _model.apiResultlc3 = await FinalizeStripeSwitchCall.call(
+          userId: currentUserUid,
+        );
+      }
+      _model.trueBranchQue = await UserEntitlementsTable().queryRows(
+        queryFn: (q) => q
+            .eqOrNull(
+              'user_id',
+              currentUserUid,
+            )
+            .eqOrNull(
+              'entitlement',
+              'decoy_wallet',
+            ),
+      );
+      _model.provider = _model.trueBranchQue?.elementAtOrNull(0)?.provider;
+      _model.providerCustomerId =
+          _model.trueBranchQue?.elementAtOrNull(0)?.providerCustomerId;
+      _model.providerSubscriptionId =
+          _model.trueBranchQue?.elementAtOrNull(0)?.providerSubscriptionId;
+      _model.isActive = _model.trueBranchQue?.elementAtOrNull(0)?.isActive;
+      _model.pendingSwitchToStripe =
+          _model.trueBranchQue?.elementAtOrNull(0)?.pendingProvider == 'stripe';
+      _model.currentPeriodEnd =
+          _model.trueBranchQue?.elementAtOrNull(0)?.currentPeriodEnd;
       safeSetState(() {});
     });
 
@@ -359,53 +391,154 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                   ),
                                                   FFButtonWidget(
                                                     onPressed: () async {
-                                                      _model.apiResultk1h =
-                                                          await CreateBTCPayInvoiceCall
-                                                              .call(
-                                                        currentUserUid:
-                                                            currentUserUid,
-                                                      );
+                                                      if (_model.provider !=
+                                                          'stripe') {
+                                                        _model.apiResultk1h =
+                                                            await CreateBTCPayInvoiceCall
+                                                                .call(
+                                                          currentUserUid:
+                                                              currentUserUid,
+                                                        );
 
-                                                      if ((_model.apiResultk1h
-                                                              ?.succeeded ??
-                                                          true)) {
-                                                        await actions
-                                                            .openExternalUrl(
-                                                          CreateBTCPayInvoiceCall
-                                                              .invoiceUrl(
-                                                            (_model.apiResultk1h
-                                                                    ?.jsonBody ??
-                                                                ''),
-                                                          )!,
-                                                        );
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                              'ERROR #018 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                              style: TextStyle(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
+                                                        if ((_model.apiResultk1h
+                                                                ?.succeeded ??
+                                                            true)) {
+                                                          await actions
+                                                              .openExternalUrl(
+                                                            CreateBTCPayInvoiceCall
+                                                                .invoiceUrl(
+                                                              (_model.apiResultk1h
+                                                                      ?.jsonBody ??
+                                                                  ''),
+                                                            )!,
+                                                          );
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                'ERROR #018 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                                ),
                                                               ),
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      4000),
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondary,
                                                             ),
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    4000),
-                                                            backgroundColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
-                                                          ),
+                                                          );
+                                                        }
+                                                      } else {
+                                                        await UserEntitlementsTable()
+                                                            .update(
+                                                          data: {
+                                                            'pending_provider':
+                                                                'btcpay',
+                                                            'pending_starts_at':
+                                                                supaSerialize<
+                                                                        DateTime>(
+                                                                    _model
+                                                                        .currentPeriodEnd),
+                                                            'switch_initiated_at':
+                                                                supaSerialize<
+                                                                        DateTime>(
+                                                                    getCurrentTimestamp),
+                                                            'teardown_grace_until':
+                                                                supaSerialize<
+                                                                        DateTime>(
+                                                                    _model
+                                                                        .currentPeriodEnd),
+                                                          },
+                                                          matchingRows:
+                                                              (rows) => rows
+                                                                  .eqOrNull(
+                                                                    'user_id',
+                                                                    currentUserUid,
+                                                                  )
+                                                                  .eqOrNull(
+                                                                    'entitlement',
+                                                                    'decoy_wallet',
+                                                                  ),
                                                         );
+                                                        await UserEntitlementsTable()
+                                                            .update(
+                                                          data: {
+                                                            'provider_status':
+                                                                'paused',
+                                                            'is_active': false,
+                                                            'cancel_at_period_end':
+                                                                true,
+                                                          },
+                                                          matchingRows:
+                                                              (rows) => rows
+                                                                  .eqOrNull(
+                                                                    'user_id',
+                                                                    currentUserUid,
+                                                                  )
+                                                                  .eqOrNull(
+                                                                    'entitlement',
+                                                                    'decoy_wallet',
+                                                                  ),
+                                                        );
+                                                        _model.fBAPIresult =
+                                                            await CreateBTCPayInvoiceCall
+                                                                .call(
+                                                          currentUserUid:
+                                                              currentUserUid,
+                                                        );
+
+                                                        if ((_model.fBAPIresult
+                                                                ?.succeeded ??
+                                                            true)) {
+                                                          await actions
+                                                              .openExternalUrl(
+                                                            CreateBTCPayInvoiceCall
+                                                                .invoiceUrl(
+                                                              (_model.fBAPIresult
+                                                                      ?.jsonBody ??
+                                                                  ''),
+                                                            )!,
+                                                          );
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                'ERROR #027 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                                ),
+                                                              ),
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      4000),
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondary,
+                                                            ),
+                                                          );
+                                                        }
                                                       }
 
                                                       safeSetState(() {});
                                                     },
-                                                    text:
-                                                        'Renew Bitcoin Payment',
+                                                    text: _model.provider ==
+                                                            'btcpay'
+                                                        ? 'Renew Bitcoin Payments'
+                                                        : 'Switch to Bitcoin Payments',
                                                     options: FFButtonOptions(
                                                       width: 250.0,
                                                       height: 50.0,
@@ -632,7 +765,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
 
                                                   safeSetState(() {});
                                                 },
-                                                text: 'Manage Card Payments',
+                                                text: _model.provider ==
+                                                        'stripe'
+                                                    ? 'Manage Card Payments'
+                                                    : 'Switch to Card Payments',
                                                 options: FFButtonOptions(
                                                   width: 250.0,
                                                   height: 50.0,

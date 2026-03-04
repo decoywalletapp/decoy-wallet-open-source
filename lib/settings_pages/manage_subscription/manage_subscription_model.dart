@@ -18,12 +18,24 @@ class ManageSubscriptionModel
 
   bool pendingSwitchToStripe = false;
 
+  DateTime? currentPeriodEnd;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.
   List<UserEntitlementsRow>? manageQue;
+  // Stores action output result for [Backend Call - API (finalizeStripeSwitch)] action in ManageSubscription widget.
+  ApiCallResponse? apiResultlc3;
+  // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.
+  List<UserEntitlementsRow>? trueBranchQue;
   // Stores action output result for [Backend Call - API (CreateBTCPayInvoice)] action in Button widget.
   ApiCallResponse? apiResultk1h;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<UserEntitlementsRow>? tBupdate;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<UserEntitlementsRow>? secondTBUpda;
+  // Stores action output result for [Backend Call - API (CreateBTCPayInvoice)] action in Button widget.
+  ApiCallResponse? fBAPIresult;
   // Stores action output result for [Backend Call - API (CreateBillingPortalSession)] action in Button widget.
   ApiCallResponse? portalRespManage;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
