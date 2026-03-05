@@ -472,26 +472,6 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                     'decoy_wallet',
                                                                   ),
                                                         );
-                                                        await UserEntitlementsTable()
-                                                            .update(
-                                                          data: {
-                                                            'provider_status':
-                                                                'paused',
-                                                            'is_active': false,
-                                                            'cancel_at_period_end':
-                                                                true,
-                                                          },
-                                                          matchingRows:
-                                                              (rows) => rows
-                                                                  .eqOrNull(
-                                                                    'user_id',
-                                                                    currentUserUid,
-                                                                  )
-                                                                  .eqOrNull(
-                                                                    'entitlement',
-                                                                    'decoy_wallet',
-                                                                  ),
-                                                        );
                                                         _model.fBAPIresult =
                                                             await CreateBTCPayInvoiceCall
                                                                 .call(
