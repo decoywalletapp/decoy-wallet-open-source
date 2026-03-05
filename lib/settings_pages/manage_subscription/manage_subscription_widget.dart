@@ -456,6 +456,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                         DateTime>(
                                                                     _model
                                                                         .currentPeriodEnd),
+                                                            'updated_at':
+                                                                supaSerialize<
+                                                                        DateTime>(
+                                                                    getCurrentTimestamp),
                                                           },
                                                           matchingRows:
                                                               (rows) => rows
@@ -766,29 +770,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           .showSnackBar(
                                                         SnackBar(
                                                           content: Text(
-                                                            _model.provider!,
-                                                            style: TextStyle(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryText,
-                                                            ),
-                                                          ),
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  4000),
-                                                          backgroundColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .secondary,
-                                                        ),
-                                                      );
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            _model
-                                                                .providerCustomerId!,
+                                                            'ERROR #028 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                             style: TextStyle(
                                                               color: FlutterFlowTheme
                                                                       .of(context)
