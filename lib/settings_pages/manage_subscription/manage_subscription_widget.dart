@@ -446,7 +446,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                 supaSerialize<
                                                                         DateTime>(
                                                                     _model
-                                                                        .currentPeriodEnd),
+                                                                        .manageQue
+                                                                        ?.elementAtOrNull(
+                                                                            0)
+                                                                        ?.currentPeriodEnd),
                                                             'switch_initiated_at':
                                                                 supaSerialize<
                                                                         DateTime>(
@@ -455,7 +458,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                 supaSerialize<
                                                                         DateTime>(
                                                                     _model
-                                                                        .currentPeriodEnd),
+                                                                        .manageQue
+                                                                        ?.elementAtOrNull(
+                                                                            0)
+                                                                        ?.currentPeriodEnd),
                                                             'updated_at':
                                                                 supaSerialize<
                                                                         DateTime>(
