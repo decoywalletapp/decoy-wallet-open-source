@@ -768,6 +768,39 @@ class FinalizeStripeSwitchCall {
   }
 }
 
+class ScheduleBtcpaySwitchCall {
+  static Future<ApiCallResponse> call({
+    String? currentUserUid = '',
+    String? jwt = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "p_user_id": "${escapeStringForJson(currentUserUid)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'scheduleBtcpaySwitch',
+      apiUrl:
+          'https://vxmrthyumzrfgtuvjqmr.supabase.co//rest/v1/rpc/schedule_btcpay_switch',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bXJ0aHl1bXpyZmd0dXZqcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMDY2NDksImV4cCI6MjA2NTc4MjY0OX0.ZBjqtz7DKRkxnR3-rYtvtmz0JJb4-pDL4ux89qVBASc',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 String _toEncodable(dynamic item) {
   if (item is DocumentReference) {
     return item.path;

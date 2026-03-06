@@ -437,47 +437,13 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           );
                                                         }
                                                       } else {
-                                                        await UserEntitlementsTable()
-                                                            .update(
-                                                          data: {
-                                                            'pending_provider':
-                                                                'btcpay',
-                                                            'pending_starts_at':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    _model
-                                                                        .manageQue
-                                                                        ?.elementAtOrNull(
-                                                                            0)
-                                                                        ?.currentPeriodEnd),
-                                                            'switch_initiated_at':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    getCurrentTimestamp),
-                                                            'teardown_grace_until':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    _model
-                                                                        .manageQue
-                                                                        ?.elementAtOrNull(
-                                                                            0)
-                                                                        ?.currentPeriodEnd),
-                                                            'updated_at':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    getCurrentTimestamp),
-                                                          },
-                                                          matchingRows:
-                                                              (rows) => rows
-                                                                  .eqOrNull(
-                                                                    'user_id',
-                                                                    currentUserUid,
-                                                                  )
-                                                                  .eqOrNull(
-                                                                    'entitlement',
-                                                                    'decoy_wallet',
-                                                                  ),
+                                                        _model.btcSwitchResult =
+                                                            await ScheduleBtcpaySwitchCall
+                                                                .call(
+                                                          currentUserUid:
+                                                              currentUserUid,
                                                         );
+
                                                         _model.fBAPIresult =
                                                             await CreateBTCPayInvoiceCall
                                                                 .call(
