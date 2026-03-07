@@ -86,43 +86,42 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
         _model.apiResultlc3 = await FinalizeStripeSwitchCall.call(
           userId: currentUserUid,
         );
+      }
+      if ((_model.pendingProvider == 'btcpay') &&
+          (_model.pendingStartsAt != null) &&
+          (_model.pendingStartsAt! <= getCurrentTimestamp)) {
+        _model.btcpayFinalizeResp = await FinalizeBtcpaySwitchCall.call(
+          userId: currentUserUid,
+        );
 
-        if ((_model.pendingProvider == 'btcpay') &&
-            (_model.pendingStartsAt != null) &&
-            (_model.pendingStartsAt! <= getCurrentTimestamp)) {
-          _model.btcpayFinalizeResp = await FinalizeBtcpaySwitchCall.call(
-            userId: currentUserUid,
+        if ((_model.btcpayFinalizeResp?.succeeded ?? true)) {
+          _model.btcpayFinalQuery = await UserEntitlementsTable().queryRows(
+            queryFn: (q) => q
+                .eqOrNull(
+                  'user_id',
+                  currentUserUid,
+                )
+                .eqOrNull(
+                  'entitlement',
+                  'decoy_wallet',
+                ),
           );
-
-          if ((_model.btcpayFinalizeResp?.succeeded ?? true)) {
-            _model.btcpayFinalQuery = await UserEntitlementsTable().queryRows(
-              queryFn: (q) => q
-                  .eqOrNull(
-                    'user_id',
-                    currentUserUid,
-                  )
-                  .eqOrNull(
-                    'entitlement',
-                    'decoy_wallet',
-                  ),
-            );
-            _model.provider =
-                _model.btcpayFinalQuery?.elementAtOrNull(0)?.provider;
-            _model.providerCustomerId =
-                _model.btcpayFinalQuery?.elementAtOrNull(0)?.providerCustomerId;
-            _model.providerSubscriptionId = _model.btcpayFinalQuery
-                ?.elementAtOrNull(0)
-                ?.providerSubscriptionId;
-            _model.isActive =
-                _model.btcpayFinalQuery?.elementAtOrNull(0)?.isActive;
-            _model.pendingProvider =
-                _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingProvider;
-            _model.pendingStartsAt =
-                _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingStartsAt;
-            _model.currentPeriodEnd =
-                _model.btcpayFinalQuery?.elementAtOrNull(0)?.currentPeriodEnd;
-            safeSetState(() {});
-          }
+          _model.provider =
+              _model.btcpayFinalQuery?.elementAtOrNull(0)?.provider;
+          _model.providerCustomerId =
+              _model.btcpayFinalQuery?.elementAtOrNull(0)?.providerCustomerId;
+          _model.providerSubscriptionId = _model.btcpayFinalQuery
+              ?.elementAtOrNull(0)
+              ?.providerSubscriptionId;
+          _model.isActive =
+              _model.btcpayFinalQuery?.elementAtOrNull(0)?.isActive;
+          _model.pendingProvider =
+              _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingProvider;
+          _model.pendingStartsAt =
+              _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingStartsAt;
+          _model.currentPeriodEnd =
+              _model.btcpayFinalQuery?.elementAtOrNull(0)?.currentPeriodEnd;
+          safeSetState(() {});
         }
       }
       _model.trueBranchQue = await UserEntitlementsTable().queryRows(
