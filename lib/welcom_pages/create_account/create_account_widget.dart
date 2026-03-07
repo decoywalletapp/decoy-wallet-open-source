@@ -123,7 +123,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    32.0, 32.0, 32.0, 32.0),
+                                    32.0, 24.0, 32.0, 32.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -267,7 +267,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primaryText,
-                                              fontSize: 14.0,
+                                              fontSize: 16.0,
                                               letterSpacing: 0.25,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -390,7 +390,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primaryText,
-                                              fontSize: 14.0,
+                                              fontSize: 16.0,
                                               letterSpacing: 0.25,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -498,7 +498,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primaryText,
-                                              fontSize: 14.0,
+                                              fontSize: 16.0,
                                               letterSpacing: 0.25,
                                               fontWeight: FontWeight.w500,
                                             ),

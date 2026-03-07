@@ -46,6 +46,8 @@ class ManageSubscriptionModel
   ApiCallResponse? portalRespManage;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<UserEntitlementsRow>? requery3;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<UserEntitlementsRow>? setPendingStripeSwitch;
   // Stores action output result for [Backend Call - API (CreateCheckoutSession)] action in Button widget.
   ApiCallResponse? apiResult5g4;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.

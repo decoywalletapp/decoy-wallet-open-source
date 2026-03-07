@@ -9,6 +9,7 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'manage_subscription_model.dart';
 export 'manage_subscription_model.dart';
 
@@ -567,8 +568,16 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                     context)
                                                                 .titleMedium
                                                                 .override(
-                                                                  fontFamily:
-                                                                      'robot',
+                                                                  font: GoogleFonts
+                                                                      .archivo(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .titleMedium
+                                                                        .fontStyle,
+                                                                  ),
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
                                                                       .info,
@@ -577,6 +586,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w600,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleMedium
+                                                                      .fontStyle,
                                                                 ),
                                                         elevation: 3.0,
                                                         borderSide: BorderSide(
@@ -712,69 +725,131 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                     safeSetState(() {});
                                                     safeSetState(() {});
                                                   } else {
-                                                    _model.apiResult5g4 =
-                                                        await CreateCheckoutSessionCall
-                                                            .call(
-                                                      currentUserUid:
-                                                          currentUserUid,
-                                                    );
+                                                    if ((_model.provider ==
+                                                            'btcpay') &&
+                                                        (_model.currentPeriodEnd !=
+                                                            null)) {
+                                                      await UserEntitlementsTable()
+                                                          .update(
+                                                        data: {
+                                                          'pending_provider':
+                                                              'stripe',
+                                                          'pending_starts_at':
+                                                              supaSerialize<
+                                                                      DateTime>(
+                                                                  _model
+                                                                      .currentPeriodEnd),
+                                                          'switch_initiated_at':
+                                                              supaSerialize<
+                                                                      DateTime>(
+                                                                  getCurrentTimestamp),
+                                                          'teardown_grace_until':
+                                                              supaSerialize<
+                                                                      DateTime>(
+                                                                  _model
+                                                                      .currentPeriodEnd),
+                                                          'updated_at':
+                                                              supaSerialize<
+                                                                      DateTime>(
+                                                                  getCurrentTimestamp),
+                                                        },
+                                                        matchingRows: (rows) =>
+                                                            rows
+                                                                .eqOrNull(
+                                                                  'user_id',
+                                                                  currentUserUid,
+                                                                )
+                                                                .eqOrNull(
+                                                                  'entitlement',
+                                                                  'decoy_wallet',
+                                                                ),
+                                                      );
+                                                      _model.apiResult5g4 =
+                                                          await CreateCheckoutSessionCall
+                                                              .call(
+                                                        currentUserUid:
+                                                            currentUserUid,
+                                                      );
 
-                                                    if ((_model.apiResult5g4
-                                                            ?.succeeded ??
-                                                        true)) {
-                                                      await actions
-                                                          .openExternalUrl(
-                                                        CreateCheckoutSessionCall
-                                                            .url(
-                                                          (_model.apiResult5g4
-                                                                  ?.jsonBody ??
-                                                              ''),
-                                                        )!,
-                                                      );
-                                                      await Future.delayed(
-                                                        Duration(
-                                                          milliseconds: 2000,
-                                                        ),
-                                                      );
-                                                      _model.requery5 =
-                                                          await UserEntitlementsTable()
-                                                              .queryRows(
-                                                        queryFn: (q) =>
-                                                            q.eqOrNull(
-                                                          'user_id',
-                                                          currentUserUid,
-                                                        ),
-                                                      );
-                                                      _model
-                                                          .pendingSwitchToStripe = (_model
-                                                                  .requery5
-                                                                  ?.elementAtOrNull(
-                                                                      0)
-                                                                  ?.pendingProvider ==
-                                                              'stripe') &&
-                                                          (_model.requery5
-                                                                  ?.elementAtOrNull(
-                                                                      0)
-                                                                  ?.pendingStartsAt !=
-                                                              null) &&
-                                                          (_model.requery5!
-                                                                  .elementAtOrNull(
-                                                                      0)!
-                                                                  .pendingStartsAt! >
-                                                              getCurrentTimestamp);
-                                                      _model.provider = _model
-                                                          .requery5
-                                                          ?.elementAtOrNull(0)
-                                                          ?.provider;
-                                                      safeSetState(() {});
-                                                      safeSetState(() {});
+                                                      if ((_model.apiResult5g4
+                                                              ?.succeeded ??
+                                                          true)) {
+                                                        await actions
+                                                            .openExternalUrl(
+                                                          CreateCheckoutSessionCall
+                                                              .url(
+                                                            (_model.apiResult5g4
+                                                                    ?.jsonBody ??
+                                                                ''),
+                                                          )!,
+                                                        );
+                                                        await Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 2000,
+                                                          ),
+                                                        );
+                                                        _model.requery5 =
+                                                            await UserEntitlementsTable()
+                                                                .queryRows(
+                                                          queryFn: (q) =>
+                                                              q.eqOrNull(
+                                                            'user_id',
+                                                            currentUserUid,
+                                                          ),
+                                                        );
+                                                        _model
+                                                            .pendingSwitchToStripe = (_model
+                                                                    .requery5
+                                                                    ?.elementAtOrNull(
+                                                                        0)
+                                                                    ?.pendingProvider ==
+                                                                'stripe') &&
+                                                            (_model.requery5
+                                                                    ?.elementAtOrNull(
+                                                                        0)
+                                                                    ?.pendingStartsAt !=
+                                                                null) &&
+                                                            (_model.requery5!
+                                                                    .elementAtOrNull(
+                                                                        0)!
+                                                                    .pendingStartsAt! >
+                                                                getCurrentTimestamp);
+                                                        _model.provider = _model
+                                                            .requery5
+                                                            ?.elementAtOrNull(0)
+                                                            ?.provider;
+                                                        safeSetState(() {});
+                                                        safeSetState(() {});
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              'ERROR #028 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                              style: TextStyle(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryText,
+                                                              ),
+                                                            ),
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    4000),
+                                                            backgroundColor:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondary,
+                                                          ),
+                                                        );
+                                                      }
                                                     } else {
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
                                                         SnackBar(
                                                           content: Text(
-                                                            'ERROR #028 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                            'ERROR #029 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
                                                             style: TextStyle(
                                                               color: FlutterFlowTheme
                                                                       .of(context)
@@ -814,7 +889,15 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           .of(context)
                                                       .titleMedium
                                                       .override(
-                                                        fontFamily: 'robot',
+                                                        font: GoogleFonts.heebo(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleMedium
+                                                                  .fontStyle,
+                                                        ),
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -822,6 +905,11 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         letterSpacing: 0.25,
                                                         fontWeight:
                                                             FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .fontStyle,
                                                       ),
                                                   elevation: 3.0,
                                                   borderSide: BorderSide(
@@ -1129,18 +1217,32 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .error,
-                                                textStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .override(
-                                                          fontFamily: 'robot',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
+                                                textStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .titleMedium
+                                                    .override(
+                                                      font: GoogleFonts.archivo(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .fontStyle,
+                                                      ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
                                                               .info,
-                                                          letterSpacing: 0.25,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
+                                                      letterSpacing: 0.25,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .titleMedium
+                                                              .fontStyle,
+                                                    ),
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(
                                                   color: Colors.transparent,
