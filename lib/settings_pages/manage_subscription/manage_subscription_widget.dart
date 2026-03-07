@@ -74,6 +74,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                       getCurrentTimestamp));
       _model.currentPeriodEnd =
           _model.manageQue?.elementAtOrNull(0)?.currentPeriodEnd;
+      _model.pendingProvider =
+          _model.manageQue?.elementAtOrNull(0)?.pendingProvider;
+      _model.pendingStartsAt =
+          _model.manageQue?.elementAtOrNull(0)?.pendingStartsAt;
       safeSetState(() {});
       if ((_model.manageQue?.elementAtOrNull(0)?.pendingProvider == 'stripe') &&
           (_model.manageQue?.elementAtOrNull(0)?.pendingStartsAt != null) &&
@@ -82,6 +86,44 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
         _model.apiResultlc3 = await FinalizeStripeSwitchCall.call(
           userId: currentUserUid,
         );
+
+        if ((_model.pendingProvider == 'btcpay') &&
+            (_model.pendingStartsAt != null) &&
+            (_model.pendingStartsAt! <= getCurrentTimestamp)) {
+          _model.btcpayFinalizeResp = await FinalizeBtcpaySwitchCall.call(
+            userId: currentUserUid,
+          );
+
+          if ((_model.btcpayFinalizeResp?.succeeded ?? true)) {
+            _model.btcpayFinalQuery = await UserEntitlementsTable().queryRows(
+              queryFn: (q) => q
+                  .eqOrNull(
+                    'user_id',
+                    currentUserUid,
+                  )
+                  .eqOrNull(
+                    'entitlement',
+                    'decoy_wallet',
+                  ),
+            );
+            _model.provider =
+                _model.btcpayFinalQuery?.elementAtOrNull(0)?.provider;
+            _model.providerCustomerId =
+                _model.btcpayFinalQuery?.elementAtOrNull(0)?.providerCustomerId;
+            _model.providerSubscriptionId = _model.btcpayFinalQuery
+                ?.elementAtOrNull(0)
+                ?.providerSubscriptionId;
+            _model.isActive =
+                _model.btcpayFinalQuery?.elementAtOrNull(0)?.isActive;
+            _model.pendingProvider =
+                _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingProvider;
+            _model.pendingStartsAt =
+                _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingStartsAt;
+            _model.currentPeriodEnd =
+                _model.btcpayFinalQuery?.elementAtOrNull(0)?.currentPeriodEnd;
+            safeSetState(() {});
+          }
+        }
       }
       _model.trueBranchQue = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
@@ -104,6 +146,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
           _model.trueBranchQue?.elementAtOrNull(0)?.pendingProvider == 'stripe';
       _model.currentPeriodEnd =
           _model.trueBranchQue?.elementAtOrNull(0)?.currentPeriodEnd;
+      _model.pendingProvider =
+          _model.trueBranchQue?.elementAtOrNull(0)?.pendingProvider;
+      _model.pendingStartsAt =
+          _model.trueBranchQue?.elementAtOrNull(0)?.pendingStartsAt;
       safeSetState(() {});
     });
 
@@ -389,153 +435,160 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      if (_model.provider !=
-                                                          'stripe') {
-                                                        _model.apiResultk1h =
-                                                            await CreateBTCPayInvoiceCall
-                                                                .call(
-                                                          currentUserUid:
-                                                              currentUserUid,
-                                                        );
-
-                                                        if ((_model.apiResultk1h
-                                                                ?.succeeded ??
-                                                            true)) {
-                                                          await actions
-                                                              .openExternalUrl(
-                                                            CreateBTCPayInvoiceCall
-                                                                .invoiceUrl(
-                                                              (_model.apiResultk1h
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            )!,
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: FFButtonWidget(
+                                                      onPressed: () async {
+                                                        if (_model.provider !=
+                                                            'stripe') {
+                                                          _model.apiResultk1h =
+                                                              await CreateBTCPayInvoiceCall
+                                                                  .call(
+                                                            currentUserUid:
+                                                                currentUserUid,
                                                           );
-                                                        } else {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            SnackBar(
-                                                              content: Text(
-                                                                'ERROR #018 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryText,
+
+                                                          if ((_model
+                                                                  .apiResultk1h
+                                                                  ?.succeeded ??
+                                                              true)) {
+                                                            await actions
+                                                                .openExternalUrl(
+                                                              CreateBTCPayInvoiceCall
+                                                                  .invoiceUrl(
+                                                                (_model.apiResultk1h
+                                                                        ?.jsonBody ??
+                                                                    ''),
+                                                              )!,
+                                                            );
+                                                          } else {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                  'ERROR #018 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryText,
+                                                                  ),
                                                                 ),
+                                                                duration: Duration(
+                                                                    milliseconds:
+                                                                        4000),
+                                                                backgroundColor:
+                                                                    FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondary,
                                                               ),
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      4000),
-                                                              backgroundColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                            ),
-                                                          );
-                                                        }
-                                                      } else {
-                                                        _model.btcSwitchResult =
-                                                            await ScheduleBtcpaySwitchCall
-                                                                .call(
-                                                          currentUserUid:
-                                                              currentUserUid,
-                                                        );
-
-                                                        _model.fBAPIresult =
-                                                            await CreateBTCPayInvoiceCall
-                                                                .call(
-                                                          currentUserUid:
-                                                              currentUserUid,
-                                                        );
-
-                                                        if ((_model.fBAPIresult
-                                                                ?.succeeded ??
-                                                            true)) {
-                                                          await actions
-                                                              .openExternalUrl(
-                                                            CreateBTCPayInvoiceCall
-                                                                .invoiceUrl(
-                                                              (_model.fBAPIresult
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            )!,
-                                                          );
+                                                            );
+                                                          }
                                                         } else {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            SnackBar(
-                                                              content: Text(
-                                                                'ERROR #027 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryText,
-                                                                ),
-                                                              ),
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      4000),
-                                                              backgroundColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                            ),
+                                                          _model.btcSwitchResult =
+                                                              await ScheduleBtcpaySwitchCall
+                                                                  .call(
+                                                            currentUserUid:
+                                                                currentUserUid,
                                                           );
-                                                        }
-                                                      }
 
-                                                      safeSetState(() {});
-                                                    },
-                                                    text: _model.provider ==
-                                                            'btcpay'
-                                                        ? 'Renew Bitcoin Payments'
-                                                        : 'Switch to Bitcoin Payments',
-                                                    options: FFButtonOptions(
-                                                      width: 250.0,
-                                                      height: 50.0,
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      iconPadding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'robot',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                letterSpacing:
-                                                                    0.25,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
+                                                          _model.fBAPIresult =
+                                                              await CreateBTCPayInvoiceCall
+                                                                  .call(
+                                                            currentUserUid:
+                                                                currentUserUid,
+                                                          );
+
+                                                          if ((_model
+                                                                  .fBAPIresult
+                                                                  ?.succeeded ??
+                                                              true)) {
+                                                            await actions
+                                                                .openExternalUrl(
+                                                              CreateBTCPayInvoiceCall
+                                                                  .invoiceUrl(
+                                                                (_model.fBAPIresult
+                                                                        ?.jsonBody ??
+                                                                    ''),
+                                                              )!,
+                                                            );
+                                                          } else {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                  'ERROR #027 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryText,
+                                                                  ),
+                                                                ),
+                                                                duration: Duration(
+                                                                    milliseconds:
+                                                                        4000),
+                                                                backgroundColor:
+                                                                    FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondary,
                                                               ),
-                                                      elevation: 3.0,
-                                                      borderSide: BorderSide(
+                                                            );
+                                                          }
+                                                        }
+
+                                                        safeSetState(() {});
+                                                      },
+                                                      text: _model.provider ==
+                                                              'btcpay'
+                                                          ? 'Renew Bitcoin Payments'
+                                                          : 'Switch to Bitcoin Payments',
+                                                      options: FFButtonOptions(
+                                                        width: 250.0,
+                                                        height: 50.0,
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        iconPadding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
                                                         color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'robot',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .info,
+                                                                  letterSpacing:
+                                                                      0.25,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                        elevation: 3.0,
+                                                        borderSide: BorderSide(
+                                                          color: Colors
+                                                              .transparent,
+                                                          width: 1.0,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
                                                     ),
                                                   ),
                                                 ].divide(SizedBox(height: 0.0)),

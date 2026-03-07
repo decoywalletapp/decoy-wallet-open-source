@@ -96,36 +96,23 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                             Expanded(
                               child: Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  elevation: 8.0,
-                                  shape: RoundedRectangleBorder(
+                                child: Container(
+                                  width: 400.0,
+                                  height: 150.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).info,
                                     borderRadius: BorderRadius.circular(0.0),
                                   ),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 150.0,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        6.0, 0.0, 0.0, 0.0),
+                                    child: ClipRRect(
                                       borderRadius: BorderRadius.circular(0.0),
-                                      border: Border.all(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          7.0, 0.0, 0.0, 0.0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(0.0),
-                                        child: Image.asset(
-                                          'assets/images/Decoy_Logo-OBHiRes.jpg',
-                                          width: 200.0,
-                                          height: 200.0,
-                                          fit: BoxFit.cover,
-                                        ),
+                                      child: Image.asset(
+                                        'assets/images/DecoyLogo1-WOHiRes.jpg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
@@ -136,7 +123,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    32.0, 64.0, 32.0, 32.0),
+                                    32.0, 32.0, 32.0, 32.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.start,

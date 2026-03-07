@@ -721,9 +721,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.contactsComplete ==
                                                           true
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .success
+                                                      ? Color(0xFF01B400)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
@@ -990,8 +988,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           true,
                                                                       progressColor: functions.computeEmergencyPercent(createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete) ==
                                                                               100
-                                                                          ? FlutterFlowTheme.of(context)
-                                                                              .success
+                                                                          ? Color(
+                                                                              0xFF159A13)
                                                                           : FlutterFlowTheme.of(context)
                                                                               .primary,
                                                                       backgroundColor:

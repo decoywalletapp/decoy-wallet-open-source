@@ -20,12 +20,20 @@ class ManageSubscriptionModel
 
   DateTime? currentPeriodEnd;
 
+  String? pendingProvider;
+
+  DateTime? pendingStartsAt;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.
   List<UserEntitlementsRow>? manageQue;
   // Stores action output result for [Backend Call - API (finalizeStripeSwitch)] action in ManageSubscription widget.
   ApiCallResponse? apiResultlc3;
+  // Stores action output result for [Backend Call - API (finalizeBtcpaySwitch)] action in ManageSubscription widget.
+  ApiCallResponse? btcpayFinalizeResp;
+  // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.
+  List<UserEntitlementsRow>? btcpayFinalQuery;
   // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.
   List<UserEntitlementsRow>? trueBranchQue;
   // Stores action output result for [Backend Call - API (CreateBTCPayInvoice)] action in Button widget.
