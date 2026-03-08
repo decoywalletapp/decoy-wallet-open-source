@@ -203,7 +203,11 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     (_model.entitlementRow1 != null &&
                             (_model.entitlementRow1)!.isNotEmpty) &&
                         (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
-                            true);
+                            true) &&
+                        (_model.entitlementRow1!
+                                .elementAtOrNull(0)!
+                                .currentPeriodEnd! >
+                            getCurrentTimestamp);
                 safeSetState(() {});
                 if (FFAppState().hasActiveSubscription == true) {
                   context.pushNamedAuth(
@@ -241,7 +245,11 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   (_model.entitlementRow2 != null &&
                           (_model.entitlementRow2)!.isNotEmpty) &&
                       (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
-                          true);
+                          true) &&
+                      (_model.entitlementRow2!
+                              .elementAtOrNull(0)!
+                              .currentPeriodEnd! >
+                          getCurrentTimestamp);
               safeSetState(() {});
               if (FFAppState().hasActiveSubscription == true) {
                 context.pushNamedAuth(PINPageWidget.routeName, context.mounted);

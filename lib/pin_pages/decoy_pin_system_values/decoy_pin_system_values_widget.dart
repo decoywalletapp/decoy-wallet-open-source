@@ -155,11 +155,15 @@ class _DecoyPinSystemValuesWidgetState
                                                   _model.pINPoliceTileValue ??=
                                                       FFAppState()
                                                           .decoyPin911Enabled,
-                                              onChanged: (newValue) async {
-                                                safeSetState(() =>
-                                                    _model.pINPoliceTileValue =
-                                                        newValue);
-                                              },
+                                              onChanged: (FFAppState()
+                                                          .hasActiveSubscription ==
+                                                      false)
+                                                  ? null
+                                                  : (newValue) async {
+                                                      safeSetState(() => _model
+                                                              .pINPoliceTileValue =
+                                                          newValue);
+                                                    },
                                               title: Text(
                                                 '911 Trigger',
                                                 style:
@@ -181,7 +185,7 @@ class _DecoyPinSystemValuesWidgetState
                                                         ),
                                               ),
                                               subtitle: Text(
-                                                'Toggle ON to enable DECOY PIN to contact emergency services',
+                                                'COMING SOON !!!',
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodySmall
@@ -193,7 +197,8 @@ class _DecoyPinSystemValuesWidgetState
                                                       color:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .secondaryText,
+                                                              .error,
+                                                      fontSize: 14.0,
                                                       letterSpacing: 0.0,
                                                       fontWeight:
                                                           FontWeight.w500,
@@ -449,11 +454,15 @@ class _DecoyPinSystemValuesWidgetState
                                                       .pINEContactsTileValue ??=
                                                   FFAppState()
                                                       .decoyPinContactsEnabled,
-                                              onChanged: (newValue) async {
-                                                safeSetState(() => _model
-                                                        .pINEContactsTileValue =
-                                                    newValue);
-                                              },
+                                              onChanged: (FFAppState()
+                                                          .hasActiveSubscription ==
+                                                      false)
+                                                  ? null
+                                                  : (newValue) async {
+                                                      safeSetState(() => _model
+                                                              .pINEContactsTileValue =
+                                                          newValue);
+                                                    },
                                               title: Text(
                                                 'Emergency Contacts Trigger',
                                                 style:

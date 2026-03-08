@@ -354,7 +354,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               ),
                                         ),
                                         subtitle: Text(
-                                          'Toggle ON to enable DECOY PIN to contact emergency services',
+                                          'COMING SOON !!!',
                                           style: FlutterFlowTheme.of(context)
                                               .bodySmall
                                               .override(
@@ -363,8 +363,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         .bodySmallFamily,
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                fontSize: 12.0,
+                                                        .error,
+                                                fontSize: 14.0,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w500,
                                                 useGoogleFonts:

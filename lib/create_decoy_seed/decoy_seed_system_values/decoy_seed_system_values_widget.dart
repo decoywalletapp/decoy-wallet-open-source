@@ -324,11 +324,15 @@ class _DecoySeedSystemValuesWidgetState
                                             value: _model
                                                     .seedMonitorArmTileValue ??=
                                                 FFAppState().decoySeedArmed,
-                                            onChanged: (newValue) async {
-                                              safeSetState(() => _model
-                                                      .seedMonitorArmTileValue =
-                                                  newValue);
-                                            },
+                                            onChanged: (FFAppState()
+                                                        .hasActiveSubscription ==
+                                                    false)
+                                                ? null
+                                                : (newValue) async {
+                                                    safeSetState(() => _model
+                                                            .seedMonitorArmTileValue =
+                                                        newValue);
+                                                  },
                                             title: Text(
                                               'Seed Phrase Monitor',
                                               style: FlutterFlowTheme.of(

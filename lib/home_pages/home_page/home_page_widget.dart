@@ -61,9 +61,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         safeSetState(() {});
         if ((_model.entitlementRow != null &&
                 (_model.entitlementRow)!.isNotEmpty) &&
-            ((_model.entitlementRow?.elementAtOrNull(0)?.isActive == true) ||
-                (_model.entitlementRow?.elementAtOrNull(0)?.providerStatus ==
-                    'settled'))) {
+            (_model.entitlementRow?.elementAtOrNull(0)?.isActive == true) &&
+            (_model.entitlementRow!.elementAtOrNull(0)!.currentPeriodEnd! >
+                getCurrentTimestamp)) {
           FFAppState().hasActiveSubscription = true;
           safeSetState(() {});
         } else {
