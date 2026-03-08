@@ -235,6 +235,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                               fontFamily:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMediumFamily,
+                                              fontSize: 14.0,
                                               letterSpacing: 0.25,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)

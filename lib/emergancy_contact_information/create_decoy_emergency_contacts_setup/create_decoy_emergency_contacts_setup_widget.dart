@@ -320,7 +320,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.personalComplete ==
                                                           true
-                                                      ? Color(0xFF159A13)
+                                                      ? Color(0xFF0CD40B)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
@@ -468,7 +468,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.personalComplete ==
                                                           true
-                                                      ? Color(0xFF159A13)
+                                                      ? Color(0xFF0CD40B)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
@@ -521,7 +521,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.addressComplete ==
                                                           true
-                                                      ? Color(0xFF159A13)
+                                                      ? Color(0xFF0CD40B)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
@@ -668,7 +668,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.addressComplete ==
                                                           true
-                                                      ? Color(0xFF159A13)
+                                                      ? Color(0xFF0CD40B)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
@@ -868,7 +868,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                   createDecoyEmergencyContactsSetupDecoyWalletRow
                                                               ?.contactsComplete ==
                                                           true
-                                                      ? Color(0xFF159A13)
+                                                      ? Color(0xFF0CD40B)
                                                       : FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
@@ -989,7 +989,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       progressColor: functions.computeEmergencyPercent(createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete) ==
                                                                               100
                                                                           ? Color(
-                                                                              0xFF159A13)
+                                                                              0xFF0CD40B)
                                                                           : FlutterFlowTheme.of(context)
                                                                               .primary,
                                                                       backgroundColor:
@@ -1023,7 +1023,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           color:
                                                                               valueOrDefault<Color>(
                                                                             (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true)
-                                                                                ? Color(0xFF159A13)
+                                                                                ? Color(0xFF0CD40B)
                                                                                 : FlutterFlowTheme.of(context).primary,
                                                                             FlutterFlowTheme.of(context).primary,
                                                                           ),
@@ -1085,8 +1085,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                                   true) &&
                                                                               (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete ==
                                                                                   true)
-                                                                          ? FlutterFlowTheme.of(context)
-                                                                              .success
+                                                                          ? Color(
+                                                                              0xFF0CD40B)
                                                                           : FlutterFlowTheme.of(context)
                                                                               .primaryText,
                                                                       FlutterFlowTheme.of(

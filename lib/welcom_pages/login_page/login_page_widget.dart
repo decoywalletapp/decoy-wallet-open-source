@@ -216,7 +216,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                           fontFamily: 'robot',
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryText,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -285,7 +285,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                           fontFamily: 'robot',
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryText,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           letterSpacing: 0.25,
                                           fontWeight: FontWeight.w500,
                                         ),

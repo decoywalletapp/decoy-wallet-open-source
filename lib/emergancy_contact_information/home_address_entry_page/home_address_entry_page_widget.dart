@@ -329,6 +329,7 @@ class _HomeAddressEntryPageWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
+                                            fontSize: 16.0,
                                             letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
@@ -453,6 +454,7 @@ class _HomeAddressEntryPageWidgetState
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .primaryText,
+                                                  fontSize: 16.0,
                                                   letterSpacing: 0.25,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
@@ -578,6 +580,7 @@ class _HomeAddressEntryPageWidgetState
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .primaryText,
+                                                  fontSize: 16.0,
                                                   letterSpacing: 0.25,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
@@ -728,6 +731,7 @@ class _HomeAddressEntryPageWidgetState
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .primaryText,
+                                                  fontSize: 16.0,
                                                   letterSpacing: 0.25,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
@@ -853,6 +857,7 @@ class _HomeAddressEntryPageWidgetState
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .primaryText,
+                                                  fontSize: 16.0,
                                                   letterSpacing: 0.25,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
@@ -962,6 +967,7 @@ class _HomeAddressEntryPageWidgetState
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
+                                            fontSize: 16.0,
                                             letterSpacing: 0.25,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)

@@ -523,6 +523,7 @@ class _PhoneNumberVerificationWidgetState
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .labelMediumFamily,
+                                                        fontSize: 16.0,
                                                         letterSpacing: 0.25,
                                                         useGoogleFonts:
                                                             !FlutterFlowTheme

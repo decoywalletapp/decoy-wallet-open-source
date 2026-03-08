@@ -998,6 +998,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -1119,6 +1120,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -1277,6 +1279,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -1581,6 +1584,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               FlutterFlowTheme.of(
                                                                       context)
                                                                   .bodyMediumFamily,
+                                                          fontSize: 16.0,
                                                           letterSpacing: 0.25,
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
@@ -1699,6 +1703,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               FlutterFlowTheme.of(
                                                                       context)
                                                                   .bodyMediumFamily,
+                                                          fontSize: 16.0,
                                                           letterSpacing: 0.25,
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
@@ -1853,6 +1858,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               FlutterFlowTheme.of(
                                                                       context)
                                                                   .bodyMediumFamily,
+                                                          fontSize: 16.0,
                                                           letterSpacing: 0.25,
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
@@ -2119,6 +2125,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -2240,6 +2247,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -2398,6 +2406,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -2636,6 +2645,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -2757,6 +2767,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -2915,6 +2926,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -3122,6 +3134,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -3243,6 +3256,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -3401,6 +3415,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMediumFamily,
+                                                            fontSize: 16.0,
                                                             letterSpacing: 0.25,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
