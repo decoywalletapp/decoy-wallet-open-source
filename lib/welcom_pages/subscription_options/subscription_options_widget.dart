@@ -95,7 +95,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                 '__transition_info__': TransitionInfo(
                                   hasTransition: true,
                                   transitionType:
-                                      PageTransitionType.leftToRight,
+                                      PageTransitionType.rightToLeft,
                                 ),
                               },
                             );
@@ -105,8 +105,8 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                               extra: <String, dynamic>{
                                 '__transition_info__': TransitionInfo(
                                   hasTransition: true,
-                                  transitionType: PageTransitionType.fade,
-                                  duration: Duration(milliseconds: 0),
+                                  transitionType:
+                                      PageTransitionType.rightToLeft,
                                 ),
                               },
                             );

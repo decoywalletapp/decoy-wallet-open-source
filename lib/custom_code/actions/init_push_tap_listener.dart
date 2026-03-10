@@ -34,10 +34,12 @@ Future<String?> initPushTapListener(BuildContext context) async {
 
     if (!_pushTapListenerInitialized) {
       _pushTapListenerInitialized = true;
+
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        // We cannot return from a listener. This path will be handled
-        // by calling getInitialMessage on next cold start, OR you can
-        // run a second custom action on AuthRouter that checks again.
+        final route = _routeFromMessage(message);
+        if (route == 'renew_btcpay') {
+          FFAppState().openRenewalFromPush = true;
+        }
       });
     }
 

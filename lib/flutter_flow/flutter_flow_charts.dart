@@ -14,6 +14,8 @@ class FlutterFlowLineChart extends StatelessWidget {
     required this.xAxisLabelInfo,
     required this.yAxisLabelInfo,
     required this.axisBounds,
+    this.xLabels,
+    this.yLabels,
     this.chartStylingInfo = const ChartStylingInfo(),
   }) : super(key: key);
 
@@ -21,6 +23,8 @@ class FlutterFlowLineChart extends StatelessWidget {
   final AxisLabelInfo xAxisLabelInfo;
   final AxisLabelInfo yAxisLabelInfo;
   final AxisBounds axisBounds;
+  final List<String>? xLabels;
+  final List<String>? yLabels;
   final ChartStylingInfo chartStylingInfo;
 
   List<LineChartBarData> get dataWithSpots =>
@@ -36,7 +40,15 @@ class FlutterFlowLineChart extends StatelessWidget {
                   chartStylingInfo.tooltipBackgroundColor ?? Colors.black,
             ),
           ),
-          gridData: FlGridData(show: chartStylingInfo.showGrid),
+          gridData: FlGridData(
+            show: chartStylingInfo.showGrid,
+            getDrawingHorizontalLine: chartStylingInfo.gridColor != null
+                ? (value) => FlLine(color: chartStylingInfo.gridColor!)
+                : defaultGridLine,
+            getDrawingVerticalLine: chartStylingInfo.gridColor != null
+                ? (value) => FlLine(color: chartStylingInfo.gridColor!)
+                : defaultGridLine,
+          ),
           borderData: FlBorderData(
             border: Border.all(
               color: chartStylingInfo.borderColor,
@@ -47,6 +59,34 @@ class FlutterFlowLineChart extends StatelessWidget {
           titlesData: getTitlesData(
             xAxisLabelInfo,
             yAxisLabelInfo,
+            getXTitlesWidget: xLabels != null
+                ? (val, _) {
+                    final idx = val.toInt();
+                    if (idx >= 0 &&
+                        idx < xLabels!.length &&
+                        val == idx.toDouble()) {
+                      return Text(
+                        xLabels![idx],
+                        style: xAxisLabelInfo.labelTextStyle,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }
+                : null,
+            getYTitlesWidget: yLabels != null
+                ? (val, _) {
+                    final idx = val.toInt();
+                    if (idx >= 0 &&
+                        idx < yLabels!.length &&
+                        val == idx.toDouble()) {
+                      return Text(
+                        yLabels![idx],
+                        style: yAxisLabelInfo.labelTextStyle,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }
+                : null,
           ),
           lineBarsData: dataWithSpots,
           minX: axisBounds.minX,
@@ -88,8 +128,17 @@ class FlutterFlowBarChart extends StatelessWidget {
   final BarChartAlignment alignment;
   final ChartStylingInfo chartStylingInfo;
 
-  Map<int, List<double>> get dataMap => xLabels.asMap().map((key, value) =>
-      MapEntry(key, barData.map((data) => data.data[key]).toList()));
+  Map<int, List<double>> get dataMap {
+    final safeLength = barData.isEmpty
+        ? xLabels.length
+        : min(xLabels.length, barData.map((d) => d.data.length).reduce(min));
+    return Map.fromEntries(
+      Iterable.generate(
+        safeLength,
+        (key) => MapEntry(key, barData.map((data) => data.data[key]).toList()),
+      ),
+    );
+  }
 
   List<BarChartGroupData> get groups => dataMap.entries.map((entry) {
         final groupInt = entry.key;
@@ -103,7 +152,8 @@ class FlutterFlowBarChart extends StatelessWidget {
               final rodValue = rod.value;
               return BarChartRodData(
                 toY: rodValue,
-                color: rodSettings.color,
+                color: rodSettings.gradient != null ? null : rodSettings.color,
+                gradient: rodSettings.gradient,
                 width: barWidth,
                 borderRadius: barBorderRadius,
                 borderSide: BorderSide(
@@ -159,7 +209,15 @@ class FlutterFlowBarChart extends StatelessWidget {
           ),
         ),
         alignment: alignment,
-        gridData: FlGridData(show: chartStylingInfo.showGrid),
+        gridData: FlGridData(
+          show: chartStylingInfo.showGrid,
+          getDrawingHorizontalLine: chartStylingInfo.gridColor != null
+              ? (value) => FlLine(color: chartStylingInfo.gridColor!)
+              : defaultGridLine,
+          getDrawingVerticalLine: chartStylingInfo.gridColor != null
+              ? (value) => FlLine(color: chartStylingInfo.gridColor!)
+              : defaultGridLine,
+        ),
         borderData: FlBorderData(
           border: Border.all(
             color: chartStylingInfo.borderColor,
@@ -170,10 +228,16 @@ class FlutterFlowBarChart extends StatelessWidget {
         titlesData: getTitlesData(
           xAxisLabelInfo,
           yAxisLabelInfo,
-          getXTitlesWidget: (val, _) => Text(
-            xLabels[val.toInt()],
-            style: xAxisLabelInfo.labelTextStyle,
-          ),
+          getXTitlesWidget: (val, _) {
+            final idx = val.toInt();
+            if (idx >= 0 && idx < xLabels.length) {
+              return Text(
+                xLabels[idx],
+                style: xAxisLabelInfo.labelTextStyle,
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
         barGroups: stacked ? stacks : groups,
         groupsSpace: groupSpace,
@@ -200,6 +264,9 @@ class FlutterFlowPieChart extends StatelessWidget {
     this.sectionLabelType = PieChartSectionLabelType.none,
     this.sectionLabelStyle,
     this.labelFormatter = const LabelFormatter(),
+    this.sectionsSpace = 0,
+    this.startDegreeOffset = 0,
+    this.labelPositionOffset,
   }) : super(key: key);
 
   final FFPieChartData data;
@@ -208,15 +275,20 @@ class FlutterFlowPieChart extends StatelessWidget {
   final PieChartSectionLabelType sectionLabelType;
   final TextStyle? sectionLabelStyle;
   final LabelFormatter labelFormatter;
+  final double sectionsSpace;
+  final double startDegreeOffset;
+  final double? labelPositionOffset;
 
-  double get sumOfValues => data.data.reduce((a, b) => a + b);
+  double get sumOfValues =>
+      data.data.isEmpty ? 0.0 : data.data.reduce((a, b) => a + b);
 
   @override
   Widget build(BuildContext context) => PieChart(
         PieChartData(
           centerSpaceRadius: donutHoleRadius,
           centerSpaceColor: donutHoleColor,
-          sectionsSpace: 0,
+          sectionsSpace: sectionsSpace,
+          startDegreeOffset: startDegreeOffset,
           sections: data.data.asMap().entries.map(
             (section) {
               String? title;
@@ -229,30 +301,40 @@ class FlutterFlowPieChart extends StatelessWidget {
                   title = formatLabel(labelFormatter, sectionData);
                   break;
                 case PieChartSectionLabelType.percent:
-                  title =
-                      '${formatLabel(labelFormatter, sectionData / sumOfValues * 100)}%';
+                  title = sumOfValues == 0
+                      ? '0%'
+                      : '${formatLabel(labelFormatter, sectionData / sumOfValues * 100)}%';
                   break;
                 default:
                   break;
               }
               return PieChartSectionData(
                 value: sectionData,
-                color: data.colors[index % colorsLength],
-                radius: otherPropsLength == 1
-                    ? data.radius.first
-                    : data.radius[index],
+                color: colorsLength == 0
+                    ? Colors.grey
+                    : data.colors[index % colorsLength],
+                radius: otherPropsLength == 0
+                    ? 50.0
+                    : otherPropsLength == 1
+                        ? data.radius.first
+                        : data.radius[index % otherPropsLength],
                 borderSide: BorderSide(
                   color: (otherPropsLength == 1
                           ? data.borderColor?.first
-                          : data.borderColor?.elementAt(index)) ??
+                          : index < (data.borderColor?.length ?? 0)
+                              ? data.borderColor![index]
+                              : null) ??
                       Colors.transparent,
                   width: (otherPropsLength == 1
                           ? data.borderWidth?.first
-                          : data.borderWidth?.elementAt(index)) ??
+                          : index < (data.borderWidth?.length ?? 0)
+                              ? data.borderWidth![index]
+                              : null) ??
                       0.0,
                 ),
                 showTitle: sectionLabelType != PieChartSectionLabelType.none,
                 titleStyle: sectionLabelStyle,
+                titlePositionPercentageOffset: labelPositionOffset ?? 0.5,
                 title: title,
               );
             },
@@ -343,6 +425,7 @@ class ChartStylingInfo {
   const ChartStylingInfo({
     this.backgroundColor = Colors.white,
     this.showGrid = false,
+    this.gridColor,
     this.enableTooltip = false,
     this.tooltipBackgroundColor,
     this.borderColor = Colors.black,
@@ -352,6 +435,7 @@ class ChartStylingInfo {
 
   final Color backgroundColor;
   final bool showGrid;
+  final Color? gridColor;
   final bool enableTooltip;
   final Color? tooltipBackgroundColor;
   final Color borderColor;
@@ -411,7 +495,6 @@ class FFLineChartData {
   List<FlSpot> get spots {
     final x = _dataToDouble(xData);
     final y = _dataToDouble(yData);
-    assert(x.length == y.length, 'X and Y data must be the same length');
 
     return Iterable<int>.generate(min(x.length, y.length))
         .where((i) => x[i] != null && y[i] != null)
@@ -426,12 +509,14 @@ class FFBarChartData {
     required this.color,
     this.borderWidth = 0,
     this.borderColor = Colors.transparent,
+    this.gradient,
   });
 
   final List<dynamic> yData;
   final Color color;
   final double borderWidth;
   final Color borderColor;
+  final LinearGradient? gradient;
 
   List<double> get data => _dataToDouble(yData).map((e) => e ?? 0.0).toList();
 }
@@ -491,6 +576,7 @@ FlTitlesData getTitlesData(
   AxisLabelInfo xAxisLabelInfo,
   AxisLabelInfo yAxisLabelInfo, {
   Widget Function(double, TitleMeta)? getXTitlesWidget,
+  Widget Function(double, TitleMeta)? getYTitlesWidget,
 }) =>
     FlTitlesData(
       bottomTitles: AxisTitles(
@@ -528,10 +614,12 @@ FlTitlesData getTitlesData(
             ? yAxisLabelInfo.titleTextStyle!.fontSize! + 12
             : 16,
         sideTitles: SideTitles(
-          getTitlesWidget: (val, _) => Text(
-            formatLabel(yAxisLabelInfo.labelFormatter, val),
-            style: yAxisLabelInfo.labelTextStyle,
-          ),
+          getTitlesWidget: (val, meta) => getYTitlesWidget != null
+              ? getYTitlesWidget(val, meta)
+              : Text(
+                  formatLabel(yAxisLabelInfo.labelFormatter, val),
+                  style: yAxisLabelInfo.labelTextStyle,
+                ),
           showTitles: yAxisLabelInfo.showLabels,
           interval: yAxisLabelInfo.labelInterval,
           reservedSize: yAxisLabelInfo.reservedSize ?? 22,
