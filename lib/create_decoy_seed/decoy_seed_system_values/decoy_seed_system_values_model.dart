@@ -7,8 +7,18 @@ import 'package:flutter/material.dart';
 
 class DecoySeedSystemValuesModel
     extends FlutterFlowModel<DecoySeedSystemValuesWidget> {
+  ///  Local state fields for this page.
+
+  String? entDSprovider;
+
+  String? entDSProviderStatus;
+
+  bool? entDSactive;
+
   ///  State fields for stateful widgets in this page.
 
+  // Stores action output result for [Backend Call - Query Rows] action in DecoySeedSystemValues widget.
+  List<UserEntitlementsRow>? entitlementSeedVal;
   // State field(s) for SeedMonitorArmTile widget.
   bool? seedMonitorArmTileValue;
   // Stores action output result for [Backend Call - API (commitDecoy)] action in Button widget.

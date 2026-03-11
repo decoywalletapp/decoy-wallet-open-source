@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'decoy_pin_system_values_model.dart';
 export 'decoy_pin_system_values_model.dart';
@@ -34,6 +35,28 @@ class _DecoyPinSystemValuesWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => DecoyPinSystemValuesModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.entitlementRowDPINVal = await UserEntitlementsTable().queryRows(
+        queryFn: (q) => q
+            .eqOrNull(
+              'user_id',
+              currentUserUid,
+            )
+            .eqOrNull(
+              'entitlement',
+              'decoy_wallet',
+            ),
+      );
+      _model.entProvider =
+          _model.entitlementRowDPINVal?.elementAtOrNull(0)?.provider;
+      _model.entProviderStatus =
+          _model.entitlementRowDPINVal?.elementAtOrNull(0)?.providerStatus;
+      _model.entIsActive =
+          _model.entitlementRowDPINVal?.elementAtOrNull(0)?.isActive;
+      safeSetState(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -896,10 +919,18 @@ class _DecoyPinSystemValuesWidgetState
                               ),
                             );
 
-                            context.pushNamed(HomePageWidget.routeName);
+                            context.goNamed(HomePageWidget.routeName);
                           } else {
-                            context
-                                .goNamed(SubscriptionOptionsWidget.routeName);
+                            if ((_model.entProvider == 'btcpay') &&
+                                (_model.entIsActive == false) &&
+                                ((_model.entProviderStatus == 'received') ||
+                                    (_model.entProviderStatus ==
+                                        'processing'))) {
+                              context.goNamed(HomePageWidget.routeName);
+                            } else {
+                              context
+                                  .goNamed(SubscriptionOptionsWidget.routeName);
+                            }
                           }
 
                           safeSetState(() {});

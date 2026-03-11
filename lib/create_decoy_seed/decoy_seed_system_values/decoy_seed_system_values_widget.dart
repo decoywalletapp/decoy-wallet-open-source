@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'decoy_seed_system_values_model.dart';
 export 'decoy_seed_system_values_model.dart';
@@ -35,6 +36,28 @@ class _DecoySeedSystemValuesWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => DecoySeedSystemValuesModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.entitlementSeedVal = await UserEntitlementsTable().queryRows(
+        queryFn: (q) => q
+            .eqOrNull(
+              'user_id',
+              currentUserUid,
+            )
+            .eqOrNull(
+              'entitlement',
+              'decoy_wallet',
+            ),
+      );
+      _model.entDSprovider =
+          _model.entitlementSeedVal?.elementAtOrNull(0)?.provider;
+      _model.entDSProviderStatus =
+          _model.entitlementSeedVal?.elementAtOrNull(0)?.providerStatus;
+      _model.entDSactive =
+          _model.entitlementSeedVal?.elementAtOrNull(0)?.isActive;
+      safeSetState(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -784,7 +807,7 @@ class _DecoySeedSystemValuesWidgetState
                               FFAppState().draftDerivationPath = '';
                               safeSetState(() {});
 
-                              context.pushNamed(HomePageWidget.routeName);
+                              context.goNamed(HomePageWidget.routeName);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -802,8 +825,16 @@ class _DecoySeedSystemValuesWidgetState
                               );
                             }
                           } else {
-                            context
-                                .goNamed(SubscriptionOptionsWidget.routeName);
+                            if ((_model.entDSprovider == 'btcpay') &&
+                                (_model.entDSactive == false) &&
+                                ((_model.entDSProviderStatus == 'received') ||
+                                    (_model.entDSProviderStatus ==
+                                        'processing'))) {
+                              context.goNamed(HomePageWidget.routeName);
+                            } else {
+                              context
+                                  .goNamed(SubscriptionOptionsWidget.routeName);
+                            }
                           }
 
                           safeSetState(() {});
