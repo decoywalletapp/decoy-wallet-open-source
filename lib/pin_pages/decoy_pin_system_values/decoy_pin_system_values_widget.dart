@@ -56,6 +56,17 @@ class _DecoyPinSystemValuesWidgetState
       _model.entIsActive =
           _model.entitlementRowDPINVal?.elementAtOrNull(0)?.isActive;
       safeSetState(() {});
+      if ((_model.entitlementRowDPINVal != null &&
+              (_model.entitlementRowDPINVal)!.isNotEmpty) &&
+          (_model.entIsActive == true) &&
+          (_model.entitlementRowDPINVal!.elementAtOrNull(0)!.currentPeriodEnd! >
+              getCurrentTimestamp)) {
+        FFAppState().hasActiveSubscription = true;
+        safeSetState(() {});
+      } else {
+        FFAppState().hasActiveSubscription = false;
+        safeSetState(() {});
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

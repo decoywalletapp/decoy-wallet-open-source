@@ -57,6 +57,17 @@ class _DecoySeedSystemValuesWidgetState
       _model.entDSactive =
           _model.entitlementSeedVal?.elementAtOrNull(0)?.isActive;
       safeSetState(() {});
+      if ((_model.entitlementSeedVal != null &&
+              (_model.entitlementSeedVal)!.isNotEmpty) &&
+          (_model.entDSactive == true) &&
+          (_model.entitlementSeedVal!.elementAtOrNull(0)!.currentPeriodEnd! >
+              getCurrentTimestamp)) {
+        FFAppState().hasActiveSubscription = true;
+        safeSetState(() {});
+      } else {
+        FFAppState().hasActiveSubscription = false;
+        safeSetState(() {});
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

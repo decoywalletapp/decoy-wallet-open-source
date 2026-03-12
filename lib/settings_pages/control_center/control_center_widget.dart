@@ -71,6 +71,33 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       FFAppState().locationEnabled =
           _model.decoyWalletRow!.elementAtOrNull(0)!.useCurrentLocation;
       safeSetState(() {});
+      _model.ctrlOutputEntitlements = await UserEntitlementsTable().queryRows(
+        queryFn: (q) => q
+            .eqOrNull(
+              'user_id',
+              currentUserUid,
+            )
+            .eqOrNull(
+              'entitlement',
+              'decoy_wallet',
+            ),
+      );
+      _model.entIsActive =
+          _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.isActive;
+      safeSetState(() {});
+      if ((_model.ctrlOutputEntitlements != null &&
+              (_model.ctrlOutputEntitlements)!.isNotEmpty) &&
+          (_model.entIsActive == true) &&
+          (_model.ctrlOutputEntitlements!
+                  .elementAtOrNull(0)!
+                  .currentPeriodEnd! >
+              getCurrentTimestamp)) {
+        FFAppState().hasActiveSubscription = true;
+        safeSetState(() {});
+      } else {
+        FFAppState().hasActiveSubscription = false;
+        safeSetState(() {});
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

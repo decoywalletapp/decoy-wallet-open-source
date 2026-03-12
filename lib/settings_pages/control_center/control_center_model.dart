@@ -9,10 +9,14 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
 
   bool wantsBiometrics = false;
 
+  bool? entIsActive;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ControlCenter widget.
   List<DecoyWalletRow>? decoyWalletRow;
+  // Stores action output result for [Backend Call - Query Rows] action in ControlCenter widget.
+  List<UserEntitlementsRow>? ctrlOutputEntitlements;
   // State field(s) for PINPoliceTile widget.
   bool? pINPoliceTileValue;
   // State field(s) for PINEContactsTile widget.
