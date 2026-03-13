@@ -359,10 +359,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       color: Colors.transparent,
                                       child: SwitchListTile(
                                         value: _model.pINPoliceTileValue ??=
-                                            FFAppState().decoyPin911Enabled,
-                                        onChanged: (FFAppState()
-                                                    .hasActiveSubscription ==
-                                                false)
+                                            false,
+                                        onChanged: true
                                             ? null
                                             : (newValue) async {
                                                 safeSetState(() =>

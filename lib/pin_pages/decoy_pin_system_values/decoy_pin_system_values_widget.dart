@@ -185,13 +185,9 @@ class _DecoyPinSystemValuesWidgetState
                                           Material(
                                             color: Colors.transparent,
                                             child: SwitchListTile(
-                                              value:
-                                                  _model.pINPoliceTileValue ??=
-                                                      FFAppState()
-                                                          .decoyPin911Enabled,
-                                              onChanged: (FFAppState()
-                                                          .hasActiveSubscription ==
-                                                      false)
+                                              value: _model
+                                                  .pINPoliceTileValue ??= false,
+                                              onChanged: true
                                                   ? null
                                                   : (newValue) async {
                                                       safeSetState(() => _model
