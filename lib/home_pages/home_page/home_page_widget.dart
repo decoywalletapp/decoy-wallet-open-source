@@ -905,8 +905,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       child: FFButtonWidget(
                                         onPressed: () async {
                                           context.pushNamed(
-                                              SubscriptionOptionsWidget
-                                                  .routeName);
+                                            SubscriptionOptionsWidget.routeName,
+                                            extra: <String, dynamic>{
+                                              '__transition_info__':
+                                                  TransitionInfo(
+                                                hasTransition: true,
+                                                transitionType:
+                                                    PageTransitionType
+                                                        .bottomToTop,
+                                              ),
+                                            },
+                                          );
                                         },
                                         text: 'Unlock Decoy Wallet',
                                         options: FFButtonOptions(

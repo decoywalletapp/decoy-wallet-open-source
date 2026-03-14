@@ -1705,7 +1705,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     color: Colors.transparent,
                                     child: SwitchListTile(
                                       value: _model.pushNotifTileValue ??=
-                                          FFAppState().biometricsEnabled,
+                                          FFAppState().pushEnabled,
                                       onChanged: (FFAppState()
                                                   .hasActiveSubscription ==
                                               false)
@@ -1898,7 +1898,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               child: Stack(
                                                 children: [
                                                   if (FFAppState()
-                                                          .biometricsEnabled ==
+                                                          .pushEnabled ==
                                                       true)
                                                     Align(
                                                       alignment:
@@ -1932,7 +1932,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                       ),
                                                     ),
                                                   if (FFAppState()
-                                                          .biometricsEnabled ==
+                                                          .pushEnabled ==
                                                       false)
                                                     Align(
                                                       alignment:
@@ -2386,6 +2386,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                   currentUserLocationValue;
                                               FFAppState().biometricsEnabled =
                                                   _model.bioSwitchTileValue!;
+                                              FFAppState().pushEnabled =
+                                                  _model.pushNotifTileValue!;
                                               safeSetState(() {});
                                               await DecoyWalletTable().update(
                                                 data: {
@@ -2421,6 +2423,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                   'location_enabled':
                                                       FFAppState()
                                                           .locationEnabled,
+                                                  'push_enabled':
+                                                      FFAppState().pushEnabled,
                                                 },
                                                 matchingRows: (rows) =>
                                                     rows.eqOrNull(
@@ -2479,6 +2483,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                   FFAppState()
                                                           .lastKnownLocation =
                                                       currentUserLocationValue;
+                                                  FFAppState().pushEnabled =
+                                                      _model
+                                                          .pushNotifTileValue!;
                                                   safeSetState(() {});
                                                   await DecoyWalletTable()
                                                       .update(
@@ -2516,6 +2523,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                       'location_enabled':
                                                           FFAppState()
                                                               .locationEnabled,
+                                                      'push_enabled':
+                                                          FFAppState()
+                                                              .pushEnabled,
                                                     },
                                                     matchingRows: (rows) =>
                                                         rows.eqOrNull(
@@ -2566,6 +2576,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                   FFAppState()
                                                           .lastKnownLocation =
                                                       currentUserLocationValue;
+                                                  FFAppState().pushEnabled =
+                                                      _model
+                                                          .pushNotifTileValue!;
                                                   safeSetState(() {});
                                                   await DecoyWalletTable()
                                                       .update(
@@ -2603,6 +2616,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                       'location_enabled':
                                                           FFAppState()
                                                               .locationEnabled,
+                                                      'push_enabled':
+                                                          FFAppState()
+                                                              .pushEnabled,
                                                     },
                                                     matchingRows: (rows) =>
                                                         rows.eqOrNull(
@@ -2636,6 +2652,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         .locationSwitchTileValue!;
                                                 FFAppState().lastKnownLocation =
                                                     currentUserLocationValue;
+                                                FFAppState().pushEnabled =
+                                                    _model.pushNotifTileValue!;
                                                 safeSetState(() {});
                                                 await DecoyWalletTable().update(
                                                   data: {
@@ -2672,6 +2690,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     'location_enabled':
                                                         FFAppState()
                                                             .locationEnabled,
+                                                    'push_enabled': FFAppState()
+                                                        .pushEnabled,
                                                   },
                                                   matchingRows: (rows) =>
                                                       rows.eqOrNull(
