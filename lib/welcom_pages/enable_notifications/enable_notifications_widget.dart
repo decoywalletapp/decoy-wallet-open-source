@@ -111,7 +111,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Text(
-                              'DecoyWallet uses notifications for critical security alerts and subscription reminders',
+                              'Decoy Wallet uses notifications for critical security alerts and subscription reminders',
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -160,36 +160,15 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                 color: Colors.transparent,
                                 child: SwitchListTile(
                                   value: _model.switchListTileValue ??=
-                                      FFAppState().pushEnabled,
+                                      _model.pushEnabledDraft,
                                   onChanged: (newValue) async {
                                     safeSetState(() =>
                                         _model.switchListTileValue = newValue);
                                     if (newValue) {
-                                      _model.pushTokenResult = await actions
-                                          .requestPushPermissionAndGetToken();
-                                      _model.pushTokenResultPS =
-                                          _model.pushTokenResult!;
-                                      safeSetState(() {});
-                                      if ((_model.pushTokenResultPS != '') &&
-                                          (_model.pushTokenResultPS !=
-                                              'PERMISSION_DENIED') &&
-                                          (_model.pushTokenResultPS !=
-                                              'APNS_NULL') &&
-                                          (_model.pushTokenResultPS !=
-                                              'FCM_NULL')) {
-                                        _model.pushEnabledDraft = true;
-                                        safeSetState(() {});
-                                      } else {
-                                        _model.pushEnabledDraft = false;
-                                        _model.pushTokenResultPS = '';
-                                        safeSetState(() {});
-                                      }
-
+                                      _model.pushEnabledDraft = true;
                                       safeSetState(() {});
                                     } else {
                                       _model.pushEnabledDraft = false;
-                                      _model.pushTokenResultPS = '';
-                                      safeSetState(() {});
                                       safeSetState(() {});
                                     }
                                   },
@@ -368,8 +347,84 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                         visible: _model.pushEnabledDraft,
                         child: FFButtonWidget(
                           onPressed: () async {
-                            FFAppState().pushEnabled = _model.pushEnabledDraft;
-                            safeSetState(() {});
+                            if (_model.pushEnabledDraft == true) {
+                              _model.pushTokenResult = await actions
+                                  .requestPushPermissionAndGetToken();
+                              _model.pushTokenResultPS =
+                                  _model.pushTokenResult!;
+                              safeSetState(() {});
+                              if ((_model.pushTokenResultPS != '') &&
+                                  (_model.pushTokenResultPS !=
+                                      'PERMISSION_DENIED') &&
+                                  (_model.pushTokenResultPS != 'APNS_NULL') &&
+                                  (_model.pushTokenResultPS != 'FCM_NULL')) {
+                                FFAppState().pushEnabled = true;
+                                safeSetState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.pushTokenResult!,
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'true',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                              } else {
+                                FFAppState().pushEnabled = false;
+                                safeSetState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.pushTokenResult!,
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'false',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                              }
+                            } else {
+                              FFAppState().pushEnabled = false;
+                              safeSetState(() {});
+                            }
+
                             _model.userSettingsRows =
                                 await UserSettingsTable().queryRows(
                               queryFn: (q) => q.eqOrNull(

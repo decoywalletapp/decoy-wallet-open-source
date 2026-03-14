@@ -405,20 +405,6 @@ class _BiometricVerificationWidgetState
                               } else {
                                 FFAppState().biometricsEnabled = false;
                                 safeSetState(() {});
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'ERROR #022 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
                               }
                             } else {
                               FFAppState().biometricsEnabled = false;

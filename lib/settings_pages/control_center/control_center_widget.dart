@@ -679,7 +679,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         .bodySmallFamily,
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .secondaryText,
+                                                        .success,
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w500,
                                                 useGoogleFonts:

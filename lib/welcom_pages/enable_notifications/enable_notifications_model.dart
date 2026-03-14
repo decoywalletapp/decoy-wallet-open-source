@@ -16,7 +16,7 @@ class EnableNotificationsModel
 
   // State field(s) for SwitchListTile widget.
   bool? switchListTileValue;
-  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in SwitchListTile widget.
+  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in Button widget.
   String? pushTokenResult;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<UserSettingsRow>? userSettingsRows;

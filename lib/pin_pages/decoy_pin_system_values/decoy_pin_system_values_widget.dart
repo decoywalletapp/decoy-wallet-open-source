@@ -526,7 +526,7 @@ class _DecoyPinSystemValuesWidgetState
                                                       color:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .secondaryText,
+                                                              .success,
                                                       letterSpacing: 0.0,
                                                       fontWeight:
                                                           FontWeight.w500,
