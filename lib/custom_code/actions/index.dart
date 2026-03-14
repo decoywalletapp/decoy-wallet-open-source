@@ -40,3 +40,4 @@ export 'subscribe_to_topic.dart' show subscribeToTopic;
 export 'get_or_create_device_id.dart' show getOrCreateDeviceId;
 export 'init_push_tap_listener.dart' show initPushTapListener;
 export 'get_push_permission_status.dart' show getPushPermissionStatus;
+export 'open_app_settings.dart' show openAppSettings;

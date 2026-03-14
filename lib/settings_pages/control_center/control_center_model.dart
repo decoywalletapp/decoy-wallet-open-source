@@ -13,6 +13,8 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
 
   bool? pushPermissionGranted;
 
+  bool? locationPermissionGranted;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ControlCenter widget.
