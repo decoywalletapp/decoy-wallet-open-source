@@ -3,6 +3,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       );
       _model.entIsActive =
           _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.isActive;
+      safeSetState(() {});
+      _model.pushStatusResult = await actions.getPushPermissionStatus();
+      _model.pushPermissionGranted = _model.pushStatusResult;
       safeSetState(() {});
       if ((_model.ctrlOutputEntitlements != null &&
               (_model.ctrlOutputEntitlements)!.isNotEmpty) &&
@@ -1973,6 +1977,55 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       ),
                                     ),
                                   ),
+                                  if ((FFAppState().pushEnabled == true) &&
+                                      (_model.pushPermissionGranted == false))
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            height: 51.05,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                            ),
+                                            child: Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Text(
+                                                'Currently Disabled in Device Settings !!!',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .error,
+                                                      fontSize: 16.0,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                 ].divide(SizedBox(height: 16.0)),
                               ),
                             ),

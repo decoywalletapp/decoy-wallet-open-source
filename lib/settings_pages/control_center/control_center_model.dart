@@ -11,12 +11,16 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
 
   bool? entIsActive;
 
+  bool? pushPermissionGranted;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ControlCenter widget.
   List<DecoyWalletRow>? decoyWalletRow;
   // Stores action output result for [Backend Call - Query Rows] action in ControlCenter widget.
   List<UserEntitlementsRow>? ctrlOutputEntitlements;
+  // Stores action output result for [Custom Action - getPushPermissionStatus] action in ControlCenter widget.
+  bool? pushStatusResult;
   // State field(s) for PINPoliceTile widget.
   bool? pINPoliceTileValue;
   // State field(s) for PINEContactsTile widget.
