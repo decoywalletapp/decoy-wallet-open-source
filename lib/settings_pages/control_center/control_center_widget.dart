@@ -92,20 +92,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       _model.pushStatusResult = await actions.getPushPermissionStatus();
       _model.getLocationPremissionResults =
           await actions.getLocationPermissionStatus();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            _model.getLocationPremissionResults!,
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).primaryText,
-            ),
-          ),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: FlutterFlowTheme.of(context).secondary,
-        ),
-      );
       _model.pushPermissionGranted = _model.pushStatusResult;
       _model.biometricPermissionGranted = _model.getBioPermissionResult;
+      _model.locationPermissionGranted = _model.getLocationPremissionResults;
       safeSetState(() {});
       if ((_model.ctrlOutputEntitlements != null &&
               (_model.ctrlOutputEntitlements)!.isNotEmpty) &&

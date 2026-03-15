@@ -12,12 +12,16 @@ import 'package:flutter/material.dart';
 import '/custom_code/actions/index.dart';
 import '/flutter_flow/custom_functions.dart';
 
-import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
-Future<String?> getLocationPermissionStatus() async {
-  final whenInUse = await Permission.locationWhenInUse.status;
-  final always = await Permission.locationAlways.status;
-  final location = await Permission.location.status;
+Future<bool?> getLocationPermissionStatus() async {
+  final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return false;
+  }
 
-  return 'whenInUse=${whenInUse.name}|always=${always.name}|location=${location.name}';
+  final permission = await Geolocator.checkPermission();
+
+  return permission == LocationPermission.always ||
+      permission == LocationPermission.whileInUse;
 }

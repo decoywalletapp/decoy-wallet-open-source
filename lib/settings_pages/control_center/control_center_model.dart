@@ -28,7 +28,7 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
   // Stores action output result for [Custom Action - getPushPermissionStatus] action in ControlCenter widget.
   bool? pushStatusResult;
   // Stores action output result for [Custom Action - getLocationPermissionStatus] action in ControlCenter widget.
-  String? getLocationPremissionResults;
+  bool? getLocationPremissionResults;
   // State field(s) for PINPoliceTile widget.
   bool? pINPoliceTileValue;
   // State field(s) for PINEContactsTile widget.
