@@ -568,9 +568,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                     context)
                                                                 .titleMedium
                                                                 .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .heebo(
+                                                                  font: GoogleFonts
+                                                                      .archivo(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600,
@@ -890,7 +889,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           .of(context)
                                                       .titleMedium
                                                       .override(
-                                                        font: GoogleFonts.heebo(
+                                                        font:
+                                                            GoogleFonts.archivo(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontStyle:
@@ -1222,7 +1222,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         context)
                                                     .titleMedium
                                                     .override(
-                                                      font: GoogleFonts.heebo(
+                                                      font: GoogleFonts.archivo(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontStyle:
