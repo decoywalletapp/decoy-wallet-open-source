@@ -14,7 +14,10 @@ import '/flutter_flow/custom_functions.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-Future<bool?> getLocationPermissionStatus() async {
-  final status = await Permission.locationWhenInUse.status;
-  return status.isGranted || status.isLimited;
+Future<String?> getLocationPermissionStatus() async {
+  final whenInUse = await Permission.locationWhenInUse.status;
+  final always = await Permission.locationAlways.status;
+  final location = await Permission.location.status;
+
+  return 'whenInUse=${whenInUse.name}|always=${always.name}|location=${location.name}';
 }

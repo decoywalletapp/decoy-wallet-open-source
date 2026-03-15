@@ -37,6 +37,8 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
 
   String? pendingEmail;
 
+  bool? setupComplete;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Custom Action - refreshSupabaseSession2] action in AuthRouter widget.

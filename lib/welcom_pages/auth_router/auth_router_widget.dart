@@ -124,6 +124,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           );
           _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
           _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
+          _model.setupComplete =
+              _model.query2?.elementAtOrNull(0)?.setupComplete;
           safeSetState(() {});
         } else {
           await DecoyWalletTable().update(
@@ -148,6 +150,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           );
           _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
           _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
+          _model.setupComplete =
+              _model.query3?.elementAtOrNull(0)?.setupComplete;
           safeSetState(() {});
         }
 
@@ -210,10 +214,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                             getCurrentTimestamp);
                 safeSetState(() {});
                 if (FFAppState().hasActiveSubscription == true) {
-                  context.pushNamedAuth(
-                      PINPageWidget.routeName, context.mounted);
+                  if (((_model.query2 != null && (_model.query2)!.isNotEmpty) &&
+                          (_model.setupComplete == true)) ||
+                      ((_model.query3 != null && (_model.query3)!.isNotEmpty) &&
+                          (_model.setupComplete == true))) {
+                    context.goNamedAuth(
+                        PINPageWidget.routeName, context.mounted);
+                  } else {
+                    context.goNamedAuth(
+                        CreatePinWidget.routeName, context.mounted);
+                  }
                 } else {
-                  context.pushNamedAuth(
+                  context.goNamedAuth(
                       HomePageWidget.routeName, context.mounted);
                 }
               } else {
@@ -252,10 +264,17 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           getCurrentTimestamp);
               safeSetState(() {});
               if (FFAppState().hasActiveSubscription == true) {
-                context.pushNamedAuth(PINPageWidget.routeName, context.mounted);
+                if (((_model.query2 != null && (_model.query2)!.isNotEmpty) &&
+                        (_model.setupComplete == true)) ||
+                    ((_model.query3 != null && (_model.query3)!.isNotEmpty) &&
+                        (_model.setupComplete == true))) {
+                  context.goNamedAuth(PINPageWidget.routeName, context.mounted);
+                } else {
+                  context.goNamedAuth(
+                      CreatePinWidget.routeName, context.mounted);
+                }
               } else {
-                context.pushNamedAuth(
-                    HomePageWidget.routeName, context.mounted);
+                context.goNamedAuth(HomePageWidget.routeName, context.mounted);
               }
             }
           }
