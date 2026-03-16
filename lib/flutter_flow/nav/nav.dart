@@ -508,12 +508,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => EnableNotificationsWidget(),
       ),
       FFRoute(
+        name: BitcoinPaymentOptionsWidget.routeName,
+        path: BitcoinPaymentOptionsWidget.routePath,
+        requireAuth: true,
+        builder: (context, params) => BitcoinPaymentOptionsWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>
             $cartesian_chart_library_syxakz.HomePageWidget(),
       )
     ].map((r) => r.toRoute(appStateNotifier)).toList(),
+    observers: [routeObserver],
   );
 }
 

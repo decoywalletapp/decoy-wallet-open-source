@@ -1721,8 +1721,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           .of(context)
                                                       .titleSmall
                                                       .override(
-                                                        font:
-                                                            GoogleFonts.archivo(
+                                                        font: GoogleFonts.heebo(
                                                           fontWeight:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -2189,8 +2188,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           .of(context)
                                                       .titleSmall
                                                       .override(
-                                                        font:
-                                                            GoogleFonts.archivo(
+                                                        font: GoogleFonts.heebo(
                                                           fontWeight:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -2261,12 +2259,22 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .override(
-                                            fontFamily: 'InterTight',
+                                            font: GoogleFonts.heebo(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleMedium
+                                                      .fontStyle,
+                                            ),
                                             color: FlutterFlowTheme.of(context)
                                                 .primary,
                                             fontSize: 24.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleMedium
+                                                    .fontStyle,
                                           ),
                                     ),
                                   ),
@@ -2659,8 +2667,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           .of(context)
                                                       .titleSmall
                                                       .override(
-                                                        font:
-                                                            GoogleFonts.archivo(
+                                                        font: GoogleFonts.heebo(
                                                           fontWeight:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -3101,7 +3108,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.archivo(
+                                          font: GoogleFonts.heebo(
                                             fontWeight: FontWeight.w600,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)

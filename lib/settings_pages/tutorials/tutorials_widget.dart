@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_video_player.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'tutorials_model.dart';
@@ -165,145 +166,118 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4.0,
-                              color: Color(0x1A000000),
-                              offset: Offset(
-                                0.0,
-                                2.0,
-                              ),
-                            )
-                          ],
+                      Material(
+                        color: Colors.transparent,
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
-                          border: Border.all(
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 12.0, 16.0, 12.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(12.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'How to Setup a Decoy PIN',
-                                          style: FlutterFlowTheme.of(context)
-                                              .titleMedium
-                                              .override(
-                                                fontFamily: 'InterTight',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .info,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4.0,
+                                color: Color(0x1A000000),
+                                offset: Offset(
+                                  0.0,
+                                  2.0,
+                                ),
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(
+                              color: FlutterFlowTheme.of(context).primary,
+                              width: 2.0,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 12.0, 16.0, 12.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Text(
+                                                'How to Setup a Decoy PIN',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .titleMedium
+                                                    .override(
+                                                      fontFamily: 'InterTight',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .info,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
                                               ),
-                                        ),
-                                      ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 200.0,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF1A1A1A),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Stack(
+                                Expanded(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: Image.network(
-                                              'https://images.unsplash.com/photo-1695460355096-3d303912874b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3Njc0MDA2NzZ8&ixlib=rb-4.1.0&q=80&w=1080',
-                                            ).image,
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Container(
+                                          width: 400.0,
+                                          height: 200.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x40000000),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderRadius: 30.0,
-                                            buttonSize: 60.0,
-                                            fillColor: Color(0x80FFFFFF),
-                                            icon: Icon(
-                                              Icons.play_arrow_rounded,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              size: 30.0,
+                                          child: Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: FlutterFlowVideoPlayer(
+                                              path:
+                                                  'https://vxmrthyumzrfgtuvjqmr.supabase.co/storage/v1/object/public/tutorial-videos/testervid.mp4',
+                                              videoType: VideoType.network,
+                                              width: 300.0,
+                                              autoPlay: false,
+                                              looping: false,
+                                              showControls: true,
+                                              allowFullScreen: true,
+                                              allowPlaybackSpeedMenu: false,
                                             ),
-                                            onPressed: () {
-                                              print('IconButton pressed ...');
-                                            },
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Container(
-                                  child: Text(
-                                    'Learn the basics of setting up your account and navigating the app interface.',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryText,
-                                          letterSpacing: 0.0,
-                                          lineHeight: 1.4,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -547,24 +521,40 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                         ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderRadius: 30.0,
-                                            buttonSize: 60.0,
-                                            fillColor: Color(0x80FFFFFF),
-                                            icon: Icon(
-                                              Icons.play_arrow_rounded,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: FlutterFlowIconButton(
+                                                borderRadius: 30.0,
+                                                buttonSize: 60.0,
+                                                fillColor: Color(0x80FFFFFF),
+                                                icon: Icon(
+                                                  Icons.play_arrow_rounded,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .primary,
-                                              size: 30.0,
+                                                  size: 30.0,
+                                                ),
+                                                onPressed: () {
+                                                  print(
+                                                      'IconButton pressed ...');
+                                                },
+                                              ),
                                             ),
-                                            onPressed: () {
-                                              print('IconButton pressed ...');
-                                            },
-                                          ),
+                                            FlutterFlowVideoPlayer(
+                                              path:
+                                                  'https://assets.mixkit.co/videos/529/529-720.mp4',
+                                              videoType: VideoType.network,
+                                              autoPlay: false,
+                                              looping: true,
+                                              showControls: true,
+                                              allowFullScreen: true,
+                                              allowPlaybackSpeedMenu: false,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],

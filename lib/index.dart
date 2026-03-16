@@ -105,3 +105,5 @@ export '/test_subjects/home_page_copy/home_page_copy_widget.dart'
     show HomePageCopyWidget;
 export '/welcom_pages/enable_notifications/enable_notifications_widget.dart'
     show EnableNotificationsWidget;
+export '/welcom_pages/bitcoin_payment_options/bitcoin_payment_options_widget.dart'
+    show BitcoinPaymentOptionsWidget;
