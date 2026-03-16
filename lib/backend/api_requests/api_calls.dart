@@ -359,7 +359,7 @@ class CreateCheckoutSessionCall {
     return ApiManager.instance.makeApiCall(
       callName: 'CreateCheckoutSession',
       apiUrl:
-          'https://decoy-stripe-webhook-866378207353.us-central1.run.app/create-checkout-session',
+          'https://decoy-stripe-webhook-live-866378207353.us-central1.run.app/create-checkout-session',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
@@ -393,7 +393,7 @@ class CreateBTCPayInvoiceCall {
     return ApiManager.instance.makeApiCall(
       callName: 'CreateBTCPayInvoice',
       apiUrl:
-          'https://decoy-stripe-webhook-866378207353.us-central1.run.app/create-btcpay-invoice',
+          'https://decoy-stripe-webhook-live-866378207353.us-central1.run.app/create-btcpay-invoice',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
@@ -430,7 +430,7 @@ class CreateBillingPortalSessionCall {
     return ApiManager.instance.makeApiCall(
       callName: 'CreateBillingPortalSession',
       apiUrl:
-          'https://decoy-stripe-webhook-866378207353.us-central1.run.app/create-billing-portal-session',
+          'https://decoy-stripe-webhook-live-866378207353.us-central1.run.app/create-billing-portal-session',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
@@ -750,7 +750,7 @@ class FinalizeStripeSwitchCall {
     return ApiManager.instance.makeApiCall(
       callName: 'finalizeStripeSwitch',
       apiUrl:
-          'https://decoy-stripe-webhook-866378207353.us-central1.run.app/finalize-stripe-switch',
+          'https://decoy-stripe-webhook-live-866378207353.us-central1.run.app/finalize-stripe-switch',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
@@ -812,7 +812,7 @@ class FinalizeBtcpaySwitchCall {
     return ApiManager.instance.makeApiCall(
       callName: 'finalizeBtcpaySwitch',
       apiUrl:
-          'https://decoy-stripe-webhook-866378207353.us-central1.run.app/finalize-btcpay-switch',
+          'https://decoy-stripe-webhook-live-866378207353.us-central1.run.app/finalize-btcpay-switch',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
