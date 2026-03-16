@@ -203,16 +203,55 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         'decoy_wallet',
                       ),
                 );
-                FFAppState().hasActiveSubscription =
-                    (_model.entitlementRow1 != null &&
-                            (_model.entitlementRow1)!.isNotEmpty) &&
-                        (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
-                            true) &&
-                        (_model.entitlementRow1!
-                                .elementAtOrNull(0)!
-                                .currentPeriodEnd! >
-                            getCurrentTimestamp);
-                safeSetState(() {});
+                if ((_model.entitlementRow1?.elementAtOrNull(0)?.provider ==
+                        'stripe') &&
+                    (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
+                        false)) {
+                  _model.apiResultRSE = await RepairStripeEntitlementCall.call(
+                    userId: currentUserUid,
+                  );
+
+                  if ((_model.apiResultRSE?.succeeded ?? true)) {
+                    _model.secondEntitlementQue =
+                        await UserEntitlementsTable().queryRows(
+                      queryFn: (q) => q
+                          .eqOrNull(
+                            'user_id',
+                            currentUserUid,
+                          )
+                          .eqOrNull(
+                            'entitlement',
+                            'decoy_wallet',
+                          ),
+                    );
+                    FFAppState().hasActiveSubscription =
+                        (_model.secondEntitlementQue != null &&
+                                (_model.secondEntitlementQue)!.isNotEmpty) &&
+                            (_model.secondEntitlementQue
+                                    ?.elementAtOrNull(0)
+                                    ?.isActive ==
+                                true) &&
+                            (_model.secondEntitlementQue!
+                                    .elementAtOrNull(0)!
+                                    .currentPeriodEnd! >
+                                getCurrentTimestamp);
+                    safeSetState(() {});
+                  }
+                } else {
+                  FFAppState().hasActiveSubscription =
+                      (_model.entitlementRow1 != null &&
+                              (_model.entitlementRow1)!.isNotEmpty) &&
+                          (_model.entitlementRow1
+                                  ?.elementAtOrNull(0)
+                                  ?.isActive ==
+                              true) &&
+                          (_model.entitlementRow1!
+                                  .elementAtOrNull(0)!
+                                  .currentPeriodEnd! >
+                              getCurrentTimestamp);
+                  safeSetState(() {});
+                }
+
                 if (FFAppState().hasActiveSubscription == true) {
                   if (((_model.query2 != null && (_model.query2)!.isNotEmpty) &&
                           (_model.setupComplete == true)) ||
@@ -253,16 +292,53 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       'decoy_wallet',
                     ),
               );
-              FFAppState().hasActiveSubscription =
-                  (_model.entitlementRow2 != null &&
-                          (_model.entitlementRow2)!.isNotEmpty) &&
-                      (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
-                          true) &&
-                      (_model.entitlementRow2!
-                              .elementAtOrNull(0)!
-                              .currentPeriodEnd! >
-                          getCurrentTimestamp);
-              safeSetState(() {});
+              if ((_model.entitlementRow2?.elementAtOrNull(0)?.provider ==
+                      'stripe') &&
+                  (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
+                      false)) {
+                _model.api2Result2RSE = await RepairStripeEntitlementCall.call(
+                  userId: currentUserUid,
+                );
+
+                if ((_model.api2Result2RSE?.succeeded ?? true)) {
+                  _model.thirdEntitlementQue =
+                      await UserEntitlementsTable().queryRows(
+                    queryFn: (q) => q
+                        .eqOrNull(
+                          'user_id',
+                          currentUserUid,
+                        )
+                        .eqOrNull(
+                          'entitlement',
+                          'decoy_wallet',
+                        ),
+                  );
+                  FFAppState().hasActiveSubscription =
+                      (_model.thirdEntitlementQue != null &&
+                              (_model.thirdEntitlementQue)!.isNotEmpty) &&
+                          (_model.thirdEntitlementQue
+                                  ?.elementAtOrNull(0)
+                                  ?.isActive ==
+                              true) &&
+                          (_model.thirdEntitlementQue!
+                                  .elementAtOrNull(0)!
+                                  .currentPeriodEnd! >
+                              getCurrentTimestamp);
+                  safeSetState(() {});
+                }
+              } else {
+                FFAppState().hasActiveSubscription =
+                    (_model.entitlementRow2 != null &&
+                            (_model.entitlementRow2)!.isNotEmpty) &&
+                        (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
+                            true) &&
+                        (_model.entitlementRow2!
+                                .elementAtOrNull(0)!
+                                .currentPeriodEnd! >
+                            getCurrentTimestamp);
+                safeSetState(() {});
+              }
+
               if (FFAppState().hasActiveSubscription == true) {
                 if (((_model.query2 != null && (_model.query2)!.isNotEmpty) &&
                         (_model.setupComplete == true)) ||

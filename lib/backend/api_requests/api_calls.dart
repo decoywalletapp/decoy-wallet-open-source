@@ -830,6 +830,35 @@ class FinalizeBtcpaySwitchCall {
   }
 }
 
+class RepairStripeEntitlementCall {
+  static Future<ApiCallResponse> call({
+    String? userId = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "user_id": "${escapeStringForJson(userId)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'RepairStripeEntitlement',
+      apiUrl:
+          'https://decoy-stripe-webhook-live-866378207353.us-central1.run.app/repair-stripe-entitlement',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 String _toEncodable(dynamic item) {
   if (item is DocumentReference) {
     return item.path;

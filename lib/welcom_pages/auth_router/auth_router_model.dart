@@ -64,8 +64,16 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
   bool authRouterBioResult = false;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<UserEntitlementsRow>? entitlementRow1;
+  // Stores action output result for [Backend Call - API (RepairStripeEntitlement)] action in AuthRouter widget.
+  ApiCallResponse? apiResultRSE;
+  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  List<UserEntitlementsRow>? secondEntitlementQue;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<UserEntitlementsRow>? entitlementRow2;
+  // Stores action output result for [Backend Call - API (RepairStripeEntitlement)] action in AuthRouter widget.
+  ApiCallResponse? api2Result2RSE;
+  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  List<UserEntitlementsRow>? thirdEntitlementQue;
 
   @override
   void initState(BuildContext context) {}
