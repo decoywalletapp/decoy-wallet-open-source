@@ -219,53 +219,89 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       padding: EdgeInsets.all(20.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Container(
-                                            width: 60.0,
-                                            height: 60.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .accent1,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Icon(
-                                                Icons.pin_rounded,
+                                          Material(
+                                            color: Colors.transparent,
+                                            elevation: 3.0,
+                                            shape: const CircleBorder(),
+                                            child: Container(
+                                              width: 60.0,
+                                              height: 60.0,
+                                              decoration: BoxDecoration(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                size: 32.0,
+                                                        .info,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Icon(
+                                                  Icons.pin_rounded,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  size: 32.0,
+                                                ),
                                               ),
                                             ),
                                           ),
                                           Expanded(
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                Container(
-                                                  width: 150.0,
-                                                  child: Stack(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, 0.0),
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.1,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: Text(
-                                                          'Create Decoy PIN',
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    child: Stack(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -0.1, 0.0),
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.1,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0),
+                                                          child: Text(
+                                                            'Decoy PIN',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .titleMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'DECOY BEBAS',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .info,
+                                                                  fontSize:
+                                                                      37.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          'Decoy PIN',
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: FlutterFlowTheme
@@ -274,7 +310,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                               .override(
                                                                 fontFamily:
                                                                     'DECOY BEBAS',
-                                                                fontSize: 24.0,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                fontSize: 37.0,
                                                                 letterSpacing:
                                                                     0.0,
                                                                 fontWeight:
@@ -282,63 +321,20 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                         .normal,
                                                               ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        'Create Decoy PIN',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .titleMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'DECOY BEBAS',
-                                                              fontSize: 24.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                            ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                                Text(
-                                                  'Set up a fake PIN that opens a decoy wallet to protect your real assets',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmallFamily,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        lineHeight: 1.3,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodySmallIsCustom,
-                                                      ),
-                                                ),
-                                              ].divide(SizedBox(height: 2.0)),
+                                              ],
                                             ),
                                           ),
                                           Icon(
                                             Icons.chevron_right_rounded,
                                             color: FlutterFlowTheme.of(context)
-                                                .accent1,
+                                                .info,
                                             size: 24.0,
                                           ),
-                                        ].divide(SizedBox(width: 15.5)),
+                                        ].divide(SizedBox(width: 12.0)),
                                       ),
                                     ),
                                     Opacity(
@@ -442,121 +438,118 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Container(
-                                            width: 60.0,
-                                            height: 60.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .accent1,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Icon(
-                                                Icons.key_rounded,
+                                          Material(
+                                            color: Colors.transparent,
+                                            elevation: 3.0,
+                                            shape: const CircleBorder(),
+                                            child: Container(
+                                              width: 60.0,
+                                              height: 60.0,
+                                              decoration: BoxDecoration(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                size: 32.0,
+                                                        .info,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Icon(
+                                                  Icons.key_rounded,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  size: 32.0,
+                                                ),
                                               ),
                                             ),
                                           ),
                                           Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  width: 200.0,
-                                                  child: Stack(
+                                            child: Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            -1.0, 0.0),
-                                                    children: [
-                                                      Align(
+                                                            0.0, 0.0),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      child: Stack(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                -1.0, 0.0),
-                                                        child: Text(
-                                                          'Create Decoy Wallet',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DECOY BEBAS',
-                                                                fontSize: 24.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.1,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: Text(
-                                                          'Create Decoy Wallet',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DECOY BEBAS',
-                                                                fontSize: 24.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Generate a fake seed phrase that creates a decoy wallet for enhanced security',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmallFamily,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                        letterSpacing: 0.0,
-                                                        lineHeight: 1.3,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme
+                                                                -0.05, 0.0),
+                                                        children: [
+                                                          Text(
+                                                            'Decoy Wallet',
+                                                            style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodySmallIsCustom,
+                                                                .titleMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'DECOY BEBAS',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .info,
+                                                                  fontSize:
+                                                                      37.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.1,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            child: Text(
+                                                              'Decoy Wallet',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .titleMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'DECOY BEBAS',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .info,
+                                                                    fontSize:
+                                                                        37.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                ),
-                                              ].divide(SizedBox(height: 2.0)),
+                                                    ),
+                                                  ),
+                                                ].divide(SizedBox(height: 2.0)),
+                                              ),
                                             ),
                                           ),
                                           Icon(
                                             Icons.chevron_right_rounded,
                                             color: FlutterFlowTheme.of(context)
-                                                .accent1,
+                                                .info,
                                             size: 24.0,
                                           ),
-                                        ].divide(SizedBox(width: 15.5)),
+                                        ].divide(SizedBox(width: 12.0)),
                                       ),
                                     ),
                                     Opacity(
@@ -658,118 +651,128 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Container(
-                                            width: 60.0,
-                                            height: 60.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .accent1,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Icon(
-                                                Icons.person_add_alt_rounded,
+                                          Material(
+                                            color: Colors.transparent,
+                                            elevation: 3.0,
+                                            shape: const CircleBorder(),
+                                            child: Container(
+                                              width: 60.0,
+                                              height: 60.0,
+                                              decoration: BoxDecoration(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                size: 32.0,
+                                                        .info,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Icon(
+                                                  Icons.person_add_alt_rounded,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  size: 32.0,
+                                                ),
                                               ),
                                             ),
                                           ),
                                           Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  width: 200.0,
-                                                  child: Stack(
-                                                    children: [
-                                                      Align(
+                                            child: Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      child: Stack(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                -1.01, -0.01),
-                                                        child: Text(
-                                                          'Create Decoy Contacts',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DECOY BEBAS',
-                                                                fontSize: 24.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
+                                                                0.0, 0.0),
+                                                        children: [
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.0, 0.0),
+                                                            child: Text(
+                                                              'Decoy Contacts',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .titleMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'DECOY BEBAS',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .info,
+                                                                    fontSize:
+                                                                        37.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.0, 0.0),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.1,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              child: Text(
+                                                                'Decoy Contacts',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'DECOY BEBAS',
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .info,
+                                                                      fontSize:
+                                                                          37.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal,
+                                                                    ),
                                                               ),
-                                                        ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.1,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: Text(
-                                                          'Create Decoy Contacts',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DECOY BEBAS',
-                                                                fontSize: 24.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  'Add trusted emergency contacts that receive alerts when your decoy wallet is activated',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodySmallFamily,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                        letterSpacing: 0.0,
-                                                        lineHeight: 1.3,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodySmallIsCustom,
-                                                      ),
-                                                ),
-                                              ].divide(SizedBox(height: 2.0)),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           Icon(
                                             Icons.chevron_right_rounded,
                                             color: FlutterFlowTheme.of(context)
-                                                .accent1,
+                                                .info,
                                             size: 24.0,
                                           ),
-                                        ].divide(SizedBox(width: 15.5)),
+                                        ].divide(SizedBox(width: 12.0)),
                                       ),
                                     ),
                                     Opacity(
