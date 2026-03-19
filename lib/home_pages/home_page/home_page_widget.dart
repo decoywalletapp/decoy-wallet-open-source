@@ -216,7 +216,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(14.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -269,14 +269,47 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                           AlignmentDirectional(
                                                               -0.1, 0.0),
                                                       children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.1,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0),
+                                                        Align(
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.01, 0.01),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.1,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            child: Text(
+                                                              'Decoy PIN',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .titleMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'DECOY BEBAS',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .info,
+                                                                    fontSize:
+                                                                        42.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  -0.01, 0.0),
                                                           child: Text(
                                                             'Decoy PIN',
                                                             textAlign: TextAlign
@@ -291,7 +324,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                           context)
                                                                       .info,
                                                                   fontSize:
-                                                                      37.0,
+                                                                      42.0,
                                                                   letterSpacing:
                                                                       0.0,
                                                                   fontWeight:
@@ -299,27 +332,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                           .normal,
                                                                 ),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          'Decoy PIN',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DECOY BEBAS',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                fontSize: 37.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
                                                         ),
                                                       ],
                                                     ),
@@ -432,7 +444,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(14.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
@@ -486,34 +498,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                             AlignmentDirectional(
                                                                 -0.05, 0.0),
                                                         children: [
-                                                          Text(
-                                                            'Decoy Wallet',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .titleMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'DECOY BEBAS',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  fontSize:
-                                                                      37.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.1,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0),
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    -0.01, 0.0),
                                                             child: Text(
                                                               'Decoy Wallet',
                                                               style: FlutterFlowTheme
@@ -526,13 +514,47 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             context)
                                                                         .info,
                                                                     fontSize:
-                                                                        37.0,
+                                                                        42.0,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .normal,
                                                                   ),
+                                                            ),
+                                                          ),
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.01, 0.0),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.1,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              child: Text(
+                                                                'Decoy Wallet',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'DECOY BEBAS',
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .info,
+                                                                      fontSize:
+                                                                          42.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal,
+                                                                    ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
@@ -645,7 +667,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(14.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
@@ -702,7 +724,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                           Align(
                                                             alignment:
                                                                 AlignmentDirectional(
-                                                                    0.0, 0.0),
+                                                                    0.01, 0.0),
                                                             child: Text(
                                                               'Decoy Contacts',
                                                               style: FlutterFlowTheme
@@ -715,7 +737,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             context)
                                                                         .info,
                                                                     fontSize:
-                                                                        37.0,
+                                                                        40.0,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     fontWeight:
@@ -727,7 +749,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                           Align(
                                                             alignment:
                                                                 AlignmentDirectional(
-                                                                    0.0, 0.0),
+                                                                    -0.01, 0.0),
                                                             child: Padding(
                                                               padding:
                                                                   EdgeInsetsDirectional
@@ -748,7 +770,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                               context)
                                                                           .info,
                                                                       fontSize:
-                                                                          37.0,
+                                                                          40.0,
                                                                       letterSpacing:
                                                                           0.0,
                                                                       fontWeight:
