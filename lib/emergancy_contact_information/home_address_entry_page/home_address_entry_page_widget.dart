@@ -162,7 +162,7 @@ class _HomeAddressEntryPageWidgetState
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Align(
                 alignment: AlignmentDirectional(-1.0, 0.0),
@@ -1198,7 +1198,9 @@ class _HomeAddressEntryPageWidgetState
                   ),
                 ),
               ),
-            ].addToStart(SizedBox(height: 48.0)),
+            ]
+                .addToStart(SizedBox(height: 48.0))
+                .addToEnd(SizedBox(height: 200.0)),
           ),
         ),
       ),

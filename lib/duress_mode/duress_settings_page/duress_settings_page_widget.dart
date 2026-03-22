@@ -46,6 +46,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
       backgroundColor: Color(0x001D2428),
       body: Column(
         mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -290,87 +291,65 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
               ),
             ],
           ),
-          Spacer(),
-          Expanded(
-            child: Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
-                child: Text(
-                  'App Versions',
-                  style: FlutterFlowTheme.of(context).titleLarge.override(
-                        fontFamily: 'hello',
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        fontSize: 22.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-              ),
+          Align(
+            alignment: AlignmentDirectional(0.0, 0.0),
+            child: Text(
+              'App Versions',
+              style: FlutterFlowTheme.of(context).titleLarge.override(
+                    fontFamily: 'hello',
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    fontSize: 22.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
           ),
           Align(
             alignment: AlignmentDirectional(0.0, 0.0),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 0.0, 0.0),
-              child: Text(
-                'v4.9.0',
-                style: FlutterFlowTheme.of(context).labelMedium.override(
+            child: Text(
+              'v4.9.0',
+              style: FlutterFlowTheme.of(context).labelMedium.override(
+                    fontFamily: 'hello',
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    fontSize: 14.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(0.0, 0.0),
+            child: FFButtonWidget(
+              onPressed: () async {
+                GoRouter.of(context).prepareAuthEvent();
+                await authManager.signOut();
+                GoRouter.of(context).clearRedirectLocation();
+
+                context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
+              },
+              text: 'Log Out',
+              options: FFButtonOptions(
+                height: 40.0,
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                color: Color(0x001D2428),
+                textStyle: FlutterFlowTheme.of(context).labelMedium.override(
                       fontFamily: 'hello',
                       color: FlutterFlowTheme.of(context).primaryBackground,
                       fontSize: 14.0,
                       letterSpacing: 0.0,
                       fontWeight: FontWeight.w500,
                     ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 0.0, 0.0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    GoRouter.of(context).prepareAuthEvent();
-                    await authManager.signOut();
-                    GoRouter.of(context).clearRedirectLocation();
-
-                    context.goNamedAuth(
-                        LoginPageWidget.routeName, context.mounted);
-                  },
-                  text: 'Log Out',
-                  options: FFButtonOptions(
-                    height: 40.0,
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: Color(0x001D2428),
-                    textStyle: FlutterFlowTheme.of(context)
-                        .labelMedium
-                        .override(
-                          fontFamily: 'hello',
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          fontSize: 14.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                    elevation: 0.0,
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).primaryBackground,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
+                elevation: 0.0,
+                borderSide: BorderSide(
+                  color: FlutterFlowTheme.of(context).primaryBackground,
+                  width: 1.0,
                 ),
+                borderRadius: BorderRadius.circular(50.0),
               ),
             ),
           ),
-        ]
-            .divide(SizedBox(height: 20.0))
-            .addToStart(SizedBox(height: 48.0))
-            .addToEnd(SizedBox(height: 64.0)),
+        ].divide(SizedBox(height: 36.0)).addToEnd(SizedBox(height: 64.0)),
       ),
     );
   }

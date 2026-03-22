@@ -205,7 +205,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
@@ -1264,7 +1264,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                           ),
                         ]
                             .divide(SizedBox(height: 20.0))
-                            .addToStart(SizedBox(height: 12.0)),
+                            .addToStart(SizedBox(height: 12.0))
+                            .addToEnd(SizedBox(height: 64.0)),
                       ),
                     ),
                   ),

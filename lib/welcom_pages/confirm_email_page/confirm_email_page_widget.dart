@@ -92,61 +92,121 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                 ],
               ),
               Expanded(
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, -1.0),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 36.0, 24.0, 0.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Material(
-                          color: Colors.transparent,
-                          elevation: 3.0,
-                          shape: const CircleBorder(),
-                          child: Container(
-                            width: 120.0,
-                            height: 120.0,
-                            decoration: BoxDecoration(
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        elevation: 3.0,
+                        shape: const CircleBorder(),
+                        child: Container(
+                          width: 120.0,
+                          height: 120.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context).primary,
+                            shape: BoxShape.circle,
+                            border: Border.all(
                               color: FlutterFlowTheme.of(context).primary,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
+                              width: 1.5,
                             ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Icon(
-                                Icons.email_outlined,
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                size: 60.0,
-                              ),
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Icon(
+                              Icons.email_outlined,
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              size: 60.0,
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 32.0, 0.0, 0.0),
-                          child: Text(
-                            'Check your email',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .headlineMedium
-                                .override(
-                                  fontFamily: 'InterTight',
-                                  letterSpacing: 0.0,
-                                ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
+                        child: Text(
+                          'Check your email',
+                          textAlign: TextAlign.center,
+                          style: FlutterFlowTheme.of(context)
+                              .headlineMedium
+                              .override(
+                                fontFamily: 'InterTight',
+                                letterSpacing: 0.0,
+                              ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                        child: Text(
+                          'We\'ve sent a confirmation link to:',
+                          textAlign: TextAlign.center,
+                          style: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .bodyMediumFamily,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 15.0,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .bodyMediumIsCustom,
+                              ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                        child: Container(
+                          width: 400.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(
+                              color: FlutterFlowTheme.of(context).primary,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              valueOrDefault<String>(
+                                widget.emailEntry != null &&
+                                        widget.emailEntry != ''
+                                    ? widget.emailEntry
+                                    : currentUserEmail,
+                                'Email',
+                              ),
+                              textAlign: TextAlign.center,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyLarge
+                                  .override(
+                                    fontFamily: 'InterTight',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
                           ),
                         ),
-                        Padding(
+                      ),
+                      Container(
+                        width: 400.0,
+                        height: 75.0,
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).info,
+                        ),
+                        child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 16.0, 0.0, 0.0),
+                              0.0, 20.0, 0.0, 0.0),
                           child: Text(
-                            'We\'ve sent a confirmation link to:',
+                            'Click the link in the email to confirm your account. If you don\'t see the email, check your spam folder.',
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -155,81 +215,17 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                                       .bodyMediumFamily,
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryText,
-                                  fontSize: 15.0,
                                   letterSpacing: 0.0,
+                                  lineHeight: 1.5,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .bodyMediumIsCustom,
                                 ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 0.0),
-                          child: Container(
-                            width: 400.0,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              borderRadius: BorderRadius.circular(12.0),
-                              border: Border.all(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Text(
-                                valueOrDefault<String>(
-                                  widget.emailEntry != null &&
-                                          widget.emailEntry != ''
-                                      ? widget.emailEntry
-                                      : currentUserEmail,
-                                  'Email',
-                                ),
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyLarge
-                                    .override(
-                                      fontFamily: 'InterTight',
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 400.0,
-                          height: 75.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).info,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 20.0, 0.0, 0.0),
-                            child: Text(
-                              'Click the link in the email to confirm your account. If you don\'t see the email, check your spam folder.',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .bodyMediumFamily,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    letterSpacing: 0.0,
-                                    lineHeight: 1.5,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .bodyMediumIsCustom,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ]
+                        .addToStart(SizedBox(height: 24.0))
+                        .addToEnd(SizedBox(height: 350.0)),
                   ),
                 ),
               ),

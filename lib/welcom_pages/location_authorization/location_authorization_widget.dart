@@ -63,6 +63,7 @@ class _LocationAuthorizationWidgetState
             padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
                   mainAxisSize: MainAxisSize.max,
@@ -127,7 +128,8 @@ class _LocationAuthorizationWidgetState
                     ),
                   ].divide(SizedBox(height: 24.0)),
                 ),
-                Expanded(
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 36.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -521,10 +523,7 @@ class _LocationAuthorizationWidgetState
                     ),
                   ].divide(SizedBox(height: 16.0)),
                 ),
-              ]
-                  .divide(SizedBox(height: 32.0))
-                  .addToStart(SizedBox(height: 32.0))
-                  .addToEnd(SizedBox(height: 32.0)),
+              ].divide(SizedBox(height: 24.0)).addToEnd(SizedBox(height: 32.0)),
             ),
           ),
         ),

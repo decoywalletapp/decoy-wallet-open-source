@@ -62,6 +62,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   width: 400.0,
@@ -130,7 +131,8 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                     ].divide(SizedBox(height: 24.0)),
                   ),
                 ),
-                Expanded(
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 36.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -530,10 +532,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                     ),
                   ].divide(SizedBox(height: 16.0)),
                 ),
-              ]
-                  .divide(SizedBox(height: 32.0))
-                  .addToStart(SizedBox(height: 40.0))
-                  .addToEnd(SizedBox(height: 32.0)),
+              ].divide(SizedBox(height: 24.0)).addToEnd(SizedBox(height: 32.0)),
             ),
           ),
         ),

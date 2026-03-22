@@ -532,6 +532,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 mainAxisSize: MainAxisSize.max,

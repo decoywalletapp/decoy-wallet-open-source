@@ -113,21 +113,23 @@ class _DuressProcessingTransactionWidgetState
         backgroundColor: Color(0x001D2428),
         body: SafeArea(
           top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 400.0,
-                      height: 700.0,
-                      decoration: BoxDecoration(),
-                      child: Align(
+          child: Align(
+            alignment: AlignmentDirectional(0.0, 0.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 400.0,
+                        height: 700.0,
+                        decoration: BoxDecoration(),
                         alignment: AlignmentDirectional(0.0, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -567,15 +569,15 @@ class _DuressProcessingTransactionWidgetState
                               ),
                             ),
                           ]
-                              .divide(SizedBox(height: 12.0))
+                              .divide(SizedBox(height: 32.0))
                               .addToStart(SizedBox(height: 32.0)),
                         ),
                       ),
-                    ),
-                  ].divide(SizedBox(height: 24.0)),
+                    ].divide(SizedBox(height: 24.0)),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -80,6 +80,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Align(
             alignment: AlignmentDirectional(0.0, -1.0),
@@ -93,13 +94,14 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                 alignment: AlignmentDirectional(0.0, 0.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
                       child: Text(
                         'Forgot Password',
+                        textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context)
                             .headlineMedium
                             .override(
@@ -118,6 +120,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                             16.0, 8.0, 16.0, 16.0),
                         child: Text(
                           'We will send you an email with a link to reset your password, please enter the email associated with your account below.',
+                          textAlign: TextAlign.center,
                           style:
                               FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'robot',
@@ -268,7 +271,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                         ),
                       ),
                     ),
-                  ],
+                  ].divide(SizedBox(height: 12.0)),
                 ),
               ),
             ),
@@ -310,7 +313,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
               ),
             ].addToStart(SizedBox(height: 24.0)),
           ),
-        ],
+        ].addToStart(SizedBox(height: 64.0)).addToEnd(SizedBox(height: 100.0)),
       ),
     );
   }

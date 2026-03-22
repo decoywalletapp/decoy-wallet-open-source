@@ -119,25 +119,23 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5.0),
-                      child: Image.asset(
-                        'assets/images/DecoyLogo1-WOHiRes.jpg',
-                        width: 500.0,
-                        height: 200.0,
-                        fit: BoxFit.cover,
-                        alignment: Alignment(0.0, 0.47),
-                      ),
+              Align(
+                alignment: AlignmentDirectional(0.0, 0.0),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5.0),
+                    child: Image.asset(
+                      'assets/images/DecoyLogo1-WOHiRes.jpg',
+                      width: 500.0,
+                      height: 200.0,
+                      fit: BoxFit.cover,
+                      alignment: Alignment(0.0, 0.0),
                     ),
                   ),
                 ),
               ),
-            ],
+            ].addToEnd(SizedBox(height: 64.0)),
           ),
         ),
       ),

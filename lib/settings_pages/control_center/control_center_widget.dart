@@ -300,7 +300,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: Container(
-                              width: 400.0,
+                              width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12.0),

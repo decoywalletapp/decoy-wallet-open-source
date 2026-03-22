@@ -87,7 +87,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
             padding: EdgeInsets.all(24.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Column(
@@ -615,7 +615,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                       ),
                   ].divide(SizedBox(height: 16.0)),
                 ),
-              ],
+              ]
+                  .divide(SizedBox(height: 200.0))
+                  .addToEnd(SizedBox(height: 100.0)),
             ),
           ),
         ),

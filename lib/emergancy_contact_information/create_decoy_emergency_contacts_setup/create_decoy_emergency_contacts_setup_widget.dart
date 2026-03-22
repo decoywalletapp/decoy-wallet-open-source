@@ -118,6 +118,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
               top: true,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -142,6 +143,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Padding(
@@ -1161,7 +1163,9 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                       ),
                     ],
                   ),
-                ].divide(SizedBox(height: 24.0)),
+                ]
+                    .divide(SizedBox(height: 24.0))
+                    .addToEnd(SizedBox(height: 48.0)),
               ),
             ),
           ),

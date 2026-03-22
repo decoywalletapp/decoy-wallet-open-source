@@ -68,42 +68,58 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0x001D2428),
-        appBar: AppBar(
-          backgroundColor: Color(0x001D2428),
-          automaticallyImplyLeading: false,
-          leading: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-            child: FlutterFlowIconButton(
-              borderRadius: 20.0,
-              buttonSize: 40.0,
-              icon: Icon(
-                Icons.arrow_back_rounded,
-                color: FlutterFlowTheme.of(context).primaryBackground,
-                size: 24.0,
-              ),
-              onPressed: () async {
-                context.safePop();
-              },
-            ),
-          ),
-          title: Text(
-            'Send Bitcoin',
-            style: FlutterFlowTheme.of(context).titleLarge.override(
-                  fontFamily: 'hello',
-                  color: FlutterFlowTheme.of(context).primaryBackground,
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
-          actions: [],
-          centerTitle: true,
-          elevation: 0.0,
-        ),
         body: SafeArea(
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional(-1.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                      child: FlutterFlowIconButton(
+                        borderRadius: 20.0,
+                        buttonSize: 40.0,
+                        icon: Icon(
+                          Icons.arrow_back_rounded,
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          size: 24.0,
+                        ),
+                        onPressed: () async {
+                          context.safePop();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Text(
+                        'Send Bitcoin',
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context).titleLarge.override(
+                              fontFamily: 'hello',
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
+                              fontSize: 36.0,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -643,7 +659,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                 ),
               ),
             ]
-                .divide(SizedBox(height: 10.0))
+                .divide(SizedBox(height: 24.0))
                 .addToStart(SizedBox(height: 24.0))
                 .addToEnd(SizedBox(height: 24.0)),
           ),

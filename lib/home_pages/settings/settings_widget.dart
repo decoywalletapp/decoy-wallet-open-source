@@ -168,7 +168,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                       child: Container(
-                        width: double.infinity,
+                        width: 400.0,
                         height: 60.0,
                         decoration: BoxDecoration(),
                         child: Stack(
@@ -237,72 +237,76 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                       child: Container(
-                        width: double.infinity,
+                        width: 400.0,
                         height: 60.0,
                         decoration: BoxDecoration(),
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Contact Us',
-                                    style: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .override(
-                                          fontFamily: 'InterTight',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          fontSize: 22.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  ),
-                                  Icon(
-                                    Icons.chevron_right_rounded,
-                                    color: Color(0xFF606A85),
-                                    size: 24.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Opacity(
-                              opacity: 0.0,
-                              child: FFButtonWidget(
-                                onPressed: () async {
-                                  context
-                                      .pushNamed(SupportTicketWidget.routeName);
-                                },
-                                text: '',
-                                options: FFButtonOptions(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 0.0, 16.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleSmallFamily,
-                                        color: Colors.white,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleSmallIsCustom,
-                                      ),
-                                  elevation: 0.0,
-                                  borderRadius: BorderRadius.circular(8.0),
+                        child: Container(
+                          width: 400.0,
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Contact Us',
+                                      style: FlutterFlowTheme.of(context)
+                                          .titleLarge
+                                          .override(
+                                            fontFamily: 'InterTight',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            fontSize: 22.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right_rounded,
+                                      color: Color(0xFF606A85),
+                                      size: 24.0,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                              Opacity(
+                                opacity: 0.0,
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    context.pushNamed(
+                                        SupportTicketWidget.routeName);
+                                  },
+                                  text: '',
+                                  options: FFButtonOptions(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 0.0, 16.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmallFamily,
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .titleSmallIsCustom,
+                                        ),
+                                    elevation: 0.0,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -759,6 +763,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Stack(
+                        alignment: AlignmentDirectional(0.0, 0.0),
                         children: [
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
@@ -815,59 +820,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         ],
                       ),
                       Stack(
-                        children: [
-                          Container(
-                            width: 50.0,
-                            height: 50.0,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.asset(
-                                'assets/images/YouTubeLogo.png',
-                                width: 60.0,
-                                height: 60.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Opacity(
-                            opacity: 0.0,
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                await launchURL(
-                                    'https://www.youtube.com/@DecoyWalletApp');
-                              },
-                              text: 'Button',
-                              options: FFButtonOptions(
-                                width: 50.0,
-                                height: 50.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primary,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .titleSmallFamily,
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .titleSmallIsCustom,
-                                    ),
-                                elevation: 0.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Stack(
+                        alignment: AlignmentDirectional(0.0, 0.0),
                         children: [
                           Container(
                             width: 50.0,
@@ -921,6 +874,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         ],
                       ),
                       Stack(
+                        alignment: AlignmentDirectional(0.0, 0.0),
                         children: [
                           Container(
                             width: 50.0,
@@ -932,7 +886,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.asset(
-                                'assets/images/instalogo.png',
+                                'assets/images/primallogo.png',
                                 width: 200.0,
                                 height: 200.0,
                                 fit: BoxFit.cover,
@@ -944,7 +898,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             child: FFButtonWidget(
                               onPressed: () async {
                                 await launchURL(
-                                    'https://www.instagram.com/decoywalletapp?igsh=NGlsdmdtZXFkejZw&utm_source=qr');
+                                    'http://primal.net/p/nprofile1qqsywp6yr7r4aemlalupwmluj953tr6dh8tujw77w6dt9k4p2gn9m2cte4kqn');
                               },
                               text: 'Button',
                               options: FFButtonOptions(
@@ -973,7 +927,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                         ],
                       ),
-                    ].divide(SizedBox(width: 24.0)),
+                    ].divide(SizedBox(width: 16.0)),
                   ),
                 ),
                 FFButtonWidget(
@@ -1012,7 +966,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ].divide(SizedBox(height: 16.0)),
             ),
           ),
-        ].divide(SizedBox(height: 8.0)),
+        ].divide(SizedBox(height: 24.0)),
       ),
     );
   }

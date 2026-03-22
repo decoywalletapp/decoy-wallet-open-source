@@ -71,6 +71,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
             children: [
               Column(
                 mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     flex: 8,
@@ -79,14 +80,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                       height: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(0.0),
-                          bottomRight: Radius.circular(0.0),
-                          topLeft: Radius.circular(0.0),
-                          topRight: Radius.circular(0.0),
-                        ),
                       ),
-                      alignment: AlignmentDirectional(0.0, -1.0),
+                      alignment: AlignmentDirectional(0.0, 0.0),
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -835,7 +830,9 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                 ),
                               ),
                             ),
-                          ].addToStart(SizedBox(height: 24.0)),
+                          ]
+                              .addToStart(SizedBox(height: 24.0))
+                              .addToEnd(SizedBox(height: 24.0)),
                         ),
                       ),
                     ),

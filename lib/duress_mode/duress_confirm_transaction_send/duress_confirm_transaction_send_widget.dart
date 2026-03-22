@@ -76,6 +76,7 @@ class _DuressConfirmTransactionSendWidgetState
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 mainAxisSize: MainAxisSize.max,
@@ -102,12 +103,13 @@ class _DuressConfirmTransactionSendWidgetState
                 padding: EdgeInsets.all(24.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Stack(
                       children: [
                         Column(
                           mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Column(
@@ -608,7 +610,7 @@ class _DuressConfirmTransactionSendWidgetState
                                 ),
                               ].divide(SizedBox(height: 16.0)),
                             ),
-                          ].divide(SizedBox(height: 32.0)),
+                          ].divide(SizedBox(height: 48.0)),
                         ),
                       ],
                     ),
@@ -618,7 +620,7 @@ class _DuressConfirmTransactionSendWidgetState
                       .addToEnd(SizedBox(height: 24.0)),
                 ),
               ),
-            ],
+            ].addToEnd(SizedBox(height: 100.0)),
           ),
         ),
       ),
