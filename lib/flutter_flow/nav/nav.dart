@@ -412,7 +412,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: PaymentReturnWidget.routeName,
         path: PaymentReturnWidget.routePath,
         requireAuth: true,
-        builder: (context, params) => PaymentReturnWidget(),
+        builder: (context, params) => PaymentReturnWidget(
+          ts: params.getParam(
+            'ts',
+            ParamType.String,
+          ),
+        ),
       ),
       FFRoute(
         name: ManageSubscriptionWidget.routeName,

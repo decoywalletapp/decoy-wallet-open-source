@@ -576,7 +576,10 @@ class _BiometricVerificationWidgetState
                     ),
                   ].divide(SizedBox(height: 16.0)),
                 ),
-              ].divide(SizedBox(height: 24.0)).addToEnd(SizedBox(height: 32.0)),
+              ]
+                  .divide(SizedBox(height: 24.0))
+                  .addToStart(SizedBox(height: 24.0))
+                  .addToEnd(SizedBox(height: 32.0)),
             ),
           ),
         ),

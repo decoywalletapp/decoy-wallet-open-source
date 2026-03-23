@@ -10,7 +10,12 @@ import 'payment_return_model.dart';
 export 'payment_return_model.dart';
 
 class PaymentReturnWidget extends StatefulWidget {
-  const PaymentReturnWidget({super.key});
+  const PaymentReturnWidget({
+    super.key,
+    this.ts,
+  });
+
+  final String? ts;
 
   static String routeName = 'PaymentReturn';
   static String routePath = '/paymentreturn';
@@ -34,18 +39,6 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
       FFAppState().entitlementCheckCompleted = false;
       FFAppState().hasActiveSubscription = false;
       safeSetState(() {});
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '1',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).primaryText,
-            ),
-          ),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: FlutterFlowTheme.of(context).secondary,
-        ),
-      );
       _model.entitlementsQuery = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
@@ -57,49 +50,13 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
               'decoy_wallet',
             ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '2',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).primaryText,
-            ),
-          ),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: FlutterFlowTheme.of(context).secondary,
-        ),
-      );
       FFAppState().entitlementCheckCompleted = true;
       safeSetState(() {});
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '3',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).primaryText,
-            ),
-          ),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: FlutterFlowTheme.of(context).secondary,
-        ),
-      );
       if ((_model.entitlementsQuery != null &&
               (_model.entitlementsQuery)!.isNotEmpty) &&
           (_model.entitlementsQuery?.elementAtOrNull(0)?.isActive == true)) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '4',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         if (Navigator.of(context).canPop()) {
           context.pop();
         }
@@ -107,18 +64,6 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
       } else {
         FFAppState().hasActiveSubscription = false;
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '4',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         if (Navigator.of(context).canPop()) {
           context.pop();
         }

@@ -616,7 +616,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                   ].divide(SizedBox(height: 16.0)),
                 ),
               ]
-                  .divide(SizedBox(height: 200.0))
+                  .divide(SizedBox(height: 64.0))
                   .addToEnd(SizedBox(height: 100.0)),
             ),
           ),

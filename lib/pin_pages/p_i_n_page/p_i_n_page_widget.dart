@@ -757,7 +757,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                   alignment: AlignmentDirectional(0.0, -1.0),
                                   child: Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        6.0, 0.0, 6.0, 48.0),
+                                        6.0, 0.0, 6.0, 36.0),
                                     child: GridView(
                                       padding: EdgeInsets.zero,
                                       gridDelegate:
@@ -1703,7 +1703,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                   ),
                 ],
               ),
-            ],
+            ].addToStart(SizedBox(height: 24.0)),
           ),
         ),
       ),

@@ -884,7 +884,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                 child: Padding(
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(
-                                                          6.0, 0.0, 6.0, 48.0),
+                                                          6.0, 0.0, 6.0, 36.0),
                                                   child: GridView(
                                                     padding: EdgeInsets.zero,
                                                     gridDelegate:
@@ -2450,7 +2450,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                 child: Padding(
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(
-                                                          6.0, 0.0, 6.0, 48.0),
+                                                          6.0, 0.0, 6.0, 36.0),
                                                   child: GridView(
                                                     padding: EdgeInsets.zero,
                                                     gridDelegate:
@@ -3446,7 +3446,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                       ),
                     ],
                   ),
-                ],
+                ].addToStart(SizedBox(height: 24.0)),
               ),
             ),
           ),

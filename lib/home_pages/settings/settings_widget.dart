@@ -927,7 +927,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                         ],
                       ),
-                    ].divide(SizedBox(width: 16.0)),
+                    ].divide(SizedBox(width: 24.0)),
                   ),
                 ),
                 FFButtonWidget(
