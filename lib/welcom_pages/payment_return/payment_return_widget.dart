@@ -69,6 +69,8 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
         }
         context.pushNamed(SubscriptionOptionsWidget.routeName);
       }
+
+      safeSetState(() {});
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

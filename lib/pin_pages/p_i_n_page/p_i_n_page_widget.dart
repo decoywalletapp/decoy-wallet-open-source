@@ -1703,7 +1703,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                   ),
                 ],
               ),
-            ].addToStart(SizedBox(height: 24.0)),
+            ].addToStart(SizedBox(height: 12.0)),
           ),
         ),
       ),
