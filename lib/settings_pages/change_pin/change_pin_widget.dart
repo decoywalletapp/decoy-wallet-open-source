@@ -1475,7 +1475,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   safeSetState(() {});
                                                   await Future.delayed(
                                                     Duration(
-                                                      milliseconds: 2500,
+                                                      milliseconds: 2000,
                                                     ),
                                                   );
                                                   _model.chngpConfirmValue = 0;
@@ -1491,7 +1491,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                 safeSetState(() {});
                                                 await Future.delayed(
                                                   Duration(
-                                                    milliseconds: 2500,
+                                                    milliseconds: 2000,
                                                   ),
                                                 );
                                                 _model.chngpConfirmValue = 0;
@@ -2915,7 +2915,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       safeSetState(() {});
                                                       await Future.delayed(
                                                         Duration(
-                                                          milliseconds: 2500,
+                                                          milliseconds: 2000,
                                                         ),
                                                       );
                                                       _model.chngpNotifValue =
@@ -2959,7 +2959,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   safeSetState(() {});
                                                   await Future.delayed(
                                                     Duration(
-                                                      milliseconds: 2500,
+                                                      milliseconds: 2000,
                                                     ),
                                                   );
                                                   _model.chngpNotifValue = 0;
@@ -4354,7 +4354,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       safeSetState(() {});
                                                       await Future.delayed(
                                                         Duration(
-                                                          milliseconds: 2500,
+                                                          milliseconds: 2000,
                                                         ),
                                                       );
                                                       _model.oldpNotificationValue =
@@ -4396,7 +4396,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   safeSetState(() {});
                                                   await Future.delayed(
                                                     Duration(
-                                                      milliseconds: 2500,
+                                                      milliseconds: 2000,
                                                     ),
                                                   );
                                                   _model.oldpNotificationValue =

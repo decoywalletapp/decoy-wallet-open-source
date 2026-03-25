@@ -57,20 +57,14 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
           (_model.entitlementsQuery?.elementAtOrNull(0)?.isActive == true)) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});
-        if (Navigator.of(context).canPop()) {
-          context.pop();
-        }
-        context.pushNamed(HomePageWidget.routeName);
+
+        context.goNamed(HomePageWidget.routeName);
       } else {
         FFAppState().hasActiveSubscription = false;
         safeSetState(() {});
-        if (Navigator.of(context).canPop()) {
-          context.pop();
-        }
-        context.pushNamed(SubscriptionOptionsWidget.routeName);
-      }
 
-      safeSetState(() {});
+        context.goNamed(SubscriptionOptionsWidget.routeName);
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -92,37 +86,143 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
         FocusScope.of(context).unfocus();
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).info,
-        body: SafeArea(
-          top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Align(
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: FlutterFlowTheme.of(context).info,
+          body: SafeArea(
+            top: true,
+            child: Align(
+              alignment: AlignmentDirectional(0.0, 0.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Align(
                     alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),
-                      child: Text(
-                        '₿itcoin Wallet',
-                        textAlign: TextAlign.start,
-                        style:
-                            FlutterFlowTheme.of(context).displayMedium.override(
-                                  fontFamily: 'InterTight',
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  letterSpacing: 0.0,
-                                ),
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              FFAppState().entitlementCheckCompleted = false;
+                              FFAppState().hasActiveSubscription = false;
+                              safeSetState(() {});
+                              _model.entitlementsQueryRefresh =
+                                  await UserEntitlementsTable().queryRows(
+                                queryFn: (q) => q
+                                    .eqOrNull(
+                                      'user_id',
+                                      currentUserUid,
+                                    )
+                                    .eqOrNull(
+                                      'entitlement',
+                                      'decoy_wallet',
+                                    ),
+                              );
+                              FFAppState().entitlementCheckCompleted = true;
+                              safeSetState(() {});
+                              if ((_model.entitlementsQueryRefresh != null &&
+                                      (_model.entitlementsQueryRefresh)!
+                                          .isNotEmpty) &&
+                                  (_model.entitlementsQueryRefresh
+                                          ?.elementAtOrNull(0)
+                                          ?.isActive ==
+                                      true)) {
+                                FFAppState().hasActiveSubscription = true;
+                                safeSetState(() {});
+
+                                context.goNamed(HomePageWidget.routeName);
+                              } else {
+                                FFAppState().hasActiveSubscription = false;
+                                safeSetState(() {});
+
+                                context.goNamed(
+                                    SubscriptionOptionsWidget.routeName);
+                              }
+
+                              safeSetState(() {});
+                            },
+                            child: Text(
+                              'Refresh',
+                              textAlign: TextAlign.start,
+                              style: FlutterFlowTheme.of(context)
+                                  .displayMedium
+                                  .override(
+                                    fontFamily: 'InterTight',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    fontSize: 24.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            FFAppState().entitlementCheckCompleted = false;
+                            FFAppState().hasActiveSubscription = false;
+                            safeSetState(() {});
+                            _model.entitlementsQueryRefreshButton =
+                                await UserEntitlementsTable().queryRows(
+                              queryFn: (q) => q
+                                  .eqOrNull(
+                                    'user_id',
+                                    currentUserUid,
+                                  )
+                                  .eqOrNull(
+                                    'entitlement',
+                                    'decoy_wallet',
+                                  ),
+                            );
+                            FFAppState().entitlementCheckCompleted = true;
+                            safeSetState(() {});
+                            if ((_model.entitlementsQueryRefreshButton !=
+                                        null &&
+                                    (_model.entitlementsQueryRefreshButton)!
+                                        .isNotEmpty) &&
+                                (_model.entitlementsQueryRefreshButton
+                                        ?.elementAtOrNull(0)
+                                        ?.isActive ==
+                                    true)) {
+                              FFAppState().hasActiveSubscription = true;
+                              safeSetState(() {});
+
+                              context.goNamed(HomePageWidget.routeName);
+                            } else {
+                              FFAppState().hasActiveSubscription = false;
+                              safeSetState(() {});
+
+                              context
+                                  .goNamed(SubscriptionOptionsWidget.routeName);
+                            }
+
+                            safeSetState(() {});
+                          },
+                          child: Icon(
+                            Icons.refresh_sharp,
+                            color: FlutterFlowTheme.of(context).primary,
+                            size: 24.0,
+                          ),
+                        ),
+                      ].divide(SizedBox(width: 6.0)),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

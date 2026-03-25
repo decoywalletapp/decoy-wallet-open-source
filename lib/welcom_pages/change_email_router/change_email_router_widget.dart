@@ -86,9 +86,9 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
           safeSetState(() {});
         }
         if (_model.needPhone == true) {
-          context.pushNamed(PhoneNumberInputWidget.routeName);
+          context.goNamed(PhoneNumberInputWidget.routeName);
         } else {
-          context.pushNamed(HomePageWidget.routeName);
+          context.goNamed(HomePageWidget.routeName);
         }
       }
     });
@@ -110,32 +110,35 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
         FocusScope.of(context).unfocus();
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).info,
-        body: SafeArea(
-          top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Align(
-                alignment: AlignmentDirectional(0.0, 0.0),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5.0),
-                    child: Image.asset(
-                      'assets/images/DecoyLogo1-WOHiRes.jpg',
-                      width: 500.0,
-                      height: 200.0,
-                      fit: BoxFit.cover,
-                      alignment: Alignment(0.0, 0.0),
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: FlutterFlowTheme.of(context).info,
+          body: SafeArea(
+            top: true,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5.0),
+                      child: Image.asset(
+                        'assets/images/DecoyLogo1-WOHiRes.jpg',
+                        width: 500.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                        alignment: Alignment(0.0, 0.0),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ].addToEnd(SizedBox(height: 64.0)),
+              ].addToEnd(SizedBox(height: 64.0)),
+            ),
           ),
         ),
       ),

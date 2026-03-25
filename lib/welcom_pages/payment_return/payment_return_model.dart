@@ -9,6 +9,10 @@ class PaymentReturnModel extends FlutterFlowModel<PaymentReturnWidget> {
 
   // Stores action output result for [Backend Call - Query Rows] action in PaymentReturn widget.
   List<UserEntitlementsRow>? entitlementsQuery;
+  // Stores action output result for [Backend Call - Query Rows] action in Text widget.
+  List<UserEntitlementsRow>? entitlementsQueryRefresh;
+  // Stores action output result for [Backend Call - Query Rows] action in Icon widget.
+  List<UserEntitlementsRow>? entitlementsQueryRefreshButton;
 
   @override
   void initState(BuildContext context) {}

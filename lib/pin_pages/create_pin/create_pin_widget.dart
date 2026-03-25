@@ -1388,7 +1388,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                   safeSetState(() {});
                                                   await Future.delayed(
                                                     Duration(
-                                                      milliseconds: 2500,
+                                                      milliseconds: 2000,
                                                     ),
                                                   );
                                                   _model.cpnotificationValue =
@@ -2859,7 +2859,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                   safeSetState(() {});
                                                   await Future.delayed(
                                                     Duration(
-                                                      milliseconds: 2500,
+                                                      milliseconds: 2000,
                                                     ),
                                                   );
                                                   _model.cpnotificationValue =
@@ -2875,7 +2875,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                 safeSetState(() {});
                                                 await Future.delayed(
                                                   Duration(
-                                                    milliseconds: 2500,
+                                                    milliseconds: 2000,
                                                   ),
                                                 );
                                                 _model.cpconfirmValue = 0;
@@ -2964,7 +2964,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                     ),
                   ],
                 ),
-              ].addToStart(SizedBox(height: 24.0)),
+              ].addToStart(SizedBox(height: 12.0)),
             ),
           ),
         ),

@@ -1623,7 +1623,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                           await Future.delayed(
                                                             Duration(
                                                               milliseconds:
-                                                                  2500,
+                                                                  2000,
                                                             ),
                                                           );
                                                           _model.notificationValue =
@@ -1646,7 +1646,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                         safeSetState(() {});
                                                         await Future.delayed(
                                                           Duration(
-                                                            milliseconds: 2500,
+                                                            milliseconds: 2000,
                                                           ),
                                                         );
                                                         _model.notificationValue =
@@ -3308,7 +3308,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                         safeSetState(() {});
                                                         await Future.delayed(
                                                           Duration(
-                                                            milliseconds: 2500,
+                                                            milliseconds: 2000,
                                                           ),
                                                         );
                                                         _model.confirmNotificationValue =
@@ -3330,7 +3330,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                       safeSetState(() {});
                                                       await Future.delayed(
                                                         Duration(
-                                                          milliseconds: 2500,
+                                                          milliseconds: 2000,
                                                         ),
                                                       );
                                                       _model.confirmNotificationValue =
@@ -3446,7 +3446,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                       ),
                     ],
                   ),
-                ].addToStart(SizedBox(height: 24.0)),
+                ].addToStart(SizedBox(height: 12.0)),
               ),
             ),
           ),

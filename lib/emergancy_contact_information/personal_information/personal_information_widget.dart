@@ -207,691 +207,789 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         FocusScope.of(context).unfocus();
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional(-1.0, 0.0),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-                    child: FlutterFlowIconButton(
-                      borderRadius: 20.0,
-                      buttonSize: 40.0,
-                      icon: Icon(
-                        Icons.arrow_back_rounded,
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        size: 24.0,
-                      ),
-                      onPressed: () async {
-                        context.safePop();
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Stack(
-                        children: [
-                          Material(
-                            color: Colors.transparent,
-                            elevation: 3.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Container(
-                              width: 100.0,
-                              height: 100.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).primary,
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            top: true,
+            child: Align(
+              alignment: AlignmentDirectional(0.0, 0.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(-1.0, 0.0),
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                        child: FlutterFlowIconButton(
+                          borderRadius: 20.0,
+                          buttonSize: 40.0,
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 24.0,
                           ),
-                          Icon(
-                            Icons.person,
-                            color: FlutterFlowTheme.of(context).info,
-                            size: 100.0,
-                          ),
-                        ],
-                      ),
-                      Container(
-                        width: 400.0,
-                        child: Form(
-                          key: _model.formKey,
-                          autovalidateMode: AutovalidateMode.disabled,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'First Name',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          letterSpacing: 0.25,
-                                          fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
-                                  TextFormField(
-                                    controller: _model.firstNameTextController,
-                                    focusNode: _model.firstNameFocusNode,
-                                    autofocus: false,
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter first name',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            letterSpacing: 0.25,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              16.0, 16.0, 16.0, 16.0),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.25,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                    keyboardType: TextInputType.name,
-                                    cursorColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    validator: _model
-                                        .firstNameTextControllerValidator
-                                        .asValidator(context),
-                                    inputFormatters: [
-                                      if (!isAndroid && !isiOS)
-                                        TextInputFormatter.withFunction(
-                                            (oldValue, newValue) {
-                                          return TextEditingValue(
-                                            selection: newValue.selection,
-                                            text: newValue.text
-                                                .toCapitalization(
-                                                    TextCapitalization.words),
-                                          );
-                                        }),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 8.0)),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Last Name',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          letterSpacing: 0.25,
-                                          fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
-                                  TextFormField(
-                                    controller: _model.lastNameTextController,
-                                    focusNode: _model.lastNameFocusNode,
-                                    autofocus: false,
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter last name',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            letterSpacing: 0.25,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              16.0, 16.0, 16.0, 16.0),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.25,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                    keyboardType: TextInputType.name,
-                                    cursorColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    validator: _model
-                                        .lastNameTextControllerValidator
-                                        .asValidator(context),
-                                    inputFormatters: [
-                                      if (!isAndroid && !isiOS)
-                                        TextInputFormatter.withFunction(
-                                            (oldValue, newValue) {
-                                          return TextEditingValue(
-                                            selection: newValue.selection,
-                                            text: newValue.text
-                                                .toCapitalization(
-                                                    TextCapitalization.words),
-                                          );
-                                        }),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 8.0)),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Phone Number',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          letterSpacing: 0.25,
-                                          fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
-                                  TextFormField(
-                                    controller: _model.phoneTextController,
-                                    focusNode: _model.phoneFocusNode,
-                                    autofocus: false,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter phone number',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            letterSpacing: 0.25,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              16.0, 16.0, 16.0, 16.0),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.25,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                    keyboardType: TextInputType.phone,
-                                    cursorColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    validator: _model
-                                        .phoneTextControllerValidator
-                                        .asValidator(context),
-                                    inputFormatters: [_model.phoneMask],
-                                  ),
-                                ].divide(SizedBox(height: 8.0)),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Email',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          letterSpacing: 0.25,
-                                          fontWeight: FontWeight.w500,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
-                                  TextFormField(
-                                    controller: _model.emailTextController,
-                                    focusNode: _model.emailFocusNode,
-                                    autofocus: false,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter email',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            letterSpacing: 0.25,
-                                            useGoogleFonts:
-                                                !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              16.0, 16.0, 16.0, 16.0),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.25,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                    cursorColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    validator: _model
-                                        .emailTextControllerValidator
-                                        .asValidator(context),
-                                  ),
-                                ].divide(SizedBox(height: 8.0)),
-                              ),
-                            ].divide(SizedBox(height: 20.0)),
-                          ),
+                          onPressed: () async {
+                            context.safePop();
+                          },
                         ),
                       ),
-                      Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 30.0, 0.0, 0.0),
-                          child: FFButtonWidget(
-                            onPressed: () async {
-                              await actions.dismissKeyboard(
-                                context,
-                              );
-                              _model.personalJsonOut =
-                                  await actions.buildPersonalJson(
-                                _model.firstNameTextController.text,
-                                _model.lastNameTextController.text,
-                                _model.phoneTextController.text,
-                                _model.emailTextController.text,
-                              );
-                              _model.personalJson = _model.personalJsonOut;
-                              safeSetState(() {});
-                              if (loggedIn == true) {
-                                _model.keyOut =
-                                    await actions.generateDataKeyIfMissing();
-                                _model.dataKeyB64 = _model.keyOut;
-                                safeSetState(() {});
-                                _model.enc = await actions.aesGcmEncryptString(
-                                  _model.personalJson!,
-                                  _model.dataKeyB64!,
-                                );
-                                _model.ctB64 = getJsonField(
-                                  _model.enc,
-                                  r'''$.ciphertextB64''',
-                                ).toString();
-                                _model.nonceB64 = getJsonField(
-                                  _model.enc,
-                                  r'''$.nonceB64''',
-                                ).toString();
-                                safeSetState(() {});
-                                _model.wrap = await WrapDataKeyCall.call(
-                                  dataKeyB64: _model.dataKeyB64,
-                                  jwt: currentJwtToken,
-                                );
-
-                                if ((_model.wrap?.succeeded ?? true)) {
-                                  _model.wrappedB64 = getJsonField(
-                                    (_model.wrap?.jsonBody ?? ''),
-                                    r'''$.wrappedB64''',
-                                  ).toString();
-                                  safeSetState(() {});
-                                  _model.supaRows =
-                                      await DecoyWalletTable().queryRows(
-                                    queryFn: (q) => q
-                                        .eqOrNull(
-                                          'user_id',
-                                          currentUserUid,
-                                        )
-                                        .order('updated_at'),
-                                  );
-                                  if (_model.supaRows != null &&
-                                      (_model.supaRows)!.isNotEmpty) {
-                                    await DecoyWalletTable().update(
-                                      data: {
-                                        'personal_ciphertext': _model.ctB64,
-                                        'personal_nonce': _model.nonceB64,
-                                        'personal_version': 1,
-                                        'wrapped_datakey': _model.wrappedB64,
-                                        'updated_at': supaSerialize<DateTime>(
-                                            getCurrentTimestamp),
-                                        'personal_complete': (_model.firstNameTextController
-                                                            .text !=
-                                                        '') &&
-                                                (_model.lastNameTextController
-                                                            .text !=
-                                                        '')
-                                            ? true
-                                            : false,
-                                      },
-                                      matchingRows: (rows) => rows.eqOrNull(
-                                        'user_id',
-                                        currentUserUid,
-                                      ),
-                                    );
-                                    _model.refreshedDecoyWallet1 =
-                                        await DecoyWalletTable().queryRows(
-                                      queryFn: (q) => q.eqOrNull(
-                                        'user_id',
-                                        currentUserUid,
-                                      ),
-                                    );
-                                    _model.personalSaved =
-                                        _model.personalSaved + 1;
-                                    safeSetState(() {});
-                                    _model.changedEmail =
-                                        functions.normalizeEmail(
-                                            _model.emailTextController.text);
-                                    _model.changedPhone =
-                                        functions.sanitizePhoneNumber(
-                                            _model.phoneTextController.text);
-                                    safeSetState(() {});
-                                    if ((functions.normalizeEmail(
-                                                currentUserEmail) !=
-                                            functions.normalizeEmail(
-                                                _model.changedEmail)) &&
-                                        (_model.changedEmail != null &&
-                                            _model.changedEmail != '')) {
-                                      _model.changedEmailHash =
-                                          await GetEmailHashCall.call(
-                                        jwt: currentJwtToken,
-                                        email: functions.normalizeEmail(
-                                            _model.changedEmail),
-                                      );
-
-                                      await DecoyWalletTable().update(
-                                        data: {
-                                          'pending_email': null,
-                                          'email_verified': false,
-                                          'email_verified_at':
-                                              supaSerialize<DateTime>(
-                                                  getCurrentTimestamp),
-                                          'pending_email_hash':
-                                              GetEmailHashCall.emailHash(
-                                            (_model.changedEmailHash
-                                                    ?.jsonBody ??
-                                                ''),
-                                          ).toString(),
-                                        },
-                                        matchingRows: (rows) => rows.eqOrNull(
-                                          'user_id',
-                                          currentUserUid,
-                                        ),
-                                      );
-                                      FFAppState().userEmail = functions
-                                          .normalizeEmail(_model.changedEmail);
-                                      safeSetState(() {});
-                                      if (_model.changedEmail!.isEmpty) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Email required!',
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                elevation: 3.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.person,
+                                color: FlutterFlowTheme.of(context).info,
+                                size: 100.0,
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: 400.0,
+                            child: Form(
+                              key: _model.formKey,
+                              autovalidateMode: AutovalidateMode.disabled,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'First Name',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              letterSpacing: 0.25,
+                                              fontWeight: FontWeight.w500,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
                                             ),
+                                      ),
+                                      TextFormField(
+                                        controller:
+                                            _model.firstNameTextController,
+                                        focusNode: _model.firstNameFocusNode,
+                                        autofocus: false,
+                                        textCapitalization:
+                                            TextCapitalization.words,
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter first name',
+                                          hintStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMediumFamily,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.25,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMediumIsCustom,
+                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondaryBackground,
+                                          contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 16.0, 16.0, 16.0),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              fontSize: 16.0,
+                                              letterSpacing: 0.25,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                        keyboardType: TextInputType.name,
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        validator: _model
+                                            .firstNameTextControllerValidator
+                                            .asValidator(context),
+                                        inputFormatters: [
+                                          if (!isAndroid && !isiOS)
+                                            TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return TextEditingValue(
+                                                selection: newValue.selection,
+                                                text: newValue.text
+                                                    .toCapitalization(
+                                                        TextCapitalization
+                                                            .words),
+                                              );
+                                            }),
+                                        ],
+                                      ),
+                                    ].divide(SizedBox(height: 8.0)),
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Last Name',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              letterSpacing: 0.25,
+                                              fontWeight: FontWeight.w500,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                      ),
+                                      TextFormField(
+                                        controller:
+                                            _model.lastNameTextController,
+                                        focusNode: _model.lastNameFocusNode,
+                                        autofocus: false,
+                                        textCapitalization:
+                                            TextCapitalization.words,
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter last name',
+                                          hintStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMediumFamily,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.25,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMediumIsCustom,
+                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondaryBackground,
+                                          contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 16.0, 16.0, 16.0),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              fontSize: 16.0,
+                                              letterSpacing: 0.25,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                        keyboardType: TextInputType.name,
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        validator: _model
+                                            .lastNameTextControllerValidator
+                                            .asValidator(context),
+                                        inputFormatters: [
+                                          if (!isAndroid && !isiOS)
+                                            TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return TextEditingValue(
+                                                selection: newValue.selection,
+                                                text: newValue.text
+                                                    .toCapitalization(
+                                                        TextCapitalization
+                                                            .words),
+                                              );
+                                            }),
+                                        ],
+                                      ),
+                                    ].divide(SizedBox(height: 8.0)),
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Phone Number',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              letterSpacing: 0.25,
+                                              fontWeight: FontWeight.w500,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                      ),
+                                      TextFormField(
+                                        controller: _model.phoneTextController,
+                                        focusNode: _model.phoneFocusNode,
+                                        autofocus: false,
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter phone number',
+                                          hintStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMediumFamily,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.25,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMediumIsCustom,
+                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondaryBackground,
+                                          contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 16.0, 16.0, 16.0),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              fontSize: 16.0,
+                                              letterSpacing: 0.25,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                        keyboardType: TextInputType.phone,
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        validator: _model
+                                            .phoneTextControllerValidator
+                                            .asValidator(context),
+                                        inputFormatters: [_model.phoneMask],
+                                      ),
+                                    ].divide(SizedBox(height: 8.0)),
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Email',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              letterSpacing: 0.25,
+                                              fontWeight: FontWeight.w500,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                      ),
+                                      TextFormField(
+                                        controller: _model.emailTextController,
+                                        focusNode: _model.emailFocusNode,
+                                        autofocus: false,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter email',
+                                          hintStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMediumFamily,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.25,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMediumIsCustom,
+                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondaryBackground,
+                                          contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 16.0, 16.0, 16.0),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              fontSize: 16.0,
+                                              letterSpacing: 0.25,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .bodyMediumIsCustom,
+                                            ),
+                                        cursorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        validator: _model
+                                            .emailTextControllerValidator
+                                            .asValidator(context),
+                                      ),
+                                    ].divide(SizedBox(height: 8.0)),
+                                  ),
+                                ].divide(SizedBox(height: 20.0)),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 30.0, 0.0, 0.0),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  await actions.dismissKeyboard(
+                                    context,
+                                  );
+                                  _model.personalJsonOut =
+                                      await actions.buildPersonalJson(
+                                    _model.firstNameTextController.text,
+                                    _model.lastNameTextController.text,
+                                    _model.phoneTextController.text,
+                                    _model.emailTextController.text,
+                                  );
+                                  _model.personalJson = _model.personalJsonOut;
+                                  safeSetState(() {});
+                                  if (loggedIn == true) {
+                                    _model.keyOut = await actions
+                                        .generateDataKeyIfMissing();
+                                    _model.dataKeyB64 = _model.keyOut;
+                                    safeSetState(() {});
+                                    _model.enc =
+                                        await actions.aesGcmEncryptString(
+                                      _model.personalJson!,
+                                      _model.dataKeyB64!,
+                                    );
+                                    _model.ctB64 = getJsonField(
+                                      _model.enc,
+                                      r'''$.ciphertextB64''',
+                                    ).toString();
+                                    _model.nonceB64 = getJsonField(
+                                      _model.enc,
+                                      r'''$.nonceB64''',
+                                    ).toString();
+                                    safeSetState(() {});
+                                    _model.wrap = await WrapDataKeyCall.call(
+                                      dataKeyB64: _model.dataKeyB64,
+                                      jwt: currentJwtToken,
+                                    );
+
+                                    if ((_model.wrap?.succeeded ?? true)) {
+                                      _model.wrappedB64 = getJsonField(
+                                        (_model.wrap?.jsonBody ?? ''),
+                                        r'''$.wrappedB64''',
+                                      ).toString();
+                                      safeSetState(() {});
+                                      _model.supaRows =
+                                          await DecoyWalletTable().queryRows(
+                                        queryFn: (q) => q
+                                            .eqOrNull(
+                                              'user_id',
+                                              currentUserUid,
+                                            )
+                                            .order('updated_at'),
+                                      );
+                                      if (_model.supaRows != null &&
+                                          (_model.supaRows)!.isNotEmpty) {
+                                        await DecoyWalletTable().update(
+                                          data: {
+                                            'personal_ciphertext': _model.ctB64,
+                                            'personal_nonce': _model.nonceB64,
+                                            'personal_version': 1,
+                                            'wrapped_datakey':
+                                                _model.wrappedB64,
+                                            'updated_at':
+                                                supaSerialize<DateTime>(
+                                                    getCurrentTimestamp),
+                                            'personal_complete': (_model.firstNameTextController
+                                                                .text !=
+                                                            '') &&
+                                                    (_model.lastNameTextController
+                                                                .text !=
+                                                            '')
+                                                ? true
+                                                : false,
+                                          },
+                                          matchingRows: (rows) => rows.eqOrNull(
+                                            'user_id',
+                                            currentUserUid,
                                           ),
                                         );
-                                        return;
-                                      }
-
-                                      await authManager.updateEmail(
-                                        email: _model.changedEmail!,
-                                        context: context,
-                                      );
-                                      safeSetState(() {});
-
-                                      context.pushNamed(
-                                        ConfirmEmailPageWidget.routeName,
-                                        queryParameters: {
-                                          'emailEntry': serializeParam(
-                                            _model.emailTextController.text,
-                                            ParamType.String,
+                                        _model.refreshedDecoyWallet1 =
+                                            await DecoyWalletTable().queryRows(
+                                          queryFn: (q) => q.eqOrNull(
+                                            'user_id',
+                                            currentUserUid,
                                           ),
-                                        }.withoutNulls,
-                                      );
-                                    } else {
-                                      if (_model.origPhone !=
-                                          _model.changedPhone) {
-                                        context.pushNamed(
-                                            PhoneNumberInputWidget.routeName);
+                                        );
+                                        _model.personalSaved =
+                                            _model.personalSaved + 1;
+                                        safeSetState(() {});
+                                        _model.changedEmail =
+                                            functions.normalizeEmail(_model
+                                                .emailTextController.text);
+                                        _model.changedPhone =
+                                            functions.sanitizePhoneNumber(_model
+                                                .phoneTextController.text);
+                                        safeSetState(() {});
+                                        if ((functions.normalizeEmail(
+                                                    currentUserEmail) !=
+                                                functions.normalizeEmail(
+                                                    _model.changedEmail)) &&
+                                            (_model.changedEmail != null &&
+                                                _model.changedEmail != '')) {
+                                          _model.changedEmailHash =
+                                              await GetEmailHashCall.call(
+                                            jwt: currentJwtToken,
+                                            email: functions.normalizeEmail(
+                                                _model.changedEmail),
+                                          );
+
+                                          await DecoyWalletTable().update(
+                                            data: {
+                                              'pending_email': null,
+                                              'email_verified': false,
+                                              'email_verified_at':
+                                                  supaSerialize<DateTime>(
+                                                      getCurrentTimestamp),
+                                              'pending_email_hash':
+                                                  GetEmailHashCall.emailHash(
+                                                (_model.changedEmailHash
+                                                        ?.jsonBody ??
+                                                    ''),
+                                              ).toString(),
+                                            },
+                                            matchingRows: (rows) =>
+                                                rows.eqOrNull(
+                                              'user_id',
+                                              currentUserUid,
+                                            ),
+                                          );
+                                          FFAppState().userEmail =
+                                              functions.normalizeEmail(
+                                                  _model.changedEmail);
+                                          safeSetState(() {});
+                                          if (_model.changedEmail!.isEmpty) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Email required!',
+                                                ),
+                                              ),
+                                            );
+                                            return;
+                                          }
+
+                                          await authManager.updateEmail(
+                                            email: _model.changedEmail!,
+                                            context: context,
+                                          );
+                                          safeSetState(() {});
+
+                                          context.pushNamed(
+                                            ConfirmEmailPageWidget.routeName,
+                                            queryParameters: {
+                                              'emailEntry': serializeParam(
+                                                _model.emailTextController.text,
+                                                ParamType.String,
+                                              ),
+                                            }.withoutNulls,
+                                          );
+                                        } else {
+                                          if (_model.origPhone !=
+                                              _model.changedPhone) {
+                                            context.pushNamed(
+                                                PhoneNumberInputWidget
+                                                    .routeName);
+                                          } else {
+                                            await Future.delayed(
+                                              Duration(
+                                                milliseconds: 250,
+                                              ),
+                                            );
+                                            _model.personalSaved =
+                                                _model.personalSaved + -1;
+                                            safeSetState(() {});
+                                            context.safePop();
+                                          }
+                                        }
                                       } else {
+                                        _model.supaNameInserts =
+                                            await DecoyWalletTable().insert({
+                                          'personal_ciphertext': _model.ctB64,
+                                          'personal_nonce': _model.nonceB64,
+                                          'personal_version': 1,
+                                          'wrapped_datakey': _model.wrappedB64,
+                                          'updated_at': supaSerialize<DateTime>(
+                                              getCurrentTimestamp),
+                                          'user_id': currentUserUid,
+                                          'personal_complete': (_model.firstNameTextController
+                                                              .text !=
+                                                          '') &&
+                                                  (_model.lastNameTextController
+                                                              .text !=
+                                                          '')
+                                              ? true
+                                              : false,
+                                        });
+                                        _model.refreshedDecoyWallet2 =
+                                            await DecoyWalletTable().queryRows(
+                                          queryFn: (q) => q.eqOrNull(
+                                            'user_id',
+                                            currentUserUid,
+                                          ),
+                                        );
+                                        _model.personalSaved =
+                                            _model.personalSaved + 1;
+                                        safeSetState(() {});
                                         await Future.delayed(
                                           Duration(
                                             milliseconds: 250,
@@ -902,111 +1000,78 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         safeSetState(() {});
                                         context.safePop();
                                       }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'ERROR #011 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                            style: TextStyle(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondary,
+                                        ),
+                                      );
                                     }
                                   } else {
-                                    _model.supaNameInserts =
-                                        await DecoyWalletTable().insert({
-                                      'personal_ciphertext': _model.ctB64,
-                                      'personal_nonce': _model.nonceB64,
-                                      'personal_version': 1,
-                                      'wrapped_datakey': _model.wrappedB64,
-                                      'updated_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
-                                      'user_id': currentUserUid,
-                                      'personal_complete': (_model.firstNameTextController
-                                                          .text !=
-                                                      '') &&
-                                              (_model.lastNameTextController
-                                                          .text !=
-                                                      '')
-                                          ? true
-                                          : false,
-                                    });
-                                    _model.refreshedDecoyWallet2 =
-                                        await DecoyWalletTable().queryRows(
-                                      queryFn: (q) => q.eqOrNull(
-                                        'user_id',
-                                        currentUserUid,
-                                      ),
-                                    );
-                                    _model.personalSaved =
-                                        _model.personalSaved + 1;
-                                    safeSetState(() {});
-                                    await Future.delayed(
-                                      Duration(
-                                        milliseconds: 250,
-                                      ),
-                                    );
-                                    _model.personalSaved =
-                                        _model.personalSaved + -1;
-                                    safeSetState(() {});
-                                    context.safePop();
+                                    context.goNamed(LoginPageWidget.routeName);
                                   }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'ERROR #011 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
-                                }
-                              } else {
-                                context.goNamed(LoginPageWidget.routeName);
-                              }
 
-                              safeSetState(() {});
-                            },
-                            text: 'Save',
-                            options: FFButtonOptions(
-                              width: 250.0,
-                              height: 50.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    font: GoogleFonts.heebo(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                    color: Colors.white,
-                                    fontSize: 18.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontStyle,
-                                  ),
-                              elevation: 3.0,
-                              borderRadius: BorderRadius.circular(12.0),
+                                  safeSetState(() {});
+                                },
+                                text: 'Save',
+                                options: FFButtonOptions(
+                                  width: 250.0,
+                                  height: 50.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.heebo(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: Colors.white,
+                                        fontSize: 18.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .fontStyle,
+                                      ),
+                                  elevation: 3.0,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ]
+                            .divide(SizedBox(height: 24.0))
+                            .addToStart(SizedBox(height: 24.0)),
                       ),
-                    ]
-                        .divide(SizedBox(height: 24.0))
-                        .addToStart(SizedBox(height: 24.0)),
-                  ),
+                    ),
+                  ].addToEnd(SizedBox(height: 150.0)),
                 ),
-              ].addToEnd(SizedBox(height: 150.0)),
+              ),
             ),
           ),
         ),

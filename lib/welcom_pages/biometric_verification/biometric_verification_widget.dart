@@ -55,331 +55,360 @@ class _BiometricVerificationWidgetState
         FocusScope.of(context).unfocus();
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          top: true,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 400.0,
-                  height: 300.0,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Material(
-                        color: Colors.transparent,
-                        elevation: 3.0,
-                        shape: const CircleBorder(),
-                        child: Container(
-                          width: 120.0,
-                          height: 120.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).accent1,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Icon(
-                              Icons.fingerprint,
-                              color: FlutterFlowTheme.of(context).primary,
-                              size: 64.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Enable Biometric Authentication',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .headlineMedium
-                                .override(
-                                  fontFamily: 'InterTight',
-                                  letterSpacing: 0.0,
-                                ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Text(
-                              'Use your fingerprint or face ID to quickly and securely access your account without entering your password every time.',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'robot',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    lineHeight: 1.5,
-                                  ),
-                            ),
-                          ),
-                        ].divide(SizedBox(height: 12.0)),
-                      ),
-                    ].divide(SizedBox(height: 24.0)),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 36.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Material(
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            top: true,
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 400.0,
+                    height: 300.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Material(
                           color: Colors.transparent,
                           elevation: 3.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                          ),
+                          shape: const CircleBorder(),
                           child: Container(
-                            width: 275.0,
+                            width: 120.0,
+                            height: 120.0,
                             decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              borderRadius: BorderRadius.circular(16.0),
-                              border: Border.all(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 2.0,
-                              ),
+                              color: FlutterFlowTheme.of(context).accent1,
+                              shape: BoxShape.circle,
                             ),
                             child: Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: SwitchListTile(
-                                  value: _model.switchListTileValue ??=
-                                      _model.wantsBiometrics,
-                                  onChanged: (newValue) async {
-                                    safeSetState(() =>
-                                        _model.switchListTileValue = newValue);
-                                    if (newValue) {
-                                      _model.wantsBiometrics = true;
-                                      safeSetState(() {});
-                                    } else {
-                                      _model.wantsBiometrics = false;
-                                      safeSetState(() {});
-                                    }
-                                  },
-                                  title: Text(
-                                    'Enable Biometric Authentication',
-                                    style: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .override(
-                                          fontFamily: 'InterTight',
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
-                                  subtitle: Text(
-                                    'Use fingerprint or face ID to sign in',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodySmall
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmallFamily,
-                                          fontSize: 12.0,
-                                          letterSpacing: 0.0,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodySmallIsCustom,
-                                        ),
-                                  ),
-                                  tileColor: Colors.transparent,
-                                  activeThumbColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  activeTrackColor:
-                                      FlutterFlowTheme.of(context).accent1,
-                                  dense: false,
-                                  controlAffinity:
-                                      ListTileControlAffinity.trailing,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(0.0),
-                                  ),
-                                ),
+                              child: Icon(
+                                Icons.fingerprint,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 64.0,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Enable Biometric Authentication',
+                              textAlign: TextAlign.center,
+                              style: FlutterFlowTheme.of(context)
+                                  .headlineMedium
+                                  .override(
+                                    fontFamily: 'InterTight',
+                                    letterSpacing: 0.0,
+                                  ),
+                            ),
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Use your fingerprint or Face ID to quickly and securely access your account',
+                                textAlign: TextAlign.center,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'robot',
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      fontSize: 14.0,
+                                      letterSpacing: 0.0,
+                                      lineHeight: 1.5,
+                                    ),
+                              ),
+                            ),
+                          ].divide(SizedBox(height: 12.0)),
+                        ),
+                      ].divide(SizedBox(height: 24.0)),
+                    ),
                   ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Padding(
+                  Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 36.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Change these settings anytime in the ',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
-                                    ),
+                          child: Material(
+                            color: Colors.transparent,
+                            elevation: 3.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            child: Container(
+                              width: 275.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                                borderRadius: BorderRadius.circular(16.0),
+                                border: Border.all(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  width: 2.0,
+                                ),
                               ),
-                              Text(
-                                'Control',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
+                              child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: SwitchListTile(
+                                    value: _model.switchListTileValue ??=
+                                        _model.wantsBiometrics,
+                                    onChanged: (newValue) async {
+                                      safeSetState(() => _model
+                                          .switchListTileValue = newValue);
+                                      if (newValue) {
+                                        _model.wantsBiometrics = true;
+                                        safeSetState(() {});
+                                      } else {
+                                        _model.wantsBiometrics = false;
+                                        safeSetState(() {});
+                                      }
+                                    },
+                                    title: Text(
+                                      'Enable Biometric Authentication',
+                                      style: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .override(
+                                            fontFamily: 'InterTight',
+                                            fontSize: 16.0,
+                                            letterSpacing: 0.0,
+                                          ),
                                     ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Center',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
+                                    tileColor: Colors.transparent,
+                                    activeThumbColor:
+                                        FlutterFlowTheme.of(context).primary,
+                                    activeTrackColor:
+                                        FlutterFlowTheme.of(context).accent1,
+                                    dense: false,
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0.0),
                                     ),
+                                  ),
+                                ),
                               ),
-                              Text(
-                                'by navigating to ',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
-                                    ),
-                              ),
-                              Text(
-                                'Settings > Control Center',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
-                                    ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
-                      width: 400.0,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                  Align(
+                    alignment: AlignmentDirectional(0.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Change these settings anytime in the ',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                ),
+                                Text(
+                                  'Control',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Center',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                ),
+                                Text(
+                                  'by navigating to ',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                ),
+                                Text(
+                                  'Settings > Control Center',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Visibility(
-                        visible: _model.wantsBiometrics,
-                        child: FFButtonWidget(
-                          onPressed: () async {
-                            if (_model.wantsBiometrics == true) {
-                              final _localAuth = LocalAuthentication();
-                              bool _isBiometricSupported =
-                                  await _localAuth.isDeviceSupported();
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        width: 400.0,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                        ),
+                        child: Visibility(
+                          visible: _model.wantsBiometrics,
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              if (_model.wantsBiometrics == true) {
+                                final _localAuth = LocalAuthentication();
+                                bool _isBiometricSupported =
+                                    await _localAuth.isDeviceSupported();
 
-                              if (_isBiometricSupported) {
-                                try {
-                                  _model.enableBioResult =
-                                      await _localAuth.authenticate(
-                                          localizedReason:
-                                              'Please authenticate to enable biometric unlock for Decoy Wallet');
-                                } on PlatformException {
-                                  _model.enableBioResult = false;
+                                if (_isBiometricSupported) {
+                                  try {
+                                    _model.enableBioResult =
+                                        await _localAuth.authenticate(
+                                            localizedReason:
+                                                'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                  } on PlatformException {
+                                    _model.enableBioResult = false;
+                                  }
+                                  safeSetState(() {});
                                 }
-                                safeSetState(() {});
-                              }
 
-                              if (_model.enableBioResult == true) {
-                                FFAppState().biometricsEnabled = true;
+                                if (_model.enableBioResult == true) {
+                                  FFAppState().biometricsEnabled = true;
+                                  safeSetState(() {});
+                                  _model.bioInsertRows =
+                                      await UserSettingsTable().queryRows(
+                                    queryFn: (q) => q.eqOrNull(
+                                      'user_id',
+                                      currentUserUid,
+                                    ),
+                                  );
+                                  if (_model.bioInsertRows != null &&
+                                      (_model.bioInsertRows)!.isNotEmpty) {
+                                    await UserSettingsTable().update(
+                                      data: {
+                                        'biometrics_enabled':
+                                            FFAppState().biometricsEnabled,
+                                      },
+                                      matchingRows: (rows) => rows.eqOrNull(
+                                        'user_id',
+                                        currentUserUid,
+                                      ),
+                                    );
+
+                                    context.goNamed(
+                                        EnableNotificationsWidget.routeName);
+                                  } else {
+                                    _model.bioInsertBE =
+                                        await UserSettingsTable().insert({
+                                      'user_id': currentUserUid,
+                                      'biometrics_enabled':
+                                          FFAppState().biometricsEnabled,
+                                    });
+
+                                    context.goNamed(
+                                        EnableNotificationsWidget.routeName);
+                                  }
+                                } else {
+                                  FFAppState().biometricsEnabled = false;
+                                  safeSetState(() {});
+                                }
+                              } else {
+                                FFAppState().biometricsEnabled = false;
                                 safeSetState(() {});
-                                _model.bioInsertRows =
+                                _model.bioInsertRowsFB =
                                     await UserSettingsTable().queryRows(
                                   queryFn: (q) => q.eqOrNull(
                                     'user_id',
                                     currentUserUid,
                                   ),
                                 );
-                                if (_model.bioInsertRows != null &&
-                                    (_model.bioInsertRows)!.isNotEmpty) {
+                                if (_model.bioInsertRowsFB != null &&
+                                    (_model.bioInsertRowsFB)!.isNotEmpty) {
                                   await UserSettingsTable().update(
                                     data: {
                                       'biometrics_enabled':
@@ -394,7 +423,7 @@ class _BiometricVerificationWidgetState
                                   context.goNamed(
                                       EnableNotificationsWidget.routeName);
                                 } else {
-                                  _model.bioInsertBE =
+                                  _model.bioInsertBEFB =
                                       await UserSettingsTable().insert({
                                     'user_id': currentUserUid,
                                     'biometrics_enabled':
@@ -404,51 +433,97 @@ class _BiometricVerificationWidgetState
                                   context.goNamed(
                                       EnableNotificationsWidget.routeName);
                                 }
-                              } else {
-                                FFAppState().biometricsEnabled = false;
-                                safeSetState(() {});
                               }
-                            } else {
-                              FFAppState().biometricsEnabled = false;
+
                               safeSetState(() {});
-                              _model.bioInsertRowsFB =
-                                  await UserSettingsTable().queryRows(
-                                queryFn: (q) => q.eqOrNull(
+                            },
+                            text: 'Continue',
+                            options: FFButtonOptions(
+                              width: 400.0,
+                              height: 50.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).primary,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    font: GoogleFonts.heebo(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontStyle,
+                                    ),
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontStyle,
+                                  ),
+                              elevation: 3.0,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: BorderRadius.circular(14.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 400.0,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                        ),
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            FFAppState().biometricsEnabled = false;
+                            safeSetState(() {});
+                            _model.bioInsertRowsFBSkipper =
+                                await UserSettingsTable().queryRows(
+                              queryFn: (q) => q.eqOrNull(
+                                'user_id',
+                                currentUserUid,
+                              ),
+                            );
+                            if (_model.bioInsertRowsFBSkipper != null &&
+                                (_model.bioInsertRowsFBSkipper)!.isNotEmpty) {
+                              await UserSettingsTable().update(
+                                data: {
+                                  'biometrics_enabled':
+                                      FFAppState().biometricsEnabled,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
                                   'user_id',
                                   currentUserUid,
                                 ),
                               );
-                              if (_model.bioInsertRowsFB != null &&
-                                  (_model.bioInsertRowsFB)!.isNotEmpty) {
-                                await UserSettingsTable().update(
-                                  data: {
-                                    'biometrics_enabled':
-                                        FFAppState().biometricsEnabled,
-                                  },
-                                  matchingRows: (rows) => rows.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
-                                );
 
-                                context.goNamed(
-                                    EnableNotificationsWidget.routeName);
-                              } else {
-                                _model.bioInsertBEFB =
-                                    await UserSettingsTable().insert({
-                                  'user_id': currentUserUid,
-                                  'biometrics_enabled':
-                                      FFAppState().biometricsEnabled,
-                                });
+                              context
+                                  .goNamed(EnableNotificationsWidget.routeName);
+                            } else {
+                              _model.bioInsertBEFBSkipper =
+                                  await UserSettingsTable().insert({
+                                'user_id': currentUserUid,
+                                'biometrics_enabled':
+                                    FFAppState().biometricsEnabled,
+                              });
 
-                                context.goNamed(
-                                    EnableNotificationsWidget.routeName);
-                              }
+                              context
+                                  .goNamed(EnableNotificationsWidget.routeName);
                             }
 
                             safeSetState(() {});
                           },
-                          text: 'Continue',
+                          text: 'Skip for Now',
                           options: FFButtonOptions(
                             width: 400.0,
                             height: 50.0,
@@ -456,7 +531,8 @@ class _BiometricVerificationWidgetState
                                 24.0, 0.0, 24.0, 0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).primary,
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
@@ -468,7 +544,8 @@ class _BiometricVerificationWidgetState
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                                  color: Colors.white,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
                                   fontSize: 18.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
@@ -480,106 +557,21 @@ class _BiometricVerificationWidgetState
                                 ),
                             elevation: 3.0,
                             borderSide: BorderSide(
-                              color: Colors.transparent,
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              width: 1.0,
                             ),
                             borderRadius: BorderRadius.circular(14.0),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 400.0,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                      ),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          FFAppState().biometricsEnabled = false;
-                          safeSetState(() {});
-                          _model.bioInsertRowsFBSkipper =
-                              await UserSettingsTable().queryRows(
-                            queryFn: (q) => q.eqOrNull(
-                              'user_id',
-                              currentUserUid,
-                            ),
-                          );
-                          if (_model.bioInsertRowsFBSkipper != null &&
-                              (_model.bioInsertRowsFBSkipper)!.isNotEmpty) {
-                            await UserSettingsTable().update(
-                              data: {
-                                'biometrics_enabled':
-                                    FFAppState().biometricsEnabled,
-                              },
-                              matchingRows: (rows) => rows.eqOrNull(
-                                'user_id',
-                                currentUserUid,
-                              ),
-                            );
-
-                            context
-                                .goNamed(EnableNotificationsWidget.routeName);
-                          } else {
-                            _model.bioInsertBEFBSkipper =
-                                await UserSettingsTable().insert({
-                              'user_id': currentUserUid,
-                              'biometrics_enabled':
-                                  FFAppState().biometricsEnabled,
-                            });
-
-                            context
-                                .goNamed(EnableNotificationsWidget.routeName);
-                          }
-
-                          safeSetState(() {});
-                        },
-                        text: 'Skip for Now',
-                        options: FFButtonOptions(
-                          width: 400.0,
-                          height: 50.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          textStyle: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .override(
-                                font: GoogleFonts.heebo(
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .fontStyle,
-                                ),
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 18.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .fontStyle,
-                              ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                      ),
-                    ),
-                  ].divide(SizedBox(height: 16.0)),
-                ),
-              ]
-                  .divide(SizedBox(height: 24.0))
-                  .addToStart(SizedBox(height: 24.0))
-                  .addToEnd(SizedBox(height: 32.0)),
+                    ].divide(SizedBox(height: 16.0)),
+                  ),
+                ]
+                    .divide(SizedBox(height: 24.0))
+                    .addToStart(SizedBox(height: 24.0))
+                    .addToEnd(SizedBox(height: 32.0)),
+              ),
             ),
           ),
         ),

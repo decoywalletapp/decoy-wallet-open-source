@@ -115,138 +115,164 @@ class _SeedPhraseVerificationWidgetState
         FocusScope.of(context).unfocus();
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).info,
-        body: SafeArea(
-          top: true,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(24.0, 32.0, 24.0, 32.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    elevation: 3.0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: Container(
-                                      width: 225.0,
-                                      height: 72.0,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: FlutterFlowTheme.of(context).info,
+          body: SafeArea(
+            top: true,
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(24.0, 32.0, 24.0, 32.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      elevation: 3.0,
+                                      shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                       ),
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.02, 0.0),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      8.0, 12.0, 8.0, 12.0),
-                                              child: Text(
-                                                'QUIZ TIME!',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.125,
-                                                    ),
+                                      child: Container(
+                                        width: 225.0,
+                                        height: 72.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.02, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        8.0, 12.0, 8.0, 12.0),
+                                                child: Text(
+                                                  'QUIZ TIME!',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'DECOY BEBAS',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
+                                                        fontSize: 48.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        lineHeight: 1.125,
+                                                      ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                -0.02, 0.0),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      8.0, 12.0, 8.0, 12.0),
-                                              child: Text(
-                                                'QUIZ TIME!',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.125,
-                                                    ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -0.02, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        8.0, 12.0, 8.0, 12.0),
+                                                child: Text(
+                                                  'QUIZ TIME!',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'DECOY BEBAS',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
+                                                        fontSize: 48.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        lineHeight: 1.125,
+                                                      ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Padding(
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 20.0, 0.0, 0.0),
+                                  child: Text(
+                                    'Question ',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .bodyMediumIsCustom,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 20.0, 0.0, 0.0),
                                 child: Text(
-                                  'Question ',
-                                  textAlign: TextAlign.center,
+                                  functions
+                                      .plusOneToString(_model.currentQuestion),
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
                                         fontFamily: FlutterFlowTheme.of(context)
                                             .bodyMediumFamily,
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
                                         letterSpacing: 0.0,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
@@ -254,793 +280,839 @@ class _SeedPhraseVerificationWidgetState
                                       ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 20.0, 0.0, 0.0),
-                              child: Text(
-                                functions
-                                    .plusOneToString(_model.currentQuestion),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
-                                    ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 20.0, 0.0, 0.0),
-                              child: Text(
-                                ' of 3',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ].divide(SizedBox(height: 8.0)),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Container(
-                                width: 400.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  borderRadius: BorderRadius.circular(16.0),
-                                  border: Border.all(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    width: 4.0,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Choose word ',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .titleLarge
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleLargeFamily,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts:
-                                                      !FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleLargeIsCustom,
-                                                ),
-                                          ),
-                                          Text(
-                                            _model.displayIndex.toString(),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumFamily,
-                                                  fontSize: 20.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.bold,
-                                                  useGoogleFonts:
-                                                      !FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumIsCustom,
-                                                ),
-                                          ),
-                                        ],
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 20.0, 0.0, 0.0),
+                                child: Text(
+                                  ' of 3',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        letterSpacing: 0.0,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
                                       ),
-                                      Stack(
-                                        children: [
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              FFButtonWidget(
-                                                onPressed: () async {
-                                                  _model.addToChosenWords(_model
-                                                      .options
-                                                      .elementAtOrNull(0)!);
-                                                  safeSetState(() {});
-                                                  _model.selectedIndex = 0;
-                                                  safeSetState(() {});
-                                                  if (_model.currentQuestion <
-                                                      2) {
-                                                    _model.currentQuestion =
-                                                        _model.currentQuestion +
-                                                            1;
-                                                    safeSetState(() {});
-                                                    _model.quizStep =
-                                                        await actions
-                                                            .buildQuizStepAction(
-                                                      _model.words.toList(),
-                                                      _model.quizIndices
-                                                          .toList(),
-                                                      _model.currentQuestion,
-                                                    );
-                                                    _model.options =
-                                                        (getJsonField(
-                                                      _model.quizStep,
-                                                      r'''$.options''',
-                                                      true,
-                                                    ) as List?)!
-                                                            .map<String>((e) =>
-                                                                e.toString())
-                                                            .toList()
-                                                            .cast<String>()
-                                                            .toList()
-                                                            .cast<String>();
-                                                    _model.correctWord =
-                                                        getJsonField(
-                                                      _model.quizStep,
-                                                      r'''$.correctWord''',
-                                                    ).toString();
-                                                    _model.displayIndex =
-                                                        getJsonField(
-                                                      _model.quizStep,
-                                                      r'''$.displayIndex''',
-                                                    );
-                                                    _model.selectedIndex = -1;
-                                                    safeSetState(() {});
-                                                  } else {
-                                                    _model.verifyResult =
-                                                        await actions
-                                                            .verifyAllSelectionsAction(
-                                                      _model.words.toList(),
-                                                      _model.quizIndices
-                                                          .toList(),
-                                                      _model.chosenWords
-                                                          .toList(),
-                                                    );
-                                                    if (_model.verifyResult ==
-                                                        true) {
-                                                      context.pushNamed(
-                                                          DecoySeedSystemValuesWidget
-                                                              .routeName);
-                                                    } else {
-                                                      _model.attemptCount =
-                                                          _model.attemptCount +
-                                                              1;
-                                                      _model.currentQuestion =
-                                                          0;
-                                                      _model.chosenWords = [];
-                                                      _model.selectedIndex = -1;
-                                                      safeSetState(() {});
-                                                      if (_model.attemptCount <
-                                                          3) {
-                                                        _model.indicesOutRetry =
-                                                            await actions
-                                                                .makeQuizIndicesAction(
-                                                          _model.words.length,
-                                                        );
-                                                        _model.quizIndices =
-                                                            _model
-                                                                .indicesOutRetry!
-                                                                .toList()
-                                                                .cast<int>();
-                                                        safeSetState(() {});
-                                                        _model.quizStepRetry =
-                                                            await actions
-                                                                .buildQuizStepAction(
-                                                          _model.words.toList(),
-                                                          _model.quizIndices
-                                                              .toList(),
-                                                          0,
-                                                        );
-                                                        _model.options =
-                                                            (getJsonField(
-                                                          _model.quizStepRetry,
-                                                          r'''$.options''',
-                                                          true,
-                                                        ) as List?)!
-                                                                .map<String>((e) =>
-                                                                    e.toString())
-                                                                .toList()
-                                                                .cast<String>()
-                                                                .toList()
-                                                                .cast<String>();
-                                                        _model.correctWord =
-                                                            getJsonField(
-                                                          _model.quizStepRetry,
-                                                          r'''$.correctWord''',
-                                                        ).toString();
-                                                        _model.displayIndex =
-                                                            getJsonField(
-                                                          _model.quizStepRetry,
-                                                          r'''$.displayIndex''',
-                                                        );
-                                                        safeSetState(() {});
-                                                        _model.notificationState =
-                                                            1;
-                                                        safeSetState(() {});
-                                                        await Future.delayed(
-                                                          Duration(
-                                                            milliseconds: 2000,
-                                                          ),
-                                                        );
-                                                        _model.notificationState =
-                                                            0;
-                                                        safeSetState(() {});
-                                                      } else {
-                                                        context.pushNamed(
-                                                          ShowDecoySeedPhraseWidget
-                                                              .routeName,
-                                                          queryParameters: {
-                                                            'mnemonic':
-                                                                serializeParam(
-                                                              widget.mnemonic,
-                                                              ParamType.String,
-                                                            ),
-                                                            'decoyId':
-                                                                serializeParam(
-                                                              widget.decoyId,
-                                                              ParamType.String,
-                                                            ),
-                                                          }.withoutNulls,
-                                                          extra: <String,
-                                                              dynamic>{
-                                                            '__transition_info__':
-                                                                TransitionInfo(
-                                                              hasTransition:
-                                                                  true,
-                                                              transitionType:
-                                                                  PageTransitionType
-                                                                      .rightToLeft,
-                                                            ),
-                                                          },
-                                                        );
-                                                      }
-                                                    }
-                                                  }
-
-                                                  safeSetState(() {});
-                                                },
-                                                text: _model.options
-                                                    .elementAtOrNull(0)!,
-                                                options: FFButtonOptions(
-                                                  width: double.infinity,
-                                                  height: 56.0,
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(24.0, 16.0,
-                                                          24.0, 16.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryBackground,
-                                                  textStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmallFamily,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                            letterSpacing: 0.0,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmallIsCustom,
-                                                          ),
-                                                  elevation: 0.0,
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    width: 2.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                ),
-                                              ),
-                                              FFButtonWidget(
-                                                onPressed: () async {
-                                                  _model.addToChosenWords(_model
-                                                      .options
-                                                      .elementAtOrNull(1)!);
-                                                  safeSetState(() {});
-                                                  _model.selectedIndex = 0;
-                                                  safeSetState(() {});
-                                                  if (_model.currentQuestion <
-                                                      2) {
-                                                    _model.currentQuestion =
-                                                        _model.currentQuestion +
-                                                            1;
-                                                    safeSetState(() {});
-                                                    _model.quizStepMid =
-                                                        await actions
-                                                            .buildQuizStepAction(
-                                                      _model.words.toList(),
-                                                      _model.quizIndices
-                                                          .toList(),
-                                                      _model.currentQuestion,
-                                                    );
-                                                    _model.options =
-                                                        (getJsonField(
-                                                      _model.quizStepMid,
-                                                      r'''$.options''',
-                                                      true,
-                                                    ) as List?)!
-                                                            .map<String>((e) =>
-                                                                e.toString())
-                                                            .toList()
-                                                            .cast<String>()
-                                                            .toList()
-                                                            .cast<String>();
-                                                    _model.correctWord =
-                                                        getJsonField(
-                                                      _model.quizStepMid,
-                                                      r'''$.correctWord''',
-                                                    ).toString();
-                                                    _model.displayIndex =
-                                                        getJsonField(
-                                                      _model.quizStepMid,
-                                                      r'''$.displayIndex''',
-                                                    );
-                                                    _model.selectedIndex = -1;
-                                                    safeSetState(() {});
-                                                  } else {
-                                                    _model.verifyResultMid =
-                                                        await actions
-                                                            .verifyAllSelectionsAction(
-                                                      _model.words.toList(),
-                                                      _model.quizIndices
-                                                          .toList(),
-                                                      _model.chosenWords
-                                                          .toList(),
-                                                    );
-                                                    if (_model
-                                                            .verifyResultMid ==
-                                                        true) {
-                                                      context.pushNamed(
-                                                          DecoySeedSystemValuesWidget
-                                                              .routeName);
-                                                    } else {
-                                                      _model.attemptCount =
-                                                          _model.attemptCount +
-                                                              1;
-                                                      _model.currentQuestion =
-                                                          0;
-                                                      _model.chosenWords = [];
-                                                      _model.selectedIndex = -1;
-                                                      safeSetState(() {});
-                                                      if (_model.attemptCount <
-                                                          3) {
-                                                        _model.indicesOutRetryMid =
-                                                            await actions
-                                                                .makeQuizIndicesAction(
-                                                          _model.words.length,
-                                                        );
-                                                        _model.quizIndices = _model
-                                                            .indicesOutRetryMid!
-                                                            .toList()
-                                                            .cast<int>();
-                                                        safeSetState(() {});
-                                                        _model.quizStepRetryMid =
-                                                            await actions
-                                                                .buildQuizStepAction(
-                                                          _model.words.toList(),
-                                                          _model.quizIndices
-                                                              .toList(),
-                                                          0,
-                                                        );
-                                                        _model.options =
-                                                            (getJsonField(
-                                                          _model
-                                                              .quizStepRetryMid,
-                                                          r'''$.options''',
-                                                          true,
-                                                        ) as List?)!
-                                                                .map<String>((e) =>
-                                                                    e.toString())
-                                                                .toList()
-                                                                .cast<String>()
-                                                                .toList()
-                                                                .cast<String>();
-                                                        _model.correctWord =
-                                                            getJsonField(
-                                                          _model
-                                                              .quizStepRetryMid,
-                                                          r'''$.correctWord''',
-                                                        ).toString();
-                                                        _model.displayIndex =
-                                                            getJsonField(
-                                                          _model
-                                                              .quizStepRetryMid,
-                                                          r'''$.displayIndex''',
-                                                        );
-                                                        safeSetState(() {});
-                                                        _model.notificationState =
-                                                            1;
-                                                        safeSetState(() {});
-                                                        await Future.delayed(
-                                                          Duration(
-                                                            milliseconds: 2000,
-                                                          ),
-                                                        );
-                                                        _model.notificationState =
-                                                            0;
-                                                        safeSetState(() {});
-                                                      } else {
-                                                        context.pushNamed(
-                                                          ShowDecoySeedPhraseWidget
-                                                              .routeName,
-                                                          queryParameters: {
-                                                            'mnemonic':
-                                                                serializeParam(
-                                                              widget.mnemonic,
-                                                              ParamType.String,
-                                                            ),
-                                                            'decoyId':
-                                                                serializeParam(
-                                                              widget.decoyId,
-                                                              ParamType.String,
-                                                            ),
-                                                          }.withoutNulls,
-                                                          extra: <String,
-                                                              dynamic>{
-                                                            '__transition_info__':
-                                                                TransitionInfo(
-                                                              hasTransition:
-                                                                  true,
-                                                              transitionType:
-                                                                  PageTransitionType
-                                                                      .rightToLeft,
-                                                            ),
-                                                          },
-                                                        );
-                                                      }
-                                                    }
-                                                  }
-
-                                                  safeSetState(() {});
-                                                },
-                                                text: _model.options
-                                                    .elementAtOrNull(1)!,
-                                                options: FFButtonOptions(
-                                                  width: double.infinity,
-                                                  height: 56.0,
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(24.0, 16.0,
-                                                          24.0, 16.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryBackground,
-                                                  textStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmallFamily,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                            letterSpacing: 0.0,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmallIsCustom,
-                                                          ),
-                                                  elevation: 0.0,
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    width: 2.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                ),
-                                              ),
-                                              FFButtonWidget(
-                                                onPressed: () async {
-                                                  _model.addToChosenWords(_model
-                                                      .options
-                                                      .elementAtOrNull(2)!);
-                                                  safeSetState(() {});
-                                                  _model.selectedIndex = 0;
-                                                  safeSetState(() {});
-                                                  if (_model.currentQuestion <
-                                                      2) {
-                                                    _model.currentQuestion =
-                                                        _model.currentQuestion +
-                                                            1;
-                                                    safeSetState(() {});
-                                                    _model.quizStepBot =
-                                                        await actions
-                                                            .buildQuizStepAction(
-                                                      _model.words.toList(),
-                                                      _model.quizIndices
-                                                          .toList(),
-                                                      _model.currentQuestion,
-                                                    );
-                                                    _model.options =
-                                                        (getJsonField(
-                                                      _model.quizStepBot,
-                                                      r'''$.options''',
-                                                      true,
-                                                    ) as List?)!
-                                                            .map<String>((e) =>
-                                                                e.toString())
-                                                            .toList()
-                                                            .cast<String>()
-                                                            .toList()
-                                                            .cast<String>();
-                                                    _model.correctWord =
-                                                        getJsonField(
-                                                      _model.quizStepBot,
-                                                      r'''$.correctWord''',
-                                                    ).toString();
-                                                    _model.displayIndex =
-                                                        getJsonField(
-                                                      _model.quizStepBot,
-                                                      r'''$.displayIndex''',
-                                                    );
-                                                    _model.selectedIndex = -1;
-                                                    safeSetState(() {});
-                                                  } else {
-                                                    _model.verifyResultBot =
-                                                        await actions
-                                                            .verifyAllSelectionsAction(
-                                                      _model.words.toList(),
-                                                      _model.quizIndices
-                                                          .toList(),
-                                                      _model.chosenWords
-                                                          .toList(),
-                                                    );
-                                                    if (_model
-                                                            .verifyResultBot ==
-                                                        true) {
-                                                      context.pushNamed(
-                                                          DecoySeedSystemValuesWidget
-                                                              .routeName);
-                                                    } else {
-                                                      _model.attemptCount =
-                                                          _model.attemptCount +
-                                                              1;
-                                                      _model.currentQuestion =
-                                                          0;
-                                                      _model.chosenWords = [];
-                                                      _model.selectedIndex = -1;
-                                                      safeSetState(() {});
-                                                      if (_model.attemptCount <
-                                                          3) {
-                                                        _model.indicesOutRetryBot =
-                                                            await actions
-                                                                .makeQuizIndicesAction(
-                                                          _model.words.length,
-                                                        );
-                                                        _model.quizIndices = _model
-                                                            .indicesOutRetryBot!
-                                                            .toList()
-                                                            .cast<int>();
-                                                        safeSetState(() {});
-                                                        _model.quizStepRetryBot =
-                                                            await actions
-                                                                .buildQuizStepAction(
-                                                          _model.words.toList(),
-                                                          _model.quizIndices
-                                                              .toList(),
-                                                          0,
-                                                        );
-                                                        _model.options =
-                                                            (getJsonField(
-                                                          _model
-                                                              .quizStepRetryBot,
-                                                          r'''$.options''',
-                                                          true,
-                                                        ) as List?)!
-                                                                .map<String>((e) =>
-                                                                    e.toString())
-                                                                .toList()
-                                                                .cast<String>()
-                                                                .toList()
-                                                                .cast<String>();
-                                                        _model.correctWord =
-                                                            getJsonField(
-                                                          _model
-                                                              .quizStepRetryBot,
-                                                          r'''$.correctWord''',
-                                                        ).toString();
-                                                        _model.displayIndex =
-                                                            getJsonField(
-                                                          _model
-                                                              .quizStepRetryBot,
-                                                          r'''$.displayIndex''',
-                                                        );
-                                                        safeSetState(() {});
-                                                        _model.notificationState =
-                                                            1;
-                                                        safeSetState(() {});
-                                                        await Future.delayed(
-                                                          Duration(
-                                                            milliseconds: 2000,
-                                                          ),
-                                                        );
-                                                        _model.notificationState =
-                                                            0;
-                                                        safeSetState(() {});
-                                                      } else {
-                                                        context.pushNamed(
-                                                          ShowDecoySeedPhraseWidget
-                                                              .routeName,
-                                                          queryParameters: {
-                                                            'mnemonic':
-                                                                serializeParam(
-                                                              widget.mnemonic,
-                                                              ParamType.String,
-                                                            ),
-                                                            'decoyId':
-                                                                serializeParam(
-                                                              widget.decoyId,
-                                                              ParamType.String,
-                                                            ),
-                                                          }.withoutNulls,
-                                                          extra: <String,
-                                                              dynamic>{
-                                                            '__transition_info__':
-                                                                TransitionInfo(
-                                                              hasTransition:
-                                                                  true,
-                                                              transitionType:
-                                                                  PageTransitionType
-                                                                      .rightToLeft,
-                                                            ),
-                                                          },
-                                                        );
-                                                      }
-                                                    }
-                                                  }
-
-                                                  safeSetState(() {});
-                                                },
-                                                text: _model.options
-                                                    .elementAtOrNull(2)!,
-                                                options: FFButtonOptions(
-                                                  width: double.infinity,
-                                                  height: 56.0,
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(24.0, 16.0,
-                                                          24.0, 16.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryBackground,
-                                                  textStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmallFamily,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                            letterSpacing: 0.0,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmallIsCustom,
-                                                          ),
-                                                  elevation: 0.0,
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    width: 2.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                ),
-                                              ),
-                                            ].divide(SizedBox(height: 12.0)),
-                                          ),
-                                        ],
-                                      ),
-                                    ].divide(SizedBox(height: 20.0)),
-                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ].divide(SizedBox(height: 24.0)),
-                    ),
-                  ].divide(SizedBox(height: 32.0)),
-                ),
-                Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 40.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                            ],
+                          ),
+                        ].divide(SizedBox(height: 8.0)),
                       ),
-                      child: Visibility(
-                        visible: _model.notificationState == 1,
-                        child: Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Text(
-                              'NOT QUITE - TRY AGAIN',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .bodyMediumFamily,
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .bodyMediumIsCustom,
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Container(
+                                  width: 400.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    border: Border.all(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 4.0,
+                                    ),
                                   ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Choose word ',
+                                              textAlign: TextAlign.center,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .titleLarge
+                                                  .override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleLargeFamily,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleLargeIsCustom,
+                                                  ),
+                                            ),
+                                            Text(
+                                              _model.displayIndex.toString(),
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMediumFamily,
+                                                    fontSize: 20.0,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMediumIsCustom,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Stack(
+                                          children: [
+                                            Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                FFButtonWidget(
+                                                  onPressed: () async {
+                                                    _model.addToChosenWords(
+                                                        _model
+                                                            .options
+                                                            .elementAtOrNull(
+                                                                0)!);
+                                                    safeSetState(() {});
+                                                    _model.selectedIndex = 0;
+                                                    safeSetState(() {});
+                                                    if (_model.currentQuestion <
+                                                        2) {
+                                                      _model.currentQuestion =
+                                                          _model.currentQuestion +
+                                                              1;
+                                                      safeSetState(() {});
+                                                      _model.quizStep =
+                                                          await actions
+                                                              .buildQuizStepAction(
+                                                        _model.words.toList(),
+                                                        _model.quizIndices
+                                                            .toList(),
+                                                        _model.currentQuestion,
+                                                      );
+                                                      _model.options =
+                                                          (getJsonField(
+                                                        _model.quizStep,
+                                                        r'''$.options''',
+                                                        true,
+                                                      ) as List?)!
+                                                              .map<String>((e) =>
+                                                                  e.toString())
+                                                              .toList()
+                                                              .cast<String>()
+                                                              .toList()
+                                                              .cast<String>();
+                                                      _model.correctWord =
+                                                          getJsonField(
+                                                        _model.quizStep,
+                                                        r'''$.correctWord''',
+                                                      ).toString();
+                                                      _model.displayIndex =
+                                                          getJsonField(
+                                                        _model.quizStep,
+                                                        r'''$.displayIndex''',
+                                                      );
+                                                      _model.selectedIndex = -1;
+                                                      safeSetState(() {});
+                                                    } else {
+                                                      _model.verifyResult =
+                                                          await actions
+                                                              .verifyAllSelectionsAction(
+                                                        _model.words.toList(),
+                                                        _model.quizIndices
+                                                            .toList(),
+                                                        _model.chosenWords
+                                                            .toList(),
+                                                      );
+                                                      if (_model.verifyResult ==
+                                                          true) {
+                                                        context.goNamed(
+                                                            DecoySeedSystemValuesWidget
+                                                                .routeName);
+                                                      } else {
+                                                        _model.attemptCount =
+                                                            _model.attemptCount +
+                                                                1;
+                                                        _model.currentQuestion =
+                                                            0;
+                                                        _model.chosenWords = [];
+                                                        _model.selectedIndex =
+                                                            -1;
+                                                        safeSetState(() {});
+                                                        if (_model
+                                                                .attemptCount <
+                                                            3) {
+                                                          _model.indicesOutRetry =
+                                                              await actions
+                                                                  .makeQuizIndicesAction(
+                                                            _model.words.length,
+                                                          );
+                                                          _model.quizIndices =
+                                                              _model
+                                                                  .indicesOutRetry!
+                                                                  .toList()
+                                                                  .cast<int>();
+                                                          safeSetState(() {});
+                                                          _model.quizStepRetry =
+                                                              await actions
+                                                                  .buildQuizStepAction(
+                                                            _model.words
+                                                                .toList(),
+                                                            _model.quizIndices
+                                                                .toList(),
+                                                            0,
+                                                          );
+                                                          _model.options =
+                                                              (getJsonField(
+                                                            _model
+                                                                .quizStepRetry,
+                                                            r'''$.options''',
+                                                            true,
+                                                          ) as List?)!
+                                                                  .map<String>(
+                                                                      (e) => e
+                                                                          .toString())
+                                                                  .toList()
+                                                                  .cast<
+                                                                      String>()
+                                                                  .toList()
+                                                                  .cast<
+                                                                      String>();
+                                                          _model.correctWord =
+                                                              getJsonField(
+                                                            _model
+                                                                .quizStepRetry,
+                                                            r'''$.correctWord''',
+                                                          ).toString();
+                                                          _model.displayIndex =
+                                                              getJsonField(
+                                                            _model
+                                                                .quizStepRetry,
+                                                            r'''$.displayIndex''',
+                                                          );
+                                                          safeSetState(() {});
+                                                          _model.notificationState =
+                                                              1;
+                                                          safeSetState(() {});
+                                                          await Future.delayed(
+                                                            Duration(
+                                                              milliseconds:
+                                                                  2000,
+                                                            ),
+                                                          );
+                                                          _model.notificationState =
+                                                              0;
+                                                          safeSetState(() {});
+                                                        } else {
+                                                          context.goNamed(
+                                                            ShowDecoySeedPhraseWidget
+                                                                .routeName,
+                                                            queryParameters: {
+                                                              'mnemonic':
+                                                                  serializeParam(
+                                                                widget
+                                                                    .mnemonic,
+                                                                ParamType
+                                                                    .String,
+                                                              ),
+                                                              'decoyId':
+                                                                  serializeParam(
+                                                                widget.decoyId,
+                                                                ParamType
+                                                                    .String,
+                                                              ),
+                                                            }.withoutNulls,
+                                                            extra: <String,
+                                                                dynamic>{
+                                                              '__transition_info__':
+                                                                  TransitionInfo(
+                                                                hasTransition:
+                                                                    true,
+                                                                transitionType:
+                                                                    PageTransitionType
+                                                                        .rightToLeft,
+                                                              ),
+                                                            },
+                                                          );
+                                                        }
+                                                      }
+                                                    }
+
+                                                    safeSetState(() {});
+                                                  },
+                                                  text: _model.options
+                                                      .elementAtOrNull(0)!,
+                                                  options: FFButtonOptions(
+                                                    width: double.infinity,
+                                                    height: 56.0,
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                24.0,
+                                                                16.0,
+                                                                24.0,
+                                                                16.0),
+                                                    iconPadding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 0.0),
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryBackground,
+                                                    textStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallFamily,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryText,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallIsCustom,
+                                                            ),
+                                                    elevation: 0.0,
+                                                    borderSide: BorderSide(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      width: 2.0,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                  ),
+                                                ),
+                                                FFButtonWidget(
+                                                  onPressed: () async {
+                                                    _model.addToChosenWords(
+                                                        _model
+                                                            .options
+                                                            .elementAtOrNull(
+                                                                1)!);
+                                                    safeSetState(() {});
+                                                    _model.selectedIndex = 0;
+                                                    safeSetState(() {});
+                                                    if (_model.currentQuestion <
+                                                        2) {
+                                                      _model.currentQuestion =
+                                                          _model.currentQuestion +
+                                                              1;
+                                                      safeSetState(() {});
+                                                      _model.quizStepMid =
+                                                          await actions
+                                                              .buildQuizStepAction(
+                                                        _model.words.toList(),
+                                                        _model.quizIndices
+                                                            .toList(),
+                                                        _model.currentQuestion,
+                                                      );
+                                                      _model.options =
+                                                          (getJsonField(
+                                                        _model.quizStepMid,
+                                                        r'''$.options''',
+                                                        true,
+                                                      ) as List?)!
+                                                              .map<String>((e) =>
+                                                                  e.toString())
+                                                              .toList()
+                                                              .cast<String>()
+                                                              .toList()
+                                                              .cast<String>();
+                                                      _model.correctWord =
+                                                          getJsonField(
+                                                        _model.quizStepMid,
+                                                        r'''$.correctWord''',
+                                                      ).toString();
+                                                      _model.displayIndex =
+                                                          getJsonField(
+                                                        _model.quizStepMid,
+                                                        r'''$.displayIndex''',
+                                                      );
+                                                      _model.selectedIndex = -1;
+                                                      safeSetState(() {});
+                                                    } else {
+                                                      _model.verifyResultMid =
+                                                          await actions
+                                                              .verifyAllSelectionsAction(
+                                                        _model.words.toList(),
+                                                        _model.quizIndices
+                                                            .toList(),
+                                                        _model.chosenWords
+                                                            .toList(),
+                                                      );
+                                                      if (_model
+                                                              .verifyResultMid ==
+                                                          true) {
+                                                        context.goNamed(
+                                                            DecoySeedSystemValuesWidget
+                                                                .routeName);
+                                                      } else {
+                                                        _model.attemptCount =
+                                                            _model.attemptCount +
+                                                                1;
+                                                        _model.currentQuestion =
+                                                            0;
+                                                        _model.chosenWords = [];
+                                                        _model.selectedIndex =
+                                                            -1;
+                                                        safeSetState(() {});
+                                                        if (_model
+                                                                .attemptCount <
+                                                            3) {
+                                                          _model.indicesOutRetryMid =
+                                                              await actions
+                                                                  .makeQuizIndicesAction(
+                                                            _model.words.length,
+                                                          );
+                                                          _model.quizIndices =
+                                                              _model
+                                                                  .indicesOutRetryMid!
+                                                                  .toList()
+                                                                  .cast<int>();
+                                                          safeSetState(() {});
+                                                          _model.quizStepRetryMid =
+                                                              await actions
+                                                                  .buildQuizStepAction(
+                                                            _model.words
+                                                                .toList(),
+                                                            _model.quizIndices
+                                                                .toList(),
+                                                            0,
+                                                          );
+                                                          _model.options =
+                                                              (getJsonField(
+                                                            _model
+                                                                .quizStepRetryMid,
+                                                            r'''$.options''',
+                                                            true,
+                                                          ) as List?)!
+                                                                  .map<String>(
+                                                                      (e) => e
+                                                                          .toString())
+                                                                  .toList()
+                                                                  .cast<
+                                                                      String>()
+                                                                  .toList()
+                                                                  .cast<
+                                                                      String>();
+                                                          _model.correctWord =
+                                                              getJsonField(
+                                                            _model
+                                                                .quizStepRetryMid,
+                                                            r'''$.correctWord''',
+                                                          ).toString();
+                                                          _model.displayIndex =
+                                                              getJsonField(
+                                                            _model
+                                                                .quizStepRetryMid,
+                                                            r'''$.displayIndex''',
+                                                          );
+                                                          safeSetState(() {});
+                                                          _model.notificationState =
+                                                              1;
+                                                          safeSetState(() {});
+                                                          await Future.delayed(
+                                                            Duration(
+                                                              milliseconds:
+                                                                  2000,
+                                                            ),
+                                                          );
+                                                          _model.notificationState =
+                                                              0;
+                                                          safeSetState(() {});
+                                                        } else {
+                                                          context.goNamed(
+                                                            ShowDecoySeedPhraseWidget
+                                                                .routeName,
+                                                            queryParameters: {
+                                                              'mnemonic':
+                                                                  serializeParam(
+                                                                widget
+                                                                    .mnemonic,
+                                                                ParamType
+                                                                    .String,
+                                                              ),
+                                                              'decoyId':
+                                                                  serializeParam(
+                                                                widget.decoyId,
+                                                                ParamType
+                                                                    .String,
+                                                              ),
+                                                            }.withoutNulls,
+                                                            extra: <String,
+                                                                dynamic>{
+                                                              '__transition_info__':
+                                                                  TransitionInfo(
+                                                                hasTransition:
+                                                                    true,
+                                                                transitionType:
+                                                                    PageTransitionType
+                                                                        .rightToLeft,
+                                                              ),
+                                                            },
+                                                          );
+                                                        }
+                                                      }
+                                                    }
+
+                                                    safeSetState(() {});
+                                                  },
+                                                  text: _model.options
+                                                      .elementAtOrNull(1)!,
+                                                  options: FFButtonOptions(
+                                                    width: double.infinity,
+                                                    height: 56.0,
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                24.0,
+                                                                16.0,
+                                                                24.0,
+                                                                16.0),
+                                                    iconPadding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 0.0),
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryBackground,
+                                                    textStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallFamily,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryText,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallIsCustom,
+                                                            ),
+                                                    elevation: 0.0,
+                                                    borderSide: BorderSide(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      width: 2.0,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                  ),
+                                                ),
+                                                FFButtonWidget(
+                                                  onPressed: () async {
+                                                    _model.addToChosenWords(
+                                                        _model
+                                                            .options
+                                                            .elementAtOrNull(
+                                                                2)!);
+                                                    safeSetState(() {});
+                                                    _model.selectedIndex = 0;
+                                                    safeSetState(() {});
+                                                    if (_model.currentQuestion <
+                                                        2) {
+                                                      _model.currentQuestion =
+                                                          _model.currentQuestion +
+                                                              1;
+                                                      safeSetState(() {});
+                                                      _model.quizStepBot =
+                                                          await actions
+                                                              .buildQuizStepAction(
+                                                        _model.words.toList(),
+                                                        _model.quizIndices
+                                                            .toList(),
+                                                        _model.currentQuestion,
+                                                      );
+                                                      _model.options =
+                                                          (getJsonField(
+                                                        _model.quizStepBot,
+                                                        r'''$.options''',
+                                                        true,
+                                                      ) as List?)!
+                                                              .map<String>((e) =>
+                                                                  e.toString())
+                                                              .toList()
+                                                              .cast<String>()
+                                                              .toList()
+                                                              .cast<String>();
+                                                      _model.correctWord =
+                                                          getJsonField(
+                                                        _model.quizStepBot,
+                                                        r'''$.correctWord''',
+                                                      ).toString();
+                                                      _model.displayIndex =
+                                                          getJsonField(
+                                                        _model.quizStepBot,
+                                                        r'''$.displayIndex''',
+                                                      );
+                                                      _model.selectedIndex = -1;
+                                                      safeSetState(() {});
+                                                    } else {
+                                                      _model.verifyResultBot =
+                                                          await actions
+                                                              .verifyAllSelectionsAction(
+                                                        _model.words.toList(),
+                                                        _model.quizIndices
+                                                            .toList(),
+                                                        _model.chosenWords
+                                                            .toList(),
+                                                      );
+                                                      if (_model
+                                                              .verifyResultBot ==
+                                                          true) {
+                                                        context.goNamed(
+                                                            DecoySeedSystemValuesWidget
+                                                                .routeName);
+                                                      } else {
+                                                        _model.attemptCount =
+                                                            _model.attemptCount +
+                                                                1;
+                                                        _model.currentQuestion =
+                                                            0;
+                                                        _model.chosenWords = [];
+                                                        _model.selectedIndex =
+                                                            -1;
+                                                        safeSetState(() {});
+                                                        if (_model
+                                                                .attemptCount <
+                                                            3) {
+                                                          _model.indicesOutRetryBot =
+                                                              await actions
+                                                                  .makeQuizIndicesAction(
+                                                            _model.words.length,
+                                                          );
+                                                          _model.quizIndices =
+                                                              _model
+                                                                  .indicesOutRetryBot!
+                                                                  .toList()
+                                                                  .cast<int>();
+                                                          safeSetState(() {});
+                                                          _model.quizStepRetryBot =
+                                                              await actions
+                                                                  .buildQuizStepAction(
+                                                            _model.words
+                                                                .toList(),
+                                                            _model.quizIndices
+                                                                .toList(),
+                                                            0,
+                                                          );
+                                                          _model.options =
+                                                              (getJsonField(
+                                                            _model
+                                                                .quizStepRetryBot,
+                                                            r'''$.options''',
+                                                            true,
+                                                          ) as List?)!
+                                                                  .map<String>(
+                                                                      (e) => e
+                                                                          .toString())
+                                                                  .toList()
+                                                                  .cast<
+                                                                      String>()
+                                                                  .toList()
+                                                                  .cast<
+                                                                      String>();
+                                                          _model.correctWord =
+                                                              getJsonField(
+                                                            _model
+                                                                .quizStepRetryBot,
+                                                            r'''$.correctWord''',
+                                                          ).toString();
+                                                          _model.displayIndex =
+                                                              getJsonField(
+                                                            _model
+                                                                .quizStepRetryBot,
+                                                            r'''$.displayIndex''',
+                                                          );
+                                                          safeSetState(() {});
+                                                          _model.notificationState =
+                                                              1;
+                                                          safeSetState(() {});
+                                                          await Future.delayed(
+                                                            Duration(
+                                                              milliseconds:
+                                                                  2000,
+                                                            ),
+                                                          );
+                                                          _model.notificationState =
+                                                              0;
+                                                          safeSetState(() {});
+                                                        } else {
+                                                          context.goNamed(
+                                                            ShowDecoySeedPhraseWidget
+                                                                .routeName,
+                                                            queryParameters: {
+                                                              'mnemonic':
+                                                                  serializeParam(
+                                                                widget
+                                                                    .mnemonic,
+                                                                ParamType
+                                                                    .String,
+                                                              ),
+                                                              'decoyId':
+                                                                  serializeParam(
+                                                                widget.decoyId,
+                                                                ParamType
+                                                                    .String,
+                                                              ),
+                                                            }.withoutNulls,
+                                                            extra: <String,
+                                                                dynamic>{
+                                                              '__transition_info__':
+                                                                  TransitionInfo(
+                                                                hasTransition:
+                                                                    true,
+                                                                transitionType:
+                                                                    PageTransitionType
+                                                                        .rightToLeft,
+                                                              ),
+                                                            },
+                                                          );
+                                                        }
+                                                      }
+                                                    }
+
+                                                    safeSetState(() {});
+                                                  },
+                                                  text: _model.options
+                                                      .elementAtOrNull(2)!,
+                                                  options: FFButtonOptions(
+                                                    width: double.infinity,
+                                                    height: 56.0,
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                24.0,
+                                                                16.0,
+                                                                24.0,
+                                                                16.0),
+                                                    iconPadding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 0.0),
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryBackground,
+                                                    textStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallFamily,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryText,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallIsCustom,
+                                                            ),
+                                                    elevation: 0.0,
+                                                    borderSide: BorderSide(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      width: 2.0,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                  ),
+                                                ),
+                                              ].divide(SizedBox(height: 12.0)),
+                                            ),
+                                          ],
+                                        ),
+                                      ].divide(SizedBox(height: 20.0)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ].divide(SizedBox(height: 24.0)),
+                      ),
+                    ].divide(SizedBox(height: 32.0)),
+                  ),
+                  Stack(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 40.0,
+                        decoration: BoxDecoration(
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                        ),
+                        child: Visibility(
+                          visible: _model.notificationState == 1,
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 16.0, 0.0, 0.0),
+                              child: Text(
+                                'NOT QUITE - TRY AGAIN',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .bodyMediumFamily,
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .bodyMediumIsCustom,
+                                    ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

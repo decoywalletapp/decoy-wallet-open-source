@@ -1027,6 +1027,7 @@ class _PhoneNumberVerificationWidgetState
                                                   .bodyMediumIsCustom,
                                         ),
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ].divide(SizedBox(height: 16.0)),
                             ),
