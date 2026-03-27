@@ -52,7 +52,15 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         );
         if (_model.refreshingOuuu == true) {
           context.goNamedAuth(
-              UpdatePasswordPageWidget.routeName, context.mounted);
+            UpdatePasswordPageWidget.routeName,
+            context.mounted,
+            extra: <String, dynamic>{
+              '__transition_info__': TransitionInfo(
+                hasTransition: true,
+                transitionType: PageTransitionType.rightToLeft,
+              ),
+            },
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -161,11 +169,27 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         safeSetState(() {});
         if (_model.verifiedViaEmail == false) {
           context.goNamedAuth(
-              ConfirmEmailPageWidget.routeName, context.mounted);
+            ConfirmEmailPageWidget.routeName,
+            context.mounted,
+            extra: <String, dynamic>{
+              '__transition_info__': TransitionInfo(
+                hasTransition: true,
+                transitionType: PageTransitionType.rightToLeft,
+              ),
+            },
+          );
         } else {
           if (_model.needPhone == true) {
             context.goNamedAuth(
-                PhoneNumberInputWidget.routeName, context.mounted);
+              PhoneNumberInputWidget.routeName,
+              context.mounted,
+              extra: <String, dynamic>{
+                '__transition_info__': TransitionInfo(
+                  hasTransition: true,
+                  transitionType: PageTransitionType.rightToLeft,
+                ),
+              },
+            );
           } else {
             if (FFAppState().biometricsEnabled == true) {
               final _localAuth = LocalAuthentication();
@@ -252,14 +276,38 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       ((_model.query3 != null && (_model.query3)!.isNotEmpty) &&
                           (_model.setupComplete == true))) {
                     context.goNamedAuth(
-                        PINPageWidget.routeName, context.mounted);
+                      PINPageWidget.routeName,
+                      context.mounted,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.rightToLeft,
+                        ),
+                      },
+                    );
                   } else {
                     context.goNamedAuth(
-                        CreatePinWidget.routeName, context.mounted);
+                      CreatePinWidget.routeName,
+                      context.mounted,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.rightToLeft,
+                        ),
+                      },
+                    );
                   }
                 } else {
                   context.goNamedAuth(
-                      HomePageWidget.routeName, context.mounted);
+                    HomePageWidget.routeName,
+                    context.mounted,
+                    extra: <String, dynamic>{
+                      '__transition_info__': TransitionInfo(
+                        hasTransition: true,
+                        transitionType: PageTransitionType.rightToLeft,
+                      ),
+                    },
+                  );
                 }
               } else {
                 GoRouter.of(context).prepareAuthEvent();
@@ -337,13 +385,39 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         (_model.setupComplete == true)) ||
                     ((_model.query3 != null && (_model.query3)!.isNotEmpty) &&
                         (_model.setupComplete == true))) {
-                  context.goNamedAuth(PINPageWidget.routeName, context.mounted);
+                  context.goNamedAuth(
+                    PINPageWidget.routeName,
+                    context.mounted,
+                    extra: <String, dynamic>{
+                      '__transition_info__': TransitionInfo(
+                        hasTransition: true,
+                        transitionType: PageTransitionType.rightToLeft,
+                      ),
+                    },
+                  );
                 } else {
                   context.goNamedAuth(
-                      CreatePinWidget.routeName, context.mounted);
+                    CreatePinWidget.routeName,
+                    context.mounted,
+                    extra: <String, dynamic>{
+                      '__transition_info__': TransitionInfo(
+                        hasTransition: true,
+                        transitionType: PageTransitionType.rightToLeft,
+                      ),
+                    },
+                  );
                 }
               } else {
-                context.goNamedAuth(HomePageWidget.routeName, context.mounted);
+                context.goNamedAuth(
+                  HomePageWidget.routeName,
+                  context.mounted,
+                  extra: <String, dynamic>{
+                    '__transition_info__': TransitionInfo(
+                      hasTransition: true,
+                      transitionType: PageTransitionType.rightToLeft,
+                    ),
+                  },
+                );
               }
             }
           }
@@ -381,25 +455,33 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               alignment: AlignmentDirectional(0.0, 0.0),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),
-                        child: Text(
-                          '₿itcoin Wallet',
-                          textAlign: TextAlign.start,
-                          style: FlutterFlowTheme.of(context)
-                              .displayMedium
-                              .override(
-                                fontFamily: 'InterTight',
-                                color: FlutterFlowTheme.of(context).primary,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.w600,
-                              ),
+                  Align(
+                    alignment: AlignmentDirectional(0.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 44.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                          color: Color(0x001D2428),
+                        ),
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          child: Text(
+                            '₿itcoin Wallet',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .displayMedium
+                                .override(
+                                  fontFamily: 'InterTight',
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
                         ),
                       ),
                     ),

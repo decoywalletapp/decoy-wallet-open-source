@@ -86,17 +86,10 @@ class _PINPageWidgetState extends State<PINPageWidget> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 775.0,
-                  decoration: BoxDecoration(
-                    color: Color(0x001D2428),
-                  ),
-                  child: Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
+                Stack(
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
                       child: Container(
                         width: 400.0,
                         decoration: BoxDecoration(),
@@ -785,7 +778,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                     alignment: AlignmentDirectional(0.0, -1.0),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          6.0, 0.0, 6.0, 0.0),
+                                          6.0, 0.0, 6.0, 36.0),
                                       child: GridView(
                                         padding: EdgeInsets.zero,
                                         gridDelegate:
@@ -1510,8 +1503,18 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   }
 
                                                   context.goNamed(
-                                                      DuressHomePageWidget
-                                                          .routeName);
+                                                    DuressHomePageWidget
+                                                        .routeName,
+                                                    extra: <String, dynamic>{
+                                                      '__transition_info__':
+                                                          TransitionInfo(
+                                                        hasTransition: true,
+                                                        transitionType:
+                                                            PageTransitionType
+                                                                .rightToLeft,
+                                                      ),
+                                                    },
+                                                  );
                                                 } else {
                                                   if (FFAppState()
                                                           .decoyPinContactsEnabled ==
@@ -1612,8 +1615,18 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   }
 
                                                   context.goNamed(
-                                                      DuressHomePageWidget
-                                                          .routeName);
+                                                    DuressHomePageWidget
+                                                        .routeName,
+                                                    extra: <String, dynamic>{
+                                                      '__transition_info__':
+                                                          TransitionInfo(
+                                                        hasTransition: true,
+                                                        transitionType:
+                                                            PageTransitionType
+                                                                .rightToLeft,
+                                                      ),
+                                                    },
+                                                  );
                                                 }
                                               } else {
                                                 if (VerifyPINCall.isAccount(
@@ -1748,9 +1761,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ].addToStart(SizedBox(height: 12.0)),
             ),
           ),
         ),
