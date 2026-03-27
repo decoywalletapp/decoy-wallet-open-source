@@ -387,7 +387,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     alignment: AlignmentDirectional(0.0, 0.0),
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 44.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 40.0),
                       child: Container(
                         width: double.infinity,
                         height: 80.0,

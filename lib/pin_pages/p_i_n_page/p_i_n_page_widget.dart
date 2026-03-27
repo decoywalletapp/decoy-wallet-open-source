@@ -1360,212 +1360,128 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                   ),
                                 ),
                                 Align(
-                                  alignment: AlignmentDirectional(0.0, 1.0),
-                                  child: FutureBuilder<List<DecoyWalletRow>>(
-                                    future: DecoyWalletTable().querySingleRow(
-                                      queryFn: (q) => q.eqOrNull(
-                                        'user_id',
-                                        currentUserUid,
-                                      ),
-                                    ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: LinearProgressIndicator(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    decoration: BoxDecoration(),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.0, 1.0),
+                                      child:
+                                          FutureBuilder<List<DecoyWalletRow>>(
+                                        future:
+                                            DecoyWalletTable().querySingleRow(
+                                          queryFn: (q) => q.eqOrNull(
+                                            'user_id',
+                                            currentUserUid,
                                           ),
-                                        );
-                                      }
-                                      List<DecoyWalletRow>
-                                          buttonDecoyWalletRowList =
-                                          snapshot.data!;
-
-                                      final buttonDecoyWalletRow =
-                                          buttonDecoyWalletRowList.isNotEmpty
-                                              ? buttonDecoyWalletRowList.first
-                                              : null;
-
-                                      return FFButtonWidget(
-                                        onPressed: () async {
-                                          currentUserLocationValue =
-                                              await getCurrentUserLocation(
-                                                  defaultLocation:
-                                                      LatLng(0.0, 0.0));
-                                          if (_model.pinInput.length >= 4) {
-                                            _model.joinedPin =
-                                                functions.newCustomFunction(
-                                                    _model.pinInput.toList());
-                                            safeSetState(() {});
-                                            _model.verifyResp =
-                                                await VerifyPINCall.call(
-                                              pin: _model.joinedPin,
-                                              jwt: currentJwtToken,
+                                        ),
+                                        builder: (context, snapshot) {
+                                          // Customize what your widget looks like when it's loading.
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child: LinearProgressIndicator(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                              ),
                                             );
+                                          }
+                                          List<DecoyWalletRow>
+                                              buttonDecoyWalletRowList =
+                                              snapshot.data!;
 
-                                            if (VerifyPINCall.ok(
-                                                  (_model.verifyResp
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                ) ==
-                                                true) {
-                                              if (VerifyPINCall.isDecoy(
-                                                    (_model.verifyResp
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                  ) ==
-                                                  true) {
-                                                if (buttonDecoyWalletRow
-                                                        ?.useCurrentLocation ==
+                                          final buttonDecoyWalletRow =
+                                              buttonDecoyWalletRowList
+                                                      .isNotEmpty
+                                                  ? buttonDecoyWalletRowList
+                                                      .first
+                                                  : null;
+
+                                          return FFButtonWidget(
+                                            onPressed: () async {
+                                              currentUserLocationValue =
+                                                  await getCurrentUserLocation(
+                                                      defaultLocation:
+                                                          LatLng(0.0, 0.0));
+                                              if (_model.pinInput.length >= 4) {
+                                                _model.joinedPin =
+                                                    functions.newCustomFunction(
+                                                        _model.pinInput
+                                                            .toList());
+                                                safeSetState(() {});
+                                                _model.verifyResp =
+                                                    await VerifyPINCall.call(
+                                                  pin: _model.joinedPin,
+                                                  jwt: currentJwtToken,
+                                                );
+
+                                                if (VerifyPINCall.ok(
+                                                      (_model.verifyResp
+                                                              ?.jsonBody ??
+                                                          ''),
+                                                    ) ==
                                                     true) {
-                                                  _model.emergencyLocation =
-                                                      currentUserLocationValue;
-                                                  safeSetState(() {});
-                                                }
-                                                _model.joinedPin = "";
-                                                safeSetState(() {});
-                                                _model.pinInput =
-                                                    [].toList().cast<String>();
-                                                safeSetState(() {});
-                                                _model.walletRow =
-                                                    await DecoyWalletTable()
-                                                        .queryRows(
-                                                  queryFn: (q) => q
-                                                      .eqOrNull(
-                                                        'user_id',
-                                                        currentUserUid,
-                                                      )
-                                                      .order('updated_at'),
-                                                );
-                                                _model.dataKeyB64 = await actions
-                                                    .generateDataKeyIfMissing();
-                                                _model.keyOut =
-                                                    _model.dataKeyB64;
-                                                safeSetState(() {});
-                                                _model.contactObj =
-                                                    await actions
-                                                        .aesGcmDecryptToMap(
-                                                  _model.walletRow!
-                                                      .elementAtOrNull(0)!
-                                                      .contactsCiphertext!,
-                                                  _model.walletRow!
-                                                      .elementAtOrNull(0)!
-                                                      .contactsNonce!,
-                                                  _model.dataKeyB64!,
-                                                );
-                                                _model.personalObj =
-                                                    await actions
-                                                        .aesGcmDecryptToMap(
-                                                  _model.walletRow!
-                                                      .elementAtOrNull(0)!
-                                                      .personalCiphertext!,
-                                                  _model.walletRow!
-                                                      .elementAtOrNull(0)!
-                                                      .personalNonce!,
-                                                  _model.dataKeyB64!,
-                                                );
-                                                if (FFAppState()
-                                                        .hasActiveSubscription ==
-                                                    false) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                        'Bitcoin payment confirming. Full protection activates after confirmation.',
-                                                        style: TextStyle(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryText,
-                                                        ),
-                                                      ),
-                                                      duration: Duration(
-                                                          milliseconds: 4000),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                    ),
-                                                  );
-                                                  if ((FFAppState()
-                                                              .fakeSeeded ==
-                                                          false) ||
-                                                      (FFAppState()
-                                                              .fakeBtcBalance <=
-                                                          0.0)) {
-                                                    FFAppState()
-                                                            .fakeBtcBalance =
-                                                        functions.randomBtc(
-                                                            1.0, 5.0, 8);
-                                                    FFAppState().fakeSeeded =
-                                                        true;
-                                                    safeSetState(() {});
-                                                  }
-
-                                                  context.goNamed(
-                                                      DuressHomePageWidget
-                                                          .routeName);
-                                                } else {
-                                                  if (FFAppState()
-                                                          .decoyPinContactsEnabled ==
+                                                  if (VerifyPINCall.isDecoy(
+                                                        (_model.verifyResp
+                                                                ?.jsonBody ??
+                                                            ''),
+                                                      ) ==
                                                       true) {
+                                                    if (buttonDecoyWalletRow
+                                                            ?.useCurrentLocation ==
+                                                        true) {
+                                                      _model.emergencyLocation =
+                                                          currentUserLocationValue;
+                                                      safeSetState(() {});
+                                                    }
+                                                    _model.joinedPin = "";
+                                                    safeSetState(() {});
+                                                    _model.pinInput = []
+                                                        .toList()
+                                                        .cast<String>();
+                                                    safeSetState(() {});
+                                                    _model.walletRow =
+                                                        await DecoyWalletTable()
+                                                            .queryRows(
+                                                      queryFn: (q) => q
+                                                          .eqOrNull(
+                                                            'user_id',
+                                                            currentUserUid,
+                                                          )
+                                                          .order('updated_at'),
+                                                    );
+                                                    _model.dataKeyB64 =
+                                                        await actions
+                                                            .generateDataKeyIfMissing();
+                                                    _model.keyOut =
+                                                        _model.dataKeyB64;
+                                                    safeSetState(() {});
+                                                    _model.contactObj =
+                                                        await actions
+                                                            .aesGcmDecryptToMap(
+                                                      _model.walletRow!
+                                                          .elementAtOrNull(0)!
+                                                          .contactsCiphertext!,
+                                                      _model.walletRow!
+                                                          .elementAtOrNull(0)!
+                                                          .contactsNonce!,
+                                                      _model.dataKeyB64!,
+                                                    );
+                                                    _model.personalObj =
+                                                        await actions
+                                                            .aesGcmDecryptToMap(
+                                                      _model.walletRow!
+                                                          .elementAtOrNull(0)!
+                                                          .personalCiphertext!,
+                                                      _model.walletRow!
+                                                          .elementAtOrNull(0)!
+                                                          .personalNonce!,
+                                                      _model.dataKeyB64!,
+                                                    );
                                                     if (FFAppState()
                                                             .hasActiveSubscription ==
-                                                        true) {
-                                                      if (_model.walletRow
-                                                              ?.elementAtOrNull(
-                                                                  0)
-                                                              ?.contactsComplete ==
-                                                          true) {
-                                                        unawaited(
-                                                          () async {
-                                                            _model.alertResult1 =
-                                                                await DecoyAlertGroup
-                                                                    .sendEmergencyAlertsCall
-                                                                    .call(
-                                                              userId:
-                                                                  currentUserUid,
-                                                              triggerId:
-                                                                  'PIN_DECOY',
-                                                              lat: functions
-                                                                  .latFromLatLng(
-                                                                      _model
-                                                                          .emergencyLocation),
-                                                              lng: functions
-                                                                  .lngFromLatLng(
-                                                                      _model
-                                                                          .emergencyLocation),
-                                                              contactsJson:
-                                                                  getJsonField(
-                                                                _model
-                                                                    .contactObj,
-                                                                r'''$.contacts''',
-                                                              ),
-                                                              ownerName: (String
-                                                                          firstName,
-                                                                      String
-                                                                          lastName) {
-                                                                return firstName +
-                                                                    " " +
-                                                                    lastName;
-                                                              }(
-                                                                  getJsonField(
-                                                                    _model
-                                                                        .personalObj,
-                                                                    r'''$.firstName''',
-                                                                  ).toString(),
-                                                                  getJsonField(
-                                                                    _model
-                                                                        .personalObj,
-                                                                    r'''$.lastName''',
-                                                                  ).toString()),
-                                                              jwt:
-                                                                  currentJwtToken,
-                                                            );
-                                                          }(),
-                                                        );
-                                                      }
-                                                    } else {
+                                                        false) {
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
@@ -1587,152 +1503,258 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                   .secondary,
                                                         ),
                                                       );
+                                                      if ((FFAppState()
+                                                                  .fakeSeeded ==
+                                                              false) ||
+                                                          (FFAppState()
+                                                                  .fakeBtcBalance <=
+                                                              0.0)) {
+                                                        FFAppState()
+                                                                .fakeBtcBalance =
+                                                            functions.randomBtc(
+                                                                1.0, 5.0, 8);
+                                                        FFAppState()
+                                                            .fakeSeeded = true;
+                                                        safeSetState(() {});
+                                                      }
+
+                                                      context.goNamed(
+                                                          DuressHomePageWidget
+                                                              .routeName);
+                                                    } else {
+                                                      if (FFAppState()
+                                                              .decoyPinContactsEnabled ==
+                                                          true) {
+                                                        if (FFAppState()
+                                                                .hasActiveSubscription ==
+                                                            true) {
+                                                          if (_model.walletRow
+                                                                  ?.elementAtOrNull(
+                                                                      0)
+                                                                  ?.contactsComplete ==
+                                                              true) {
+                                                            unawaited(
+                                                              () async {
+                                                                _model.alertResult1 =
+                                                                    await DecoyAlertGroup
+                                                                        .sendEmergencyAlertsCall
+                                                                        .call(
+                                                                  userId:
+                                                                      currentUserUid,
+                                                                  triggerId:
+                                                                      'PIN_DECOY',
+                                                                  lat: functions
+                                                                      .latFromLatLng(
+                                                                          _model
+                                                                              .emergencyLocation),
+                                                                  lng: functions
+                                                                      .lngFromLatLng(
+                                                                          _model
+                                                                              .emergencyLocation),
+                                                                  contactsJson:
+                                                                      getJsonField(
+                                                                    _model
+                                                                        .contactObj,
+                                                                    r'''$.contacts''',
+                                                                  ),
+                                                                  ownerName: (String
+                                                                              firstName,
+                                                                          String
+                                                                              lastName) {
+                                                                    return firstName +
+                                                                        " " +
+                                                                        lastName;
+                                                                  }(
+                                                                      getJsonField(
+                                                                        _model
+                                                                            .personalObj,
+                                                                        r'''$.firstName''',
+                                                                      ).toString(),
+                                                                      getJsonField(
+                                                                        _model
+                                                                            .personalObj,
+                                                                        r'''$.lastName''',
+                                                                      ).toString()),
+                                                                  jwt:
+                                                                      currentJwtToken,
+                                                                );
+                                                              }(),
+                                                            );
+                                                          }
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                'Bitcoin payment confirming. Full protection activates after confirmation.',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                                ),
+                                                              ),
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      4000),
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondary,
+                                                            ),
+                                                          );
+                                                        }
+                                                      }
+                                                      if ((FFAppState()
+                                                                  .fakeSeeded ==
+                                                              false) ||
+                                                          (FFAppState()
+                                                                  .fakeBtcBalance <=
+                                                              0.0)) {
+                                                        FFAppState()
+                                                                .fakeBtcBalance =
+                                                            functions.randomBtc(
+                                                                1.0, 5.0, 8);
+                                                        FFAppState()
+                                                            .fakeSeeded = true;
+                                                        safeSetState(() {});
+                                                      }
+
+                                                      context.goNamed(
+                                                          DuressHomePageWidget
+                                                              .routeName);
+                                                    }
+                                                  } else {
+                                                    if (VerifyPINCall.isAccount(
+                                                          (_model.verifyResp
+                                                                  ?.jsonBody ??
+                                                              ''),
+                                                        ) ==
+                                                        true) {
+                                                      _model.joinedPin = "";
+                                                      safeSetState(() {});
+                                                      _model.pinInput = []
+                                                          .toList()
+                                                          .cast<String>();
+                                                      safeSetState(() {});
+
+                                                      context.goNamed(
+                                                          HomePageWidget
+                                                              .routeName);
+                                                    } else {
+                                                      _model.joinedPin = "";
+                                                      safeSetState(() {});
+                                                      _model.pinInput = []
+                                                          .toList()
+                                                          .cast<String>();
+                                                      safeSetState(() {});
+                                                      _model.ppNotificationValue =
+                                                          2;
+                                                      safeSetState(() {});
+                                                      await Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 2000,
+                                                        ),
+                                                      );
+                                                      _model.ppNotificationValue =
+                                                          0;
+                                                      safeSetState(() {});
                                                     }
                                                   }
-                                                  if ((FFAppState()
-                                                              .fakeSeeded ==
-                                                          false) ||
-                                                      (FFAppState()
-                                                              .fakeBtcBalance <=
-                                                          0.0)) {
-                                                    FFAppState()
-                                                            .fakeBtcBalance =
-                                                        functions.randomBtc(
-                                                            1.0, 5.0, 8);
-                                                    FFAppState().fakeSeeded =
-                                                        true;
-                                                    safeSetState(() {});
-                                                  }
-
-                                                  context.goNamed(
-                                                      DuressHomePageWidget
-                                                          .routeName);
-                                                }
-                                              } else {
-                                                if (VerifyPINCall.isAccount(
-                                                      (_model.verifyResp
-                                                              ?.jsonBody ??
-                                                          ''),
-                                                    ) ==
-                                                    true) {
-                                                  _model.joinedPin = "";
-                                                  safeSetState(() {});
-                                                  _model.pinInput = []
-                                                      .toList()
-                                                      .cast<String>();
-                                                  safeSetState(() {});
-
-                                                  context.goNamed(
-                                                      HomePageWidget.routeName);
                                                 } else {
-                                                  _model.joinedPin = "";
-                                                  safeSetState(() {});
-                                                  _model.pinInput = []
-                                                      .toList()
-                                                      .cast<String>();
-                                                  safeSetState(() {});
-                                                  _model.ppNotificationValue =
-                                                      2;
-                                                  safeSetState(() {});
-                                                  await Future.delayed(
-                                                    Duration(
-                                                      milliseconds: 2000,
-                                                    ),
-                                                  );
-                                                  _model.ppNotificationValue =
-                                                      0;
-                                                  safeSetState(() {});
-                                                }
-                                              }
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'ERROR #006 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                    style: TextStyle(
-                                                      color:
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'ERROR #006 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .primaryText,
+                                                              .secondary,
                                                     ),
+                                                  );
+                                                }
+                                              } else {
+                                                _model.joinedPin = "";
+                                                safeSetState(() {});
+                                                _model.pinInput =
+                                                    [].toList().cast<String>();
+                                                safeSetState(() {});
+                                                _model.ppNotificationValue = 1;
+                                                safeSetState(() {});
+                                                await Future.delayed(
+                                                  Duration(
+                                                    milliseconds: 2000,
                                                   ),
-                                                  duration: Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                ),
-                                              );
-                                            }
-                                          } else {
-                                            _model.joinedPin = "";
-                                            safeSetState(() {});
-                                            _model.pinInput =
-                                                [].toList().cast<String>();
-                                            safeSetState(() {});
-                                            _model.ppNotificationValue = 1;
-                                            safeSetState(() {});
-                                            await Future.delayed(
-                                              Duration(
-                                                milliseconds: 2000,
-                                              ),
-                                            );
-                                            _model.ppNotificationValue = 0;
-                                            safeSetState(() {});
-                                          }
+                                                );
+                                                _model.ppNotificationValue = 0;
+                                                safeSetState(() {});
+                                              }
 
-                                          safeSetState(() {});
-                                        },
-                                        text: 'Enter',
-                                        options: FFButtonOptions(
-                                          width: 400.0,
-                                          height: 50.0,
-                                          padding: EdgeInsets.all(0.0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          textStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .titleMedium
-                                              .override(
-                                                font: GoogleFonts.heebo(
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleMedium
-                                                          .fontStyle,
-                                                ),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                letterSpacing: 0.0,
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontStyle,
+                                              safeSetState(() {});
+                                            },
+                                            text: 'Enter',
+                                            options: FFButtonOptions(
+                                              width: 400.0,
+                                              height: 50.0,
+                                              padding: EdgeInsets.all(0.0),
+                                              iconPadding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleMedium
+                                                      .override(
+                                                        font: GoogleFonts.heebo(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .fontStyle,
+                                                      ),
+                                              elevation: 3.0,
+                                              borderSide: BorderSide(
+                                                color: Colors.transparent,
                                               ),
-                                          elevation: 3.0,
-                                          borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                        ),
-                                      );
-                                    },
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
