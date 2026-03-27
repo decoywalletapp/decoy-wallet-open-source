@@ -1503,18 +1503,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   }
 
                                                   context.goNamed(
-                                                    DuressHomePageWidget
-                                                        .routeName,
-                                                    extra: <String, dynamic>{
-                                                      '__transition_info__':
-                                                          TransitionInfo(
-                                                        hasTransition: true,
-                                                        transitionType:
-                                                            PageTransitionType
-                                                                .rightToLeft,
-                                                      ),
-                                                    },
-                                                  );
+                                                      DuressHomePageWidget
+                                                          .routeName);
                                                 } else {
                                                   if (FFAppState()
                                                           .decoyPinContactsEnabled ==
@@ -1615,18 +1605,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   }
 
                                                   context.goNamed(
-                                                    DuressHomePageWidget
-                                                        .routeName,
-                                                    extra: <String, dynamic>{
-                                                      '__transition_info__':
-                                                          TransitionInfo(
-                                                        hasTransition: true,
-                                                        transitionType:
-                                                            PageTransitionType
-                                                                .rightToLeft,
-                                                      ),
-                                                    },
-                                                  );
+                                                      DuressHomePageWidget
+                                                          .routeName);
                                                 }
                                               } else {
                                                 if (VerifyPINCall.isAccount(
