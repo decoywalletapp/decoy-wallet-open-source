@@ -457,6 +457,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           _model.c5PhoneTFMask.clear();
         });
       }
+
+      _model.getConsentStatusesResp = await GetConsentStatusesCall.call(
+        jwt: currentJwtToken,
+      );
+
+      if ((_model.getConsentStatusesResp?.succeeded ?? true)) {
+        _model.c1Status = GetConsentStatusesCall.slot1Status(
+          (_model.getConsentStatusesResp?.jsonBody ?? ''),
+        ).toString();
+        safeSetState(() {});
+      }
     });
 
     _model.c1FirstTFTextController ??= TextEditingController();
@@ -1413,7 +1424,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }
 
                                                           _model.c1Status =
-                                                              'Confirmation sent';
+                                                              'Text ready to send';
                                                           safeSetState(() {});
                                                         }
 
@@ -1423,7 +1434,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           'Send Confirmation Link',
                                                       options: FFButtonOptions(
                                                         width: 200.0,
-                                                        height: 40.0,
+                                                        height: 50.0,
                                                         padding:
                                                             EdgeInsetsDirectional
                                                                 .fromSTEB(
@@ -1462,7 +1473,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         elevation: 3.0,
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(8.0),
+                                                                .circular(10.0),
                                                       ),
                                                     ),
                                                   ),
@@ -2085,6 +2096,177 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       inputFormatters: [
                                                         _model.c2PhoneTFMask
                                                       ],
+                                                    ),
+                                                    Expanded(
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 30.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
+                                                          ),
+                                                          child: Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.0, 0.0),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child: Text(
+                                                                    'Status: ',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          useGoogleFonts:
+                                                                              !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  _model
+                                                                      .c2Status,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                      ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: FFButtonWidget(
+                                                        onPressed: () async {
+                                                          _model.createConsentResp2 =
+                                                              await CreateConsentRequestCall
+                                                                  .call(
+                                                            userId:
+                                                                currentUserUid,
+                                                            contactSlot: 1,
+                                                            firstName: _model
+                                                                .c1FirstTFTextController
+                                                                .text,
+                                                            lastName: _model
+                                                                .c1LastTFTextController
+                                                                .text,
+                                                            phoneNumber: _model
+                                                                .c1PhoneDigits,
+                                                          );
+
+                                                          if ((_model
+                                                                  .createConsentResp2
+                                                                  ?.succeeded ??
+                                                              true)) {
+                                                            if (isiOS) {
+                                                              await launchUrl(
+                                                                  Uri.parse(
+                                                                      "sms:${_model.c1PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                (_model.createConsentResp2
+                                                                        ?.jsonBody ??
+                                                                    ''),
+                                                              ).toString()}')}"));
+                                                            } else {
+                                                              await launchUrl(
+                                                                  Uri(
+                                                                scheme: 'sms',
+                                                                path: _model
+                                                                    .c1PhoneDigits!,
+                                                                queryParameters: <String,
+                                                                    String>{
+                                                                  'body':
+                                                                      'Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                    (_model.createConsentResp2
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                  ).toString()}',
+                                                                },
+                                                              ));
+                                                            }
+
+                                                            _model.c2Status =
+                                                                'Text ready to send';
+                                                            safeSetState(() {});
+                                                          }
+
+                                                          safeSetState(() {});
+                                                        },
+                                                        text:
+                                                            'Send Confirmation Link',
+                                                        options:
+                                                            FFButtonOptions(
+                                                          width: 200.0,
+                                                          height: 50.0,
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      16.0,
+                                                                      0.0,
+                                                                      16.0,
+                                                                      0.0),
+                                                          iconPadding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          textStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleSmall
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .titleSmallFamily,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    useGoogleFonts:
+                                                                        !FlutterFlowTheme.of(context)
+                                                                            .titleSmallIsCustom,
+                                                                  ),
+                                                          elevation: 3.0,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ].divide(
                                                       SizedBox(height: 12.0)),

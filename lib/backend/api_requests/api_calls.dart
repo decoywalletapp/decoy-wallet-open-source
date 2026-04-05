@@ -901,6 +901,56 @@ class CreateConsentRequestCall {
       );
 }
 
+class GetConsentStatusesCall {
+  static Future<ApiCallResponse> call({
+    String? jwt = '',
+  }) async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'GetConsentStatuses',
+      apiUrl:
+          'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/getConsentStatuses',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static dynamic consents(dynamic response) => getJsonField(
+        response,
+        r'''$.consents''',
+      );
+  static dynamic slot1Status(dynamic response) => getJsonField(
+        response,
+        r'''$.slotStatuses["1"]''',
+      );
+  static dynamic slot2Status(dynamic response) => getJsonField(
+        response,
+        r'''$.slotStatuses["2"]''',
+      );
+  static dynamic slot3Status(dynamic response) => getJsonField(
+        response,
+        r'''$.slotStatuses["3"]''',
+      );
+  static dynamic slot4Status(dynamic response) => getJsonField(
+        response,
+        r'''$.slotStatuses["4"]''',
+      );
+  static dynamic slot5Status(dynamic response) => getJsonField(
+        response,
+        r'''$.slotStatuses["5"]''',
+      );
+}
+
 String _toEncodable(dynamic item) {
   if (item is DocumentReference) {
     return item.path;

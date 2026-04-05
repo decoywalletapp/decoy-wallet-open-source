@@ -69,6 +69,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   dynamic contactsObj;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
   String? dataKeyOut2;
+  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in EmergencyContacts widget.
+  ApiCallResponse? getConsentStatusesResp;
   // State field(s) for c1FirstTF widget.
   FocusNode? c1FirstTFFocusNode;
   TextEditingController? c1FirstTFTextController;
@@ -97,6 +99,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   TextEditingController? c2PhoneTFTextController;
   late MaskTextInputFormatter c2PhoneTFMask;
   String? Function(BuildContext, String?)? c2PhoneTFTextControllerValidator;
+  // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
+  ApiCallResponse? createConsentResp2;
   // State field(s) for c3FirstTF widget.
   FocusNode? c3FirstTFFocusNode;
   TextEditingController? c3FirstTFTextController;
