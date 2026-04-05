@@ -114,6 +114,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   TextEditingController? c3PhoneTFTextController;
   late MaskTextInputFormatter c3PhoneTFMask;
   String? Function(BuildContext, String?)? c3PhoneTFTextControllerValidator;
+  // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
+  ApiCallResponse? createConsentResp3;
   // State field(s) for c4FirstTF widget.
   FocusNode? c4FirstTFFocusNode;
   TextEditingController? c4FirstTFTextController;
@@ -127,6 +129,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   TextEditingController? c4PhoneTFTextController;
   late MaskTextInputFormatter c4PhoneTFMask;
   String? Function(BuildContext, String?)? c4PhoneTFTextControllerValidator;
+  // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
+  ApiCallResponse? createConsentResp4;
   // State field(s) for c5FirstTF widget.
   FocusNode? c5FirstTFFocusNode;
   TextEditingController? c5FirstTFTextController;
@@ -140,6 +144,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   TextEditingController? c5PhoneTFTextController;
   late MaskTextInputFormatter c5PhoneTFMask;
   String? Function(BuildContext, String?)? c5PhoneTFTextControllerValidator;
+  // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
+  ApiCallResponse? createConsentResp5;
   // Stores action output result for [Custom Action - buildContactsPayloadV2] action in Button widget.
   String? contactsPayload;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
