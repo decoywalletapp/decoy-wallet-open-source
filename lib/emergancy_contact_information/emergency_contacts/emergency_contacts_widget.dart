@@ -1376,6 +1376,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       fontFamily:
                                                                           FlutterFlowTheme.of(context)
                                                                               .bodyMediumFamily,
+                                                                      color:
+                                                                          () {
+                                                                        if (_model.c1Status ==
+                                                                            'Confirmed') {
+                                                                          return Color(
+                                                                              0xFF0CD40B);
+                                                                        } else if (_model.c1Status ==
+                                                                            'Pending') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primary;
+                                                                        } else if (_model.c1Status ==
+                                                                            'Denied') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else if (_model.c1Status ==
+                                                                            'Opted out') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primaryText;
+                                                                        }
+                                                                      }(),
                                                                       fontSize:
                                                                           16.0,
                                                                       letterSpacing:
@@ -1446,8 +1469,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                         safeSetState(() {});
                                                       },
-                                                      text:
-                                                          'Send Confirmation Link',
+                                                      text: _model.c1Status ==
+                                                              'Not sent'
+                                                          ? 'Send Confirmation Link'
+                                                          : 'Resend Confirmation Link',
                                                       options: FFButtonOptions(
                                                         width: 200.0,
                                                         height: 50.0,
@@ -2171,6 +2196,24 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       .override(
                                                                         fontFamily:
                                                                             FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        color:
+                                                                            () {
+                                                                          if (_model.c2Status ==
+                                                                              'Confirmed') {
+                                                                            return Color(0xFF0CD40B);
+                                                                          } else if (_model.c2Status ==
+                                                                              'Pending') {
+                                                                            return FlutterFlowTheme.of(context).primary;
+                                                                          } else if (_model.c2Status ==
+                                                                              'Denied') {
+                                                                            return FlutterFlowTheme.of(context).error;
+                                                                          } else if (_model.c2Status ==
+                                                                              'Opted out') {
+                                                                            return FlutterFlowTheme.of(context).error;
+                                                                          } else {
+                                                                            return FlutterFlowTheme.of(context).primaryText;
+                                                                          }
+                                                                        }(),
                                                                         fontSize:
                                                                             16.0,
                                                                         letterSpacing:
@@ -2241,8 +2284,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                           safeSetState(() {});
                                                         },
-                                                        text:
-                                                            'Send Confirmation Link',
+                                                        text: _model.c2Status ==
+                                                                'Not sent'
+                                                            ? 'Send Confirmation Link'
+                                                            : 'Resend Confirmation Link',
                                                         options:
                                                             FFButtonOptions(
                                                           width: 200.0,
@@ -2887,6 +2932,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       fontFamily:
                                                                           FlutterFlowTheme.of(context)
                                                                               .bodyMediumFamily,
+                                                                      color:
+                                                                          () {
+                                                                        if (_model.c3Status ==
+                                                                            'Confirmed') {
+                                                                          return Color(
+                                                                              0xFF0CD40B);
+                                                                        } else if (_model.c3Status ==
+                                                                            'Pending') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primary;
+                                                                        } else if (_model.c3Status ==
+                                                                            'Denied') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else if (_model.c3Status ==
+                                                                            'Opted out') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primaryText;
+                                                                        }
+                                                                      }(),
                                                                       fontSize:
                                                                           16.0,
                                                                       letterSpacing:
@@ -2957,8 +3025,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                         safeSetState(() {});
                                                       },
-                                                      text:
-                                                          'Send Confirmation Link',
+                                                      text: _model.c3Status ==
+                                                              'Not sent'
+                                                          ? 'Send Confirmation Link'
+                                                          : 'Resend Confirmation Link',
                                                       options: FFButtonOptions(
                                                         width: 200.0,
                                                         height: 50.0,
@@ -3574,6 +3644,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       fontFamily:
                                                                           FlutterFlowTheme.of(context)
                                                                               .bodyMediumFamily,
+                                                                      color:
+                                                                          () {
+                                                                        if (_model.c4Status ==
+                                                                            'Confirmed') {
+                                                                          return Color(
+                                                                              0xFF0CD40B);
+                                                                        } else if (_model.c4Status ==
+                                                                            'Pending') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primary;
+                                                                        } else if (_model.c4Status ==
+                                                                            'Denied') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else if (_model.c4Status ==
+                                                                            'Opted out') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primaryText;
+                                                                        }
+                                                                      }(),
                                                                       fontSize:
                                                                           16.0,
                                                                       letterSpacing:
@@ -3644,8 +3737,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                         safeSetState(() {});
                                                       },
-                                                      text:
-                                                          'Send Confirmation Link',
+                                                      text: _model.c4Status ==
+                                                              'Not sent'
+                                                          ? 'Send Confirmation Link'
+                                                          : 'Resend Confirmation Link',
                                                       options: FFButtonOptions(
                                                         width: 200.0,
                                                         height: 50.0,
@@ -4230,6 +4325,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       fontFamily:
                                                                           FlutterFlowTheme.of(context)
                                                                               .bodyMediumFamily,
+                                                                      color:
+                                                                          () {
+                                                                        if (_model.c5Status ==
+                                                                            'Confirmed') {
+                                                                          return Color(
+                                                                              0xFF0CD40B);
+                                                                        } else if (_model.c5Status ==
+                                                                            'Pending') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primary;
+                                                                        } else if (_model.c5Status ==
+                                                                            'Denied') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else if (_model.c5Status ==
+                                                                            'Opted out') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .error;
+                                                                        } else {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primaryText;
+                                                                        }
+                                                                      }(),
                                                                       fontSize:
                                                                           16.0,
                                                                       letterSpacing:
@@ -4300,8 +4418,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                         safeSetState(() {});
                                                       },
-                                                      text:
-                                                          'Send Confirmation Link',
+                                                      text: _model.c5Status ==
+                                                              'Not sent'
+                                                          ? 'Send Confirmation Link'
+                                                          : 'Resend Confirmation Link',
                                                       options: FFButtonOptions(
                                                         width: 200.0,
                                                         height: 50.0,
