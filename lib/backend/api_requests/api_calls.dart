@@ -859,6 +859,48 @@ class RepairStripeEntitlementCall {
   }
 }
 
+class CreateConsentRequestCall {
+  static Future<ApiCallResponse> call({
+    String? userId = '',
+    int? contactSlot,
+    String? firstName = '',
+    String? lastName = '',
+    String? phoneNumber = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "userId": "${escapeStringForJson(userId)}",
+  "contactSlot": ${contactSlot},
+  "firstName": "${escapeStringForJson(firstName)}",
+  "lastName": "${escapeStringForJson(lastName)}",
+  "phoneNumber": "${escapeStringForJson(phoneNumber)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'CreateConsentRequest',
+      apiUrl:
+          'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/createConsentRequest',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static dynamic link(dynamic response) => getJsonField(
+        response,
+        r'''$.link''',
+      );
+}
+
 String _toEncodable(dynamic item) {
   if (item is DocumentReference) {
     return item.path;

@@ -77,12 +77,7 @@ class _CreateAccountB4ChangeWidgetState
                   height: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(0.0),
-                      bottomRight: Radius.circular(0.0),
-                      topLeft: Radius.circular(0.0),
-                      topRight: Radius.circular(0.0),
-                    ),
+                    borderRadius: BorderRadius.only(),
                   ),
                   alignment: AlignmentDirectional(0.0, -1.0),
                   child: SingleChildScrollView(
@@ -96,12 +91,7 @@ class _CreateAccountB4ChangeWidgetState
                           height: 120.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).primary,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(0.0),
-                              bottomRight: Radius.circular(0.0),
-                              topLeft: Radius.circular(0.0),
-                              topRight: Radius.circular(0.0),
-                            ),
+                            borderRadius: BorderRadius.only(),
                             border: Border.all(
                               color: FlutterFlowTheme.of(context).primary,
                             ),
@@ -113,8 +103,6 @@ class _CreateAccountB4ChangeWidgetState
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(16.0),
                                 bottomRight: Radius.circular(16.0),
-                                topLeft: Radius.circular(0.0),
-                                topRight: Radius.circular(0.0),
                               ),
                               child: Image.asset(
                                 'assets/images/Decoy_Logo-OBHiRes.jpg',

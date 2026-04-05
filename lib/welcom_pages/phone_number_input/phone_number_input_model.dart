@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'phone_number_input_widget.dart' show PhoneNumberInputWidget;
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
   ///  Local state fields for this page.
@@ -26,6 +27,7 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
   // State field(s) for PhoneNumberField widget.
   FocusNode? phoneNumberFieldFocusNode;
   TextEditingController? phoneNumberFieldTextController;
+  late MaskTextInputFormatter phoneNumberFieldMask;
   String? Function(BuildContext, String?)?
       phoneNumberFieldTextControllerValidator;
   // Stores action output result for [Backend Call - API (getPhoneHash)] action in Button widget.

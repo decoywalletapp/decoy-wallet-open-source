@@ -11,6 +11,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'phone_number_input_model.dart';
 export 'phone_number_input_model.dart';
 
@@ -47,6 +48,11 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
         safeSetState(() {
           _model.phoneNumberFieldTextController?.text = functions
               .formatUSPhone(_model.phoneNumberFieldTextController.text);
+          _model.phoneNumberFieldMask.updateMask(
+            newValue: TextEditingValue(
+              text: _model.phoneNumberFieldTextController!.text,
+            ),
+          );
         });
       }
     });
@@ -54,6 +60,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
     _model.phoneNumberFieldTextController ??= TextEditingController();
     _model.phoneNumberFieldFocusNode ??= FocusNode();
 
+    _model.phoneNumberFieldMask =
+        MaskTextInputFormatter(mask: '(###) ###-####');
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -194,12 +202,32 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                           functions.formatAsUsPhone(
                                                               _model
                                                                   .pnDigits10!);
+                                                      _model
+                                                          .phoneNumberFieldMask
+                                                          .updateMask(
+                                                        newValue:
+                                                            TextEditingValue(
+                                                          text: _model
+                                                              .phoneNumberFieldTextController!
+                                                              .text,
+                                                        ),
+                                                      );
                                                     });
                                                   } else {
                                                     safeSetState(() {
                                                       _model
                                                           .phoneNumberFieldTextController
                                                           ?.text = '';
+                                                      _model
+                                                          .phoneNumberFieldMask
+                                                          .updateMask(
+                                                        newValue:
+                                                            TextEditingValue(
+                                                          text: _model
+                                                              .phoneNumberFieldTextController!
+                                                              .text,
+                                                        ),
+                                                      );
                                                     });
                                                   }
                                                 },
@@ -308,6 +336,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                               validator: _model
                                                   .phoneNumberFieldTextControllerValidator
                                                   .asValidator(context),
+                                              inputFormatters: [
+                                                _model.phoneNumberFieldMask
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -465,6 +496,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                 safeSetState(() {
                                   _model.phoneNumberFieldTextController
                                       ?.clear();
+                                  _model.phoneNumberFieldMask.clear();
                                 });
                                 _model.cleanPhone = '';
                                 _model.pnDigits10 = '';
@@ -493,6 +525,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   safeSetState(() {
                                     _model.phoneNumberFieldTextController
                                         ?.clear();
+                                    _model.phoneNumberFieldMask.clear();
                                   });
                                   _model.cleanPhone = '';
                                   _model.pnDigits10 = '';

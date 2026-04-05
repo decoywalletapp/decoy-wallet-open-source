@@ -251,6 +251,9 @@ class _HomeAddressEntryPageWidgetState
                                         focusNode:
                                             _model.streetAddressFocusNode,
                                         autofocus: false,
+                                        autofillHints: [
+                                          AutofillHints.fullStreetAddress
+                                        ],
                                         textInputAction: TextInputAction.next,
                                         obscureText: false,
                                         decoration: InputDecoration(
@@ -373,6 +376,9 @@ class _HomeAddressEntryPageWidgetState
                                                   _model.cityTextController,
                                               focusNode: _model.cityFocusNode,
                                               autofocus: false,
+                                              autofillHints: [
+                                                AutofillHints.addressCity
+                                              ],
                                               textInputAction:
                                                   TextInputAction.next,
                                               obscureText: false,
@@ -506,6 +512,9 @@ class _HomeAddressEntryPageWidgetState
                                                   _model.stateTextController,
                                               focusNode: _model.stateFocusNode,
                                               autofocus: false,
+                                              autofillHints: [
+                                                AutofillHints.addressState
+                                              ],
                                               textCapitalization:
                                                   TextCapitalization.characters,
                                               textInputAction:
@@ -669,6 +678,9 @@ class _HomeAddressEntryPageWidgetState
                                                   _model.zipTextController,
                                               focusNode: _model.zipFocusNode,
                                               autofocus: false,
+                                              autofillHints: [
+                                                AutofillHints.email
+                                              ],
                                               textInputAction:
                                                   TextInputAction.next,
                                               obscureText: false,

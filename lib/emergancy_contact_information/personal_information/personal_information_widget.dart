@@ -308,6 +308,9 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.firstNameTextController,
                                         focusNode: _model.firstNameFocusNode,
                                         autofocus: false,
+                                        autofillHints: [
+                                          AutofillHints.givenName
+                                        ],
                                         textCapitalization:
                                             TextCapitalization.words,
                                         textInputAction: TextInputAction.next,
@@ -439,6 +442,9 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.lastNameTextController,
                                         focusNode: _model.lastNameFocusNode,
                                         autofocus: false,
+                                        autofillHints: [
+                                          AutofillHints.familyName
+                                        ],
                                         textCapitalization:
                                             TextCapitalization.words,
                                         textInputAction: TextInputAction.next,

@@ -48,6 +48,16 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   String? c5PhoneDigits;
 
+  String c1Status = 'Not sent';
+
+  String c2Status = 'Not sent';
+
+  String c3Status = 'Not sent';
+
+  String c4Status = 'Not sent';
+
+  String c5Status = 'Not sent';
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -72,6 +82,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   TextEditingController? c1PhoneTFTextController;
   late MaskTextInputFormatter c1PhoneTFMask;
   String? Function(BuildContext, String?)? c1PhoneTFTextControllerValidator;
+  // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
+  ApiCallResponse? createConsentResp1;
   // State field(s) for c2FirstTF widget.
   FocusNode? c2FirstTFFocusNode;
   TextEditingController? c2FirstTFTextController;
