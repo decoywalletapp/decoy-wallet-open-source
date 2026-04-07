@@ -1,6 +1,7 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
+import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -181,7 +182,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
     _model.firstNameFocusNode ??= FocusNode();
 
     _model.lastNameTextController ??= TextEditingController();
-    _model.lastNameFocusNode ??= FocusNode();
 
     _model.phoneTextController ??= TextEditingController();
     _model.phoneFocusNode ??= FocusNode();
@@ -308,6 +308,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.firstNameTextController,
                                         focusNode: _model.firstNameFocusNode,
                                         autofocus: false,
+                                        enabled: true,
                                         autofillHints: [
                                           AutofillHints.givenName
                                         ],
@@ -437,117 +438,192 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                       .bodyMediumIsCustom,
                                             ),
                                       ),
-                                      TextFormField(
-                                        controller:
-                                            _model.lastNameTextController,
-                                        focusNode: _model.lastNameFocusNode,
-                                        autofocus: false,
-                                        autofillHints: [
-                                          AutofillHints.familyName
-                                        ],
-                                        textCapitalization:
-                                            TextCapitalization.words,
-                                        textInputAction: TextInputAction.next,
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          hintText: 'Enter last name',
-                                          hintStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                letterSpacing: 0.25,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
+                                      Autocomplete<String>(
+                                        initialValue: TextEditingValue(),
+                                        optionsBuilder: (textEditingValue) {
+                                          if (textEditingValue.text == '') {
+                                            return const Iterable<
+                                                String>.empty();
+                                          }
+                                          return <String>[].where((option) {
+                                            final lowercaseOption =
+                                                option.toLowerCase();
+                                            return lowercaseOption.contains(
+                                                textEditingValue.text
+                                                    .toLowerCase());
+                                          });
+                                        },
+                                        optionsViewBuilder:
+                                            (context, onSelected, options) {
+                                          return AutocompleteOptionsList(
+                                            textFieldKey: _model.lastNameKey,
+                                            textController:
+                                                _model.lastNameTextController!,
+                                            options: options.toList(),
+                                            onSelected: onSelected,
+                                            textStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      letterSpacing: 0.0,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                            textHighlightStyle: TextStyle(),
+                                            elevation: 4.0,
+                                            optionBackgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primaryBackground,
+                                            optionHighlightColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondaryBackground,
+                                            maxHeight: 200.0,
+                                          );
+                                        },
+                                        onSelected: (String selection) {
+                                          safeSetState(() =>
+                                              _model.lastNameSelectedOption =
+                                                  selection);
+                                          FocusScope.of(context).unfocus();
+                                        },
+                                        fieldViewBuilder: (
+                                          context,
+                                          textEditingController,
+                                          focusNode,
+                                          onEditingComplete,
+                                        ) {
+                                          _model.lastNameFocusNode = focusNode;
+
+                                          _model.lastNameTextController =
+                                              textEditingController;
+                                          return TextFormField(
+                                            key: _model.lastNameKey,
+                                            controller: textEditingController,
+                                            focusNode: focusNode,
+                                            onEditingComplete:
+                                                onEditingComplete,
+                                            autofocus: false,
+                                            enabled: true,
+                                            autofillHints: [
+                                              AutofillHints.familyName
+                                            ],
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              hintText: 'Enter last name',
+                                              hintStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMediumFamily,
+                                                    color: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodyMediumIsCustom,
+                                                        .secondaryText,
+                                                    letterSpacing: 0.25,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMediumIsCustom,
+                                                  ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  width: 1.5,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
                                               ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .primary,
-                                              width: 1.5,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              width: 1.5,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                                  width: 1.5,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .error,
-                                              width: 1.5,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                                  width: 1.5,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .error,
-                                              width: 1.5,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          filled: true,
-                                          fillColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .secondaryBackground,
-                                          contentPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 16.0, 16.0, 16.0),
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily:
+                                                  width: 1.5,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
+                                              filled: true,
+                                              fillColor:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyMediumFamily,
-                                              fontSize: 16.0,
-                                              letterSpacing: 0.25,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .bodyMediumIsCustom,
+                                                      .secondaryBackground,
+                                              contentPadding:
+                                                  EdgeInsetsDirectional
+                                                      .fromSTEB(16.0, 16.0,
+                                                          16.0, 16.0),
                                             ),
-                                        keyboardType: TextInputType.name,
-                                        cursorColor:
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                        validator: _model
-                                            .lastNameTextControllerValidator
-                                            .asValidator(context),
-                                        inputFormatters: [
-                                          if (!isAndroid && !isiOS)
-                                            TextInputFormatter.withFunction(
-                                                (oldValue, newValue) {
-                                              return TextEditingValue(
-                                                selection: newValue.selection,
-                                                text: newValue.text
-                                                    .toCapitalization(
-                                                        TextCapitalization
-                                                            .words),
-                                              );
-                                            }),
-                                        ],
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumFamily,
+                                                  fontSize: 16.0,
+                                                  letterSpacing: 0.25,
+                                                  useGoogleFonts:
+                                                      !FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumIsCustom,
+                                                ),
+                                            keyboardType: TextInputType.name,
+                                            cursorColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            validator: _model
+                                                .lastNameTextControllerValidator
+                                                .asValidator(context),
+                                            inputFormatters: [
+                                              if (!isAndroid && !isiOS)
+                                                TextInputFormatter.withFunction(
+                                                    (oldValue, newValue) {
+                                                  return TextEditingValue(
+                                                    selection:
+                                                        newValue.selection,
+                                                    text: newValue.text
+                                                        .toCapitalization(
+                                                            TextCapitalization
+                                                                .words),
+                                                  );
+                                                }),
+                                            ],
+                                          );
+                                        },
                                       ),
                                     ].divide(SizedBox(height: 8.0)),
                                   ),

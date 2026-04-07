@@ -613,3 +613,76 @@ bool isEntitlementCurrentlyActive(
   // Otherwise it is active
   return true;
 }
+
+List<dynamic> buildConsentSlotsList(
+  String c1First,
+  String c1Last,
+  String c1Phone,
+  String c2First,
+  String c2Last,
+  String c2Phone,
+  String c3First,
+  String c3Last,
+  String c3Phone,
+  String c4First,
+  String c4Last,
+  String c4Phone,
+  String c5First,
+  String c5Last,
+  String c5Phone,
+) {
+  String clean(String value) {
+    return value.trim();
+  }
+
+  String normalizePhone(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return '';
+
+    final raw = trimmed.replaceAll(RegExp(r'[^0-9+]'), '');
+
+    if (raw.startsWith('+')) {
+      final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
+      if (digits.length == 11 && digits.startsWith('1')) {
+        return '+$digits';
+      }
+      return '';
+    }
+
+    final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.length == 10) return '+1$digits';
+    if (digits.length == 11 && digits.startsWith('1')) return '+$digits';
+
+    return '';
+  }
+
+  Map<String, dynamic> slotMap(
+    int slot,
+    String first,
+    String last,
+    String phone,
+  ) {
+    return {
+      'contact_slot': slot,
+      'first_name': clean(first),
+      'last_name': clean(last),
+      'phone_number': normalizePhone(phone),
+    };
+  }
+
+  bool isEmptySlot(Map<String, dynamic> slot) {
+    return (slot['first_name'] as String).isEmpty &&
+        (slot['last_name'] as String).isEmpty &&
+        (slot['phone_number'] as String).isEmpty;
+  }
+
+  final slots = <Map<String, dynamic>>[
+    slotMap(1, c1First, c1Last, c1Phone),
+    slotMap(2, c2First, c2Last, c2Phone),
+    slotMap(3, c3First, c3Last, c3Phone),
+    slotMap(4, c4First, c4Last, c4Phone),
+    slotMap(5, c5First, c5Last, c5Phone),
+  ];
+
+  return slots.where((slot) => !isEmptySlot(slot)).toList();
+}

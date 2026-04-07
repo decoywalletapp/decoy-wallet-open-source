@@ -252,10 +252,26 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       ((_model.query3 != null && (_model.query3)!.isNotEmpty) &&
                           (_model.setupComplete == true))) {
                     context.goNamedAuth(
-                        PINPageWidget.routeName, context.mounted);
+                      PINPageWidget.routeName,
+                      context.mounted,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                        ),
+                      },
+                    );
                   } else {
                     context.goNamedAuth(
-                        CreatePinWidget.routeName, context.mounted);
+                      CreatePinWidget.routeName,
+                      context.mounted,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                        ),
+                      },
+                    );
                   }
                 } else {
                   context.goNamedAuth(
@@ -337,10 +353,27 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         (_model.setupComplete == true)) ||
                     ((_model.query3 != null && (_model.query3)!.isNotEmpty) &&
                         (_model.setupComplete == true))) {
-                  context.goNamedAuth(PINPageWidget.routeName, context.mounted);
+                  context.goNamedAuth(
+                    PINPageWidget.routeName,
+                    context.mounted,
+                    extra: <String, dynamic>{
+                      '__transition_info__': TransitionInfo(
+                        hasTransition: true,
+                        transitionType: PageTransitionType.fade,
+                      ),
+                    },
+                  );
                 } else {
                   context.goNamedAuth(
-                      CreatePinWidget.routeName, context.mounted);
+                    CreatePinWidget.routeName,
+                    context.mounted,
+                    extra: <String, dynamic>{
+                      '__transition_info__': TransitionInfo(
+                        hasTransition: true,
+                        transitionType: PageTransitionType.fade,
+                      ),
+                    },
+                  );
                 }
               } else {
                 context.goNamedAuth(HomePageWidget.routeName, context.mounted);

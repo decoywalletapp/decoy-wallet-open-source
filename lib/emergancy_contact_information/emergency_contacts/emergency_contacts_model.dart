@@ -58,6 +58,17 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   String c5Status = 'Not sent';
 
+  List<dynamic> consentSlotsList = [];
+  void addToConsentSlotsList(dynamic item) => consentSlotsList.add(item);
+  void removeFromConsentSlotsList(dynamic item) =>
+      consentSlotsList.remove(item);
+  void removeAtIndexFromConsentSlotsList(int index) =>
+      consentSlotsList.removeAt(index);
+  void insertAtIndexInConsentSlotsList(int index, dynamic item) =>
+      consentSlotsList.insert(index, item);
+  void updateConsentSlotsListAtIndex(int index, Function(dynamic) updateFn) =>
+      consentSlotsList[index] = updateFn(consentSlotsList[index]);
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -164,6 +175,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   DecoyWalletRow? insRow;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<DecoyWalletRow>? decoyWalletRefresh2;
+  // Stores action output result for [Backend Call - API (SyncConsentSlots)] action in Button widget.
+  ApiCallResponse? syncConsentResp;
 
   @override
   void initState(BuildContext context) {}

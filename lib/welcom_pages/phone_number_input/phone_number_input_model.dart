@@ -25,8 +25,10 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
 
   final formKey = GlobalKey<FormState>();
   // State field(s) for PhoneNumberField widget.
+  final phoneNumberFieldKey = GlobalKey();
   FocusNode? phoneNumberFieldFocusNode;
   TextEditingController? phoneNumberFieldTextController;
+  String? phoneNumberFieldSelectedOption;
   late MaskTextInputFormatter phoneNumberFieldMask;
   String? Function(BuildContext, String?)?
       phoneNumberFieldTextControllerValidator;
@@ -45,6 +47,5 @@ class PhoneNumberInputModel extends FlutterFlowModel<PhoneNumberInputWidget> {
   @override
   void dispose() {
     phoneNumberFieldFocusNode?.dispose();
-    phoneNumberFieldTextController?.dispose();
   }
 }

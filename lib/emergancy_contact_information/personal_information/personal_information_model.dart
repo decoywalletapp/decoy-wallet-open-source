@@ -54,8 +54,10 @@ class PersonalInformationModel
   TextEditingController? firstNameTextController;
   String? Function(BuildContext, String?)? firstNameTextControllerValidator;
   // State field(s) for lastName widget.
+  final lastNameKey = GlobalKey();
   FocusNode? lastNameFocusNode;
   TextEditingController? lastNameTextController;
+  String? lastNameSelectedOption;
   String? Function(BuildContext, String?)? lastNameTextControllerValidator;
   // State field(s) for phone widget.
   FocusNode? phoneFocusNode;
@@ -98,7 +100,6 @@ class PersonalInformationModel
     firstNameTextController?.dispose();
 
     lastNameFocusNode?.dispose();
-    lastNameTextController?.dispose();
 
     phoneFocusNode?.dispose();
     phoneTextController?.dispose();

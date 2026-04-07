@@ -11,12 +11,16 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for EmailAddress widget.
+  final emailAddressKey = GlobalKey();
   FocusNode? emailAddressFocusNode;
   TextEditingController? emailAddressTextController;
+  String? emailAddressSelectedOption;
   String? Function(BuildContext, String?)? emailAddressTextControllerValidator;
   // State field(s) for PasswordCreateAccount widget.
+  final passwordCreateAccountKey = GlobalKey();
   FocusNode? passwordCreateAccountFocusNode;
   TextEditingController? passwordCreateAccountTextController;
+  String? passwordCreateAccountSelectedOption;
   late bool passwordCreateAccountVisibility;
   String? Function(BuildContext, String?)?
       passwordCreateAccountTextControllerValidator;
@@ -38,10 +42,8 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   @override
   void dispose() {
     emailAddressFocusNode?.dispose();
-    emailAddressTextController?.dispose();
 
     passwordCreateAccountFocusNode?.dispose();
-    passwordCreateAccountTextController?.dispose();
 
     passwordConfirmFocusNode?.dispose();
     passwordConfirmTextController?.dispose();

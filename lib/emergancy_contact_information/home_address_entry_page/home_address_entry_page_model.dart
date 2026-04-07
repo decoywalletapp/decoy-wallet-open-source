@@ -53,8 +53,10 @@ class HomeAddressEntryPageModel
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in HomeAddressEntryPage widget.
   String? dataKeyOut2;
   // State field(s) for StreetAddress widget.
+  final streetAddressKey = GlobalKey();
   FocusNode? streetAddressFocusNode;
   TextEditingController? streetAddressTextController;
+  String? streetAddressSelectedOption;
   String? Function(BuildContext, String?)? streetAddressTextControllerValidator;
   // State field(s) for City widget.
   FocusNode? cityFocusNode;
@@ -101,7 +103,6 @@ class HomeAddressEntryPageModel
   @override
   void dispose() {
     streetAddressFocusNode?.dispose();
-    streetAddressTextController?.dispose();
 
     cityFocusNode?.dispose();
     cityTextController?.dispose();

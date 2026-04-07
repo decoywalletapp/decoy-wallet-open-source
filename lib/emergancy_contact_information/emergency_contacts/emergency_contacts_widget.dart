@@ -1222,6 +1222,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       },
                                                     ),
                                                     autofocus: false,
+                                                    enabled: true,
                                                     textInputAction:
                                                         TextInputAction.next,
                                                     obscureText: false,
@@ -1474,7 +1475,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           ? 'Send Confirmation Link'
                                                           : 'Resend Confirmation Link',
                                                       options: FFButtonOptions(
-                                                        width: 200.0,
+                                                        width: 275.26,
                                                         height: 50.0,
                                                         padding:
                                                             EdgeInsetsDirectional
@@ -4609,7 +4610,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .emergencyContactsIncrement =
                                                     _model.contactsCount;
                                                 safeSetState(() {});
-                                                context.safePop();
                                               } else {
                                                 _model.insRow =
                                                     await DecoyWalletTable()
@@ -4658,7 +4658,93 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .emergencyContactsIncrement =
                                                     _model.contactsCount;
                                                 safeSetState(() {});
+                                              }
+
+                                              _model.consentSlotsList = functions
+                                                  .buildConsentSlotsList(
+                                                      _model
+                                                          .c1FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c1LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c1PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5PhoneTFTextController
+                                                          .text)
+                                                  .toList()
+                                                  .cast<dynamic>();
+                                              safeSetState(() {});
+                                              _model.syncConsentResp =
+                                                  await SyncConsentSlotsCall
+                                                      .call(
+                                                jwt: currentJwtToken,
+                                                slotsJsonList: _model
+                                                    .consentSlotsList
+                                                    .map((e) => e.toString())
+                                                    .toList(),
+                                              );
+
+                                              if ((_model.syncConsentResp
+                                                      ?.succeeded ??
+                                                  true)) {
                                                 context.safePop();
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'ERROR #030 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
                                               }
                                             } else {
                                               ScaffoldMessenger.of(context)

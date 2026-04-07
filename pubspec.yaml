@@ -122,6 +122,7 @@ dependencies:
   sqflite_common: 2.5.4+3
   storage_client: 2.4.0
   stream_transform: 2.1.0
+  substring_highlight: 1.0.33
   supabase: 2.7.0
   supabase_flutter: 2.9.0
   synchronized: 3.4.0

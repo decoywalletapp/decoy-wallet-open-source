@@ -951,6 +951,39 @@ class GetConsentStatusesCall {
       );
 }
 
+class SyncConsentSlotsCall {
+  static Future<ApiCallResponse> call({
+    String? jwt = '',
+    List<String>? slotsJsonList,
+  }) async {
+    final slotsJson = _serializeList(slotsJsonList);
+
+    final ffApiRequestBody = '''
+{
+  "slots": ${slotsJson}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'SyncConsentSlots',
+      apiUrl:
+          'https://vxmrthyumzrfgtuvjqmr.supabase.co/functions/v1/syncConsentSlots',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 String _toEncodable(dynamic item) {
   if (item is DocumentReference) {
     return item.path;

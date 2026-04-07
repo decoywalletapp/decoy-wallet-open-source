@@ -1,6 +1,7 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
+import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
@@ -58,7 +59,6 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
     });
 
     _model.phoneNumberFieldTextController ??= TextEditingController();
-    _model.phoneNumberFieldFocusNode ??= FocusNode();
 
     _model.phoneNumberFieldMask =
         MaskTextInputFormatter(mask: '(###) ###-####');
@@ -169,158 +169,253 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                         Expanded(
                                           child: Container(
                                             width: 400.0,
-                                            child: TextFormField(
-                                              controller: _model
-                                                  .phoneNumberFieldTextController,
-                                              focusNode: _model
-                                                  .phoneNumberFieldFocusNode,
-                                              onChanged: (_) =>
-                                                  EasyDebounce.debounce(
-                                                '_model.phoneNumberFieldTextController',
-                                                Duration(milliseconds: 1000),
-                                                () async {
-                                                  await Future.delayed(
+                                            child: Autocomplete<String>(
+                                              initialValue: TextEditingValue(),
+                                              optionsBuilder:
+                                                  (textEditingValue) {
+                                                if (textEditingValue.text ==
+                                                    '') {
+                                                  return const Iterable<
+                                                      String>.empty();
+                                                }
+                                                return <String>[]
+                                                    .where((option) {
+                                                  final lowercaseOption =
+                                                      option.toLowerCase();
+                                                  return lowercaseOption
+                                                      .contains(textEditingValue
+                                                          .text
+                                                          .toLowerCase());
+                                                });
+                                              },
+                                              optionsViewBuilder: (context,
+                                                  onSelected, options) {
+                                                return AutocompleteOptionsList(
+                                                  textFieldKey: _model
+                                                      .phoneNumberFieldKey,
+                                                  textController: _model
+                                                      .phoneNumberFieldTextController!,
+                                                  options: options.toList(),
+                                                  onSelected: onSelected,
+                                                  textStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                            letterSpacing: 0.0,
+                                                            useGoogleFonts:
+                                                                !FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumIsCustom,
+                                                          ),
+                                                  textHighlightStyle:
+                                                      TextStyle(),
+                                                  elevation: 4.0,
+                                                  optionBackgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primaryBackground,
+                                                  optionHighlightColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondaryBackground,
+                                                  maxHeight: 200.0,
+                                                );
+                                              },
+                                              onSelected: (String selection) {
+                                                safeSetState(() => _model
+                                                        .phoneNumberFieldSelectedOption =
+                                                    selection);
+                                                FocusScope.of(context)
+                                                    .unfocus();
+                                              },
+                                              fieldViewBuilder: (
+                                                context,
+                                                textEditingController,
+                                                focusNode,
+                                                onEditingComplete,
+                                              ) {
+                                                _model.phoneNumberFieldFocusNode =
+                                                    focusNode;
+
+                                                _model.phoneNumberFieldTextController =
+                                                    textEditingController;
+                                                return TextFormField(
+                                                  key: _model
+                                                      .phoneNumberFieldKey,
+                                                  controller:
+                                                      textEditingController,
+                                                  focusNode: focusNode,
+                                                  onEditingComplete:
+                                                      onEditingComplete,
+                                                  onChanged: (_) =>
+                                                      EasyDebounce.debounce(
+                                                    '_model.phoneNumberFieldTextController',
                                                     Duration(
-                                                      milliseconds: 10,
-                                                    ),
-                                                  );
-                                                  _model.pnDigits10 = functions
-                                                      .normalizeToTenDigits(_model
-                                                          .phoneNumberFieldTextController
-                                                          .text);
-                                                  _model.cleanPhone = functions
-                                                      .toE164USpt2(_model
-                                                          .phoneNumberFieldTextController
-                                                          .text);
-                                                  safeSetState(() {});
-                                                  if (_model.pnDigits10 !=
-                                                          null &&
-                                                      _model.pnDigits10 != '') {
-                                                    safeSetState(() {
-                                                      _model.phoneNumberFieldTextController
-                                                              ?.text =
-                                                          functions.formatAsUsPhone(
+                                                        milliseconds: 1000),
+                                                    () async {
+                                                      await Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 10,
+                                                        ),
+                                                      );
+                                                      _model.pnDigits10 = functions
+                                                          .normalizeToTenDigits(
                                                               _model
-                                                                  .pnDigits10!);
-                                                      _model
-                                                          .phoneNumberFieldMask
-                                                          .updateMask(
-                                                        newValue:
-                                                            TextEditingValue(
-                                                          text: _model
-                                                              .phoneNumberFieldTextController!
-                                                              .text,
-                                                        ),
-                                                      );
-                                                    });
-                                                  } else {
-                                                    safeSetState(() {
-                                                      _model
-                                                          .phoneNumberFieldTextController
-                                                          ?.text = '';
-                                                      _model
-                                                          .phoneNumberFieldMask
-                                                          .updateMask(
-                                                        newValue:
-                                                            TextEditingValue(
-                                                          text: _model
-                                                              .phoneNumberFieldTextController!
-                                                              .text,
-                                                        ),
-                                                      );
-                                                    });
-                                                  }
-                                                },
-                                              ),
-                                              autofocus: true,
-                                              autofillHints: [
-                                                AutofillHints.telephoneNumber
-                                              ],
-                                              textInputAction:
-                                                  TextInputAction.done,
-                                              obscureText: false,
-                                              decoration: InputDecoration(
-                                                labelText: 'Phone Number',
-                                                hintText: '(555) 123-4567',
-                                                hintStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelLarge
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelLargeFamily,
-                                                          letterSpacing: 0.25,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .labelLargeIsCustom,
-                                                        ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    width: 2.0,
+                                                                  .phoneNumberFieldTextController
+                                                                  .text);
+                                                      _model.cleanPhone = functions
+                                                          .toE164USpt2(_model
+                                                              .phoneNumberFieldTextController
+                                                              .text);
+                                                      safeSetState(() {});
+                                                      if (_model.pnDigits10 !=
+                                                              null &&
+                                                          _model.pnDigits10 !=
+                                                              '') {
+                                                        safeSetState(() {
+                                                          _model.phoneNumberFieldTextController
+                                                                  ?.text =
+                                                              functions
+                                                                  .formatAsUsPhone(
+                                                                      _model
+                                                                          .pnDigits10!);
+                                                          _model
+                                                              .phoneNumberFieldMask
+                                                              .updateMask(
+                                                            newValue:
+                                                                TextEditingValue(
+                                                              text: _model
+                                                                  .phoneNumberFieldTextController!
+                                                                  .text,
+                                                            ),
+                                                          );
+                                                        });
+                                                      } else {
+                                                        safeSetState(() {
+                                                          _model
+                                                              .phoneNumberFieldTextController
+                                                              ?.text = '';
+                                                          _model
+                                                              .phoneNumberFieldMask
+                                                              .updateMask(
+                                                            newValue:
+                                                                TextEditingValue(
+                                                              text: _model
+                                                                  .phoneNumberFieldTextController!
+                                                                  .text,
+                                                            ),
+                                                          );
+                                                        });
+                                                      }
+                                                    },
                                                   ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    width: 2.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                ),
-                                                errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .error,
-                                                    width: 2.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                ),
-                                                focusedErrorBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .error,
-                                                    width: 2.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                ),
-                                                filled: true,
-                                                fillColor:
-                                                    FlutterFlowTheme.of(context)
+                                                  autofocus: true,
+                                                  enabled: true,
+                                                  autofillHints: [
+                                                    AutofillHints
+                                                        .telephoneNumber
+                                                  ],
+                                                  textInputAction:
+                                                      TextInputAction.done,
+                                                  obscureText: false,
+                                                  decoration: InputDecoration(
+                                                    labelText: 'Phone Number',
+                                                    hintText: '(555) 123-4567',
+                                                    hintStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .labelLarge
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelLargeFamily,
+                                                              letterSpacing:
+                                                                  0.25,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelLargeIsCustom,
+                                                            ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        width: 2.0,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                    ),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        width: 2.0,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                    ),
+                                                    errorBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .error,
+                                                        width: 2.0,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                    ),
+                                                    focusedErrorBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .error,
+                                                        width: 2.0,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                    ),
+                                                    filled: true,
+                                                    fillColor: FlutterFlowTheme
+                                                            .of(context)
                                                         .secondaryBackground,
-                                                contentPadding:
-                                                    EdgeInsetsDirectional
-                                                        .fromSTEB(20.0, 16.0,
-                                                            20.0, 16.0),
-                                                prefixIcon: Icon(
-                                                  Icons.phone_rounded,
-                                                  color: FlutterFlowTheme.of(
+                                                    contentPadding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                20.0,
+                                                                16.0,
+                                                                20.0,
+                                                                16.0),
+                                                    prefixIcon: Icon(
+                                                      Icons.phone_rounded,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      size: 20.0,
+                                                    ),
+                                                  ),
+                                                  style: FlutterFlowTheme.of(
                                                           context)
-                                                      .primary,
-                                                  size: 20.0,
-                                                ),
-                                              ),
-                                              style:
-                                                  FlutterFlowTheme.of(context)
                                                       .bodyLarge
                                                       .override(
                                                         fontFamily: 'robot',
@@ -329,16 +424,20 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
-                                              keyboardType: TextInputType.phone,
-                                              cursorColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              validator: _model
-                                                  .phoneNumberFieldTextControllerValidator
-                                                  .asValidator(context),
-                                              inputFormatters: [
-                                                _model.phoneNumberFieldMask
-                                              ],
+                                                  keyboardType:
+                                                      TextInputType.phone,
+                                                  cursorColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  validator: _model
+                                                      .phoneNumberFieldTextControllerValidator
+                                                      .asValidator(context),
+                                                  inputFormatters: [
+                                                    _model.phoneNumberFieldMask
+                                                  ],
+                                                );
+                                              },
                                             ),
                                           ),
                                         ),
