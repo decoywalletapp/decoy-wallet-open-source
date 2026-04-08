@@ -12,6 +12,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'emergency_contacts_model.dart';
@@ -577,221 +578,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                             size: 24.0,
                           ),
                           onPressed: () async {
-                            await actions.dismissKeyboard(
-                              context,
-                            );
-                            _model.contactsPayload =
-                                await actions.buildContactsPayloadV2(
-                              _model.c1FirstTFTextController.text,
-                              _model.c1LastTFTextController.text,
-                              _model.c1PhoneTFTextController.text,
-                              _model.c2FirstTFTextController.text,
-                              _model.c2LastTFTextController.text,
-                              _model.c2PhoneTFTextController.text,
-                              _model.c3FirstTFTextController.text,
-                              _model.c3LastTFTextController.text,
-                              _model.c3PhoneTFTextController.text,
-                              _model.c4FirstTFTextController.text,
-                              _model.c4LastTFTextController.text,
-                              _model.c4PhoneTFTextController.text,
-                              _model.c5FirstTFTextController.text,
-                              _model.c5LastTFTextController.text,
-                              _model.c5PhoneTFTextController.text,
-                              _model.contactsCount,
-                            );
-                            _model.contactsJson = _model.contactsPayload!;
-                            safeSetState(() {});
-                            if (loggedIn == true) {
-                              _model.keyOut =
-                                  await actions.generateDataKeyIfMissing();
-                              _model.dataKeyB64 = _model.keyOut!;
-                              safeSetState(() {});
-                              _model.enc = await actions.aesGcmEncryptString(
-                                _model.contactsJson,
-                                _model.dataKeyB64,
-                              );
-                              _model.ctB64 = getJsonField(
-                                _model.enc,
-                                r'''$.ciphertextB64''',
-                              ).toString();
-                              _model.nonceB64 = getJsonField(
-                                _model.enc,
-                                r'''$.nonceB64''',
-                              ).toString();
-                              safeSetState(() {});
-                              _model.wrap = await WrapDataKeyCall.call(
-                                dataKeyB64: _model.dataKeyB64,
-                                jwt: currentJwtToken,
-                              );
-
-                              if ((_model.wrap?.succeeded ?? true)) {
-                                _model.wrappedB64 = getJsonField(
-                                  (_model.wrap?.jsonBody ?? ''),
-                                  r'''$.wrappedB64''',
-                                ).toString();
-                                safeSetState(() {});
-                                _model.upd = await DecoyWalletTable().queryRows(
-                                  queryFn: (q) => q.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
-                                );
-                                if (_model.upd != null &&
-                                    (_model.upd)!.isNotEmpty) {
-                                  await DecoyWalletTable().update(
-                                    data: {
-                                      'wrapped_datakey': _model.wrappedB64,
-                                      'updated_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
-                                      'contacts_ciphertext': _model.ctB64,
-                                      'contacts_nonce': _model.nonceB64,
-                                      'contacts_version': 1,
-                                      'created_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
-                                      'contacts_complete': (_model.c1PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model
-                                                          .c2PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model.c3PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model.c4PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model.c5PhoneTFTextController
-                                                          .text !=
-                                                      '')
-                                          ? true
-                                          : false,
-                                    },
-                                    matchingRows: (rows) => rows.eqOrNull(
-                                      'user_id',
-                                      currentUserUid,
-                                    ),
-                                  );
-                                  _model.decoyWalletRefresh1 =
-                                      await DecoyWalletTable().queryRows(
-                                    queryFn: (q) => q.eqOrNull(
-                                      'user_id',
-                                      currentUserUid,
-                                    ),
-                                  );
-                                  FFAppState().emergencyContactsIncrement =
-                                      _model.contactsCount;
-                                  safeSetState(() {});
-                                } else {
-                                  _model.insRow =
-                                      await DecoyWalletTable().insert({
-                                    'wrapped_datakey': _model.wrappedB64,
-                                    'updated_at': supaSerialize<DateTime>(
-                                        getCurrentTimestamp),
-                                    'contacts_ciphertext': _model.ctB64,
-                                    'contacts_nonce': _model.nonceB64,
-                                    'contacts_version': 1,
-                                    'user_id': currentUserUid,
-                                    'contacts_complete': (_model.c1PhoneTFTextController.text !=
-                                                    '') ||
-                                            (_model.c2PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c3PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c4PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c5PhoneTFTextController
-                                                        .text !=
-                                                    '')
-                                        ? true
-                                        : false,
-                                  });
-                                  _model.decoyWalletRefresh2 =
-                                      await DecoyWalletTable().queryRows(
-                                    queryFn: (q) => q.eqOrNull(
-                                      'user_id',
-                                      currentUserUid,
-                                    ),
-                                  );
-                                  FFAppState().emergencyContactsIncrement =
-                                      _model.contactsCount;
-                                  safeSetState(() {});
-                                }
-
-                                _model.consentSlotsList = functions
-                                    .buildConsentSlotsList(
-                                        _model.c1FirstTFTextController.text,
-                                        _model.c1LastTFTextController.text,
-                                        _model.c1PhoneTFTextController.text,
-                                        _model.c2FirstTFTextController.text,
-                                        _model.c2LastTFTextController.text,
-                                        _model.c2PhoneTFTextController.text,
-                                        _model.c3FirstTFTextController.text,
-                                        _model.c3LastTFTextController.text,
-                                        _model.c3PhoneTFTextController.text,
-                                        _model.c4FirstTFTextController.text,
-                                        _model.c4LastTFTextController.text,
-                                        _model.c4PhoneTFTextController.text,
-                                        _model.c5FirstTFTextController.text,
-                                        _model.c5LastTFTextController.text,
-                                        _model.c5PhoneTFTextController.text)
-                                    .toList()
-                                    .cast<dynamic>();
-                                safeSetState(() {});
-                                _model.syncConsentResp =
-                                    await SyncConsentSlotsCall.call(
-                                  jwt: currentJwtToken,
-                                  slotsJsonList: _model.consentSlotsList
-                                      .map((e) => e.toString())
-                                      .toList(),
-                                );
-
-                                if ((_model.syncConsentResp?.succeeded ??
-                                    true)) {
-                                  context.safePop();
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'ERROR #030 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
-                                  context.safePop();
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
-                                context.safePop();
-                              }
-                            } else {
-                              context.goNamed(LoginPageWidget.routeName);
-                            }
-
-                            safeSetState(() {});
+                            context.safePop();
                           },
                         ),
                       ),
@@ -1763,8 +1550,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           text: '',
                                                           options:
                                                               FFButtonOptions(
-                                                            width:
-                                                                double.infinity,
+                                                            width: 300.0,
                                                             height: 50.0,
                                                             padding:
                                                                 EdgeInsetsDirectional
@@ -2519,110 +2305,195 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         ),
                                                       ),
                                                     ),
-                                                    Expanded(
-                                                      child: FFButtonWidget(
-                                                        onPressed: () async {
-                                                          _model.createConsentResp2 =
-                                                              await CreateConsentRequestCall
-                                                                  .call(
-                                                            userId:
-                                                                currentUserUid,
-                                                            contactSlot: 2,
-                                                            firstName: _model
-                                                                .c2FirstTFTextController
-                                                                .text,
-                                                            lastName: _model
-                                                                .c2LastTFTextController
-                                                                .text,
-                                                            phoneNumber: _model
-                                                                .c2PhoneDigits,
-                                                          );
-
-                                                          if ((_model
-                                                                  .createConsentResp2
-                                                                  ?.succeeded ??
-                                                              true)) {
-                                                            if (isiOS) {
-                                                              await launchUrl(
-                                                                  Uri.parse(
-                                                                      "sms:${_model.c2PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c2FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                (_model.createConsentResp2
-                                                                        ?.jsonBody ??
-                                                                    ''),
-                                                              ).toString()}')}"));
-                                                            } else {
-                                                              await launchUrl(
-                                                                  Uri(
-                                                                scheme: 'sms',
-                                                                path: _model
-                                                                    .c2PhoneDigits!,
-                                                                queryParameters: <String,
-                                                                    String>{
-                                                                  'body':
-                                                                      'Hi ${_model.c2FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                    (_model.createConsentResp2
-                                                                            ?.jsonBody ??
-                                                                        ''),
-                                                                  ).toString()}',
-                                                                },
-                                                              ));
-                                                            }
-
-                                                            _model.c2Status =
-                                                                'Text ready to send';
-                                                            safeSetState(() {});
-                                                          }
-
-                                                          safeSetState(() {});
-                                                        },
-                                                        text: _model.c2Status ==
-                                                                'Not sent'
-                                                            ? 'Send Confirmation Link'
-                                                            : 'Resend Confirmation Link',
-                                                        options:
-                                                            FFButtonOptions(
-                                                          width: 200.0,
-                                                          height: 50.0,
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      0.0,
-                                                                      16.0,
-                                                                      0.0),
-                                                          iconPadding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          textStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleSmall
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .titleSmallFamily,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .titleSmallIsCustom,
-                                                                  ),
+                                                    Stack(
+                                                      children: [
+                                                        Material(
+                                                          color: Colors
+                                                              .transparent,
                                                           elevation: 3.0,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10.0),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          child: Container(
+                                                            width: 300.0,
+                                                            height: 50.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  _model.c2Status ==
+                                                                          'Not sent'
+                                                                      ? 'Send Confirmation Link'
+                                                                      : 'Resend Confirmation Link',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .info,
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                      ),
+                                                                ),
+                                                                Icon(
+                                                                  Icons
+                                                                      .send_rounded,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .info,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ].divide(SizedBox(
+                                                                  width: 12.0)),
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
+                                                        Opacity(
+                                                          opacity: 0.0,
+                                                          child: Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.0, 0.0),
+                                                            child:
+                                                                FFButtonWidget(
+                                                              onPressed:
+                                                                  () async {
+                                                                _model.createConsentResp2 =
+                                                                    await CreateConsentRequestCall
+                                                                        .call(
+                                                                  userId:
+                                                                      currentUserUid,
+                                                                  contactSlot:
+                                                                      2,
+                                                                  firstName: _model
+                                                                      .c2FirstTFTextController
+                                                                      .text,
+                                                                  lastName: _model
+                                                                      .c2LastTFTextController
+                                                                      .text,
+                                                                  phoneNumber:
+                                                                      _model
+                                                                          .c2PhoneDigits,
+                                                                );
+
+                                                                if ((_model
+                                                                        .createConsentResp2
+                                                                        ?.succeeded ??
+                                                                    true)) {
+                                                                  if (isiOS) {
+                                                                    await launchUrl(
+                                                                        Uri.parse(
+                                                                            "sms:${_model.c2PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c2FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                      (_model.createConsentResp2
+                                                                              ?.jsonBody ??
+                                                                          ''),
+                                                                    ).toString()}')}"));
+                                                                  } else {
+                                                                    await launchUrl(
+                                                                        Uri(
+                                                                      scheme:
+                                                                          'sms',
+                                                                      path: _model
+                                                                          .c2PhoneDigits!,
+                                                                      queryParameters: <String,
+                                                                          String>{
+                                                                        'body':
+                                                                            'Hi ${_model.c2FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                          (_model.createConsentResp2?.jsonBody ??
+                                                                              ''),
+                                                                        ).toString()}',
+                                                                      },
+                                                                    ));
+                                                                  }
+
+                                                                  _model.c2Status =
+                                                                      'Text ready to send';
+                                                                  safeSetState(
+                                                                      () {});
+                                                                }
+
+                                                                safeSetState(
+                                                                    () {});
+                                                              },
+                                                              text: _model.c2Status ==
+                                                                      'Not sent'
+                                                                  ? 'Send Confirmation Link'
+                                                                  : 'Resend Confirmation Link',
+                                                              options:
+                                                                  FFButtonOptions(
+                                                                width: 300.0,
+                                                                height: 50.0,
+                                                                padding: EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        16.0,
+                                                                        0.0,
+                                                                        16.0,
+                                                                        0.0),
+                                                                iconPadding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primary,
+                                                                textStyle: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .titleSmallFamily,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .titleSmallIsCustom,
+                                                                    ),
+                                                                elevation: 3.0,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ].divide(
                                                       SizedBox(height: 12.0)),
@@ -3261,108 +3132,188 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Expanded(
-                                                    child: FFButtonWidget(
-                                                      onPressed: () async {
-                                                        _model.createConsentResp3 =
-                                                            await CreateConsentRequestCall
-                                                                .call(
-                                                          userId:
-                                                              currentUserUid,
-                                                          contactSlot: 3,
-                                                          firstName: _model
-                                                              .c3FirstTFTextController
-                                                              .text,
-                                                          lastName: _model
-                                                              .c3LastTFTextController
-                                                              .text,
-                                                          phoneNumber: _model
-                                                              .c3PhoneDigits,
-                                                        );
-
-                                                        if ((_model
-                                                                .createConsentResp3
-                                                                ?.succeeded ??
-                                                            true)) {
-                                                          if (isiOS) {
-                                                            await launchUrl(
-                                                                Uri.parse(
-                                                                    "sms:${_model.c3PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c3FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                              (_model.createConsentResp3
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            ).toString()}')}"));
-                                                          } else {
-                                                            await launchUrl(Uri(
-                                                              scheme: 'sms',
-                                                              path: _model
-                                                                  .c3PhoneDigits!,
-                                                              queryParameters: <String,
-                                                                  String>{
-                                                                'body':
-                                                                    'Hi ${_model.c3FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                  (_model.createConsentResp3
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                ).toString()}',
-                                                              },
-                                                            ));
-                                                          }
-
-                                                          _model.c3Status =
-                                                              'Text ready to send';
-                                                          safeSetState(() {});
-                                                        }
-
-                                                        safeSetState(() {});
-                                                      },
-                                                      text: _model.c3Status ==
-                                                              'Not sent'
-                                                          ? 'Send Confirmation Link'
-                                                          : 'Resend Confirmation Link',
-                                                      options: FFButtonOptions(
-                                                        width: 200.0,
-                                                        height: 50.0,
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    16.0,
-                                                                    0.0,
-                                                                    16.0,
-                                                                    0.0),
-                                                        iconPadding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleSmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
+                                                  Container(
+                                                    width: 300.0,
+                                                    height: 50.0,
+                                                    child: Stack(
+                                                      children: [
+                                                        Material(
+                                                          color: Colors
+                                                              .transparent,
+                                                          elevation: 3.0,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          child: Container(
+                                                            width: 300.0,
+                                                            height: 100.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  _model.c3Status ==
+                                                                          'Not sent'
+                                                                      ? 'Send Confirmation Link'
+                                                                      : 'Resend Confirmation Link',
+                                                                  style: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .titleSmallFamily,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmallIsCustom,
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .info,
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                      ),
                                                                 ),
-                                                        elevation: 3.0,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
-                                                      ),
+                                                                Icon(
+                                                                  Icons
+                                                                      .send_rounded,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .info,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ].divide(SizedBox(
+                                                                  width: 12.0)),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Opacity(
+                                                          opacity: 0.0,
+                                                          child: FFButtonWidget(
+                                                            onPressed:
+                                                                () async {
+                                                              _model.createConsentResp3 =
+                                                                  await CreateConsentRequestCall
+                                                                      .call(
+                                                                userId:
+                                                                    currentUserUid,
+                                                                contactSlot: 3,
+                                                                firstName: _model
+                                                                    .c3FirstTFTextController
+                                                                    .text,
+                                                                lastName: _model
+                                                                    .c3LastTFTextController
+                                                                    .text,
+                                                                phoneNumber: _model
+                                                                    .c3PhoneDigits,
+                                                              );
+
+                                                              if ((_model
+                                                                      .createConsentResp3
+                                                                      ?.succeeded ??
+                                                                  true)) {
+                                                                if (isiOS) {
+                                                                  await launchUrl(
+                                                                      Uri.parse(
+                                                                          "sms:${_model.c3PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c3FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                    (_model.createConsentResp3
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                  ).toString()}')}"));
+                                                                } else {
+                                                                  await launchUrl(
+                                                                      Uri(
+                                                                    scheme:
+                                                                        'sms',
+                                                                    path: _model
+                                                                        .c3PhoneDigits!,
+                                                                    queryParameters: <String,
+                                                                        String>{
+                                                                      'body':
+                                                                          'Hi ${_model.c3FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                        (_model.createConsentResp3?.jsonBody ??
+                                                                            ''),
+                                                                      ).toString()}',
+                                                                    },
+                                                                  ));
+                                                                }
+
+                                                                _model.c3Status =
+                                                                    'Text ready to send';
+                                                                safeSetState(
+                                                                    () {});
+                                                              }
+
+                                                              safeSetState(
+                                                                  () {});
+                                                            },
+                                                            text: _model.c3Status ==
+                                                                    'Not sent'
+                                                                ? 'Send Confirmation Link'
+                                                                : 'Resend Confirmation Link',
+                                                            options:
+                                                                FFButtonOptions(
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 50.0,
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          16.0,
+                                                                          0.0,
+                                                                          16.0,
+                                                                          0.0),
+                                                              iconPadding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              textStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).titleSmallFamily,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).titleSmallIsCustom,
+                                                                      ),
+                                                              elevation: 3.0,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ].divide(
@@ -3973,109 +3924,191 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Expanded(
-                                                    child: FFButtonWidget(
-                                                      onPressed: () async {
-                                                        _model.createConsentResp4 =
-                                                            await CreateConsentRequestCall
-                                                                .call(
-                                                          userId:
-                                                              currentUserUid,
-                                                          contactSlot: 4,
-                                                          firstName: _model
-                                                              .c4FirstTFTextController
-                                                              .text,
-                                                          lastName: _model
-                                                              .c4LastTFTextController
-                                                              .text,
-                                                          phoneNumber: _model
-                                                              .c4PhoneDigits,
-                                                        );
+                                                  Stack(
+                                                    children: [
+                                                      Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 3.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        child: Container(
+                                                          width: 300.0,
+                                                          height: 50.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _model.c3Status ==
+                                                                        'Not sent'
+                                                                    ? 'Send Confirmation Link'
+                                                                    : 'Resend Confirmation Link',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyMediumFamily,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .info,
+                                                                      fontSize:
+                                                                          18.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .bodyMediumIsCustom,
+                                                                    ),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .send_rounded,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                size: 24.0,
+                                                              ),
+                                                            ].divide(SizedBox(
+                                                                width: 12.0)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Opacity(
+                                                        opacity: 0.0,
+                                                        child: FFButtonWidget(
+                                                          onPressed: () async {
+                                                            _model.createConsentResp4 =
+                                                                await CreateConsentRequestCall
+                                                                    .call(
+                                                              userId:
+                                                                  currentUserUid,
+                                                              contactSlot: 4,
+                                                              firstName: _model
+                                                                  .c4FirstTFTextController
+                                                                  .text,
+                                                              lastName: _model
+                                                                  .c4LastTFTextController
+                                                                  .text,
+                                                              phoneNumber: _model
+                                                                  .c4PhoneDigits,
+                                                            );
 
-                                                        if ((_model
-                                                                .createConsentResp4
-                                                                ?.succeeded ??
-                                                            true)) {
-                                                          if (isiOS) {
-                                                            await launchUrl(
-                                                                Uri.parse(
-                                                                    "sms:${_model.c4PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c4FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                              (_model.createConsentResp4
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            ).toString()}')}"));
-                                                          } else {
-                                                            await launchUrl(Uri(
-                                                              scheme: 'sms',
-                                                              path: _model
-                                                                  .c4PhoneDigits!,
-                                                              queryParameters: <String,
-                                                                  String>{
-                                                                'body':
-                                                                    'Hi ${_model.c4FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                            if ((_model
+                                                                    .createConsentResp4
+                                                                    ?.succeeded ??
+                                                                true)) {
+                                                              if (isiOS) {
+                                                                await launchUrl(
+                                                                    Uri.parse(
+                                                                        "sms:${_model.c4PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c4FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
                                                                   (_model.createConsentResp4
                                                                           ?.jsonBody ??
                                                                       ''),
-                                                                ).toString()}',
-                                                              },
-                                                            ));
-                                                          }
+                                                                ).toString()}')}"));
+                                                              } else {
+                                                                await launchUrl(
+                                                                    Uri(
+                                                                  scheme: 'sms',
+                                                                  path: _model
+                                                                      .c4PhoneDigits!,
+                                                                  queryParameters: <String,
+                                                                      String>{
+                                                                    'body':
+                                                                        'Hi ${_model.c4FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                      (_model.createConsentResp4
+                                                                              ?.jsonBody ??
+                                                                          ''),
+                                                                    ).toString()}',
+                                                                  },
+                                                                ));
+                                                              }
 
-                                                          _model.c4Status =
-                                                              'Text ready to send';
-                                                          safeSetState(() {});
-                                                        }
+                                                              _model.c4Status =
+                                                                  'Text ready to send';
+                                                              safeSetState(
+                                                                  () {});
+                                                            }
 
-                                                        safeSetState(() {});
-                                                      },
-                                                      text: _model.c4Status ==
-                                                              'Not sent'
-                                                          ? 'Send Confirmation Link'
-                                                          : 'Resend Confirmation Link',
-                                                      options: FFButtonOptions(
-                                                        width: 200.0,
-                                                        height: 50.0,
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    16.0,
-                                                                    0.0,
-                                                                    16.0,
-                                                                    0.0),
-                                                        iconPadding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
+                                                            safeSetState(() {});
+                                                          },
+                                                          text: _model.c4Status ==
+                                                                  'Not sent'
+                                                              ? 'Send Confirmation Link'
+                                                              : 'Resend Confirmation Link',
+                                                          options:
+                                                              FFButtonOptions(
+                                                            width: 300.0,
+                                                            height: 50.0,
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        16.0,
+                                                                        0.0,
+                                                                        16.0,
+                                                                        0.0),
+                                                            iconPadding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
                                                                 .primary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleSmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmallFamily,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmallIsCustom,
-                                                                ),
-                                                        elevation: 3.0,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
+                                                            textStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .titleSmallFamily,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .titleSmallIsCustom,
+                                                                    ),
+                                                            elevation: 3.0,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
                                                 ].divide(
                                                     SizedBox(height: 12.0)),
@@ -4654,109 +4687,188 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Expanded(
-                                                    child: FFButtonWidget(
-                                                      onPressed: () async {
-                                                        _model.createConsentResp5 =
-                                                            await CreateConsentRequestCall
-                                                                .call(
-                                                          userId:
-                                                              currentUserUid,
-                                                          contactSlot: 5,
-                                                          firstName: _model
-                                                              .c5FirstTFTextController
-                                                              .text,
-                                                          lastName: _model
-                                                              .c5LastTFTextController
-                                                              .text,
-                                                          phoneNumber: _model
-                                                              .c5PhoneDigits,
-                                                        );
+                                                  Stack(
+                                                    children: [
+                                                      Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 3.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        child: Container(
+                                                          width: 300.0,
+                                                          height: 50.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _model.c5Status ==
+                                                                        'Not sent'
+                                                                    ? 'Send Confirmation Link'
+                                                                    : 'Resend Confirmation Link',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyMediumFamily,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .info,
+                                                                      fontSize:
+                                                                          18.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .bodyMediumIsCustom,
+                                                                    ),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .send_rounded,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                size: 24.0,
+                                                              ),
+                                                            ].divide(SizedBox(
+                                                                width: 12.0)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Opacity(
+                                                        opacity: 0.0,
+                                                        child: FFButtonWidget(
+                                                          onPressed: () async {
+                                                            _model.createConsentResp5 =
+                                                                await CreateConsentRequestCall
+                                                                    .call(
+                                                              userId:
+                                                                  currentUserUid,
+                                                              contactSlot: 5,
+                                                              firstName: _model
+                                                                  .c5FirstTFTextController
+                                                                  .text,
+                                                              lastName: _model
+                                                                  .c5LastTFTextController
+                                                                  .text,
+                                                              phoneNumber: _model
+                                                                  .c5PhoneDigits,
+                                                            );
 
-                                                        if ((_model
-                                                                .createConsentResp5
-                                                                ?.succeeded ??
-                                                            true)) {
-                                                          if (isiOS) {
-                                                            await launchUrl(
-                                                                Uri.parse(
-                                                                    "sms:${_model.c5PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c5FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                              (_model.createConsentResp5
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            ).toString()}')}"));
-                                                          } else {
-                                                            await launchUrl(Uri(
-                                                              scheme: 'sms',
-                                                              path: _model
-                                                                  .c5PhoneDigits!,
-                                                              queryParameters: <String,
-                                                                  String>{
-                                                                'body':
-                                                                    'Hi ${_model.c5FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                            if ((_model
+                                                                    .createConsentResp5
+                                                                    ?.succeeded ??
+                                                                true)) {
+                                                              if (isiOS) {
+                                                                await launchUrl(
+                                                                    Uri.parse(
+                                                                        "sms:${_model.c5PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c5FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
                                                                   (_model.createConsentResp5
                                                                           ?.jsonBody ??
                                                                       ''),
-                                                                ).toString()}',
-                                                              },
-                                                            ));
-                                                          }
+                                                                ).toString()}')}"));
+                                                              } else {
+                                                                await launchUrl(
+                                                                    Uri(
+                                                                  scheme: 'sms',
+                                                                  path: _model
+                                                                      .c5PhoneDigits!,
+                                                                  queryParameters: <String,
+                                                                      String>{
+                                                                    'body':
+                                                                        'Hi ${_model.c5FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                      (_model.createConsentResp5
+                                                                              ?.jsonBody ??
+                                                                          ''),
+                                                                    ).toString()}',
+                                                                  },
+                                                                ));
+                                                              }
 
-                                                          _model.c5Status =
-                                                              'Text ready to send';
-                                                          safeSetState(() {});
-                                                        }
+                                                              _model.c5Status =
+                                                                  'Text ready to send';
+                                                              safeSetState(
+                                                                  () {});
+                                                            }
 
-                                                        safeSetState(() {});
-                                                      },
-                                                      text: _model.c5Status ==
-                                                              'Not sent'
-                                                          ? 'Send Confirmation Link'
-                                                          : 'Resend Confirmation Link',
-                                                      options: FFButtonOptions(
-                                                        width: 200.0,
-                                                        height: 50.0,
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    16.0,
-                                                                    0.0,
-                                                                    16.0,
-                                                                    0.0),
-                                                        iconPadding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
+                                                            safeSetState(() {});
+                                                          },
+                                                          text: _model.c5Status ==
+                                                                  'Not sent'
+                                                              ? 'Send Confirmation Link'
+                                                              : 'Resend Confirmation Link',
+                                                          options:
+                                                              FFButtonOptions(
+                                                            width: 300.0,
+                                                            height: 50.0,
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        16.0,
+                                                                        0.0,
+                                                                        16.0,
+                                                                        0.0),
+                                                            iconPadding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
                                                                 .primary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleSmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmallFamily,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmallIsCustom,
-                                                                ),
-                                                        elevation: 3.0,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
+                                                            textStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .titleSmallFamily,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .titleSmallIsCustom,
+                                                                    ),
+                                                            elevation: 3.0,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
                                                 ].divide(
                                                     SizedBox(height: 12.0)),
@@ -4765,20 +4877,350 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           ),
                                         ),
                                       ),
-                                    FlutterFlowIconButton(
-                                      borderRadius: 0.0,
-                                      fillColor: Colors.white,
-                                      icon: Icon(
-                                        Icons.add_circle_rounded,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        size: 35.0,
+                                    if (_model.contactsCount <= 4)
+                                      FlutterFlowIconButton(
+                                        borderRadius: 0.0,
+                                        fillColor: Colors.white,
+                                        icon: Icon(
+                                          Icons.add_circle_rounded,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          size: 35.0,
+                                        ),
+                                        onPressed: () async {
+                                          _model.contactsCount =
+                                              _model.contactsCount + 1;
+                                          safeSetState(() {});
+                                        },
                                       ),
-                                      onPressed: () async {
-                                        _model.contactsCount =
-                                            _model.contactsCount + 1;
-                                        safeSetState(() {});
-                                      },
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: FFButtonWidget(
+                                        onPressed: () async {
+                                          await actions.dismissKeyboard(
+                                            context,
+                                          );
+                                          _model.contactsPayload = await actions
+                                              .buildContactsPayloadV2(
+                                            _model.c1FirstTFTextController.text,
+                                            _model.c1LastTFTextController.text,
+                                            _model.c1PhoneTFTextController.text,
+                                            _model.c2FirstTFTextController.text,
+                                            _model.c2LastTFTextController.text,
+                                            _model.c2PhoneTFTextController.text,
+                                            _model.c3FirstTFTextController.text,
+                                            _model.c3LastTFTextController.text,
+                                            _model.c3PhoneTFTextController.text,
+                                            _model.c4FirstTFTextController.text,
+                                            _model.c4LastTFTextController.text,
+                                            _model.c4PhoneTFTextController.text,
+                                            _model.c5FirstTFTextController.text,
+                                            _model.c5LastTFTextController.text,
+                                            _model.c5PhoneTFTextController.text,
+                                            _model.contactsCount,
+                                          );
+                                          _model.contactsJson =
+                                              _model.contactsPayload!;
+                                          safeSetState(() {});
+                                          if (loggedIn == true) {
+                                            _model.keyOut = await actions
+                                                .generateDataKeyIfMissing();
+                                            _model.dataKeyB64 = _model.keyOut!;
+                                            safeSetState(() {});
+                                            _model.enc = await actions
+                                                .aesGcmEncryptString(
+                                              _model.contactsJson,
+                                              _model.dataKeyB64,
+                                            );
+                                            _model.ctB64 = getJsonField(
+                                              _model.enc,
+                                              r'''$.ciphertextB64''',
+                                            ).toString();
+                                            _model.nonceB64 = getJsonField(
+                                              _model.enc,
+                                              r'''$.nonceB64''',
+                                            ).toString();
+                                            safeSetState(() {});
+                                            _model.wrap =
+                                                await WrapDataKeyCall.call(
+                                              dataKeyB64: _model.dataKeyB64,
+                                              jwt: currentJwtToken,
+                                            );
+
+                                            if ((_model.wrap?.succeeded ??
+                                                true)) {
+                                              _model.wrappedB64 = getJsonField(
+                                                (_model.wrap?.jsonBody ?? ''),
+                                                r'''$.wrappedB64''',
+                                              ).toString();
+                                              safeSetState(() {});
+                                              _model.upd =
+                                                  await DecoyWalletTable()
+                                                      .queryRows(
+                                                queryFn: (q) => q.eqOrNull(
+                                                  'user_id',
+                                                  currentUserUid,
+                                                ),
+                                              );
+                                              if (_model.upd != null &&
+                                                  (_model.upd)!.isNotEmpty) {
+                                                await DecoyWalletTable().update(
+                                                  data: {
+                                                    'wrapped_datakey':
+                                                        _model.wrappedB64,
+                                                    'updated_at': supaSerialize<
+                                                            DateTime>(
+                                                        getCurrentTimestamp),
+                                                    'contacts_ciphertext':
+                                                        _model.ctB64,
+                                                    'contacts_nonce':
+                                                        _model.nonceB64,
+                                                    'contacts_version': 1,
+                                                    'created_at': supaSerialize<
+                                                            DateTime>(
+                                                        getCurrentTimestamp),
+                                                    'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
+                                                            (_model.c2PhoneTFTextController
+                                                                        .text !=
+                                                                    '') ||
+                                                            (_model.c3PhoneTFTextController
+                                                                        .text !=
+                                                                    '') ||
+                                                            (_model.c4PhoneTFTextController
+                                                                        .text !=
+                                                                    '') ||
+                                                            (_model.c5PhoneTFTextController
+                                                                        .text !=
+                                                                    '')
+                                                        ? true
+                                                        : false,
+                                                  },
+                                                  matchingRows: (rows) =>
+                                                      rows.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+                                                _model.decoyWalletRefresh1 =
+                                                    await DecoyWalletTable()
+                                                        .queryRows(
+                                                  queryFn: (q) => q.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+                                                FFAppState()
+                                                        .emergencyContactsIncrement =
+                                                    _model.contactsCount;
+                                                safeSetState(() {});
+                                              } else {
+                                                _model.insRow =
+                                                    await DecoyWalletTable()
+                                                        .insert({
+                                                  'wrapped_datakey':
+                                                      _model.wrappedB64,
+                                                  'updated_at':
+                                                      supaSerialize<DateTime>(
+                                                          getCurrentTimestamp),
+                                                  'contacts_ciphertext':
+                                                      _model.ctB64,
+                                                  'contacts_nonce':
+                                                      _model.nonceB64,
+                                                  'contacts_version': 1,
+                                                  'user_id': currentUserUid,
+                                                  'contacts_complete': (_model
+                                                                      .c1PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model
+                                                                      .c2PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model
+                                                                      .c3PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model.c4PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model.c5PhoneTFTextController
+                                                                      .text !=
+                                                                  '')
+                                                      ? true
+                                                      : false,
+                                                });
+                                                _model.decoyWalletRefresh2 =
+                                                    await DecoyWalletTable()
+                                                        .queryRows(
+                                                  queryFn: (q) => q.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+                                                FFAppState()
+                                                        .emergencyContactsIncrement =
+                                                    _model.contactsCount;
+                                                safeSetState(() {});
+                                              }
+
+                                              _model.consentSlotsList = functions
+                                                  .buildConsentSlotsList(
+                                                      _model
+                                                          .c1FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c1LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c1PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5PhoneTFTextController
+                                                          .text)
+                                                  .toList()
+                                                  .cast<dynamic>();
+                                              safeSetState(() {});
+                                              _model.syncConsentResp =
+                                                  await SyncConsentSlotsCall
+                                                      .call(
+                                                jwt: currentJwtToken,
+                                                slotsJsonList: _model
+                                                    .consentSlotsList
+                                                    .map((e) => e.toString())
+                                                    .toList(),
+                                              );
+
+                                              if ((_model.syncConsentResp
+                                                      ?.succeeded ??
+                                                  true)) {
+                                                context.safePop();
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'ERROR #030 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
+                                              }
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                ),
+                                              );
+                                            }
+                                          } else {
+                                            context.goNamed(
+                                                LoginPageWidget.routeName);
+                                          }
+
+                                          safeSetState(() {});
+                                        },
+                                        text: 'Save',
+                                        options: FFButtonOptions(
+                                          width: 280.0,
+                                          height: 56.0,
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 0.0, 16.0, 0.0),
+                                          iconPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 0.0),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          textStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .titleSmall
+                                              .override(
+                                                font: GoogleFonts.heebo(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .info,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmall
+                                                        .fontStyle,
+                                              ),
+                                          elevation: 3.0,
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                      ),
                                     ),
                                   ]
                                       .divide(SizedBox(height: 12.0))

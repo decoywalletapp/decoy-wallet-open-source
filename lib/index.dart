@@ -46,8 +46,8 @@ export '/create_decoy_seed/seed_phrase_verification/seed_phrase_verification_wid
     show SeedPhraseVerificationWidget;
 export '/emergancy_contact_information/create_decoy_emergency_contacts_setup/create_decoy_emergency_contacts_setup_widget.dart'
     show CreateDecoyEmergencyContactsSetupWidget;
-export '/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart'
-    show HomeAddressEntryPageWidget;
+export '/test_subjects/home_address_entry_pagedonzo/home_address_entry_pagedonzo_widget.dart'
+    show HomeAddressEntryPagedonzoWidget;
 export '/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart'
     show EmergencyContactsWidget;
 export '/welcom_pages/biometric_verification/biometric_verification_widget.dart'
@@ -107,5 +107,5 @@ export '/welcom_pages/enable_notifications/enable_notifications_widget.dart'
     show EnableNotificationsWidget;
 export '/test_subjects/emergency_contacts_copy2/emergency_contacts_copy2_widget.dart'
     show EmergencyContactsCopy2Widget;
-export '/test_subjects/home_address_entry_page_copy/home_address_entry_page_copy_widget.dart'
-    show HomeAddressEntryPageCopyWidget;
+export '/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart'
+    show HomeAddressEntryPageWidget;

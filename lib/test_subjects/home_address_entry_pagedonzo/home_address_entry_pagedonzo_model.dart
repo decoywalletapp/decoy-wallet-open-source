@@ -2,12 +2,12 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'home_address_entry_page_copy_widget.dart'
-    show HomeAddressEntryPageCopyWidget;
+import 'home_address_entry_pagedonzo_widget.dart'
+    show HomeAddressEntryPagedonzoWidget;
 import 'package:flutter/material.dart';
 
-class HomeAddressEntryPageCopyModel
-    extends FlutterFlowModel<HomeAddressEntryPageCopyWidget> {
+class HomeAddressEntryPagedonzoModel
+    extends FlutterFlowModel<HomeAddressEntryPagedonzoWidget> {
   ///  Local state fields for this page.
 
   String? addressJson;
@@ -45,14 +45,32 @@ class HomeAddressEntryPageCopyModel
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
-  // Stores action output result for [Backend Call - Query Rows] action in HomeAddressEntryPageCopy widget.
+  // Stores action output result for [Backend Call - Query Rows] action in HomeAddressEntryPagedonzo widget.
   List<DecoyWalletRow>? rows;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in HomeAddressEntryPageCopy widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in HomeAddressEntryPagedonzo widget.
   String? dataKeyOut;
-  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in HomeAddressEntryPageCopy widget.
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in HomeAddressEntryPagedonzo widget.
   dynamic addrObj;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in HomeAddressEntryPageCopy widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in HomeAddressEntryPagedonzo widget.
   String? dataKeyOut2;
+  // Stores action output result for [Custom Action - buildAddressPayloadV1] action in IconButton widget.
+  String? playload;
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in IconButton widget.
+  String? keyOut;
+  // Stores action output result for [Custom Action - aesGcmEncryptString] action in IconButton widget.
+  dynamic enc;
+  // Stores action output result for [Backend Call - API (WrapDataKey)] action in IconButton widget.
+  ApiCallResponse? wrap;
+  // Stores action output result for [Backend Call - Query Rows] action in IconButton widget.
+  List<DecoyWalletRow>? supaRows;
+  // Stores action output result for [Backend Call - Update Row(s)] action in IconButton widget.
+  List<DecoyWalletRow>? updRow;
+  // Stores action output result for [Backend Call - Query Rows] action in IconButton widget.
+  List<DecoyWalletRow>? decoyWalletRefresh1;
+  // Stores action output result for [Backend Call - Insert Row] action in IconButton widget.
+  DecoyWalletRow? insRow;
+  // Stores action output result for [Backend Call - Query Rows] action in IconButton widget.
+  List<DecoyWalletRow>? decoyWalletRefresh2;
   // State field(s) for StreetAddress widget.
   final streetAddressKey = GlobalKey();
   FocusNode? streetAddressFocusNode;
@@ -79,24 +97,6 @@ class HomeAddressEntryPageCopyModel
   FocusNode? apartmentFocusNode;
   TextEditingController? apartmentTextController;
   String? Function(BuildContext, String?)? apartmentTextControllerValidator;
-  // Stores action output result for [Custom Action - buildAddressPayloadV1] action in Button widget.
-  String? playload;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
-  String? keyOut;
-  // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.
-  dynamic enc;
-  // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
-  ApiCallResponse? wrap;
-  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
-  List<DecoyWalletRow>? supaRows;
-  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
-  List<DecoyWalletRow>? updRow;
-  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
-  List<DecoyWalletRow>? decoyWalletRefresh1;
-  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
-  DecoyWalletRow? insRow;
-  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
-  List<DecoyWalletRow>? decoyWalletRefresh2;
 
   @override
   void initState(BuildContext context) {}

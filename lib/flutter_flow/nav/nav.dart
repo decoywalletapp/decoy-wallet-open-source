@@ -292,9 +292,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => CreateDecoyEmergencyContactsSetupWidget(),
       ),
       FFRoute(
-        name: HomeAddressEntryPageWidget.routeName,
-        path: HomeAddressEntryPageWidget.routePath,
-        builder: (context, params) => HomeAddressEntryPageWidget(),
+        name: HomeAddressEntryPagedonzoWidget.routeName,
+        path: HomeAddressEntryPagedonzoWidget.routePath,
+        builder: (context, params) => HomeAddressEntryPagedonzoWidget(),
       ),
       FFRoute(
         name: EmergencyContactsWidget.routeName,
@@ -518,9 +518,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => EmergencyContactsCopy2Widget(),
       ),
       FFRoute(
-        name: HomeAddressEntryPageCopyWidget.routeName,
-        path: HomeAddressEntryPageCopyWidget.routePath,
-        builder: (context, params) => HomeAddressEntryPageCopyWidget(),
+        name: HomeAddressEntryPageWidget.routeName,
+        path: HomeAddressEntryPageWidget.routePath,
+        builder: (context, params) => HomeAddressEntryPageWidget(),
       ),
       FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,

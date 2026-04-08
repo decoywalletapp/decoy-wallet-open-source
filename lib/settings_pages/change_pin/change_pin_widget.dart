@@ -757,7 +757,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 36.0),
+                                                    0.0, 0.0, 0.0, 24.0),
                                             child: GridView(
                                               padding: EdgeInsets.zero,
                                               gridDelegate:
@@ -2289,7 +2289,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 36.0),
+                                                    0.0, 0.0, 0.0, 24.0),
                                             child: GridView(
                                               padding: EdgeInsets.zero,
                                               gridDelegate:
@@ -3711,7 +3711,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 36.0),
+                                                    0.0, 0.0, 0.0, 24.0),
                                             child: GridView(
                                               padding: EdgeInsets.zero,
                                               gridDelegate:

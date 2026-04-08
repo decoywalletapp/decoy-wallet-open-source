@@ -1519,8 +1519,22 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                       }
 
                                                       context.goNamed(
-                                                          DuressHomePageWidget
-                                                              .routeName);
+                                                        DuressHomePageWidget
+                                                            .routeName,
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          '__transition_info__':
+                                                              TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .rightToLeft,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                          ),
+                                                        },
+                                                      );
                                                     } else {
                                                       if (FFAppState()
                                                               .decoyPinContactsEnabled ==
@@ -1622,8 +1636,22 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                       }
 
                                                       context.goNamed(
-                                                          DuressHomePageWidget
-                                                              .routeName);
+                                                        DuressHomePageWidget
+                                                            .routeName,
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          '__transition_info__':
+                                                              TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .rightToLeft,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                          ),
+                                                        },
+                                                      );
                                                     }
                                                   } else {
                                                     if (VerifyPINCall.isAccount(
@@ -1640,8 +1668,22 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                       safeSetState(() {});
 
                                                       context.goNamed(
-                                                          HomePageWidget
-                                                              .routeName);
+                                                        HomePageWidget
+                                                            .routeName,
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          '__transition_info__':
+                                                              TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .rightToLeft,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                          ),
+                                                        },
+                                                      );
                                                     } else {
                                                       _model.joinedPin = "";
                                                       safeSetState(() {});

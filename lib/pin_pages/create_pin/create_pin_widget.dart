@@ -785,7 +785,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 36.0),
+                                                    0.0, 0.0, 0.0, 24.0),
                                             child: GridView(
                                               padding: EdgeInsets.zero,
                                               gridDelegate:
@@ -2125,7 +2125,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 36.0),
+                                                    0.0, 0.0, 0.0, 24.0),
                                             child: GridView(
                                               padding: EdgeInsets.zero,
                                               gridDelegate:

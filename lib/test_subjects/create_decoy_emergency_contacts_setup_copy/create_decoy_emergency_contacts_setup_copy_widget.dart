@@ -548,7 +548,7 @@ class _CreateDecoyEmergencyContactsSetupCopyWidgetState
                                         child: FFButtonWidget(
                                           onPressed: () async {
                                             context.pushNamed(
-                                                HomeAddressEntryPageWidget
+                                                HomeAddressEntryPagedonzoWidget
                                                     .routeName);
                                           },
                                           text: '',
