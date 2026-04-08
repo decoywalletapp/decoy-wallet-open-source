@@ -684,5 +684,5 @@ List<dynamic> buildConsentSlotsList(
     slotMap(5, c5First, c5Last, c5Phone),
   ];
 
-  return slots.where((slot) => !isEmptySlot(slot)).toList();
+  return slots;
 }
