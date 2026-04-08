@@ -12,36 +12,38 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'emergency_contacts_model.dart';
-export 'emergency_contacts_model.dart';
+import 'emergency_contacts_copy2_model.dart';
+export 'emergency_contacts_copy2_model.dart';
 
 /// generate a page that allows the user to add up to five emergency
 /// contacts...
 ///
 /// the emergency contacts will have first name last name and phone number...
 /// save button at the bottom
-class EmergencyContactsWidget extends StatefulWidget {
-  const EmergencyContactsWidget({super.key});
+class EmergencyContactsCopy2Widget extends StatefulWidget {
+  const EmergencyContactsCopy2Widget({super.key});
 
-  static String routeName = 'EmergencyContacts';
-  static String routePath = '/emergencyContacts';
+  static String routeName = 'EmergencyContactsCopy2';
+  static String routePath = '/emergencyContactsCopy2';
 
   @override
-  State<EmergencyContactsWidget> createState() =>
-      _EmergencyContactsWidgetState();
+  State<EmergencyContactsCopy2Widget> createState() =>
+      _EmergencyContactsCopy2WidgetState();
 }
 
-class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
-  late EmergencyContactsModel _model;
+class _EmergencyContactsCopy2WidgetState
+    extends State<EmergencyContactsCopy2Widget> {
+  late EmergencyContactsCopy2Model _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => EmergencyContactsModel());
+    _model = createModel(context, () => EmergencyContactsCopy2Model());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -577,221 +579,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                             size: 24.0,
                           ),
                           onPressed: () async {
-                            await actions.dismissKeyboard(
-                              context,
-                            );
-                            _model.contactsPayload =
-                                await actions.buildContactsPayloadV2(
-                              _model.c1FirstTFTextController.text,
-                              _model.c1LastTFTextController.text,
-                              _model.c1PhoneTFTextController.text,
-                              _model.c2FirstTFTextController.text,
-                              _model.c2LastTFTextController.text,
-                              _model.c2PhoneTFTextController.text,
-                              _model.c3FirstTFTextController.text,
-                              _model.c3LastTFTextController.text,
-                              _model.c3PhoneTFTextController.text,
-                              _model.c4FirstTFTextController.text,
-                              _model.c4LastTFTextController.text,
-                              _model.c4PhoneTFTextController.text,
-                              _model.c5FirstTFTextController.text,
-                              _model.c5LastTFTextController.text,
-                              _model.c5PhoneTFTextController.text,
-                              _model.contactsCount,
-                            );
-                            _model.contactsJson = _model.contactsPayload!;
-                            safeSetState(() {});
-                            if (loggedIn == true) {
-                              _model.keyOut =
-                                  await actions.generateDataKeyIfMissing();
-                              _model.dataKeyB64 = _model.keyOut!;
-                              safeSetState(() {});
-                              _model.enc = await actions.aesGcmEncryptString(
-                                _model.contactsJson,
-                                _model.dataKeyB64,
-                              );
-                              _model.ctB64 = getJsonField(
-                                _model.enc,
-                                r'''$.ciphertextB64''',
-                              ).toString();
-                              _model.nonceB64 = getJsonField(
-                                _model.enc,
-                                r'''$.nonceB64''',
-                              ).toString();
-                              safeSetState(() {});
-                              _model.wrap = await WrapDataKeyCall.call(
-                                dataKeyB64: _model.dataKeyB64,
-                                jwt: currentJwtToken,
-                              );
-
-                              if ((_model.wrap?.succeeded ?? true)) {
-                                _model.wrappedB64 = getJsonField(
-                                  (_model.wrap?.jsonBody ?? ''),
-                                  r'''$.wrappedB64''',
-                                ).toString();
-                                safeSetState(() {});
-                                _model.upd = await DecoyWalletTable().queryRows(
-                                  queryFn: (q) => q.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
-                                );
-                                if (_model.upd != null &&
-                                    (_model.upd)!.isNotEmpty) {
-                                  await DecoyWalletTable().update(
-                                    data: {
-                                      'wrapped_datakey': _model.wrappedB64,
-                                      'updated_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
-                                      'contacts_ciphertext': _model.ctB64,
-                                      'contacts_nonce': _model.nonceB64,
-                                      'contacts_version': 1,
-                                      'created_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
-                                      'contacts_complete': (_model.c1PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model
-                                                          .c2PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model.c3PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model.c4PhoneTFTextController
-                                                          .text !=
-                                                      '') ||
-                                              (_model.c5PhoneTFTextController
-                                                          .text !=
-                                                      '')
-                                          ? true
-                                          : false,
-                                    },
-                                    matchingRows: (rows) => rows.eqOrNull(
-                                      'user_id',
-                                      currentUserUid,
-                                    ),
-                                  );
-                                  _model.decoyWalletRefresh1 =
-                                      await DecoyWalletTable().queryRows(
-                                    queryFn: (q) => q.eqOrNull(
-                                      'user_id',
-                                      currentUserUid,
-                                    ),
-                                  );
-                                  FFAppState().emergencyContactsIncrement =
-                                      _model.contactsCount;
-                                  safeSetState(() {});
-                                } else {
-                                  _model.insRow =
-                                      await DecoyWalletTable().insert({
-                                    'wrapped_datakey': _model.wrappedB64,
-                                    'updated_at': supaSerialize<DateTime>(
-                                        getCurrentTimestamp),
-                                    'contacts_ciphertext': _model.ctB64,
-                                    'contacts_nonce': _model.nonceB64,
-                                    'contacts_version': 1,
-                                    'user_id': currentUserUid,
-                                    'contacts_complete': (_model.c1PhoneTFTextController.text !=
-                                                    '') ||
-                                            (_model.c2PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c3PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c4PhoneTFTextController
-                                                        .text !=
-                                                    '') ||
-                                            (_model.c5PhoneTFTextController
-                                                        .text !=
-                                                    '')
-                                        ? true
-                                        : false,
-                                  });
-                                  _model.decoyWalletRefresh2 =
-                                      await DecoyWalletTable().queryRows(
-                                    queryFn: (q) => q.eqOrNull(
-                                      'user_id',
-                                      currentUserUid,
-                                    ),
-                                  );
-                                  FFAppState().emergencyContactsIncrement =
-                                      _model.contactsCount;
-                                  safeSetState(() {});
-                                }
-
-                                _model.consentSlotsList = functions
-                                    .buildConsentSlotsList(
-                                        _model.c1FirstTFTextController.text,
-                                        _model.c1LastTFTextController.text,
-                                        _model.c1PhoneTFTextController.text,
-                                        _model.c2FirstTFTextController.text,
-                                        _model.c2LastTFTextController.text,
-                                        _model.c2PhoneTFTextController.text,
-                                        _model.c3FirstTFTextController.text,
-                                        _model.c3LastTFTextController.text,
-                                        _model.c3PhoneTFTextController.text,
-                                        _model.c4FirstTFTextController.text,
-                                        _model.c4LastTFTextController.text,
-                                        _model.c4PhoneTFTextController.text,
-                                        _model.c5FirstTFTextController.text,
-                                        _model.c5LastTFTextController.text,
-                                        _model.c5PhoneTFTextController.text)
-                                    .toList()
-                                    .cast<dynamic>();
-                                safeSetState(() {});
-                                _model.syncConsentResp =
-                                    await SyncConsentSlotsCall.call(
-                                  jwt: currentJwtToken,
-                                  slotsJsonList: _model.consentSlotsList
-                                      .map((e) => e.toString())
-                                      .toList(),
-                                );
-
-                                if ((_model.syncConsentResp?.succeeded ??
-                                    true)) {
-                                  context.safePop();
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'ERROR #030 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
-                                  context.safePop();
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
-                                context.safePop();
-                              }
-                            } else {
-                              context.goNamed(LoginPageWidget.routeName);
-                            }
-
-                            safeSetState(() {});
+                            context.safePop();
                           },
                         ),
                       ),
@@ -1628,83 +1416,22 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Stack(
-                                                    children: [
-                                                      Material(
-                                                        color:
-                                                            Colors.transparent,
-                                                        elevation: 3.0,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                        ),
-                                                        child: Container(
-                                                          width: 300.0,
-                                                          height: 50.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                _model.c1Status ==
-                                                                        'Not sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyMediumFamily,
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .info,
-                                                                      fontSize:
-                                                                          18.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                              Icon(
-                                                                Icons
-                                                                    .send_rounded,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                size: 24.0,
-                                                              ),
-                                                            ].divide(SizedBox(
-                                                                width: 12.0)),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Opacity(
-                                                        opacity: 0.0,
-                                                        child: FFButtonWidget(
+                                                  Container(
+                                                    width: 300.0,
+                                                    height: 50.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground,
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        FFButtonWidget(
                                                           onPressed: () async {
                                                             _model.createConsentResp1 =
                                                                 await CreateConsentRequestCall
@@ -1760,11 +1487,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                             safeSetState(() {});
                                                           },
-                                                          text: '',
+                                                          text: _model.c1Status ==
+                                                                  'Not sent'
+                                                              ? 'Send Confirmation Link'
+                                                              : 'Resend Confirmation Link',
                                                           options:
                                                               FFButtonOptions(
-                                                            width:
-                                                                double.infinity,
+                                                            width: 275.3,
                                                             height: 50.0,
                                                             padding:
                                                                 EdgeInsetsDirectional
@@ -1806,8 +1535,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         10.0),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                        Icon(
+                                                          Icons.send,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                          size: 24.0,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ].divide(
                                                     SizedBox(height: 12.0)),
@@ -4779,6 +4515,335 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                             _model.contactsCount + 1;
                                         safeSetState(() {});
                                       },
+                                    ),
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: FFButtonWidget(
+                                        onPressed: () async {
+                                          await actions.dismissKeyboard(
+                                            context,
+                                          );
+                                          _model.contactsPayload = await actions
+                                              .buildContactsPayloadV2(
+                                            _model.c1FirstTFTextController.text,
+                                            _model.c1LastTFTextController.text,
+                                            _model.c1PhoneTFTextController.text,
+                                            _model.c2FirstTFTextController.text,
+                                            _model.c2LastTFTextController.text,
+                                            _model.c2PhoneTFTextController.text,
+                                            _model.c3FirstTFTextController.text,
+                                            _model.c3LastTFTextController.text,
+                                            _model.c3PhoneTFTextController.text,
+                                            _model.c4FirstTFTextController.text,
+                                            _model.c4LastTFTextController.text,
+                                            _model.c4PhoneTFTextController.text,
+                                            _model.c5FirstTFTextController.text,
+                                            _model.c5LastTFTextController.text,
+                                            _model.c5PhoneTFTextController.text,
+                                            _model.contactsCount,
+                                          );
+                                          _model.contactsJson =
+                                              _model.contactsPayload!;
+                                          safeSetState(() {});
+                                          if (loggedIn == true) {
+                                            _model.keyOut = await actions
+                                                .generateDataKeyIfMissing();
+                                            _model.dataKeyB64 = _model.keyOut!;
+                                            safeSetState(() {});
+                                            _model.enc = await actions
+                                                .aesGcmEncryptString(
+                                              _model.contactsJson,
+                                              _model.dataKeyB64,
+                                            );
+                                            _model.ctB64 = getJsonField(
+                                              _model.enc,
+                                              r'''$.ciphertextB64''',
+                                            ).toString();
+                                            _model.nonceB64 = getJsonField(
+                                              _model.enc,
+                                              r'''$.nonceB64''',
+                                            ).toString();
+                                            safeSetState(() {});
+                                            _model.wrap =
+                                                await WrapDataKeyCall.call(
+                                              dataKeyB64: _model.dataKeyB64,
+                                              jwt: currentJwtToken,
+                                            );
+
+                                            if ((_model.wrap?.succeeded ??
+                                                true)) {
+                                              _model.wrappedB64 = getJsonField(
+                                                (_model.wrap?.jsonBody ?? ''),
+                                                r'''$.wrappedB64''',
+                                              ).toString();
+                                              safeSetState(() {});
+                                              _model.upd =
+                                                  await DecoyWalletTable()
+                                                      .queryRows(
+                                                queryFn: (q) => q.eqOrNull(
+                                                  'user_id',
+                                                  currentUserUid,
+                                                ),
+                                              );
+                                              if (_model.upd != null &&
+                                                  (_model.upd)!.isNotEmpty) {
+                                                await DecoyWalletTable().update(
+                                                  data: {
+                                                    'wrapped_datakey':
+                                                        _model.wrappedB64,
+                                                    'updated_at': supaSerialize<
+                                                            DateTime>(
+                                                        getCurrentTimestamp),
+                                                    'contacts_ciphertext':
+                                                        _model.ctB64,
+                                                    'contacts_nonce':
+                                                        _model.nonceB64,
+                                                    'contacts_version': 1,
+                                                    'created_at': supaSerialize<
+                                                            DateTime>(
+                                                        getCurrentTimestamp),
+                                                    'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
+                                                            (_model.c2PhoneTFTextController
+                                                                        .text !=
+                                                                    '') ||
+                                                            (_model.c3PhoneTFTextController
+                                                                        .text !=
+                                                                    '') ||
+                                                            (_model.c4PhoneTFTextController
+                                                                        .text !=
+                                                                    '') ||
+                                                            (_model.c5PhoneTFTextController
+                                                                        .text !=
+                                                                    '')
+                                                        ? true
+                                                        : false,
+                                                  },
+                                                  matchingRows: (rows) =>
+                                                      rows.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+                                                _model.decoyWalletRefresh1 =
+                                                    await DecoyWalletTable()
+                                                        .queryRows(
+                                                  queryFn: (q) => q.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+                                                FFAppState()
+                                                        .emergencyContactsIncrement =
+                                                    _model.contactsCount;
+                                                safeSetState(() {});
+                                              } else {
+                                                _model.insRow =
+                                                    await DecoyWalletTable()
+                                                        .insert({
+                                                  'wrapped_datakey':
+                                                      _model.wrappedB64,
+                                                  'updated_at':
+                                                      supaSerialize<DateTime>(
+                                                          getCurrentTimestamp),
+                                                  'contacts_ciphertext':
+                                                      _model.ctB64,
+                                                  'contacts_nonce':
+                                                      _model.nonceB64,
+                                                  'contacts_version': 1,
+                                                  'user_id': currentUserUid,
+                                                  'contacts_complete': (_model
+                                                                      .c1PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model
+                                                                      .c2PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model
+                                                                      .c3PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model.c4PhoneTFTextController
+                                                                      .text !=
+                                                                  '') ||
+                                                          (_model.c5PhoneTFTextController
+                                                                      .text !=
+                                                                  '')
+                                                      ? true
+                                                      : false,
+                                                });
+                                                _model.decoyWalletRefresh2 =
+                                                    await DecoyWalletTable()
+                                                        .queryRows(
+                                                  queryFn: (q) => q.eqOrNull(
+                                                    'user_id',
+                                                    currentUserUid,
+                                                  ),
+                                                );
+                                                FFAppState()
+                                                        .emergencyContactsIncrement =
+                                                    _model.contactsCount;
+                                                safeSetState(() {});
+                                              }
+
+                                              _model.consentSlotsList = functions
+                                                  .buildConsentSlotsList(
+                                                      _model
+                                                          .c1FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c1LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c1PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c2PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c3PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c4PhoneTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5FirstTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5LastTFTextController
+                                                          .text,
+                                                      _model
+                                                          .c5PhoneTFTextController
+                                                          .text)
+                                                  .toList()
+                                                  .cast<dynamic>();
+                                              safeSetState(() {});
+                                              _model.syncConsentResp =
+                                                  await SyncConsentSlotsCall
+                                                      .call(
+                                                jwt: currentJwtToken,
+                                                slotsJsonList: _model
+                                                    .consentSlotsList
+                                                    .map((e) => e.toString())
+                                                    .toList(),
+                                              );
+
+                                              if ((_model.syncConsentResp
+                                                      ?.succeeded ??
+                                                  true)) {
+                                                context.safePop();
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'ERROR #030 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                      style: TextStyle(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                  ),
+                                                );
+                                              }
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                ),
+                                              );
+                                            }
+                                          } else {
+                                            context.goNamed(
+                                                LoginPageWidget.routeName);
+                                          }
+
+                                          safeSetState(() {});
+                                        },
+                                        text: 'Save',
+                                        options: FFButtonOptions(
+                                          width: 280.0,
+                                          height: 56.0,
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 0.0, 16.0, 0.0),
+                                          iconPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 0.0),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          textStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .titleSmall
+                                              .override(
+                                                font: GoogleFonts.heebo(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .fontStyle,
+                                                ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .info,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmall
+                                                        .fontStyle,
+                                              ),
+                                          elevation: 3.0,
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                      ),
                                     ),
                                   ]
                                       .divide(SizedBox(height: 12.0))

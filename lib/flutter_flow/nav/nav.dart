@@ -513,6 +513,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => EnableNotificationsWidget(),
       ),
       FFRoute(
+        name: EmergencyContactsCopy2Widget.routeName,
+        path: EmergencyContactsCopy2Widget.routePath,
+        builder: (context, params) => EmergencyContactsCopy2Widget(),
+      ),
+      FFRoute(
+        name: HomeAddressEntryPageCopyWidget.routeName,
+        path: HomeAddressEntryPageCopyWidget.routePath,
+        builder: (context, params) => HomeAddressEntryPageCopyWidget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>

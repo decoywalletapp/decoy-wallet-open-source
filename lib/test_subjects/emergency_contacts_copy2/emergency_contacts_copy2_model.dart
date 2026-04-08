@@ -2,11 +2,12 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'emergency_contacts_widget.dart' show EmergencyContactsWidget;
+import 'emergency_contacts_copy2_widget.dart' show EmergencyContactsCopy2Widget;
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
+class EmergencyContactsCopy2Model
+    extends FlutterFlowModel<EmergencyContactsCopy2Widget> {
   ///  Local state fields for this page.
 
   int contactIncrement = 0;
@@ -72,36 +73,16 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
-  // Stores action output result for [Backend Call - Query Rows] action in EmergencyContacts widget.
+  // Stores action output result for [Backend Call - Query Rows] action in EmergencyContactsCopy2 widget.
   List<DecoyWalletRow>? rows;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContactsCopy2 widget.
   String? dataKeyOut;
-  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EmergencyContactsCopy2 widget.
   dynamic contactsObj;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContactsCopy2 widget.
   String? dataKeyOut2;
-  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in EmergencyContacts widget.
+  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in EmergencyContactsCopy2 widget.
   ApiCallResponse? getConsentStatusesResp;
-  // Stores action output result for [Custom Action - buildContactsPayloadV2] action in IconButton widget.
-  String? contactsPayload;
-  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in IconButton widget.
-  String? keyOut;
-  // Stores action output result for [Custom Action - aesGcmEncryptString] action in IconButton widget.
-  dynamic enc;
-  // Stores action output result for [Backend Call - API (WrapDataKey)] action in IconButton widget.
-  ApiCallResponse? wrap;
-  // Stores action output result for [Backend Call - Query Rows] action in IconButton widget.
-  List<DecoyWalletRow>? upd;
-  // Stores action output result for [Backend Call - Update Row(s)] action in IconButton widget.
-  List<DecoyWalletRow>? updRow;
-  // Stores action output result for [Backend Call - Query Rows] action in IconButton widget.
-  List<DecoyWalletRow>? decoyWalletRefresh1;
-  // Stores action output result for [Backend Call - Insert Row] action in IconButton widget.
-  DecoyWalletRow? insRow;
-  // Stores action output result for [Backend Call - Query Rows] action in IconButton widget.
-  List<DecoyWalletRow>? decoyWalletRefresh2;
-  // Stores action output result for [Backend Call - API (SyncConsentSlots)] action in IconButton widget.
-  ApiCallResponse? syncConsentResp;
   // State field(s) for c1FirstTF widget.
   FocusNode? c1FirstTFFocusNode;
   TextEditingController? c1FirstTFTextController;
@@ -177,6 +158,26 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   String? Function(BuildContext, String?)? c5PhoneTFTextControllerValidator;
   // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
   ApiCallResponse? createConsentResp5;
+  // Stores action output result for [Custom Action - buildContactsPayloadV2] action in Button widget.
+  String? contactsPayload;
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
+  String? keyOut;
+  // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.
+  dynamic enc;
+  // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
+  ApiCallResponse? wrap;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? upd;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<DecoyWalletRow>? updRow;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? decoyWalletRefresh1;
+  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
+  DecoyWalletRow? insRow;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? decoyWalletRefresh2;
+  // Stores action output result for [Backend Call - API (SyncConsentSlots)] action in Button widget.
+  ApiCallResponse? syncConsentResp;
 
   @override
   void initState(BuildContext context) {}

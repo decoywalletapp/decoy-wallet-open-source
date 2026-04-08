@@ -7,20 +7,9 @@ class DuressScanQRv2Model extends FlutterFlowModel<DuressScanQRv2Widget> {
 
   bool isScanning = true;
 
-  ///  State fields for stateful widgets in this page.
-
-  var scannedQRv2 = '';
-  // State field(s) for WalletAddress widget.
-  FocusNode? walletAddressFocusNode;
-  TextEditingController? walletAddressTextController;
-  String? Function(BuildContext, String?)? walletAddressTextControllerValidator;
-
   @override
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    walletAddressFocusNode?.dispose();
-    walletAddressTextController?.dispose();
-  }
+  void dispose() {}
 }
