@@ -3184,7 +3184,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
 
                                             safeSetState(() {});
                                           },
-                                    text: 'Save Changes',
+                                    text: 'Save & Exit',
                                     options: FFButtonOptions(
                                       width: 400.0,
                                       height: 50.0,

@@ -1529,6 +1529,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            _model.c1PhoneDigits =
+                                                                functions.sanitizePhoneDigits(
+                                                                    _model
+                                                                        .c1PhoneTFTextController
+                                                                        .text);
+                                                            safeSetState(() {});
                                                             _model.createConsentResp1 =
                                                                 await CreateConsentRequestCall
                                                                     .call(
@@ -2449,6 +2455,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FFButtonWidget(
                                                               onPressed:
                                                                   () async {
+                                                                _model.c2PhoneDigits =
+                                                                    functions.sanitizePhoneDigits(_model
+                                                                        .c2PhoneTFTextController
+                                                                        .text);
+                                                                safeSetState(
+                                                                    () {});
                                                                 _model.createConsentResp2 =
                                                                     await CreateConsentRequestCall
                                                                         .call(
@@ -3300,6 +3312,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           child: FFButtonWidget(
                                                             onPressed:
                                                                 () async {
+                                                              _model.c3PhoneDigits =
+                                                                  functions.sanitizePhoneDigits(
+                                                                      _model
+                                                                          .c3PhoneTFTextController
+                                                                          .text);
+                                                              safeSetState(
+                                                                  () {});
                                                               _model.createConsentResp3 =
                                                                   await CreateConsentRequestCall
                                                                       .call(
@@ -4121,6 +4140,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            _model.c4PhoneDigits =
+                                                                functions.sanitizePhoneDigits(
+                                                                    _model
+                                                                        .c4PhoneTFTextController
+                                                                        .text);
+                                                            safeSetState(() {});
                                                             _model.createConsentResp4 =
                                                                 await CreateConsentRequestCall
                                                                     .call(
@@ -4907,6 +4932,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            _model.c5PhoneDigits =
+                                                                functions.sanitizePhoneDigits(
+                                                                    _model
+                                                                        .c5PhoneTFTextController
+                                                                        .text);
+                                                            safeSetState(() {});
                                                             _model.createConsentResp5 =
                                                                 await CreateConsentRequestCall
                                                                     .call(

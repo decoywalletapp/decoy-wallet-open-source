@@ -149,6 +149,7 @@ class _LocationAuthorizationWidgetState
                             ),
                             child: Container(
                               width: 300.0,
+                              height: 90.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
@@ -158,42 +159,45 @@ class _LocationAuthorizationWidgetState
                                   width: 2.0,
                                 ),
                               ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: SwitchListTile(
-                                  value: _model.switchListTileValue ??=
-                                      _model.wantsLocation,
-                                  onChanged: (newValue) async {
-                                    safeSetState(() =>
-                                        _model.switchListTileValue = newValue);
-                                    if (newValue) {
-                                      _model.wantsLocation = true;
-                                      safeSetState(() {});
-                                    } else {
-                                      _model.wantsLocation = false;
-                                      safeSetState(() {});
-                                    }
-                                  },
-                                  title: Text(
-                                    'Enable Location Services',
-                                    style: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .override(
-                                          fontFamily: 'InterTight',
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
-                                  tileColor: Colors.transparent,
-                                  activeThumbColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  activeTrackColor:
-                                      FlutterFlowTheme.of(context).accent1,
-                                  dense: false,
-                                  controlAffinity:
-                                      ListTileControlAffinity.trailing,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(0.0),
+                              child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: SwitchListTile(
+                                    value: _model.switchListTileValue ??=
+                                        _model.wantsLocation,
+                                    onChanged: (newValue) async {
+                                      safeSetState(() => _model
+                                          .switchListTileValue = newValue);
+                                      if (newValue) {
+                                        _model.wantsLocation = true;
+                                        safeSetState(() {});
+                                      } else {
+                                        _model.wantsLocation = false;
+                                        safeSetState(() {});
+                                      }
+                                    },
+                                    title: Text(
+                                      'Enable Location Services',
+                                      style: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .override(
+                                            fontFamily: 'InterTight',
+                                            fontSize: 16.0,
+                                            letterSpacing: 0.0,
+                                          ),
+                                    ),
+                                    tileColor: Colors.transparent,
+                                    activeThumbColor:
+                                        FlutterFlowTheme.of(context).primary,
+                                    activeTrackColor:
+                                        FlutterFlowTheme.of(context).accent1,
+                                    dense: false,
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0.0),
+                                    ),
                                   ),
                                 ),
                               ),

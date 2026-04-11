@@ -152,6 +152,7 @@ class _BiometricVerificationWidgetState
                             ),
                             child: Container(
                               width: 275.0,
+                              height: 90.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
