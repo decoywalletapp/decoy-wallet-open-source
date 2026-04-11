@@ -783,7 +783,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     } else if (_model
                                                             .c1Status ==
                                                         'Pending') {
-                                                      return Color(0xFFFAF100);
+                                                      return Color(0xFFFFDF00);
                                                     } else if (_model
                                                             .c1Status ==
                                                         'Denied') {
@@ -1556,7 +1556,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             children: [
                                                               Text(
                                                                 _model.c1Status ==
-                                                                        'not_sent'
+                                                                        'Not sent'
                                                                     ? 'Send Confirmation Link'
                                                                     : 'Resend Confirmation Link',
                                                                 style: FlutterFlowTheme.of(
@@ -2531,7 +2531,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               children: [
                                                                 Text(
                                                                   _model.c2Status ==
-                                                                          'not_sent'
+                                                                          'Not sent'
                                                                       ? 'Send Confirmation Link'
                                                                       : 'Resend Confirmation Link',
                                                                   style: FlutterFlowTheme.of(
@@ -3435,7 +3435,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               children: [
                                                                 Text(
                                                                   _model.c3Status ==
-                                                                          'not_sent'
+                                                                          'Not sent'
                                                                       ? 'Send Confirmation Link'
                                                                       : 'Resend Confirmation Link',
                                                                   style: FlutterFlowTheme.of(
@@ -4300,7 +4300,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             children: [
                                                               Text(
                                                                 _model.c4Status ==
-                                                                        'not_sent'
+                                                                        'Not sent'
                                                                     ? 'Send Confirmation Link'
                                                                     : 'Resend Confirmation Link',
                                                                 style: FlutterFlowTheme.of(
@@ -5130,7 +5130,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             children: [
                                                               Text(
                                                                 _model.c5Status ==
-                                                                        'not_sent'
+                                                                        'Not sent'
                                                                     ? 'Send Confirmation Link'
                                                                     : 'Resend Confirmation Link',
                                                                 style: FlutterFlowTheme.of(
@@ -5484,7 +5484,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               }
 
                                               _model.consentSlotsList = functions
-                                                  .buildConsentSlotsList(
+                                                  .buildConsentSlotsListFINAL(
                                                       _model
                                                           .c1FirstTFTextController
                                                           .text,
@@ -5494,6 +5494,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model
                                                           .c1PhoneTFTextController
                                                           .text,
+                                                      _model.c1Status,
                                                       _model
                                                           .c2FirstTFTextController
                                                           .text,
@@ -5503,6 +5504,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model
                                                           .c2PhoneTFTextController
                                                           .text,
+                                                      _model.c2Status,
                                                       _model
                                                           .c3FirstTFTextController
                                                           .text,
@@ -5512,6 +5514,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model
                                                           .c3PhoneTFTextController
                                                           .text,
+                                                      _model.c3Status,
                                                       _model
                                                           .c4FirstTFTextController
                                                           .text,
@@ -5521,6 +5524,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model
                                                           .c4PhoneTFTextController
                                                           .text,
+                                                      _model.c4Status,
                                                       _model
                                                           .c5FirstTFTextController
                                                           .text,
@@ -5529,7 +5533,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           .text,
                                                       _model
                                                           .c5PhoneTFTextController
-                                                          .text)
+                                                          .text,
+                                                      _model.c5Status)
                                                   .toList()
                                                   .cast<dynamic>();
                                               safeSetState(() {});

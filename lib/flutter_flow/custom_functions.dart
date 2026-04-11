@@ -614,22 +614,27 @@ bool isEntitlementCurrentlyActive(
   return true;
 }
 
-List<dynamic> buildConsentSlotsList(
+List<dynamic> buildConsentSlotsListFINAL(
   String c1First,
   String c1Last,
   String c1Phone,
+  String c1Status,
   String c2First,
   String c2Last,
   String c2Phone,
+  String c2Status,
   String c3First,
   String c3Last,
   String c3Phone,
+  String c3Status,
   String c4First,
   String c4Last,
   String c4Phone,
+  String c4Status,
   String c5First,
   String c5Last,
   String c5Phone,
+  String c5Status,
 ) {
   String clean(String value) {
     return value.trim();
@@ -656,32 +661,39 @@ List<dynamic> buildConsentSlotsList(
     return '';
   }
 
+  String normalizeStatus(String value) {
+    final v = value.trim();
+
+    if (v == 'Confirmed') return 'Confirmed';
+    if (v == 'Pending') return 'Pending';
+    if (v == 'Denied') return 'Denied';
+    if (v == 'Opted out') return 'Opted out';
+
+    return 'Not sent';
+  }
+
   Map<String, dynamic> slotMap(
     int slot,
     String first,
     String last,
     String phone,
+    String status,
   ) {
     return {
       'contact_slot': slot,
       'first_name': clean(first),
       'last_name': clean(last),
       'phone_number': normalizePhone(phone),
+      'consent_status': normalizeStatus(status),
     };
   }
 
-  bool isEmptySlot(Map<String, dynamic> slot) {
-    return (slot['first_name'] as String).isEmpty &&
-        (slot['last_name'] as String).isEmpty &&
-        (slot['phone_number'] as String).isEmpty;
-  }
-
   final slots = <Map<String, dynamic>>[
-    slotMap(1, c1First, c1Last, c1Phone),
-    slotMap(2, c2First, c2Last, c2Phone),
-    slotMap(3, c3First, c3Last, c3Phone),
-    slotMap(4, c4First, c4Last, c4Phone),
-    slotMap(5, c5First, c5Last, c5Phone),
+    slotMap(1, c1First, c1Last, c1Phone, c1Status),
+    slotMap(2, c2First, c2Last, c2Phone, c2Status),
+    slotMap(3, c3First, c3Last, c3Phone, c3Status),
+    slotMap(4, c4First, c4Last, c4Phone, c4Status),
+    slotMap(5, c5First, c5Last, c5Phone, c5Status),
   ];
 
   return slots;
