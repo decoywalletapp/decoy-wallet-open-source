@@ -78,6 +78,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   String? dataKeyOut;
   // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EmergencyContacts widget.
   dynamic contactsObj;
+  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in EmergencyContacts widget.
+  ApiCallResponse? constentOOO;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
   String? dataKeyOut2;
   // State field(s) for c1FirstTF widget.

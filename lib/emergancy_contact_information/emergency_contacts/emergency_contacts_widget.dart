@@ -70,41 +70,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             _model.dataKeyB64,
           );
           _model.contactsJson = _model.contactsObj!.toString();
-          _model.c1Status = valueOrDefault<String>(
-            getJsonField(
-              _model.contactsObj,
-              r'''$.contacts[0].consent_status''',
-            )?.toString(),
-            'not_sent',
-          );
-          _model.c2Status = valueOrDefault<String>(
-            getJsonField(
-              _model.contactsObj,
-              r'''$.contacts[1].consent_status''',
-            )?.toString(),
-            'not_sent',
-          );
-          _model.c3Status = valueOrDefault<String>(
-            getJsonField(
-              _model.contactsObj,
-              r'''$.contacts[2].consent_status''',
-            )?.toString(),
-            'not_sent',
-          );
-          _model.c4Status = valueOrDefault<String>(
-            getJsonField(
-              _model.contactsObj,
-              r'''$.contacts[3].consent_status''',
-            )?.toString(),
-            'not_sent',
-          );
-          _model.c5Status = valueOrDefault<String>(
-            getJsonField(
-              _model.contactsObj,
-              r'''$.contacts[4].consent_status''',
-            )?.toString(),
-            'not_sent',
-          );
           safeSetState(() {});
           _model.contactsCount = () {
             if (getJsonField(
@@ -451,6 +416,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               );
             });
           }
+
+          _model.constentOOO = await GetConsentStatusesCall.call(
+            jwt: currentJwtToken,
+          );
+
+          if ((_model.constentOOO?.succeeded ?? true)) {
+            _model.c1Status = GetConsentStatusesCall.slot1Status(
+              (_model.constentOOO?.jsonBody ?? ''),
+            ).toString();
+            _model.c2Status = GetConsentStatusesCall.slot2Status(
+              (_model.constentOOO?.jsonBody ?? ''),
+            ).toString();
+            _model.c3Status = GetConsentStatusesCall.slot3Status(
+              (_model.constentOOO?.jsonBody ?? ''),
+            ).toString();
+            _model.c4Status = GetConsentStatusesCall.slot4Status(
+              (_model.constentOOO?.jsonBody ?? ''),
+            ).toString();
+            _model.c5Status = GetConsentStatusesCall.slot5Status(
+              (_model.constentOOO?.jsonBody ?? ''),
+            ).toString();
+            safeSetState(() {});
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -760,7 +748,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     } else if (_model
                                                             .c1Status ==
                                                         'Pending') {
-                                                      return Color(0xFFFFDF00);
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .primary;
                                                     } else if (_model
                                                             .c1Status ==
                                                         'Denied') {
@@ -1465,7 +1455,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             return Color(0xFF0CD40B);
                                                                           } else if (_model.c1Status ==
                                                                               'Pending') {
-                                                                            return Color(0xFFFAF100);
+                                                                            return FlutterFlowTheme.of(context).primary;
                                                                           } else if (_model.c1Status ==
                                                                               'Denied') {
                                                                             return FlutterFlowTheme.of(context).error;
@@ -1474,13 +1464,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             return FlutterFlowTheme.of(context).error;
                                                                           } else if (_model.c1Status ==
                                                                               'Not sent') {
-                                                                            return FlutterFlowTheme.of(context).primary;
+                                                                            return FlutterFlowTheme.of(context).primaryText;
                                                                           } else {
                                                                             return FlutterFlowTheme.of(context).primary;
                                                                           }
                                                                         }(),
                                                                         FlutterFlowTheme.of(context)
-                                                                            .primary,
+                                                                            .primaryText,
                                                                       ),
                                                                       fontSize:
                                                                           16.0,
