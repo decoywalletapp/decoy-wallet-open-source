@@ -451,6 +451,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               );
             });
           }
+
+          _model.consentStatusResp = await GetConsentStatusesCall.call(
+            jwt: currentJwtToken,
+          );
+
+          if ((_model.consentStatusResp?.succeeded ?? true)) {
+            _model.c1Status = GetConsentStatusesCall.slot1Status(
+              (_model.consentStatusResp?.jsonBody ?? ''),
+            ).toString();
+            _model.c2Status = GetConsentStatusesCall.slot2Status(
+              (_model.consentStatusResp?.jsonBody ?? ''),
+            ).toString();
+            _model.c3Status = GetConsentStatusesCall.slot3Status(
+              (_model.consentStatusResp?.jsonBody ?? ''),
+            ).toString();
+            _model.c4Status = GetConsentStatusesCall.slot4Status(
+              (_model.consentStatusResp?.jsonBody ?? ''),
+            ).toString();
+            _model.c5Status = GetConsentStatusesCall.slot5Status(
+              (_model.consentStatusResp?.jsonBody ?? ''),
+            ).toString();
+            safeSetState(() {});
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
