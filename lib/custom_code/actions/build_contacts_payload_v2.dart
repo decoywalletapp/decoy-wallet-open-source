@@ -15,35 +15,60 @@ import 'dart:convert';
 String _s(String? v) => (v ?? '').trim();
 
 String _normalizePhone(String? input) {
-  // keep only digits and an optional leading '+'
   final raw = (input ?? '').replaceAll(RegExp(r'[^0-9+]'), '');
   if (raw.isEmpty) return '';
 
-  // If it already starts with '+', allow only +1XXXXXXXXXX
   if (raw.startsWith('+')) {
-    final only = raw.replaceAll(RegExp(r'[^0-9]'), ''); // just digits
+    final only = raw.replaceAll(RegExp(r'[^0-9]'), '');
     return RegExp(r'^1\d{10}$').hasMatch(only) ? '+$only' : '';
   }
 
-  // Otherwise normalize common US inputs
   final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
   if (digits.length == 10) return '+1$digits';
   if (digits.length == 11 && digits.startsWith('1')) return '+$digits';
 
-  // Anything else is invalid for our US-only phase
   return '';
 }
 
-Map<String, String> _contact(String? f, String? l, String? p) => {
+String _normalizeConsentStatus(String? status) {
+  final s = _s(status).toLowerCase();
+
+  switch (s) {
+    case 'confirmed':
+      return 'confirmed';
+    case 'pending':
+      return 'pending';
+    case 'denied':
+      return 'denied';
+    case 'opted out':
+    case 'opted_out':
+      return 'opted_out';
+    case 'not sent':
+    case 'not_sent':
+    default:
+      return 'not_sent';
+  }
+}
+
+Map<String, dynamic> _contact(
+  int slot,
+  String? f,
+  String? l,
+  String? p,
+  String? status,
+) =>
+    {
+      'slot': slot,
       'first': _s(f),
       'last': _s(l),
       'phone': _normalizePhone(p),
+      'consent_status': _normalizeConsentStatus(status),
     };
 
-bool _isEmptyContact(Map<String, String> c) =>
-    (_s(c['first']).isEmpty) &&
-    (_s(c['last']).isEmpty) &&
-    (_s(c['phone']).isEmpty);
+bool _isEmptyContact(Map<String, dynamic> c) =>
+    (_s(c['first']?.toString()).isEmpty) &&
+    (_s(c['last']?.toString()).isEmpty) &&
+    (_s(c['phone']?.toString()).isEmpty);
 
 // ACTION
 Future<String> buildContactsPayloadV2(
@@ -63,23 +88,27 @@ Future<String> buildContactsPayloadV2(
   String? c5Last,
   String? c5Phone,
   int contactsVisibleCount,
+  String? c1Status,
+  String? c2Status,
+  String? c3Status,
+  String? c4Status,
+  String? c5Status,
 ) async {
-  final c1 = _contact(c1First, c1Last, c1Phone);
-  final c2 = _contact(c2First, c2Last, c2Phone);
-  final c3 = _contact(c3First, c3Last, c3Phone);
-  final c4 = _contact(c4First, c4Last, c4Phone);
-  final c5 = _contact(c5First, c5Last, c5Phone);
+  final c1 = _contact(1, c1First, c1Last, c1Phone, c1Status);
+  final c2 = _contact(2, c2First, c2Last, c2Phone, c2Status);
+  final c3 = _contact(3, c3First, c3Last, c3Phone, c3Status);
+  final c4 = _contact(4, c4First, c4Last, c4Phone, c4Status);
+  final c5 = _contact(5, c5First, c5Last, c5Phone, c5Status);
 
   final all = [c1, c2, c3, c4, c5];
   final allowed = all.take(contactsVisibleCount.clamp(0, 5)).toList();
   final filtered = allowed.where((c) => !_isEmptyContact(c)).toList();
 
   final out = {
-    'version': 1,
+    'version': 2,
     'contacts': filtered,
     'validCount': filtered.length,
   };
-  return jsonEncode(out); // IMPORTANT: String
+
+  return jsonEncode(out);
 }
-// Set your action name, define your arguments and return parameter,
-// and then add the boilerplate code using the green button on the right!

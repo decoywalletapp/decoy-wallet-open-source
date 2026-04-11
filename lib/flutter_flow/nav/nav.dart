@@ -445,16 +445,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => PhoneNumberInputCopyWidget(),
       ),
       FFRoute(
-        name: EmscontoldWidget.routeName,
-        path: EmscontoldWidget.routePath,
-        builder: (context, params) => EmscontoldWidget(),
-      ),
-      FFRoute(
-        name: EmergencyContactsCopyWidget.routeName,
-        path: EmergencyContactsCopyWidget.routePath,
-        builder: (context, params) => EmergencyContactsCopyWidget(),
-      ),
-      FFRoute(
         name: AuthRouterCopyWidget.routeName,
         path: AuthRouterCopyWidget.routePath,
         builder: (context, params) => AuthRouterCopyWidget(
@@ -511,11 +501,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: EnableNotificationsWidget.routeName,
         path: EnableNotificationsWidget.routePath,
         builder: (context, params) => EnableNotificationsWidget(),
-      ),
-      FFRoute(
-        name: EmergencyContactsCopy2Widget.routeName,
-        path: EmergencyContactsCopy2Widget.routePath,
-        builder: (context, params) => EmergencyContactsCopy2Widget(),
       ),
       FFRoute(
         name: HomeAddressEntryPageWidget.routeName,

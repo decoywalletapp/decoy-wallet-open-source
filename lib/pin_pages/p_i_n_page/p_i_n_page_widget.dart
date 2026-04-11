@@ -1668,22 +1668,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                       safeSetState(() {});
 
                                                       context.goNamed(
-                                                        HomePageWidget
-                                                            .routeName,
-                                                        extra: <String,
-                                                            dynamic>{
-                                                          '__transition_info__':
-                                                              TransitionInfo(
-                                                            hasTransition: true,
-                                                            transitionType:
-                                                                PageTransitionType
-                                                                    .rightToLeft,
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    300),
-                                                          ),
-                                                        },
-                                                      );
+                                                          HomePageWidget
+                                                              .routeName);
                                                     } else {
                                                       _model.joinedPin = "";
                                                       safeSetState(() {});

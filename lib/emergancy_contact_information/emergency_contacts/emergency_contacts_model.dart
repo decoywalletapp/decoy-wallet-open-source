@@ -48,15 +48,15 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   String? c5PhoneDigits;
 
-  String c1Status = 'Not sent';
+  String c1Status = 'not_sent';
 
-  String c2Status = 'Not sent';
+  String c2Status = 'not_sent';
 
-  String c3Status = 'Not sent';
+  String c3Status = 'not_sent';
 
-  String c4Status = 'Not sent';
+  String c4Status = 'not_sent';
 
-  String c5Status = 'Not sent';
+  String c5Status = 'not_sent';
 
   List<dynamic> consentSlotsList = [];
   void addToConsentSlotsList(dynamic item) => consentSlotsList.add(item);
@@ -80,8 +80,6 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   dynamic contactsObj;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
   String? dataKeyOut2;
-  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in EmergencyContacts widget.
-  ApiCallResponse? getConsentStatusesResp;
   // State field(s) for c1FirstTF widget.
   FocusNode? c1FirstTFFocusNode;
   TextEditingController? c1FirstTFTextController;

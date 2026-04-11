@@ -70,6 +70,41 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             _model.dataKeyB64,
           );
           _model.contactsJson = _model.contactsObj!.toString();
+          _model.c1Status = valueOrDefault<String>(
+            getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[0].consent_status''',
+            )?.toString(),
+            'not_sent',
+          );
+          _model.c2Status = valueOrDefault<String>(
+            getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[1].consent_status''',
+            )?.toString(),
+            'not_sent',
+          );
+          _model.c3Status = valueOrDefault<String>(
+            getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[2].consent_status''',
+            )?.toString(),
+            'not_sent',
+          );
+          _model.c4Status = valueOrDefault<String>(
+            getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[3].consent_status''',
+            )?.toString(),
+            'not_sent',
+          );
+          _model.c5Status = valueOrDefault<String>(
+            getJsonField(
+              _model.contactsObj,
+              r'''$.contacts[4].consent_status''',
+            )?.toString(),
+            'not_sent',
+          );
           safeSetState(() {});
           _model.contactsCount = () {
             if (getJsonField(
@@ -456,29 +491,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           _model.c5PhoneTFTextController?.clear();
           _model.c5PhoneTFMask.clear();
         });
-      }
-
-      _model.getConsentStatusesResp = await GetConsentStatusesCall.call(
-        jwt: currentJwtToken,
-      );
-
-      if ((_model.getConsentStatusesResp?.succeeded ?? true)) {
-        _model.c1Status = GetConsentStatusesCall.slot1Status(
-          (_model.getConsentStatusesResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c2Status = GetConsentStatusesCall.slot2Status(
-          (_model.getConsentStatusesResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c3Status = GetConsentStatusesCall.slot3Status(
-          (_model.getConsentStatusesResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c4Status = GetConsentStatusesCall.slot4Status(
-          (_model.getConsentStatusesResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c5Status = GetConsentStatusesCall.slot5Status(
-          (_model.getConsentStatusesResp?.jsonBody ?? ''),
-        ).toString();
-        safeSetState(() {});
       }
     });
 
@@ -1369,7 +1381,31 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 ),
                                                               ),
                                                               Text(
-                                                                _model.c1Status,
+                                                                () {
+                                                                  if (_model
+                                                                          .c1Status ==
+                                                                      'not_sent') {
+                                                                    return 'Not sent';
+                                                                  } else if (_model
+                                                                          .c1Status ==
+                                                                      'pending') {
+                                                                    return 'Pending';
+                                                                  } else if (_model
+                                                                          .c1Status ==
+                                                                      'confirmed') {
+                                                                    return 'Confirmed';
+                                                                  } else if (_model
+                                                                          .c1Status ==
+                                                                      'denied') {
+                                                                    return 'Denied';
+                                                                  } else if (_model
+                                                                          .c1Status ==
+                                                                      'opted_out') {
+                                                                    return 'Opted out';
+                                                                  } else {
+                                                                    return 'Not sent';
+                                                                  }
+                                                                }(),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -1451,7 +1487,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             children: [
                                                               Text(
                                                                 _model.c1Status ==
-                                                                        'Not sent'
+                                                                        'not_sent'
                                                                     ? 'Send Confirmation Link'
                                                                     : 'Resend Confirmation Link',
                                                                 style: FlutterFlowTheme.of(
@@ -1540,14 +1576,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               }
 
                                                               _model.c1Status =
-                                                                  'Text ready to send';
+                                                                  'pending';
                                                               safeSetState(
                                                                   () {});
                                                             }
 
                                                             safeSetState(() {});
                                                           },
-                                                          text: '',
+                                                          text: _model.c1Status ==
+                                                                  'not_sent'
+                                                              ? 'Send Confirmation Link'
+                                                              : 'Resend Confirmation Link',
                                                           options:
                                                               FFButtonOptions(
                                                             width: 300.0,
@@ -2265,8 +2304,31 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   ),
                                                                 ),
                                                                 Text(
-                                                                  _model
-                                                                      .c2Status,
+                                                                  () {
+                                                                    if (_model
+                                                                            .c2Status ==
+                                                                        'not_sent') {
+                                                                      return 'Not sent';
+                                                                    } else if (_model
+                                                                            .c2Status ==
+                                                                        'pending') {
+                                                                      return 'Pending';
+                                                                    } else if (_model
+                                                                            .c2Status ==
+                                                                        'confirmed') {
+                                                                      return 'Confirmed';
+                                                                    } else if (_model
+                                                                            .c2Status ==
+                                                                        'denied') {
+                                                                      return 'Denied';
+                                                                    } else if (_model
+                                                                            .c2Status ==
+                                                                        'opted_out') {
+                                                                      return 'Opted out';
+                                                                    } else {
+                                                                      return 'Not sent';
+                                                                    }
+                                                                  }(),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyMedium
@@ -2341,7 +2403,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               children: [
                                                                 Text(
                                                                   _model.c2Status ==
-                                                                          'Not sent'
+                                                                          'not_sent'
                                                                       ? 'Send Confirmation Link'
                                                                       : 'Resend Confirmation Link',
                                                                   style: FlutterFlowTheme.of(
@@ -2434,7 +2496,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   }
 
                                                                   _model.c2Status =
-                                                                      'Text ready to send';
+                                                                      'pending';
                                                                   safeSetState(
                                                                       () {});
                                                                 }
@@ -2443,7 +2505,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     () {});
                                                               },
                                                               text: _model.c2Status ==
-                                                                      'Not sent'
+                                                                      'not_sent'
                                                                   ? 'Send Confirmation Link'
                                                                   : 'Resend Confirmation Link',
                                                               options:
@@ -3086,7 +3148,31 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 ),
                                                               ),
                                                               Text(
-                                                                _model.c3Status,
+                                                                () {
+                                                                  if (_model
+                                                                          .c3Status ==
+                                                                      'not_sent') {
+                                                                    return 'Not sent';
+                                                                  } else if (_model
+                                                                          .c3Status ==
+                                                                      'pending') {
+                                                                    return 'Pending';
+                                                                  } else if (_model
+                                                                          .c3Status ==
+                                                                      'confirmed') {
+                                                                    return 'Confirmed';
+                                                                  } else if (_model
+                                                                          .c3Status ==
+                                                                      'denied') {
+                                                                    return 'Denied';
+                                                                  } else if (_model
+                                                                          .c3Status ==
+                                                                      'opted_out') {
+                                                                    return 'Opted out';
+                                                                  } else {
+                                                                    return 'Not sent';
+                                                                  }
+                                                                }(),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -3171,7 +3257,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               children: [
                                                                 Text(
                                                                   _model.c3Status ==
-                                                                          'Not sent'
+                                                                          'not_sent'
                                                                       ? 'Send Confirmation Link'
                                                                       : 'Resend Confirmation Link',
                                                                   style: FlutterFlowTheme.of(
@@ -3257,7 +3343,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 }
 
                                                                 _model.c3Status =
-                                                                    'Text ready to send';
+                                                                    'pending';
                                                                 safeSetState(
                                                                     () {});
                                                               }
@@ -3266,7 +3352,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   () {});
                                                             },
                                                             text: _model.c3Status ==
-                                                                    'Not sent'
+                                                                    'not_sent'
                                                                 ? 'Send Confirmation Link'
                                                                 : 'Resend Confirmation Link',
                                                             options:
@@ -3878,7 +3964,31 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 ),
                                                               ),
                                                               Text(
-                                                                _model.c4Status,
+                                                                () {
+                                                                  if (_model
+                                                                          .c4Status ==
+                                                                      'not_sent') {
+                                                                    return 'Not sent';
+                                                                  } else if (_model
+                                                                          .c4Status ==
+                                                                      'pending') {
+                                                                    return 'Pending';
+                                                                  } else if (_model
+                                                                          .c4Status ==
+                                                                      'confirmed') {
+                                                                    return 'Confirmed';
+                                                                  } else if (_model
+                                                                          .c4Status ==
+                                                                      'denied') {
+                                                                    return 'Denied';
+                                                                  } else if (_model
+                                                                          .c4Status ==
+                                                                      'opted_out') {
+                                                                    return 'Opted out';
+                                                                  } else {
+                                                                    return 'Not sent';
+                                                                  }
+                                                                }(),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -3962,8 +4072,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .center,
                                                             children: [
                                                               Text(
-                                                                _model.c3Status ==
-                                                                        'Not sent'
+                                                                _model.c4Status ==
+                                                                        'not_sent'
                                                                     ? 'Send Confirmation Link'
                                                                     : 'Resend Confirmation Link',
                                                                 style: FlutterFlowTheme.of(
@@ -4052,7 +4162,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               }
 
                                                               _model.c4Status =
-                                                                  'Text ready to send';
+                                                                  'pending';
                                                               safeSetState(
                                                                   () {});
                                                             }
@@ -4060,7 +4170,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             safeSetState(() {});
                                                           },
                                                           text: _model.c4Status ==
-                                                                  'Not sent'
+                                                                  'not_sent'
                                                               ? 'Send Confirmation Link'
                                                               : 'Resend Confirmation Link',
                                                           options:
@@ -4641,7 +4751,31 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 ),
                                                               ),
                                                               Text(
-                                                                _model.c5Status,
+                                                                () {
+                                                                  if (_model
+                                                                          .c5Status ==
+                                                                      'not_sent') {
+                                                                    return 'Not sent';
+                                                                  } else if (_model
+                                                                          .c5Status ==
+                                                                      'pending') {
+                                                                    return 'Pending';
+                                                                  } else if (_model
+                                                                          .c5Status ==
+                                                                      'confirmed') {
+                                                                    return 'Confirmed';
+                                                                  } else if (_model
+                                                                          .c5Status ==
+                                                                      'denied') {
+                                                                    return 'Denied';
+                                                                  } else if (_model
+                                                                          .c5Status ==
+                                                                      'opted_out') {
+                                                                    return 'Opted out';
+                                                                  } else {
+                                                                    return 'Not sent';
+                                                                  }
+                                                                }(),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -4723,7 +4857,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             children: [
                                                               Text(
                                                                 _model.c5Status ==
-                                                                        'Not sent'
+                                                                        'not_sent'
                                                                     ? 'Send Confirmation Link'
                                                                     : 'Resend Confirmation Link',
                                                                 style: FlutterFlowTheme.of(
@@ -4812,7 +4946,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               }
 
                                                               _model.c5Status =
-                                                                  'Text ready to send';
+                                                                  'pending';
                                                               safeSetState(
                                                                   () {});
                                                             }
@@ -4820,7 +4954,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             safeSetState(() {});
                                                           },
                                                           text: _model.c5Status ==
-                                                                  'Not sent'
+                                                                  'not_sent'
                                                               ? 'Send Confirmation Link'
                                                               : 'Resend Confirmation Link',
                                                           options:
@@ -4918,6 +5052,11 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                             _model.c5LastTFTextController.text,
                                             _model.c5PhoneTFTextController.text,
                                             _model.contactsCount,
+                                            _model.c1Status,
+                                            _model.c2Status,
+                                            _model.c3Status,
+                                            _model.c4Status,
+                                            _model.c5Status,
                                           );
                                           _model.contactsJson =
                                               _model.contactsPayload!;
