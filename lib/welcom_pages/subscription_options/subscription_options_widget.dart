@@ -149,94 +149,148 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Material(
-                                        color: Colors.transparent,
-                                        elevation: 3.0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        child: Container(
-                                          width: 300.0,
-                                          height: 120.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 12.0, 0.0, 0.0),
-                                                child: Stack(
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Expanded(
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              elevation: 5.0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              child: Container(
+                                                width: 300.0,
+                                                height: 70.0,
+                                                decoration: BoxDecoration(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  border: Border.all(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                  ),
+                                                ),
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -0.02, 0.0),
-                                                      child: Text(
-                                                        'Choose Access',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodyMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'DECOY BEBAS',
-                                                              color: FlutterFlowTheme
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  12.0,
+                                                                  0.0,
+                                                                  0.0),
+                                                      child: Stack(
+                                                        children: [
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.02, 0.0),
+                                                            child: Text(
+                                                              'CHOOSE ACCESS',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .info,
-                                                              fontSize: 48.0,
-                                                              letterSpacing:
-                                                                  0.5,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              lineHeight: 1.0,
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'DECOY BEBAS',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .info,
+                                                                    fontSize:
+                                                                        48.0,
+                                                                    letterSpacing:
+                                                                        0.5,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                    lineHeight:
+                                                                        1.0,
+                                                                  ),
                                                             ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.02, 0.0),
-                                                      child: Text(
-                                                        'Choose Access',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodyMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'DECOY BEBAS',
-                                                              color: FlutterFlowTheme
+                                                          ),
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    -0.02, 0.0),
+                                                            child: Text(
+                                                              'CHOOSE ACCESS',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .info,
-                                                              fontSize: 48.0,
-                                                              letterSpacing:
-                                                                  0.5,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              lineHeight: 1.0,
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'DECOY BEBAS',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .info,
+                                                                    fontSize:
+                                                                        48.0,
+                                                                    letterSpacing:
+                                                                        0.5,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                    lineHeight:
+                                                                        1.0,
+                                                                  ),
                                                             ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              Column(
+                                            ),
+                                          ),
+                                          Material(
+                                            color: Colors.transparent,
+                                            elevation: 5.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(10.0),
+                                                bottomRight:
+                                                    Radius.circular(10.0),
+                                              ),
+                                            ),
+                                            child: Container(
+                                              width: 175.0,
+                                              height: 60.0,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(10.0),
+                                                  bottomRight:
+                                                      Radius.circular(10.0),
+                                                ),
+                                              ),
+                                              child: Column(
                                                 mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Stack(
                                                     children: [
@@ -298,9 +352,9 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                   ),
                                                 ],
                                               ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ].divide(SizedBox(height: 0.0)),
                                   ),
@@ -693,7 +747,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                     ].divide(SizedBox(height: 16.0)),
                                   ),
                                 ),
-                              ].divide(SizedBox(height: 24.0)),
+                              ].divide(SizedBox(height: 18.0)),
                             ),
                           ),
                         ),

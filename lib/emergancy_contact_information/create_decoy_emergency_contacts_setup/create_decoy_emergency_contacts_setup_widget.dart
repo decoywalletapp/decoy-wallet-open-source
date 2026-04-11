@@ -147,38 +147,129 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 20.0),
-                            child: Material(
-                              color: Colors.transparent,
-                              elevation: 5.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Container(
-                                width: 325.0,
-                                height: 120.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  borderRadius: BorderRadius.circular(8.0),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 20.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Material(
+                                  color: Colors.transparent,
+                                  elevation: 5.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Container(
+                                    width: 325.0,
+                                    height: 70.0,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      border: Border.all(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                      ),
+                                    ),
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 12.0, 0.0, 0.0),
+                                          child: Stack(
+                                            children: [
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.02, 0.0),
+                                                child: Text(
+                                                  'DECOY EMERGENCY',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'DECOY BEBAS',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
+                                                        fontSize: 48.0,
+                                                        letterSpacing: 0.5,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        lineHeight: 1.0,
+                                                      ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    -0.02, 0.0),
+                                                child: Text(
+                                                  'DECOY EMERGENCY',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'DECOY BEBAS',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
+                                                        fontSize: 48.0,
+                                                        letterSpacing: 0.5,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        lineHeight: 1.0,
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 12.0, 0.0, 0.0),
-                                      child: Stack(
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(10.0),
+                                    bottomRight: Radius.circular(10.0),
+                                  ),
+                                ),
+                                child: Container(
+                                  width: 150.0,
+                                  height: 60.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Stack(
                                         children: [
                                           Align(
                                             alignment:
-                                                AlignmentDirectional(0.02, 0.0),
+                                                AlignmentDirectional(0.01, 0.0),
                                             child: Text(
-                                              'DECOY EMERGENCY',
+                                              'SETUP',
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -197,10 +288,10 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             ),
                                           ),
                                           Align(
-                                            alignment: AlignmentDirectional(
-                                                -0.02, 0.0),
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
                                             child: Text(
-                                              'DECOY EMERGENCY',
+                                              'SETUP',
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -220,66 +311,11 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.01, 0.0),
-                                              child: Text(
-                                                'SETUP',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.5,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.0,
-                                                    ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Text(
-                                                'SETUP',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.5,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.0,
-                                                    ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                         Padding(
@@ -1170,7 +1206,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                       ],
                     ),
                   ]
-                      .divide(SizedBox(height: 24.0))
+                      .divide(SizedBox(height: 18.0))
                       .addToEnd(SizedBox(height: 48.0)),
                 ),
               ),

@@ -210,186 +210,178 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      elevation: 3.0,
-                                      shape: RoundedRectangleBorder(
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    elevation: 5.0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Container(
+                                      width: 300.0,
+                                      height: 70.0,
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
                                         borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: Container(
-                                        width: 300.0,
-                                        height: 110.0,
-                                        decoration: BoxDecoration(
+                                            BorderRadius.circular(10.0),
+                                        border: Border.all(
                                           color: FlutterFlowTheme.of(context)
                                               .primary,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
                                         ),
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 12.0, 0.0, 0.0),
-                                              child: Stack(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -0.02, 0.0),
-                                                    child: Text(
-                                                      'MANAGE ACCESS',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DECOY BEBAS',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                fontSize: 48.0,
-                                                                letterSpacing:
-                                                                    0.5,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                                lineHeight: 1.0,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.02, 0.0),
-                                                    child: Text(
-                                                      'MANAGE ACCESS',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DECOY BEBAS',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                fontSize: 48.0,
-                                                                letterSpacing:
-                                                                    0.5,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                                lineHeight: 1.0,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.max,
+                                      ),
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 12.0, 0.0, 0.0),
+                                            child: Stack(
                                               children: [
-                                                Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Stack(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      children: [
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                          child: Text(
-                                                            'METHOD',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'DECOY BEBAS',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  fontSize:
-                                                                      48.0,
-                                                                  letterSpacing:
-                                                                      0.5,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  lineHeight:
-                                                                      1.0,
-                                                                ),
-                                                          ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.02, 0.0),
+                                                  child: Text(
+                                                    'MANAGE ACCESS',
+                                                    textAlign: TextAlign.center,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              'DECOY BEBAS',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .info,
+                                                          fontSize: 48.0,
+                                                          letterSpacing: 0.5,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          lineHeight: 1.0,
                                                         ),
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -0.01, 0.0),
-                                                          child: Text(
-                                                            'METHOD',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'DECOY BEBAS',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  fontSize:
-                                                                      48.0,
-                                                                  letterSpacing:
-                                                                      0.5,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  lineHeight:
-                                                                      1.0,
-                                                                ),
-                                                          ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          -0.02, 0.0),
+                                                  child: Text(
+                                                    'MANAGE ACCESS',
+                                                    textAlign: TextAlign.center,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              'DECOY BEBAS',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .info,
+                                                          fontSize: 48.0,
+                                                          letterSpacing: 0.5,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          lineHeight: 1.0,
                                                         ),
-                                                      ],
-                                                    ),
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ].divide(SizedBox(height: 0.0)),
-                              ),
+                                ),
+                                Material(
+                                  color: Colors.transparent,
+                                  elevation: 5.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    width: 175.0,
+                                    height: 60.0,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10.0),
+                                        bottomRight: Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.01, 0.0),
+                                              child: Text(
+                                                'METHOD',
+                                                textAlign: TextAlign.center,
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily: 'DECOY BEBAS',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .info,
+                                                      fontSize: 48.0,
+                                                      letterSpacing: 0.5,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      lineHeight: 1.0,
+                                                    ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Text(
+                                                'METHOD',
+                                                textAlign: TextAlign.center,
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily: 'DECOY BEBAS',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .info,
+                                                      fontSize: 48.0,
+                                                      letterSpacing: 0.5,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      lineHeight: 1.0,
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
@@ -1303,7 +1295,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                             ),
                           ]
                               .divide(SizedBox(height: 20.0))
-                              .addToStart(SizedBox(height: 12.0))
+                              .addToStart(SizedBox(height: 6.0))
                               .addToEnd(SizedBox(height: 64.0)),
                         ),
                       ),

@@ -149,7 +149,7 @@ class _DecoySeedSystemValuesWidgetState
                                             BorderRadius.circular(8.0),
                                       ),
                                       child: Container(
-                                        width: 300.0,
+                                        width: 250.0,
                                         height: 110.0,
                                         decoration: BoxDecoration(
                                           color: FlutterFlowTheme.of(context)
