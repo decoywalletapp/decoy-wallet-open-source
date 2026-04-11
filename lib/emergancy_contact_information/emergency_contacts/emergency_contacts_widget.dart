@@ -473,6 +473,76 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               (_model.consentStatusResp?.jsonBody ?? ''),
             ).toString();
             safeSetState(() {});
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  GetConsentStatusesCall.slot1Status(
+                    (_model.consentStatusResp?.jsonBody ?? ''),
+                  ).toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  GetConsentStatusesCall.slot2Status(
+                    (_model.consentStatusResp?.jsonBody ?? ''),
+                  ).toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  GetConsentStatusesCall.slot3Status(
+                    (_model.consentStatusResp?.jsonBody ?? ''),
+                  ).toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  GetConsentStatusesCall.slot4Status(
+                    (_model.consentStatusResp?.jsonBody ?? ''),
+                  ).toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  GetConsentStatusesCall.slot5Status(
+                    (_model.consentStatusResp?.jsonBody ?? ''),
+                  ).toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1454,6 +1524,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             'Opted out') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
+                                                                        } else if (_model.c1Status ==
+                                                                            'not_sent') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primaryText;
                                                                         } else {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .primaryText;

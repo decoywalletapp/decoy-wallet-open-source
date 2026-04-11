@@ -452,8 +452,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               focusNode: focusNode,
                                               onEditingComplete:
                                                   onEditingComplete,
-                                              autofocus: false,
-                                              enabled: true,
+                                              autofocus: true,
+                                              enabled: false,
                                               autofillHints: [
                                                 AutofillHints.password
                                               ],
@@ -577,7 +577,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               .passwordConfirmTextController,
                                           focusNode:
                                               _model.passwordConfirmFocusNode,
-                                          autofocus: false,
+                                          autofocus: true,
                                           autofillHints: [
                                             AutofillHints.password
                                           ],
