@@ -804,6 +804,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             Stack(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               children: [
+                                Container(
+                                  width: 100.0,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                  ),
+                                ),
                                 Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Container(
@@ -865,6 +873,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               alignment: AlignmentDirectional(0.0, 0.0),
                               children: [
                                 Container(
+                                  width: 100.0,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                  ),
+                                ),
+                                Container(
                                   width: 50.0,
                                   height: 50.0,
                                   decoration: BoxDecoration(
@@ -922,6 +938,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               alignment: AlignmentDirectional(0.0, 0.0),
                               children: [
                                 Container(
+                                  width: 100.0,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                  ),
+                                ),
+                                Container(
                                   width: 50.0,
                                   height: 50.0,
                                   decoration: BoxDecoration(
@@ -975,7 +999,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 ),
                               ],
                             ),
-                          ].divide(SizedBox(width: 24.0)),
+                          ],
                         ),
                       ),
                     ),

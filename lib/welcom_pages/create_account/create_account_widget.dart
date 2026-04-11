@@ -453,7 +453,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               onEditingComplete:
                                                   onEditingComplete,
                                               autofocus: true,
-                                              enabled: false,
+                                              enabled: true,
                                               autofillHints: [
                                                 AutofillHints.password
                                               ],
