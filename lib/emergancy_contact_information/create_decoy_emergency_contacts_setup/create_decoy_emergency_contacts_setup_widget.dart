@@ -162,7 +162,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                   ),
                                   child: Container(
                                     width: 325.0,
-                                    height: 70.0,
+                                    height: 72.0,
                                     decoration: BoxDecoration(
                                       color:
                                           FlutterFlowTheme.of(context).primary,
@@ -1000,11 +1000,13 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                     color: FlutterFlowTheme.of(
                                                                             context)
                                                                         .primary,
+                                                                    fontSize:
+                                                                        24.0,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w600,
+                                                                            .normal,
                                                                   ),
                                                             ),
                                                           ),
@@ -1142,6 +1144,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                         FlutterFlowTheme.of(context)
                                                                             .primary,
                                                                       ),
+                                                                      fontSize:
+                                                                          16.0,
                                                                       letterSpacing:
                                                                           0.0,
                                                                       useGoogleFonts:
@@ -1176,6 +1180,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                         FlutterFlowTheme.of(context)
                                                                             .primary,
                                                                       ),
+                                                                      fontSize:
+                                                                          16.0,
                                                                       letterSpacing:
                                                                           0.0,
                                                                       useGoogleFonts:
@@ -1189,7 +1195,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                       ),
                                                     ),
                                                   ].divide(
-                                                      SizedBox(height: 24.0)),
+                                                      SizedBox(height: 18.0)),
                                                 ),
                                               ),
                                             ),
@@ -1203,7 +1209,9 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                             ].divide(SizedBox(height: 0.0)),
                           ),
                         ),
-                      ],
+                      ]
+                          .divide(SizedBox(height: 6.0))
+                          .addToStart(SizedBox(height: 6.0)),
                     ),
                   ]
                       .divide(SizedBox(height: 18.0))

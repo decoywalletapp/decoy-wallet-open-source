@@ -223,7 +223,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                     ),
                                     child: Container(
                                       width: 300.0,
-                                      height: 70.0,
+                                      height: 72.0,
                                       decoration: BoxDecoration(
                                         color: FlutterFlowTheme.of(context)
                                             .primary,

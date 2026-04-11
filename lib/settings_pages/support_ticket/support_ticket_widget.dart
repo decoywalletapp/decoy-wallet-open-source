@@ -116,14 +116,117 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                       children: [
                         Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Text(
-                            'Create Support Ticket',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineMedium
-                                .override(
-                                  fontFamily: 'InterTight',
-                                  letterSpacing: 0.0,
-                                ),
+                          child: Material(
+                            color: Colors.transparent,
+                            elevation: 3.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Container(
+                              width: 300.0,
+                              height: 71.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context).primary,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional(0.05, 0.0),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          8.0, 12.0, 8.0, 12.0),
+                                      child: Text(
+                                        'SUPPORT TICKET',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DECOY BEBAS',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .info,
+                                              fontSize: 52.0,
+                                              letterSpacing: 0.3,
+                                              fontWeight: FontWeight.normal,
+                                              lineHeight: 1.05,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(-0.05, 0.0),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          8.0, 12.0, 8.0, 12.0),
+                                      child: Text(
+                                        'SUPPORT TICKET',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DECOY BEBAS',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .info,
+                                              fontSize: 52.0,
+                                              letterSpacing: 0.3,
+                                              fontWeight: FontWeight.normal,
+                                              lineHeight: 1.05,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.05),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          8.0, 12.0, 8.0, 12.0),
+                                      child: Text(
+                                        'SUPPORT TICKET',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DECOY BEBAS',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .info,
+                                              fontSize: 52.0,
+                                              letterSpacing: 0.3,
+                                              fontWeight: FontWeight.normal,
+                                              lineHeight: 1.05,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, -0.05),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          8.0, 12.0, 8.0, 12.0),
+                                      child: Text(
+                                        'SUPPORT TICKET',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DECOY BEBAS',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .info,
+                                              fontSize: 52.0,
+                                              letterSpacing: 0.3,
+                                              fontWeight: FontWeight.normal,
+                                              lineHeight: 1.05,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                         Align(
@@ -584,7 +687,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                     ),
                   ),
                 ),
-              ].divide(SizedBox(height: 24.0)),
+              ].divide(SizedBox(height: 12.0)),
             ),
           ),
         ),

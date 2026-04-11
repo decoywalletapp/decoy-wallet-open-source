@@ -1453,6 +1453,78 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   ),
                                                   Stack(
                                                     children: [
+                                                      Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 3.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        child: Container(
+                                                          width: 300.0,
+                                                          height: 50.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _model.c1Status ==
+                                                                        'not_sent'
+                                                                    ? 'Send Confirmation Link'
+                                                                    : 'Resend Confirmation Link',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyMediumFamily,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .info,
+                                                                      fontSize:
+                                                                          18.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .bodyMediumIsCustom,
+                                                                    ),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .send_rounded,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                size: 24.0,
+                                                              ),
+                                                            ].divide(SizedBox(
+                                                                width: 12.0)),
+                                                          ),
+                                                        ),
+                                                      ),
                                                       Opacity(
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
@@ -1471,6 +1543,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   .text,
                                                               phoneNumber: _model
                                                                   .c1PhoneDigits,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             if ((_model
@@ -1557,78 +1631,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 BorderRadius
                                                                     .circular(
                                                                         10.0),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Material(
-                                                        color:
-                                                            Colors.transparent,
-                                                        elevation: 3.0,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                        ),
-                                                        child: Container(
-                                                          width: 300.0,
-                                                          height: 50.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                _model.c1Status ==
-                                                                        'not_sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyMediumFamily,
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .info,
-                                                                      fontSize:
-                                                                          18.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                              Icon(
-                                                                Icons
-                                                                    .send_rounded,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                size: 24.0,
-                                                              ),
-                                                            ].divide(SizedBox(
-                                                                width: 12.0)),
                                                           ),
                                                         ),
                                                       ),
@@ -2369,6 +2371,74 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     ),
                                                     Stack(
                                                       children: [
+                                                        Material(
+                                                          color: Colors
+                                                              .transparent,
+                                                          elevation: 3.0,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          child: Container(
+                                                            width: 300.0,
+                                                            height: 50.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  _model.c2Status ==
+                                                                          'not_sent'
+                                                                      ? 'Send Confirmation Link'
+                                                                      : 'Resend Confirmation Link',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .info,
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                      ),
+                                                                ),
+                                                                Icon(
+                                                                  Icons
+                                                                      .send_rounded,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .info,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ].divide(SizedBox(
+                                                                  width: 12.0)),
+                                                            ),
+                                                          ),
+                                                        ),
                                                         Opacity(
                                                           opacity: 0.0,
                                                           child: Align(
@@ -2395,6 +2465,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   phoneNumber:
                                                                       _model
                                                                           .c2PhoneDigits,
+                                                                  jwt:
+                                                                      currentJwtToken,
                                                                 );
 
                                                                 if ((_model
@@ -2484,74 +2556,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         .circular(
                                                                             10.0),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Material(
-                                                          color: Colors
-                                                              .transparent,
-                                                          elevation: 3.0,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                          ),
-                                                          child: Container(
-                                                            width: 300.0,
-                                                            height: 50.0,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primary,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8.0),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  _model.c2Status ==
-                                                                          'not_sent'
-                                                                      ? 'Send Confirmation Link'
-                                                                      : 'Resend Confirmation Link',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .info,
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        useGoogleFonts:
-                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                      ),
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .send_rounded,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  size: 24.0,
-                                                                ),
-                                                              ].divide(SizedBox(
-                                                                  width: 12.0)),
                                                             ),
                                                           ),
                                                         ),
@@ -3223,6 +3227,74 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     height: 50.0,
                                                     child: Stack(
                                                       children: [
+                                                        Material(
+                                                          color: Colors
+                                                              .transparent,
+                                                          elevation: 3.0,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          child: Container(
+                                                            width: 300.0,
+                                                            height: 100.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  _model.c3Status ==
+                                                                          'not_sent'
+                                                                      ? 'Send Confirmation Link'
+                                                                      : 'Resend Confirmation Link',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .info,
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                      ),
+                                                                ),
+                                                                Icon(
+                                                                  Icons
+                                                                      .send_rounded,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .info,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ].divide(SizedBox(
+                                                                  width: 12.0)),
+                                                            ),
+                                                          ),
+                                                        ),
                                                         Opacity(
                                                           opacity: 0.0,
                                                           child: FFButtonWidget(
@@ -3242,6 +3314,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .text,
                                                                 phoneNumber: _model
                                                                     .c3PhoneDigits,
+                                                                jwt:
+                                                                    currentJwtToken,
                                                               );
 
                                                               if ((_model
@@ -3328,74 +3402,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   BorderRadius
                                                                       .circular(
                                                                           10.0),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Material(
-                                                          color: Colors
-                                                              .transparent,
-                                                          elevation: 3.0,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                          ),
-                                                          child: Container(
-                                                            width: 300.0,
-                                                            height: 100.0,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primary,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8.0),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  _model.c3Status ==
-                                                                          'not_sent'
-                                                                      ? 'Send Confirmation Link'
-                                                                      : 'Resend Confirmation Link',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .info,
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        useGoogleFonts:
-                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                      ),
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .send_rounded,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  size: 24.0,
-                                                                ),
-                                                              ].divide(SizedBox(
-                                                                  width: 12.0)),
                                                             ),
                                                           ),
                                                         ),
@@ -4036,6 +4042,81 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   ),
                                                   Stack(
                                                     children: [
+                                                      Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 3.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        child: Container(
+                                                          width: 300.0,
+                                                          height: 50.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _model.c4Status ==
+                                                                        'not_sent'
+                                                                    ? 'Send Confirmation Link'
+                                                                    : 'Resend Confirmation Link',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyMediumFamily,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .info,
+                                                                      fontSize:
+                                                                          18.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .bodyMediumIsCustom,
+                                                                    ),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .send_rounded,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                size: 24.0,
+                                                              ),
+                                                            ].divide(SizedBox(
+                                                                width: 12.0)),
+                                                          ),
+                                                        ),
+                                                      ),
                                                       Opacity(
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
@@ -4054,6 +4135,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   .text,
                                                               phoneNumber: _model
                                                                   .c4PhoneDigits,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             if ((_model
@@ -4140,81 +4223,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 BorderRadius
                                                                     .circular(
                                                                         10.0),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Material(
-                                                        color:
-                                                            Colors.transparent,
-                                                        elevation: 3.0,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                        ),
-                                                        child: Container(
-                                                          width: 300.0,
-                                                          height: 50.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                          ),
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                _model.c4Status ==
-                                                                        'not_sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyMediumFamily,
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .info,
-                                                                      fontSize:
-                                                                          18.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                              Icon(
-                                                                Icons
-                                                                    .send_rounded,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                size: 24.0,
-                                                              ),
-                                                            ].divide(SizedBox(
-                                                                width: 12.0)),
                                                           ),
                                                         ),
                                                       ),
@@ -4823,6 +4831,78 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   ),
                                                   Stack(
                                                     children: [
+                                                      Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 3.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        child: Container(
+                                                          width: 300.0,
+                                                          height: 50.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _model.c5Status ==
+                                                                        'not_sent'
+                                                                    ? 'Send Confirmation Link'
+                                                                    : 'Resend Confirmation Link',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyMediumFamily,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .info,
+                                                                      fontSize:
+                                                                          18.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .bodyMediumIsCustom,
+                                                                    ),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .send_rounded,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .info,
+                                                                size: 24.0,
+                                                              ),
+                                                            ].divide(SizedBox(
+                                                                width: 12.0)),
+                                                          ),
+                                                        ),
+                                                      ),
                                                       Opacity(
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
@@ -4841,6 +4921,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   .text,
                                                               phoneNumber: _model
                                                                   .c5PhoneDigits,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             if ((_model
@@ -4927,78 +5009,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 BorderRadius
                                                                     .circular(
                                                                         10.0),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Material(
-                                                        color:
-                                                            Colors.transparent,
-                                                        elevation: 3.0,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                        ),
-                                                        child: Container(
-                                                          width: 300.0,
-                                                          height: 50.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                _model.c5Status ==
-                                                                        'not_sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyMediumFamily,
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .info,
-                                                                      fontSize:
-                                                                          18.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                              Icon(
-                                                                Icons
-                                                                    .send_rounded,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .info,
-                                                                size: 24.0,
-                                                              ),
-                                                            ].divide(SizedBox(
-                                                                width: 12.0)),
                                                           ),
                                                         ),
                                                       ),

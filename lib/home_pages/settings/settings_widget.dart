@@ -95,14 +95,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           color: Colors.transparent,
                           elevation: 3.0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Container(
-                            width: 175.0,
+                            width: 190.0,
                             height: 71.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context).primary,
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Stack(
@@ -122,7 +122,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                             color: FlutterFlowTheme.of(context)
                                                 .info,
                                             fontSize: 52.0,
-                                            letterSpacing: 0.1,
+                                            letterSpacing: 0.8,
                                             fontWeight: FontWeight.normal,
                                             lineHeight: 1.05,
                                           ),
@@ -144,7 +144,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                             color: FlutterFlowTheme.of(context)
                                                 .info,
                                             fontSize: 52.0,
-                                            letterSpacing: 0.1,
+                                            letterSpacing: 0.8,
                                             fontWeight: FontWeight.normal,
                                             lineHeight: 1.05,
                                           ),

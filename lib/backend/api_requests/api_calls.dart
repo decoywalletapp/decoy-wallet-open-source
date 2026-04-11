@@ -866,6 +866,7 @@ class CreateConsentRequestCall {
     String? firstName = '',
     String? lastName = '',
     String? phoneNumber = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -882,6 +883,7 @@ class CreateConsentRequestCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
