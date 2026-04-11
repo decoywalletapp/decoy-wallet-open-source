@@ -25,8 +25,10 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   String? Function(BuildContext, String?)?
       passwordCreateAccountTextControllerValidator;
   // State field(s) for PasswordConfirm widget.
+  final passwordConfirmKey = GlobalKey();
   FocusNode? passwordConfirmFocusNode;
   TextEditingController? passwordConfirmTextController;
+  String? passwordConfirmSelectedOption;
   late bool passwordConfirmVisibility;
   String? Function(BuildContext, String?)?
       passwordConfirmTextControllerValidator;
@@ -46,6 +48,5 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
     passwordCreateAccountFocusNode?.dispose();
 
     passwordConfirmFocusNode?.dispose();
-    passwordConfirmTextController?.dispose();
   }
 }

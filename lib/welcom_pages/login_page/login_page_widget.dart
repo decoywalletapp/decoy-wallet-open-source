@@ -206,6 +206,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     focusNode:
                                         _model.emailAddressLoginFocusNode,
                                     autofocus: true,
+                                    enabled: true,
                                     autofillHints: [AutofillHints.email],
                                     textInputAction: TextInputAction.next,
                                     obscureText: false,
@@ -279,6 +280,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         _model.passwordLoginTextController,
                                     focusNode: _model.passwordLoginFocusNode,
                                     autofocus: true,
+                                    enabled: true,
                                     autofillHints: [AutofillHints.password],
                                     textInputAction: TextInputAction.done,
                                     obscureText:
@@ -362,56 +364,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         .asValidator(context),
                                   ),
                                 ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 20.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                          ),
-                                          child: Visibility(
-                                            visible:
-                                                _model.notificationValue == 1,
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Text(
-                                                'INVALID LOGIN',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMediumFamily,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      useGoogleFonts:
-                                                          !FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMediumIsCustom,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 FFButtonWidget(
                                   onPressed: () async {
                                     _model.decoyLogin =
@@ -472,6 +424,56 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                          ),
+                                          child: Visibility(
+                                            visible:
+                                                _model.notificationValue == 1,
+                                            child: Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Text(
+                                                'INVALID LOGIN',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .error,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
 
                                 // You will have to add an action on this rich text to go to your login page.
