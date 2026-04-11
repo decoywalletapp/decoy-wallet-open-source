@@ -845,9 +845,34 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               border: Border.all(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                color: () {
+                                                  if (_model.c5Status ==
+                                                      'Confirmed') {
+                                                    return Color(0xFF0CD40B);
+                                                  } else if (_model.c5Status ==
+                                                      'Pending') {
+                                                    return Color(0xFFFAF100);
+                                                  } else if (_model.c5Status ==
+                                                      'Denied') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Opted out') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Not sent') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  } else {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  }
+                                                }(),
                                                 width: 2.5,
                                               ),
                                             ),
@@ -1477,23 +1502,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 () {
                                                                   if (_model
                                                                           .c1Status ==
-                                                                      'not_sent') {
+                                                                      'Not sent') {
                                                                     return 'Not sent';
                                                                   } else if (_model
                                                                           .c1Status ==
-                                                                      'pending') {
+                                                                      'Pending') {
                                                                     return 'Pending';
                                                                   } else if (_model
                                                                           .c1Status ==
-                                                                      'confirmed') {
+                                                                      'Confirmed') {
                                                                     return 'Confirmed';
                                                                   } else if (_model
                                                                           .c1Status ==
-                                                                      'denied') {
+                                                                      'Denied') {
                                                                     return 'Denied';
                                                                   } else if (_model
                                                                           .c1Status ==
-                                                                      'opted_out') {
+                                                                      'Opted out') {
                                                                     return 'Opted out';
                                                                   } else {
                                                                     return 'Not sent';
@@ -1508,29 +1533,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                               .bodyMediumFamily,
                                                                       color:
                                                                           () {
-                                                                        if (_model.c1Status ==
+                                                                        if (_model.c5Status ==
                                                                             'Confirmed') {
                                                                           return Color(
                                                                               0xFF0CD40B);
-                                                                        } else if (_model.c1Status ==
+                                                                        } else if (_model.c5Status ==
                                                                             'Pending') {
-                                                                          return FlutterFlowTheme.of(context)
-                                                                              .primary;
-                                                                        } else if (_model.c1Status ==
+                                                                          return Color(
+                                                                              0xFFFAF100);
+                                                                        } else if (_model.c5Status ==
                                                                             'Denied') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
-                                                                        } else if (_model.c1Status ==
+                                                                        } else if (_model.c5Status ==
                                                                             'Opted out') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
-                                                                        } else if (_model.c1Status ==
-                                                                            'not_sent') {
+                                                                        } else if (_model.c5Status ==
+                                                                            'Not sent') {
                                                                           return FlutterFlowTheme.of(context)
-                                                                              .primaryText;
+                                                                              .primary;
                                                                         } else {
                                                                           return FlutterFlowTheme.of(context)
-                                                                              .primaryText;
+                                                                              .primary;
                                                                         }
                                                                       }(),
                                                                       fontSize:
@@ -1681,7 +1706,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               }
 
                                                               _model.c1Status =
-                                                                  'pending';
+                                                                  'Pending';
                                                               safeSetState(
                                                                   () {});
                                                             }
@@ -1689,7 +1714,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             safeSetState(() {});
                                                           },
                                                           text: _model.c1Status ==
-                                                                  'not_sent'
+                                                                  'Not sent'
                                                               ? 'Send Confirmation Link'
                                                               : 'Resend Confirmation Link',
                                                           options:
@@ -1773,9 +1798,38 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 borderRadius:
                                                     BorderRadius.circular(12.0),
                                                 border: Border.all(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
+                                                  color: () {
+                                                    if (_model.c5Status ==
+                                                        'Confirmed') {
+                                                      return Color(0xFF0CD40B);
+                                                    } else if (_model
+                                                            .c5Status ==
+                                                        'Pending') {
+                                                      return Color(0xFFFAF100);
+                                                    } else if (_model
+                                                            .c5Status ==
+                                                        'Denied') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .error;
+                                                    } else if (_model
+                                                            .c5Status ==
+                                                        'Opted out') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .error;
+                                                    } else if (_model
+                                                            .c5Status ==
+                                                        'Not sent') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .primary;
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .primary;
+                                                    }
+                                                  }(),
                                                   width: 2.5,
                                                 ),
                                               ),
@@ -2412,23 +2466,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   () {
                                                                     if (_model
                                                                             .c2Status ==
-                                                                        'not_sent') {
+                                                                        'Not sent') {
                                                                       return 'Not sent';
                                                                     } else if (_model
                                                                             .c2Status ==
-                                                                        'pending') {
+                                                                        'Pending') {
                                                                       return 'Pending';
                                                                     } else if (_model
                                                                             .c2Status ==
-                                                                        'confirmed') {
+                                                                        'Confirmed') {
                                                                       return 'Confirmed';
                                                                     } else if (_model
                                                                             .c2Status ==
-                                                                        'denied') {
+                                                                        'Denied') {
                                                                       return 'Denied';
                                                                     } else if (_model
                                                                             .c2Status ==
-                                                                        'opted_out') {
+                                                                        'Opted out') {
                                                                       return 'Opted out';
                                                                     } else {
                                                                       return 'Not sent';
@@ -2442,20 +2496,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                         color:
                                                                             () {
-                                                                          if (_model.c2Status ==
+                                                                          if (_model.c5Status ==
                                                                               'Confirmed') {
                                                                             return Color(0xFF0CD40B);
-                                                                          } else if (_model.c2Status ==
+                                                                          } else if (_model.c5Status ==
                                                                               'Pending') {
-                                                                            return FlutterFlowTheme.of(context).primary;
-                                                                          } else if (_model.c2Status ==
+                                                                            return Color(0xFFFAF100);
+                                                                          } else if (_model.c5Status ==
                                                                               'Denied') {
                                                                             return FlutterFlowTheme.of(context).error;
-                                                                          } else if (_model.c2Status ==
+                                                                          } else if (_model.c5Status ==
                                                                               'Opted out') {
                                                                             return FlutterFlowTheme.of(context).error;
+                                                                          } else if (_model.c5Status ==
+                                                                              'Not sent') {
+                                                                            return FlutterFlowTheme.of(context).primary;
                                                                           } else {
-                                                                            return FlutterFlowTheme.of(context).primaryText;
+                                                                            return FlutterFlowTheme.of(context).primary;
                                                                           }
                                                                         }(),
                                                                         fontSize:
@@ -2609,7 +2666,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   }
 
                                                                   _model.c2Status =
-                                                                      'pending';
+                                                                      'Pending';
                                                                   safeSetState(
                                                                       () {});
                                                                 }
@@ -2618,7 +2675,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     () {});
                                                               },
                                                               text: _model.c2Status ==
-                                                                      'not_sent'
+                                                                      'Not sent'
                                                                   ? 'Send Confirmation Link'
                                                                   : 'Resend Confirmation Link',
                                                               options:
@@ -2695,9 +2752,34 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               border: Border.all(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                color: () {
+                                                  if (_model.c5Status ==
+                                                      'Confirmed') {
+                                                    return Color(0xFF0CD40B);
+                                                  } else if (_model.c5Status ==
+                                                      'Pending') {
+                                                    return Color(0xFFFAF100);
+                                                  } else if (_model.c5Status ==
+                                                      'Denied') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Opted out') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Not sent') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  } else {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  }
+                                                }(),
                                                 width: 2.5,
                                               ),
                                             ),
@@ -3264,23 +3346,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 () {
                                                                   if (_model
                                                                           .c3Status ==
-                                                                      'not_sent') {
+                                                                      'Not sent') {
                                                                     return 'Not sent';
                                                                   } else if (_model
                                                                           .c3Status ==
-                                                                      'pending') {
+                                                                      'Pending') {
                                                                     return 'Pending';
                                                                   } else if (_model
                                                                           .c3Status ==
-                                                                      'confirmed') {
+                                                                      'Confirmed') {
                                                                     return 'Confirmed';
                                                                   } else if (_model
                                                                           .c3Status ==
-                                                                      'denied') {
+                                                                      'Denied') {
                                                                     return 'Denied';
                                                                   } else if (_model
                                                                           .c3Status ==
-                                                                      'opted_out') {
+                                                                      'Opted out') {
                                                                     return 'Opted out';
                                                                   } else {
                                                                     return 'Not sent';
@@ -3295,25 +3377,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                               .bodyMediumFamily,
                                                                       color:
                                                                           () {
-                                                                        if (_model.c3Status ==
+                                                                        if (_model.c5Status ==
                                                                             'Confirmed') {
                                                                           return Color(
                                                                               0xFF0CD40B);
-                                                                        } else if (_model.c3Status ==
+                                                                        } else if (_model.c5Status ==
                                                                             'Pending') {
-                                                                          return FlutterFlowTheme.of(context)
-                                                                              .primary;
-                                                                        } else if (_model.c3Status ==
+                                                                          return Color(
+                                                                              0xFFFAF100);
+                                                                        } else if (_model.c5Status ==
                                                                             'Denied') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
-                                                                        } else if (_model.c3Status ==
+                                                                        } else if (_model.c5Status ==
                                                                             'Opted out') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
+                                                                        } else if (_model.c5Status ==
+                                                                            'Not sent') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primary;
                                                                         } else {
                                                                           return FlutterFlowTheme.of(context)
-                                                                              .primaryText;
+                                                                              .primary;
                                                                         }
                                                                       }(),
                                                                       fontSize:
@@ -3465,7 +3551,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 }
 
                                                                 _model.c3Status =
-                                                                    'pending';
+                                                                    'Pending';
                                                                 safeSetState(
                                                                     () {});
                                                               }
@@ -3474,7 +3560,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   () {});
                                                             },
                                                             text: _model.c3Status ==
-                                                                    'not_sent'
+                                                                    'Not sent'
                                                                 ? 'Send Confirmation Link'
                                                                 : 'Resend Confirmation Link',
                                                             options:
@@ -3551,9 +3637,34 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               border: Border.all(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                color: () {
+                                                  if (_model.c5Status ==
+                                                      'Confirmed') {
+                                                    return Color(0xFF0CD40B);
+                                                  } else if (_model.c5Status ==
+                                                      'Pending') {
+                                                    return Color(0xFFFAF100);
+                                                  } else if (_model.c5Status ==
+                                                      'Denied') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Opted out') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Not sent') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  } else {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  }
+                                                }(),
                                                 width: 2.5,
                                               ),
                                             ),
@@ -4089,23 +4200,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 () {
                                                                   if (_model
                                                                           .c4Status ==
-                                                                      'not_sent') {
+                                                                      'Not sent') {
                                                                     return 'Not sent';
                                                                   } else if (_model
                                                                           .c4Status ==
-                                                                      'pending') {
+                                                                      'Pending') {
                                                                     return 'Pending';
                                                                   } else if (_model
                                                                           .c4Status ==
-                                                                      'confirmed') {
+                                                                      'Confirmed') {
                                                                     return 'Confirmed';
                                                                   } else if (_model
                                                                           .c4Status ==
-                                                                      'denied') {
+                                                                      'Denied') {
                                                                     return 'Denied';
                                                                   } else if (_model
                                                                           .c4Status ==
-                                                                      'opted_out') {
+                                                                      'Opted out') {
                                                                     return 'Opted out';
                                                                   } else {
                                                                     return 'Not sent';
@@ -4120,25 +4231,29 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                               .bodyMediumFamily,
                                                                       color:
                                                                           () {
-                                                                        if (_model.c4Status ==
+                                                                        if (_model.c5Status ==
                                                                             'Confirmed') {
                                                                           return Color(
                                                                               0xFF0CD40B);
-                                                                        } else if (_model.c4Status ==
+                                                                        } else if (_model.c5Status ==
                                                                             'Pending') {
-                                                                          return FlutterFlowTheme.of(context)
-                                                                              .primary;
-                                                                        } else if (_model.c4Status ==
+                                                                          return Color(
+                                                                              0xFFFAF100);
+                                                                        } else if (_model.c5Status ==
                                                                             'Denied') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
-                                                                        } else if (_model.c4Status ==
+                                                                        } else if (_model.c5Status ==
                                                                             'Opted out') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
+                                                                        } else if (_model.c5Status ==
+                                                                            'Not sent') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primary;
                                                                         } else {
                                                                           return FlutterFlowTheme.of(context)
-                                                                              .primaryText;
+                                                                              .primary;
                                                                         }
                                                                       }(),
                                                                       fontSize:
@@ -4292,7 +4407,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               }
 
                                                               _model.c4Status =
-                                                                  'pending';
+                                                                  'Pending';
                                                               safeSetState(
                                                                   () {});
                                                             }
@@ -4300,7 +4415,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             safeSetState(() {});
                                                           },
                                                           text: _model.c4Status ==
-                                                                  'not_sent'
+                                                                  'Not sent'
                                                               ? 'Send Confirmation Link'
                                                               : 'Resend Confirmation Link',
                                                           options:
@@ -4377,9 +4492,34 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               border: Border.all(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                color: () {
+                                                  if (_model.c5Status ==
+                                                      'Confirmed') {
+                                                    return Color(0xFF0CD40B);
+                                                  } else if (_model.c5Status ==
+                                                      'Pending') {
+                                                    return Color(0xFFFAF100);
+                                                  } else if (_model.c5Status ==
+                                                      'Denied') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Opted out') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .error;
+                                                  } else if (_model.c5Status ==
+                                                      'Not sent') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  } else {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  }
+                                                }(),
                                                 width: 2.5,
                                               ),
                                             ),
@@ -4884,23 +5024,23 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 () {
                                                                   if (_model
                                                                           .c5Status ==
-                                                                      'not_sent') {
+                                                                      'Not sent') {
                                                                     return 'Not sent';
                                                                   } else if (_model
                                                                           .c5Status ==
-                                                                      'pending') {
+                                                                      'Pending') {
                                                                     return 'Pending';
                                                                   } else if (_model
                                                                           .c5Status ==
-                                                                      'confirmed') {
+                                                                      'Confirmed') {
                                                                     return 'Confirmed';
                                                                   } else if (_model
                                                                           .c5Status ==
-                                                                      'denied') {
+                                                                      'Denied') {
                                                                     return 'Denied';
                                                                   } else if (_model
                                                                           .c5Status ==
-                                                                      'opted_out') {
+                                                                      'Opted out') {
                                                                     return 'Opted out';
                                                                   } else {
                                                                     return 'Not sent';
@@ -4921,8 +5061,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                               0xFF0CD40B);
                                                                         } else if (_model.c5Status ==
                                                                             'Pending') {
-                                                                          return FlutterFlowTheme.of(context)
-                                                                              .primary;
+                                                                          return Color(
+                                                                              0xFFFAF100);
                                                                         } else if (_model.c5Status ==
                                                                             'Denied') {
                                                                           return FlutterFlowTheme.of(context)
@@ -4931,9 +5071,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             'Opted out') {
                                                                           return FlutterFlowTheme.of(context)
                                                                               .error;
+                                                                        } else if (_model.c5Status ==
+                                                                            'Not sent') {
+                                                                          return FlutterFlowTheme.of(context)
+                                                                              .primary;
                                                                         } else {
                                                                           return FlutterFlowTheme.of(context)
-                                                                              .primaryText;
+                                                                              .primary;
                                                                         }
                                                                       }(),
                                                                       fontSize:
@@ -5084,7 +5228,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               }
 
                                                               _model.c5Status =
-                                                                  'pending';
+                                                                  'Pending';
                                                               safeSetState(
                                                                   () {});
                                                             }
@@ -5092,7 +5236,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             safeSetState(() {});
                                                           },
                                                           text: _model.c5Status ==
-                                                                  'not_sent'
+                                                                  'Not sent'
                                                               ? 'Send Confirmation Link'
                                                               : 'Resend Confirmation Link',
                                                           options:

@@ -1014,7 +1014,11 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                             width: 12.0)),
                                                       ),
                                                     ),
-                                                    Expanded(
+                                                    Container(
+                                                      width: 325.0,
+                                                      height: 25.0,
+                                                      decoration:
+                                                          BoxDecoration(),
                                                       child: Align(
                                                         alignment:
                                                             AlignmentDirectional(
@@ -1043,7 +1047,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                             createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete,
                                                                             createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete),
                                                                         width:
-                                                                            345.0,
+                                                                            325.0,
                                                                         lineHeight:
                                                                             25.0,
                                                                         animation:
