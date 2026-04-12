@@ -933,23 +933,23 @@ class GetConsentStatusesCall {
       );
   static dynamic slot1Status(dynamic response) => getJsonField(
         response,
-        r'''$.slotStatuses["1"]''',
+        r'''$.slot1Status''',
       );
   static dynamic slot2Status(dynamic response) => getJsonField(
         response,
-        r'''$.slotStatuses["2"]''',
+        r'''$.slot2Status''',
       );
   static dynamic slot3Status(dynamic response) => getJsonField(
         response,
-        r'''$.slotStatuses["3"]''',
+        r'''$.slot3Status''',
       );
   static dynamic slot4Status(dynamic response) => getJsonField(
         response,
-        r'''$.slotStatuses["4"]''',
+        r'''$.slot4Status''',
       );
   static dynamic slot5Status(dynamic response) => getJsonField(
         response,
-        r'''$.slotStatuses["5"]''',
+        r'''$.slot5Status''',
       );
 }
 
