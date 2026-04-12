@@ -6181,10 +6181,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   await SyncConsentSlotsCall
                                                       .call(
                                                 jwt: currentJwtToken,
-                                                slotsJsonList: _model
-                                                    .consentSlotsList
-                                                    .map((e) => e.toString())
-                                                    .toList(),
+                                                slotsJsonJson:
+                                                    _model.consentSlotsList,
                                               );
 
                                               if ((_model.syncConsentResp

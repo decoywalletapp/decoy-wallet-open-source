@@ -956,10 +956,9 @@ class GetConsentStatusesCall {
 class SyncConsentSlotsCall {
   static Future<ApiCallResponse> call({
     String? jwt = '',
-    List<String>? slotsJsonList,
+    dynamic slotsJsonJson,
   }) async {
-    final slotsJson = _serializeList(slotsJsonList);
-
+    final slotsJson = _serializeJson(slotsJsonJson, true);
     final ffApiRequestBody = '''
 {
   "slots": ${slotsJson}
