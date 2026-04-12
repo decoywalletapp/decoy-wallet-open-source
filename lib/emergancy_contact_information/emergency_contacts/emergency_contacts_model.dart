@@ -72,14 +72,14 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
+  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in EmergencyContacts widget.
+  ApiCallResponse? topConsentResp;
   // Stores action output result for [Backend Call - Query Rows] action in EmergencyContacts widget.
   List<DecoyWalletRow>? rows;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
   String? dataKeyOut;
   // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in EmergencyContacts widget.
   dynamic contactsObj;
-  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in EmergencyContacts widget.
-  ApiCallResponse? constentOOO;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in EmergencyContacts widget.
   String? dataKeyOut2;
   // State field(s) for c1FirstTF widget.
