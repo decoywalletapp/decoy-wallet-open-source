@@ -67,18 +67,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           (_model.topConsentResp?.jsonBody ?? ''),
         ).toString();
         safeSetState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              (_model.topConsentResp?.jsonBody ?? '').toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
       }
       _model.rows = await DecoyWalletTable().queryRows(
         queryFn: (q) => q
@@ -450,67 +438,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               );
             });
           }
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                _model.c1Status,
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).secondary,
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                _model.c2Status,
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).secondary,
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                _model.c3Status,
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).secondary,
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                _model.c4Status,
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).secondary,
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                _model.c5Status,
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).secondary,
-            ),
-          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -1108,13 +1035,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   'Denied') {
                                                                 return FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primary;
+                                                                    .error;
                                                               } else if (_model
                                                                       .c1Status ==
                                                                   'Opted out') {
                                                                 return FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primary;
+                                                                    .error;
                                                               } else if (_model
                                                                       .c1Status ==
                                                                   'Not sent') {
@@ -1266,13 +1193,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   'Denied') {
                                                                 return FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primary;
+                                                                    .error;
                                                               } else if (_model
                                                                       .c1Status ==
                                                                   'Opted out') {
                                                                 return FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primary;
+                                                                    .error;
                                                               } else if (_model
                                                                       .c1Status ==
                                                                   'Not sent') {
@@ -1461,13 +1388,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   'Denied') {
                                                                 return FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primary;
+                                                                    .error;
                                                               } else if (_model
                                                                       .c1Status ==
                                                                   'Opted out') {
                                                                 return FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primary;
+                                                                    .error;
                                                               } else if (_model
                                                                       .c1Status ==
                                                                   'Not sent') {
@@ -2173,13 +2100,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
-                                                                      .primary;
+                                                                      .error;
                                                                 } else if (_model
                                                                         .c2Status ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
-                                                                      .primary;
+                                                                      .error;
                                                                 } else if (_model
                                                                         .c2Status ==
                                                                     'Not sent') {
@@ -2343,13 +2270,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
-                                                                      .primary;
+                                                                      .error;
                                                                 } else if (_model
                                                                         .c2Status ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
-                                                                      .primary;
+                                                                      .error;
                                                                 } else if (_model
                                                                         .c2Status ==
                                                                     'Not sent') {
@@ -2551,13 +2478,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
-                                                                      .primary;
+                                                                      .error;
                                                                 } else if (_model
                                                                         .c2Status ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
-                                                                      .primary;
+                                                                      .error;
                                                                 } else if (_model
                                                                         .c2Status ==
                                                                     'Not sent') {

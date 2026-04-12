@@ -1098,7 +1098,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
 
                                 safeSetState(() {});
                               },
-                              text: 'Save',
+                              text: 'Save & Exit',
                               options: FFButtonOptions(
                                 width: 250.0,
                                 height: 56.0,

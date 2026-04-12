@@ -171,11 +171,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
-        name: DuressScanQRv2Widget.routeName,
-        path: DuressScanQRv2Widget.routePath,
-        builder: (context, params) => DuressScanQRv2Widget(),
-      ),
-      FFRoute(
         name: DuressSendBTCWidget.routeName,
         path: DuressSendBTCWidget.routePath,
         builder: (context, params) => DuressSendBTCWidget(),
@@ -184,11 +179,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: DuressConfirmTransactionSendWidget.routeName,
         path: DuressConfirmTransactionSendWidget.routePath,
         builder: (context, params) => DuressConfirmTransactionSendWidget(),
-      ),
-      FFRoute(
-        name: DuressTransactionInitiatedWidget.routeName,
-        path: DuressTransactionInitiatedWidget.routePath,
-        builder: (context, params) => DuressTransactionInitiatedWidget(),
       ),
       FFRoute(
         name: DuressProcessingTransactionWidget.routeName,
@@ -253,11 +243,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         ),
       ),
       FFRoute(
-        name: CreateAccountB4ChangeWidget.routeName,
-        path: CreateAccountB4ChangeWidget.routePath,
-        builder: (context, params) => CreateAccountB4ChangeWidget(),
-      ),
-      FFRoute(
         name: DuressScanQRWidget.routeName,
         path: DuressScanQRWidget.routePath,
         builder: (context, params) => DuressScanQRWidget(),
@@ -290,11 +275,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: CreateDecoyEmergencyContactsSetupWidget.routeName,
         path: CreateDecoyEmergencyContactsSetupWidget.routePath,
         builder: (context, params) => CreateDecoyEmergencyContactsSetupWidget(),
-      ),
-      FFRoute(
-        name: HomeAddressEntryPagedonzoWidget.routeName,
-        path: HomeAddressEntryPagedonzoWidget.routePath,
-        builder: (context, params) => HomeAddressEntryPagedonzoWidget(),
       ),
       FFRoute(
         name: EmergencyContactsWidget.routeName,
@@ -435,67 +415,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => LocationAuthorizationWidget(),
       ),
       FFRoute(
-        name: LetsssseeeeeoldemscontactWidget.routeName,
-        path: LetsssseeeeeoldemscontactWidget.routePath,
-        builder: (context, params) => LetsssseeeeeoldemscontactWidget(),
-      ),
-      FFRoute(
         name: PhoneNumberInputCopyWidget.routeName,
         path: PhoneNumberInputCopyWidget.routePath,
         builder: (context, params) => PhoneNumberInputCopyWidget(),
-      ),
-      FFRoute(
-        name: AuthRouterCopyWidget.routeName,
-        path: AuthRouterCopyWidget.routePath,
-        builder: (context, params) => AuthRouterCopyWidget(
-          type: params.getParam(
-            'type',
-            ParamType.String,
-          ),
-          accessToken: params.getParam(
-            'accessToken',
-            ParamType.String,
-          ),
-          refreshToken: params.getParam(
-            'refreshToken',
-            ParamType.String,
-          ),
-        ),
-      ),
-      FFRoute(
-        name: LoginPageB44444Widget.routeName,
-        path: LoginPageB44444Widget.routePath,
-        builder: (context, params) => LoginPageB44444Widget(
-          type: params.getParam(
-            'type',
-            ParamType.String,
-          ),
-          accessToken: params.getParam(
-            'accessToken',
-            ParamType.String,
-          ),
-          refreshToken: params.getParam(
-            'refreshToken',
-            ParamType.String,
-          ),
-        ),
-      ),
-      FFRoute(
-        name: DuressHomePageCopyWidget.routeName,
-        path: DuressHomePageCopyWidget.routePath,
-        builder: (context, params) => DuressHomePageCopyWidget(),
-      ),
-      FFRoute(
-        name: CreateDecoyEmergencyContactsSetupCopyWidget.routeName,
-        path: CreateDecoyEmergencyContactsSetupCopyWidget.routePath,
-        builder: (context, params) =>
-            CreateDecoyEmergencyContactsSetupCopyWidget(),
-      ),
-      FFRoute(
-        name: HomePageCopyWidget.routeName,
-        path: HomePageCopyWidget.routePath,
-        requireAuth: true,
-        builder: (context, params) => HomePageCopyWidget(),
       ),
       FFRoute(
         name: EnableNotificationsWidget.routeName,
