@@ -51,25 +51,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       );
 
       if ((_model.topConsentResp?.succeeded ?? true)) {
-        _model.c1Status = getJsonField(
+        _model.c1Status = GetConsentStatusesCall.slot1Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$.consents[0].status''',
         ).toString();
-        _model.c2Status = getJsonField(
+        _model.c2Status = GetConsentStatusesCall.slot2Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$.consents[1].status''',
         ).toString();
-        _model.c3Status = getJsonField(
+        _model.c3Status = GetConsentStatusesCall.slot3Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$.consents[2].status''',
         ).toString();
-        _model.c4Status = getJsonField(
+        _model.c4Status = GetConsentStatusesCall.slot4Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$.consents[3].status''',
         ).toString();
-        _model.c5Status = getJsonField(
+        _model.c5Status = GetConsentStatusesCall.slot5Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$.consents[4].status''',
         ).toString();
         safeSetState(() {});
         ScaffoldMessenger.of(context).showSnackBar(
