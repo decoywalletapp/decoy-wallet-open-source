@@ -53,25 +53,37 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       if ((_model.topConsentResp?.succeeded ?? true)) {
         _model.c1Status = getJsonField(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$[0].status''',
+          r'''$.consents[0].status''',
         ).toString();
         _model.c2Status = getJsonField(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$[1].status''',
+          r'''$.consents[1].status''',
         ).toString();
         _model.c3Status = getJsonField(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$[2].status''',
+          r'''$.consents[2].status''',
         ).toString();
         _model.c4Status = getJsonField(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$[3].status''',
+          r'''$.consents[3].status''',
         ).toString();
         _model.c5Status = getJsonField(
           (_model.topConsentResp?.jsonBody ?? ''),
-          r'''$[4].status''',
+          r'''$.consents[4].status''',
         ).toString();
         safeSetState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              (_model.topConsentResp?.jsonBody ?? '').toString(),
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
       }
       _model.rows = await DecoyWalletTable().queryRows(
         queryFn: (q) => q
