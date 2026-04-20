@@ -812,23 +812,20 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         .secondaryBackground,
                                   ),
                                 ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Container(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Image.asset(
-                                        'assets/images/xlogo.png',
-                                        width: 200.86,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
-                                      ),
+                                Container(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.asset(
+                                      'assets/images/primallogo.png',
+                                      width: 200.0,
+                                      height: 200.0,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
@@ -837,7 +834,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   child: FFButtonWidget(
                                     onPressed: () async {
                                       await launchURL(
-                                          'https://x.com/decoywalletapp?s=21');
+                                          'http://primal.net/p/nprofile1qqsywp6yr7r4aemlalupwmluj953tr6dh8tujw77w6dt9k4p2gn9m2cte4kqn');
                                     },
                                     text: 'Button',
                                     options: FFButtonOptions(
@@ -945,20 +942,23 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                         .secondaryBackground,
                                   ),
                                 ),
-                                Container(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.asset(
-                                      'assets/images/primallogo.png',
-                                      width: 200.0,
-                                      height: 200.0,
-                                      fit: BoxFit.cover,
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Container(
+                                    width: 50.0,
+                                    height: 50.0,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.asset(
+                                        'assets/images/xlogo.png',
+                                        width: 200.9,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -967,7 +967,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   child: FFButtonWidget(
                                     onPressed: () async {
                                       await launchURL(
-                                          'http://primal.net/p/nprofile1qqsywp6yr7r4aemlalupwmluj953tr6dh8tujw77w6dt9k4p2gn9m2cte4kqn');
+                                          'https://x.com/decoywalletapp?s=21');
                                     },
                                     text: 'Button',
                                     options: FFButtonOptions(

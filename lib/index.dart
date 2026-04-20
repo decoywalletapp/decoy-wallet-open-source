@@ -84,3 +84,5 @@ export '/welcom_pages/enable_notifications/enable_notifications_widget.dart'
     show EnableNotificationsWidget;
 export '/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart'
     show HomeAddressEntryPageWidget;
+export '/test_subjects/create_decoy_emergency_contacts_setup_v2/create_decoy_emergency_contacts_setup_v2_widget.dart'
+    show CreateDecoyEmergencyContactsSetupV2Widget;

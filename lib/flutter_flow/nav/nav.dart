@@ -430,6 +430,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => HomeAddressEntryPageWidget(),
       ),
       FFRoute(
+        name: CreateDecoyEmergencyContactsSetupV2Widget.routeName,
+        path: CreateDecoyEmergencyContactsSetupV2Widget.routePath,
+        builder: (context, params) =>
+            CreateDecoyEmergencyContactsSetupV2Widget(),
+      ),
+      FFRoute(
         name: $cartesian_chart_library_syxakz.HomePageWidget.routeName,
         path: $cartesian_chart_library_syxakz.HomePageWidget.routePath,
         builder: (context, params) =>
