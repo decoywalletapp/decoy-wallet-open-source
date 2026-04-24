@@ -1709,6 +1709,69 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .createConsentResp1
                                                                     ?.succeeded ??
                                                                 true)) {
+                                                              _model.c1Status =
+                                                                  'Pending';
+                                                              _model.consentSlotsList = functions
+                                                                  .buildConsentSlotsListFINAL(
+                                                                      _model
+                                                                          .c1FirstTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c1LastTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c1PhoneTFTextController
+                                                                          .text,
+                                                                      'Pending',
+                                                                      _model
+                                                                          .c2FirstTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c2LastTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c2PhoneTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c2Status,
+                                                                      _model
+                                                                          .c3FirstTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c3LastTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c3PhoneTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c3Status,
+                                                                      _model
+                                                                          .c4FirstTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c4LastTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c4PhoneTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c4Status,
+                                                                      _model
+                                                                          .c5FirstTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c5LastTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c5PhoneTFTextController
+                                                                          .text,
+                                                                      _model
+                                                                          .c5Status)
+                                                                  .toList()
+                                                                  .cast<
+                                                                      dynamic>();
+                                                              safeSetState(
+                                                                  () {});
                                                               if (isiOS) {
                                                                 await launchUrl(
                                                                     Uri.parse(
@@ -1735,10 +1798,56 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 ));
                                                               }
 
-                                                              _model.c1Status =
-                                                                  'Pending';
-                                                              safeSetState(
-                                                                  () {});
+                                                              _model.ohcoolDiff =
+                                                                  await GetConsentStatusesCall
+                                                                      .call();
+
+                                                              if ((_model
+                                                                      .ohcoolDiff
+                                                                      ?.succeeded ??
+                                                                  true)) {
+                                                                _model.consentSlotsList = functions
+                                                                    .buildConsentSlotsListFINAL(
+                                                                        _model.c1FirstTFTextController.text,
+                                                                        _model.c1LastTFTextController.text,
+                                                                        _model.c1PhoneTFTextController.text,
+                                                                        GetConsentStatusesCall.slot1Status(
+                                                                          (_model.ohcoolDiff?.jsonBody ??
+                                                                              ''),
+                                                                        ).toString(),
+                                                                        _model.c2FirstTFTextController.text,
+                                                                        _model.c2LastTFTextController.text,
+                                                                        _model.c2PhoneTFTextController.text,
+                                                                        GetConsentStatusesCall.slot2Status(
+                                                                          (_model.ohcoolDiff?.jsonBody ??
+                                                                              ''),
+                                                                        ).toString(),
+                                                                        _model.c3FirstTFTextController.text,
+                                                                        _model.c3LastTFTextController.text,
+                                                                        _model.c3PhoneTFTextController.text,
+                                                                        GetConsentStatusesCall.slot3Status(
+                                                                          (_model.ohcoolDiff?.jsonBody ??
+                                                                              ''),
+                                                                        ).toString(),
+                                                                        _model.c4FirstTFTextController.text,
+                                                                        _model.c4LastTFTextController.text,
+                                                                        _model.c4PhoneTFTextController.text,
+                                                                        GetConsentStatusesCall.slot4Status(
+                                                                          (_model.ohcoolDiff?.jsonBody ??
+                                                                              ''),
+                                                                        ).toString(),
+                                                                        _model.c5FirstTFTextController.text,
+                                                                        _model.c5LastTFTextController.text,
+                                                                        _model.c5PhoneTFTextController.text,
+                                                                        GetConsentStatusesCall.slot5Status(
+                                                                          (_model.ohcoolDiff?.jsonBody ??
+                                                                              ''),
+                                                                        ).toString())
+                                                                    .toList()
+                                                                    .cast<dynamic>();
+                                                                safeSetState(
+                                                                    () {});
+                                                              }
                                                             }
 
                                                             safeSetState(() {});

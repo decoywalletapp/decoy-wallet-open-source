@@ -97,6 +97,8 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   String? Function(BuildContext, String?)? c1PhoneTFTextControllerValidator;
   // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
   ApiCallResponse? createConsentResp1;
+  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in Button widget.
+  ApiCallResponse? ohcoolDiff;
   // State field(s) for c2FirstTF widget.
   FocusNode? c2FirstTFFocusNode;
   TextEditingController? c2FirstTFTextController;
