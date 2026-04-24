@@ -101,10 +101,30 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   TextEditingController? c1PhoneTFTextController;
   late MaskTextInputFormatter c1PhoneTFMask;
   String? Function(BuildContext, String?)? c1PhoneTFTextControllerValidator;
+  // Stores action output result for [Custom Action - buildContactsPayloadV2] action in Button widget.
+  String? contactsPayloadslot1;
+  // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in Button widget.
+  String? keyOutslot1;
+  // Stores action output result for [Custom Action - aesGcmEncryptString] action in Button widget.
+  dynamic encslot1;
+  // Stores action output result for [Backend Call - API (WrapDataKey)] action in Button widget.
+  ApiCallResponse? wrapslot1;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? updslot1;
+  // Stores action output result for [Backend Call - Update Row(s)] action in Button widget.
+  List<DecoyWalletRow>? updRowslot1;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? decoyWalletRefresh1slot1;
+  // Stores action output result for [Backend Call - Insert Row] action in Button widget.
+  DecoyWalletRow? insRowslot1;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? decoyWalletRefresh2slot1;
+  // Stores action output result for [Backend Call - API (SyncConsentSlots)] action in Button widget.
+  ApiCallResponse? syncConsentRespslot1;
   // Stores action output result for [Backend Call - API (CreateConsentRequest)] action in Button widget.
   ApiCallResponse? createConsentResp1;
   // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in Button widget.
-  ApiCallResponse? ohcoolDiff;
+  ApiCallResponse? ohcoolDiffslot1;
   // State field(s) for c2FirstTF widget.
   FocusNode? c2FirstTFFocusNode;
   TextEditingController? c2FirstTFTextController;

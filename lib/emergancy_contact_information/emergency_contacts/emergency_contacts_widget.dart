@@ -1695,128 +1695,230 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         .c1PhoneTFTextController
                                                                         .text);
                                                             safeSetState(() {});
-                                                            _model.createConsentResp1 =
-                                                                await CreateConsentRequestCall
-                                                                    .call(
-                                                              userId:
-                                                                  currentUserUid,
-                                                              contactSlot: 1,
-                                                              firstName: _model
+                                                            await actions
+                                                                .dismissKeyboard(
+                                                              context,
+                                                            );
+                                                            _model.contactsPayloadslot1 =
+                                                                await actions
+                                                                    .buildContactsPayloadV2(
+                                                              _model
                                                                   .c1FirstTFTextController
                                                                   .text,
-                                                              lastName: _model
+                                                              _model
                                                                   .c1LastTFTextController
                                                                   .text,
-                                                              phoneNumber: _model
-                                                                  .c1PhoneDigits,
-                                                              jwt:
-                                                                  currentJwtToken,
+                                                              _model
+                                                                  .c1PhoneTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c2FirstTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c2LastTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c2PhoneTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c3FirstTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c3LastTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c3PhoneTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c4FirstTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c4LastTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c4PhoneTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c5FirstTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c5LastTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .c5PhoneTFTextController
+                                                                  .text,
+                                                              _model
+                                                                  .contactsCount,
+                                                              _model.c1Status,
+                                                              _model.c2Status,
+                                                              _model.c3Status,
+                                                              _model.c4Status,
+                                                              _model.c5Status,
                                                             );
-
-                                                            if ((_model
-                                                                    .createConsentResp1
-                                                                    ?.succeeded ??
-                                                                true)) {
-                                                              _model.c1Status =
-                                                                  'Pending';
-                                                              _model.consentSlotsList = functions
-                                                                  .buildConsentSlotsListFINAL(
-                                                                      _model
-                                                                          .c1FirstTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c1LastTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c1PhoneTFTextController
-                                                                          .text,
-                                                                      'Pending',
-                                                                      _model
-                                                                          .c2FirstTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c2LastTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c2PhoneTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c2Status,
-                                                                      _model
-                                                                          .c3FirstTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c3LastTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c3PhoneTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c3Status,
-                                                                      _model
-                                                                          .c4FirstTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c4LastTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c4PhoneTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c4Status,
-                                                                      _model
-                                                                          .c5FirstTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c5LastTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c5PhoneTFTextController
-                                                                          .text,
-                                                                      _model
-                                                                          .c5Status)
-                                                                  .toList()
-                                                                  .cast<
-                                                                      dynamic>();
+                                                            _model.contactsJson =
+                                                                _model
+                                                                    .contactsPayloadslot1!;
+                                                            safeSetState(() {});
+                                                            if (loggedIn ==
+                                                                true) {
+                                                              _model.keyOutslot1 =
+                                                                  await actions
+                                                                      .generateDataKeyIfMissing();
+                                                              _model.dataKeyB64 =
+                                                                  _model
+                                                                      .keyOutslot1!;
                                                               safeSetState(
                                                                   () {});
-                                                              if (isiOS) {
-                                                                await launchUrl(
-                                                                    Uri.parse(
-                                                                        "sms:${_model.c1PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                  (_model.createConsentResp1
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                ).toString()}')}"));
-                                                              } else {
-                                                                await launchUrl(
-                                                                    Uri(
-                                                                  scheme: 'sms',
-                                                                  path: _model
-                                                                      .c1PhoneDigits!,
-                                                                  queryParameters: <String,
-                                                                      String>{
-                                                                    'body':
-                                                                        'Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                      (_model.createConsentResp1
-                                                                              ?.jsonBody ??
-                                                                          ''),
-                                                                    ).toString()}',
-                                                                  },
-                                                                ));
-                                                              }
-
-                                                              _model.ohcoolDiff =
-                                                                  await GetConsentStatusesCall
+                                                              _model.encslot1 =
+                                                                  await actions
+                                                                      .aesGcmEncryptString(
+                                                                _model
+                                                                    .contactsJson,
+                                                                _model
+                                                                    .dataKeyB64,
+                                                              );
+                                                              _model.ctB64 =
+                                                                  getJsonField(
+                                                                _model.encslot1,
+                                                                r'''$.ciphertextB64''',
+                                                              ).toString();
+                                                              _model.nonceB64 =
+                                                                  getJsonField(
+                                                                _model.encslot1,
+                                                                r'''$.nonceB64''',
+                                                              ).toString();
+                                                              safeSetState(
+                                                                  () {});
+                                                              _model.wrapslot1 =
+                                                                  await WrapDataKeyCall
                                                                       .call(
+                                                                dataKeyB64: _model
+                                                                    .dataKeyB64,
                                                                 jwt:
                                                                     currentJwtToken,
                                                               );
 
                                                               if ((_model
-                                                                      .ohcoolDiff
+                                                                      .wrapslot1
                                                                       ?.succeeded ??
                                                                   true)) {
+                                                                _model.wrappedB64 =
+                                                                    getJsonField(
+                                                                  (_model.wrapslot1
+                                                                          ?.jsonBody ??
+                                                                      ''),
+                                                                  r'''$.wrappedB64''',
+                                                                ).toString();
+                                                                safeSetState(
+                                                                    () {});
+                                                                _model.updslot1 =
+                                                                    await DecoyWalletTable()
+                                                                        .queryRows(
+                                                                  queryFn: (q) =>
+                                                                      q.eqOrNull(
+                                                                    'user_id',
+                                                                    currentUserUid,
+                                                                  ),
+                                                                );
+                                                                if (_model.updslot1 !=
+                                                                        null &&
+                                                                    (_model.updslot1)!
+                                                                        .isNotEmpty) {
+                                                                  await DecoyWalletTable()
+                                                                      .update(
+                                                                    data: {
+                                                                      'wrapped_datakey':
+                                                                          _model
+                                                                              .wrappedB64,
+                                                                      'updated_at':
+                                                                          supaSerialize<DateTime>(
+                                                                              getCurrentTimestamp),
+                                                                      'contacts_ciphertext':
+                                                                          _model
+                                                                              .ctB64,
+                                                                      'contacts_nonce':
+                                                                          _model
+                                                                              .nonceB64,
+                                                                      'contacts_version':
+                                                                          1,
+                                                                      'created_at':
+                                                                          supaSerialize<DateTime>(
+                                                                              getCurrentTimestamp),
+                                                                      'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
+                                                                              (_model.c2PhoneTFTextController.text != '') ||
+                                                                              (_model.c3PhoneTFTextController.text != '') ||
+                                                                              (_model.c4PhoneTFTextController.text != '') ||
+                                                                              (_model.c5PhoneTFTextController.text != '')
+                                                                          ? true
+                                                                          : false,
+                                                                    },
+                                                                    matchingRows:
+                                                                        (rows) =>
+                                                                            rows.eqOrNull(
+                                                                      'user_id',
+                                                                      currentUserUid,
+                                                                    ),
+                                                                  );
+                                                                  _model.decoyWalletRefresh1slot1 =
+                                                                      await DecoyWalletTable()
+                                                                          .queryRows(
+                                                                    queryFn: (q) =>
+                                                                        q.eqOrNull(
+                                                                      'user_id',
+                                                                      currentUserUid,
+                                                                    ),
+                                                                  );
+                                                                  FFAppState()
+                                                                          .emergencyContactsIncrement =
+                                                                      _model
+                                                                          .contactsCount;
+                                                                  safeSetState(
+                                                                      () {});
+                                                                } else {
+                                                                  _model.insRowslot1 =
+                                                                      await DecoyWalletTable()
+                                                                          .insert({
+                                                                    'wrapped_datakey':
+                                                                        _model
+                                                                            .wrappedB64,
+                                                                    'updated_at':
+                                                                        supaSerialize<DateTime>(
+                                                                            getCurrentTimestamp),
+                                                                    'contacts_ciphertext':
+                                                                        _model
+                                                                            .ctB64,
+                                                                    'contacts_nonce':
+                                                                        _model
+                                                                            .nonceB64,
+                                                                    'contacts_version':
+                                                                        1,
+                                                                    'user_id':
+                                                                        currentUserUid,
+                                                                    'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
+                                                                            (_model.c2PhoneTFTextController.text != '') ||
+                                                                            (_model.c3PhoneTFTextController.text != '') ||
+                                                                            (_model.c4PhoneTFTextController.text != '') ||
+                                                                            (_model.c5PhoneTFTextController.text != '')
+                                                                        ? true
+                                                                        : false,
+                                                                  });
+                                                                  _model.decoyWalletRefresh2slot1 =
+                                                                      await DecoyWalletTable()
+                                                                          .queryRows(
+                                                                    queryFn: (q) =>
+                                                                        q.eqOrNull(
+                                                                      'user_id',
+                                                                      currentUserUid,
+                                                                    ),
+                                                                  );
+                                                                  FFAppState()
+                                                                          .emergencyContactsIncrement =
+                                                                      _model
+                                                                          .contactsCount;
+                                                                  safeSetState(
+                                                                      () {});
+                                                                }
+
                                                                 _model.consentSlotsList = functions
                                                                     .buildConsentSlotsListFINAL(
                                                                         _model
@@ -1828,7 +1930,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         _model
                                                                             .c1PhoneTFTextController
                                                                             .text,
-                                                                        'Pending',
+                                                                        _model
+                                                                            .c1Status,
                                                                         _model
                                                                             .c2FirstTFTextController
                                                                             .text,
@@ -1876,30 +1979,204 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .toList()
                                                                     .cast<
                                                                         dynamic>();
-                                                                _model.c1First =
-                                                                    GetConsentStatusesCall
-                                                                        .slot1First(
-                                                                  (_model.ohcoolDiff
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                ).toString();
-                                                                _model.c1Last =
-                                                                    GetConsentStatusesCall
-                                                                        .slot1Last(
-                                                                  (_model.ohcoolDiff
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                ).toString();
-                                                                _model.c1Phone =
-                                                                    GetConsentStatusesCall
-                                                                        .slot1Phone(
-                                                                  (_model.ohcoolDiff
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                ).toString();
                                                                 safeSetState(
                                                                     () {});
+                                                                _model.syncConsentRespslot1 =
+                                                                    await SyncConsentSlotsCall
+                                                                        .call(
+                                                                  jwt:
+                                                                      currentJwtToken,
+                                                                  slotsJsonJson:
+                                                                      _model
+                                                                          .consentSlotsList,
+                                                                );
+
+                                                                if ((_model
+                                                                        .syncConsentRespslot1
+                                                                        ?.succeeded ??
+                                                                    true)) {
+                                                                  _model.createConsentResp1 =
+                                                                      await CreateConsentRequestCall
+                                                                          .call(
+                                                                    userId:
+                                                                        currentUserUid,
+                                                                    contactSlot:
+                                                                        1,
+                                                                    firstName: _model
+                                                                        .c1FirstTFTextController
+                                                                        .text,
+                                                                    lastName: _model
+                                                                        .c1LastTFTextController
+                                                                        .text,
+                                                                    phoneNumber:
+                                                                        _model
+                                                                            .c1PhoneDigits,
+                                                                    jwt:
+                                                                        currentJwtToken,
+                                                                  );
+
+                                                                  if ((_model
+                                                                          .createConsentResp1
+                                                                          ?.succeeded ??
+                                                                      true)) {
+                                                                    _model.c1Status =
+                                                                        'Pending';
+                                                                    _model.consentSlotsList = functions
+                                                                        .buildConsentSlotsListFINAL(
+                                                                            _model
+                                                                                .c1FirstTFTextController.text,
+                                                                            _model
+                                                                                .c1LastTFTextController.text,
+                                                                            _model
+                                                                                .c1PhoneTFTextController.text,
+                                                                            'Pending',
+                                                                            _model
+                                                                                .c2FirstTFTextController.text,
+                                                                            _model
+                                                                                .c2LastTFTextController.text,
+                                                                            _model
+                                                                                .c2PhoneTFTextController.text,
+                                                                            _model
+                                                                                .c2Status,
+                                                                            _model
+                                                                                .c3FirstTFTextController.text,
+                                                                            _model
+                                                                                .c3LastTFTextController.text,
+                                                                            _model
+                                                                                .c3PhoneTFTextController.text,
+                                                                            _model
+                                                                                .c3Status,
+                                                                            _model
+                                                                                .c4FirstTFTextController.text,
+                                                                            _model
+                                                                                .c4LastTFTextController.text,
+                                                                            _model
+                                                                                .c4PhoneTFTextController.text,
+                                                                            _model
+                                                                                .c4Status,
+                                                                            _model
+                                                                                .c5FirstTFTextController.text,
+                                                                            _model
+                                                                                .c5LastTFTextController.text,
+                                                                            _model
+                                                                                .c5PhoneTFTextController.text,
+                                                                            _model
+                                                                                .c5Status)
+                                                                        .toList()
+                                                                        .cast<
+                                                                            dynamic>();
+                                                                    safeSetState(
+                                                                        () {});
+                                                                    if (isiOS) {
+                                                                      await launchUrl(
+                                                                          Uri.parse(
+                                                                              "sms:${_model.c1PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                        (_model.createConsentResp1?.jsonBody ??
+                                                                            ''),
+                                                                      ).toString()}')}"));
+                                                                    } else {
+                                                                      await launchUrl(
+                                                                          Uri(
+                                                                        scheme:
+                                                                            'sms',
+                                                                        path: _model
+                                                                            .c1PhoneDigits!,
+                                                                        queryParameters: <String,
+                                                                            String>{
+                                                                          'body':
+                                                                              'Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
+                                                                            (_model.createConsentResp1?.jsonBody ??
+                                                                                ''),
+                                                                          ).toString()}',
+                                                                        },
+                                                                      ));
+                                                                    }
+
+                                                                    _model.ohcoolDiffslot1 =
+                                                                        await GetConsentStatusesCall
+                                                                            .call(
+                                                                      jwt:
+                                                                          currentJwtToken,
+                                                                    );
+
+                                                                    if ((_model
+                                                                            .ohcoolDiffslot1
+                                                                            ?.succeeded ??
+                                                                        true)) {
+                                                                      _model.consentSlotsList = functions
+                                                                          .buildConsentSlotsListFINAL(
+                                                                              _model.c1FirstTFTextController.text,
+                                                                              _model.c1LastTFTextController.text,
+                                                                              _model.c1PhoneTFTextController.text,
+                                                                              'Pending',
+                                                                              _model.c2FirstTFTextController.text,
+                                                                              _model.c2LastTFTextController.text,
+                                                                              _model.c2PhoneTFTextController.text,
+                                                                              _model.c2Status,
+                                                                              _model.c3FirstTFTextController.text,
+                                                                              _model.c3LastTFTextController.text,
+                                                                              _model.c3PhoneTFTextController.text,
+                                                                              _model.c3Status,
+                                                                              _model.c4FirstTFTextController.text,
+                                                                              _model.c4LastTFTextController.text,
+                                                                              _model.c4PhoneTFTextController.text,
+                                                                              _model.c4Status,
+                                                                              _model.c5FirstTFTextController.text,
+                                                                              _model.c5LastTFTextController.text,
+                                                                              _model.c5PhoneTFTextController.text,
+                                                                              _model.c5Status)
+                                                                          .toList()
+                                                                          .cast<dynamic>();
+                                                                      _model.c1First =
+                                                                          GetConsentStatusesCall
+                                                                              .slot1First(
+                                                                        (_model.ohcoolDiffslot1?.jsonBody ??
+                                                                            ''),
+                                                                      ).toString();
+                                                                      _model.c1Last =
+                                                                          GetConsentStatusesCall
+                                                                              .slot1Last(
+                                                                        (_model.ohcoolDiffslot1?.jsonBody ??
+                                                                            ''),
+                                                                      ).toString();
+                                                                      _model.c1Phone =
+                                                                          GetConsentStatusesCall
+                                                                              .slot1Phone(
+                                                                        (_model.ohcoolDiffslot1?.jsonBody ??
+                                                                            ''),
+                                                                      ).toString();
+                                                                      safeSetState(
+                                                                          () {});
+                                                                    }
+                                                                  }
+                                                                }
+                                                              } else {
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                  SnackBar(
+                                                                    content:
+                                                                        Text(
+                                                                      'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryText,
+                                                                      ),
+                                                                    ),
+                                                                    duration: Duration(
+                                                                        milliseconds:
+                                                                            4000),
+                                                                    backgroundColor:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .secondary,
+                                                                  ),
+                                                                );
                                                               }
+                                                            } else {
+                                                              context.goNamed(
+                                                                  LoginPageWidget
+                                                                      .routeName);
                                                             }
 
                                                             safeSetState(() {});
