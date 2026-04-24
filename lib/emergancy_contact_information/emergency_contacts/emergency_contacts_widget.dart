@@ -1800,7 +1800,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                               _model.ohcoolDiff =
                                                                   await GetConsentStatusesCall
-                                                                      .call();
+                                                                      .call(
+                                                                jwt:
+                                                                    currentJwtToken,
+                                                              );
 
                                                               if ((_model
                                                                       .ohcoolDiff
