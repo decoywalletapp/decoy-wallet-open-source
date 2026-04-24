@@ -457,10 +457,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
         _model.dataKeyB64 = _model.dataKeyOut2!;
         safeSetState(() {});
         safeSetState(() {
-          _model.c1FirstTFTextController?.clear();
-          _model.c1LastTFTextController?.clear();
-          _model.c1PhoneTFTextController?.clear();
-          _model.c1PhoneTFMask.clear();
+          _model.c1FirstTFTextController?.text = _model.c1First;
+
+          _model.c1LastTFTextController?.text = _model.c1Last;
+
+          _model.c1PhoneTFTextController?.text = _model.c1Phone;
+
+          _model.c1PhoneTFMask.updateMask(
+            newValue: TextEditingValue(text: _model.c1Phone),
+          );
           _model.c2FirstTFTextController?.clear();
           _model.c2LastTFTextController?.clear();
           _model.c2PhoneTFTextController?.clear();
@@ -481,13 +486,16 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       }
     });
 
-    _model.c1FirstTFTextController ??= TextEditingController();
+    _model.c1FirstTFTextController ??=
+        TextEditingController(text: _model.c1First);
     _model.c1FirstTFFocusNode ??= FocusNode();
 
-    _model.c1LastTFTextController ??= TextEditingController();
+    _model.c1LastTFTextController ??=
+        TextEditingController(text: _model.c1Last);
     _model.c1LastTFFocusNode ??= FocusNode();
 
-    _model.c1PhoneTFTextController ??= TextEditingController();
+    _model.c1PhoneTFTextController ??=
+        TextEditingController(text: _model.c1Phone);
     _model.c1PhoneTFFocusNode ??= FocusNode();
 
     _model.c1PhoneTFMask = MaskTextInputFormatter(mask: '(###) ###-####');
@@ -1811,43 +1819,84 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   true)) {
                                                                 _model.consentSlotsList = functions
                                                                     .buildConsentSlotsListFINAL(
-                                                                        _model.c1FirstTFTextController.text,
-                                                                        _model.c1LastTFTextController.text,
-                                                                        _model.c1PhoneTFTextController.text,
-                                                                        GetConsentStatusesCall.slot1Status(
-                                                                          (_model.ohcoolDiff?.jsonBody ??
-                                                                              ''),
-                                                                        ).toString(),
-                                                                        _model.c2FirstTFTextController.text,
-                                                                        _model.c2LastTFTextController.text,
-                                                                        _model.c2PhoneTFTextController.text,
-                                                                        GetConsentStatusesCall.slot2Status(
-                                                                          (_model.ohcoolDiff?.jsonBody ??
-                                                                              ''),
-                                                                        ).toString(),
-                                                                        _model.c3FirstTFTextController.text,
-                                                                        _model.c3LastTFTextController.text,
-                                                                        _model.c3PhoneTFTextController.text,
-                                                                        GetConsentStatusesCall.slot3Status(
-                                                                          (_model.ohcoolDiff?.jsonBody ??
-                                                                              ''),
-                                                                        ).toString(),
-                                                                        _model.c4FirstTFTextController.text,
-                                                                        _model.c4LastTFTextController.text,
-                                                                        _model.c4PhoneTFTextController.text,
-                                                                        GetConsentStatusesCall.slot4Status(
-                                                                          (_model.ohcoolDiff?.jsonBody ??
-                                                                              ''),
-                                                                        ).toString(),
-                                                                        _model.c5FirstTFTextController.text,
-                                                                        _model.c5LastTFTextController.text,
-                                                                        _model.c5PhoneTFTextController.text,
-                                                                        GetConsentStatusesCall.slot5Status(
-                                                                          (_model.ohcoolDiff?.jsonBody ??
-                                                                              ''),
-                                                                        ).toString())
+                                                                        _model
+                                                                            .c1FirstTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c1LastTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c1PhoneTFTextController
+                                                                            .text,
+                                                                        'Pending',
+                                                                        _model
+                                                                            .c2FirstTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c2LastTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c2PhoneTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c2Status,
+                                                                        _model
+                                                                            .c3FirstTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c3LastTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c3PhoneTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c3Status,
+                                                                        _model
+                                                                            .c4FirstTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c4LastTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c4PhoneTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c4Status,
+                                                                        _model
+                                                                            .c5FirstTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c5LastTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c5PhoneTFTextController
+                                                                            .text,
+                                                                        _model
+                                                                            .c5Status)
                                                                     .toList()
-                                                                    .cast<dynamic>();
+                                                                    .cast<
+                                                                        dynamic>();
+                                                                _model.c1First =
+                                                                    GetConsentStatusesCall
+                                                                        .slot1First(
+                                                                  (_model.ohcoolDiff
+                                                                          ?.jsonBody ??
+                                                                      ''),
+                                                                ).toString();
+                                                                _model.c1Last =
+                                                                    GetConsentStatusesCall
+                                                                        .slot1Last(
+                                                                  (_model.ohcoolDiff
+                                                                          ?.jsonBody ??
+                                                                      ''),
+                                                                ).toString();
+                                                                _model.c1Phone =
+                                                                    GetConsentStatusesCall
+                                                                        .slot1Phone(
+                                                                  (_model.ohcoolDiff
+                                                                          ?.jsonBody ??
+                                                                      ''),
+                                                                ).toString();
                                                                 safeSetState(
                                                                     () {});
                                                               }

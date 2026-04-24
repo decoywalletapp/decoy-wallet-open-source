@@ -201,15 +201,16 @@ class _DecoySeedAcknowledgementsWidgetState
                     ],
                   ),
                 ),
-                Expanded(
+                Align(
+                  alignment: AlignmentDirectional(0.0, -1.0),
                   child: Container(
                     width: 400.0,
-                    height: 100.0,
+                    height: 550.0,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                     ),
                     child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
+                      alignment: AlignmentDirectional(0.0, -1.0),
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             24.0, 0.0, 24.0, 0.0),

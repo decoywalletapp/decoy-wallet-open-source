@@ -100,6 +100,7 @@ class _DecoyPinAcknowledgementsWidgetState
                   alignment: AlignmentDirectional(0.0, 0.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -200,289 +201,277 @@ class _DecoyPinAcknowledgementsWidgetState
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    width: 400.0,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
-                    ),
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Material(
-                                color: Colors.transparent,
-                                elevation: 3.0,
-                                shape: RoundedRectangleBorder(
+                Container(
+                  width: 400.0,
+                  height: 550.0,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                  ),
+                  child: Align(
+                    alignment: AlignmentDirectional(0.0, -1.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Material(
+                              color: Colors.transparent,
+                              elevation: 3.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Container(
+                                width: 400.0,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF9F9F9),
                                   borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Container(
-                                  width: 400.0,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF9F9F9),
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    border: Border.all(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      width: 1.5,
-                                    ),
+                                  border: Border.all(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 1.5,
                                   ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Using a Decoy PIN will trigger emergency behavior inside Decoy Wallet, including notifying contacts or emergency services.\n\nThis feature is designed for real duress situations only.',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          letterSpacing: 0.0,
+                                          lineHeight: 1.5,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .bodyMediumIsCustom,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 10.0),
                                     child: Text(
-                                      'Using a Decoy PIN will trigger emergency behavior inside Decoy Wallet, including notifying contacts or emergency services.\n\nThis feature is designed for real duress situations only.',
+                                      'Important: To enable the Decoy PIN feature, you must confirm all of the acknowledgements below.\nIf you do not agree with every statement, do not continue.',
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
+                                          .titleMedium
                                           .override(
                                             fontFamily:
                                                 FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                                    .titleMediumFamily,
                                             letterSpacing: 0.0,
-                                            lineHeight: 1.5,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)
-                                                    .bodyMediumIsCustom,
+                                                    .titleMediumIsCustom,
                                           ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 10.0),
-                                      child: Text(
-                                        'Important: To enable the Decoy PIN feature, you must confirm all of the acknowledgements below.\nIf you do not agree with every statement, do not continue.',
-                                        textAlign: TextAlign.center,
-                                        style: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMediumFamily,
-                                              letterSpacing: 0.0,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .titleMediumIsCustom,
-                                            ),
-                                      ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Theme(
+                                data: ThemeData(
+                                  checkboxTheme: CheckboxThemeData(
+                                    visualDensity: VisualDensity.compact,
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4.0),
                                     ),
                                   ),
+                                  unselectedWidgetColor:
+                                      FlutterFlowTheme.of(context).alternate,
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Theme(
-                                  data: ThemeData(
-                                    checkboxTheme: CheckboxThemeData(
-                                      visualDensity: VisualDensity.compact,
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                      ),
-                                    ),
-                                    unselectedWidgetColor:
-                                        FlutterFlowTheme.of(context).alternate,
-                                  ),
-                                  child: Checkbox(
-                                    value: _model.checkboxValue1 ??= false,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() =>
-                                          _model.checkboxValue1 = newValue!);
-                                      if (newValue!) {
-                                        _model.boxesSelected = true;
-                                        safeSetState(() {});
-                                      }
-                                    },
-                                    side: (FlutterFlowTheme.of(context)
-                                                .alternate !=
-                                            null)
-                                        ? BorderSide(
-                                            width: 2,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          )
-                                        : null,
-                                    activeColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    checkColor:
-                                        FlutterFlowTheme.of(context).info,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'I understand that entering my Decoy PIN will activate an emergency trigger and may notify my emergency contacts, third party services, or public safety agencies.',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
+                                child: Checkbox(
+                                  value: _model.checkboxValue1 ??= false,
+                                  onChanged: (newValue) async {
+                                    safeSetState(() =>
+                                        _model.checkboxValue1 = newValue!);
+                                    if (newValue!) {
+                                      _model.boxesSelected = true;
+                                      safeSetState(() {});
+                                    }
+                                  },
+                                  side: (FlutterFlowTheme.of(context)
+                                              .alternate !=
+                                          null)
+                                      ? BorderSide(
+                                          width: 2,
                                           color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          letterSpacing: 0.0,
-                                          lineHeight: 1.4,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
+                                              .alternate,
+                                        )
+                                      : null,
+                                  activeColor:
+                                      FlutterFlowTheme.of(context).primary,
+                                  checkColor: FlutterFlowTheme.of(context).info,
                                 ),
-                              ].divide(SizedBox(width: 12.0)),
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Theme(
-                                  data: ThemeData(
-                                    checkboxTheme: CheckboxThemeData(
-                                      visualDensity: VisualDensity.compact,
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'I understand that entering my Decoy PIN will activate an emergency trigger and may notify my emergency contacts, third party services, or public safety agencies.',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        lineHeight: 1.4,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
                                       ),
+                                ),
+                              ),
+                            ].divide(SizedBox(width: 12.0)),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Theme(
+                                data: ThemeData(
+                                  checkboxTheme: CheckboxThemeData(
+                                    visualDensity: VisualDensity.compact,
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4.0),
                                     ),
-                                    unselectedWidgetColor:
-                                        FlutterFlowTheme.of(context).alternate,
                                   ),
-                                  child: Checkbox(
-                                    value: _model.checkboxValue2 ??= false,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() =>
-                                          _model.checkboxValue2 = newValue!);
-                                      if (newValue!) {
-                                        _model.boxesSelected = true;
-                                        safeSetState(() {});
-                                      }
-                                    },
-                                    side: (FlutterFlowTheme.of(context)
-                                                .alternate !=
-                                            null)
-                                        ? BorderSide(
-                                            width: 2,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          )
-                                        : null,
-                                    activeColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    checkColor:
-                                        FlutterFlowTheme.of(context).info,
-                                  ),
+                                  unselectedWidgetColor:
+                                      FlutterFlowTheme.of(context).alternate,
                                 ),
-                                Expanded(
-                                  child: Text(
-                                    'I understand this feature is only for real emergency situations, and I am responsible for any false alerts, fees, or consequences caused by misuse.',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
+                                child: Checkbox(
+                                  value: _model.checkboxValue2 ??= false,
+                                  onChanged: (newValue) async {
+                                    safeSetState(() =>
+                                        _model.checkboxValue2 = newValue!);
+                                    if (newValue!) {
+                                      _model.boxesSelected = true;
+                                      safeSetState(() {});
+                                    }
+                                  },
+                                  side: (FlutterFlowTheme.of(context)
+                                              .alternate !=
+                                          null)
+                                      ? BorderSide(
+                                          width: 2,
                                           color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          letterSpacing: 0.0,
-                                          lineHeight: 1.4,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
+                                              .alternate,
+                                        )
+                                      : null,
+                                  activeColor:
+                                      FlutterFlowTheme.of(context).primary,
+                                  checkColor: FlutterFlowTheme.of(context).info,
                                 ),
-                              ].divide(SizedBox(width: 12.0)),
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Theme(
-                                  data: ThemeData(
-                                    checkboxTheme: CheckboxThemeData(
-                                      visualDensity: VisualDensity.compact,
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'I understand this feature is only for real emergency situations, and I am responsible for any false alerts, fees, or consequences caused by misuse.',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        lineHeight: 1.4,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
                                       ),
+                                ),
+                              ),
+                            ].divide(SizedBox(width: 12.0)),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Theme(
+                                data: ThemeData(
+                                  checkboxTheme: CheckboxThemeData(
+                                    visualDensity: VisualDensity.compact,
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4.0),
                                     ),
-                                    unselectedWidgetColor:
-                                        FlutterFlowTheme.of(context).alternate,
                                   ),
-                                  child: Checkbox(
-                                    value: _model.checkboxValue3 ??= false,
-                                    onChanged: (newValue) async {
-                                      safeSetState(() =>
-                                          _model.checkboxValue3 = newValue!);
-                                      if (newValue!) {
-                                        _model.boxesSelected = true;
-                                        safeSetState(() {});
-                                      }
-                                    },
-                                    side: (FlutterFlowTheme.of(context)
-                                                .alternate !=
-                                            null)
-                                        ? BorderSide(
-                                            width: 2,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          )
-                                        : null,
-                                    activeColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    checkColor:
-                                        FlutterFlowTheme.of(context).info,
-                                  ),
+                                  unselectedWidgetColor:
+                                      FlutterFlowTheme.of(context).alternate,
                                 ),
-                                Expanded(
-                                  child: Text(
-                                    'I understand that alerts may fail due to connectivity, device issues, or technical limitations, and Decoy Wallet cannot guarantee a response.',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
+                                child: Checkbox(
+                                  value: _model.checkboxValue3 ??= false,
+                                  onChanged: (newValue) async {
+                                    safeSetState(() =>
+                                        _model.checkboxValue3 = newValue!);
+                                    if (newValue!) {
+                                      _model.boxesSelected = true;
+                                      safeSetState(() {});
+                                    }
+                                  },
+                                  side: (FlutterFlowTheme.of(context)
+                                              .alternate !=
+                                          null)
+                                      ? BorderSide(
+                                          width: 2,
                                           color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          letterSpacing: 0.0,
-                                          lineHeight: 1.4,
-                                          useGoogleFonts:
-                                              !FlutterFlowTheme.of(context)
-                                                  .bodyMediumIsCustom,
-                                        ),
-                                  ),
+                                              .alternate,
+                                        )
+                                      : null,
+                                  activeColor:
+                                      FlutterFlowTheme.of(context).primary,
+                                  checkColor: FlutterFlowTheme.of(context).info,
                                 ),
-                              ].divide(SizedBox(width: 12.0)),
-                            ),
-                          ],
-                        ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'I understand that alerts may fail due to connectivity, device issues, or technical limitations, and Decoy Wallet cannot guarantee a response.',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        lineHeight: 1.4,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                ),
+                              ),
+                            ].divide(SizedBox(width: 12.0)),
+                          ),
+                        ],
                       ),
                     ),
                   ),

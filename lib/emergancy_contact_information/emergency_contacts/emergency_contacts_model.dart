@@ -69,6 +69,12 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   void updateConsentSlotsListAtIndex(int index, Function(dynamic) updateFn) =>
       consentSlotsList[index] = updateFn(consentSlotsList[index]);
 
+  String c1First = '\"\"';
+
+  String c1Last = '\"\"';
+
+  String c1Phone = '\"\"';
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();

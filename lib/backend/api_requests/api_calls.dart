@@ -951,6 +951,66 @@ class GetConsentStatusesCall {
         response,
         r'''$.slot5Status''',
       );
+  static dynamic slot1First(dynamic response) => getJsonField(
+        response,
+        r'''$.slot1First''',
+      );
+  static dynamic slot1Last(dynamic response) => getJsonField(
+        response,
+        r'''$.slot1Last''',
+      );
+  static dynamic slot1Phone(dynamic response) => getJsonField(
+        response,
+        r'''$.slot1Phone''',
+      );
+  static dynamic slot2First(dynamic response) => getJsonField(
+        response,
+        r'''$.slot2First''',
+      );
+  static dynamic slot2Last(dynamic response) => getJsonField(
+        response,
+        r'''$.slot2Last''',
+      );
+  static dynamic slot2Phone(dynamic response) => getJsonField(
+        response,
+        r'''$.slot2Phone''',
+      );
+  static dynamic slot3First(dynamic response) => getJsonField(
+        response,
+        r'''$.slot3First''',
+      );
+  static dynamic slot3Last(dynamic response) => getJsonField(
+        response,
+        r'''$.slot3Last''',
+      );
+  static dynamic slot3Phone(dynamic response) => getJsonField(
+        response,
+        r'''$.slot3Phone''',
+      );
+  static dynamic slot4First(dynamic response) => getJsonField(
+        response,
+        r'''$.slot4First''',
+      );
+  static dynamic slot4Last(dynamic response) => getJsonField(
+        response,
+        r'''$.slot4Last''',
+      );
+  static dynamic slot4Phone(dynamic response) => getJsonField(
+        response,
+        r'''$.slot4Phone''',
+      );
+  static dynamic slot5First(dynamic response) => getJsonField(
+        response,
+        r'''$.slot5First''',
+      );
+  static dynamic slot5Last(dynamic response) => getJsonField(
+        response,
+        r'''$.slot5Last''',
+      );
+  static dynamic slot5Phone(dynamic response) => getJsonField(
+        response,
+        r'''$.slot5Phone''',
+      );
 }
 
 class SyncConsentSlotsCall {
