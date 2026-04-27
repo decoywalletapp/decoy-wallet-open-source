@@ -64,6 +64,18 @@ Future<void> _syncCurrentFcmTokenForUser(String userId) async {
   }
 }
 
+Future<void> _syncPushTokenWhenUserAvailable() async {
+  for (var i = 0; i < 15; i++) {
+    final userId = SupaFlow.client.auth.currentUser?.id ?? currentUserUid;
+    if (userId.isNotEmpty) {
+      await _syncCurrentFcmTokenForUser(userId);
+      return;
+    }
+
+    await Future.delayed(const Duration(seconds: 1));
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;
@@ -97,6 +109,7 @@ void main() async {
 
   final initialUserId = SupaFlow.client.auth.currentUser?.id ?? '';
   await _syncCurrentFcmTokenForUser(initialUserId);
+  unawaited(_syncPushTokenWhenUserAvailable());
 
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
@@ -155,6 +168,9 @@ class _MyAppState extends State<MyApp> {
     userStream = decoyWalletAppSupabaseUserStream()
       ..listen((user) {
         _appStateNotifier.update(user);
+        if (user.loggedIn && user.uid.isNotEmpty) {
+          unawaited(_syncCurrentFcmTokenForUser(user.uid));
+        }
       });
     jwtTokenStream.listen((_) {});
     Future.delayed(
