@@ -168,8 +168,9 @@ class _MyAppState extends State<MyApp> {
     userStream = decoyWalletAppSupabaseUserStream()
       ..listen((user) {
         _appStateNotifier.update(user);
-        if (user.loggedIn && user.uid.isNotEmpty) {
-          unawaited(_syncCurrentFcmTokenForUser(user.uid));
+        final userId = user.uid ?? '';
+        if (user.loggedIn && userId.isNotEmpty) {
+          unawaited(_syncCurrentFcmTokenForUser(userId));
         }
       });
     jwtTokenStream.listen((_) {});
