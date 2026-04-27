@@ -92,44 +92,32 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       final ok = session != null || res.user != null;
       if (!ok || !mounted) return;
 
-      // Optional: promote pending_email -> email on your profile row
-      try {
-        final uid = client.auth.currentUser?.id;
-        final nowEmail =
-            (client.auth.currentUser?.email ?? '').trim().toLowerCase();
-        if (uid != null && nowEmail.isNotEmpty) {
-          // maybeSingle() can return null; keep everything nullable-safe
-          final dynamic profDyn = await client
-              .from('profiles') // <-- change table name if yours differs
-              .select()
-              .eq('id', uid)
-              .maybeSingle();
+      final uid = client.auth.currentUser?.id;
+      final nowEmail =
+          (client.auth.currentUser?.email ?? '').trim().toLowerCase();
 
-          final Map<String, dynamic>? prof =
-              (profDyn is Map<String, dynamic>) ? profDyn : null;
-
-          String pending = '';
-          final dynamic val = prof?['pending_email']; // null-safe index
-          if (val is String) {
-            pending = val.trim().toLowerCase();
-          }
-
-          if (pending.isNotEmpty && pending == nowEmail) {
-            await client.from('profiles').update({
-              'email': nowEmail,
-              'pending_email': null,
-              'email_verified': true,
-            }).eq('id', uid);
-          }
+      if (t == 'email_change' && uid != null && nowEmail.isNotEmpty) {
+        try {
+          await client.from('decoy_wallet').update({
+            'pending_email': null,
+            'email_verified': true,
+            'email_verified_at': DateTime.now().toUtc().toIso8601String(),
+          }).eq('user_id', uid);
+        } catch (e, st) {
+          if (kDebugMode)
+            debugPrint('[VerifyAnyLink] email change promote err: $e\n$st');
         }
-      } catch (e, st) {
-        if (kDebugMode)
-          debugPrint('[VerifyAnyLink] profile promote err: $e\n$st');
+
+        if (!_navigated && mounted) {
+          _navigated = true;
+          context.goNamed('AuthRouter');
+        }
+        return;
       }
 
       if (!_navigated && mounted) {
         _navigated = true;
-        context.goNamed('phoneNumberInput'); // next step in your flow
+        context.goNamed('phoneNumberInput'); // next step in your signup flow
       }
     } on AuthApiException catch (e, st) {
       if (e.code == 'otp_expired' || e.statusCode == 403) {
