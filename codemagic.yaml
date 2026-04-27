@@ -6,7 +6,7 @@ workflows:
       groups:
         - signing_cert
         - app_store_connect
-      xcode: latest
+      xcode: 26.2
       vars:
         TEAM_ID: 8Y7L4NZ5ZX
         BUNDLE_ID: com.decoywalletapp.app
@@ -16,7 +16,6 @@ workflows:
 
     cache:
       cache_paths:
-        - $HOME/flutter
         - $HOME/.pub-cache
         - ios/Pods
 
@@ -34,16 +33,15 @@ workflows:
           test -n "$APP_STORE_CONNECT_ISSUER_ID"
           test -n "$APP_STORE_CONNECT_PRIVATE_KEY"
 
-      - name: Install Flutter (exact)
+      - name: Install Flutter 3.38.5 to match build 509
         script: |
           set -euxo pipefail
-          if [ ! -d "$HOME/flutter/bin" ]; then
-            cd "$HOME"
-            URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_3.32.4-stable.zip"
-            curl -L --fail --show-error --output flutter.zip "$URL"
-            unzip -q flutter.zip
-            rm -f flutter.zip
-          fi
+          rm -rf "$HOME/flutter" "$HOME/flutter.zip"
+          cd "$HOME"
+          URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_3.38.5-stable.zip"
+          curl -L --fail --show-error --output flutter.zip "$URL"
+          unzip -q flutter.zip
+          rm -f flutter.zip
           echo 'export PATH="$HOME/flutter/bin:$PATH"' >> $CM_ENV
           "$HOME/flutter/bin/flutter" --version
 
@@ -155,7 +153,6 @@ workflows:
           rm -rf /tmp/ipa_inspect
           mkdir -p /tmp/ipa_inspect
 
-          # Pull embedded.mobileprovision out of the IPA safely (handles spaces, no cd needed)
           unzip -p "$IPA" 'Payload/*.app/embedded.mobileprovision' > /tmp/ipa_inspect/embedded.mobileprovision
 
           /usr/bin/security cms -D -i /tmp/ipa_inspect/embedded.mobileprovision > /tmp/ipa_inspect/embedded.plist
