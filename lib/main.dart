@@ -38,7 +38,16 @@ Future<void> _syncCurrentFcmTokenForUser(String userId) async {
   if (userId.isEmpty) return;
 
   try {
-    final settings = await FirebaseMessaging.instance.getNotificationSettings();
+    var settings = await FirebaseMessaging.instance.getNotificationSettings();
+    if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+      settings = await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+        provisional: false,
+      );
+    }
+
     final allowed =
         settings.authorizationStatus == AuthorizationStatus.authorized ||
             settings.authorizationStatus == AuthorizationStatus.provisional;
