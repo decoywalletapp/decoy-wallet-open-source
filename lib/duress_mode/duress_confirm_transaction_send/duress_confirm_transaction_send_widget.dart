@@ -60,6 +60,27 @@ class _DuressConfirmTransactionSendWidgetState
     super.dispose();
   }
 
+  void _recordFakeSendAndStartTransaction() {
+    final sentBtc = functions.amountToDouble(FFAppState().sendAmountBtc);
+    final totalAfterFee =
+        functions.totalAfterFee(FFAppState().sendAmountBtc, _model.feeBtc);
+
+    FFAppState().sendAmountBtc = totalAfterFee;
+
+    if (sentBtc > 0.0) {
+      final nextBalance = FFAppState().fakeBtcBalance - sentBtc;
+      FFAppState().fakeBtcBalance = nextBalance > 0.0 ? nextBalance : 0.0;
+      FFAppState().fakeUsdValue = functions.usdFromBtc(
+        FFAppState().fakeBtcBalance,
+        FFAppState().currentPriceMultiple,
+      );
+    }
+
+    FFAppState().txStartAt = getCurrentTimestamp;
+    FFAppState().txTotalMins = 60;
+    FFAppState().txStatus = 'awaiting';
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -388,14 +409,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                     FFAppState().sendAmountBtc,
                                                     _model.feeBtc) !=
                                                 '0')) {
-                                          FFAppState().sendAmountBtc =
-                                              functions.totalAfterFee(
-                                                  FFAppState().sendAmountBtc,
-                                                  _model.feeBtc);
-                                          FFAppState().txStartAt =
-                                              getCurrentTimestamp;
-                                          FFAppState().txTotalMins = 60;
-                                          FFAppState().txStatus = 'awaiting';
+                                          _recordFakeSendAndStartTransaction();
                                           safeSetState(() {});
 
                                           context.pushNamed(
@@ -403,9 +417,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                 .routeName,
                                             queryParameters: {
                                               'amountBtc': serializeParam(
-                                                functions.totalAfterFee(
-                                                    FFAppState().sendAmountBtc,
-                                                    _model.feeBtc),
+                                                FFAppState().sendAmountBtc,
                                                 ParamType.String,
                                               ),
                                               'toAddress': serializeParam(
@@ -560,22 +572,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                                     _model
                                                                         .feeBtc) !=
                                                                 '0')) {
-                                                          FFAppState()
-                                                                  .sendAmountBtc =
-                                                              functions.totalAfterFee(
-                                                                  FFAppState()
-                                                                      .sendAmountBtc,
-                                                                  _model
-                                                                      .feeBtc);
-                                                          safeSetState(() {});
-                                                          FFAppState()
-                                                                  .txStartAt =
-                                                              getCurrentTimestamp;
-                                                          FFAppState()
-                                                              .txTotalMins = 60;
-                                                          FFAppState()
-                                                                  .txStatus =
-                                                              'awaiting';
+                                                          _recordFakeSendAndStartTransaction();
                                                           safeSetState(() {});
 
                                                           context.pushNamed(
@@ -584,11 +581,8 @@ class _DuressConfirmTransactionSendWidgetState
                                                             queryParameters: {
                                                               'amountBtc':
                                                                   serializeParam(
-                                                                functions.totalAfterFee(
-                                                                    FFAppState()
-                                                                        .sendAmountBtc,
-                                                                    _model
-                                                                        .feeBtc),
+                                                                FFAppState()
+                                                                    .sendAmountBtc,
                                                                 ParamType
                                                                     .String,
                                                               ),
