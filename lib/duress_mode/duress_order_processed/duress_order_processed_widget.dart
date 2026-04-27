@@ -1,4 +1,5 @@
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,12 @@ class _DuressOrderProcessedWidgetState
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      final remainingFakeBalance = FFAppState().fakeBtcBalance -
+          functions.amountToDouble(FFAppState().sendAmountBtc);
+      FFAppState().fakeBtcBalance = remainingFakeBalance > 0.0
+          ? double.parse(remainingFakeBalance.toStringAsFixed(8))
+          : 0.0;
+      safeSetState(() {});
       await Future.delayed(
         Duration(
           milliseconds: 2500,
@@ -88,7 +95,7 @@ class _DuressOrderProcessedWidgetState
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: Color(0xFF1D2428),
           body: SafeArea(
             top: true,
             child: Align(
