@@ -3,6 +3,7 @@ import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -45,6 +46,15 @@ Future<void> _syncCurrentFcmTokenForUser(String userId) async {
     if (!allowed) return;
 
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      for (var i = 0; i < 6 && (apnsToken == null || apnsToken.isEmpty); i++) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      }
+    }
+
     final token = await FirebaseMessaging.instance.getToken();
     if (token == null || token.isEmpty) return;
 
