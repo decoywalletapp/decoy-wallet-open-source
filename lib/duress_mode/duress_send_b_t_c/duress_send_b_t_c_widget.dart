@@ -126,7 +126,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          functions.formatBtcTrim(_model.amountText),
+                          _model.amountText.isEmpty ? '0' : _model.amountText,
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context)
                               .displayMedium
