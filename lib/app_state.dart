@@ -13,6 +13,9 @@ class FFAppState extends ChangeNotifier {
 
   FFAppState._internal();
 
+  static const double _fakeBtcReseedThreshold = 0.05;
+  static const Duration _fakeBtcReseedCooldown = Duration(hours: 24);
+
   static void reset() {
     _instance = FFAppState._internal();
   }
@@ -25,6 +28,11 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _fakeBtcBalance =
           await secureStorage.getDouble('ff_fakeBtcBalance') ?? _fakeBtcBalance;
+    });
+    await _safeInitAsync(() async {
+      final stored = await secureStorage.getString('ff_fakeBtcSeededAt');
+      _fakeBtcSeededAt =
+          stored == null ? _fakeBtcSeededAt : DateTime.tryParse(stored);
     });
     await _safeInitAsync(() async {
       _fakeUsdValue =
@@ -178,14 +186,52 @@ class FFAppState extends ChangeNotifier {
   }
 
   double _fakeBtcBalance = 0.0;
-  double get fakeBtcBalance => _fakeBtcBalance;
+  double get fakeBtcBalance => _isFakeBtcBalanceStale() ? 0.0 : _fakeBtcBalance;
   set fakeBtcBalance(double value) {
+    final wasStale = _isFakeBtcBalanceStale();
     _fakeBtcBalance = value;
     secureStorage.setDouble('ff_fakeBtcBalance', value);
+    if (value > 0.0 &&
+        (!_fakeSeeded || _fakeBtcSeededAt == null || wasStale)) {
+      fakeBtcSeededAt = DateTime.now().toUtc();
+    }
   }
 
   void deleteFakeBtcBalance() {
     secureStorage.delete(key: 'ff_fakeBtcBalance');
+    fakeBtcSeededAt = null;
+  }
+
+  DateTime? _fakeBtcSeededAt;
+  DateTime? get fakeBtcSeededAt => _fakeBtcSeededAt;
+  set fakeBtcSeededAt(DateTime? value) {
+    _fakeBtcSeededAt = value;
+    if (value == null) {
+      secureStorage.delete(key: 'ff_fakeBtcSeededAt');
+    } else {
+      secureStorage.setString(
+        'ff_fakeBtcSeededAt',
+        value.toUtc().toIso8601String(),
+      );
+    }
+  }
+
+  void deleteFakeBtcSeededAt() {
+    secureStorage.delete(key: 'ff_fakeBtcSeededAt');
+  }
+
+  bool _isFakeBtcBalanceStale() {
+    if (_fakeSeeded != true) return false;
+    if (!_fakeBtcBalance.isFinite ||
+        _fakeBtcBalance <= _fakeBtcReseedThreshold) {
+      return true;
+    }
+
+    final seededAt = _fakeBtcSeededAt;
+    if (seededAt == null) return false;
+
+    return DateTime.now().toUtc().difference(seededAt.toUtc()) >=
+        _fakeBtcReseedCooldown;
   }
 
   double _fakeUsdValue = 0.0;
