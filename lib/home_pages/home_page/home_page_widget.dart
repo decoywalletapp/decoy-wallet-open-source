@@ -281,7 +281,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                             Align(
                                                               alignment:
                                                                   AlignmentDirectional(
-                                                                      0.0, 0.0),
+                                                                      -0.01,
+                                                                      0.0),
                                                               child: Text(
                                                                 'Decoy Keys',
                                                                 style: FlutterFlowTheme.of(
@@ -306,7 +307,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                             Align(
                                                               alignment:
                                                                   AlignmentDirectional(
-                                                                      0.0, 0.0),
+                                                                      0.01,
+                                                                      0.0),
                                                               child: Padding(
                                                                 padding:
                                                                     EdgeInsetsDirectional
@@ -516,7 +518,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                             Align(
                                                               alignment:
                                                                   AlignmentDirectional(
-                                                                      0.0, 0.0),
+                                                                      -0.01,
+                                                                      0.0),
                                                               child: Text(
                                                                 'Decoy PIN',
                                                                 textAlign:
@@ -544,7 +547,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                             Align(
                                                               alignment:
                                                                   AlignmentDirectional(
-                                                                      0.0, 0.0),
+                                                                      0.01,
+                                                                      0.0),
                                                               child: Padding(
                                                                 padding:
                                                                     EdgeInsetsDirectional

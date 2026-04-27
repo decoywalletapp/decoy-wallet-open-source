@@ -558,10 +558,18 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
 
                                                           safeSetState(() {});
                                                         },
-                                                        text: _model.provider ==
-                                                                'btcpay'
-                                                            ? 'Renew Bitcoin Payments'
-                                                            : 'Switch to Bitcoin Payments',
+                                                        text: () {
+                                                          if (_model.provider ==
+                                                              'btcpay') {
+                                                            return 'Renew Bitcoin Payments';
+                                                          } else if (_model
+                                                                  .pendingProvider ==
+                                                              'btcpay') {
+                                                            return 'Stack More Days';
+                                                          } else {
+                                                            return 'Switch to Bitcoin Payments';
+                                                          }
+                                                        }(),
                                                         options:
                                                             FFButtonOptions(
                                                           width: 250.0,
@@ -894,10 +902,18 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
 
                                                     safeSetState(() {});
                                                   },
-                                                  text: _model.provider ==
-                                                          'stripe'
-                                                      ? 'Manage Card Payments'
-                                                      : 'Switch to Card Payments',
+                                                  text: () {
+                                                    if (_model.provider ==
+                                                        'stripe') {
+                                                      return 'Manage Card Payments';
+                                                    } else if (_model
+                                                            .pendingProvider ==
+                                                        'stripe') {
+                                                      return 'Card Payments Scheduled';
+                                                    } else {
+                                                      return 'Switch to Card Payments';
+                                                    }
+                                                  }(),
                                                   options: FFButtonOptions(
                                                     width: 250.0,
                                                     height: 50.0,

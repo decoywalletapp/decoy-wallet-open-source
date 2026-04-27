@@ -43,18 +43,7 @@ class UserEntitlementsRow extends SupabaseDataRow {
   set providerStatus(String? value) =>
       setField<String>('provider_status', value);
 
-  DateTime? get rawCurrentPeriodEnd => getField<DateTime>('current_period_end');
-
-  DateTime? get currentPeriodEnd {
-    final current = getField<DateTime>('current_period_end');
-    final graceUntil = getField<DateTime>('teardown_grace_until');
-
-    if (current == null) return graceUntil;
-    if (graceUntil == null) return current;
-
-    return graceUntil.isAfter(current) ? graceUntil : current;
-  }
-
+  DateTime? get currentPeriodEnd => getField<DateTime>('current_period_end');
   set currentPeriodEnd(DateTime? value) =>
       setField<DateTime>('current_period_end', value);
 
