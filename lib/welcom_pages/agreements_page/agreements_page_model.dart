@@ -1,16 +1,16 @@
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/index.dart';
 import 'agreements_page_widget.dart' show AgreementsPageWidget;
 import 'package:flutter/material.dart';
 
 class AgreementsPageModel extends FlutterFlowModel<AgreementsPageWidget> {
-  ///  Local state fields for this page.
+  /// Local state fields for this page.
 
-  bool boxesSelected = false;
+  int agreementPageIndex = 0;
 
-  ///  State fields for stateful widgets in this page.
+  /// State fields for stateful widgets in this page.
 
+  PageController? pageViewController;
   // State field(s) for Checkbox widget.
   bool? checkboxValue1;
   // State field(s) for Checkbox widget.
@@ -24,5 +24,7 @@ class AgreementsPageModel extends FlutterFlowModel<AgreementsPageWidget> {
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {}
+  void dispose() {
+    pageViewController?.dispose();
+  }
 }
