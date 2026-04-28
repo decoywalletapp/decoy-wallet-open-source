@@ -95,7 +95,7 @@ class _DuressOrderProcessedWidgetState
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0xFF1D2428),
+          backgroundColor: Colors.black,
           body: SafeArea(
             top: true,
             child: Align(
