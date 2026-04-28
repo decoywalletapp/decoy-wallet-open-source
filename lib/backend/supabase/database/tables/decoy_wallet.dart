@@ -85,11 +85,11 @@ class DecoyWalletRow extends SupabaseDataRow {
   set wrappedDatakey(String? value) =>
       setField<String>('wrapped_datakey', value);
 
-  String? get contactsCiphertext => getField<String>('contacts_ciphertext');
+  String? get contactsCiphertext => getField<String>('contacts_ciphertext') ?? '';
   set contactsCiphertext(String? value) =>
       setField<String>('contacts_ciphertext', value);
 
-  String? get contactsNonce => getField<String>('contacts_nonce');
+  String? get contactsNonce => getField<String>('contacts_nonce') ?? '';
   set contactsNonce(String? value) => setField<String>('contacts_nonce', value);
 
   int? get contactsVersion => getField<int>('contacts_version');
@@ -108,13 +108,13 @@ class DecoyWalletRow extends SupabaseDataRow {
   DateTime? get updatedAt => getField<DateTime>('updated_at');
   set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
 
-  String? get personalNonce => getField<String>('personal_nonce');
+  String? get personalNonce => getField<String>('personal_nonce') ?? '';
   set personalNonce(String? value) => setField<String>('personal_nonce', value);
 
   int? get personalVersion => getField<int>('personal_version');
   set personalVersion(int? value) => setField<int>('personal_version', value);
 
-  String? get personalCiphertext => getField<String>('personal_ciphertext');
+  String? get personalCiphertext => getField<String>('personal_ciphertext') ?? '';
   set personalCiphertext(String? value) =>
       setField<String>('personal_ciphertext', value);
 
