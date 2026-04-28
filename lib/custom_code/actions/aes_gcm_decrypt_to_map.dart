@@ -21,13 +21,20 @@ Uint8List _decodeB64Any(String s) {
   return Uint8List.fromList(base64.decode(norm));
 }
 
+bool _isBlankish(String s) {
+  final v = s.trim();
+  return v.isEmpty || v == '""' || v == "''";
+}
+
 Future<dynamic> aesGcmDecryptToMap(
   String ciphertextB64,
   String nonceB64,
   String base64DataKey,
 ) async {
   try {
-    if (ciphertextB64.isEmpty || nonceB64.isEmpty || base64DataKey.isEmpty) {
+    if (_isBlankish(ciphertextB64) ||
+        _isBlankish(nonceB64) ||
+        _isBlankish(base64DataKey)) {
       return {'_ok': false, '_error': 'missing input'};
     }
 
