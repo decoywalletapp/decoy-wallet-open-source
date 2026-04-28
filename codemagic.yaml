@@ -120,6 +120,17 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool NO" ios/Runner/Info.plist
           /usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist
 
+      - name: Stabilize duress transition backgrounds
+        script: |
+          set -euxo pipefail
+          find lib/duress_mode -name '*_widget.dart' -print0 | \
+            xargs -0 perl -0pi -e 's/backgroundColor: Color\(0x001D2428\)/backgroundColor: Color(0xFF000000)/g'
+
+          if grep -R "backgroundColor: Color(0x001D2428)" lib/duress_mode; then
+            echo "Transparent duress page backgrounds remain."
+            exit 1
+          fi
+
       - name: Apply provisioning profiles to Xcode project
         script: |
           set -euxo pipefail
