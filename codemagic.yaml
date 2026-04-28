@@ -155,6 +155,61 @@ workflows:
               lib/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart
           done
 
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+
+          create_pin = Path('lib/pin_pages/create_pin/create_pin_widget.dart')
+          text = create_pin.read_text()
+          old = """                                                      await DecoyWalletTable()
+                                                          .update(
+                                                        data: {
+                                                          'setup_complete':
+                                                              true,
+                                                          'setup_completed_at':
+                                                              supaSerialize<
+                                                                      DateTime>(
+                                                                  getCurrentTimestamp),
+                                                        },
+                                                        matchingRows: (rows) =>
+                                                            rows.eqOrNull(
+                                                          'user_id',
+                                                          currentUserUid,
+                                                        ),
+                                                      );
+
+                                                      context.goNamed(
+                                                        HomePageWidget
+                                                            .routeName,
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          '__transition_info__':
+                                                              TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .fade,
+                                                          ),
+                                                        },
+                                                      );"""
+          new = """                                                      context.goNamed(
+                                                        AgreementsPageWidget
+                                                            .routeName,
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          '__transition_info__':
+                                                              TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .fade,
+                                                          ),
+                                                        },
+                                                      );"""
+          if old not in text:
+              raise SystemExit('CreatePin onboarding completion block was not found.')
+          create_pin.write_text(text.replace(old, new))
+          PY
+
           if grep -R "backgroundColor: Color(0x001D2428)" lib/duress_mode; then
             echo "Transparent duress page backgrounds remain."
             exit 1
@@ -167,6 +222,21 @@ workflows:
 
           if grep -n "AutofillHints.email" lib/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart | grep -q "zipTextController"; then
             echo "ZIP field still has the wrong autofill hint."
+            exit 1
+          fi
+
+          if ! grep -n "AgreementsPageWidget" lib/pin_pages/create_pin/create_pin_widget.dart; then
+            echo "CreatePin is not routed through AgreementsPage."
+            exit 1
+          fi
+
+          if grep -n "'feature': 'decoy_pin_ack'" lib/welcom_pages/agreements_page/agreements_page_widget.dart; then
+            echo "AgreementsPage still contains decoy PIN acknowledgement consent logic."
+            exit 1
+          fi
+
+          if ! grep -n "'feature': 'onboarding_agreements'" lib/welcom_pages/agreements_page/agreements_page_widget.dart; then
+            echo "AgreementsPage is missing onboarding agreements consent logging."
             exit 1
           fi
 
