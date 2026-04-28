@@ -8,9 +8,9 @@ class PhoneNumberInputCopyModel
     extends FlutterFlowModel<PhoneNumberInputCopyWidget> {
   ///  Local state fields for this page.
   /// formats the user's phone number for twilio recognition
-  String cleanPhone = '\"\"';
+  String cleanPhone = '';
 
-  String rawPhoneInput = '\"\"';
+  String rawPhoneInput = '';
 
   bool skipChange = false;
 
