@@ -120,14 +120,53 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool NO" ios/Runner/Info.plist
           /usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" ios/Runner/Info.plist
 
-      - name: Stabilize duress transition backgrounds
+      - name: Stabilize generated UI patches
         script: |
           set -euxo pipefail
+
           find lib/duress_mode -name '*_widget.dart' -print0 | \
             xargs -0 perl -0pi -e 's/backgroundColor: Color\(0x001D2428\)/backgroundColor: Color(0xFF000000)/g'
 
+          perl -0pi -e 's/backgroundColor: Color\(0x001D2428\)/backgroundColor: Color(0xFF000000)/g' \
+            lib/pin_pages/create_decoy_pin/create_decoy_pin_widget.dart
+
+          perl -0pi -e 's/(textAlign:\n\s+TextAlign\.center,\n)(\s+cursorColor:)/$1                                                      keyboardType: TextInputType.number,\n                                                      autofillHints: [\n                                                        AutofillHints.oneTimeCode\n                                                      ],\n$2/' \
+            lib/welcom_pages/phone_number_verification/phone_number_verification_widget.dart
+
+          perl -0pi -e 's/(controller: _model\.phoneTextController,\n\s+focusNode: _model\.phoneFocusNode,\n\s+autofocus: false,\n)(?!\s*autofillHints:)/$1                                        autofillHints: [\n                                          AutofillHints.telephoneNumber\n                                        ],\n/' \
+            lib/emergancy_contact_information/personal_information/personal_information_widget.dart
+
+          perl -0pi -e 's/(controller: _model\.emailTextController,\n\s+focusNode: _model\.emailFocusNode,\n\s+autofocus: false,\n)(?!\s*autofillHints:)/$1                                        autofillHints: [AutofillHints.email],\n                                        keyboardType: TextInputType.emailAddress,\n/' \
+            lib/emergancy_contact_information/personal_information/personal_information_widget.dart
+
+          perl -0pi -e 's/(controller:\n\s+_model\.zipTextController,\n\s+focusNode: _model\.zipFocusNode,\n\s+autofocus: false,\n\s+autofillHints: \[\n\s+)AutofillHints\.email/$1AutofillHints.postalCode/' \
+            lib/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart
+
+          perl -0pi -e 's/AutofillHints\.password/AutofillHints.newPassword/g' \
+            lib/welcom_pages/create_account/create_account_widget.dart \
+            lib/welcom_pages/update_password_page/update_password_page_widget.dart
+
+          for n in 1 2 3 4 5; do
+            perl -0pi -e "s/(controller: _model\s*\n\s*\.c${n}FirstTFTextController,\s*\n\s*focusNode: _model\s*\n\s*\.c${n}FirstTFFocusNode,\s*\n\s*autofocus: false,\s*\n)(?!\s*autofillHints:)/\$1                                                    autofillHints: [\n                                                      AutofillHints.givenName\n                                                    ],\n/" \
+              lib/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart
+            perl -0pi -e "s/(controller: _model\s*\n\s*\.c${n}LastTFTextController,\s*\n\s*focusNode: _model\s*\n\s*\.c${n}LastTFFocusNode,\s*\n\s*autofocus: false,\s*\n)(?!\s*autofillHints:)/\$1                                                    autofillHints: [\n                                                      AutofillHints.familyName\n                                                    ],\n/" \
+              lib/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart
+            perl -0pi -e "s/(controller: _model\s*\n\s*\.c${n}PhoneTFTextController,.*?autofocus: false,\s*\n)(?!\s*autofillHints:)/\$1                                                    autofillHints: [\n                                                      AutofillHints.telephoneNumber\n                                                    ],\n/s" \
+              lib/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart
+          done
+
           if grep -R "backgroundColor: Color(0x001D2428)" lib/duress_mode; then
             echo "Transparent duress page backgrounds remain."
+            exit 1
+          fi
+
+          if grep -n "backgroundColor: Color(0x001D2428)" lib/pin_pages/create_decoy_pin/create_decoy_pin_widget.dart; then
+            echo "Transparent CreateDecoyPin page background remains."
+            exit 1
+          fi
+
+          if grep -n "AutofillHints.email" lib/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart | grep -q "zipTextController"; then
+            echo "ZIP field still has the wrong autofill hint."
             exit 1
           fi
 
