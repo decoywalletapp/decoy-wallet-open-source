@@ -1,102 +1,63 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import '/auth/auth_manager.dart';
+import 'package:from_css_color/from_css_color.dart';
+
 import '/backend/supabase/supabase.dart';
-import '/flutter_flow/flutter_flow_util.dart';
+import 'apple_auth.dart';
 import 'email_auth.dart';
 
-import 'supabase_user_provider.dart';
+export 'base_auth_user_provider.dart';
 
-export '/auth/base_auth_user_provider.dart';
+class SupabaseUserProvider extends BaseAuthUserProvider {
+  @override
+  String? get currentUserEmail => currentUser?.email;
 
-class SupabaseAuthManager extends AuthManager with EmailSignInManager {
+  @override
+  String? get currentUserUid => currentUser?.uid;
+
+  @override
+  bool get loggedIn => currentUser?.loggedIn ?? false;
+
+  @override
+  bool get emailVerified => currentUser?.emailVerified ?? false;
+
+  @override
+  bool get phoneVerified => currentUser?.phoneVerified ?? false;
+}
+
+class SupabaseAuthUser extends BaseAuthUser {
+  User? user;
+  SupabaseAuthUser(this.user);
+  @override
+  bool get loggedIn => user != null;
+
+  @override
+  bool get emailVerified => user?.emailConfirmedAt != null;
+
+  @override
+  bool get phoneVerified => user?.phoneConfirmedAt != null;
+
+  @override
+  AuthUserInfo get authUserInfo => AuthUserInfo(
+        uid: user?.id,
+        email: user?.email,
+        phoneNumber: user?.phone,
+      );
+
+  @override
+  Future? delete() => user?.delete();
+}
+
+Stream<BaseAuthUser> decoyWalletAppSupabaseUserStream() => SupaFlow
+    .client.auth.onAuthStateChange
+    .map<BaseAuthUser>((event) => currentUser = SupabaseAuthUser(event.session?.user));
+
+class SupabaseAuthManager extends AuthManager
+    with EmailSignInManager, AppleSignInManager {
   @override
   Future signOut() {
     return SupaFlow.client.auth.signOut();
-  }
-
-  @override
-  Future deleteUser(BuildContext context) async {
-    try {
-      if (!loggedIn) {
-        print('Error: delete user attempted with no logged in user!');
-        return;
-      }
-      await currentUser?.delete();
-    } on AuthException catch (e) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
-      );
-    }
-  }
-
-  @override
-  Future updateEmail({
-    required String email,
-    required BuildContext context,
-  }) async {
-    try {
-      if (!loggedIn) {
-        print('Error: update email attempted with no logged in user!');
-        return;
-      }
-      await currentUser?.updateEmail(email);
-    } on AuthException catch (e) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
-      );
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Email change confirmation email sent')),
-    );
-  }
-
-  @override
-  Future updatePassword({
-    required String newPassword,
-    required BuildContext context,
-  }) async {
-    try {
-      if (!loggedIn) {
-        print('Error: update password attempted with no logged in user!');
-        return;
-      }
-      await currentUser?.updatePassword(newPassword);
-    } on AuthException catch (e) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
-      );
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Password updated successfully')),
-    );
-  }
-
-  @override
-  Future resetPassword({
-    required String email,
-    required BuildContext context,
-    String? redirectTo,
-  }) async {
-    try {
-      await SupaFlow.client.auth
-          .resetPasswordForEmail(email, redirectTo: redirectTo);
-    } on AuthException catch (e) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
-      );
-      return null;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Password reset email sent')),
-    );
   }
 
   @override
@@ -121,32 +82,29 @@ class SupabaseAuthManager extends AuthManager with EmailSignInManager {
         () => emailCreateAccountFunc(email, password),
       );
 
-  /// Tries to sign in or create an account using Supabase Auth.
-  /// Returns the User object if sign in was successful.
+  @override
+  Future<BaseAuthUser?> signInWithApple(BuildContext context) =>
+      _signInOrCreateAccount(context, appleSignInFunc);
+
   Future<BaseAuthUser?> _signInOrCreateAccount(
     BuildContext context,
     Future<User?> Function() signInFunc,
   ) async {
     try {
       final user = await signInFunc();
-      final authUser = user == null ? null : DecoyWalletAppSupabaseUser(user);
-
-      // Update currentUser here in case user info needs to be used immediately
-      // after a user is signed in. This should be handled by the user stream,
-      // but adding here too in case of a race condition where the user stream
-      // doesn't assign the currentUser in time.
-      if (authUser != null) {
-        currentUser = authUser;
-        AppStateNotifier.instance.update(authUser);
+      if (user == null) {
+        return null;
       }
-      return authUser;
+      return currentUser = SupabaseAuthUser(user);
     } on AuthException catch (e) {
-      final errorMsg = e.message.contains('User already registered')
-          ? 'Error: The email is already in use by a different account'
-          : 'Error: ${e.message}';
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMsg)),
+        SnackBar(
+          content: Text(
+            'Error: ${e.message}',
+            style: TextStyle(color: FlutterFlowTheme.of(context).primaryText),
+          ),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
       );
       return null;
     }
