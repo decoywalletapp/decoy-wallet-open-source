@@ -177,6 +177,33 @@ def patch_phone_number_copy() -> None:
     write_if_changed(path, text, original)
 
 
+def patch_create_pin_route() -> None:
+    path = Path('lib/pin_pages/create_pin/create_pin_widget.dart')
+    text = path.read_text()
+    original = text
+
+    if 'AgreementsPageWidget' in text:
+        note('create pin route: already routed through AgreementsPage')
+        return
+
+    pattern = re.compile(
+        r"\s*await\s+DecoyWalletTable\(\)\s*\.update\([\s\S]*?"
+        r"matchingRows:\s*\(rows\)\s*=>[\s\S]*?currentUserUid,\s*\),\s*\),\s*\);\s*"
+        r"context\.goNamed\(\s*HomePageWidget\s*\.routeName,",
+        re.MULTILINE,
+    )
+    replacement = """
+                                                      context.goNamed(
+                                                        AgreementsPageWidget
+                                                            .routeName,"""
+    text, count = pattern.subn(replacement, text, count=1)
+    if count != 1:
+        fail('create pin route: HomePage completion block not found')
+
+    note('create pin route: routed through AgreementsPage')
+    write_if_changed(path, text, original)
+
+
 def patch_emergency_contact_defaults() -> None:
     path = Path('lib/emergancy_contact_information/emergency_contacts/emergency_contacts_model.dart')
     text = path.read_text()
@@ -203,6 +230,7 @@ def main() -> None:
     patch_create_account()
     patch_phone_number_main()
     patch_phone_number_copy()
+    patch_create_pin_route()
     patch_emergency_contact_defaults()
     note('all generated field fixes complete')
 
