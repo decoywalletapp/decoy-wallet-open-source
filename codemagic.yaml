@@ -207,9 +207,12 @@ workflows:
                                                           ),
                                                         },
                                                       );"""
-          if old not in text:
+          if old in text:
+              create_pin.write_text(text.replace(old, new))
+          elif 'AgreementsPageWidget' in text:
+              print('CreatePin already routes through AgreementsPage.')
+          else:
               raise SystemExit('CreatePin onboarding completion block was not found.')
-          create_pin.write_text(text.replace(old, new))
           PY
 
           if grep -R "backgroundColor: Color(0x001D2428)" lib/duress_mode; then
