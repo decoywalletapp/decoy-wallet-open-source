@@ -38,16 +38,10 @@ Future<void> _syncCurrentFcmTokenForUser(String userId) async {
   if (userId.isEmpty) return;
 
   try {
-    var settings = await FirebaseMessaging.instance.getNotificationSettings();
-    if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
-      settings = await FirebaseMessaging.instance.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-        provisional: false,
-      );
-    }
+    final settings = await FirebaseMessaging.instance.getNotificationSettings();
 
+    // Do not trigger the iOS notification prompt from app startup or auth refresh.
+    // The onboarding notifications page asks for permission only after the user continues.
     final allowed =
         settings.authorizationStatus == AuthorizationStatus.authorized ||
             settings.authorizationStatus == AuthorizationStatus.provisional;
