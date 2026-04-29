@@ -353,6 +353,123 @@ def patch_create_pin_route() -> None:
     note('create pin route: left as final setup gate')
 
 
+def patch_fake_btc_persistence() -> None:
+    path = Path('lib/app_state.dart')
+    text = path.read_text()
+    original = text
+
+    helper = """
+  bool get shouldSeedFakeBtcBalance =>
+      _fakeSeeded != true || _isFakeBtcBalanceStale();
+"""
+    marker = "\n  bool _isFakeBtcBalanceStale() {"
+    if 'bool get shouldSeedFakeBtcBalance =>' not in text:
+        if marker not in text:
+            fail('fake BTC persistence: stale helper marker not found')
+        text = text.replace(marker, helper + marker, 1)
+        note('fake BTC persistence: added reseed helper')
+    else:
+        note('fake BTC persistence: reseed helper already present')
+
+    old_stale = """  bool _isFakeBtcBalanceStale() {
+    if (_fakeSeeded != true) return false;
+    if (!_fakeBtcBalance.isFinite ||
+        _fakeBtcBalance <= _fakeBtcReseedThreshold) {
+      return true;
+    }
+
+    final seededAt = _fakeBtcSeededAt;
+    if (seededAt == null) return false;
+
+    return DateTime.now().toUtc().difference(seededAt.toUtc()) >=
+        _fakeBtcReseedCooldown;
+  }
+"""
+    new_stale = """  bool _isFakeBtcBalanceStale() {
+    if (_fakeSeeded != true) return false;
+    if (!_fakeBtcBalance.isFinite || _fakeBtcBalance < 0.0) {
+      return true;
+    }
+
+    final seededAt = _fakeBtcSeededAt;
+    if (seededAt == null) return false;
+
+    return DateTime.now().toUtc().difference(seededAt.toUtc()) >=
+        _fakeBtcReseedCooldown;
+  }
+"""
+    if old_stale in text:
+        text = text.replace(old_stale, new_stale, 1)
+        note('fake BTC persistence: low balance now persists until cooldown')
+    elif '_fakeBtcBalance < 0.0' in text:
+        note('fake BTC persistence: stale logic already patched')
+    else:
+        fail('fake BTC persistence: stale logic block not found')
+
+    write_if_changed(path, text, original)
+
+
+def patch_fake_btc_seed_conditions() -> None:
+    pattern = re.compile(
+        r'\(FFAppState\(\)\s*\.fakeSeeded\s*==\s*false\)\s*\|\|\s*'
+        r'\(FFAppState\(\)\s*\.fakeBtcBalance\s*<=\s*(?:0\.0|0\.05)\)',
+        re.MULTILINE,
+    )
+
+    patched_any = False
+    for path in Path('lib').rglob('*_widget.dart'):
+        text = path.read_text()
+        original = text
+        text, count = pattern.subn('FFAppState().shouldSeedFakeBtcBalance == true', text)
+        if count:
+            patched_any = True
+            note(f'fake BTC reseed condition: patched {path} ({count})')
+            write_if_changed(path, text, original)
+
+    if not patched_any:
+        note('fake BTC reseed condition: no generated reseed expressions found')
+
+
+def patch_duress_pin_alert_flow() -> None:
+    path = Path('lib/pin_pages/p_i_n_page/p_i_n_page_widget.dart')
+    text = path.read_text()
+    original = text
+
+    gate_pattern = re.compile(
+        r'if\s*\(\s*FFAppState\(\)\s*\.decoyPinContactsEnabled\s*==\s*true\s*\)\s*\{',
+        re.MULTILINE,
+    )
+    text, gate_count = gate_pattern.subn('if (true) {', text, count=1)
+    if gate_count:
+        note('duress PIN alert: removed local contacts toggle from alert gate')
+    elif 'decoyPinContactsEnabled' in text and 'sendEmergencyAlertsCall' in text:
+        fail('duress PIN alert: contacts toggle gate still present near alert flow')
+    else:
+        note('duress PIN alert: local contacts toggle gate already absent')
+
+    alert_pattern = re.compile(
+        r'unawaited\(\s*\(\)\s+async\s+\{\s*'
+        r'(_model\.alertResult1\s*=\s*await\s*DecoyAlertGroup\s*\.sendEmergencyAlertsCall\s*\.call\([\s\S]*?\);\s*)'
+        r'\}\(\),\s*\);',
+        re.MULTILINE,
+    )
+    text, alert_count = alert_pattern.subn(lambda m: m.group(1), text, count=1)
+    if alert_count:
+        note('duress PIN alert: alert call is awaited before navigation')
+    elif re.search(
+        r'_model\.alertResult1\s*=\s*await\s*DecoyAlertGroup\s*\.sendEmergencyAlertsCall\s*\.call',
+        text,
+    ):
+        note('duress PIN alert: alert call already awaited')
+    else:
+        fail('duress PIN alert: sendEmergencyAlerts call not found')
+
+    if re.search(r'unawaited\([\s\S]{0,2500}sendEmergencyAlertsCall', text):
+        fail('duress PIN alert: alert call is still fire-and-forget')
+
+    write_if_changed(path, text, original)
+
+
 def patch_emergency_contact_defaults() -> None:
     path = Path('lib/emergancy_contact_information/emergency_contacts/emergency_contacts_model.dart')
     text = path.read_text()
@@ -385,6 +502,9 @@ def main() -> None:
     patch_location_route_to_agreements()
     patch_agreements_page_completion()
     patch_create_pin_route()
+    patch_fake_btc_persistence()
+    patch_fake_btc_seed_conditions()
+    patch_duress_pin_alert_flow()
     patch_emergency_contact_defaults()
     note('all generated field fixes complete')
 
