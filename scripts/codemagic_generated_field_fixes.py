@@ -155,7 +155,7 @@ def patch_phone_number_copy() -> None:
     if "package:flutter/services.dart" not in text:
         text = text.replace(
             "import 'package:flutter/scheduler.dart';\n",
-            "import 'package:flutter/scheduler.dart';\nimport 'package:flutter/services.dart';\nn",
+            "import 'package:flutter/scheduler.dart';\nimport 'package:flutter/services.dart';\n",
         )
         note('phone number copy services import: patched')
 
