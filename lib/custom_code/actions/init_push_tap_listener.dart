@@ -20,7 +20,6 @@ String? _routeFromMessage(RemoteMessage message) {
   final type = message.data['type']?.toString();
   if (type == 'entitlement_renewal_reminder') return 'renew_btcpay';
   if (type == 'entitlement_activated') return 'activated_btcpay';
-  if (type == 'payment_confirmed') return 'activated_btcpay';
   return null;
 }
 

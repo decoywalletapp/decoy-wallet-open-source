@@ -14,11 +14,11 @@ class StripeEventsRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => StripeEventsTable();
 
-  int get id => getField<int>('id')!;
-  set id(int value) => setField<int>('id', value);
+  int? get id => getField<int>('id');
+  set id(int? value) => setField<int>('id', value);
 
-  DateTime get createdAt => getField<DateTime>('created_at')!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
 
   String get stripeEventId => getField<String>('stripe_event_id')!;
   set stripeEventId(String value) => setField<String>('stripe_event_id', value);
@@ -26,8 +26,8 @@ class StripeEventsRow extends SupabaseDataRow {
   String get type => getField<String>('type')!;
   set type(String value) => setField<String>('type', value);
 
-  bool get livemode => getField<bool>('livemode')!;
-  set livemode(bool value) => setField<bool>('livemode', value);
+  bool? get livemode => getField<bool>('livemode');
+  set livemode(bool? value) => setField<bool>('livemode', value);
 
   String? get apiVersion => getField<String>('api_version');
   set apiVersion(String? value) => setField<String>('api_version', value);

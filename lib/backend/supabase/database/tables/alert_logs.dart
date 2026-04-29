@@ -14,8 +14,8 @@ class AlertLogsRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => AlertLogsTable();
 
-  String get id => getField<String>('id')!;
-  set id(String value) => setField<String>('id', value);
+  String? get id => getField<String>('id');
+  set id(String? value) => setField<String>('id', value);
 
   String get userId => getField<String>('user_id')!;
   set userId(String value) => setField<String>('user_id', value);
@@ -23,8 +23,8 @@ class AlertLogsRow extends SupabaseDataRow {
   String get triggerType => getField<String>('trigger_type')!;
   set triggerType(String value) => setField<String>('trigger_type', value);
 
-  bool get success => getField<bool>('success')!;
-  set success(bool value) => setField<bool>('success', value);
+  bool? get success => getField<bool>('success');
+  set success(bool? value) => setField<bool>('success', value);
 
   String? get errorMessage => getField<String>('error_message');
   set errorMessage(String? value) => setField<String>('error_message', value);
@@ -35,8 +35,8 @@ class AlertLogsRow extends SupabaseDataRow {
   double? get lng => getField<double>('lng');
   set lng(double? value) => setField<double>('lng', value);
 
-  DateTime get createdAt => getField<DateTime>('created_at')!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
 
   String? get txid => getField<String>('txid');
   set txid(String? value) => setField<String>('txid', value);

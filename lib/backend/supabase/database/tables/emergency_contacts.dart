@@ -15,8 +15,8 @@ class EmergencyContactsRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => EmergencyContactsTable();
 
-  String get id => getField<String>('id')!;
-  set id(String value) => setField<String>('id', value);
+  String? get id => getField<String>('id');
+  set id(String? value) => setField<String>('id', value);
 
   String get userId => getField<String>('user_id')!;
   set userId(String value) => setField<String>('user_id', value);
@@ -31,9 +31,9 @@ class EmergencyContactsRow extends SupabaseDataRow {
   String get keyId => getField<String>('key_id')!;
   set keyId(String value) => setField<String>('key_id', value);
 
-  DateTime get createdAt => getField<DateTime>('created_at')!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
 
-  DateTime get updatedAt => getField<DateTime>('updated_at')!;
-  set updatedAt(DateTime value) => setField<DateTime>('updated_at', value);
+  DateTime? get updatedAt => getField<DateTime>('updated_at');
+  set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
 }

@@ -14,8 +14,8 @@ class SmsQueueRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => SmsQueueTable();
 
-  String get id => getField<String>('id')!;
-  set id(String value) => setField<String>('id', value);
+  String? get id => getField<String>('id');
+  set id(String? value) => setField<String>('id', value);
 
   String get alertId => getField<String>('alert_id')!;
   set alertId(String value) => setField<String>('alert_id', value);
@@ -23,9 +23,9 @@ class SmsQueueRow extends SupabaseDataRow {
   String get userId => getField<String>('user_id')!;
   set userId(String value) => setField<String>('user_id', value);
 
-  DateTime get createdAt => getField<DateTime>('created_at')!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
 
-  bool get processed => getField<bool>('processed')!;
-  set processed(bool value) => setField<bool>('processed', value);
+  bool? get processed => getField<bool>('processed');
+  set processed(bool? value) => setField<bool>('processed', value);
 }

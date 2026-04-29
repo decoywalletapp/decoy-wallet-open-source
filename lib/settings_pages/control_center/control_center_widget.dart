@@ -67,11 +67,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       FFAppState().decoySeedArmed =
           _model.decoyWalletRow!.elementAtOrNull(0)!.decoySeedArmed!;
       FFAppState().decoyPin911Enabled =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPin911Enabled;
+          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPin911Enabled!;
       FFAppState().decoyPinContactsEnabled =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPinContactsEnabled;
+          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPinContactsEnabled!;
       FFAppState().locationEnabled =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.useCurrentLocation;
+          _model.decoyWalletRow!.elementAtOrNull(0)!.useCurrentLocation!;
       safeSetState(() {});
       _model.ctrlOutputEntitlements = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q

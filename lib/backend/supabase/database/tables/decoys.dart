@@ -14,8 +14,8 @@ class DecoysRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => DecoysTable();
 
-  String get id => getField<String>('id')!;
-  set id(String value) => setField<String>('id', value);
+  String? get id => getField<String>('id');
+  set id(String? value) => setField<String>('id', value);
 
   String get userId => getField<String>('user_id')!;
   set userId(String value) => setField<String>('user_id', value);
@@ -24,10 +24,11 @@ class DecoysRow extends SupabaseDataRow {
   set decoyName(String? value) => setField<String>('decoy_name', value);
 
   List<String> get addresses => getListField<String>('addresses');
-  set addresses(List<String> value) => setListField<String>('addresses', value);
+  set addresses(List<String>? value) =>
+      setListField<String>('addresses', value);
 
-  bool get active => getField<bool>('active')!;
-  set active(bool value) => setField<bool>('active', value);
+  bool? get active => getField<bool>('active');
+  set active(bool? value) => setField<bool>('active', value);
 
   DateTime? get createdAt => getField<DateTime>('created_at');
   set createdAt(DateTime? value) => setField<DateTime>('created_at', value);

@@ -15,8 +15,8 @@ class DecoyTriggersRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => DecoyTriggersTable();
 
-  String get id => getField<String>('id')!;
-  set id(String value) => setField<String>('id', value);
+  String? get id => getField<String>('id');
+  set id(String? value) => setField<String>('id', value);
 
   String? get decoyId => getField<String>('decoy_id');
   set decoyId(String? value) => setField<String>('decoy_id', value);

@@ -25,8 +25,8 @@ class RecoveryExchangeCodesRow extends SupabaseDataRow {
   String get refreshToken => getField<String>('refresh_token')!;
   set refreshToken(String value) => setField<String>('refresh_token', value);
 
-  DateTime get createdAt => getField<DateTime>('created_at')!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
 
   DateTime? get usedAt => getField<DateTime>('used_at');
   set usedAt(DateTime? value) => setField<DateTime>('used_at', value);

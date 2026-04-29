@@ -18,9 +18,9 @@ class DecoySeedScanStateRow extends SupabaseDataRow {
   String get decoyId => getField<String>('decoy_id')!;
   set decoyId(String value) => setField<String>('decoy_id', value);
 
-  int get lastIndex => getField<int>('last_index')!;
-  set lastIndex(int value) => setField<int>('last_index', value);
+  int? get lastIndex => getField<int>('last_index');
+  set lastIndex(int? value) => setField<int>('last_index', value);
 
-  DateTime get updatedAt => getField<DateTime>('updated_at')!;
-  set updatedAt(DateTime value) => setField<DateTime>('updated_at', value);
+  DateTime? get updatedAt => getField<DateTime>('updated_at');
+  set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
 }

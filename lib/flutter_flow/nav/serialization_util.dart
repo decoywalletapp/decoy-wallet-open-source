@@ -276,40 +276,50 @@ dynamic deserializeParam<T>(
       case ParamType.SupabaseRow:
         final data = json.decode(param) as Map<String, dynamic>;
         switch (T) {
-          case ArmedDecoySeedsRow:
-            return ArmedDecoySeedsRow(data);
-          case DecoyWalletRow:
-            return DecoyWalletRow(data);
-          case UserSettingsRow:
-            return UserSettingsRow(data);
-          case DecoySeedScanStateRow:
-            return DecoySeedScanStateRow(data);
-          case UserConsentsRow:
-            return UserConsentsRow(data);
-          case UserEntitlementsRow:
-            return UserEntitlementsRow(data);
-          case RecoveryExchangeCodesRow:
-            return RecoveryExchangeCodesRow(data);
-          case DecoySeenTxsRow:
-            return DecoySeenTxsRow(data);
-          case UserDevicesRow:
-            return UserDevicesRow(data);
-          case DecoyTriggersRow:
-            return DecoyTriggersRow(data);
-          case NotificationJobsRow:
-            return NotificationJobsRow(data);
-          case DecoySeedBaselinesRow:
-            return DecoySeedBaselinesRow(data);
-          case EmergencyContactsRow:
-            return EmergencyContactsRow(data);
-          case DecoysRow:
-            return DecoysRow(data);
-          case SmsQueueRow:
-            return SmsQueueRow(data);
           case AlertLogsRow:
             return AlertLogsRow(data);
+          case ArmedDecoySeedsRow:
+            return ArmedDecoySeedsRow(data);
+          case BtcpayWebhookEventsRow:
+            return BtcpayWebhookEventsRow(data);
+          case DecoySeedBaselinesRow:
+            return DecoySeedBaselinesRow(data);
+          case DecoySeedScanStateRow:
+            return DecoySeedScanStateRow(data);
+          case DecoySeenTxsRow:
+            return DecoySeenTxsRow(data);
+          case DecoyTriggersRow:
+            return DecoyTriggersRow(data);
+          case DecoyWalletRow:
+            return DecoyWalletRow(data);
+          case DecoysRow:
+            return DecoysRow(data);
+          case EmergencyContactConsentRequestsRow:
+            return EmergencyContactConsentRequestsRow(data);
+          case EmergencyContactConsentsRow:
+            return EmergencyContactConsentsRow(data);
+          case EmergencyContactOptOutTokensRow:
+            return EmergencyContactOptOutTokensRow(data);
+          case EmergencyContactSmsSuppressionsRow:
+            return EmergencyContactSmsSuppressionsRow(data);
+          case EmergencyContactsRow:
+            return EmergencyContactsRow(data);
+          case NotificationJobsRow:
+            return NotificationJobsRow(data);
+          case RecoveryExchangeCodesRow:
+            return RecoveryExchangeCodesRow(data);
+          case SmsQueueRow:
+            return SmsQueueRow(data);
           case StripeEventsRow:
             return StripeEventsRow(data);
+          case UserConsentsRow:
+            return UserConsentsRow(data);
+          case UserDevicesRow:
+            return UserDevicesRow(data);
+          case UserEntitlementsRow:
+            return UserEntitlementsRow(data);
+          case UserSettingsRow:
+            return UserSettingsRow(data);
           default:
             return null;
         }

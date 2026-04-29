@@ -368,7 +368,7 @@ class _LocationAuthorizationWidgetState
                                   ),
                                 );
 
-                                context.goNamed(CreatePinWidget.routeName);
+                                context.goNamed(AgreementsPageWidget.routeName);
                               } else {
                                 FFAppState().locationEnabled = false;
                                 safeSetState(() {});
@@ -392,7 +392,7 @@ class _LocationAuthorizationWidgetState
                                   ),
                                 );
 
-                                context.goNamed(CreatePinWidget.routeName);
+                                context.goNamed(AgreementsPageWidget.routeName);
                               }
 
                               safeSetState(() {});

@@ -18,6 +18,6 @@ class DecoySeedBaselinesRow extends SupabaseDataRow {
   String get decoyId => getField<String>('decoy_id')!;
   set decoyId(String value) => setField<String>('decoy_id', value);
 
-  DateTime get baselinedAt => getField<DateTime>('baselined_at')!;
-  set baselinedAt(DateTime value) => setField<DateTime>('baselined_at', value);
+  DateTime? get baselinedAt => getField<DateTime>('baselined_at');
+  set baselinedAt(DateTime? value) => setField<DateTime>('baselined_at', value);
 }

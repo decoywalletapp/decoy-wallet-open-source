@@ -14,11 +14,11 @@ class DecoyWalletRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => DecoyWalletTable();
 
-  DateTime get createdAt => getField<DateTime>('created_at')!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
 
-  String get id => getField<String>('id')!;
-  set id(String value) => setField<String>('id', value);
+  String? get id => getField<String>('id');
+  set id(String? value) => setField<String>('id', value);
 
   String? get walletName => getField<String>('wallet_name');
   set walletName(String? value) => setField<String>('wallet_name', value);
@@ -85,11 +85,11 @@ class DecoyWalletRow extends SupabaseDataRow {
   set wrappedDatakey(String? value) =>
       setField<String>('wrapped_datakey', value);
 
-  String? get contactsCiphertext => getField<String>('contacts_ciphertext') ?? '';
+  String? get contactsCiphertext => getField<String>('contacts_ciphertext');
   set contactsCiphertext(String? value) =>
       setField<String>('contacts_ciphertext', value);
 
-  String? get contactsNonce => getField<String>('contacts_nonce') ?? '';
+  String? get contactsNonce => getField<String>('contacts_nonce');
   set contactsNonce(String? value) => setField<String>('contacts_nonce', value);
 
   int? get contactsVersion => getField<int>('contacts_version');
@@ -108,13 +108,13 @@ class DecoyWalletRow extends SupabaseDataRow {
   DateTime? get updatedAt => getField<DateTime>('updated_at');
   set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
 
-  String? get personalNonce => getField<String>('personal_nonce') ?? '';
+  String? get personalNonce => getField<String>('personal_nonce');
   set personalNonce(String? value) => setField<String>('personal_nonce', value);
 
   int? get personalVersion => getField<int>('personal_version');
   set personalVersion(int? value) => setField<int>('personal_version', value);
 
-  String? get personalCiphertext => getField<String>('personal_ciphertext') ?? '';
+  String? get personalCiphertext => getField<String>('personal_ciphertext');
   set personalCiphertext(String? value) =>
       setField<String>('personal_ciphertext', value);
 
@@ -128,8 +128,8 @@ class DecoyWalletRow extends SupabaseDataRow {
   String? get pendingEmail => getField<String>('pending_email');
   set pendingEmail(String? value) => setField<String>('pending_email', value);
 
-  bool get useCurrentLocation => getField<bool>('use_current_location')!;
-  set useCurrentLocation(bool value) =>
+  bool? get useCurrentLocation => getField<bool>('use_current_location');
+  set useCurrentLocation(bool? value) =>
       setField<bool>('use_current_location', value);
 
   bool? get personalComplete => getField<bool>('personal_complete');
@@ -143,12 +143,12 @@ class DecoyWalletRow extends SupabaseDataRow {
   set contactsComplete(bool? value) =>
       setField<bool>('contacts_complete', value);
 
-  bool get hasDecoySeedAck => getField<bool>('has_decoy_seed_ack')!;
-  set hasDecoySeedAck(bool value) =>
+  bool? get hasDecoySeedAck => getField<bool>('has_decoy_seed_ack');
+  set hasDecoySeedAck(bool? value) =>
       setField<bool>('has_decoy_seed_ack', value);
 
-  bool get hasDecoyPinAck => getField<bool>('has_decoy_pin_ack')!;
-  set hasDecoyPinAck(bool value) => setField<bool>('has_decoy_pin_ack', value);
+  bool? get hasDecoyPinAck => getField<bool>('has_decoy_pin_ack');
+  set hasDecoyPinAck(bool? value) => setField<bool>('has_decoy_pin_ack', value);
 
   bool? get decoySeedArmed => getField<bool>('decoy_seed_armed');
   set decoySeedArmed(bool? value) => setField<bool>('decoy_seed_armed', value);
@@ -167,13 +167,13 @@ class DecoyWalletRow extends SupabaseDataRow {
   set decoySeedDecoyId(String? value) =>
       setField<String>('decoy_seed_decoy_id', value);
 
-  bool get decoyPin911Enabled => getField<bool>('decoy_pin_911_enabled')!;
-  set decoyPin911Enabled(bool value) =>
+  bool? get decoyPin911Enabled => getField<bool>('decoy_pin_911_enabled');
+  set decoyPin911Enabled(bool? value) =>
       setField<bool>('decoy_pin_911_enabled', value);
 
-  bool get decoyPinContactsEnabled =>
-      getField<bool>('decoy_pin_contacts_enabled')!;
-  set decoyPinContactsEnabled(bool value) =>
+  bool? get decoyPinContactsEnabled =>
+      getField<bool>('decoy_pin_contacts_enabled');
+  set decoyPinContactsEnabled(bool? value) =>
       setField<bool>('decoy_pin_contacts_enabled', value);
 
   DateTime? get lastTeardownAt => getField<DateTime>('last_teardown_at');
@@ -195,10 +195,19 @@ class DecoyWalletRow extends SupabaseDataRow {
   set pendingEmailHash(String? value) =>
       setField<String>('pending_email_hash', value);
 
-  bool get setupComplete => getField<bool>('setup_complete')!;
-  set setupComplete(bool value) => setField<bool>('setup_complete', value);
+  bool? get setupComplete => getField<bool>('setup_complete');
+  set setupComplete(bool? value) => setField<bool>('setup_complete', value);
 
   DateTime? get setupCompletedAt => getField<DateTime>('setup_completed_at');
   set setupCompletedAt(DateTime? value) =>
       setField<DateTime>('setup_completed_at', value);
+
+  bool? get agreementsComplete => getField<bool>('agreements_complete');
+  set agreementsComplete(bool? value) =>
+      setField<bool>('agreements_complete', value);
+
+  DateTime? get agreementsCompletedAt =>
+      getField<DateTime>('agreements_completed_at');
+  set agreementsCompletedAt(DateTime? value) =>
+      setField<DateTime>('agreements_completed_at', value);
 }

@@ -21,33 +21,13 @@ Uint8List _decodeB64Any(String s) {
   return Uint8List.fromList(base64.decode(norm));
 }
 
-bool _isBlankish(String s) {
-  final v = s.trim();
-  return v.isEmpty || v == '""' || v == "''";
-}
-
-String _cleanString(Object? value) {
-  final text = (value ?? '').toString().trim();
-  if (text == '""' || text == "''") return '';
-  if (text.length >= 2) {
-    final first = text[0];
-    final last = text[text.length - 1];
-    if ((first == '"' && last == '"') || (first == "'" && last == "'")) {
-      return text.substring(1, text.length - 1).trim();
-    }
-  }
-  return text;
-}
-
 Future<dynamic> aesGcmDecryptToMap(
   String ciphertextB64,
   String nonceB64,
   String base64DataKey,
 ) async {
   try {
-    if (_isBlankish(ciphertextB64) ||
-        _isBlankish(nonceB64) ||
-        _isBlankish(base64DataKey)) {
+    if (ciphertextB64.isEmpty || nonceB64.isEmpty || base64DataKey.isEmpty) {
       return {'_ok': false, '_error': 'missing input'};
     }
 
@@ -73,7 +53,7 @@ Future<dynamic> aesGcmDecryptToMap(
     // plaintext must be a JSON string
     final obj = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
 
-    // --- SANITIZER: make sure optional fields are clean strings, not null or quote placeholders ---
+    // --- SANITIZER: make sure optional fields are strings, not null ---
     // For address-like payloads
     for (final k in const [
       'street',
@@ -84,7 +64,7 @@ Future<dynamic> aesGcmDecryptToMap(
       'country'
     ]) {
       if (obj.containsKey(k)) {
-        obj[k] = _cleanString(obj[k]);
+        obj[k] = (obj[k] ?? '').toString();
       }
     }
     // For contacts payloads
@@ -93,16 +73,16 @@ Future<dynamic> aesGcmDecryptToMap(
       for (var i = 0; i < list.length; i++) {
         final c = list[i];
         if (c is Map) {
-          c['first'] = _cleanString(c['first']);
-          c['last'] = _cleanString(c['last']);
-          c['phone'] = _cleanString(c['phone']);
+          c['first'] = (c['first'] ?? '').toString();
+          c['last'] = (c['last'] ?? '').toString();
+          c['phone'] = (c['phone'] ?? '').toString();
         }
       }
     }
     // For personal info payloads
     for (final k in const ['firstName', 'lastName', 'phone', 'email']) {
       if (obj.containsKey(k)) {
-        obj[k] = _cleanString(obj[k]);
+        obj[k] = (obj[k] ?? '').toString();
       }
     }
     // ---------------------------------------------------------------

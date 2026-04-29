@@ -12,21 +12,10 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 // helpers
-String _s(String? v) {
-  final text = (v ?? '').trim();
-  if (text == '""' || text == "''") return '';
-  if (text.length >= 2) {
-    final first = text[0];
-    final last = text[text.length - 1];
-    if ((first == '"' && last == '"') || (first == "'" && last == "'")) {
-      return text.substring(1, text.length - 1).trim();
-    }
-  }
-  return text;
-}
+String _s(String? v) => (v ?? '').trim();
 
 String _normalizePhone(String? input) {
-  final raw = _s(input).replaceAll(RegExp(r'[^0-9+]'), '');
+  final raw = (input ?? '').replaceAll(RegExp(r'[^0-9+]'), '');
   if (raw.isEmpty) return '';
 
   if (raw.startsWith('+')) {

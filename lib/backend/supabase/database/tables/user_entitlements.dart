@@ -21,11 +21,11 @@ class UserEntitlementsRow extends SupabaseDataRow {
   String get entitlement => getField<String>('entitlement')!;
   set entitlement(String value) => setField<String>('entitlement', value);
 
-  bool get isActive => getField<bool>('is_active')!;
-  set isActive(bool value) => setField<bool>('is_active', value);
+  bool? get isActive => getField<bool>('is_active');
+  set isActive(bool? value) => setField<bool>('is_active', value);
 
-  DateTime get updatedAt => getField<DateTime>('updated_at')!;
-  set updatedAt(DateTime value) => setField<DateTime>('updated_at', value);
+  DateTime? get updatedAt => getField<DateTime>('updated_at');
+  set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
 
   String? get provider => getField<String>('provider');
   set provider(String? value) => setField<String>('provider', value);
@@ -43,18 +43,7 @@ class UserEntitlementsRow extends SupabaseDataRow {
   set providerStatus(String? value) =>
       setField<String>('provider_status', value);
 
-  DateTime? get rawCurrentPeriodEnd => getField<DateTime>('current_period_end');
-
-  DateTime? get currentPeriodEnd {
-    final current = getField<DateTime>('current_period_end');
-    final graceUntil = getField<DateTime>('teardown_grace_until');
-
-    if (current == null) return graceUntil;
-    if (graceUntil == null) return current;
-
-    return graceUntil.isAfter(current) ? graceUntil : current;
-  }
-
+  DateTime? get currentPeriodEnd => getField<DateTime>('current_period_end');
   set currentPeriodEnd(DateTime? value) =>
       setField<DateTime>('current_period_end', value);
 
