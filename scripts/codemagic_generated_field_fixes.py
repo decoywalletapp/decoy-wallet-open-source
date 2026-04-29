@@ -39,12 +39,102 @@ def replace_optional(text: str, old: str, new: str, label: str) -> str:
     return text
 
 
+def replace_on_editing_complete_after(text: str, marker: str, body: str, label: str) -> str:
+    start = text.find(marker)
+    if start == -1:
+        fail(f"{label}: marker not found")
+
+    window = text[start:start + 5000]
+    if body in window:
+        note(f"{label}: already patched")
+        return text
+
+    match = re.search(
+        r'(?P<indent>[ \t]*)onEditingComplete:\s*\n?[ \t]*onEditingComplete,',
+        window,
+    )
+    if not match:
+        fail(f"{label}: onEditingComplete handoff not found after marker")
+
+    indent = match.group('indent')
+    new_block = f"{indent}onEditingComplete: () {{\n{indent}  {body}\n{indent}}},"
+    absolute_start = start + match.start()
+    absolute_end = start + match.end()
+    note(f"{label}: patched")
+    return text[:absolute_start] + new_block + text[absolute_end:]
+
+
 def write_if_changed(path: Path, text: str, original: str) -> None:
     if text != original:
         path.write_text(text)
         note(f"wrote {path}")
     else:
         note(f"no changes needed for {path}")
+
+
+def patch_main_notification_permission() -> None:
+    path = Path('lib/main.dart')
+    text = path.read_text()
+    original = text
+
+    old = """    var settings = await FirebaseMessaging.instance.getNotificationSettings();
+    if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+      settings = await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+        provisional: false,
+      );
+    }
+
+    final allowed =
+"""
+    new = """    final settings = await FirebaseMessaging.instance.getNotificationSettings();
+
+    // Do not trigger the iOS notification prompt from app startup or auth refresh.
+    // The onboarding notifications page asks for permission only after the user continues.
+    final allowed =
+"""
+
+    if old in text:
+        text = text.replace(old, new, 1)
+        note('main push permission prompt: delayed until onboarding')
+    elif 'Do not trigger the iOS notification prompt from app startup or auth refresh.' in text:
+        note('main push permission prompt: already patched')
+    else:
+        fail('main push permission prompt: requestPermission startup block not found')
+
+    write_if_changed(path, text, original)
+
+
+def patch_personal_information_keyboard() -> None:
+    path = Path('lib/emergancy_contact_information/personal_information/personal_information_widget.dart')
+    text = path.read_text()
+    original = text
+
+    text = replace_on_editing_complete_after(
+        text,
+        '_model.lastNameTextController',
+        '_model.phoneFocusNode?.requestFocus();',
+        'personal info last name Next action',
+    )
+
+    write_if_changed(path, text, original)
+
+
+def patch_home_address_keyboard() -> None:
+    path = Path('lib/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart')
+    text = path.read_text()
+    original = text
+
+    text = replace_on_editing_complete_after(
+        text,
+        '_model.streetAddressTextController',
+        '_model.cityFocusNode?.requestFocus();',
+        'home address street Next action',
+    )
+
+    write_if_changed(path, text, original)
 
 
 def patch_create_account() -> None:
@@ -111,6 +201,12 @@ def patch_create_account() -> None:
         '',
         'create account interactive selection',
     )
+    text = replace_optional(
+        text,
+        "return ['Option 1'].where",
+        "return const <String>[].where",
+        'create account placeholder autocomplete options',
+    )
 
     write_if_changed(path, text, original)
 
@@ -138,6 +234,26 @@ def patch_phone_number_main() -> None:
                                                     FocusScope.of(context).unfocus();
                                                   },""",
         'phone number main Done action',
+    )
+
+    text = replace_after(
+        text,
+        """_model.phoneNumberFieldTextController =
+                                                    textEditingController;""",
+        """                                                  autofillHints: [
+                                                    AutofillHints.telephoneNumber
+                                                  ],""",
+        """                                                  autofillHints: [
+                                                    AutofillHints.telephoneNumber,
+                                                    AutofillHints.telephoneNumberNational
+                                                  ],""",
+        'phone number main autofill hints',
+    )
+    text = replace_optional(
+        text,
+        "return ['Option 1'].where",
+        "return const <String>[].where",
+        'phone number main placeholder autocomplete options',
     )
 
     write_if_changed(path, text, original)
@@ -173,6 +289,16 @@ def patch_phone_number_copy() -> None:
         note('phone number copy Done action: patched')
     else:
         note('phone number copy Done action: already patched')
+
+    text = replace_optional(
+        text,
+        """                                  autofillHints: [AutofillHints.telephoneNumber],""",
+        """                                  autofillHints: [
+                                    AutofillHints.telephoneNumber,
+                                    AutofillHints.telephoneNumberNational
+                                  ],""",
+        'phone number copy autofill hints',
+    )
 
     write_if_changed(path, text, original)
 
@@ -230,6 +356,9 @@ def patch_emergency_contact_defaults() -> None:
 
 
 def main() -> None:
+    patch_main_notification_permission()
+    patch_personal_information_keyboard()
+    patch_home_address_keyboard()
     patch_create_account()
     patch_phone_number_main()
     patch_phone_number_copy()
