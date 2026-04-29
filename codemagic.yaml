@@ -155,6 +155,8 @@ workflows:
               lib/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart
           done
 
+          /usr/bin/python3 scripts/codemagic_generated_field_fixes.py
+
           /usr/bin/python3 - <<'PY'
           from pathlib import Path
 
