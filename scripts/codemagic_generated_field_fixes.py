@@ -155,7 +155,7 @@ def patch_phone_number_copy() -> None:
     if "package:flutter/services.dart" not in text:
         text = text.replace(
             "import 'package:flutter/scheduler.dart';\n",
-            "import 'package:flutter/scheduler.dart';\nimport 'package:flutter/services.dart';\n",
+            "import 'package:flutter/scheduler.dart';\nimport 'package:flutter/services.dart';\nn",
         )
         note('phone number copy services import: patched')
 
@@ -186,19 +186,22 @@ def patch_create_pin_route() -> None:
         note('create pin route: already routed through AgreementsPage')
         return
 
-    pattern = re.compile(
-        r"\s*await\s+DecoyWalletTable\(\)\s*\.update\([\s\S]*?"
-        r"matchingRows:\s*\(rows\)\s*=>[\s\S]*?currentUserUid,\s*\),\s*\),\s*\);\s*"
-        r"context\.goNamed\(\s*HomePageWidget\s*\.routeName,",
-        re.MULTILINE,
-    )
-    replacement = """
-                                                      context.goNamed(
-                                                        AgreementsPageWidget
-                                                            .routeName,"""
-    text, count = pattern.subn(replacement, text, count=1)
-    if count != 1:
-        fail('create pin route: HomePage completion block not found')
+    old_route = """HomePageWidget
+                                                            .routeName"""
+    new_route = """AgreementsPageWidget
+                                                            .routeName"""
+
+    if old_route in text:
+        text = text.replace(old_route, new_route, 1)
+    else:
+        text, count = re.subn(
+            r'HomePageWidget\s*\.routeName',
+            "AgreementsPageWidget\n                                                            .routeName",
+            text,
+            count=1,
+        )
+        if count != 1:
+            fail('create pin route: HomePage route target not found')
 
     note('create pin route: routed through AgreementsPage')
     write_if_changed(path, text, original)
