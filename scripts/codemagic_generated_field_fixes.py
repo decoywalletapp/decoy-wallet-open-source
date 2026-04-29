@@ -303,34 +303,54 @@ def patch_phone_number_copy() -> None:
     write_if_changed(path, text, original)
 
 
-def patch_create_pin_route() -> None:
-    path = Path('lib/pin_pages/create_pin/create_pin_widget.dart')
+def patch_location_route_to_agreements() -> None:
+    path = Path('lib/welcom_pages/location_authorization/location_authorization_widget.dart')
     text = path.read_text()
     original = text
 
-    if 'AgreementsPageWidget' in text:
-        note('create pin route: already routed through AgreementsPage')
+    if 'CreatePinWidget.routeName' in text:
+        text = text.replace('CreatePinWidget.routeName', 'AgreementsPageWidget.routeName')
+        note('location authorization route: routed to AgreementsPage before PIN setup')
+    elif 'AgreementsPageWidget.routeName' in text:
+        note('location authorization route: already routed to AgreementsPage')
+    else:
+        fail('location authorization route: no CreatePin or Agreements route target found')
+
+    write_if_changed(path, text, original)
+
+
+def patch_agreements_page_completion() -> None:
+    path = Path('lib/welcom_pages/agreements_page/agreements_page_widget.dart')
+    if not path.exists():
+        note('agreements page completion: file absent')
         return
 
-    old_route = """HomePageWidget
-                                                            .routeName"""
-    new_route = """AgreementsPageWidget
-                                                            .routeName"""
+    text = path.read_text()
+    original = text
 
-    if old_route in text:
-        text = text.replace(old_route, new_route, 1)
+    text = replace_optional(
+        text,
+        """          'setup_complete': true,
+          'setup_completed_at': supaSerialize<DateTime>(acceptedAt),""",
+        """          'agreements_complete': true,
+          'agreements_completed_at': supaSerialize<DateTime>(acceptedAt),""",
+        'agreements page backend acceptance fields',
+    )
+
+    if 'HomePageWidget.routeName' in text:
+        text = text.replace('HomePageWidget.routeName', 'CreatePinWidget.routeName', 1)
+        note('agreements page route: routed to CreatePin after legal acceptance')
+    elif 'CreatePinWidget.routeName' in text:
+        note('agreements page route: already routed to CreatePin')
     else:
-        text, count = re.subn(
-            r'HomePageWidget\s*\.routeName',
-            "AgreementsPageWidget\n                                                            .routeName",
-            text,
-            count=1,
-        )
-        if count != 1:
-            fail('create pin route: HomePage route target not found')
+        fail('agreements page route: no HomePage or CreatePin route target found')
 
-    note('create pin route: routed through AgreementsPage')
     write_if_changed(path, text, original)
+
+
+def patch_create_pin_route() -> None:
+    # Create PIN is now the final onboarding gate. Leave its existing HomePage route intact.
+    note('create pin route: left as final setup gate')
 
 
 def patch_emergency_contact_defaults() -> None:
@@ -362,6 +382,8 @@ def main() -> None:
     patch_create_account()
     patch_phone_number_main()
     patch_phone_number_copy()
+    patch_location_route_to_agreements()
+    patch_agreements_page_completion()
     patch_create_pin_route()
     patch_emergency_contact_defaults()
     note('all generated field fixes complete')
