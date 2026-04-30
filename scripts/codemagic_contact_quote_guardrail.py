@@ -9,6 +9,66 @@ FAKE_SEED_CONDITION = re.compile(
     r"\(\s*FFAppState\(\)\.fakeSeeded\s*==\s*false\s*\)\s*\|\|\s*"
     r"\(\s*FFAppState\(\)\.fakeBtcBalance\s*<=\s*(?:0(?:\.0+)?|0\.05)\s*\)"
 )
+FAKE_BTC_APP_STATE_BLOCK = re.compile(
+    r"  double _fakeBtcBalance = 0\.0;\n"
+    r"(?:(?!  double _fakeUsdValue = 0\.0;).)*"
+    r"  double _fakeUsdValue = 0\.0;",
+    re.DOTALL,
+)
+FAKE_BTC_BALANCE_INIT = """    await _safeInitAsync(() async {
+      _fakeBtcBalance =
+          await secureStorage.getDouble('ff_fakeBtcBalance') ?? _fakeBtcBalance;
+    });"""
+FAKE_BTC_SEEDED_AT_INIT = """    await _safeInitAsync(() async {
+      final stored = await secureStorage.getString('ff_fakeBtcSeededAt');
+      _fakeBtcSeededAt =
+          stored == null ? _fakeBtcSeededAt : DateTime.tryParse(stored);
+    });"""
+FAKE_BTC_PERSISTENT_BLOCK = """  double _fakeBtcBalance = 0.0;
+  double get fakeBtcBalance => _fakeBtcBalance;
+  set fakeBtcBalance(double value) {
+    _fakeBtcBalance = value;
+    secureStorage.setDouble('ff_fakeBtcBalance', value);
+    if (value.isFinite && value >= 0.0) {
+      fakeBtcSeededAt = DateTime.now().toUtc();
+    }
+  }
+
+  void deleteFakeBtcBalance() {
+    _fakeBtcBalance = 0.0;
+    secureStorage.delete(key: 'ff_fakeBtcBalance');
+    fakeBtcSeededAt = null;
+  }
+
+  DateTime? _fakeBtcSeededAt;
+  DateTime? get fakeBtcSeededAt => _fakeBtcSeededAt;
+  set fakeBtcSeededAt(DateTime? value) {
+    _fakeBtcSeededAt = value;
+    if (value == null) {
+      secureStorage.delete(key: 'ff_fakeBtcSeededAt');
+    } else {
+      secureStorage.setString(
+        'ff_fakeBtcSeededAt',
+        value.toUtc().toIso8601String(),
+      );
+    }
+  }
+
+  void deleteFakeBtcSeededAt() {
+    _fakeBtcSeededAt = null;
+    secureStorage.delete(key: 'ff_fakeBtcSeededAt');
+  }
+
+  bool get shouldSeedFakeBtcBalance {
+    if (!_fakeBtcBalance.isFinite) return true;
+    if (_fakeSeeded != true) return true;
+
+    final seededAt = _fakeBtcSeededAt;
+    if (seededAt == null) return _fakeBtcBalance <= 0.0;
+
+    return DateTime.now().toUtc().difference(seededAt.toUtc()) >=
+        _fakeBtcReseedCooldown;
+  }"""
 
 
 def cleanup_contact_quote_defaults():
@@ -56,34 +116,49 @@ def verify_duress_alert_gate():
     print('[guardrail] duress alert gate verified: contacts trigger, active subscription, contacts complete')
 
 
-def patch_fake_btc_persistence():
+def ensure_fake_btc_persistence():
     app_state = ROOT / 'lib' / 'app_state.dart'
     if not app_state.exists():
         print('[guardrail] warning: lib/app_state.dart not found for fake BTC persistence patch')
         return
 
     original = app_state.read_text()
-    text = original.replace(
-        'if (_fakeBtcSeededAt == null) return _fakeBtcBalance <= 0.0;',
-        'if (_fakeBtcSeededAt == null) return false;',
+    text = original
+
+    if '_fakeBtcReseedCooldown' not in text:
+        text = text.replace(
+            '  FFAppState._internal();\n',
+            '  FFAppState._internal();\n\n'
+            '  static const Duration _fakeBtcReseedCooldown = Duration(hours: 24);\n',
+            1,
+        )
+
+    if "await secureStorage.getString('ff_fakeBtcSeededAt')" not in text:
+        text = text.replace(
+            FAKE_BTC_BALANCE_INIT,
+            f"{FAKE_BTC_BALANCE_INIT}\n{FAKE_BTC_SEEDED_AT_INIT}",
+            1,
+        )
+
+    text, count = FAKE_BTC_APP_STATE_BLOCK.subn(
+        f"{FAKE_BTC_PERSISTENT_BLOCK}\n\n  double _fakeUsdValue = 0.0;",
+        text,
+        count=1,
     )
-    text = text.replace(
-        'if (value > 0 && (_fakeBtcSeededAt == null || _fakeSeeded != true || wasStale)) {',
-        'if (value >= 0 && (_fakeBtcSeededAt == null || _fakeSeeded != true || wasStale)) {',
-    )
+    if count != 1:
+        raise SystemExit('[guardrail] unable to patch fake BTC persistence block safely')
 
     if text != original:
         app_state.write_text(text)
-        print('[guardrail] hardened fake BTC persistence window in lib/app_state.dart')
+        print('[guardrail] ensured 24-hour fake BTC balance hold window in lib/app_state.dart')
     else:
-        print('[guardrail] fake BTC persistence already hardened or source not yet patched')
+        print('[guardrail] fake BTC persistence already current')
 
 
 def patch_fake_btc_seed_conditions():
     app_state = ROOT / 'lib' / 'app_state.dart'
     if not app_state.exists() or 'shouldSeedFakeBtcBalance' not in app_state.read_text():
-        print('[guardrail] skipping fake BTC seed condition cleanup; shouldSeedFakeBtcBalance is unavailable')
-        return
+        raise SystemExit('[guardrail] cannot normalize fake BTC seed conditions; shouldSeedFakeBtcBalance is unavailable')
 
     patched = 0
     for path in (ROOT / 'lib').rglob('*.dart'):
@@ -103,7 +178,7 @@ def patch_fake_btc_seed_conditions():
 def main():
     cleanup_contact_quote_defaults()
     verify_duress_alert_gate()
-    patch_fake_btc_persistence()
+    ensure_fake_btc_persistence()
     patch_fake_btc_seed_conditions()
 
 
