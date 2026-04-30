@@ -297,7 +297,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       Align(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                0.01, 0.0),
+                                                                0.02, 0.0),
                                                         child: Text(
                                                           'METHOD',
                                                           textAlign:
@@ -324,7 +324,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       Align(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                0.0, 0.0),
+                                                                -0.02, 0.0),
                                                         child: Text(
                                                           'METHOD',
                                                           textAlign:

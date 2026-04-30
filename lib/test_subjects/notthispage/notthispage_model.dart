@@ -1,11 +1,10 @@
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'phone_number_input_copy_widget.dart' show PhoneNumberInputCopyWidget;
+import 'notthispage_widget.dart' show NotthispageWidget;
 import 'package:flutter/material.dart';
 
-class PhoneNumberInputCopyModel
-    extends FlutterFlowModel<PhoneNumberInputCopyWidget> {
+class NotthispageModel extends FlutterFlowModel<NotthispageWidget> {
   ///  Local state fields for this page.
   /// formats the user's phone number for twilio recognition
   String cleanPhone = '\"\"';

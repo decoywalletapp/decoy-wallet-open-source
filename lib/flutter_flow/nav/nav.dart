@@ -415,9 +415,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => LocationAuthorizationWidget(),
       ),
       FFRoute(
-        name: PhoneNumberInputCopyWidget.routeName,
-        path: PhoneNumberInputCopyWidget.routePath,
-        builder: (context, params) => PhoneNumberInputCopyWidget(),
+        name: NotthispageWidget.routeName,
+        path: NotthispageWidget.routePath,
+        builder: (context, params) => NotthispageWidget(),
       ),
       FFRoute(
         name: EnableNotificationsWidget.routeName,

@@ -9,7 +9,7 @@ class AgreementsPageModel extends FlutterFlowModel<AgreementsPageWidget> {
 
   bool boxesSelected = false;
 
-  int agreementPageIndex = 0;
+  int agreementPageIndex = 1;
 
   ///  State fields for stateful widgets in this page.
 

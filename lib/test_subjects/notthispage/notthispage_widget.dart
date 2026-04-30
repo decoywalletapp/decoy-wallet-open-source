@@ -8,32 +8,30 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'phone_number_input_copy_model.dart';
-export 'phone_number_input_copy_model.dart';
+import 'notthispage_model.dart';
+export 'notthispage_model.dart';
 
 /// This page asks the user to enter their phone number which will save to
 /// their account profile in supabase
-class PhoneNumberInputCopyWidget extends StatefulWidget {
-  const PhoneNumberInputCopyWidget({super.key});
+class NotthispageWidget extends StatefulWidget {
+  const NotthispageWidget({super.key});
 
-  static String routeName = 'phoneNumberInputCopy';
-  static String routePath = '/phoneNumberInputCopy';
+  static String routeName = 'Notthispage';
+  static String routePath = '/notthispage';
 
   @override
-  State<PhoneNumberInputCopyWidget> createState() =>
-      _PhoneNumberInputCopyWidgetState();
+  State<NotthispageWidget> createState() => _NotthispageWidgetState();
 }
 
-class _PhoneNumberInputCopyWidgetState
-    extends State<PhoneNumberInputCopyWidget> {
-  late PhoneNumberInputCopyModel _model;
+class _NotthispageWidgetState extends State<NotthispageWidget> {
+  late NotthispageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => PhoneNumberInputCopyModel());
+    _model = createModel(context, () => NotthispageModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
