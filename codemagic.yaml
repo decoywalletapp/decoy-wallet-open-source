@@ -139,6 +139,7 @@ workflows:
             lib/welcom_pages/update_password_page/update_password_page_widget.dart || true
 
           /usr/bin/python3 scripts/codemagic_generated_field_fixes.py
+          /usr/bin/python3 scripts/codemagic_contact_quote_guardrail.py
 
           test -f ios/Runner/Runner.entitlements
           grep -q "aps-environment" ios/Runner/Runner.entitlements
