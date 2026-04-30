@@ -1,0 +1,132 @@
+workflows:
+  ios_release:
+    name: iOS Release (TestFlight)
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    environment:
+      flutter: 3.38.5
+      xcode: latest
+      cocoapods: default
+      groups:
+        - decoy-ios-signing
+        - decoy-firebase-ios
+      vars:
+        BUNDLE_ID: "com.mycompany.decoywallet"
+        APP_STORE_APPLE_ID: "6748536132"
+        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        APPLE_TEAM_ID: "ZC5TJQUJ6H"
+
+    integrations:
+      app_store_connect: Apple Sign In and production environment settings
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: flutterflow
+          include: true
+          source: true
+
+    scripts:
+      - name: Show build context
+        script: |
+          set -e
+          echo "Branch: $CM_BRANCH"
+          echo "Commit: $CM_COMMIT"
+          echo "Build number: $BUILD_NUMBER"
+          flutter --version
+
+      - name: Verify notification entitlement is present
+        script: |
+          set -e
+          ENTITLEMENTS="ios/Runner/Runner.entitlements"
+          if [ ! -f "$ENTITLEMENTS" ]; then
+            echo "Creating $ENTITLEMENTS"
+            cat > "$ENTITLEMENTS" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+          	<key>com.apple.developer.applesignin</key>
+          	<array>
+          		<string>Default</string>
+          	</array>
+          	<key>aps-environment</key>
+          	<string>production</string>
+          </dict>
+          </plist>
+          PLIST
+          fi
+          if ! grep -q "aps-environment" "$ENTITLEMENTS"; then
+            echo "Adding aps-environment entitlement"
+            plutil -insert aps-environment -string production "$ENTITLEMENTS" || /usr/libexec/PlistBuddy -c "Add :aps-environment string production" "$ENTITLEMENTS"
+          fi
+          if ! grep -q "com.apple.developer.applesignin" "$ENTITLEMENTS"; then
+            echo "Adding Apple Sign In entitlement"
+            /usr/libexec/PlistBuddy -c "Add :com.apple.developer.applesignin array" "$ENTITLEMENTS" || true
+            /usr/libexec/PlistBuddy -c "Add :com.apple.developer.applesignin:0 string Default" "$ENTITLEMENTS" || true
+          fi
+          cat "$ENTITLEMENTS"
+
+      - name: Apply generated-code guardrails
+        script: |
+          set -e
+          /usr/bin/python3 scripts/codemagic_generated_field_fixes.py
+          /usr/bin/python3 scripts/codemagic_contact_quote_guardrail.py
+
+      - name: Confirm fake BTC persistence guardrail
+        script: |
+          set -e
+          if ! grep -q "shouldSeedFakeBtcBalance" lib/app_state.dart; then
+            echo "Missing fake BTC seed guardrail in app_state.dart"
+            exit 1
+          fi
+          if grep -q "if (true)" lib/create_pin/create_pin_widget.dart; then
+            echo "Dangerous flattened duress alert gate detected"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        script: |
+          set -e
+          flutter pub get
+
+      - name: Install CocoaPods dependencies
+        script: |
+          set -e
+          cd ios
+          pod install
+
+      - name: Set up code signing
+        script: |
+          set -e
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+          xcode-project use-profiles
+
+      - name: Build IPA
+        script: |
+          set -e
+          flutter build ipa --release \
+            --build-name=0.1.0 \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - DayOneDTs
+          - DayZeroDecoyTesters
+          - Internal
