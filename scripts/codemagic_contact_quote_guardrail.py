@@ -30,36 +30,30 @@ def cleanup_contact_quote_defaults():
     print(f'[guardrail] contact quote cleanup complete; files patched={patched}')
 
 
-def patch_duress_alert_gate():
-    alert_files = 0
-    patched = 0
+def verify_duress_alert_gate():
+    pin_page = ROOT / 'lib' / 'pin_pages' / 'p_i_n_page' / 'p_i_n_page_widget.dart'
+    if not pin_page.exists():
+        print('[guardrail] warning: PIN page not found for duress alert gate verification')
+        return
 
-    for path in (ROOT / 'lib').rglob('*.dart'):
-        original = path.read_text()
-        if 'sendEmergencyAlertsCall.call' not in original and 'SendEmergencyAlertsCall.call' not in original:
-            continue
+    text = pin_page.read_text()
+    if 'sendEmergencyAlertsCall.call' not in text and 'SendEmergencyAlertsCall.call' not in text:
+        print('[guardrail] warning: PIN page has no emergency alert call to verify')
+        return
 
-        alert_files += 1
-        text = re.sub(
-            r"if\s*\(\s*FFAppState\(\)\.decoyPinContactsEnabled\s*==\s*true\s*\)\s*\{",
-            "if (true) {",
-            original,
+    required_terms = [
+        'decoyPinContactsEnabled',
+        'hasActiveSubscription',
+        'contactsComplete',
+    ]
+    missing = [term for term in required_terms if term not in text]
+    if missing:
+        raise SystemExit(
+            '[guardrail] unsafe PIN alert gate: missing required condition(s): '
+            + ', '.join(missing)
         )
-        text = re.sub(
-            r"if\s*\(\s*FFAppState\(\)\.decoyPinContactsEnabled\s*\)\s*\{",
-            "if (true) {",
-            text,
-        )
 
-        if text != original:
-            path.write_text(text)
-            patched += 1
-            print(f'[guardrail] removed extra decoyPinContactsEnabled alert gate in {path.relative_to(ROOT)}')
-
-    if alert_files == 0:
-        print('[guardrail] warning: no emergency alert call files found')
-    elif patched == 0:
-        print(f'[guardrail] duress alert gate already clean; alert files checked={alert_files}')
+    print('[guardrail] duress alert gate verified: contacts trigger, active subscription, contacts complete')
 
 
 def patch_fake_btc_persistence():
@@ -108,7 +102,7 @@ def patch_fake_btc_seed_conditions():
 
 def main():
     cleanup_contact_quote_defaults()
-    patch_duress_alert_gate()
+    verify_duress_alert_gate()
     patch_fake_btc_persistence()
     patch_fake_btc_seed_conditions()
 
