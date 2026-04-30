@@ -172,7 +172,7 @@ def patch_emergency_contact_empty_strings():
         text = p.read_text()
         original = text
         text = text.replace("'\"\"'", "''")
-        text = text.replace('"\\"\\""', "''")
+        text = text.replace('"\\\"\\\""', "''")
         if text != original:
             p.write_text(text)
             print(f'[guardrail] patched empty-string display in {p.relative_to(ROOT)}')
@@ -206,6 +206,226 @@ def patch_agreements_completion():
             print(f'[guardrail] patched agreements completion in {p.relative_to(ROOT)}')
 
 
+def _find_text_form_field_spans(text):
+    spans = []
+    needle = 'TextFormField('
+    start = 0
+    while True:
+        call_start = text.find(needle, start)
+        if call_start == -1:
+            return spans
+
+        open_idx = call_start + len('TextFormField')
+        i = open_idx
+        depth = 0
+        quote = None
+        escape = False
+        line_comment = False
+        block_comment = False
+
+        while i < len(text):
+            ch = text[i]
+            nxt = text[i + 1] if i + 1 < len(text) else ''
+
+            if line_comment:
+                if ch == '\n':
+                    line_comment = False
+                i += 1
+                continue
+
+            if block_comment:
+                if ch == '*' and nxt == '/':
+                    block_comment = False
+                    i += 2
+                else:
+                    i += 1
+                continue
+
+            if quote:
+                if escape:
+                    escape = False
+                elif ch == '\\':
+                    escape = True
+                elif ch == quote:
+                    quote = None
+                i += 1
+                continue
+
+            if ch == '/' and nxt == '/':
+                line_comment = True
+                i += 2
+                continue
+            if ch == '/' and nxt == '*':
+                block_comment = True
+                i += 2
+                continue
+            if ch in ("'", '"'):
+                quote = ch
+                i += 1
+                continue
+            if ch == '(':
+                depth += 1
+            elif ch == ')':
+                depth -= 1
+                if depth == 0:
+                    spans.append((call_start, i + 1))
+                    start = i + 1
+                    break
+            i += 1
+        else:
+            start = call_start + len(needle)
+
+
+def _patch_text_form_fields(text, patcher):
+    spans = _find_text_form_field_spans(text)
+    if not spans:
+        return text
+
+    out = []
+    last = 0
+    for start, end in spans:
+        block = text[start:end]
+        out.append(text[last:start])
+        out.append(patcher(block))
+        last = end
+    out.append(text[last:])
+    return ''.join(out)
+
+
+def _has_named_arg(block, arg_name):
+    return re.search(rf'\b{re.escape(arg_name)}\s*:', block) is not None
+
+
+def _insert_after_anchor_if_missing(block, anchor_regex, insert_text, arg_name):
+    if _has_named_arg(block, arg_name):
+        return block
+    return re.sub(anchor_regex, lambda m: m.group(0) + insert_text, block, count=1)
+
+
+def _patch_email_field(block):
+    if 'keyboardType: TextInputType.emailAddress,' not in block:
+        return block
+    block = _insert_after_anchor_if_missing(
+        block,
+        r"keyboardType: TextInputType\.emailAddress,\n",
+        "textInputAction: TextInputAction.next,\n",
+        'textInputAction',
+    )
+    block = _insert_after_anchor_if_missing(
+        block,
+        r"keyboardType: TextInputType\.emailAddress,\n",
+        "autofillHints: const [AutofillHints.username, AutofillHints.email],\n",
+        'autofillHints',
+    )
+    return block
+
+
+def _patch_create_account_passwords(block):
+    if 'obscureText: !_model.passwordVisibility,' in block:
+        block = _insert_after_anchor_if_missing(
+            block,
+            r"obscureText: !_model\.passwordVisibility,\n",
+            "textInputAction: TextInputAction.next,\n",
+            'textInputAction',
+        )
+        block = _insert_after_anchor_if_missing(
+            block,
+            r"obscureText: !_model\.passwordVisibility,\n",
+            "autofillHints: const [AutofillHints.newPassword],\n",
+            'autofillHints',
+        )
+
+    if 'obscureText: !_model.confirmPasswordVisibility,' in block:
+        block = _insert_after_anchor_if_missing(
+            block,
+            r"obscureText: !_model\.confirmPasswordVisibility,\n",
+            "textInputAction: TextInputAction.done,\n",
+            'textInputAction',
+        )
+        block = _insert_after_anchor_if_missing(
+            block,
+            r"obscureText: !_model\.confirmPasswordVisibility,\n",
+            "autofillHints: const [AutofillHints.newPassword],\n",
+            'autofillHints',
+        )
+        block = _insert_after_anchor_if_missing(
+            block,
+            r"obscureText: !_model\.confirmPasswordVisibility,\n",
+            "onEditingComplete: () {\n"
+            "  TextInput.finishAutofillContext();\n"
+            "  FocusScope.of(context).unfocus();\n"
+            "},\n",
+            'onEditingComplete',
+        )
+
+    return block
+
+
+def _patch_phone_field(block):
+    if 'keyboardType: TextInputType.phone,' not in block:
+        return block
+    block = _insert_after_anchor_if_missing(
+        block,
+        r"keyboardType: TextInputType\.phone,\n",
+        "textInputAction: TextInputAction.done,\n",
+        'textInputAction',
+    )
+    block = _insert_after_anchor_if_missing(
+        block,
+        r"keyboardType: TextInputType\.phone,\n",
+        "autofillHints: const [AutofillHints.telephoneNumber, AutofillHints.telephoneNumberNational],\n",
+        'autofillHints',
+    )
+    block = _insert_after_anchor_if_missing(
+        block,
+        r"keyboardType: TextInputType\.phone,\n",
+        "onEditingComplete: () {\n"
+        "  TextInput.finishAutofillContext();\n"
+        "  FocusScope.of(context).unfocus();\n"
+        "},\n",
+        'onEditingComplete',
+    )
+    return block
+
+
+def _patch_name_field(block):
+    if 'keyboardType: TextInputType.name,' not in block:
+        return block
+    return _insert_after_anchor_if_missing(
+        block,
+        r"keyboardType: TextInputType\.name,\n",
+        "textInputAction: TextInputAction.next,\n",
+        'textInputAction',
+    )
+
+
+def _patch_street_field(block):
+    if 'keyboardType: TextInputType.streetAddress,' not in block:
+        return block
+    return _insert_after_anchor_if_missing(
+        block,
+        r"keyboardType: TextInputType\.streetAddress,\n",
+        "textInputAction: TextInputAction.next,\n",
+        'textInputAction',
+    )
+
+
+def _validate_no_duplicate_text_field_args():
+    checked_args = ('textInputAction', 'autofillHints', 'onEditingComplete')
+    problems = []
+    for p in (ROOT / 'lib').rglob('*.dart'):
+        text = p.read_text()
+        for block in (text[start:end] for start, end in _find_text_form_field_spans(text)):
+            for arg in checked_args:
+                count = len(re.findall(rf'\b{re.escape(arg)}\s*:', block))
+                if count > 1:
+                    problems.append(f'{p.relative_to(ROOT)} has duplicate {arg} in one TextFormField')
+    if problems:
+        for problem in problems:
+            print(f'[guardrail] ERROR {problem}')
+        raise SystemExit(1)
+
+
 def patch_keyboard_and_autofill():
     for p in (ROOT / 'lib').rglob('*.dart'):
         name = p.name
@@ -218,65 +438,23 @@ def patch_keyboard_and_autofill():
         if 'create_account' in rel or 'create_account' in name:
             text = ensure_import(text, "import 'package:flutter/services.dart';")
             text = text.replace('enableInteractiveSelection: false,', '')
-            text = re.sub(
-                r"keyboardType: TextInputType\.emailAddress,\n(?!\s*textInputAction)",
-                "keyboardType: TextInputType.emailAddress,\n"
-                "textInputAction: TextInputAction.next,\n"
-                "autofillHints: const [AutofillHints.username, AutofillHints.email],\n",
-                text,
-            )
-            text = re.sub(
-                r"obscureText: !_model\.passwordVisibility,\n(?!\s*textInputAction)",
-                "obscureText: !_model.passwordVisibility,\n"
-                "textInputAction: TextInputAction.next,\n"
-                "autofillHints: const [AutofillHints.newPassword],\n",
-                text,
-                count=1,
-            )
-            text = re.sub(
-                r"obscureText: !_model\.confirmPasswordVisibility,\n(?!\s*textInputAction)",
-                "obscureText: !_model.confirmPasswordVisibility,\n"
-                "textInputAction: TextInputAction.done,\n"
-                "autofillHints: const [AutofillHints.newPassword],\n"
-                "onEditingComplete: () {\n"
-                "  TextInput.finishAutofillContext();\n"
-                "  FocusScope.of(context).unfocus();\n"
-                "},\n",
-                text,
-                count=1,
-            )
+            text = _patch_text_form_fields(text, lambda block: _patch_create_account_passwords(_patch_email_field(block)))
 
         if 'phone_number_input' in rel or 'phone_number_input' in name:
             text = ensure_import(text, "import 'package:flutter/services.dart';")
-            text = re.sub(
-                r"keyboardType: TextInputType\.phone,\n(?!\s*textInputAction)",
-                "keyboardType: TextInputType.phone,\n"
-                "textInputAction: TextInputAction.done,\n"
-                "autofillHints: const [AutofillHints.telephoneNumber, AutofillHints.telephoneNumberNational],\n"
-                "onEditingComplete: () {\n"
-                "  TextInput.finishAutofillContext();\n"
-                "  FocusScope.of(context).unfocus();\n"
-                "},\n",
-                text,
-            )
+            text = _patch_text_form_fields(text, _patch_phone_field)
 
         if 'personal_contact' in rel or 'personal_information' in rel:
-            text = re.sub(
-                r"keyboardType: TextInputType\.name,\n(?!\s*textInputAction)",
-                "keyboardType: TextInputType.name,\ntextInputAction: TextInputAction.next,\n",
-                text,
-            )
+            text = _patch_text_form_fields(text, _patch_name_field)
 
         if 'home_address' in rel or 'address_contact' in rel:
-            text = re.sub(
-                r"keyboardType: TextInputType\.streetAddress,\n(?!\s*textInputAction)",
-                "keyboardType: TextInputType.streetAddress,\ntextInputAction: TextInputAction.next,\n",
-                text,
-            )
+            text = _patch_text_form_fields(text, _patch_street_field)
 
         if text != original:
             p.write_text(text)
             print(f'[guardrail] patched keyboard/autofill in {p.relative_to(ROOT)}')
+
+    _validate_no_duplicate_text_field_args()
 
 
 def main():
