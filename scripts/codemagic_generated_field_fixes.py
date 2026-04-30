@@ -160,11 +160,11 @@ def patch_text_form_fields(path: Path) -> None:
 
 def patch_keyboard_and_autofill() -> None:
     targets = [
-        ROOT / 'lib/create_account/create_account_widget.dart',
-        ROOT / 'lib/phone_number_input/phone_number_input_widget.dart',
-        ROOT / 'lib/onboarding_account_creation/personal_information/personal_information_widget.dart',
-        ROOT / 'lib/onboarding_account_creation/home_address_entry_page/home_address_entry_page_widget.dart',
-        ROOT / 'lib/onboarding_account_creation/emergency_contacts/emergency_contacts_widget.dart',
+        ROOT / 'lib/welcom_pages/create_account/create_account_widget.dart',
+        ROOT / 'lib/welcom_pages/phone_number_input/phone_number_input_widget.dart',
+        ROOT / 'lib/emergancy_contact_information/personal_information/personal_information_widget.dart',
+        ROOT / 'lib/emergancy_contact_information/home_address_entry_page/home_address_entry_page_widget.dart',
+        ROOT / 'lib/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart',
     ]
     for path in targets:
         if path.exists():
