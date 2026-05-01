@@ -143,15 +143,17 @@ def patch_duress_home_seed_condition() -> None:
 
 
 def validate_duress_pin_alert_gate() -> None:
-    path = ROOT / 'lib/pin_pages/create_pin/create_pin_widget.dart'
+    path = ROOT / 'lib/pin_pages/p_i_n_page/p_i_n_page_widget.dart'
     if not path.exists():
-        raise SystemExit('Missing expected duress PIN page file')
+        raise SystemExit('Missing expected duress PIN entry page file')
 
     text = read(path)
-    if 'SendEmergencyAlertsCall.call' not in text:
-        raise SystemExit('Duress PIN page no longer calls SendEmergencyAlerts')
+    if not re.search(r'sendEmergencyAlertsCall\s*\.\s*call\s*\(', text):
+        raise SystemExit('Duress PIN entry page no longer calls SendEmergencyAlerts')
     if 'if (true)' in text:
         raise SystemExit('Dangerous flattened duress alert gate detected')
+    if 'DuressHomePageWidget.routeName' not in text:
+        raise SystemExit('Duress PIN entry page no longer routes to DuressHomePage')
 
     required_gate_tokens = [
         'decoyPinContactsEnabled',
