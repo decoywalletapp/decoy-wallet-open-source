@@ -12,7 +12,7 @@ workflows:
         - app_store_connect
         - signing_cert
       vars:
-        BUNDLE_ID: "com.mycompany.decoywallet"
+        BUNDLE_ID: "com.decoywalletapp.app"
         APP_STORE_APPLE_ID: "6748536132"
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
@@ -108,16 +108,43 @@ workflows:
       - name: Set up code signing
         script: |
           set -e
-          if [ -z "${CERTIFICATE_PRIVATE_KEY:-}" ]; then
-            echo "Missing CERTIFICATE_PRIVATE_KEY in CodeMagic environment group signing_cert"
-            exit 1
-          fi
           keychain initialize
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
-            --create
-          keychain add-certificates
+
+          if [ -n "${CM_CERTIFICATE:-}" ] && [ -n "${CM_CERTIFICATE_PASSWORD:-}" ] && [ -n "${IOS_PROVISIONING_PROFILE:-}" ]; then
+            echo "Using stored CodeMagic signing certificate and provisioning profile"
+            python3 - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          Path('/tmp/certificate.p12').write_bytes(base64.b64decode(os.environ['CM_CERTIFICATE']))
+
+          profile_dir = Path.home() / 'Library' / 'MobileDevice' / 'Provisioning Profiles'
+          profile_dir.mkdir(parents=True, exist_ok=True)
+          (profile_dir / 'decoy_main.mobileprovision').write_bytes(
+              base64.b64decode(os.environ['IOS_PROVISIONING_PROFILE'])
+          )
+
+          ext_profile = os.environ.get('EXT_IOS_PROVISIONING_PROFILE')
+          if ext_profile:
+              (profile_dir / 'decoy_extension.mobileprovision').write_bytes(
+                  base64.b64decode(ext_profile)
+              )
+          PY
+            keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          else
+            if [ -z "${CERTIFICATE_PRIVATE_KEY:-}" ]; then
+              echo "Missing signing files: either CM_CERTIFICATE/CM_CERTIFICATE_PASSWORD/IOS_PROVISIONING_PROFILE or CERTIFICATE_PRIVATE_KEY must be present"
+              exit 1
+            fi
+            echo "Stored signing files not found; fetching signing files from App Store Connect"
+            app-store-connect fetch-signing-files "$BUNDLE_ID" \
+              --type IOS_APP_STORE \
+              --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
+              --create
+            keychain add-certificates
+          fi
+
           xcode-project use-profiles
 
       - name: Build IPA
