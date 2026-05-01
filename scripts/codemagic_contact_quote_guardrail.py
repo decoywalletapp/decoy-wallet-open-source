@@ -152,7 +152,7 @@ def validate_duress_pin_alert_gate() -> None:
         raise SystemExit('Duress PIN entry page no longer calls SendEmergencyAlerts')
     if 'if (true)' in text:
         raise SystemExit('Dangerous flattened duress alert gate detected')
-    if 'DuressHomePageWidget.routeName' not in text:
+    if not re.search(r'DuressHomePageWidget\s*\.\s*routeName', text):
         raise SystemExit('Duress PIN entry page no longer routes to DuressHomePage')
 
     required_gate_tokens = [
