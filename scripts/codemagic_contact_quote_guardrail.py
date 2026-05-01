@@ -13,6 +13,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+DURESS_BACKGROUND_FILES = [
+    'lib/duress_mode/duress_home_page/duress_home_page_widget.dart',
+    'lib/duress_mode/duress_send_b_t_c/duress_send_b_t_c_widget.dart',
+    'lib/duress_mode/duress_confirm_transaction_send/duress_confirm_transaction_send_widget.dart',
+    'lib/duress_mode/duress_order_processed/duress_order_processed_widget.dart',
+    'lib/duress_mode/duress_processing_transaction/duress_processing_transaction_widget.dart',
+    'lib/duress_mode/duress_settings_page/duress_settings_page_widget.dart',
+    'lib/duress_mode/duress_scan_q_r/duress_scan_q_r_widget.dart',
+]
+
 
 def read(path: Path) -> str:
     return path.read_text(encoding='utf-8')
@@ -100,6 +110,7 @@ def patch_app_state_fake_btc_window() -> None:
 """
         insertion = """  void deleteFakeBtcBalance() {
     secureStorage.delete(key: 'ff_fakeBtcBalance');
+    fakeBtcSeededAt = null;
   }
 
   DateTime? _fakeBtcSeededAt;
@@ -117,7 +128,7 @@ def patch_app_state_fake_btc_window() -> None:
   }
 
   bool get shouldSeedFakeBtcBalance {
-    if (_fakeBtcBalance <= 0.0 || _fakeBtcSeededAt == null) {
+    if (_fakeBtcSeededAt == null) {
       return true;
     }
     return DateTime.now().toUtc().difference(_fakeBtcSeededAt!.toUtc()) >=
@@ -139,6 +150,46 @@ def patch_duress_home_seed_condition() -> None:
     text = text.replace('if (!FFAppState().fakeSeeded)', 'if (FFAppState().shouldSeedFakeBtcBalance)')
     text = text.replace('if (FFAppState().fakeSeeded == false)', 'if (FFAppState().shouldSeedFakeBtcBalance)')
     text = text.replace('if (FFAppState().fakeBtcBalance <= 0.0)', 'if (FFAppState().shouldSeedFakeBtcBalance)')
+    write_if_changed(path, original, text)
+
+
+def patch_duress_backgrounds() -> None:
+    for rel_path in DURESS_BACKGROUND_FILES:
+        path = ROOT / rel_path
+        if not path.exists():
+            continue
+        original = read(path)
+        text = original.replace('backgroundColor: Color(0x001D2428),', 'backgroundColor: Color(0xFF1D2428),')
+        write_if_changed(path, original, text)
+
+
+def patch_duress_order_processed_subtraction() -> None:
+    path = ROOT / 'lib/duress_mode/duress_order_processed/duress_order_processed_widget.dart'
+    if not path.exists():
+        return
+
+    original = read(path)
+    text = original
+
+    custom_functions_import = "import '/flutter_flow/custom_functions.dart' as functions;\n"
+    if custom_functions_import not in text:
+        import_anchor = "import '/flutter_flow/flutter_flow_util.dart';\n"
+        if import_anchor in text:
+            text = text.replace(import_anchor, import_anchor + custom_functions_import)
+
+    if 'final remainingFakeBalance = FFAppState().fakeBtcBalance -' not in text:
+        marker = '    SchedulerBinding.instance.addPostFrameCallback((_) async {\n'
+        subtraction = """      final remainingFakeBalance = FFAppState().fakeBtcBalance -
+          functions.amountToDouble(FFAppState().sendAmountBtc);
+      FFAppState().fakeBtcBalance = remainingFakeBalance > 0.0
+          ? double.parse(remainingFakeBalance.toStringAsFixed(8))
+          : 0.0;
+      safeSetState(() {});
+"""
+        if marker in text:
+            text = text.replace(marker, marker + subtraction)
+
+    text = text.replace('backgroundColor: Color(0x001D2428),', 'backgroundColor: Color(0xFF1D2428),')
     write_if_changed(path, original, text)
 
 
@@ -167,12 +218,28 @@ def validate_duress_pin_alert_gate() -> None:
         )
 
 
+def validate_fake_btc_subtraction() -> None:
+    path = ROOT / 'lib/duress_mode/duress_order_processed/duress_order_processed_widget.dart'
+    if not path.exists():
+        raise SystemExit('Missing expected duress order processed page file')
+    text = read(path)
+    required_tokens = ['remainingFakeBalance', 'amountToDouble', 'fakeBtcBalance']
+    missing = [token for token in required_tokens if token not in text]
+    if missing:
+        raise SystemExit(
+            'Fake BTC subtraction is missing required token(s): ' + ', '.join(missing)
+        )
+
+
 def main() -> None:
     patch_visible_empty_quotes()
     patch_app_state_fake_btc_window()
     patch_duress_home_seed_condition()
+    patch_duress_backgrounds()
+    patch_duress_order_processed_subtraction()
     validate_duress_pin_alert_gate()
-    print('[guardrail] contact, fake BTC, and duress gate checks complete')
+    validate_fake_btc_subtraction()
+    print('[guardrail] contact, fake BTC, duress background, and duress gate checks complete')
 
 
 if __name__ == '__main__':
