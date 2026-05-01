@@ -9,17 +9,14 @@ workflows:
       xcode: latest
       cocoapods: default
       groups:
-        - decoy-ios-signing
-        - decoy-firebase-ios
+        - app_store_connect
+        - signing_cert
       vars:
         BUNDLE_ID: "com.mycompany.decoywallet"
         APP_STORE_APPLE_ID: "6748536132"
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
         APPLE_TEAM_ID: "ZC5TJQUJ6H"
-
-    integrations:
-      app_store_connect: Apple Sign In and production environment settings
 
     triggering:
       events:
@@ -129,7 +126,9 @@ workflows:
 
     publishing:
       app_store_connect:
-        auth: integration
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         beta_groups:
           - DayOneDTs
