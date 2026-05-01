@@ -80,9 +80,13 @@ workflows:
             echo "Missing fake BTC seed guardrail in app_state.dart"
             exit 1
           fi
-          PIN_PAGE="lib/pin_pages/create_pin/create_pin_widget.dart"
+          PIN_PAGE="lib/pin_pages/p_i_n_page/p_i_n_page_widget.dart"
           if [ ! -f "$PIN_PAGE" ]; then
-            echo "Missing expected duress PIN page: $PIN_PAGE"
+            echo "Missing expected duress PIN entry page: $PIN_PAGE"
+            exit 1
+          fi
+          if ! grep -q "sendEmergencyAlertsCall" "$PIN_PAGE"; then
+            echo "Duress PIN entry page no longer calls SendEmergencyAlerts"
             exit 1
           fi
           if grep -q "if (true)" "$PIN_PAGE"; then
