@@ -133,9 +133,8 @@ def props_for_field(path: Path, block: str) -> list[str]:
         props.append('textInputAction: TextInputAction.next,')
     elif 'phone' in kinds:
         props.append(
-            'autofillHints: const [\n'
-            '  AutofillHints.telephoneNumber,\n'
-            '  AutofillHints.telephoneNumberNational,\n'
+            'autofillHints: [\n'
+            '  AutofillHints.telephoneNumber\n'
             '],'
         )
         action = 'done' if 'phone_number_input' in path_s else 'next'
@@ -233,10 +232,9 @@ def patch_text_form_fields(path: Path) -> None:
 
 def _force_phone_autofill_props(field: str) -> str:
     field = re.sub(
-        r'autofillHints\s*:\s*\[[^\]]*\]\s*,',
-        'autofillHints: const [\n'
-        '  AutofillHints.telephoneNumber,\n'
-        '  AutofillHints.telephoneNumberNational,\n'
+        r'autofillHints\s*:\s*(?:const\s*)?\[[^\]]*\]\s*,',
+        'autofillHints: [\n'
+        '  AutofillHints.telephoneNumber\n'
         '],',
         field,
         count=1,
@@ -251,9 +249,8 @@ def _force_phone_autofill_props(field: str) -> str:
     return insert_props_before_decoration(
         field,
         [
-            'autofillHints: const [\n'
-            '  AutofillHints.telephoneNumber,\n'
-            '  AutofillHints.telephoneNumberNational,\n'
+            'autofillHints: [\n'
+            '  AutofillHints.telephoneNumber\n'
             '],',
             'textInputAction: TextInputAction.done,',
         ],
@@ -304,6 +301,13 @@ def patch_phone_input_native_autofill_widget() -> None:
             )
             field = re.sub(
                 r'\n\s*onEditingComplete\s*:\s*onEditingComplete\s*,',
+                '',
+                field,
+                count=1,
+                flags=re.S,
+            )
+            field = re.sub(
+                r'\n\s*inputFormatters\s*:\s*\[\s*_model\.phoneNumberFieldMask\s*\]\s*,',
                 '',
                 field,
                 count=1,
