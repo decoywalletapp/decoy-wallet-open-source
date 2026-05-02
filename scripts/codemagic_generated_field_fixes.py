@@ -149,6 +149,14 @@ def _submit_focus_prop(next_focus_node: str) -> str:
     )
 
 
+def _submit_done_prop() -> str:
+    return (
+        'onFieldSubmitted: (_) async {\n'
+        '  FocusScope.of(context).unfocus();\n'
+        '},'
+    )
+
+
 def focus_props_for_field(path: Path, block: str) -> list[str]:
     path_s = path.as_posix().lower()
 
@@ -165,6 +173,15 @@ def focus_props_for_field(path: Path, block: str) -> list[str]:
             'passwordCreateAccountKey',
         )):
             return [_submit_focus_prop('passwordConfirmFocusNode')]
+        if any(marker in block for marker in (
+            'passwordConfirmFocusNode',
+            'passwordConfirmTextController',
+            'passwordConfirmKey',
+            'confirmPasswordFocusNode',
+            'confirmPasswordTextController',
+            'confirmPasswordKey',
+        )):
+            return [_submit_done_prop()]
 
     if 'personal_information_widget.dart' in path_s:
         if any(marker in block for marker in (
