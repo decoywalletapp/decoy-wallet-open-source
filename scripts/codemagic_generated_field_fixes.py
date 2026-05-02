@@ -132,7 +132,12 @@ def props_for_field(path: Path, block: str) -> list[str]:
         props.append('autofillHints: const [AutofillHints.newPassword],')
         props.append('textInputAction: TextInputAction.next,')
     elif 'phone' in kinds:
-        props.append('autofillHints: const [AutofillHints.telephoneNumber],')
+        props.append(
+            'autofillHints: const [\n'
+            '  AutofillHints.telephoneNumber,\n'
+            '  AutofillHints.telephoneNumberNational,\n'
+            '],'
+        )
         action = 'done' if 'phone_number_input' in path_s else 'next'
         props.append(f'textInputAction: TextInputAction.{action},')
     elif {'first_name', 'last_name', 'street', 'city', 'state', 'zip'} & kinds:
@@ -226,6 +231,123 @@ def patch_text_form_fields(path: Path) -> None:
     write_if_changed(path, original, text)
 
 
+def _force_phone_autofill_props(field: str) -> str:
+    field = re.sub(
+        r'autofillHints\s*:\s*\[[^\]]*\]\s*,',
+        'autofillHints: const [\n'
+        '  AutofillHints.telephoneNumber,\n'
+        '  AutofillHints.telephoneNumberNational,\n'
+        '],',
+        field,
+        count=1,
+        flags=re.S,
+    )
+    field = re.sub(
+        r'textInputAction\s*:\s*TextInputAction\.\w+\s*,',
+        'textInputAction: TextInputAction.done,',
+        field,
+        count=1,
+    )
+    return insert_props_before_decoration(
+        field,
+        [
+            'autofillHints: const [\n'
+            '  AutofillHints.telephoneNumber,\n'
+            '  AutofillHints.telephoneNumberNational,\n'
+            '],',
+            'textInputAction: TextInputAction.done,',
+        ],
+    )
+
+
+def patch_phone_input_native_autofill_widget() -> None:
+    path = ROOT / 'lib/welcom_pages/phone_number_input/phone_number_input_widget.dart'
+    if not path.exists():
+        return
+
+    original = read(path)
+    text = original
+
+    spans = find_call_spans(text, 'Autocomplete<String>')
+    if spans:
+        pieces = []
+        last = 0
+        changed = False
+        for start, end in spans:
+            block = text[start:end]
+            if 'phoneNumberFieldTextController' not in block:
+                pieces.append(text[last:end])
+                last = end
+                continue
+
+            field_spans = find_call_spans(block, 'TextFormField')
+            if not field_spans:
+                pieces.append(text[last:end])
+                last = end
+                continue
+
+            field_start, field_end = field_spans[0]
+            field = block[field_start:field_end]
+            field = re.sub(
+                r'controller\s*:\s*textEditingController\s*,',
+                'controller: _model.phoneNumberFieldTextController,',
+                field,
+                count=1,
+                flags=re.S,
+            )
+            field = re.sub(
+                r'focusNode\s*:\s*focusNode\s*,',
+                'focusNode: _model.phoneNumberFieldFocusNode,',
+                field,
+                count=1,
+                flags=re.S,
+            )
+            field = re.sub(
+                r'\n\s*onEditingComplete\s*:\s*onEditingComplete\s*,',
+                '',
+                field,
+                count=1,
+                flags=re.S,
+            )
+            field = _force_phone_autofill_props(field)
+
+            pieces.append(text[last:start])
+            pieces.append(field)
+            last = end
+            changed = True
+
+        pieces.append(text[last:])
+        if changed:
+            text = ''.join(pieces)
+
+    controller_line = '    _model.phoneNumberFieldTextController ??= TextEditingController();'
+    focus_line = '    _model.phoneNumberFieldFocusNode ??= FocusNode();'
+    if controller_line in text and 'phoneNumberFieldFocusNode ??= FocusNode()' not in text:
+        text = text.replace(controller_line, f'{controller_line}\n{focus_line}', 1)
+
+    write_if_changed(path, original, text)
+
+
+def patch_phone_input_native_autofill_model() -> None:
+    path = ROOT / 'lib/welcom_pages/phone_number_input/phone_number_input_model.dart'
+    if not path.exists():
+        return
+
+    original = read(path)
+    text = original
+    focus_dispose = '    phoneNumberFieldFocusNode?.dispose();'
+    controller_dispose = '    phoneNumberFieldTextController?.dispose();'
+    if focus_dispose in text and controller_dispose not in text:
+        text = text.replace(focus_dispose, f'{focus_dispose}\n{controller_dispose}', 1)
+
+    write_if_changed(path, original, text)
+
+
+def patch_phone_input_native_autofill() -> None:
+    patch_phone_input_native_autofill_widget()
+    patch_phone_input_native_autofill_model()
+
+
 def patch_keyboard_and_autofill() -> None:
     targets = [
         ROOT / 'lib/welcom_pages/create_account/create_account_widget.dart',
@@ -268,6 +390,7 @@ def validate_no_duplicate_textfield_args() -> None:
 
 def main() -> None:
     patch_main_notification_prompt()
+    patch_phone_input_native_autofill()
     patch_keyboard_and_autofill()
     validate_no_duplicate_textfield_args()
     print('[guardrail] safe generated field fixes complete')
