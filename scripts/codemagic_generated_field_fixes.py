@@ -62,6 +62,10 @@ def find_call_spans(text: str, call_name: str):
     return spans
 
 
+def _format_prop(prop: str, indent: str) -> str:
+    return ''.join(f'\n{indent}{line}' for line in prop.splitlines())
+
+
 def insert_props_before_decoration(block: str, props: list[str]) -> str:
     missing = []
     for prop in props:
@@ -75,13 +79,13 @@ def insert_props_before_decoration(block: str, props: list[str]) -> str:
     match = re.search(r'\n(\s*)decoration\s*:', block)
     if match:
         indent = match.group(1)
-        insertion = ''.join(f'\n{indent}{prop}' for prop in missing)
+        insertion = ''.join(_format_prop(prop, indent) for prop in missing)
         return block[:match.start()] + insertion + block[match.start():]
 
     close = block.rfind(')')
     if close == -1:
         return block
-    insertion = ''.join(f'\n        {prop}' for prop in missing)
+    insertion = ''.join(_format_prop(prop, '        ') for prop in missing)
     return block[:close] + insertion + block[close:]
 
 
@@ -137,6 +141,50 @@ def props_for_field(path: Path, block: str) -> list[str]:
     return props
 
 
+def _submit_focus_prop(next_focus_node: str) -> str:
+    return (
+        'onFieldSubmitted: (_) async {\n'
+        f'  FocusScope.of(context).requestFocus(_model.{next_focus_node});\n'
+        '},'
+    )
+
+
+def focus_props_for_field(path: Path, block: str) -> list[str]:
+    path_s = path.as_posix().lower()
+
+    if 'create_account_widget.dart' in path_s:
+        if any(marker in block for marker in (
+            'emailAddressFocusNode',
+            'emailAddressTextController',
+            'emailAddressKey',
+        )):
+            return [_submit_focus_prop('passwordCreateAccountFocusNode')]
+        if any(marker in block for marker in (
+            'passwordCreateAccountFocusNode',
+            'passwordCreateAccountTextController',
+            'passwordCreateAccountKey',
+        )):
+            return [_submit_focus_prop('passwordConfirmFocusNode')]
+
+    if 'personal_information_widget.dart' in path_s:
+        if any(marker in block for marker in (
+            'lastNameFocusNode',
+            'lastNameTextController',
+            'lastNameKey',
+        )):
+            return [_submit_focus_prop('phoneFocusNode')]
+
+    if 'home_address_entry_page_widget.dart' in path_s:
+        if any(marker in block for marker in (
+            'streetAddressFocusNode',
+            'streetAddressTextController',
+            'streetAddressKey',
+        )):
+            return [_submit_focus_prop('cityFocusNode')]
+
+    return []
+
+
 def patch_text_form_fields(path: Path) -> None:
     original = read(path)
     text = original
@@ -148,7 +196,10 @@ def patch_text_form_fields(path: Path) -> None:
     last = 0
     for start, end in spans:
         block = text[start:end]
-        updated = insert_props_before_decoration(block, props_for_field(path, block))
+        updated = insert_props_before_decoration(
+            block,
+            props_for_field(path, block) + focus_props_for_field(path, block),
+        )
         pieces.append(text[last:start])
         pieces.append(updated)
         last = end
@@ -190,7 +241,7 @@ def validate_no_duplicate_textfield_args() -> None:
         text = read(path)
         for start, end in find_call_spans(text, 'TextFormField'):
             block = text[start:end]
-            for arg in ('autofillHints', 'textInputAction'):
+            for arg in ('autofillHints', 'textInputAction', 'onFieldSubmitted'):
                 count = len(re.findall(rf'\b{arg}\s*:', block))
                 if count > 1:
                     raise SystemExit(
