@@ -126,6 +126,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
           _model.setupComplete =
               _model.query2?.elementAtOrNull(0)?.setupComplete;
+          _model.agreementsComplete =
+              _model.query2?.elementAtOrNull(0)?.agreementsComplete;
           safeSetState(() {});
         } else {
           await DecoyWalletTable().update(
@@ -152,6 +154,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
           _model.setupComplete =
               _model.query3?.elementAtOrNull(0)?.setupComplete;
+          _model.agreementsComplete =
+              _model.query3?.elementAtOrNull(0)?.agreementsComplete;
           safeSetState(() {});
         }
 
@@ -274,8 +278,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     );
                   }
                 } else {
-                  context.goNamedAuth(
-                      HomePageWidget.routeName, context.mounted);
+                  if (_model.agreementsComplete != true) {
+                    context.goNamedAuth(
+                        AgreementsPageWidget.routeName, context.mounted);
+                  } else {
+                    if (_model.setupComplete != true) {
+                      context.goNamedAuth(
+                          CreatePinWidget.routeName, context.mounted);
+                    } else {
+                      context.goNamedAuth(
+                          HomePageWidget.routeName, context.mounted);
+                    }
+                  }
                 }
               } else {
                 GoRouter.of(context).prepareAuthEvent();
@@ -376,7 +390,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   );
                 }
               } else {
-                context.goNamedAuth(HomePageWidget.routeName, context.mounted);
+                if (_model.agreementsComplete != true) {
+                  context.goNamedAuth(
+                      AgreementsPageWidget.routeName, context.mounted);
+                } else {
+                  if (_model.setupComplete != true) {
+                    context.goNamedAuth(
+                        CreatePinWidget.routeName, context.mounted);
+                  } else {
+                    context.goNamedAuth(
+                        HomePageWidget.routeName, context.mounted);
+                  }
+                }
               }
             }
           }

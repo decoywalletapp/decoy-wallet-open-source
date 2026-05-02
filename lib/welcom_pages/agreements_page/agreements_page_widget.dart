@@ -250,6 +250,70 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                         onPressed: () async {
                                           await _model.pageViewController
                                               ?.animateToPage(
+                                            0,
+                                            duration:
+                                                Duration(milliseconds: 500),
+                                            curve: Curves.ease,
+                                          );
+                                          _model.agreementPageIndex = 0;
+                                          safeSetState(() {});
+                                        },
+                                        text: 'Terms',
+                                        options: FFButtonOptions(
+                                          width: 140.0,
+                                          height: 40.0,
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 0.0, 16.0, 0.0),
+                                          iconPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 0.0),
+                                          color: _model.agreementPageIndex == 0
+                                              ? FlutterFlowTheme.of(context)
+                                                  .primary
+                                              : FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
+                                          textStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .titleSmall
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmallFamily,
+                                                color:
+                                                    _model.agreementPageIndex ==
+                                                            0
+                                                        ? FlutterFlowTheme.of(
+                                                                context)
+                                                            .primaryBackground
+                                                        : FlutterFlowTheme.of(
+                                                                context)
+                                                            .primaryText,
+                                                letterSpacing: 0.0,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .titleSmallIsCustom,
+                                              ),
+                                          elevation: 3.0,
+                                          borderSide: BorderSide(
+                                            color: _model.agreementPageIndex ==
+                                                    0
+                                                ? FlutterFlowTheme.of(context)
+                                                    .primary
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            width: 2.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        showLoadingIndicator: false,
+                                      ),
+                                      FFButtonWidget(
+                                        onPressed: () async {
+                                          await _model.pageViewController
+                                              ?.animateToPage(
                                             1,
                                             duration:
                                                 Duration(milliseconds: 500),
@@ -258,7 +322,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                           _model.agreementPageIndex = 1;
                                           safeSetState(() {});
                                         },
-                                        text: 'Terms',
+                                        text: 'Privacy',
                                         options: FFButtonOptions(
                                           width: 140.0,
                                           height: 40.0,
@@ -308,69 +372,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                         ),
-                                      ),
-                                      FFButtonWidget(
-                                        onPressed: () async {
-                                          await _model.pageViewController
-                                              ?.animateToPage(
-                                            2,
-                                            duration:
-                                                Duration(milliseconds: 500),
-                                            curve: Curves.ease,
-                                          );
-                                          _model.agreementPageIndex = 2;
-                                          safeSetState(() {});
-                                        },
-                                        text: 'Privacy',
-                                        options: FFButtonOptions(
-                                          width: 140.0,
-                                          height: 40.0,
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 0.0, 16.0, 0.0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: _model.agreementPageIndex == 2
-                                              ? FlutterFlowTheme.of(context)
-                                                  .primary
-                                              : FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
-                                          textStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .titleSmall
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmallFamily,
-                                                color:
-                                                    _model.agreementPageIndex ==
-                                                            2
-                                                        ? FlutterFlowTheme.of(
-                                                                context)
-                                                            .primaryBackground
-                                                        : FlutterFlowTheme.of(
-                                                                context)
-                                                            .primaryText,
-                                                letterSpacing: 0.0,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .titleSmallIsCustom,
-                                              ),
-                                          elevation: 3.0,
-                                          borderSide: BorderSide(
-                                            color: _model.agreementPageIndex ==
-                                                    2
-                                                ? FlutterFlowTheme.of(context)
-                                                    .primary
-                                                : FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
+                                        showLoadingIndicator: false,
                                       ),
                                     ],
                                   ),

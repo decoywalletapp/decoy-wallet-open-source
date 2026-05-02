@@ -11,17 +11,17 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
 
   int contactIncrement = 0;
 
-  String contactsJson = '';
+  String contactsJson = '\"\"';
 
   int validCount = 0;
 
-  String dataKeyB64 = '';
+  String dataKeyB64 = '\"\"';
 
-  String ctB64 = '';
+  String ctB64 = '\"\"';
 
-  String nonceB64 = '';
+  String nonceB64 = '\"\"';
 
-  String wrappedB64 = '';
+  String wrappedB64 = '\"\"';
 
   String? rowCipherB64;
 
@@ -69,35 +69,35 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   void updateConsentSlotsListAtIndex(int index, Function(dynamic) updateFn) =>
       consentSlotsList[index] = updateFn(consentSlotsList[index]);
 
-  String c1First = '';
+  String c1First = '\"\"';
 
-  String c1Last = '';
+  String c1Last = '\"\"';
 
-  String c1Phone = '';
+  String c1Phone = '\"\"';
 
-  String c2First = '';
+  String c2First = '\"\"';
 
-  String c2Last = '';
+  String c2Last = '\"\"';
 
-  String c2Phone = '';
+  String c2Phone = '\"\"';
 
-  String c3First = '';
+  String c3First = '\"\"';
 
-  String c3Last = '';
+  String c3Last = '\"\"';
 
-  String c3Phone = '';
+  String c3Phone = '\"\"';
 
-  String c4First = '';
+  String c4First = '\"\"';
 
-  String c4Last = '';
+  String c4Last = '\"\"';
 
-  String c4Phone = '';
+  String c4Phone = '\"\"';
 
-  String c5First = '';
+  String c5First = '\"\"';
 
-  String c5Last = '';
+  String c5Last = '\"\"';
 
-  String c5Phone = '';
+  String c5Phone = '\"\"';
 
   ///  State fields for stateful widgets in this page.
 
