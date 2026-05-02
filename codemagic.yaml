@@ -32,7 +32,8 @@ workflows:
           set -e
           echo "Branch: $CM_BRANCH"
           echo "Commit: $CM_COMMIT"
-          echo "Build number: $BUILD_NUMBER"
+          echo "CodeMagic run number: $BUILD_NUMBER"
+          echo "iOS/TestFlight build numbers are generated as UTC timestamps during Build IPA."
           flutter --version
 
       - name: Verify notification entitlement is present
@@ -145,14 +146,16 @@ workflows:
             keychain add-certificates
           fi
 
-          xcode-project use-profiles
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
 
       - name: Build IPA
         script: |
           set -e
+          IOS_BUILD_NUMBER="$(date -u +%Y%m%d%H%M%S)"
+          echo "Using iOS/TestFlight build number: $IOS_BUILD_NUMBER"
           flutter build ipa --release \
             --build-name=0.1.0 \
-            --build-number=$BUILD_NUMBER \
+            --build-number=$IOS_BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
 
     artifacts:
