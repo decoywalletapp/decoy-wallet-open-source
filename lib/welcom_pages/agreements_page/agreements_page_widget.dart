@@ -1,6 +1,5 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
@@ -47,7 +46,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.agreementPageIndex = 1;
+      _model.agreementPageIndex = 0;
       safeSetState(() {});
     });
 
@@ -78,29 +77,6 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-                      child: FlutterFlowIconButton(
-                        borderColor: Colors.transparent,
-                        borderRadius: 20.0,
-                        borderWidth: 1.0,
-                        buttonSize: 40.0,
-                        icon: Icon(
-                          Icons.arrow_back_rounded,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 24.0,
-                        ),
-                        onPressed: () async {
-                          context.safePop();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
                   child: Column(
@@ -726,7 +702,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                     ),
                   ),
                 ),
-              ],
+              ].addToStart(SizedBox(height: 24.0)),
             ),
           ),
         ),
