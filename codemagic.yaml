@@ -1,0 +1,171 @@
+workflows:
+  ios_release:
+    name: iOS Release (TestFlight)
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    environment:
+      flutter: 3.38.5
+      xcode: latest
+      cocoapods: default
+      groups:
+        - app_store_connect
+        - signing_cert
+      vars:
+        BUNDLE_ID: "com.decoywalletapp.app"
+        APP_STORE_APPLE_ID: "6748536132"
+        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        APPLE_TEAM_ID: "ZC5TJQUJ6H"
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: flutterflow
+          include: true
+          source: true
+
+    scripts:
+      - name: Show build context
+        script: |
+          set -e
+          echo "Branch: $CM_BRANCH"
+          echo "Commit: $CM_COMMIT"
+          echo "CodeMagic run number: $BUILD_NUMBER"
+          echo "iOS/TestFlight build numbers are generated as UTC timestamps during Build IPA."
+          flutter --version
+
+      - name: Verify notification entitlement is present
+        script: |
+          set -e
+          ENTITLEMENTS="ios/Runner/Runner.entitlements"
+          if [ ! -f "$ENTITLEMENTS" ]; then
+            echo "Creating $ENTITLEMENTS"
+            cat > "$ENTITLEMENTS" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+          	<key>com.apple.developer.applesignin</key>
+          	<array>
+          		<string>Default</string>
+          	</array>
+          	<key>aps-environment</key>
+          	<string>production</string>
+          </dict>
+          </plist>
+          PLIST
+          fi
+          if ! grep -q "aps-environment" "$ENTITLEMENTS"; then
+            echo "Adding aps-environment entitlement"
+            plutil -insert aps-environment -string production "$ENTITLEMENTS" || /usr/libexec/PlistBuddy -c "Add :aps-environment string production" "$ENTITLEMENTS"
+          fi
+          if ! grep -q "com.apple.developer.applesignin" "$ENTITLEMENTS"; then
+            echo "Adding Apple Sign In entitlement"
+            /usr/libexec/PlistBuddy -c "Add :com.apple.developer.applesignin array" "$ENTITLEMENTS" || true
+            /usr/libexec/PlistBuddy -c "Add :com.apple.developer.applesignin:0 string Default" "$ENTITLEMENTS" || true
+          fi
+          cat "$ENTITLEMENTS"
+
+      - name: Apply generated-code guardrails
+        script: |
+          set -e
+          /usr/bin/python3 scripts/codemagic_generated_field_fixes.py
+          /usr/bin/python3 scripts/codemagic_contact_quote_guardrail.py
+
+      - name: Confirm fake BTC persistence guardrail
+        script: |
+          set -e
+          if ! grep -q "shouldSeedFakeBtcBalance" lib/app_state.dart; then
+            echo "Missing fake BTC seed guardrail in app_state.dart"
+            exit 1
+          fi
+          PIN_PAGE="lib/pin_pages/p_i_n_page/p_i_n_page_widget.dart"
+          if [ ! -f "$PIN_PAGE" ]; then
+            echo "Missing expected duress PIN entry page: $PIN_PAGE"
+            exit 1
+          fi
+          if ! grep -q "sendEmergencyAlertsCall" "$PIN_PAGE"; then
+            echo "Duress PIN entry page no longer calls SendEmergencyAlerts"
+            exit 1
+          fi
+          if grep -q "if (true)" "$PIN_PAGE"; then
+            echo "Dangerous flattened duress alert gate detected"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        script: |
+          set -e
+          flutter pub get
+
+      - name: Install CocoaPods dependencies
+        script: |
+          set -e
+          cd ios
+          pod install
+
+      - name: Set up code signing
+        script: |
+          set -e
+          keychain initialize
+
+          if [ -n "${CM_CERTIFICATE:-}" ] && [ -n "${CM_CERTIFICATE_PASSWORD:-}" ] && [ -n "${IOS_PROVISIONING_PROFILE:-}" ]; then
+            echo "Using stored CodeMagic signing certificate and provisioning profile"
+            python3 - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          Path('/tmp/certificate.p12').write_bytes(base64.b64decode(os.environ['CM_CERTIFICATE']))
+
+          profile_dir = Path.home() / 'Library' / 'MobileDevice' / 'Provisioning Profiles'
+          profile_dir.mkdir(parents=True, exist_ok=True)
+          (profile_dir / 'decoy_main.mobileprovision').write_bytes(
+              base64.b64decode(os.environ['IOS_PROVISIONING_PROFILE'])
+          )
+
+          ext_profile = os.environ.get('EXT_IOS_PROVISIONING_PROFILE')
+          if ext_profile:
+              (profile_dir / 'decoy_extension.mobileprovision').write_bytes(
+                  base64.b64decode(ext_profile)
+              )
+          PY
+            keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          else
+            if [ -z "${CERTIFICATE_PRIVATE_KEY:-}" ]; then
+              echo "Missing signing files: either CM_CERTIFICATE/CM_CERTIFICATE_PASSWORD/IOS_PROVISIONING_PROFILE or CERTIFICATE_PRIVATE_KEY must be present"
+              exit 1
+            fi
+            echo "Stored signing files not found; fetching signing files from App Store Connect"
+            app-store-connect fetch-signing-files "$BUNDLE_ID" \
+              --type IOS_APP_STORE \
+              --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
+              --create
+            keychain add-certificates
+          fi
+
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+
+      - name: Build IPA
+        script: |
+          set -e
+          IOS_BUILD_NUMBER="$(date -u +%Y%m%d%H%M%S)"
+          echo "Using iOS/TestFlight build number: $IOS_BUILD_NUMBER"
+          flutter build ipa --release \
+            --build-name=0.1.0 \
+            --build-number=$IOS_BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
