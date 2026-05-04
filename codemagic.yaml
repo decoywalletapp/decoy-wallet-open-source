@@ -146,7 +146,7 @@ workflows:
             keychain add-certificates
           fi
 
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
 
       - name: Build IPA
         script: |
@@ -158,14 +158,30 @@ workflows:
             --build-number=$IOS_BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
 
+      - name: Verify IPA exists
+        script: |
+          set -e
+          ls -lah build/ios/ipa || true
+          IPA_REL="$(ls -1 build/ios/ipa/*.ipa | head -n1)"
+          test -n "$IPA_REL"
+          IPA_ABS="$(/usr/bin/python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$IPA_REL")"
+          echo "IPA_ABS=$IPA_ABS" >> $CM_ENV
+          echo "IPA ready: $IPA_ABS"
+
+      - name: Upload to App Store Connect (CLI)
+        script: |
+          set -e
+          IPA="${IPA_ABS:-}"
+          test -n "$IPA"
+          test -f "$IPA"
+
+          app-store-connect publish \
+            --path "$IPA" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY
+
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
-
-    publishing:
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        submit_to_testflight: true
