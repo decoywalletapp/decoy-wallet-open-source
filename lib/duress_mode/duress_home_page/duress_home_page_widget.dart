@@ -204,6 +204,25 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
+    final fakeBtcDisplayText = valueOrDefault<String>(
+      formatNumber(
+        FFAppState().fakeBtcBalance,
+        formatType: FormatType.decimal,
+        decimalType: DecimalType.periodDecimal,
+      ),
+      '0',
+    );
+    final fakeUsdDisplayText = fakeBtcDisplayText == '0'
+        ? '0.00'
+        : valueOrDefault<String>(
+            formatNumber(
+              FFAppState().fakeUsdValue,
+              formatType: FormatType.decimal,
+              decimalType: DecimalType.periodDecimal,
+            ),
+            '0',
+          );
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -361,14 +380,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                       ),
                                 ),
                                 Text(
-                                  '₿ ${valueOrDefault<String>(
-                                    formatNumber(
-                                      FFAppState().fakeBtcBalance,
-                                      formatType: FormatType.decimal,
-                                      decimalType: DecimalType.periodDecimal,
-                                    ),
-                                    '0',
-                                  )}',
+                                  '₿ $fakeBtcDisplayText',
                                   style: FlutterFlowTheme.of(context)
                                       .displayMedium
                                       .override(
@@ -380,14 +392,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                                       ),
                                 ),
                                 Text(
-                                  '\$ ${valueOrDefault<String>(
-                                    formatNumber(
-                                      FFAppState().fakeUsdValue,
-                                      formatType: FormatType.decimal,
-                                      decimalType: DecimalType.periodDecimal,
-                                    ),
-                                    '0',
-                                  )}',
+                                  '\$ $fakeUsdDisplayText',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
