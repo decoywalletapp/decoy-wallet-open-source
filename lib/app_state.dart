@@ -143,6 +143,11 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getBool('ff_openRenewalFromPush') ??
               _openRenewalFromPush;
     });
+    await _safeInitAsync(() async {
+      _pendingStripeCheckoutSessionId =
+          await secureStorage.getString('ff_pendingStripeCheckoutSessionId') ??
+              _pendingStripeCheckoutSessionId;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -635,6 +640,21 @@ class FFAppState extends ChangeNotifier {
 
   void deleteOpenRenewalFromPush() {
     secureStorage.delete(key: 'ff_openRenewalFromPush');
+  }
+
+  String _pendingStripeCheckoutSessionId = '';
+  String get pendingStripeCheckoutSessionId => _pendingStripeCheckoutSessionId;
+  set pendingStripeCheckoutSessionId(String value) {
+    _pendingStripeCheckoutSessionId = value;
+    if (value.isEmpty) {
+      secureStorage.delete(key: 'ff_pendingStripeCheckoutSessionId');
+    } else {
+      secureStorage.setString('ff_pendingStripeCheckoutSessionId', value);
+    }
+  }
+
+  void deletePendingStripeCheckoutSessionId() {
+    secureStorage.delete(key: 'ff_pendingStripeCheckoutSessionId');
   }
 }
 

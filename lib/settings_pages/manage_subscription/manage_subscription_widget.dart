@@ -99,7 +99,9 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
 
     _model.refreshingEntitlement = true;
     try {
-      final sessionId = _model.stripeCheckoutSessionId;
+      final sessionId = _hasText(_model.stripeCheckoutSessionId)
+          ? _model.stripeCheckoutSessionId
+          : FFAppState().pendingStripeCheckoutSessionId;
       if (_hasText(sessionId)) {
         _model.stripeCheckoutSyncResult = await FinalizeStripeSwitchCall.call(
           userId: currentUserUid,
@@ -112,6 +114,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
 
       if (_model.pendingSwitchToStripe == true || _model.provider == 'stripe') {
         _model.stripeCheckoutSessionId = null;
+        FFAppState().pendingStripeCheckoutSessionId = '';
       }
     } finally {
       _model.refreshingEntitlement = false;
@@ -814,13 +817,19 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                         if ((_model.apiResult5g4
                                                                 ?.succeeded ??
                                                             true)) {
-                                                          _model.stripeCheckoutSessionId =
+                                                          final checkoutSessionId =
                                                               CreateCheckoutSessionCall
                                                                   .sessionId(
                                                             (_model.apiResult5g4
                                                                     ?.jsonBody ??
                                                                 ''),
                                                           );
+                                                          _model.stripeCheckoutSessionId =
+                                                              checkoutSessionId;
+                                                          FFAppState()
+                                                                  .pendingStripeCheckoutSessionId =
+                                                              checkoutSessionId ??
+                                                                  '';
                                                           await actions
                                                               .openExternalUrl(
                                                             CreateCheckoutSessionCall

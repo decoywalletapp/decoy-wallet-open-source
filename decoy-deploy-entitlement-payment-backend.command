@@ -6,7 +6,7 @@ CLOUDSDK_PYTHON_BIN="/Users/mitchellwleblanc/.cache/codex-runtimes/codex-primary
 REPO="/Users/mitchellwleblanc/Documents/GitHub/mobile-app"
 SOURCE_DIR="$REPO/codex_backend_work/decoy-stripe-webhook-live"
 INDEX_FILE="$SOURCE_DIR/index.js"
-EXPECTED_SHA="74ee187339c7d25239cfb607d16d031f12be1db10de078c0b736812ef7fc2ea1"
+EXPECTED_SHA="eaa75af5d85a704fc5a1b837e8279ae2603141a2a4e6f316ab61c42b947689d0"
 PROJECT="decoywallet-a283b"
 REGION="us-central1"
 SERVICE="decoy-stripe-webhook-live"
@@ -94,4 +94,4 @@ if [[ -n "$previous_revision" ]]; then
 fi
 
 echo "Done. Payment backend entitlement-safety hardening deployed."
-echo "Now test: BTC-active user taps card switch, abandons checkout, and returns to the app."
+echo "Now publish the app build, then test completed Stripe switch from a BTC-active account again."

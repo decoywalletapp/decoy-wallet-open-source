@@ -42,10 +42,14 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
       FFAppState().entitlementCheckCompleted = false;
       FFAppState().hasActiveSubscription = false;
       safeSetState(() {});
-      if (widget.sessionId != null && widget.sessionId != '') {
+      final checkoutSessionId =
+          (widget.sessionId != null && widget.sessionId != '')
+              ? widget.sessionId
+              : FFAppState().pendingStripeCheckoutSessionId;
+      if (checkoutSessionId != null && checkoutSessionId != '') {
         _model.stripeSwitchSyncResult = await FinalizeStripeSwitchCall.call(
           userId: currentUserUid,
-          sessionId: widget.sessionId,
+          sessionId: checkoutSessionId,
           jwt: currentJwtToken,
         );
       }
@@ -60,6 +64,15 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
               'decoy_wallet',
             ),
       );
+      final entitlement = _model.entitlementsQuery?.elementAtOrNull(0);
+      final stripeSwitchConfirmed =
+          entitlement?.provider == 'stripe' ||
+              (entitlement?.pendingProvider == 'stripe' &&
+                  (entitlement?.pendingProviderSubscriptionId ?? '')
+                      .isNotEmpty);
+      if (stripeSwitchConfirmed) {
+        FFAppState().pendingStripeCheckoutSessionId = '';
+      }
       FFAppState().entitlementCheckCompleted = true;
       safeSetState(() {});
       if ((_model.entitlementsQuery != null &&

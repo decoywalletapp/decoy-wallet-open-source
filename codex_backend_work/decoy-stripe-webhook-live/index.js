@@ -57,6 +57,7 @@ if (!SUPABASE_URL) throw new Error("Missing SUPABASE_URL");
 if (!SUPABASE_SERVICE_ROLE_KEY) throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
 
 const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
+const PAYMENT_BACKEND_VERSION = "entitlement-safety-20260506-session-persistence-v2";
 
 const BTCPAY_ENABLED = !!(
   BTCPAY_BASE_URL &&
@@ -620,7 +621,12 @@ async function notifyPaymentConfirmed(userId, { provider, invoiceId = null, body
 /* ---------- Stripe helpers ---------- */
 function extractUserIdFromStripeEvent(event) {
   const obj = event.data?.object;
-  return obj?.metadata?.user_id || obj?.client_reference_id || null;
+  return (
+    obj?.metadata?.user_id ||
+    obj?.client_reference_id ||
+    obj?.subscription_details?.metadata?.user_id ||
+    null
+  );
 }
 
 function computeIsActiveFromStripeEvent(event) {
@@ -803,6 +809,17 @@ app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (re
 
     if (
       !userId &&
+      event.type === "checkout.session.completed" &&
+      stripeFields.provider_subscription_id
+    ) {
+      const subForUser = await stripeFetchSubscription(
+        String(stripeFields.provider_subscription_id)
+      );
+      userId = subForUser?.metadata?.user_id || null;
+    }
+
+    if (
+      !userId &&
       (event.type === "customer.subscription.updated" ||
         event.type === "customer.subscription.created" ||
         event.type === "customer.subscription.deleted")
@@ -857,6 +874,12 @@ app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (re
         }
 
         await supabaseUpsertEntitlement(pendingPayload);
+        console.log("stripe switch pending scheduled", {
+          version: PAYMENT_BACKEND_VERSION,
+          userId: String(userId),
+          type: event.type,
+          pending_starts_at: existing.current_period_end || null,
+        });
 
         return res.status(200).json({
           received: true,
@@ -1522,7 +1545,13 @@ app.post("/btcpay-webhook", express.raw({ type: "application/json" }), async (re
 // JSON for normal routes
 app.use(express.json());
 
-app.get("/health", (_, res) => res.send("ok"));
+app.get("/health", (_, res) =>
+  res.json({
+    ok: true,
+    service: "decoy-stripe-webhook-live",
+    version: PAYMENT_BACKEND_VERSION,
+  })
+);
 
 /* ---------- REPAIR STRIPE ENTITLEMENT ---------- */
 app.post("/repair-stripe-entitlement", async (req, res) => {
@@ -1644,14 +1673,25 @@ app.post("/finalize-stripe-switch", async (req, res) => {
           });
         }
 
-        const sessionUserId =
+        let sessionUserId =
           sess.client_reference_id || sess.metadata?.user_id || sess.subscription_details?.metadata?.user_id;
+        let sub = null;
+
+        if (!sessionUserId && sess.subscription) {
+          sub = await stripeFetchSubscription(String(sess.subscription));
+          sessionUserId = sub?.metadata?.user_id || null;
+        }
 
         if (String(sessionUserId || "") !== String(user_id)) {
           return res.status(403).json({ error: "Stripe checkout session does not belong to user" });
         }
 
-        if (String(sess.status || "") !== "complete" || !sess.subscription) {
+        const checkoutComplete =
+          String(sess.status || "") === "complete" ||
+          String(sess.payment_status || "") === "paid" ||
+          !!sess.subscription;
+
+        if (!checkoutComplete || !sess.subscription) {
           return res.status(200).json({
             ok: true,
             skipped: true,
@@ -1659,7 +1699,7 @@ app.post("/finalize-stripe-switch", async (req, res) => {
           });
         }
 
-        const sub = await stripeFetchSubscription(String(sess.subscription));
+        sub = sub || (await stripeFetchSubscription(String(sess.subscription)));
         if (!sub) {
           return res
             .status(502)

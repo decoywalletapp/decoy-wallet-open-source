@@ -19,7 +19,9 @@ git add \
   codex_backend_work/decoy-stripe-webhook-live/index.js \
   codex_backend_work/decoy-stripe-webhook-live/package.json \
   decoy-deploy-entitlement-payment-backend.command \
+  decoy-finish-stripe-switch-session-fix.command \
   decoy-publish-entitlement-safety-build.command \
+  lib/app_state.dart \
   lib/backend/api_requests/api_calls.dart \
   lib/flutter_flow/nav/nav.dart \
   lib/settings_pages/manage_subscription/manage_subscription_model.dart \
@@ -30,7 +32,7 @@ git add \
 if git diff --cached --quiet; then
   echo "No staged mobile changes found; using existing HEAD."
 else
-  git commit -m "fix: sync completed stripe switch return"
+  git commit -m "fix: preserve stripe switch checkout session"
 fi
 
 HEAD_SHA="$(git rev-parse HEAD)"
@@ -190,4 +192,4 @@ if status < 200 or status >= 300:
 PY
 
 echo "Done. Entitlement-safety TestFlight build started."
-echo "Next: wait for the build, then test the completed Stripe switch from a BTC-active account."
+echo "Next: wait for the build, then test completed Stripe switch from a BTC-active account again."
