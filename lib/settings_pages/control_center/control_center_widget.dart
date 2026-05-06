@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -98,11 +99,15 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       safeSetState(() {});
       if ((_model.ctrlOutputEntitlements != null &&
               (_model.ctrlOutputEntitlements)!.isNotEmpty) &&
-          (_model.entIsActive == true) &&
-          (_model.ctrlOutputEntitlements!
-                  .elementAtOrNull(0)!
-                  .currentPeriodEnd! >
-              getCurrentTimestamp)) {
+          functions.isEntitlementUsableForProtection(
+            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.isActive,
+            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.currentPeriodEnd,
+            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.pendingProvider,
+            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.pendingStartsAt,
+            _model.ctrlOutputEntitlements
+                ?.elementAtOrNull(0)
+                ?.pendingProviderSubscriptionId,
+          )) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});
       } else {

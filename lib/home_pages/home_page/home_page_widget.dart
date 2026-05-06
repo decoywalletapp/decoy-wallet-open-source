@@ -3,6 +3,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -61,9 +62,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         safeSetState(() {});
         if ((_model.entitlementRow != null &&
                 (_model.entitlementRow)!.isNotEmpty) &&
-            (_model.entitlementRow?.elementAtOrNull(0)?.isActive == true) &&
-            (_model.entitlementRow!.elementAtOrNull(0)!.currentPeriodEnd! >
-                getCurrentTimestamp)) {
+            functions.isEntitlementUsableForProtection(
+              _model.entitlementRow?.elementAtOrNull(0)?.isActive,
+              _model.entitlementRow?.elementAtOrNull(0)?.currentPeriodEnd,
+              _model.entitlementRow?.elementAtOrNull(0)?.pendingProvider,
+              _model.entitlementRow?.elementAtOrNull(0)?.pendingStartsAt,
+              _model.entitlementRow
+                  ?.elementAtOrNull(0)
+                  ?.pendingProviderSubscriptionId,
+            )) {
           FFAppState().hasActiveSubscription = true;
           safeSetState(() {});
         } else {

@@ -226,28 +226,44 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     FFAppState().hasActiveSubscription =
                         (_model.secondEntitlementQue != null &&
                                 (_model.secondEntitlementQue)!.isNotEmpty) &&
-                            (_model.secondEntitlementQue
-                                    ?.elementAtOrNull(0)
-                                    ?.isActive ==
-                                true) &&
-                            (_model.secondEntitlementQue!
-                                    .elementAtOrNull(0)!
-                                    .currentPeriodEnd! >
-                                getCurrentTimestamp);
+                            functions.isEntitlementUsableForProtection(
+                              _model.secondEntitlementQue
+                                  ?.elementAtOrNull(0)
+                                  ?.isActive,
+                              _model.secondEntitlementQue
+                                  ?.elementAtOrNull(0)
+                                  ?.currentPeriodEnd,
+                              _model.secondEntitlementQue
+                                  ?.elementAtOrNull(0)
+                                  ?.pendingProvider,
+                              _model.secondEntitlementQue
+                                  ?.elementAtOrNull(0)
+                                  ?.pendingStartsAt,
+                              _model.secondEntitlementQue
+                                  ?.elementAtOrNull(0)
+                                  ?.pendingProviderSubscriptionId,
+                            );
                     safeSetState(() {});
                   }
                 } else {
                   FFAppState().hasActiveSubscription =
                       (_model.entitlementRow1 != null &&
                               (_model.entitlementRow1)!.isNotEmpty) &&
-                          (_model.entitlementRow1
-                                  ?.elementAtOrNull(0)
-                                  ?.isActive ==
-                              true) &&
-                          (_model.entitlementRow1!
-                                  .elementAtOrNull(0)!
-                                  .currentPeriodEnd! >
-                              getCurrentTimestamp);
+                          functions.isEntitlementUsableForProtection(
+                            _model.entitlementRow1?.elementAtOrNull(0)?.isActive,
+                            _model.entitlementRow1
+                                ?.elementAtOrNull(0)
+                                ?.currentPeriodEnd,
+                            _model.entitlementRow1
+                                ?.elementAtOrNull(0)
+                                ?.pendingProvider,
+                            _model.entitlementRow1
+                                ?.elementAtOrNull(0)
+                                ?.pendingStartsAt,
+                            _model.entitlementRow1
+                                ?.elementAtOrNull(0)
+                                ?.pendingProviderSubscriptionId,
+                          );
                   safeSetState(() {});
                 }
 
@@ -353,26 +369,44 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   FFAppState().hasActiveSubscription =
                       (_model.thirdEntitlementQue != null &&
                               (_model.thirdEntitlementQue)!.isNotEmpty) &&
-                          (_model.thirdEntitlementQue
-                                  ?.elementAtOrNull(0)
-                                  ?.isActive ==
-                              true) &&
-                          (_model.thirdEntitlementQue!
-                                  .elementAtOrNull(0)!
-                                  .currentPeriodEnd! >
-                              getCurrentTimestamp);
+                          functions.isEntitlementUsableForProtection(
+                            _model.thirdEntitlementQue
+                                ?.elementAtOrNull(0)
+                                ?.isActive,
+                            _model.thirdEntitlementQue
+                                ?.elementAtOrNull(0)
+                                ?.currentPeriodEnd,
+                            _model.thirdEntitlementQue
+                                ?.elementAtOrNull(0)
+                                ?.pendingProvider,
+                            _model.thirdEntitlementQue
+                                ?.elementAtOrNull(0)
+                                ?.pendingStartsAt,
+                            _model.thirdEntitlementQue
+                                ?.elementAtOrNull(0)
+                                ?.pendingProviderSubscriptionId,
+                          );
                   safeSetState(() {});
                 }
               } else {
                 FFAppState().hasActiveSubscription =
                     (_model.entitlementRow2 != null &&
                             (_model.entitlementRow2)!.isNotEmpty) &&
-                        (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
-                            true) &&
-                        (_model.entitlementRow2!
-                                .elementAtOrNull(0)!
-                                .currentPeriodEnd! >
-                            getCurrentTimestamp);
+                        functions.isEntitlementUsableForProtection(
+                          _model.entitlementRow2?.elementAtOrNull(0)?.isActive,
+                          _model.entitlementRow2
+                              ?.elementAtOrNull(0)
+                              ?.currentPeriodEnd,
+                          _model.entitlementRow2
+                              ?.elementAtOrNull(0)
+                              ?.pendingProvider,
+                          _model.entitlementRow2
+                              ?.elementAtOrNull(0)
+                              ?.pendingStartsAt,
+                          _model.entitlementRow2
+                              ?.elementAtOrNull(0)
+                              ?.pendingProviderSubscriptionId,
+                        );
                 safeSetState(() {});
               }
 

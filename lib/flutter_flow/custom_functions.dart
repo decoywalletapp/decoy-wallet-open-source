@@ -614,6 +614,36 @@ bool isEntitlementCurrentlyActive(
   return true;
 }
 
+bool isEntitlementUsableForProtection(
+  bool? isActive,
+  DateTime? currentPeriodEnd,
+  String? pendingProvider,
+  DateTime? pendingStartsAt,
+  String? pendingProviderSubscriptionId,
+) {
+  if (isActive != true) {
+    return false;
+  }
+
+  final now = DateTime.now().toUtc();
+  final periodEnd = currentPeriodEnd?.toUtc();
+  if (periodEnd == null || periodEnd.isAfter(now)) {
+    return true;
+  }
+
+  final provider = (pendingProvider ?? '').trim().toLowerCase();
+  final hasPaidPendingProvider =
+      provider == 'stripe' || provider == 'btcpay';
+  final hasPendingStart = pendingStartsAt != null;
+  final hasPendingSubscription =
+      (pendingProviderSubscriptionId ?? '').trim().isNotEmpty;
+
+  // Keep protection usable during the exact paid-provider handoff window.
+  // The backend finalizer flips providers, but the app must not create a
+  // temporary dead zone while that transition is due.
+  return hasPaidPendingProvider && hasPendingStart && hasPendingSubscription;
+}
+
 List<dynamic> buildConsentSlotsListFINAL(
   String c1First,
   String c1Last,

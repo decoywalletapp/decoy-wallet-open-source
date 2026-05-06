@@ -3,6 +3,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +61,15 @@ class _DecoySeedSystemValuesWidgetState
       safeSetState(() {});
       if ((_model.entitlementSeedVal != null &&
               (_model.entitlementSeedVal)!.isNotEmpty) &&
-          (_model.entDSactive == true) &&
-          (_model.entitlementSeedVal!.elementAtOrNull(0)!.currentPeriodEnd! >
-              getCurrentTimestamp)) {
+          functions.isEntitlementUsableForProtection(
+            _model.entitlementSeedVal?.elementAtOrNull(0)?.isActive,
+            _model.entitlementSeedVal?.elementAtOrNull(0)?.currentPeriodEnd,
+            _model.entitlementSeedVal?.elementAtOrNull(0)?.pendingProvider,
+            _model.entitlementSeedVal?.elementAtOrNull(0)?.pendingStartsAt,
+            _model.entitlementSeedVal
+                ?.elementAtOrNull(0)
+                ?.pendingProviderSubscriptionId,
+          )) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});
       } else {
