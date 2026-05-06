@@ -351,6 +351,7 @@ class SendSupportTicketCall {
 class CreateCheckoutSessionCall {
   static Future<ApiCallResponse> call({
     String? currentUserUid = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -363,6 +364,7 @@ class CreateCheckoutSessionCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -385,6 +387,7 @@ class CreateCheckoutSessionCall {
 class CreateBTCPayInvoiceCall {
   static Future<ApiCallResponse> call({
     String? currentUserUid = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -397,6 +400,7 @@ class CreateBTCPayInvoiceCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -420,11 +424,14 @@ class CreateBTCPayInvoiceCall {
 class CreateBillingPortalSessionCall {
   static Future<ApiCallResponse> call({
     String? customerId = '',
+    String? userId = '',
     String? returnUrl = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
 "customer_id": "${escapeStringForJson(customerId)}",
+"user_id": "${escapeStringForJson(userId)}",
 "return_url": "${escapeStringForJson(returnUrl)}"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -434,6 +441,7 @@ class CreateBillingPortalSessionCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -742,6 +750,7 @@ class CheckPhoneTakenCall {
 class FinalizeStripeSwitchCall {
   static Future<ApiCallResponse> call({
     String? userId = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -754,6 +763,7 @@ class FinalizeStripeSwitchCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -804,6 +814,7 @@ class ScheduleBtcpaySwitchCall {
 class FinalizeBtcpaySwitchCall {
   static Future<ApiCallResponse> call({
     String? userId = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -816,6 +827,7 @@ class FinalizeBtcpaySwitchCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -833,6 +845,7 @@ class FinalizeBtcpaySwitchCall {
 class RepairStripeEntitlementCall {
   static Future<ApiCallResponse> call({
     String? userId = '',
+    String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -845,6 +858,7 @@ class RepairStripeEntitlementCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
       },
       params: {},
       body: ffApiRequestBody,

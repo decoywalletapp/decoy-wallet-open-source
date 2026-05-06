@@ -207,6 +207,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         false)) {
                   _model.apiResultRSE = await RepairStripeEntitlementCall.call(
                     userId: currentUserUid,
+                    jwt: currentJwtToken,
                   );
 
                   if ((_model.apiResultRSE?.succeeded ?? true)) {
@@ -333,6 +334,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       false)) {
                 _model.api2Result2RSE = await RepairStripeEntitlementCall.call(
                   userId: currentUserUid,
+                  jwt: currentJwtToken,
                 );
 
                 if ((_model.api2Result2RSE?.succeeded ?? true)) {

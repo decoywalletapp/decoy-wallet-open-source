@@ -86,6 +86,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
               getCurrentTimestamp)) {
         _model.apiResultlc3 = await FinalizeStripeSwitchCall.call(
           userId: currentUserUid,
+          jwt: currentJwtToken,
         );
       }
       if ((_model.pendingProvider == 'btcpay') &&
@@ -93,6 +94,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
           (_model.pendingStartsAt! <= getCurrentTimestamp)) {
         _model.btcpayFinalizeResp = await FinalizeBtcpaySwitchCall.call(
           userId: currentUserUid,
+          jwt: currentJwtToken,
         );
 
         if ((_model.btcpayFinalizeResp?.succeeded ?? true)) {
@@ -463,6 +465,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                     .call(
                                                               currentUserUid:
                                                                   currentUserUid,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             if ((_model
@@ -508,6 +512,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                     .call(
                                                               currentUserUid:
                                                                   currentUserUid,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             _model.fBAPIresult =
@@ -515,6 +521,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                     .call(
                                                               currentUserUid:
                                                                   currentUserUid,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             if ((_model
@@ -703,8 +711,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                               .call(
                                                         customerId: _model
                                                             .providerCustomerId,
+                                                        userId: currentUserUid,
                                                         returnUrl:
                                                             'https://decoywalletapp.com/open',
+                                                        jwt: currentJwtToken,
                                                       );
 
                                                       await actions
@@ -798,6 +808,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                                 .call(
                                                           currentUserUid:
                                                               currentUserUid,
+                                                          jwt: currentJwtToken,
                                                         );
 
                                                         if ((_model.apiResult5g4
@@ -1214,8 +1225,10 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                             .call(
                                                       customerId: _model
                                                           .providerCustomerId,
+                                                      userId: currentUserUid,
                                                       returnUrl:
                                                           'https://decoywalletapp.com/open',
+                                                      jwt: currentJwtToken,
                                                     );
 
                                                     await actions

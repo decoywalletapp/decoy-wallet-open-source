@@ -442,6 +442,8 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                                     .call(
                                                               currentUserUid:
                                                                   currentUserUid,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             if ((_model
@@ -634,6 +636,8 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                                     .call(
                                                               currentUserUid:
                                                                   currentUserUid,
+                                                              jwt:
+                                                                  currentJwtToken,
                                                             );
 
                                                             await actions
