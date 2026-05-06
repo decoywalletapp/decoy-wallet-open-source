@@ -124,7 +124,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                     ),
                                               ),
                                               Text(
-                                                'Deleting your Decoy Wallet account will permanently remove your account, emergency contacts, alert routing settings, and all app configurations. This action cannot be undone.',
+                                                'Deleting your Decoy Wallet account will permanently remove your account, emergency contacts, alert routing settings, and all app configurations. Any active Stripe subscription connected to this account will be canceled first. This action cannot be undone.',
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -340,7 +340,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              'Account subscription access',
+                                                              'Account subscription access and active Stripe billing',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodySmall

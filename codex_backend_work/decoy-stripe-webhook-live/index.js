@@ -10,6 +10,7 @@
    8) POST /finalize-stripe-switch (deterministic provider flip after pending_starts_at)
    9) POST /finalize-btcpay-switch (deterministic provider flip after pending_starts_at)
    10) POST /repair-stripe-entitlement (repair entitlement from Stripe truth)
+   11) POST /delete-account-and-cancel-billing (cancel Stripe billing, then delete account)
 
    Node 18+
 */
@@ -57,7 +58,8 @@ if (!SUPABASE_URL) throw new Error("Missing SUPABASE_URL");
 if (!SUPABASE_SERVICE_ROLE_KEY) throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
 
 const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
-const PAYMENT_BACKEND_VERSION = "entitlement-safety-20260506-session-persistence-v2";
+const PAYMENT_BACKEND_VERSION =
+  "entitlement-safety-20260506-session-persistence-v2-account-delete-billing-cancel-v1";
 
 const BTCPAY_ENABLED = !!(
   BTCPAY_BASE_URL &&
@@ -731,6 +733,133 @@ async function stripeFetchSubscription(subscriptionId) {
   }
 }
 
+function isTerminalStripeSubscriptionStatus(status) {
+  const s = String(status || "").toLowerCase();
+  return s === "canceled" || s === "incomplete_expired";
+}
+
+async function stripeListOpenSubscriptionsForCustomer(customerId) {
+  if (!customerId || typeof customerId !== "string") return [];
+
+  const subs = [];
+  let startingAfter = undefined;
+
+  do {
+    const params = {
+      customer: customerId,
+      status: "all",
+      limit: 100,
+    };
+    if (startingAfter) params.starting_after = startingAfter;
+
+    const page = await stripe.subscriptions.list(params);
+
+    for (const sub of page.data || []) {
+      if (!isTerminalStripeSubscriptionStatus(sub?.status)) {
+        subs.push(sub);
+      }
+    }
+
+    startingAfter =
+      page.has_more && page.data?.length ? page.data[page.data.length - 1].id : undefined;
+  } while (startingAfter);
+
+  return subs;
+}
+
+async function collectStripeSubscriptionIdsForAccountDeletion(entitlementRow) {
+  if (!entitlementRow) return [];
+
+  const ids = new Set();
+  const add = (value) => {
+    const id = value ? String(value).trim() : "";
+    if (id.startsWith("sub_")) ids.add(id);
+  };
+
+  if (String(entitlementRow.provider || "") === "stripe") {
+    add(entitlementRow.provider_subscription_id);
+  }
+
+  if (String(entitlementRow.pending_provider || "") === "stripe") {
+    add(entitlementRow.pending_provider_subscription_id);
+  }
+
+  const customerIds = new Set();
+  if (entitlementRow.provider_customer_id) {
+    customerIds.add(String(entitlementRow.provider_customer_id));
+  }
+  if (entitlementRow.pending_provider_customer_id) {
+    customerIds.add(String(entitlementRow.pending_provider_customer_id));
+  }
+
+  for (const customerId of customerIds) {
+    const customerSubs = await stripeListOpenSubscriptionsForCustomer(customerId);
+    for (const sub of customerSubs) add(sub?.id);
+  }
+
+  return [...ids];
+}
+
+async function cancelStripeSubscriptionForAccountDeletion(subscriptionId) {
+  try {
+    const sub = await stripe.subscriptions.retrieve(subscriptionId);
+    if (!sub || isTerminalStripeSubscriptionStatus(sub.status)) {
+      return {
+        subscription_id: subscriptionId,
+        status: sub?.status || "missing",
+        canceled: false,
+        skipped: "already_terminal",
+      };
+    }
+
+    const canceled = await stripe.subscriptions.cancel(subscriptionId, {
+      invoice_now: false,
+      prorate: false,
+    });
+
+    return {
+      subscription_id: subscriptionId,
+      status: canceled?.status || "canceled",
+      canceled: true,
+      skipped: null,
+    };
+  } catch (e) {
+    if (e?.type === "StripeInvalidRequestError" && e?.code === "resource_missing") {
+      return {
+        subscription_id: subscriptionId,
+        status: "missing",
+        canceled: false,
+        skipped: "missing_in_stripe",
+      };
+    }
+
+    const err = new Error(
+      `Could not cancel Stripe subscription before account deletion: ${e?.message || "unknown"}`
+    );
+    err.statusCode = 502;
+    throw err;
+  }
+}
+
+async function supabaseDeleteCurrentUserAccount(userJwt) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/delete_current_user_account`, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${userJwt}`,
+      "Content-Type": "application/json",
+    },
+    body: "{}",
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    const err = new Error(`account deletion RPC failed: ${res.status} ${txt}`);
+    err.statusCode = res.status >= 400 && res.status < 600 ? res.status : 500;
+    throw err;
+  }
+}
+
 async function stripeFetchCheckoutSession(sessionId) {
   if (!sessionId || typeof sessionId !== "string") return null;
   try {
@@ -836,6 +965,14 @@ app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (re
 
     if (!isUuid(String(userId))) {
       return res.status(200).json({ received: true, skipped: "user_id_not_uuid" });
+    }
+
+    const authUserExists = await supabaseAuthUserExists(String(userId));
+    if (!authUserExists) {
+      return res.status(200).json({
+        received: true,
+        skipped: "user_not_in_auth_users",
+      });
     }
 
     const existing = await supabaseGetEntitlementRow(String(userId), "decoy_wallet");
@@ -1645,6 +1782,41 @@ app.post("/repair-stripe-entitlement", async (req, res) => {
   } catch (err) {
     console.log("repair-stripe-entitlement failed", err?.message || String(err));
     return res.status(responseStatusFromError(err)).json({ error: err?.message || "Server error" });
+  }
+});
+
+/* ---------- DELETE ACCOUNT WITH PAYMENT SAFETY ---------- */
+app.post("/delete-account-and-cancel-billing", async (req, res) => {
+  try {
+    const userJwt = getBearerToken(req);
+    const authedUser = await requireSupabaseUser(req);
+    const user_id = requireRequestUserMatches(req, authedUser);
+
+    if (!isUuid(user_id)) {
+      return res.status(400).json({ error: "Missing or invalid user_id (must be UUID)" });
+    }
+
+    const row = await supabaseGetEntitlementRow(user_id, "decoy_wallet");
+    const stripeSubscriptionIds = await collectStripeSubscriptionIdsForAccountDeletion(row);
+    const stripeResults = [];
+
+    for (const subscriptionId of stripeSubscriptionIds) {
+      stripeResults.push(await cancelStripeSubscriptionForAccountDeletion(subscriptionId));
+    }
+
+    await supabaseDeleteCurrentUserAccount(userJwt);
+
+    return res.status(200).json({
+      ok: true,
+      deleted: true,
+      canceled_stripe_subscriptions: stripeResults,
+    });
+  } catch (err) {
+    console.log("delete-account-and-cancel-billing failed", err?.message || String(err));
+    return res.status(responseStatusFromError(err)).json({
+      ok: false,
+      error: err?.message || "Server error",
+    });
   }
 });
 

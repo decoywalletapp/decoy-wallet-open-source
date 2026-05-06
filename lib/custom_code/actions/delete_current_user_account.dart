@@ -9,17 +9,43 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+const String _deleteAccountUrl =
+    'https://decoy-stripe-webhook-live-866378207353.us-central1.run.app/delete-account-and-cancel-billing';
+
 Future<bool?> deleteCurrentUserAccount() async {
-  // Call the Supabase RPC function that deletes the current user account
   try {
     final supabase = SupaFlow.client;
-    final response = await supabase.rpc('delete_current_user_account');
+    final jwt = supabase.auth.currentSession?.accessToken;
+    final userId = supabase.auth.currentUser?.id;
 
-    // If you want to log the whole response for debugging:
-    // print('Delete account RPC response: $response');
+    if (jwt == null || jwt.isEmpty || userId == null || userId.isEmpty) {
+      return false;
+    }
 
-    // Supabase RPC throws on error, so if we got here it likely worked
-    return true;
+    final response = await http.post(
+      Uri.parse(_deleteAccountUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwt',
+      },
+      body: jsonEncode({
+        'user_id': userId,
+      }),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      return false;
+    }
+
+    final body = jsonDecode(response.body);
+    if (body is Map<String, dynamic>) {
+      return body['ok'] == true && body['deleted'] == true;
+    }
+
+    return false;
   } catch (e) {
     // Log the error so you can see it in Test Mode
     print('Error deleting account: $e');
