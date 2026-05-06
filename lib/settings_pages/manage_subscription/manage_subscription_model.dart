@@ -28,6 +28,10 @@ class ManageSubscriptionModel
 
   String? pendingProviderSubscriptionId;
 
+  String? stripeCheckoutSessionId;
+
+  bool refreshingEntitlement = false;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.
@@ -56,6 +60,10 @@ class ManageSubscriptionModel
   ApiCallResponse? apiResult5g4;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<UserEntitlementsRow>? requery5;
+  // Stores action output result for [Backend Call - API (finalizeStripeSwitch)] action after returning from Stripe checkout.
+  ApiCallResponse? stripeCheckoutSyncResult;
+  // Stores action output result for [Backend Call - Query Rows] action after returning from Stripe checkout.
+  List<UserEntitlementsRow>? stripeCheckoutRefreshQuery;
   // Stores action output result for [Backend Call - API (CreateBillingPortalSession)] action in Button widget.
   ApiCallResponse? portalRespCancel;
 

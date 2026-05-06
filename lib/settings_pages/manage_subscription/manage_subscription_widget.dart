@@ -36,7 +36,8 @@ class ManageSubscriptionWidget extends StatefulWidget {
       _ManageSubscriptionWidgetState();
 }
 
-class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
+class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
+    with WidgetsBindingObserver {
   late ManageSubscriptionModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -74,9 +75,68 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
     return paidThrough.millisecondsSinceEpoch ~/ 1000;
   }
 
+  Future<void> _refreshEntitlementFromBackend() async {
+    _model.stripeCheckoutRefreshQuery = await UserEntitlementsTable().queryRows(
+      queryFn: (q) => q
+          .eqOrNull(
+            'user_id',
+            currentUserUid,
+          )
+          .eqOrNull(
+            'entitlement',
+            'decoy_wallet',
+          ),
+    );
+    _model.manageQue = _model.stripeCheckoutRefreshQuery;
+    _applyEntitlementRow(_model.stripeCheckoutRefreshQuery?.elementAtOrNull(0));
+    safeSetState(() {});
+  }
+
+  Future<void> _syncStripeCheckoutSessionAndRefresh() async {
+    if (_model.refreshingEntitlement) {
+      return;
+    }
+
+    _model.refreshingEntitlement = true;
+    try {
+      final sessionId = _model.stripeCheckoutSessionId;
+      if (_hasText(sessionId)) {
+        _model.stripeCheckoutSyncResult = await FinalizeStripeSwitchCall.call(
+          userId: currentUserUid,
+          sessionId: sessionId,
+          jwt: currentJwtToken,
+        );
+      }
+
+      await _refreshEntitlementFromBackend();
+
+      if (_model.pendingSwitchToStripe == true || _model.provider == 'stripe') {
+        _model.stripeCheckoutSessionId = null;
+      }
+    } finally {
+      _model.refreshingEntitlement = false;
+      safeSetState(() {});
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(Duration(milliseconds: 1500));
+        if (!mounted) {
+          return;
+        }
+        await _syncStripeCheckoutSessionAndRefresh();
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _model = createModel(context, () => ManageSubscriptionModel());
 
     // On page load action.
@@ -147,6 +207,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _model.dispose();
 
     super.dispose();
@@ -753,6 +814,13 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                         if ((_model.apiResult5g4
                                                                 ?.succeeded ??
                                                             true)) {
+                                                          _model.stripeCheckoutSessionId =
+                                                              CreateCheckoutSessionCall
+                                                                  .sessionId(
+                                                            (_model.apiResult5g4
+                                                                    ?.jsonBody ??
+                                                                ''),
+                                                          );
                                                           await actions
                                                               .openExternalUrl(
                                                             CreateCheckoutSessionCall

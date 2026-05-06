@@ -402,6 +402,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             'ts',
             ParamType.String,
           ),
+          sessionId: params.getParam(
+            'session_id',
+            ParamType.String,
+          ),
         ),
       ),
       FFRoute(

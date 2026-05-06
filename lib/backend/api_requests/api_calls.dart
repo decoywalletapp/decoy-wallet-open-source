@@ -383,6 +383,11 @@ class CreateCheckoutSessionCall {
         response,
         r'''$.url''',
       ));
+
+  static String? sessionId(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.session_id''',
+      ));
 }
 
 class CreateBTCPayInvoiceCall {
@@ -751,11 +756,13 @@ class CheckPhoneTakenCall {
 class FinalizeStripeSwitchCall {
   static Future<ApiCallResponse> call({
     String? userId = '',
+    String? sessionId = '',
     String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
-"user_id": "${escapeStringForJson(userId)}"
+"user_id": "${escapeStringForJson(userId)}",
+"session_id": "${escapeStringForJson(sessionId)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'finalizeStripeSwitch',

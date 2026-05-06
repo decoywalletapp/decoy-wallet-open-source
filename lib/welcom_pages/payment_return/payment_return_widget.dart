@@ -1,4 +1,5 @@
 import '/auth/supabase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -13,9 +14,11 @@ class PaymentReturnWidget extends StatefulWidget {
   const PaymentReturnWidget({
     super.key,
     this.ts,
+    this.sessionId,
   });
 
   final String? ts;
+  final String? sessionId;
 
   static String routeName = 'PaymentReturn';
   static String routePath = '/paymentreturn';
@@ -39,6 +42,13 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
       FFAppState().entitlementCheckCompleted = false;
       FFAppState().hasActiveSubscription = false;
       safeSetState(() {});
+      if (widget.sessionId != null && widget.sessionId != '') {
+        _model.stripeSwitchSyncResult = await FinalizeStripeSwitchCall.call(
+          userId: currentUserUid,
+          sessionId: widget.sessionId,
+          jwt: currentJwtToken,
+        );
+      }
       _model.entitlementsQuery = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
