@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:ff_commons/api_requests/api_manager.dart';
 
-
 export 'package:ff_commons/api_requests/api_manager.dart' show ApiCallResponse;
 
 const _kPrivateApiFunctionName = 'ffPrivateApiCall';
@@ -351,11 +350,13 @@ class SendSupportTicketCall {
 class CreateCheckoutSessionCall {
   static Future<ApiCallResponse> call({
     String? currentUserUid = '',
+    int? trialEnd,
     String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
-  "user_id": "${escapeStringForJson(currentUserUid)}"
+  "user_id": "${escapeStringForJson(currentUserUid)}",
+  "trial_end": ${trialEnd == null ? 'null' : trialEnd}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'CreateCheckoutSession',

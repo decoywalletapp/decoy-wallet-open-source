@@ -24,6 +24,10 @@ class ManageSubscriptionModel
 
   DateTime? pendingStartsAt;
 
+  String? pendingProviderCustomerId;
+
+  String? pendingProviderSubscriptionId;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in ManageSubscription widget.

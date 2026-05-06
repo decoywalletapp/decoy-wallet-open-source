@@ -41,6 +41,39 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _hasText(String? value) => value != null && value.isNotEmpty;
+
+  bool _isConfirmedPendingStripeSwitch(UserEntitlementsRow? row) =>
+      row?.pendingProvider == 'stripe' &&
+      row?.provider == 'btcpay' &&
+      row?.isActive == true &&
+      row?.pendingStartsAt != null &&
+      row!.pendingStartsAt! > getCurrentTimestamp &&
+      _hasText(row.pendingProviderSubscriptionId);
+
+  void _applyEntitlementRow(UserEntitlementsRow? row) {
+    _model.provider = row?.provider;
+    _model.providerCustomerId = row?.providerCustomerId;
+    _model.providerSubscriptionId = row?.providerSubscriptionId;
+    _model.isActive = row?.isActive;
+    _model.currentPeriodEnd = row?.currentPeriodEnd;
+    _model.pendingProvider = row?.pendingProvider;
+    _model.pendingStartsAt = row?.pendingStartsAt;
+    _model.pendingProviderCustomerId = row?.pendingProviderCustomerId;
+    _model.pendingProviderSubscriptionId = row?.pendingProviderSubscriptionId;
+    _model.pendingSwitchToStripe = _isConfirmedPendingStripeSwitch(row);
+  }
+
+  int? _stripeSwitchTrialEndSeconds() {
+    final paidThrough = _model.currentPeriodEnd;
+    if (_model.provider != 'btcpay' ||
+        paidThrough == null ||
+        paidThrough <= getCurrentTimestamp) {
+      return null;
+    }
+    return paidThrough.millisecondsSinceEpoch ~/ 1000;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,31 +92,11 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
               'decoy_wallet',
             ),
       );
-      _model.provider = _model.manageQue?.elementAtOrNull(0)?.provider;
-      _model.providerCustomerId =
-          _model.manageQue?.elementAtOrNull(0)?.providerCustomerId;
-      _model.providerSubscriptionId =
-          _model.manageQue?.elementAtOrNull(0)?.providerSubscriptionId;
-      _model.isActive = _model.manageQue?.elementAtOrNull(0)?.isActive;
-      _model.pendingSwitchToStripe =
-          (_model.manageQue?.elementAtOrNull(0)?.pendingProvider == 'stripe') &&
-              (_model.manageQue?.elementAtOrNull(0)?.provider == 'btcpay') &&
-              (_model.manageQue?.elementAtOrNull(0)?.isActive == true) &&
-              ((_model.manageQue?.elementAtOrNull(0)?.pendingStartsAt !=
-                      null) &&
-                  (_model.manageQue!.elementAtOrNull(0)!.pendingStartsAt! >
-                      getCurrentTimestamp));
-      _model.currentPeriodEnd =
-          _model.manageQue?.elementAtOrNull(0)?.currentPeriodEnd;
-      _model.pendingProvider =
-          _model.manageQue?.elementAtOrNull(0)?.pendingProvider;
-      _model.pendingStartsAt =
-          _model.manageQue?.elementAtOrNull(0)?.pendingStartsAt;
+      _applyEntitlementRow(_model.manageQue?.elementAtOrNull(0));
       safeSetState(() {});
-      if ((_model.manageQue?.elementAtOrNull(0)?.pendingProvider == 'stripe') &&
-          (_model.manageQue?.elementAtOrNull(0)?.pendingStartsAt != null) &&
-          (_model.manageQue!.elementAtOrNull(0)!.pendingStartsAt! <=
-              getCurrentTimestamp)) {
+      if ((_model.pendingProvider == 'stripe') &&
+          (_model.pendingStartsAt != null) &&
+          (_model.pendingStartsAt! <= getCurrentTimestamp)) {
         _model.apiResultlc3 = await FinalizeStripeSwitchCall.call(
           userId: currentUserUid,
           jwt: currentJwtToken,
@@ -109,21 +122,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                   'decoy_wallet',
                 ),
           );
-          _model.provider =
-              _model.btcpayFinalQuery?.elementAtOrNull(0)?.provider;
-          _model.providerCustomerId =
-              _model.btcpayFinalQuery?.elementAtOrNull(0)?.providerCustomerId;
-          _model.providerSubscriptionId = _model.btcpayFinalQuery
-              ?.elementAtOrNull(0)
-              ?.providerSubscriptionId;
-          _model.isActive =
-              _model.btcpayFinalQuery?.elementAtOrNull(0)?.isActive;
-          _model.pendingProvider =
-              _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingProvider;
-          _model.pendingStartsAt =
-              _model.btcpayFinalQuery?.elementAtOrNull(0)?.pendingStartsAt;
-          _model.currentPeriodEnd =
-              _model.btcpayFinalQuery?.elementAtOrNull(0)?.currentPeriodEnd;
+          _applyEntitlementRow(_model.btcpayFinalQuery?.elementAtOrNull(0));
           safeSetState(() {});
         }
       }
@@ -138,20 +137,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
               'decoy_wallet',
             ),
       );
-      _model.provider = _model.trueBranchQue?.elementAtOrNull(0)?.provider;
-      _model.providerCustomerId =
-          _model.trueBranchQue?.elementAtOrNull(0)?.providerCustomerId;
-      _model.providerSubscriptionId =
-          _model.trueBranchQue?.elementAtOrNull(0)?.providerSubscriptionId;
-      _model.isActive = _model.trueBranchQue?.elementAtOrNull(0)?.isActive;
-      _model.pendingSwitchToStripe =
-          _model.trueBranchQue?.elementAtOrNull(0)?.pendingProvider == 'stripe';
-      _model.currentPeriodEnd =
-          _model.trueBranchQue?.elementAtOrNull(0)?.currentPeriodEnd;
-      _model.pendingProvider =
-          _model.trueBranchQue?.elementAtOrNull(0)?.pendingProvider;
-      _model.pendingStartsAt =
-          _model.trueBranchQue?.elementAtOrNull(0)?.pendingStartsAt;
+      _model.manageQue = _model.trueBranchQue;
+      _applyEntitlementRow(_model.trueBranchQue?.elementAtOrNull(0));
       safeSetState(() {});
     });
 
@@ -740,27 +727,12 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                           currentUserUid,
                                                         ),
                                                       );
-                                                      _model
-                                                          .pendingSwitchToStripe = (_model
-                                                                  .requery3
-                                                                  ?.elementAtOrNull(
-                                                                      0)
-                                                                  ?.pendingProvider ==
-                                                              'stripe') &&
-                                                          (_model.requery3
-                                                                  ?.elementAtOrNull(
-                                                                      0)
-                                                                  ?.pendingStartsAt !=
-                                                              null) &&
-                                                          (_model.requery3!
-                                                                  .elementAtOrNull(
-                                                                      0)!
-                                                                  .pendingStartsAt! >
-                                                              getCurrentTimestamp);
-                                                      _model.provider = _model
-                                                          .requery3
-                                                          ?.elementAtOrNull(0)
-                                                          ?.provider;
+                                                      _model.manageQue =
+                                                          _model.requery3;
+                                                      _applyEntitlementRow(
+                                                          _model.requery3
+                                                              ?.elementAtOrNull(
+                                                                  0));
                                                       safeSetState(() {});
                                                       safeSetState(() {});
                                                     } else {
@@ -768,46 +740,13 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                               'btcpay') &&
                                                           (_model.currentPeriodEnd !=
                                                               null)) {
-                                                        await UserEntitlementsTable()
-                                                            .update(
-                                                          data: {
-                                                            'pending_provider':
-                                                                'stripe',
-                                                            'pending_starts_at':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    _model
-                                                                        .currentPeriodEnd),
-                                                            'switch_initiated_at':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    getCurrentTimestamp),
-                                                            'teardown_grace_until':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    _model
-                                                                        .currentPeriodEnd),
-                                                            'updated_at':
-                                                                supaSerialize<
-                                                                        DateTime>(
-                                                                    getCurrentTimestamp),
-                                                          },
-                                                          matchingRows:
-                                                              (rows) => rows
-                                                                  .eqOrNull(
-                                                                    'user_id',
-                                                                    currentUserUid,
-                                                                  )
-                                                                  .eqOrNull(
-                                                                    'entitlement',
-                                                                    'decoy_wallet',
-                                                                  ),
-                                                        );
                                                         _model.apiResult5g4 =
                                                             await CreateCheckoutSessionCall
                                                                 .call(
                                                           currentUserUid:
                                                               currentUserUid,
+                                                          trialEnd:
+                                                              _stripeSwitchTrialEndSeconds(),
                                                           jwt: currentJwtToken,
                                                         );
 
@@ -838,28 +777,12 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                               currentUserUid,
                                                             ),
                                                           );
-                                                          _model
-                                                              .pendingSwitchToStripe = (_model
-                                                                      .requery5
-                                                                      ?.elementAtOrNull(
-                                                                          0)
-                                                                      ?.pendingProvider ==
-                                                                  'stripe') &&
-                                                              (_model.requery5
-                                                                      ?.elementAtOrNull(
-                                                                          0)
-                                                                      ?.pendingStartsAt !=
-                                                                  null) &&
-                                                              (_model.requery5!
-                                                                      .elementAtOrNull(
-                                                                          0)!
-                                                                      .pendingStartsAt! >
-                                                                  getCurrentTimestamp);
-                                                          _model.provider = _model
-                                                              .requery5
-                                                              ?.elementAtOrNull(
-                                                                  0)
-                                                              ?.provider;
+                                                          _model.manageQue =
+                                                              _model.requery5;
+                                                          _applyEntitlementRow(
+                                                              _model.requery5
+                                                                  ?.elementAtOrNull(
+                                                                      0));
                                                           safeSetState(() {});
                                                           safeSetState(() {});
                                                         } else {
@@ -1168,11 +1091,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget> {
                                                       .pendingSwitchToStripe ==
                                                   true)
                                                 Text(
-                                                  dateTimeFormat(
-                                                      "yMd",
-                                                      _model.manageQue!
-                                                          .elementAtOrNull(0)!
-                                                          .pendingStartsAt!),
+                                                  dateTimeFormat("yMd",
+                                                      _model.pendingStartsAt!),
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
