@@ -31,6 +31,18 @@ class FFAppState extends ChangeNotifier {
           await secureStorage.getDouble('ff_fakeUsdValue') ?? _fakeUsdValue;
     });
     await _safeInitAsync(() async {
+      final fakeBtcSeededAtString =
+          await secureStorage.getString('ff_fakeBtcSeededAt');
+      _fakeBtcSeededAt = fakeBtcSeededAtString != null
+          ? DateTime.tryParse(fakeBtcSeededAtString) ?? _fakeBtcSeededAt
+          : _fakeBtcSeededAt;
+      if (_fakeSeeded && _fakeBtcSeededAt == null) {
+        _fakeBtcSeededAt = DateTime.now().toUtc();
+        await secureStorage.setString(
+            'ff_fakeBtcSeededAt', _fakeBtcSeededAt!.toIso8601String());
+      }
+    });
+    await _safeInitAsync(() async {
       _currentBtcPrice = await secureStorage.getDouble('ff_currentBtcPrice') ??
           _currentBtcPrice;
     });
@@ -140,6 +152,28 @@ class FFAppState extends ChangeNotifier {
 
   late FlutterSecureStorage secureStorage;
 
+  bool get _fakeBtcSeedExpired {
+    final seededAt = _fakeBtcSeededAt;
+    if (!_fakeSeeded) {
+      return false;
+    }
+    return shouldSeedFakeBtcBalance && seededAt != null;
+  }
+
+  bool get shouldSeedFakeBtcBalance {
+    final seededAt = _fakeBtcSeededAt;
+    if (!_fakeSeeded) {
+      return true;
+    }
+    if (seededAt == null) {
+      return false;
+    }
+
+    final elapsedMs = DateTime.now().toUtc().millisecondsSinceEpoch -
+        seededAt.toUtc().millisecondsSinceEpoch;
+    return elapsedMs >= const Duration(hours: 24).inMilliseconds;
+  }
+
   /// This is the user's PIN to access account
   String _userPIN = '';
   String get userPIN => _userPIN;
@@ -155,10 +189,13 @@ class FFAppState extends ChangeNotifier {
   }
 
   bool _fakeSeeded = false;
-  bool get fakeSeeded => _fakeSeeded;
+  bool get fakeSeeded => _fakeSeeded && !_fakeBtcSeedExpired;
   set fakeSeeded(bool value) {
     _fakeSeeded = value;
     secureStorage.setBool('ff_fakeSeeded', value);
+    if (value && _fakeBtcSeededAt == null) {
+      fakeBtcSeededAt = DateTime.now();
+    }
   }
 
   void deleteFakeSeeded() {
@@ -178,10 +215,20 @@ class FFAppState extends ChangeNotifier {
   }
 
   double _fakeBtcBalance = 0.0;
-  double get fakeBtcBalance => _fakeBtcBalance;
+  double get fakeBtcBalance {
+    if (_fakeSeeded && _fakeBtcBalance <= 0.0 && !_fakeBtcSeedExpired) {
+      return 0.000000000001;
+    }
+    return _fakeBtcBalance;
+  }
+
   set fakeBtcBalance(double value) {
     _fakeBtcBalance = value;
     secureStorage.setDouble('ff_fakeBtcBalance', value);
+    if (value > 0.0 &&
+        (!_fakeSeeded || _fakeBtcSeededAt == null || _fakeBtcSeedExpired)) {
+      fakeBtcSeededAt = DateTime.now();
+    }
   }
 
   void deleteFakeBtcBalance() {
@@ -197,6 +244,23 @@ class FFAppState extends ChangeNotifier {
 
   void deleteFakeUsdValue() {
     secureStorage.delete(key: 'ff_fakeUsdValue');
+  }
+
+  DateTime? _fakeBtcSeededAt;
+  DateTime? get fakeBtcSeededAt => _fakeBtcSeededAt;
+  set fakeBtcSeededAt(DateTime? value) {
+    _fakeBtcSeededAt = value;
+    if (value == null) {
+      secureStorage.delete(key: 'ff_fakeBtcSeededAt');
+    } else {
+      secureStorage.setString(
+          'ff_fakeBtcSeededAt', value.toUtc().toIso8601String());
+    }
+  }
+
+  void deleteFakeBtcSeededAt() {
+    _fakeBtcSeededAt = null;
+    secureStorage.delete(key: 'ff_fakeBtcSeededAt');
   }
 
   String _scannedQR = '';

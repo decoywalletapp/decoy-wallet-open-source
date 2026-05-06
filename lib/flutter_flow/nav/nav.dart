@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import '/auth/base_auth_user_provider.dart';
 
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -250,7 +249,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: CreateDecoyPinWidget.routeName,
         path: CreateDecoyPinWidget.routePath,
-        builder: (context, params) => CreateDecoyPinWidget(),
+        builder: (context, params) => Container(
+          color: Color(0xFF1D2428),
+          child: CreateDecoyPinWidget(),
+        ),
       ),
       FFRoute(
         name: GenerateDecoySeedPhraseWidget.routeName,
@@ -337,7 +339,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: DecoyPinSystemValuesWidget.routeName,
         path: DecoyPinSystemValuesWidget.routePath,
-        builder: (context, params) => DecoyPinSystemValuesWidget(),
+        builder: (context, params) => Container(
+          color: Color(0xFF1D2428),
+          child: DecoyPinSystemValuesWidget(),
+        ),
       ),
       FFRoute(
         name: DecoySeedSystemValuesWidget.routeName,

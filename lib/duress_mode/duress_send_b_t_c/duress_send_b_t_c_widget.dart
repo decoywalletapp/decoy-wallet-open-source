@@ -60,6 +60,17 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
+    final fakeBtcAvailableText = valueOrDefault<String>(
+      formatNumber(
+        FFAppState().fakeBtcBalance,
+        formatType: FormatType.decimal,
+        decimalType: DecimalType.periodDecimal,
+      ),
+      '0',
+    );
+    final fakeBtcAvailableForSend =
+        fakeBtcAvailableText == '0' ? 0.0 : FFAppState().fakeBtcBalance;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -165,7 +176,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                 Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: Text(
-                                    'Max available: ${FFAppState().fakeBtcBalance.toString()}',
+                                    'Max available: $fakeBtcAvailableText',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
@@ -209,7 +220,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                     fontFamily: 'hello',
                                     color: functions.amountToDouble(
                                                 _model.amountText) >
-                                            FFAppState().fakeBtcBalance
+                                            fakeBtcAvailableForSend
                                         ? FlutterFlowTheme.of(context).error
                                         : FlutterFlowTheme.of(context)
                                             .primaryBackground,
@@ -226,7 +237,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                                 if (newValue) {
                                   _model.sendMax = true;
                                   _model.amountText =
-                                      FFAppState().fakeBtcBalance.toString();
+                                      fakeBtcAvailableForSend.toString();
                                   safeSetState(() {});
                                 } else {
                                   _model.sendMax = false;
@@ -580,7 +591,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                 ),
                 AnimatedOpacity(
                   opacity: (functions.amountToDouble(_model.amountText) <=
-                              FFAppState().fakeBtcBalance) &&
+                              fakeBtcAvailableForSend) &&
                           (functions.amountToDouble(_model.amountText) > 0.0)
                       ? 1.0
                       : 0.5,
@@ -595,7 +606,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                           if ((functions.amountToDouble(_model.amountText) >
                                   0.0) &&
                               (functions.amountToDouble(_model.amountText) <=
-                                  FFAppState().fakeBtcBalance)) {
+                                  fakeBtcAvailableForSend)) {
                             FFAppState().sendAmountBtc =
                                 functions.formatBtc(_model.amountText)!;
                             safeSetState(() {});

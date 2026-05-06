@@ -64,6 +64,17 @@ class _DuressConfirmTransactionSendWidgetState
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
+    final sendAmountBtcDisplayText = valueOrDefault<String>(
+      formatNumber(
+        functions.amountToDouble(FFAppState().sendAmountBtc),
+        formatType: FormatType.decimal,
+        decimalType: DecimalType.periodDecimal,
+      ),
+      '0',
+    );
+    final sendAmountBtcForFlow =
+        sendAmountBtcDisplayText == '0' ? '0' : FFAppState().sendAmountBtc;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -175,7 +186,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    '${functions.formatBtcTrim(FFAppState().sendAmountBtc)}',
+                                                    '${functions.formatBtcTrim(sendAmountBtcForFlow)}',
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                             context)
@@ -218,7 +229,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                 ],
                                               ),
                                               Text(
-                                                '≈ ${functions.btcToUsdDisplay(FFAppState().sendAmountBtc, FFAppState().currentPriceMultiple)} USD',
+                                                '≈ ${functions.btcToUsdDisplay(sendAmountBtcForFlow, FFAppState().currentPriceMultiple)} USD',
                                                 textAlign: TextAlign.center,
                                                 style:
                                                     FlutterFlowTheme.of(context)
@@ -308,7 +319,7 @@ class _DuressConfirmTransactionSendWidgetState
                                             ),
                                             Text(
                                               functions.totalAfterFee(
-                                                  FFAppState().sendAmountBtc,
+                                                  sendAmountBtcForFlow,
                                                   _model.feeBtc),
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -385,12 +396,12 @@ class _DuressConfirmTransactionSendWidgetState
                                         safeSetState(() {});
                                         if ((_model.slidePct >= 100.0) &&
                                             (functions.totalAfterFee(
-                                                    FFAppState().sendAmountBtc,
+                                                    sendAmountBtcForFlow,
                                                     _model.feeBtc) !=
                                                 '0')) {
                                           FFAppState().sendAmountBtc =
                                               functions.totalAfterFee(
-                                                  FFAppState().sendAmountBtc,
+                                                  sendAmountBtcForFlow,
                                                   _model.feeBtc);
                                           FFAppState().txStartAt =
                                               getCurrentTimestamp;
@@ -404,7 +415,7 @@ class _DuressConfirmTransactionSendWidgetState
                                             queryParameters: {
                                               'amountBtc': serializeParam(
                                                 functions.totalAfterFee(
-                                                    FFAppState().sendAmountBtc,
+                                                    sendAmountBtcForFlow,
                                                     _model.feeBtc),
                                                 ParamType.String,
                                               ),
@@ -555,16 +566,14 @@ class _DuressConfirmTransactionSendWidgetState
                                                         if ((_model.sliderValue! >=
                                                                 100.0) &&
                                                             (functions.totalAfterFee(
-                                                                    FFAppState()
-                                                                        .sendAmountBtc,
+                                                                    sendAmountBtcForFlow,
                                                                     _model
                                                                         .feeBtc) !=
                                                                 '0')) {
                                                           FFAppState()
                                                                   .sendAmountBtc =
                                                               functions.totalAfterFee(
-                                                                  FFAppState()
-                                                                      .sendAmountBtc,
+                                                                  sendAmountBtcForFlow,
                                                                   _model
                                                                       .feeBtc);
                                                           safeSetState(() {});
@@ -585,8 +594,7 @@ class _DuressConfirmTransactionSendWidgetState
                                                               'amountBtc':
                                                                   serializeParam(
                                                                 functions.totalAfterFee(
-                                                                    FFAppState()
-                                                                        .sendAmountBtc,
+                                                                    sendAmountBtcForFlow,
                                                                     _model
                                                                         .feeBtc),
                                                                 ParamType
