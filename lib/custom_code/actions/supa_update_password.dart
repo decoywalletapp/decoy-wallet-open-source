@@ -18,8 +18,8 @@ Future<bool> supaUpdatePassword(String newPassword) async {
   try {
     final pw = newPassword.trim();
 
-    // Let UI enforce 10 or 12; keep a safety floor here
-    if (pw.length < 10) return false;
+    // Match the live auth policy seen in recovery testing.
+    if (pw.length < 11) return false;
 
     final client = Supabase.instance.client;
 

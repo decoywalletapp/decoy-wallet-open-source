@@ -592,7 +592,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
                                                             child: Text(
-                                                              'INVALID PASSWORD - MUST BE 10 CHARACTERS LONG',
+                                                              'INVALID PASSWORD - MUST BE AT LEAST 11 CHARACTERS',
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,

@@ -4,8 +4,8 @@ Last updated: 2026-05-07
 
 Current known-good mobile checkpoint:
 
-- `3609ccd`
-- `fix: reset access state after account deletion`
+- `1efbd13`
+- `fix: refresh push notification token state`
 
 ## Verified / Done
 
@@ -30,6 +30,7 @@ Current known-good mobile checkpoint:
 - Account deletion was tested successfully with a disposable account after fixing the read-only `armed_decoy_seeds` view cleanup issue.
 - CodeMagic/TestFlight upload now tolerates Apple's confirmed-success-after-500 uploader response.
 - Recreating an account with the same email after account deletion resets local access state correctly.
+- Push notification permission/token behavior tested successfully in TestFlight after the notification hardening build.
 
 ## Next Release-Readiness Pass
 
@@ -52,16 +53,20 @@ Current known-good mobile checkpoint:
 3. Notification permission edge cases
    - Code hardening added: Control Center now refreshes notification permission/device token before saving push enabled.
    - Code hardening added: app startup refreshes the push device token for users whose backend setting already has push enabled.
-   - User denies push permission during onboarding.
-   - User enables push later from settings/control center.
-   - User disables push in iOS Settings.
-   - User reinstalls app and receives a new device token.
+   - Completed: basic Control Center save still works.
+   - Completed: push allowed in iOS Settings stays enabled without warning.
+   - Completed: push denied in iOS Settings shows the expected warning/settings path.
+   - Completed: enabling push again from iOS Settings clears the warning after app refresh/save.
+   - Completed: emergency PIN alert sanity check still sends after the push hardening build.
 
 4. Deep links and return routes
-   - Payment return website button opens the app.
-   - Payment return route lands in the right app state.
-   - Push tap for subscription renewal opens the manage subscription flow.
-   - Password reset and email confirmation links route correctly.
+   - Completed: payment return website button opens the app.
+   - Completed: payment return route lands in the right app state.
+   - Completed: password reset links route correctly.
+   - Completed: email confirmation links route correctly.
+   - Code polish added: payment return page shows Decoy logo first and only reveals manual Refresh after a 5-second fallback delay.
+   - Code polish added: password create/reset copy and client-side floors now match the live 11-character auth behavior.
+   - Remaining: push tap for subscription renewal opens the manage subscription flow.
 
 5. Emergency contact stale-state protection
    - Confirmed contacts receive alerts.
@@ -82,4 +87,4 @@ Current known-good mobile checkpoint:
 
 ## Current Next Item
 
-Returning user after entitlement loss.
+Deep links and return routes polish build.

@@ -787,7 +787,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'Password Must Be At Least 10 Characters',
+                                                            'Password Must Be At Least 11 Characters',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium
@@ -820,7 +820,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'INVALID PASSWORD - MUST BE 10 CHARACTERS',
+                                                            'INVALID PASSWORD - MUST BE AT LEAST 11 CHARACTERS',
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: FlutterFlowTheme

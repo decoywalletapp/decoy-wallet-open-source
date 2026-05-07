@@ -27,8 +27,8 @@ Future<dynamic> supaRecoveryUpdatePassword(
     if (rt.isEmpty) {
       return {'ok': false, 'error': 'Missing refreshToken'};
     }
-    if (pw.isEmpty || pw.length < 8) {
-      return {'ok': false, 'error': 'Password must be at least 8 characters'};
+    if (pw.isEmpty || pw.length < 11) {
+      return {'ok': false, 'error': 'Password must be at least 11 characters'};
     }
 
     // 1) Set the recovery session in this app instance

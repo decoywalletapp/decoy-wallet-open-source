@@ -29,8 +29,7 @@ Future<String> supaEmailSignUp(
       return 'ERR: missing email or password';
     }
 
-    // NEW: enforce minimum 10
-    if (p.length < 10) {
+    if (p.length < 11) {
       return 'ERR: password too short';
     }
 
