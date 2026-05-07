@@ -170,16 +170,52 @@ workflows:
 
       - name: Upload to App Store Connect (CLI)
         script: |
-          set -e
+          set -euo pipefail
           IPA="${IPA_ABS:-}"
           test -n "$IPA"
           test -f "$IPA"
 
+          upload_log="$(mktemp)"
+          upload_status=0
           app-store-connect publish \
             --path "$IPA" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY
+            --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY 2>&1 | tee "$upload_log" || upload_status=$?
+
+          if [ "$upload_status" -eq 0 ]; then
+            exit 0
+          fi
+
+          if grep -Eq "UPLOAD SUCCEEDED with no errors|No errors uploading archive" "$upload_log"; then
+            echo "App Store Connect upload reported success after a transient Apple API error. Treating upload as successful."
+            exit 0
+          fi
+
+          if grep -Eq "status code 500|internal server error" "$upload_log"; then
+            echo "Apple returned a transient App Store Connect server error without confirmed upload success. Retrying once..."
+            sleep 60
+            retry_log="$(mktemp)"
+            retry_status=0
+            app-store-connect publish \
+              --path "$IPA" \
+              --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+              --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+              --private-key @env:APP_STORE_CONNECT_PRIVATE_KEY 2>&1 | tee "$retry_log" || retry_status=$?
+
+            if [ "$retry_status" -eq 0 ]; then
+              exit 0
+            fi
+
+            if grep -Eq "UPLOAD SUCCEEDED with no errors|No errors uploading archive" "$retry_log"; then
+              echo "App Store Connect retry reported upload success. Treating upload as successful."
+              exit 0
+            fi
+
+            exit "$retry_status"
+          fi
+
+          exit "$upload_status"
 
     artifacts:
       - build/ios/ipa/*.ipa
