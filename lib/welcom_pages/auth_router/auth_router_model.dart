@@ -63,6 +63,12 @@ class AuthRouterModel extends FlutterFlowModel<AuthRouterWidget> {
   List<DecoyWalletRow>? updateRows;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<DecoyWalletRow>? query3;
+  // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
+  List<UserSettingsRow>? pushSettingsRows;
+  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in AuthRouter widget.
+  String? pushTokenRefreshResult;
+  // Stores action output result for [Custom Action - getPushPermissionStatus] action in AuthRouter widget.
+  bool? pushPermissionRefreshResult;
   bool authRouterBioResult = false;
   // Stores action output result for [Backend Call - Query Rows] action in AuthRouter widget.
   List<UserEntitlementsRow>? entitlementRow1;

@@ -159,6 +159,23 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           safeSetState(() {});
         }
 
+        _model.pushSettingsRows = await UserSettingsTable().queryRows(
+          queryFn: (q) => q.eqOrNull(
+            'user_id',
+            currentUserUid,
+          ),
+        );
+        FFAppState().pushEnabled =
+            _model.pushSettingsRows?.elementAtOrNull(0)?.pushEnabled == true;
+        safeSetState(() {});
+        if (FFAppState().pushEnabled == true) {
+          _model.pushTokenRefreshResult =
+              await actions.requestPushPermissionAndGetToken();
+          _model.pushPermissionRefreshResult =
+              await actions.getPushPermissionStatus();
+          safeSetState(() {});
+        }
+
         _model.verifiedViaEmail =
             _model.dwList.elementAtOrNull(0)!.emailVerified!;
         _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;

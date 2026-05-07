@@ -4,8 +4,8 @@ Last updated: 2026-05-07
 
 Current known-good mobile checkpoint:
 
-- `9ece070`
-- `fix: tolerate App Store upload success after Apple 500`
+- `3609ccd`
+- `fix: reset access state after account deletion`
 
 ## Verified / Done
 
@@ -23,10 +23,13 @@ Current known-good mobile checkpoint:
 - Expired/unpaid users are blocked from alert delivery.
 - PIN trigger database path checks entitlements.
 - Seed trigger database path simulated successfully for active paid, paid handoff, and expired states.
+- Live Decoy Seed trigger tested successfully with BlueWallet using the intended on-chain restore, receive, and outbound-send flow.
+- Blitz Wallet Lightning-to-on-chain test did not trigger; treat as a wallet-behavior compatibility caveat for future research, not a release blocker for the intended on-chain seed flow.
 - Bitcoin subscription days stack from the existing paid-through date.
 - Account deletion now routes through the payment backend, cancels/handles active Stripe billing first, then deletes Supabase app/account data.
 - Account deletion was tested successfully with a disposable account after fixing the read-only `armed_decoy_seeds` view cleanup issue.
 - CodeMagic/TestFlight upload now tolerates Apple's confirmed-success-after-500 uploader response.
+- Recreating an account with the same email after account deletion resets local access state correctly.
 
 ## Next Release-Readiness Pass
 
@@ -36,14 +39,19 @@ Current known-good mobile checkpoint:
    - Intentionally retained: global SMS STOP suppressions, Stripe/BTCPay payment audit records, and a minimal deletion receipt.
    - Completed: app delete-account action now goes through the Stripe payment backend so active/pending Stripe subscriptions are canceled before account data is deleted.
    - Completed: disposable account deletion test passed on 2026-05-07.
+   - Completed: same-email account recreation after deletion shows the unpaid/locked state correctly on 2026-05-07.
 
 2. Returning user after entitlement loss
-   - Confirm contact/person/address data remains available.
-   - Confirm trigger settings intentionally disarm after entitlement loss.
-   - Confirm paying again requires the user to intentionally rearm triggers.
-   - Confirm no re-save of emergency contacts is required once triggers are rearmed.
+   - Completed: contact/person/address setup state remains available after entitlement loss and restoration.
+   - Completed: expired entitlement blocks alert delivery; live seed spend did not send an alert while unpaid on 2026-05-07.
+   - Completed: trigger settings intentionally disarm after entitlement loss.
+   - Completed: paying again requires the user to intentionally rearm triggers.
+   - Completed: after manually re-enabling the trigger switch, alert delivery works again without needing to re-save emergency contacts.
+   - Baseline live Seed trigger check passed before continuing entitlement-loss testing.
 
 3. Notification permission edge cases
+   - Code hardening added: Control Center now refreshes notification permission/device token before saving push enabled.
+   - Code hardening added: app startup refreshes the push device token for users whose backend setting already has push enabled.
    - User denies push permission during onboarding.
    - User enables push later from settings/control center.
    - User disables push in iOS Settings.

@@ -50,6 +50,27 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng? currentUserLocationValue;
 
+  Future<void> _syncPushPreferenceBeforeSave() async {
+    final wantsPush = _model.pushNotifTileValue == true;
+    FFAppState().pushEnabled = wantsPush;
+
+    if (wantsPush) {
+      _model.pushTokenSyncResult =
+          await actions.requestPushPermissionAndGetToken();
+      _model.pushPermissionRefreshResult =
+          await actions.getPushPermissionStatus();
+      _model.pushPermissionGranted =
+          _model.pushPermissionRefreshResult == true;
+    } else {
+      _model.pushPermissionRefreshResult =
+          await actions.getPushPermissionStatus();
+      _model.pushPermissionGranted =
+          _model.pushPermissionRefreshResult == true;
+    }
+
+    safeSetState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -2161,7 +2182,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         ),
                                       ),
                                     ),
-                                    if ((FFAppState().pushEnabled == true) &&
+                                    if (((_model.pushNotifTileValue == true) ||
+                                            (FFAppState().pushEnabled ==
+                                                true)) &&
                                         (_model.pushPermissionGranted == false))
                                       Align(
                                         alignment:
@@ -2215,8 +2238,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 ].divide(SizedBox(height: 8.0)),
                                               ),
                                             ),
-                                            if ((FFAppState().pushEnabled ==
-                                                    true) &&
+                                            if (((_model.pushNotifTileValue ==
+                                                        true) ||
+                                                    (FFAppState()
+                                                            .pushEnabled ==
+                                                        true)) &&
                                                 (_model.pushPermissionGranted ==
                                                     false))
                                               Padding(
@@ -2846,9 +2872,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     currentUserLocationValue;
                                                 FFAppState().biometricsEnabled =
                                                     _model.bioSwitchTileValue!;
-                                                FFAppState().pushEnabled =
-                                                    _model.pushNotifTileValue!;
-                                                safeSetState(() {});
+                                                await _syncPushPreferenceBeforeSave();
                                                 await DecoyWalletTable().update(
                                                   data: {
                                                     'decoy_seed_armed':
@@ -2948,10 +2972,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     FFAppState()
                                                             .lastKnownLocation =
                                                         currentUserLocationValue;
-                                                    FFAppState().pushEnabled =
-                                                        _model
-                                                            .pushNotifTileValue!;
-                                                    safeSetState(() {});
+                                                    await _syncPushPreferenceBeforeSave();
                                                     await DecoyWalletTable()
                                                         .update(
                                                       data: {
@@ -3044,10 +3065,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     FFAppState()
                                                             .lastKnownLocation =
                                                         currentUserLocationValue;
-                                                    FFAppState().pushEnabled =
-                                                        _model
-                                                            .pushNotifTileValue!;
-                                                    safeSetState(() {});
+                                                    await _syncPushPreferenceBeforeSave();
                                                     await DecoyWalletTable()
                                                         .update(
                                                       data: {
@@ -3123,10 +3141,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                   FFAppState()
                                                           .lastKnownLocation =
                                                       currentUserLocationValue;
-                                                  FFAppState().pushEnabled =
-                                                      _model
-                                                          .pushNotifTileValue!;
-                                                  safeSetState(() {});
+                                                  await _syncPushPreferenceBeforeSave();
                                                   await DecoyWalletTable()
                                                       .update(
                                                     data: {

@@ -27,6 +27,10 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
   bool? getBioPermissionResult;
   // Stores action output result for [Custom Action - getPushPermissionStatus] action in ControlCenter widget.
   bool? pushStatusResult;
+  // Stores action output result for [Custom Action - requestPushPermissionAndGetToken] action in ControlCenter widget.
+  String? pushTokenSyncResult;
+  // Stores action output result for [Custom Action - getPushPermissionStatus] action in ControlCenter widget.
+  bool? pushPermissionRefreshResult;
   // Stores action output result for [Custom Action - getLocationPermissionStatus] action in ControlCenter widget.
   bool? getLocationPremissionResults;
   // State field(s) for PINPoliceTile widget.
