@@ -620,6 +620,18 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                                           .hasDecoyPin =
                                                                       false;
                                                                   FFAppState()
+                                                                          .hasActiveSubscription =
+                                                                      false;
+                                                                  FFAppState()
+                                                                          .entitlementStatus =
+                                                                      'unpaid';
+                                                                  FFAppState()
+                                                                          .entitlementCheckCompleted =
+                                                                      false;
+                                                                  FFAppState()
+                                                                          .prevHasActiveSubscription =
+                                                                      false;
+                                                                  FFAppState()
                                                                           .biometricsEnabled =
                                                                       false;
                                                                   FFAppState()
@@ -645,6 +657,12 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                                   FFAppState()
                                                                           .pushEnabled =
                                                                       false;
+                                                                  FFAppState()
+                                                                          .openRenewalFromPush =
+                                                                      false;
+                                                                  FFAppState()
+                                                                          .pendingStripeCheckoutSessionId =
+                                                                      '';
                                                                   safeSetState(
                                                                       () {});
 

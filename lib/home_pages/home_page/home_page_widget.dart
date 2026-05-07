@@ -44,6 +44,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       } else {
         FFAppState().entitlementCheckCompleted = false;
         FFAppState().hasActiveSubscription = false;
+        FFAppState().entitlementStatus = 'unpaid';
         safeSetState(() {});
         _model.entitlementRow = await UserEntitlementsTable().queryRows(
           queryFn: (q) => q
@@ -56,20 +57,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 'decoy_wallet',
               ),
         );
+        final entitlement = _model.entitlementRow?.elementAtOrNull(0);
         FFAppState().entitlementCheckCompleted = true;
         FFAppState().entitlementStatus =
-            _model.entitlementRow!.elementAtOrNull(0)!.providerStatus!;
+            entitlement?.providerStatus ?? 'unpaid';
         safeSetState(() {});
-        if ((_model.entitlementRow != null &&
-                (_model.entitlementRow)!.isNotEmpty) &&
+        if (entitlement != null &&
             functions.isEntitlementUsableForProtection(
-              _model.entitlementRow?.elementAtOrNull(0)?.isActive,
-              _model.entitlementRow?.elementAtOrNull(0)?.currentPeriodEnd,
-              _model.entitlementRow?.elementAtOrNull(0)?.pendingProvider,
-              _model.entitlementRow?.elementAtOrNull(0)?.pendingStartsAt,
-              _model.entitlementRow
-                  ?.elementAtOrNull(0)
-                  ?.pendingProviderSubscriptionId,
+              entitlement.isActive,
+              entitlement.currentPeriodEnd,
+              entitlement.pendingProvider,
+              entitlement.pendingStartsAt,
+              entitlement.pendingProviderSubscriptionId,
             )) {
           FFAppState().hasActiveSubscription = true;
           safeSetState(() {});

@@ -1,11 +1,11 @@
 # Decoy Wallet Release Readiness Checklist
 
-Last updated: 2026-05-06
+Last updated: 2026-05-07
 
 Current known-good mobile checkpoint:
 
-- `0ac966d7dceb47f98d435c0fb994cb59512d9604`
-- `fix: keep access active during payment handoff`
+- `9ece070`
+- `fix: tolerate App Store upload success after Apple 500`
 
 ## Verified / Done
 
@@ -24,6 +24,9 @@ Current known-good mobile checkpoint:
 - PIN trigger database path checks entitlements.
 - Seed trigger database path simulated successfully for active paid, paid handoff, and expired states.
 - Bitcoin subscription days stack from the existing paid-through date.
+- Account deletion now routes through the payment backend, cancels/handles active Stripe billing first, then deletes Supabase app/account data.
+- Account deletion was tested successfully with a disposable account after fixing the read-only `armed_decoy_seeds` view cleanup issue.
+- CodeMagic/TestFlight upload now tolerates Apple's confirmed-success-after-500 uploader response.
 
 ## Next Release-Readiness Pass
 
@@ -31,8 +34,8 @@ Current known-good mobile checkpoint:
    - Supabase account deletion RPC hardened on 2026-05-06.
    - Audit confirmed sensitive app-owned tables are now explicitly deleted or intentionally retained.
    - Intentionally retained: global SMS STOP suppressions, Stripe/BTCPay payment audit records, and a minimal deletion receipt.
-   - In progress: app delete-account action is being moved through the Stripe payment backend so active/pending Stripe subscriptions are canceled before account data is deleted.
-   - Remaining validation: deploy backend, publish mobile build, then test actual deletion with a disposable user only.
+   - Completed: app delete-account action now goes through the Stripe payment backend so active/pending Stripe subscriptions are canceled before account data is deleted.
+   - Completed: disposable account deletion test passed on 2026-05-07.
 
 2. Returning user after entitlement loss
    - Confirm contact/person/address data remains available.
@@ -71,4 +74,4 @@ Current known-good mobile checkpoint:
 
 ## Current Next Item
 
-Account deletion and data cleanup.
+Returning user after entitlement loss.
