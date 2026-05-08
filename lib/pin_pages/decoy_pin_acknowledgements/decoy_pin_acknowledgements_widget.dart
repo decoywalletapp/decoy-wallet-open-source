@@ -315,15 +315,11 @@ class _DecoyPinAcknowledgementsWidgetState
                                       safeSetState(() {});
                                     }
                                   },
-                                  side: (FlutterFlowTheme.of(context)
-                                              .alternate !=
-                                          null)
-                                      ? BorderSide(
-                                          width: 2,
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                        )
-                                      : null,
+                                  side: BorderSide(
+                                    width: 2,
+                                    color:
+                                        FlutterFlowTheme.of(context).alternate,
+                                  ),
                                   activeColor:
                                       FlutterFlowTheme.of(context).primary,
                                   checkColor: FlutterFlowTheme.of(context).info,
@@ -376,15 +372,11 @@ class _DecoyPinAcknowledgementsWidgetState
                                       safeSetState(() {});
                                     }
                                   },
-                                  side: (FlutterFlowTheme.of(context)
-                                              .alternate !=
-                                          null)
-                                      ? BorderSide(
-                                          width: 2,
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                        )
-                                      : null,
+                                  side: BorderSide(
+                                    width: 2,
+                                    color:
+                                        FlutterFlowTheme.of(context).alternate,
+                                  ),
                                   activeColor:
                                       FlutterFlowTheme.of(context).primary,
                                   checkColor: FlutterFlowTheme.of(context).info,
@@ -437,15 +429,11 @@ class _DecoyPinAcknowledgementsWidgetState
                                       safeSetState(() {});
                                     }
                                   },
-                                  side: (FlutterFlowTheme.of(context)
-                                              .alternate !=
-                                          null)
-                                      ? BorderSide(
-                                          width: 2,
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                        )
-                                      : null,
+                                  side: BorderSide(
+                                    width: 2,
+                                    color:
+                                        FlutterFlowTheme.of(context).alternate,
+                                  ),
                                   activeColor:
                                       FlutterFlowTheme.of(context).primary,
                                   checkColor: FlutterFlowTheme.of(context).info,
@@ -453,7 +441,7 @@ class _DecoyPinAcknowledgementsWidgetState
                               ),
                               Expanded(
                                 child: Text(
-                                  'I understand that alerts may fail due to connectivity, device issues, or technical limitations, and Decoy Wallet cannot guarantee a response.',
+                                  'I understand Decoy PIN alerts rely on my device permissions, network connection, and saved alert settings, and I am responsible for keeping those settings ready and current.',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(

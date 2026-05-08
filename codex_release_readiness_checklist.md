@@ -112,6 +112,7 @@ Current known-good mobile checkpoint:
    - Code polish added: lawyer-provided bold formatting and centered title/effective-date blocks are preserved from the Word documents.
    - Code polish added: onboarding Agreements Terms and Privacy pages now show the final documents instead of placeholder text.
    - Code polish added: Settings Terms of Use and Privacy Policy pages now show the final documents.
+   - Code polish added: Decoy PIN and Decoy Seed acknowledgement final checkboxes now use readiness-focused wording instead of broad delivery-disclaimer wording.
    - Remaining: TestFlight display check for onboarding Terms/Privacy tab switching, scroll behavior, checkbox/Continue behavior, and Settings legal page navigation.
 
 ## Current Next Item

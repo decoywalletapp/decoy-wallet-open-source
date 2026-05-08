@@ -320,15 +320,11 @@ class _DecoySeedAcknowledgementsWidgetState
                                         safeSetState(() {});
                                       }
                                     },
-                                    side: (FlutterFlowTheme.of(context)
-                                                .alternate !=
-                                            null)
-                                        ? BorderSide(
-                                            width: 2,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          )
-                                        : null,
+                                    side: BorderSide(
+                                      width: 2,
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                    ),
                                     activeColor:
                                         FlutterFlowTheme.of(context).primary,
                                     checkColor:
@@ -384,15 +380,11 @@ class _DecoySeedAcknowledgementsWidgetState
                                         safeSetState(() {});
                                       }
                                     },
-                                    side: (FlutterFlowTheme.of(context)
-                                                .alternate !=
-                                            null)
-                                        ? BorderSide(
-                                            width: 2,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          )
-                                        : null,
+                                    side: BorderSide(
+                                      width: 2,
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                    ),
                                     activeColor:
                                         FlutterFlowTheme.of(context).primary,
                                     checkColor:
@@ -448,15 +440,11 @@ class _DecoySeedAcknowledgementsWidgetState
                                         safeSetState(() {});
                                       }
                                     },
-                                    side: (FlutterFlowTheme.of(context)
-                                                .alternate !=
-                                            null)
-                                        ? BorderSide(
-                                            width: 2,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          )
-                                        : null,
+                                    side: BorderSide(
+                                      width: 2,
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                    ),
                                     activeColor:
                                         FlutterFlowTheme.of(context).primary,
                                     checkColor:
@@ -465,7 +453,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                 ),
                                 Expanded(
                                   child: Text(
-                                    'I understand that alerts may fail due to connectivity, device issues, or technical limitations, and Decoy Wallet cannot guarantee delivery or response.',
+                                    'I understand Decoy Seed alerts are designed for on-chain activity from my armed Decoy Seed wallet, and I am responsible for keeping my seed alert settings ready and current.',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(

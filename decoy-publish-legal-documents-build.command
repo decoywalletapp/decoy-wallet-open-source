@@ -12,7 +12,7 @@ echo "Publishing Decoy Wallet legal documents update..."
 echo "Repository: $REPO"
 echo "Current branch: $(git branch --show-current)"
 echo "Starting commit: $(git rev-parse HEAD)"
-echo "This is app-only legal copy/UI wiring."
+echo "This is app-only legal copy/UI wiring and acknowledgement wording polish."
 echo "It does not touch emergency alerts, payments, entitlements, backend code, signing, or CodeMagic config."
 
 git diff --check -- \
@@ -22,6 +22,8 @@ git diff --check -- \
   lib/welcom_pages/agreements_page/agreements_page_widget.dart \
   lib/settings_pages/termsof_use/termsof_use_widget.dart \
   lib/settings_pages/privacy_policy/privacy_policy_widget.dart \
+  lib/pin_pages/decoy_pin_acknowledgements/decoy_pin_acknowledgements_widget.dart \
+  lib/create_decoy_seed/decoy_seed_acknowledgements/decoy_seed_acknowledgements_widget.dart \
   decoy-publish-legal-documents-build.command
 
 git add \
@@ -31,12 +33,14 @@ git add \
   lib/welcom_pages/agreements_page/agreements_page_widget.dart \
   lib/settings_pages/termsof_use/termsof_use_widget.dart \
   lib/settings_pages/privacy_policy/privacy_policy_widget.dart \
+  lib/pin_pages/decoy_pin_acknowledgements/decoy_pin_acknowledgements_widget.dart \
+  lib/create_decoy_seed/decoy_seed_acknowledgements/decoy_seed_acknowledgements_widget.dart \
   decoy-publish-legal-documents-build.command
 
 if git diff --cached --quiet; then
   echo "No staged legal-document changes found; using existing HEAD."
 else
-  git commit -m "chore: add final legal documents"
+  git commit -m "chore: polish legal acknowledgements"
 fi
 
 HEAD_SHA="$(git rev-parse HEAD)"
