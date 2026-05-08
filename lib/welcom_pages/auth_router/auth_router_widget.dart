@@ -37,6 +37,31 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
   late AuthRouterModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _hideContentForPinHandoff = false;
+
+  static const _pinHandoffFadeOutDuration = Duration(milliseconds: 180);
+  static const _pinRouteFadeDuration = Duration(milliseconds: 220);
+
+  Future<void> _goToPinPageAfterCleanHandoff() async {
+    safeSetState(() {
+      _hideContentForPinHandoff = true;
+    });
+    await Future.delayed(_pinHandoffFadeOutDuration);
+    if (!mounted) {
+      return;
+    }
+    context.goNamedAuth(
+      PINPageWidget.routeName,
+      context.mounted,
+      extra: <String, dynamic>{
+        '__transition_info__': TransitionInfo(
+          hasTransition: true,
+          transitionType: PageTransitionType.fade,
+          duration: _pinRouteFadeDuration,
+        ),
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -299,15 +324,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           ((_model.query3 != null &&
                                   (_model.query3)!.isNotEmpty) &&
                               (_model.setupComplete == true))) {
-                        context.goNamedAuth(
-                          PINPageWidget.routeName,
-                          context.mounted,
-                          extra: <String, dynamic>{
-                            '__transition_info__': TransitionInfo(
-                              hasTransition: false,
-                            ),
-                          },
-                        );
+                        await _goToPinPageAfterCleanHandoff();
                       } else {
                         context.goNamedAuth(
                           CreatePinWidget.routeName,
@@ -441,15 +458,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         ((_model.query3 != null &&
                                 (_model.query3)!.isNotEmpty) &&
                             (_model.setupComplete == true))) {
-                      context.goNamedAuth(
-                        PINPageWidget.routeName,
-                        context.mounted,
-                        extra: <String, dynamic>{
-                          '__transition_info__': TransitionInfo(
-                            hasTransition: false,
-                          ),
-                        },
-                      );
+                      await _goToPinPageAfterCleanHandoff();
                     } else {
                       context.goNamedAuth(
                         CreatePinWidget.routeName,
@@ -510,42 +519,47 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           backgroundColor: Color(0x001D2428),
           body: SafeArea(
             top: true,
-            child: Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 40.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 80.0,
-                        decoration: BoxDecoration(
-                          color: Color(0x001D2428),
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Text(
-                            '₿itcoin Wallet',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .displayMedium
-                                .override(
-                                  fontFamily: 'InterTight',
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
+            child: AnimatedOpacity(
+              opacity: _hideContentForPinHandoff ? 0.0 : 1.0,
+              duration: _pinHandoffFadeOutDuration,
+              curve: Curves.easeOut,
+              child: Align(
+                alignment: AlignmentDirectional(0.0, 0.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            0.0, 0.0, 0.0, 40.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 80.0,
+                          decoration: BoxDecoration(
+                            color: Color(0x001D2428),
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Text(
+                              '₿itcoin Wallet',
+                              textAlign: TextAlign.center,
+                              style: FlutterFlowTheme.of(context)
+                                  .displayMedium
+                                  .override(
+                                    fontFamily: 'InterTight',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

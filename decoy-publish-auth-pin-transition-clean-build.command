@@ -8,11 +8,11 @@ WORKFLOW_ID="ios_release"
 
 cd "$REPO"
 
-echo "Publishing Decoy Wallet Auth Router to PIN transition cleanup..."
+echo "Publishing Decoy Wallet Auth Router to PIN two-step fade cleanup..."
 echo "Repository: $REPO"
 echo "Current branch: $(git branch --show-current)"
 echo "Starting commit: $(git rev-parse HEAD)"
-echo "This is app-only UI polish for the app-open Auth Router to PIN handoff."
+echo "This is app-only UI polish for the app-open Auth Router to PIN two-step fade handoff."
 echo "It does not touch emergency alert infrastructure, seed watcher code, payment backends, signing, or entitlements."
 
 git diff --check -- \
@@ -28,7 +28,7 @@ git add \
 if git diff --cached --quiet; then
   echo "No staged Auth Router to PIN transition changes found; using existing HEAD."
 else
-  git commit -m "fix: remove auth pin crossfade overlap"
+  git commit -m "fix: prevent auth pin transition overlap"
 fi
 
 HEAD_SHA="$(git rev-parse HEAD)"
@@ -187,5 +187,5 @@ if status < 200 or status >= 300:
     sys.exit(1)
 PY
 
-echo "Done. Auth Router to PIN transition cleanup TestFlight build started."
+echo "Done. Auth Router to PIN two-step fade TestFlight build started."
 echo "Next: install TestFlight, force-close the app, reopen, and watch the Bitcoin Wallet to PIN handoff."
