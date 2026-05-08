@@ -4,8 +4,8 @@ Last updated: 2026-05-08
 
 Current known-good mobile checkpoint:
 
-- `a4d76f3`
-- `fix: open renewal push taps from unlocked app`
+- `1c7873b`
+- `chore: tighten release hygiene`
 
 ## Verified / Done
 
@@ -34,6 +34,7 @@ Current known-good mobile checkpoint:
 - Deep link return flow polish tested successfully in TestFlight after the payment return/password reset build.
 - Password reset keyboard Next behavior tested successfully.
 - Auth Router to PIN two-step fade tested successfully; Bitcoin Wallet / PIN text overlap no longer visible.
+- Final active-account PIN alert sanity test passed after release-hygiene build.
 
 ## Next Release-Readiness Pass
 
@@ -103,9 +104,15 @@ Current known-good mobile checkpoint:
    - Code hardening added: removed direct production routing/export exposure for `lib/test_subjects` pages.
    - Code hardening added: removed the unused `debugSignUp` custom action export and source file.
    - Review result: no live Stripe/webhook/service-role secrets found committed in app code; Supabase anon client key is expected public client configuration.
-   - Review result: current `ios_release` CodeMagic workflow includes signing, notification entitlement verification, generated-code guardrails, timestamp build numbers, and App Store Connect upload retry/success detection.
-   - Remaining: publish TestFlight release-hygiene build and do a short smoke check.
+- Review result: current `ios_release` CodeMagic workflow includes signing, notification entitlement verification, generated-code guardrails, timestamp build numbers, and App Store Connect upload retry/success detection.
+- Completed: release-hygiene TestFlight smoke check passed; app opens, PIN unlock works, Settings opens, and Manage Access opens normally.
+
+8. Legal documents
+   - Code polish added: lawyer-provided final Terms of Service and Privacy Policy are centralized in app code so onboarding and Settings use the same legal copy.
+   - Code polish added: onboarding Agreements Terms and Privacy pages now show the final documents instead of placeholder text.
+   - Code polish added: Settings Terms of Use and Privacy Policy pages now show the final documents.
+   - Remaining: TestFlight display check for onboarding Terms/Privacy tab switching, scroll behavior, checkbox/Continue behavior, and Settings legal page navigation.
 
 ## Current Next Item
 
-Release hygiene TestFlight smoke check.
+Legal documents TestFlight display check.
