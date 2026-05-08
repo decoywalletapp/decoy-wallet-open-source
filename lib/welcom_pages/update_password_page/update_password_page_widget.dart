@@ -435,20 +435,16 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                           await actions.dismissKeyboard(
                                             context,
                                           );
-                                          if (_model.passwordTextController
-                                                  .text ==
-                                              _model
-                                                  .confirmUpdatedPasswordTextController
-                                                  .text) {
-                                            _model.passUpdate = await actions
-                                                .supaUpdatePassword(
-                                              _model
-                                                  .passwordTextController.text,
-                                            );
-                                            if (_model.passUpdate == true) {
-                                              context.goNamed(
-                                                  AuthRouterWidget.routeName);
-                                            } else {
+                                          final newPassword = _model
+                                              .passwordTextController.text
+                                              .trim();
+                                          final confirmedPassword = _model
+                                              .confirmUpdatedPasswordTextController
+                                              .text
+                                              .trim();
+                                          if (newPassword ==
+                                              confirmedPassword) {
+                                            if (newPassword.length < 10) {
                                               _model.notificationState = 2;
                                               safeSetState(() {});
                                               await Future.delayed(
@@ -458,6 +454,26 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                               );
                                               _model.notificationState = 0;
                                               safeSetState(() {});
+                                            } else {
+                                              _model.passUpdate = await actions
+                                                  .supaUpdatePassword(
+                                                newPassword,
+                                              );
+                                              if (_model.passUpdate == true) {
+                                                context.goNamed(
+                                                    AuthRouterWidget
+                                                        .routeName);
+                                              } else {
+                                                _model.notificationState = 3;
+                                                safeSetState(() {});
+                                                await Future.delayed(
+                                                  Duration(
+                                                    milliseconds: 5000,
+                                                  ),
+                                                );
+                                                _model.notificationState = 0;
+                                                safeSetState(() {});
+                                              }
                                             }
                                           } else {
                                             _model.notificationState = 1;
@@ -592,7 +608,42 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
                                                             child: Text(
-                                                              'INVALID PASSWORD - MUST BE AT LEAST 11 CHARACTERS',
+                                                              'INVALID PASSWORD - MUST BE AT LEAST 10 CHARACTERS',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyMediumFamily,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primary,
+                                                                    fontSize:
+                                                                        14.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    useGoogleFonts:
+                                                                        !FlutterFlowTheme.of(context)
+                                                                            .bodyMediumIsCustom,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        if (_model
+                                                                .notificationState ==
+                                                            3)
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.0, 0.0),
+                                                            child: Text(
+                                                              'PASSWORD UPDATE FAILED - TRY A DIFFERENT PASSWORD',
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,

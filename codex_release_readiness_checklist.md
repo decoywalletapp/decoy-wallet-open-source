@@ -65,7 +65,7 @@ Current known-good mobile checkpoint:
    - Completed: password reset links route correctly.
    - Completed: email confirmation links route correctly.
    - Code polish added: payment return page shows Decoy logo first and only reveals manual Refresh after a 5-second fallback delay.
-   - Code polish added: password create/reset copy and client-side floors now match the live 11-character auth behavior.
+   - Code polish added: password create/reset copy and client-side floors preserve the intended 10-character minimum.
    - Remaining: push tap for subscription renewal opens the manage subscription flow.
 
 5. Emergency contact stale-state protection
