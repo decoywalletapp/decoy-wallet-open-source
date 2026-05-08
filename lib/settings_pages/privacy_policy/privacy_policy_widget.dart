@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/legal/legal_document_view.dart';
 import '/legal/legal_documents.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -87,17 +88,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 24.0),
                 child: SingleChildScrollView(
-                  child: Text(
-                    kDecoyWalletPrivacyPolicy,
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).bodyMediumFamily,
-                          fontSize: 14.0,
-                          letterSpacing: 0.0,
-                          lineHeight: 1.5,
-                          useGoogleFonts:
-                              !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                        ),
+                  child: LegalDocumentView(
+                    paragraphs: kDecoyWalletPrivacyPolicyParagraphs,
+                    fontSize: 14.0,
+                    lineHeight: 1.5,
+                    paragraphSpacing: 14.0,
                   ),
                 ),
               ),

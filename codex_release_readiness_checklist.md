@@ -109,6 +109,7 @@ Current known-good mobile checkpoint:
 
 8. Legal documents
    - Code polish added: lawyer-provided final Terms of Service and Privacy Policy are centralized in app code so onboarding and Settings use the same legal copy.
+   - Code polish added: lawyer-provided bold formatting and centered title/effective-date blocks are preserved from the Word documents.
    - Code polish added: onboarding Agreements Terms and Privacy pages now show the final documents instead of placeholder text.
    - Code polish added: Settings Terms of Use and Privacy Policy pages now show the final documents.
    - Remaining: TestFlight display check for onboarding Terms/Privacy tab switching, scroll behavior, checkbox/Continue behavior, and Settings legal page navigation.

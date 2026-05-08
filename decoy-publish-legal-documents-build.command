@@ -17,6 +17,7 @@ echo "It does not touch emergency alerts, payments, entitlements, backend code, 
 
 git diff --check -- \
   codex_release_readiness_checklist.md \
+  lib/legal/legal_document_view.dart \
   lib/legal/legal_documents.dart \
   lib/welcom_pages/agreements_page/agreements_page_widget.dart \
   lib/settings_pages/termsof_use/termsof_use_widget.dart \
@@ -25,6 +26,7 @@ git diff --check -- \
 
 git add \
   codex_release_readiness_checklist.md \
+  lib/legal/legal_document_view.dart \
   lib/legal/legal_documents.dart \
   lib/welcom_pages/agreements_page/agreements_page_widget.dart \
   lib/settings_pages/termsof_use/termsof_use_widget.dart \
