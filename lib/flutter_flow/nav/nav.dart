@@ -80,7 +80,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
 
   return GoRouter(
     initialLocation: '/',
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: false,
     refreshListenable: appStateNotifier,
     navigatorKey: appNavigatorKey,
     errorBuilder: (context, state) =>
@@ -424,11 +424,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => LocationAuthorizationWidget(),
       ),
       FFRoute(
-        name: NotthispageWidget.routeName,
-        path: NotthispageWidget.routePath,
-        builder: (context, params) => NotthispageWidget(),
-      ),
-      FFRoute(
         name: EnableNotificationsWidget.routeName,
         path: EnableNotificationsWidget.routePath,
         builder: (context, params) => EnableNotificationsWidget(),
@@ -437,12 +432,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: HomeAddressEntryPageWidget.routeName,
         path: HomeAddressEntryPageWidget.routePath,
         builder: (context, params) => HomeAddressEntryPageWidget(),
-      ),
-      FFRoute(
-        name: CreateDecoyEmergencyContactsSetupV2Widget.routeName,
-        path: CreateDecoyEmergencyContactsSetupV2Widget.routePath,
-        builder: (context, params) =>
-            CreateDecoyEmergencyContactsSetupV2Widget(),
       ),
       FFRoute(
         name: AgreementsPageWidget.routeName,

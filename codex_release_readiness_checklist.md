@@ -4,8 +4,8 @@ Last updated: 2026-05-08
 
 Current known-good mobile checkpoint:
 
-- `1184cae`
-- `fix: prevent auth pin transition overlap`
+- `a4d76f3`
+- `fix: open renewal push taps from unlocked app`
 
 ## Verified / Done
 
@@ -70,7 +70,8 @@ Current known-good mobile checkpoint:
    - Code polish added: payment return page shows Decoy logo first and only reveals manual Refresh after a 5-second fallback delay.
    - Code polish added: password create/reset copy and client-side floors preserve the intended 10-character minimum.
    - Code hardening added: subscription renewal push taps now navigate directly to Manage Subscription when the app is already unlocked, while preserving the cold-start fallback flag.
-   - Remaining: push tap for subscription renewal opens the manage subscription flow.
+   - Completed: push tap for subscription renewal opens the Manage Subscription flow.
+   - Completed: renewal push near expiration opens Manage Subscription and displays the expected remaining-days state.
 
 4a. UI polish notes
    - Current transition baseline before this pass: Auth Router to PIN used a 300ms fade. User rated current transition feel about 6/10 and wants easy revert if the polish feels worse.
@@ -86,15 +87,25 @@ Current known-good mobile checkpoint:
 
 6. Account setup readiness gates
    - App should not visually imply emergency protection is armed unless required setup is complete.
-   - PIN trigger setup gate should require valid contact/911 preferences.
-   - Seed trigger setup gate should require seed arming plus contact readiness.
+   - PIN trigger setup should distinguish saved user preference from currently usable confirmed-contact routing.
+   - Seed trigger setup should distinguish saved seed-monitor arming from currently usable confirmed-contact routing.
+   - Decision: do not ship a destructive gate that flips armed trigger preferences off while contacts are pending confirmation.
+   - Desired behavior: users may arm PIN contact alerts and seed monitor before a contact confirms; those preferences should become usable automatically once a contact confirms.
+   - Conclusion: no app-code change shipped for this item; current behavior should be preserved unless a future audit finds a concrete break.
+   - Completed: audit found no reason to change the current trigger preference behavior.
 
 7. Release hygiene
    - Remove or justify debug/test-only code paths.
    - Check test pages exposed through app routing.
    - Review sensitive backend logging.
    - Confirm App Store/TestFlight build uses the intended workflow.
+   - Code hardening added: disabled GoRouter diagnostic logging for release builds.
+   - Code hardening added: removed direct production routing/export exposure for `lib/test_subjects` pages.
+   - Code hardening added: removed the unused `debugSignUp` custom action export and source file.
+   - Review result: no live Stripe/webhook/service-role secrets found committed in app code; Supabase anon client key is expected public client configuration.
+   - Review result: current `ios_release` CodeMagic workflow includes signing, notification entitlement verification, generated-code guardrails, timestamp build numbers, and App Store Connect upload retry/success detection.
+   - Remaining: publish TestFlight release-hygiene build and do a short smoke check.
 
 ## Current Next Item
 
-Push tap for subscription renewal opens the manage subscription flow.
+Release hygiene TestFlight smoke check.
