@@ -73,6 +73,7 @@ Current known-good mobile checkpoint:
    - Current transition baseline before this pass: Auth Router to PIN used a 300ms fade. User rated current transition feel about 6/10 and wants easy revert if the polish feels worse.
    - Code polish added: password reset first field uses keyboard Next to focus the confirm field.
    - Code polish added: Auth Router to PIN keeps fade style but shortens the fade to reduce visible page overlap during app open.
+   - Follow-up code polish added: Auth Router to PIN now uses a clean no-transition handoff to eliminate Bitcoin Wallet / PIN text overlap.
 
 5. Emergency contact stale-state protection
    - Confirmed contacts receive alerts.

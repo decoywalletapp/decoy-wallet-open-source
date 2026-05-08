@@ -304,9 +304,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           context.mounted,
                           extra: <String, dynamic>{
                             '__transition_info__': TransitionInfo(
-                              hasTransition: true,
-                              transitionType: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 120),
+                              hasTransition: false,
                             ),
                           },
                         );
@@ -448,9 +446,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         context.mounted,
                         extra: <String, dynamic>{
                           '__transition_info__': TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 120),
+                            hasTransition: false,
                           ),
                         },
                       );
