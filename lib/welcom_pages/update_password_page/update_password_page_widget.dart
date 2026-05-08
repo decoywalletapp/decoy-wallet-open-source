@@ -167,6 +167,13 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                               ],
                                               obscureText:
                                                   !_model.passwordVisibility,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              onFieldSubmitted: (_) async {
+                                                _model
+                                                    .confirmUpdatedPasswordFocusNode
+                                                    ?.requestFocus();
+                                              },
                                               decoration: InputDecoration(
                                                 labelText: 'Password',
                                                 labelStyle:

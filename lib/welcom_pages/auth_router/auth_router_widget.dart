@@ -306,6 +306,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                             '__transition_info__': TransitionInfo(
                               hasTransition: true,
                               transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 120),
                             ),
                           },
                         );
@@ -449,6 +450,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           '__transition_info__': TransitionInfo(
                             hasTransition: true,
                             transitionType: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 120),
                           ),
                         },
                       );

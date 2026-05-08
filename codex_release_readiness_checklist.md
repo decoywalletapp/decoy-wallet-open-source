@@ -1,11 +1,11 @@
 # Decoy Wallet Release Readiness Checklist
 
-Last updated: 2026-05-07
+Last updated: 2026-05-08
 
 Current known-good mobile checkpoint:
 
-- `1efbd13`
-- `fix: refresh push notification token state`
+- `9e8c815`
+- `fix: polish deep link return flows`
 
 ## Verified / Done
 
@@ -31,6 +31,7 @@ Current known-good mobile checkpoint:
 - CodeMagic/TestFlight upload now tolerates Apple's confirmed-success-after-500 uploader response.
 - Recreating an account with the same email after account deletion resets local access state correctly.
 - Push notification permission/token behavior tested successfully in TestFlight after the notification hardening build.
+- Deep link return flow polish tested successfully in TestFlight after the payment return/password reset build.
 
 ## Next Release-Readiness Pass
 
@@ -67,6 +68,11 @@ Current known-good mobile checkpoint:
    - Code polish added: payment return page shows Decoy logo first and only reveals manual Refresh after a 5-second fallback delay.
    - Code polish added: password create/reset copy and client-side floors preserve the intended 10-character minimum.
    - Remaining: push tap for subscription renewal opens the manage subscription flow.
+
+4a. UI polish notes
+   - Current transition baseline before this pass: Auth Router to PIN used a 300ms fade. User rated current transition feel about 6/10 and wants easy revert if the polish feels worse.
+   - Code polish added: password reset first field uses keyboard Next to focus the confirm field.
+   - Code polish added: Auth Router to PIN keeps fade style but shortens the fade to reduce visible page overlap during app open.
 
 5. Emergency contact stale-state protection
    - Confirmed contacts receive alerts.
