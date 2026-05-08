@@ -23,6 +23,24 @@ String? _routeFromMessage(RemoteMessage message) {
   return null;
 }
 
+void _handleRenewalPushTap(BuildContext context) {
+  FFAppState().openRenewalFromPush = true;
+
+  if (FFAppState().isLocked == true) {
+    return;
+  }
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final navContext = appNavigatorKey.currentContext;
+    final targetContext = navContext ?? (context.mounted ? context : null);
+    if (targetContext == null || !targetContext.mounted) {
+      return;
+    }
+    FFAppState().openRenewalFromPush = false;
+    targetContext.goNamed('ManageSubscription');
+  });
+}
+
 Future<String?> initPushTapListener(BuildContext context) async {
   try {
     String? firstRoute;
@@ -38,7 +56,7 @@ Future<String?> initPushTapListener(BuildContext context) async {
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         final route = _routeFromMessage(message);
         if (route == 'renew_btcpay') {
-          FFAppState().openRenewalFromPush = true;
+          _handleRenewalPushTap(context);
         }
       });
     }

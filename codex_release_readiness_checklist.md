@@ -4,8 +4,8 @@ Last updated: 2026-05-08
 
 Current known-good mobile checkpoint:
 
-- `9e8c815`
-- `fix: polish deep link return flows`
+- `1184cae`
+- `fix: prevent auth pin transition overlap`
 
 ## Verified / Done
 
@@ -32,6 +32,8 @@ Current known-good mobile checkpoint:
 - Recreating an account with the same email after account deletion resets local access state correctly.
 - Push notification permission/token behavior tested successfully in TestFlight after the notification hardening build.
 - Deep link return flow polish tested successfully in TestFlight after the payment return/password reset build.
+- Password reset keyboard Next behavior tested successfully.
+- Auth Router to PIN two-step fade tested successfully; Bitcoin Wallet / PIN text overlap no longer visible.
 
 ## Next Release-Readiness Pass
 
@@ -67,13 +69,14 @@ Current known-good mobile checkpoint:
    - Completed: email confirmation links route correctly.
    - Code polish added: payment return page shows Decoy logo first and only reveals manual Refresh after a 5-second fallback delay.
    - Code polish added: password create/reset copy and client-side floors preserve the intended 10-character minimum.
+   - Code hardening added: subscription renewal push taps now navigate directly to Manage Subscription when the app is already unlocked, while preserving the cold-start fallback flag.
    - Remaining: push tap for subscription renewal opens the manage subscription flow.
 
 4a. UI polish notes
    - Current transition baseline before this pass: Auth Router to PIN used a 300ms fade. User rated current transition feel about 6/10 and wants easy revert if the polish feels worse.
    - Code polish added: password reset first field uses keyboard Next to focus the confirm field.
    - Code polish added: Auth Router to PIN keeps fade style but shortens the fade to reduce visible page overlap during app open.
-   - Follow-up code polish added: Auth Router to PIN now fades the router content to blank first, then fades in PIN, preserving the fade feel while preventing Bitcoin Wallet / PIN text overlap.
+   - Completed: Auth Router to PIN now fades the router content to blank first, then fades in PIN, preserving the fade feel while preventing Bitcoin Wallet / PIN text overlap.
 
 5. Emergency contact stale-state protection
    - Confirmed contacts receive alerts.
@@ -94,4 +97,4 @@ Current known-good mobile checkpoint:
 
 ## Current Next Item
 
-Deep links and return routes polish build.
+Push tap for subscription renewal opens the manage subscription flow.
