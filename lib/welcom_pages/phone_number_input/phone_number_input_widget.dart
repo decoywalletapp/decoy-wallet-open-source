@@ -413,17 +413,17 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                       ],
                                     ),
                                     Align(
-                                      alignment:
-                                          AlignmentDirectional(-1.0, 0.0),
+                                      alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Container(
-                                        width: 400.0,
+                                        width: 360.0,
                                         child: Wrap(
-                                          alignment: WrapAlignment.start,
+                                          alignment: WrapAlignment.center,
                                           spacing: 0.0,
                                           runSpacing: 2.0,
                                           children: [
                                             Text(
                                               'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See ',
+                                              textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodySmall
@@ -457,6 +457,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                               },
                                               child: Text(
                                                 'SMS Terms',
+                                                textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodySmall
@@ -483,6 +484,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                             ),
                                             Text(
                                               ' and ',
+                                              textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodySmall
@@ -516,6 +518,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                               },
                                               child: Text(
                                                 'Privacy Policy',
+                                                textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodySmall
@@ -542,6 +545,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                             ),
                                             Text(
                                               '.',
+                                              textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodySmall
@@ -760,6 +764,24 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                     );
 
                                     if ((_model.sendRes?.succeeded ?? true)) {
+                                      await UserConsentsTable().insert({
+                                        'user_id': currentUserUid,
+                                        'feature': 'sms_terms',
+                                        'consent_version':
+                                            'sms_terms_user_2026_05_09',
+                                        'checkboxes': {
+                                          'accepted_sms_terms': true,
+                                          'sms_terms_url':
+                                              'https://www.decoywalletapp.com/sms-terms',
+                                          'privacy_policy_url':
+                                              'https://www.decoywalletapp.com/privacy-policy',
+                                          'phone_e164_hash': _model.phoneHash,
+                                          'consent_text':
+                                              'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See SMS Terms and Privacy Policy.',
+                                        },
+                                        'created_at': supaSerialize<DateTime>(
+                                            getCurrentTimestamp),
+                                      });
                                       context.pushNamed(
                                         PhoneNumberVerificationWidget.routeName,
                                         queryParameters: {

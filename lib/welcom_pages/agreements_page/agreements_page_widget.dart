@@ -380,7 +380,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Terms of Use',
+                                                    'Terms of Service',
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -517,7 +517,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                             ),
                             Expanded(
                               child: Text(
-                                'I agree to the Terms of Use policy outlined by DECOY WALLET LLC',
+                                'I agree to the Terms of Service outlined by DECOY WALLET LLC',
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -573,7 +573,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                             ),
                             Expanded(
                               child: Text(
-                                'I agree to the Privacy policy outlined by DECOY WALLET LLC',
+                                'I agree to the Privacy Policy outlined by DECOY WALLET LLC',
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(

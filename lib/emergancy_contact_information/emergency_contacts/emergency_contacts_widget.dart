@@ -1882,13 +1882,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       'created_at':
                                                                           supaSerialize<DateTime>(
                                                                               getCurrentTimestamp),
-                                                                      'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                              (_model.c2PhoneTFTextController.text != '') ||
-                                                                              (_model.c3PhoneTFTextController.text != '') ||
-                                                                              (_model.c4PhoneTFTextController.text != '') ||
-                                                                              (_model.c5PhoneTFTextController.text != '')
-                                                                          ? true
-                                                                          : false,
+                                                                      'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                          _model
+                                                                              .c1Status,
+                                                                          _model
+                                                                              .c2Status,
+                                                                          _model
+                                                                              .c3Status,
+                                                                          _model
+                                                                              .c4Status,
+                                                                          _model
+                                                                              .c5Status),
                                                                     },
                                                                     matchingRows:
                                                                         (rows) =>
@@ -1932,13 +1936,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         1,
                                                                     'user_id':
                                                                         currentUserUid,
-                                                                    'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                            (_model.c2PhoneTFTextController.text != '') ||
-                                                                            (_model.c3PhoneTFTextController.text != '') ||
-                                                                            (_model.c4PhoneTFTextController.text != '') ||
-                                                                            (_model.c5PhoneTFTextController.text != '')
-                                                                        ? true
-                                                                        : false,
+                                                                    'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                        _model
+                                                                            .c1Status,
+                                                                        _model
+                                                                            .c2Status,
+                                                                        _model
+                                                                            .c3Status,
+                                                                        _model
+                                                                            .c4Status,
+                                                                        _model
+                                                                            .c5Status),
                                                                   });
                                                                   _model.decoyWalletRefresh2slot1 =
                                                                       await DecoyWalletTable()
@@ -3423,9 +3431,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                               1,
                                                                           'created_at':
                                                                               supaSerialize<DateTime>(getCurrentTimestamp),
-                                                                          'contacts_complete': (_model.c1PhoneTFTextController.text != '') || (_model.c2PhoneTFTextController.text != '') || (_model.c3PhoneTFTextController.text != '') || (_model.c4PhoneTFTextController.text != '') || (_model.c5PhoneTFTextController.text != '')
-                                                                              ? true
-                                                                              : false,
+                                                                          'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                              _model.c1Status,
+                                                                              _model.c2Status,
+                                                                              _model.c3Status,
+                                                                              _model.c4Status,
+                                                                              _model.c5Status),
                                                                         },
                                                                         matchingRows:
                                                                             (rows) =>
@@ -3466,13 +3477,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             1,
                                                                         'user_id':
                                                                             currentUserUid,
-                                                                        'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                                (_model.c2PhoneTFTextController.text != '') ||
-                                                                                (_model.c3PhoneTFTextController.text != '') ||
-                                                                                (_model.c4PhoneTFTextController.text != '') ||
-                                                                                (_model.c5PhoneTFTextController.text != '')
-                                                                            ? true
-                                                                            : false,
+                                                                        'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                            _model.c1Status,
+                                                                            _model.c2Status,
+                                                                            _model.c3Status,
+                                                                            _model.c4Status,
+                                                                            _model.c5Status),
                                                                       });
                                                                       _model.decoyWalletRefresh2slot22222 =
                                                                           await DecoyWalletTable()
@@ -4801,13 +4811,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             1,
                                                                         'created_at':
                                                                             supaSerialize<DateTime>(getCurrentTimestamp),
-                                                                        'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                                (_model.c2PhoneTFTextController.text != '') ||
-                                                                                (_model.c3PhoneTFTextController.text != '') ||
-                                                                                (_model.c4PhoneTFTextController.text != '') ||
-                                                                                (_model.c5PhoneTFTextController.text != '')
-                                                                            ? true
-                                                                            : false,
+                                                                        'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                            _model.c1Status,
+                                                                            _model.c2Status,
+                                                                            _model.c3Status,
+                                                                            _model.c4Status,
+                                                                            _model.c5Status),
                                                                       },
                                                                       matchingRows:
                                                                           (rows) =>
@@ -4852,13 +4861,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           1,
                                                                       'user_id':
                                                                           currentUserUid,
-                                                                      'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                              (_model.c2PhoneTFTextController.text != '') ||
-                                                                              (_model.c3PhoneTFTextController.text != '') ||
-                                                                              (_model.c4PhoneTFTextController.text != '') ||
-                                                                              (_model.c5PhoneTFTextController.text != '')
-                                                                          ? true
-                                                                          : false,
+                                                                      'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                          _model
+                                                                              .c1Status,
+                                                                          _model
+                                                                              .c2Status,
+                                                                          _model
+                                                                              .c3Status,
+                                                                          _model
+                                                                              .c4Status,
+                                                                          _model
+                                                                              .c5Status),
                                                                     });
                                                                     _model.decoyWalletRefresh2slot33333 =
                                                                         await DecoyWalletTable()
@@ -6200,13 +6213,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       'created_at':
                                                                           supaSerialize<DateTime>(
                                                                               getCurrentTimestamp),
-                                                                      'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                              (_model.c2PhoneTFTextController.text != '') ||
-                                                                              (_model.c3PhoneTFTextController.text != '') ||
-                                                                              (_model.c4PhoneTFTextController.text != '') ||
-                                                                              (_model.c5PhoneTFTextController.text != '')
-                                                                          ? true
-                                                                          : false,
+                                                                      'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                          _model
+                                                                              .c1Status,
+                                                                          _model
+                                                                              .c2Status,
+                                                                          _model
+                                                                              .c3Status,
+                                                                          _model
+                                                                              .c4Status,
+                                                                          _model
+                                                                              .c5Status),
                                                                     },
                                                                     matchingRows:
                                                                         (rows) =>
@@ -6250,13 +6267,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         1,
                                                                     'user_id':
                                                                         currentUserUid,
-                                                                    'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                            (_model.c2PhoneTFTextController.text != '') ||
-                                                                            (_model.c3PhoneTFTextController.text != '') ||
-                                                                            (_model.c4PhoneTFTextController.text != '') ||
-                                                                            (_model.c5PhoneTFTextController.text != '')
-                                                                        ? true
-                                                                        : false,
+                                                                    'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                        _model
+                                                                            .c1Status,
+                                                                        _model
+                                                                            .c2Status,
+                                                                        _model
+                                                                            .c3Status,
+                                                                        _model
+                                                                            .c4Status,
+                                                                        _model
+                                                                            .c5Status),
                                                                   });
                                                                   _model.decoyWalletRefresh2slot4444 =
                                                                       await DecoyWalletTable()
@@ -7586,13 +7607,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       'created_at':
                                                                           supaSerialize<DateTime>(
                                                                               getCurrentTimestamp),
-                                                                      'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                              (_model.c2PhoneTFTextController.text != '') ||
-                                                                              (_model.c3PhoneTFTextController.text != '') ||
-                                                                              (_model.c4PhoneTFTextController.text != '') ||
-                                                                              (_model.c5PhoneTFTextController.text != '')
-                                                                          ? true
-                                                                          : false,
+                                                                      'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                          _model
+                                                                              .c1Status,
+                                                                          _model
+                                                                              .c2Status,
+                                                                          _model
+                                                                              .c3Status,
+                                                                          _model
+                                                                              .c4Status,
+                                                                          _model
+                                                                              .c5Status),
                                                                     },
                                                                     matchingRows:
                                                                         (rows) =>
@@ -7636,13 +7661,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         1,
                                                                     'user_id':
                                                                         currentUserUid,
-                                                                    'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                                            (_model.c2PhoneTFTextController.text != '') ||
-                                                                            (_model.c3PhoneTFTextController.text != '') ||
-                                                                            (_model.c4PhoneTFTextController.text != '') ||
-                                                                            (_model.c5PhoneTFTextController.text != '')
-                                                                        ? true
-                                                                        : false,
+                                                                    'contacts_complete': functions.hasConfirmedEmergencyContact(
+                                                                        _model
+                                                                            .c1Status,
+                                                                        _model
+                                                                            .c2Status,
+                                                                        _model
+                                                                            .c3Status,
+                                                                        _model
+                                                                            .c4Status,
+                                                                        _model
+                                                                            .c5Status),
                                                                   });
                                                                   _model.decoyWalletRefresh2slot5555 =
                                                                       await DecoyWalletTable()
@@ -8088,21 +8117,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     'created_at': supaSerialize<
                                                             DateTime>(
                                                         getCurrentTimestamp),
-                                                    'contacts_complete': (_model.c1PhoneTFTextController.text != '') ||
-                                                            (_model.c2PhoneTFTextController
-                                                                        .text !=
-                                                                    '') ||
-                                                            (_model.c3PhoneTFTextController
-                                                                        .text !=
-                                                                    '') ||
-                                                            (_model.c4PhoneTFTextController
-                                                                        .text !=
-                                                                    '') ||
-                                                            (_model.c5PhoneTFTextController
-                                                                        .text !=
-                                                                    '')
-                                                        ? true
-                                                        : false,
+                                                    'contacts_complete': functions
+                                                        .hasConfirmedEmergencyContact(
+                                                            _model.c1Status,
+                                                            _model.c2Status,
+                                                            _model.c3Status,
+                                                            _model.c4Status,
+                                                            _model.c5Status),
                                                   },
                                                   matchingRows: (rows) =>
                                                       rows.eqOrNull(
@@ -8137,26 +8158,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model.nonceB64,
                                                   'contacts_version': 1,
                                                   'user_id': currentUserUid,
-                                                  'contacts_complete': (_model
-                                                                      .c1PhoneTFTextController
-                                                                      .text !=
-                                                                  '') ||
-                                                          (_model
-                                                                      .c2PhoneTFTextController
-                                                                      .text !=
-                                                                  '') ||
-                                                          (_model
-                                                                      .c3PhoneTFTextController
-                                                                      .text !=
-                                                                  '') ||
-                                                          (_model.c4PhoneTFTextController
-                                                                      .text !=
-                                                                  '') ||
-                                                          (_model.c5PhoneTFTextController
-                                                                      .text !=
-                                                                  '')
-                                                      ? true
-                                                      : false,
+                                                  'contacts_complete': functions
+                                                      .hasConfirmedEmergencyContact(
+                                                    _model.c1Status,
+                                                    _model.c2Status,
+                                                    _model.c3Status,
+                                                    _model.c4Status,
+                                                    _model.c5Status,
+                                                  ),
                                                 });
                                                 _model.decoyWalletRefresh2 =
                                                     await DecoyWalletTable()

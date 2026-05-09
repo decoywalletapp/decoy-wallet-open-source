@@ -553,6 +553,23 @@ int computeEmergencyPercent(
   return ((count / 3.0) * 100).round();
 }
 
+bool hasConfirmedEmergencyContact(
+  String? slot1Status,
+  String? slot2Status,
+  String? slot3Status,
+  String? slot4Status,
+  String? slot5Status,
+) {
+  bool isConfirmed(String? status) =>
+      (status ?? '').trim().toLowerCase() == 'confirmed';
+
+  return isConfirmed(slot1Status) ||
+      isConfirmed(slot2Status) ||
+      isConfirmed(slot3Status) ||
+      isConfirmed(slot4Status) ||
+      isConfirmed(slot5Status);
+}
+
 String btcToUsdDisplay(
   String btcText,
   double btcUsdPrice,
@@ -632,8 +649,7 @@ bool isEntitlementUsableForProtection(
   }
 
   final provider = (pendingProvider ?? '').trim().toLowerCase();
-  final hasPaidPendingProvider =
-      provider == 'stripe' || provider == 'btcpay';
+  final hasPaidPendingProvider = provider == 'stripe' || provider == 'btcpay';
   final hasPendingStart = pendingStartsAt != null;
   final hasPendingSubscription =
       (pendingProviderSubscriptionId ?? '').trim().isNotEmpty;

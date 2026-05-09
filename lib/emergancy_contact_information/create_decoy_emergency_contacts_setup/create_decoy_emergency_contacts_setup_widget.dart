@@ -1,4 +1,5 @@
 import '/auth/supabase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -47,6 +48,37 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       safeSetState(() {});
+      _model.consentStatusesResp = await GetConsentStatusesCall.call(
+        jwt: currentJwtToken,
+      );
+      if ((_model.consentStatusesResp?.succeeded ?? false)) {
+        await DecoyWalletTable().update(
+          data: {
+            'contacts_complete': functions.hasConfirmedEmergencyContact(
+              GetConsentStatusesCall.slot1Status(
+                (_model.consentStatusesResp?.jsonBody ?? ''),
+              )?.toString(),
+              GetConsentStatusesCall.slot2Status(
+                (_model.consentStatusesResp?.jsonBody ?? ''),
+              )?.toString(),
+              GetConsentStatusesCall.slot3Status(
+                (_model.consentStatusesResp?.jsonBody ?? ''),
+              )?.toString(),
+              GetConsentStatusesCall.slot4Status(
+                (_model.consentStatusesResp?.jsonBody ?? ''),
+              )?.toString(),
+              GetConsentStatusesCall.slot5Status(
+                (_model.consentStatusesResp?.jsonBody ?? ''),
+              )?.toString(),
+            ),
+            'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          },
+          matchingRows: (rows) => rows.eqOrNull(
+            'user_id',
+            currentUserUid,
+          ),
+        );
+      }
       _model.numberQue = await DecoyWalletTable().queryRows(
         queryFn: (q) => q.eqOrNull(
           'user_id',

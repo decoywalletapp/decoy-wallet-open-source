@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -25,6 +26,9 @@ class CreateDecoyEmergencyContactsSetupModel
 
   // Stores action output result for [Backend Call - Query Rows] action in CreateDecoyEmergencyContactsSetup widget.
   List<DecoyWalletRow>? numberQue;
+
+  // Stores action output result for [Backend Call - API (GetConsentStatuses)] action in CreateDecoyEmergencyContactsSetup widget.
+  ApiCallResponse? consentStatusesResp;
 
   @override
   void initState(BuildContext context) {}
