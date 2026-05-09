@@ -1,6 +1,6 @@
 # Decoy Wallet Release Readiness Checklist
 
-Last updated: 2026-05-08
+Last updated: 2026-05-09
 
 Current known-good mobile checkpoint:
 
@@ -79,6 +79,7 @@ Current known-good mobile checkpoint:
    - Code polish added: password reset first field uses keyboard Next to focus the confirm field.
    - Code polish added: Auth Router to PIN keeps fade style but shortens the fade to reduce visible page overlap during app open.
    - Completed: Auth Router to PIN now fades the router content to blank first, then fades in PIN, preserving the fade feel while preventing Bitcoin Wallet / PIN text overlap.
+   - Code hardening added: app-level display guard prevents iOS Bold Text and enlarged system text size from resizing fixed Decoy Wallet layouts.
 
 5. Emergency contact stale-state protection
    - Confirmed contacts receive alerts.
@@ -115,6 +116,11 @@ Current known-good mobile checkpoint:
    - Code polish added: Decoy PIN and Decoy Seed acknowledgement final checkboxes now use readiness-focused wording instead of broad delivery-disclaimer wording.
    - Remaining: TestFlight display check for onboarding Terms/Privacy tab switching, scroll behavior, checkbox/Continue behavior, and Settings legal page navigation.
 
+9. Display accessibility stress test
+   - Code hardening added: Decoy Wallet now opts out of app-wide iOS Bold Text and Dynamic Type scaling to protect fixed graphic layouts for release.
+   - Remaining: TestFlight check with iOS Settings > Display & Brightness > Bold Text enabled and large Text Size enabled.
+   - Remaining: spot-check Choose Method, locked home, setup checklist, Emergency Contacts, Control Center, Settings, location permission, and Agreements pages.
+
 ## Current Next Item
 
-Legal documents TestFlight display check.
+Display accessibility stress test.

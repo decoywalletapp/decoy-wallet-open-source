@@ -59,6 +59,27 @@ class MyAppScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
+class _DecoyDisplayGuard extends StatelessWidget {
+  const _DecoyDisplayGuard({
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
+    return MediaQuery(
+      data: mediaQuery.copyWith(
+        boldText: false,
+        textScaler: TextScaler.noScaling,
+      ),
+      child: child,
+    );
+  }
+}
+
 class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.system;
 
@@ -118,6 +139,9 @@ class _MyAppState extends State<MyApp> {
       ),
       themeMode: _themeMode,
       routerConfig: _router,
+      builder: (context, child) => _DecoyDisplayGuard(
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }
