@@ -205,7 +205,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         _model.emailAddressLoginTextController,
                                     focusNode:
                                         _model.emailAddressLoginFocusNode,
-                                    autofocus: true,
+                                    autofocus: false,
                                     enabled: true,
                                     autofillHints: [AutofillHints.email],
                                     textInputAction: TextInputAction.next,
@@ -279,7 +279,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     controller:
                                         _model.passwordLoginTextController,
                                     focusNode: _model.passwordLoginFocusNode,
-                                    autofocus: true,
+                                    autofocus: false,
                                     enabled: true,
                                     autofillHints: [AutofillHints.password],
                                     textInputAction: TextInputAction.done,

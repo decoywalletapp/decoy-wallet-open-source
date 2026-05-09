@@ -17,18 +17,24 @@ echo "It does not touch emergency alerts, payments, entitlements, backend code, 
 
 git diff --check -- \
   codex_release_readiness_checklist.md \
+  lib/home_pages/home_page/home_page_widget.dart \
   lib/main.dart \
+  lib/welcom_pages/create_account/create_account_widget.dart \
+  lib/welcom_pages/login_page/login_page_widget.dart \
   decoy-publish-display-text-stability-build.command
 
 git add \
   codex_release_readiness_checklist.md \
+  lib/home_pages/home_page/home_page_widget.dart \
   lib/main.dart \
+  lib/welcom_pages/create_account/create_account_widget.dart \
+  lib/welcom_pages/login_page/login_page_widget.dart \
   decoy-publish-display-text-stability-build.command
 
 if git diff --cached --quiet; then
   echo "No staged display-stability changes found; using existing HEAD."
 else
-  git commit -m "fix: stabilize app text scaling"
+  git commit -m "fix: stabilize app display text"
 fi
 
 HEAD_SHA="$(git rev-parse HEAD)"

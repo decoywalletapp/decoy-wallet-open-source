@@ -118,6 +118,8 @@ Current known-good mobile checkpoint:
 
 9. Display accessibility stress test
    - Code hardening added: Decoy Wallet now opts out of app-wide iOS Bold Text and Dynamic Type scaling to protect fixed graphic layouts for release.
+   - Code polish added: Home page Decoy Contacts tile now uses one centered label instead of offset duplicate text.
+   - Code polish added: Login and Create Account pages no longer auto-focus the first text field on page load, so the keyboard does not cover the initial page content.
    - Remaining: TestFlight check with iOS Settings > Display & Brightness > Bold Text enabled and large Text Size enabled.
    - Remaining: spot-check Choose Method, locked home, setup checklist, Emergency Contacts, Control Center, Settings, location permission, and Agreements pages.
 

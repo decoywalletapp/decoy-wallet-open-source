@@ -270,7 +270,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               focusNode: focusNode,
                                               onEditingComplete:
                                                   onEditingComplete,
-                                              autofocus: true,
+                                              autofocus: false,
                                               enabled: true,
                                               autofillHints: [
                                                 AutofillHints.email
@@ -451,7 +451,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               focusNode: focusNode,
                                               onEditingComplete:
                                                   onEditingComplete,
-                                              autofocus: true,
+                                              autofocus: false,
                                               enabled: true,
                                               autofillHints: [
                                                 AutofillHints.password
@@ -643,7 +643,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               focusNode: focusNode,
                                               onEditingComplete:
                                                   onEditingComplete,
-                                              autofocus: true,
+                                              autofocus: false,
                                               autofillHints: [
                                                 AutofillHints.password
                                               ],
