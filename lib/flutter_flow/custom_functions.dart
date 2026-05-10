@@ -560,14 +560,118 @@ bool hasConfirmedEmergencyContact(
   String? slot4Status,
   String? slot5Status,
 ) {
-  bool isConfirmed(String? status) =>
-      (status ?? '').trim().toLowerCase() == 'confirmed';
+  bool isConfirmed(String? status) {
+    final normalized =
+        (status ?? '').trim().toLowerCase().replaceAll(RegExp(r'[\s-]+'), '_');
+    return normalized == 'confirmed' ||
+        normalized == 'confirm' ||
+        normalized == 'accepted' ||
+        normalized == 'approved' ||
+        normalized == 'active' ||
+        normalized == 'consented' ||
+        normalized == 'yes';
+  }
 
   return isConfirmed(slot1Status) ||
       isConfirmed(slot2Status) ||
       isConfirmed(slot3Status) ||
       isConfirmed(slot4Status) ||
       isConfirmed(slot5Status);
+}
+
+String emergencyContactStatusLabel(String? status) {
+  final normalized =
+      (status ?? '').trim().toLowerCase().replaceAll(RegExp(r'[\s-]+'), '_');
+  if (normalized == 'confirmed' ||
+      normalized == 'confirm' ||
+      normalized == 'accepted' ||
+      normalized == 'approved' ||
+      normalized == 'active' ||
+      normalized == 'consented' ||
+      normalized == 'yes') {
+    return 'Confirmed';
+  }
+  if (normalized == 'pending') return 'Pending';
+  if (normalized == 'denied' || normalized == 'no') return 'Denied';
+  if (normalized == 'opted_out' || normalized == 'stopped') return 'Opted out';
+  return 'Not sent';
+}
+
+dynamic applyConsentStatusesToContactsPayload(
+  dynamic contactsPayload,
+  String? slot1Status,
+  String? slot2Status,
+  String? slot3Status,
+  String? slot4Status,
+  String? slot5Status,
+) {
+  final statusesBySlot = <int, String?>{
+    1: slot1Status,
+    2: slot2Status,
+    3: slot3Status,
+    4: slot4Status,
+    5: slot5Status,
+  };
+
+  String normalizeStatus(String? status) {
+    final normalized =
+        (status ?? '').trim().toLowerCase().replaceAll(RegExp(r'[\s-]+'), '_');
+    if (normalized == 'confirmed' ||
+        normalized == 'confirm' ||
+        normalized == 'accepted' ||
+        normalized == 'approved' ||
+        normalized == 'active' ||
+        normalized == 'consented' ||
+        normalized == 'yes') {
+      return 'confirmed';
+    }
+    if (normalized == 'pending') return 'pending';
+    if (normalized == 'denied' || normalized == 'no') return 'denied';
+    if (normalized == 'opted_out' || normalized == 'stopped') {
+      return 'opted_out';
+    }
+    return 'not_sent';
+  }
+
+  dynamic clonePayload(dynamic value) {
+    if (value is String) {
+      try {
+        return jsonDecode(value);
+      } catch (_) {
+        return value;
+      }
+    }
+    return jsonDecode(jsonEncode(value));
+  }
+
+  int? contactSlot(dynamic contact) {
+    if (contact is! Map) return null;
+    final raw = contact['slot'] ?? contact['contact_slot'];
+    if (raw is int) return raw;
+    if (raw is num) return raw.toInt();
+    return int.tryParse(raw?.toString() ?? '');
+  }
+
+  final cloned = clonePayload(contactsPayload);
+
+  List<dynamic>? contacts;
+  if (cloned is Map && cloned['contacts'] is List) {
+    contacts = cloned['contacts'] as List<dynamic>;
+  } else if (cloned is List) {
+    contacts = cloned;
+  }
+
+  if (contacts == null) return contactsPayload;
+
+  for (final contact in contacts) {
+    if (contact is! Map) continue;
+    final slot = contactSlot(contact);
+    if (slot == null || !statusesBySlot.containsKey(slot)) continue;
+    final status = normalizeStatus(statusesBySlot[slot]);
+    contact['consent_status'] = status;
+  }
+
+  return cloned;
 }
 
 String btcToUsdDisplay(
@@ -708,12 +812,20 @@ List<dynamic> buildConsentSlotsListFINAL(
   }
 
   String normalizeStatus(String value) {
-    final v = value.trim();
+    final v = value.trim().toLowerCase().replaceAll(RegExp(r'[\s-]+'), '_');
 
-    if (v == 'Confirmed') return 'Confirmed';
-    if (v == 'Pending') return 'Pending';
-    if (v == 'Denied') return 'Denied';
-    if (v == 'Opted out') return 'Opted out';
+    if (v == 'confirmed' ||
+        v == 'confirm' ||
+        v == 'accepted' ||
+        v == 'approved' ||
+        v == 'active' ||
+        v == 'consented' ||
+        v == 'yes') {
+      return 'Confirmed';
+    }
+    if (v == 'pending') return 'Pending';
+    if (v == 'denied' || v == 'no') return 'Denied';
+    if (v == 'opted_out' || v == 'stopped') return 'Opted out';
 
     return 'Not sent';
   }

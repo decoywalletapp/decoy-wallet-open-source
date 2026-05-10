@@ -1479,6 +1479,83 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           .personalNonce!,
                                                       _model.dataKeyB64!,
                                                     );
+                                                    var liveContactsComplete = _model
+                                                            .walletRow
+                                                            ?.elementAtOrNull(0)
+                                                            ?.contactsComplete ==
+                                                        true;
+                                                    final liveConsentStatusesResp =
+                                                        await GetConsentStatusesCall
+                                                            .call(
+                                                      jwt: currentJwtToken,
+                                                    );
+                                                    if (liveConsentStatusesResp
+                                                        .succeeded) {
+                                                      final slot1Status =
+                                                          GetConsentStatusesCall
+                                                              .slot1Status(
+                                                        liveConsentStatusesResp
+                                                            .jsonBody,
+                                                      )?.toString();
+                                                      final slot2Status =
+                                                          GetConsentStatusesCall
+                                                              .slot2Status(
+                                                        liveConsentStatusesResp
+                                                            .jsonBody,
+                                                      )?.toString();
+                                                      final slot3Status =
+                                                          GetConsentStatusesCall
+                                                              .slot3Status(
+                                                        liveConsentStatusesResp
+                                                            .jsonBody,
+                                                      )?.toString();
+                                                      final slot4Status =
+                                                          GetConsentStatusesCall
+                                                              .slot4Status(
+                                                        liveConsentStatusesResp
+                                                            .jsonBody,
+                                                      )?.toString();
+                                                      final slot5Status =
+                                                          GetConsentStatusesCall
+                                                              .slot5Status(
+                                                        liveConsentStatusesResp
+                                                            .jsonBody,
+                                                      )?.toString();
+                                                      liveContactsComplete =
+                                                          functions
+                                                              .hasConfirmedEmergencyContact(
+                                                        slot1Status,
+                                                        slot2Status,
+                                                        slot3Status,
+                                                        slot4Status,
+                                                        slot5Status,
+                                                      );
+                                                      _model.contactObj = functions
+                                                          .applyConsentStatusesToContactsPayload(
+                                                        _model.contactObj,
+                                                        slot1Status,
+                                                        slot2Status,
+                                                        slot3Status,
+                                                        slot4Status,
+                                                        slot5Status,
+                                                      );
+                                                      await DecoyWalletTable()
+                                                          .update(
+                                                        data: {
+                                                          'contacts_complete':
+                                                              liveContactsComplete,
+                                                          'updated_at':
+                                                              supaSerialize<
+                                                                      DateTime>(
+                                                                  getCurrentTimestamp),
+                                                        },
+                                                        matchingRows: (rows) =>
+                                                            rows.eqOrNull(
+                                                          'user_id',
+                                                          currentUserUid,
+                                                        ),
+                                                      );
+                                                    }
                                                     if (FFAppState()
                                                             .hasActiveSubscription ==
                                                         false) {
@@ -1542,10 +1619,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         if (FFAppState()
                                                                 .hasActiveSubscription ==
                                                             true) {
-                                                          if (_model.walletRow
-                                                                  ?.elementAtOrNull(
-                                                                      0)
-                                                                  ?.contactsComplete ==
+                                                          if (liveContactsComplete ==
                                                               true) {
                                                             unawaited(
                                                               () async {

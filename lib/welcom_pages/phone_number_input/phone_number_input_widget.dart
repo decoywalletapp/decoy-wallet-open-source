@@ -422,7 +422,30 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                           runSpacing: 2.0,
                                           children: [
                                             Text(
-                                              'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See ',
+                                              'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts.\nMessage frequency varies. Msg & data rates may apply.\nReply STOP to opt out. Reply HELP for help.',
+                                              textAlign: TextAlign.center,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodySmall
+                                                  .override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodySmallFamily,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryText,
+                                                    fontSize: 11.5,
+                                                    letterSpacing: 0.0,
+                                                    lineHeight: 1.35,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodySmallIsCustom,
+                                                  ),
+                                            ),
+                                            Text(
+                                              'See ',
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)

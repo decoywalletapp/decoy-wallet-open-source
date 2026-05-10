@@ -51,21 +51,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       );
 
       if ((_model.topConsentResp?.succeeded ?? true)) {
-        _model.c1Status = GetConsentStatusesCall.slot1Status(
+        _model.c1Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot1Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c2Status = GetConsentStatusesCall.slot2Status(
+        )?.toString());
+        _model.c2Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot2Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c3Status = GetConsentStatusesCall.slot3Status(
+        )?.toString());
+        _model.c3Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot3Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c4Status = GetConsentStatusesCall.slot4Status(
+        )?.toString());
+        _model.c4Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot4Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-        ).toString();
-        _model.c5Status = GetConsentStatusesCall.slot5Status(
+        )?.toString());
+        _model.c5Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot5Status(
           (_model.topConsentResp?.jsonBody ?? ''),
-        ).toString();
+        )?.toString());
         safeSetState(() {});
       }
       _model.rows = await DecoyWalletTable().queryRows(

@@ -34,75 +34,99 @@ class CreateDecoyEmergencyContactsSetupWidget extends StatefulWidget {
 }
 
 class _CreateDecoyEmergencyContactsSetupWidgetState
-    extends State<CreateDecoyEmergencyContactsSetupWidget> {
+    extends State<CreateDecoyEmergencyContactsSetupWidget>
+    with WidgetsBindingObserver {
   late CreateDecoyEmergencyContactsSetupModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Future<void> _refreshCompletionState() async {
+    _model.consentStatusesResp = await GetConsentStatusesCall.call(
+      jwt: currentJwtToken,
+    );
+    if ((_model.consentStatusesResp?.succeeded ?? false)) {
+      await DecoyWalletTable().update(
+        data: {
+          'contacts_complete': functions.hasConfirmedEmergencyContact(
+            GetConsentStatusesCall.slot1Status(
+              (_model.consentStatusesResp?.jsonBody ?? ''),
+            )?.toString(),
+            GetConsentStatusesCall.slot2Status(
+              (_model.consentStatusesResp?.jsonBody ?? ''),
+            )?.toString(),
+            GetConsentStatusesCall.slot3Status(
+              (_model.consentStatusesResp?.jsonBody ?? ''),
+            )?.toString(),
+            GetConsentStatusesCall.slot4Status(
+              (_model.consentStatusesResp?.jsonBody ?? ''),
+            )?.toString(),
+            GetConsentStatusesCall.slot5Status(
+              (_model.consentStatusesResp?.jsonBody ?? ''),
+            )?.toString(),
+          ),
+          'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
+        },
+        matchingRows: (rows) => rows.eqOrNull(
+          'user_id',
+          currentUserUid,
+        ),
+      );
+    }
+
+    _model.numberQue = await DecoyWalletTable().queryRows(
+      queryFn: (q) => q.eqOrNull(
+        'user_id',
+        currentUserUid,
+      ),
+    );
+    final walletRow = _model.numberQue?.elementAtOrNull(0);
+    if (walletRow != null) {
+      _model.personalDone = walletRow.personalComplete ?? false;
+      _model.addressDone = walletRow.addressComplete ?? false;
+      _model.contactsDone = walletRow.contactsComplete ?? false;
+    }
+    _model.progressValue = functions.computeEmergencyProgress(
+      _model.personalDone,
+      _model.addressDone,
+      _model.contactsDone,
+    );
+    _model.progressPercent = functions.computeEmergencyPercent(
+      _model.personalDone,
+      _model.addressDone,
+      _model.contactsDone,
+    );
+    if (mounted) {
+      safeSetState(() {});
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _model =
         createModel(context, () => CreateDecoyEmergencyContactsSetupModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       safeSetState(() {});
-      _model.consentStatusesResp = await GetConsentStatusesCall.call(
-        jwt: currentJwtToken,
-      );
-      if ((_model.consentStatusesResp?.succeeded ?? false)) {
-        await DecoyWalletTable().update(
-          data: {
-            'contacts_complete': functions.hasConfirmedEmergencyContact(
-              GetConsentStatusesCall.slot1Status(
-                (_model.consentStatusesResp?.jsonBody ?? ''),
-              )?.toString(),
-              GetConsentStatusesCall.slot2Status(
-                (_model.consentStatusesResp?.jsonBody ?? ''),
-              )?.toString(),
-              GetConsentStatusesCall.slot3Status(
-                (_model.consentStatusesResp?.jsonBody ?? ''),
-              )?.toString(),
-              GetConsentStatusesCall.slot4Status(
-                (_model.consentStatusesResp?.jsonBody ?? ''),
-              )?.toString(),
-              GetConsentStatusesCall.slot5Status(
-                (_model.consentStatusesResp?.jsonBody ?? ''),
-              )?.toString(),
-            ),
-            'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
-          },
-          matchingRows: (rows) => rows.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-      }
-      _model.numberQue = await DecoyWalletTable().queryRows(
-        queryFn: (q) => q.eqOrNull(
-          'user_id',
-          currentUserUid,
-        ),
-      );
-      _model.personalDone =
-          _model.numberQue!.elementAtOrNull(0)!.personalComplete!;
-      _model.addressDone =
-          _model.numberQue!.elementAtOrNull(0)!.addressComplete!;
-      _model.contactsDone =
-          _model.numberQue!.elementAtOrNull(0)!.contactsComplete!;
-      safeSetState(() {});
-      _model.progressValue = _model.completedCount / 3;
-      safeSetState(() {});
-      _model.progressPercent = ((_model.progressValue!) * 100).round();
-      safeSetState(() {});
+      await _refreshCompletionState();
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      _refreshCompletionState();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _model.dispose();
 
     super.dispose();
@@ -137,6 +161,21 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
             createDecoyEmergencyContactsSetupDecoyWalletRowList.isNotEmpty
                 ? createDecoyEmergencyContactsSetupDecoyWalletRowList.first
                 : null;
+        final personalComplete = _model.numberQue != null
+            ? _model.personalDone
+            : createDecoyEmergencyContactsSetupDecoyWalletRow
+                    ?.personalComplete ??
+                false;
+        final addressComplete = _model.numberQue != null
+            ? _model.addressDone
+            : createDecoyEmergencyContactsSetupDecoyWalletRow
+                    ?.addressComplete ??
+                false;
+        final contactsComplete = _model.numberQue != null
+            ? _model.contactsDone
+            : createDecoyEmergencyContactsSetupDecoyWalletRow
+                    ?.contactsComplete ??
+                false;
 
         return GestureDetector(
           onTap: () {
@@ -395,9 +434,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                     BorderRadius.circular(16.0),
                                                 border: Border.all(
                                                   color: valueOrDefault<Color>(
-                                                    createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                ?.personalComplete ==
-                                                            true
+                                                    personalComplete == true
                                                         ? Color(0xFF0CD40B)
                                                         : FlutterFlowTheme.of(
                                                                 context)
@@ -528,9 +565,10 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: FFButtonWidget(
                                               onPressed: () async {
-                                                context.pushNamed(
+                                                await context.pushNamed(
                                                     PersonalInformationWidget
                                                         .routeName);
+                                                await _refreshCompletionState();
                                               },
                                               text: '',
                                               options: FFButtonOptions(
@@ -567,9 +605,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(
                                                   color: valueOrDefault<Color>(
-                                                    createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                ?.personalComplete ==
-                                                            true
+                                                    personalComplete == true
                                                         ? Color(0xFF0CD40B)
                                                         : FlutterFlowTheme.of(
                                                                 context)
@@ -620,9 +656,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                     BorderRadius.circular(16.0),
                                                 border: Border.all(
                                                   color: valueOrDefault<Color>(
-                                                    createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                ?.addressComplete ==
-                                                            true
+                                                    addressComplete == true
                                                         ? Color(0xFF0CD40B)
                                                         : FlutterFlowTheme.of(
                                                                 context)
@@ -759,9 +793,10 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: FFButtonWidget(
                                               onPressed: () async {
-                                                context.pushNamed(
+                                                await context.pushNamed(
                                                     HomeAddressEntryPageWidget
                                                         .routeName);
+                                                await _refreshCompletionState();
                                               },
                                               text: '',
                                               options: FFButtonOptions(
@@ -795,9 +830,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(
                                                   color: valueOrDefault<Color>(
-                                                    createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                ?.addressComplete ==
-                                                            true
+                                                    addressComplete == true
                                                         ? Color(0xFF0CD40B)
                                                         : FlutterFlowTheme.of(
                                                                 context)
@@ -848,9 +881,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                     BorderRadius.circular(16.0),
                                                 border: Border.all(
                                                   color: valueOrDefault<Color>(
-                                                    createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                ?.contactsComplete ==
-                                                            true
+                                                    contactsComplete == true
                                                         ? Color(0xFF0CD40B)
                                                         : FlutterFlowTheme.of(
                                                                 context)
@@ -983,9 +1014,10 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: FFButtonWidget(
                                               onPressed: () async {
-                                                context.pushNamed(
+                                                await context.pushNamed(
                                                     EmergencyContactsWidget
                                                         .routeName);
+                                                await _refreshCompletionState();
                                               },
                                               text: '',
                                               options: FFButtonOptions(
@@ -1019,9 +1051,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(
                                                   color: valueOrDefault<Color>(
-                                                    createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                ?.contactsComplete ==
-                                                            true
+                                                    contactsComplete == true
                                                         ? Color(0xFF0CD40B)
                                                         : FlutterFlowTheme.of(
                                                                 context)
@@ -1135,9 +1165,9 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       child:
                                                                           LinearPercentIndicator(
                                                                         percent: functions.computeEmergencyProgress(
-                                                                            createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete,
-                                                                            createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete,
-                                                                            createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete),
+                                                                            personalComplete,
+                                                                            addressComplete,
+                                                                            contactsComplete),
                                                                         width:
                                                                             325.0,
                                                                         lineHeight:
@@ -1146,7 +1176,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                             true,
                                                                         animateFromLastPercent:
                                                                             true,
-                                                                        progressColor: functions.computeEmergencyPercent(createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete, createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete) ==
+                                                                        progressColor: functions.computeEmergencyPercent(personalComplete, addressComplete, contactsComplete) ==
                                                                                 100
                                                                             ? Color(0xFF0CD40B)
                                                                             : FlutterFlowTheme.of(context).primary,
@@ -1177,7 +1207,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                               Border.all(
                                                                             color:
                                                                                 valueOrDefault<Color>(
-                                                                              (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete == true) && (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true) ? Color(0xFF0CD40B) : FlutterFlowTheme.of(context).primary,
+                                                                              (personalComplete == true) && (addressComplete == true) && (contactsComplete == true) ? Color(0xFF0CD40B) : FlutterFlowTheme.of(context).primary,
                                                                               FlutterFlowTheme.of(context).primary,
                                                                             ),
                                                                             width:
@@ -1216,12 +1246,9 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                               child: Text(
                                                                 functions
                                                                     .computeEmergencyPercent(
-                                                                        createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                            ?.personalComplete,
-                                                                        createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                            ?.addressComplete,
-                                                                        createDecoyEmergencyContactsSetupDecoyWalletRow
-                                                                            ?.contactsComplete)
+                                                                        personalComplete,
+                                                                        addressComplete,
+                                                                        contactsComplete)
                                                                     .toString(),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
@@ -1232,9 +1259,9 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                               .bodyMediumFamily,
                                                                       color: valueOrDefault<
                                                                           Color>(
-                                                                        (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
-                                                                                (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete == true) &&
-                                                                                (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true)
+                                                                        (personalComplete == true) &&
+                                                                                (addressComplete == true) &&
+                                                                                (contactsComplete == true)
                                                                             ? Color(0xFF0CD40B)
                                                                             : FlutterFlowTheme.of(context).primaryText,
                                                                         FlutterFlowTheme.of(context)
@@ -1268,9 +1295,9 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                               .bodyMediumFamily,
                                                                       color: valueOrDefault<
                                                                           Color>(
-                                                                        (createDecoyEmergencyContactsSetupDecoyWalletRow?.personalComplete == true) &&
-                                                                                (createDecoyEmergencyContactsSetupDecoyWalletRow?.addressComplete == true) &&
-                                                                                (createDecoyEmergencyContactsSetupDecoyWalletRow?.contactsComplete == true)
+                                                                        (personalComplete == true) &&
+                                                                                (addressComplete == true) &&
+                                                                                (contactsComplete == true)
                                                                             ? Color(0xFF0CD40B)
                                                                             : FlutterFlowTheme.of(context).primaryText,
                                                                         FlutterFlowTheme.of(context)
