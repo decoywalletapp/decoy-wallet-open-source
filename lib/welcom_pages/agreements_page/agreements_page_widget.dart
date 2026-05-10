@@ -6,6 +6,7 @@ import '/index.dart';
 import '/legal/legal_document_view.dart';
 import '/legal/legal_documents.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,11 +41,21 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
   late AgreementsPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late final TapGestureRecognizer _termsLinkRecognizer;
+  late final TapGestureRecognizer _privacyLinkRecognizer;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => AgreementsPageModel());
+    _termsLinkRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        launchURL('https://www.decoywalletapp.com/terms-of-use');
+      };
+    _privacyLinkRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        launchURL('https://www.decoywalletapp.com/privacy-policy');
+      };
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -57,6 +68,8 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
 
   @override
   void dispose() {
+    _termsLinkRecognizer.dispose();
+    _privacyLinkRecognizer.dispose();
     _model.dispose();
 
     super.dispose();
@@ -516,21 +529,40 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                               ),
                             ),
                             Expanded(
-                              child: Text(
-                                'I agree to the Terms of Service outlined by DECOY WALLET LLC',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      lineHeight: 1.4,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
+                              child: RichText(
+                                textScaler: MediaQuery.of(context).textScaler,
+                                text: TextSpan(
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        lineHeight: 1.4,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                  children: [
+                                    TextSpan(
+                                      text: 'I agree to the ',
                                     ),
+                                    TextSpan(
+                                      text: 'Terms of Service',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: _termsLinkRecognizer,
+                                    ),
+                                    TextSpan(
+                                      text: ' outlined by DECOY WALLET LLC',
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ].divide(SizedBox(width: 12.0)),
@@ -572,21 +604,40 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                               ),
                             ),
                             Expanded(
-                              child: Text(
-                                'I agree to the Privacy Policy outlined by DECOY WALLET LLC',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                      lineHeight: 1.4,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .bodyMediumIsCustom,
+                              child: RichText(
+                                textScaler: MediaQuery.of(context).textScaler,
+                                text: TextSpan(
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                        lineHeight: 1.4,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodyMediumIsCustom,
+                                      ),
+                                  children: [
+                                    TextSpan(
+                                      text: 'I agree to the ',
                                     ),
+                                    TextSpan(
+                                      text: 'Privacy Policy',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: _privacyLinkRecognizer,
+                                    ),
+                                    TextSpan(
+                                      text: ' outlined by DECOY WALLET LLC',
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ].divide(SizedBox(width: 12.0)),
