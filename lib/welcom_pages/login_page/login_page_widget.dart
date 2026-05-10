@@ -366,6 +366,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 ),
                                 FFButtonWidget(
                                   onPressed: () async {
+                                    AppStateNotifier.instance
+                                        .updateNotifyOnAuthChange(false);
                                     _model.decoyLogin =
                                         await actions.supaEmailLogin(
                                       _model
@@ -373,9 +375,14 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       _model.passwordLoginTextController.text,
                                     );
                                     if (_model.decoyLogin == true) {
-                                      context
-                                          .goNamed(AuthRouterWidget.routeName);
+                                      context.goNamedAuth(
+                                        AuthRouterWidget.routeName,
+                                        context.mounted,
+                                        ignoreRedirect: true,
+                                      );
                                     } else {
+                                      AppStateNotifier.instance
+                                          .updateNotifyOnAuthChange(true);
                                       _model.notificationValue = 1;
                                       safeSetState(() {});
                                       await Future.delayed(
