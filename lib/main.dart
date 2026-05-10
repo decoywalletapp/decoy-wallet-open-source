@@ -81,7 +81,7 @@ class _DecoyDisplayGuard extends StatelessWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode _themeMode = ThemeMode.light;
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
@@ -118,7 +118,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void setThemeMode(ThemeMode mode) => safeSetState(() {
-        _themeMode = mode;
+        _themeMode = ThemeMode.light;
       });
 
   @override
