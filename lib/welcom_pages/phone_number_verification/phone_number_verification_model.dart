@@ -48,6 +48,10 @@ class PhoneNumberVerificationModel
   ApiCallResponse? emailHashResp;
   // Stores action output result for [Custom Action - generateDataKeyIfMissing] action in PhoneCode widget.
   String? dataKeyB64;
+  // Stores action output result for [Backend Call - Query Rows] action in PhoneCode widget.
+  List<DecoyWalletRow>? existingPersonalRows;
+  // Stores action output result for [Custom Action - aesGcmDecryptToMap] action in PhoneCode widget.
+  dynamic existingPersonalObj;
   // Stores action output result for [Backend Call - API (WrapDataKey)] action in PhoneCode widget.
   ApiCallResponse? wrapResp;
   // Stores action output result for [Custom Action - buildPersonalJson] action in PhoneCode widget.

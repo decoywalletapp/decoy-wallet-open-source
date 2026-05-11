@@ -867,11 +867,16 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                 await actions.dismissKeyboard(
                                   context,
                                 );
+                                _model.changedPhone =
+                                    functions.sanitizePhoneNumber(
+                                        _model.phoneTextController.text);
                                 _model.personalJsonOut =
                                     await actions.buildPersonalJson(
                                   _model.firstNameTextController.text,
                                   _model.lastNameTextController.text,
-                                  _model.phoneTextController.text,
+                                  _model.origPhone != _model.changedPhone
+                                      ? (_model.origPhone ?? '')
+                                      : _model.phoneTextController.text,
                                   _model.emailTextController.text,
                                 );
                                 _model.personalJson = _model.personalJsonOut;
@@ -925,12 +930,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           'wrapped_datakey': _model.wrappedB64,
                                           'updated_at': supaSerialize<DateTime>(
                                               getCurrentTimestamp),
-                                          'personal_complete': (_model.firstNameTextController
-                                                              .text !=
-                                                          '') &&
+                                          'personal_complete': (_model
+                                                          .firstNameTextController
+                                                          .text !=
+                                                      '') &&
                                                   (_model.lastNameTextController
-                                                              .text !=
-                                                          '')
+                                                          .text !=
+                                                      '')
                                               ? true
                                               : false,
                                         },
@@ -1046,12 +1052,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         'updated_at': supaSerialize<DateTime>(
                                             getCurrentTimestamp),
                                         'user_id': currentUserUid,
-                                        'personal_complete': (_model.firstNameTextController
-                                                            .text !=
-                                                        '') &&
+                                        'personal_complete': (_model
+                                                        .firstNameTextController
+                                                        .text !=
+                                                    '') &&
                                                 (_model.lastNameTextController
-                                                            .text !=
-                                                        '')
+                                                        .text !=
+                                                    '')
                                             ? true
                                             : false,
                                       });

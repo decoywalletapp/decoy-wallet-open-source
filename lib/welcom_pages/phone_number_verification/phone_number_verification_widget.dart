@@ -333,6 +333,48 @@ class _PhoneNumberVerificationWidgetState
                                                               _model.dataKeyB64 =
                                                                   await actions
                                                                       .generateDataKeyIfMissing();
+                                                              _model.existingPersonalRows =
+                                                                  await DecoyWalletTable()
+                                                                      .queryRows(
+                                                                queryFn: (q) =>
+                                                                    q.eqOrNull(
+                                                                  'user_id',
+                                                                  currentUserUid,
+                                                                ),
+                                                              );
+                                                              if ((_model.existingPersonalRows !=
+                                                                          null &&
+                                                                      (_model.existingPersonalRows)!
+                                                                          .isNotEmpty) &&
+                                                                  ((_model.existingPersonalRows?.elementAtOrNull(0)?.personalCiphertext !=
+                                                                              null &&
+                                                                          _model.existingPersonalRows?.elementAtOrNull(0)?.personalCiphertext !=
+                                                                              '') &&
+                                                                      (_model.existingPersonalRows?.elementAtOrNull(0)?.personalNonce !=
+                                                                              null &&
+                                                                          _model.existingPersonalRows?.elementAtOrNull(0)?.personalNonce !=
+                                                                              ''))) {
+                                                                _model.existingPersonalObj =
+                                                                    await actions
+                                                                        .aesGcmDecryptToMap(
+                                                                  _model
+                                                                      .existingPersonalRows!
+                                                                      .elementAtOrNull(
+                                                                          0)!
+                                                                      .personalCiphertext!,
+                                                                  _model
+                                                                      .existingPersonalRows!
+                                                                      .elementAtOrNull(
+                                                                          0)!
+                                                                      .personalNonce!,
+                                                                  _model
+                                                                      .dataKeyB64!,
+                                                                );
+                                                              } else {
+                                                                _model.existingPersonalObj =
+                                                                    null;
+                                                              }
+
                                                               _model.wrapResp =
                                                                   await WrapDataKeyCall
                                                                       .call(
@@ -345,11 +387,52 @@ class _PhoneNumberVerificationWidgetState
                                                               _model.personalJson =
                                                                   await actions
                                                                       .buildPersonalJson(
-                                                                '',
-                                                                '',
+                                                                (_model.existingPersonalObj !=
+                                                                            null) &&
+                                                                        (getJsonField(
+                                                                              _model.existingPersonalObj,
+                                                                              r'''$.firstName''',
+                                                                            ) !=
+                                                                            null)
+                                                                    ? getJsonField(
+                                                                        _model
+                                                                            .existingPersonalObj,
+                                                                        r'''$.firstName''',
+                                                                      ).toString()
+                                                                    : '',
+                                                                (_model.existingPersonalObj !=
+                                                                            null) &&
+                                                                        (getJsonField(
+                                                                              _model.existingPersonalObj,
+                                                                              r'''$.lastName''',
+                                                                            ) !=
+                                                                            null)
+                                                                    ? getJsonField(
+                                                                        _model
+                                                                            .existingPersonalObj,
+                                                                        r'''$.lastName''',
+                                                                      ).toString()
+                                                                    : '',
                                                                 widget
                                                                     .cleanPhone,
-                                                                currentUserEmail,
+                                                                ((_model.existingPersonalObj !=
+                                                                            null) &&
+                                                                        (getJsonField(
+                                                                              _model.existingPersonalObj,
+                                                                              r'''$.email''',
+                                                                            ) !=
+                                                                            null) &&
+                                                                        (getJsonField(
+                                                                              _model.existingPersonalObj,
+                                                                              r'''$.email''',
+                                                                            ).toString() !=
+                                                                            ''))
+                                                                    ? getJsonField(
+                                                                        _model
+                                                                            .existingPersonalObj,
+                                                                        r'''$.email''',
+                                                                      ).toString()
+                                                                    : currentUserEmail,
                                                               );
                                                               _model.encPersonal =
                                                                   await actions
