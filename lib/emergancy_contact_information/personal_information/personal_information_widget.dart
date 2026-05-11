@@ -136,32 +136,25 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           });
         }
 
-        if ((getJsonField(
-                  _model.personalObj,
-                  r'''$.email''',
-                ) ==
-                null) &&
-            (currentUserEmail == '')) {
+        if (currentUserEmail != '') {
+          safeSetState(() {
+            _model.emailTextController?.text = currentUserEmail;
+          });
+        } else if (getJsonField(
+              _model.personalObj,
+              r'''$.email''',
+            ) ==
+            null) {
           safeSetState(() {
             _model.emailTextController?.text = '';
           });
         } else {
-          if (getJsonField(
-                _model.personalObj,
-                r'''$.email''',
-              ) ==
-              null) {
-            safeSetState(() {
-              _model.emailTextController?.text = currentUserEmail;
-            });
-          } else {
-            safeSetState(() {
-              _model.emailTextController?.text = getJsonField(
-                _model.personalObj,
-                r'''$.email''',
-              ).toString();
-            });
-          }
+          safeSetState(() {
+            _model.emailTextController?.text = getJsonField(
+              _model.personalObj,
+              r'''$.email''',
+            ).toString();
+          });
         }
       } else {
         _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
@@ -870,6 +863,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                 _model.changedPhone =
                                     functions.sanitizePhoneNumber(
                                         _model.phoneTextController.text);
+                                _model.changedEmail = functions.normalizeEmail(
+                                    _model.emailTextController.text);
                                 _model.personalJsonOut =
                                     await actions.buildPersonalJson(
                                   _model.firstNameTextController.text,
@@ -877,7 +872,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                   _model.origPhone != _model.changedPhone
                                       ? (_model.origPhone ?? '')
                                       : _model.phoneTextController.text,
-                                  _model.emailTextController.text,
+                                  (currentUserEmail != '') &&
+                                          (functions.normalizeEmail(
+                                                  currentUserEmail) !=
+                                              functions.normalizeEmail(
+                                                  _model.changedEmail))
+                                      ? currentUserEmail
+                                      : _model.emailTextController.text,
                                 );
                                 _model.personalJson = _model.personalJsonOut;
                                 safeSetState(() {});
