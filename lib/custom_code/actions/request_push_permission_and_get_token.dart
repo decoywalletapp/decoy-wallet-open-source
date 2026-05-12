@@ -30,16 +30,19 @@ Future<String?> requestPushPermissionAndGetToken() async {
 
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-    // iOS: ensure APNs token exists first
-    String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    // iOS needs APNs before FCM can issue a usable token. Android does not
+    // have APNs, so it should go straight to the FCM token request.
+    if (isiOS) {
+      String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
 
-    for (var i = 0; i < 6 && (apnsToken == null || apnsToken.isEmpty); i++) {
-      await Future.delayed(const Duration(seconds: 2));
-      apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    }
+      for (var i = 0; i < 6 && (apnsToken == null || apnsToken.isEmpty); i++) {
+        await Future.delayed(const Duration(seconds: 2));
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      }
 
-    if (apnsToken == null || apnsToken.isEmpty) {
-      return 'APNS_NULL';
+      if (apnsToken == null || apnsToken.isEmpty) {
+        return 'APNS_NULL';
+      }
     }
 
     // Get FCM token
