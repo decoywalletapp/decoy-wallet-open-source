@@ -1,4 +1,5 @@
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +7,6 @@ import 'package:flutter/scheduler.dart';
 import 'duress_order_processed_model.dart';
 export 'duress_order_processed_model.dart';
 
-/// Create a page that shows text in the middle saying "Decoy Seed Active"
-/// with and orange check mark adn a button at the bottom of the page that
-/// says "Back to Home"
 class DuressOrderProcessedWidget extends StatefulWidget {
   const DuressOrderProcessedWidget({
     super.key,
@@ -31,8 +29,12 @@ class DuressOrderProcessedWidget extends StatefulWidget {
 
 class _DuressOrderProcessedWidgetState
     extends State<DuressOrderProcessedWidget> {
-  late DuressOrderProcessedModel _model;
+  static const _pageBackground = Color(0xFF080C0D);
+  static const _panelBackground = Color(0xFF121819);
+  static const _mutedText = Color(0xFF8C979A);
+  static const _softBorder = Color(0xFF253033);
 
+  late DuressOrderProcessedModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -40,12 +42,9 @@ class _DuressOrderProcessedWidgetState
     super.initState();
     _model = createModel(context, () => DuressOrderProcessedModel());
 
-    // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(
-        Duration(
-          milliseconds: 2500,
-        ),
+        const Duration(milliseconds: 2500),
       );
 
       context.pushNamed(
@@ -73,12 +72,13 @@ class _DuressOrderProcessedWidgetState
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final orange = FlutterFlowTheme.of(context).primary;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -88,68 +88,196 @@ class _DuressOrderProcessedWidgetState
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: _pageBackground,
           body: SafeArea(
             top: true,
-            child: Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 390.0),
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: const Duration(milliseconds: 2300),
+                    curve: Curves.easeInOutCubic,
+                    builder: (context, progress, _) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 24.0),
-                            child: AnimatedContainer(
-                              duration: Duration(milliseconds: 360),
-                              curve: Curves.bounceOut,
-                              width: 80.0,
-                              height: 80.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).primary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 40.0,
-                                ),
+                          Container(
+                            width: 92.0,
+                            height: 92.0,
+                            decoration: BoxDecoration(
+                              color: orange.withValues(alpha: 0.14),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: orange.withValues(alpha: 0.48),
+                                width: 1.2,
                               ),
                             ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 74.0,
+                                  height: 74.0,
+                                  child: CircularProgressIndicator(
+                                    value: progress,
+                                    strokeWidth: 4.0,
+                                    color: orange,
+                                    backgroundColor: const Color(0xFF263033),
+                                  ),
+                                ),
+                                Icon(
+                                  progress > 0.86
+                                      ? Icons.check_rounded
+                                      : Icons.arrow_upward_rounded,
+                                  color: orange,
+                                  size: 34.0,
+                                ),
+                              ],
+                            ),
                           ),
+                          const SizedBox(height: 26.0),
                           Text(
-                            'Order Processed',
+                            progress > 0.82
+                                ? 'Transaction Broadcast'
+                                : 'Broadcasting Transaction',
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium
                                 .override(
-                                  fontFamily: 'hello',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
+                                  fontFamily: 'InterTight',
+                                  color: FlutterFlowTheme.of(context).info,
+                                  fontSize: 28.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            progress > 0.82
+                                ? 'Waiting for network confirmations'
+                                : 'Signing and relaying to Bitcoin peers',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'InterTight',
+                                  color: _mutedText,
+                                  fontSize: 14.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w600,
                                 ),
                           ),
+                          const SizedBox(height: 26.0),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: _panelBackground,
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: _softBorder),
+                            ),
+                            child: Column(
+                              children: [
+                                _statusRow(
+                                  context,
+                                  label: 'Amount',
+                                  value:
+                                      '${functions.formatBtcTrim(widget.amountBtc ?? '0')} BTC',
+                                ),
+                                _divider(),
+                                _statusRow(
+                                  context,
+                                  label: 'To',
+                                  value: functions.maskAddress(
+                                    widget.toAddress ?? '',
+                                    6,
+                                    6,
+                                  ),
+                                  accent: orange,
+                                ),
+                                _divider(),
+                                _statusRow(
+                                  context,
+                                  label: 'Status',
+                                  value: progress > 0.82
+                                      ? 'Broadcasted'
+                                      : 'Signing',
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 18.0),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4.0),
+                            child: LinearProgressIndicator(
+                              value: progress,
+                              minHeight: 5.0,
+                              color: orange,
+                              backgroundColor: const Color(0xFF283236),
+                            ),
+                          ),
                         ],
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _statusRow(
+    BuildContext context, {
+    required String label,
+    required String value,
+    Color? accent,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'InterTight',
+                    color: _mutedText,
+                    fontSize: 13.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value.isEmpty ? '--' : value,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'InterTight',
+                    color: accent ?? FlutterFlowTheme.of(context).info,
+                    fontSize: 13.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w800,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _divider() {
+    return Container(
+      height: 1.0,
+      color: _softBorder,
     );
   }
 }

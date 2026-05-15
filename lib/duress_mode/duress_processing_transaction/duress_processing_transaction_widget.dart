@@ -11,12 +11,6 @@ import 'package:provider/provider.dart';
 import 'duress_processing_transaction_model.dart';
 export 'duress_processing_transaction_model.dart';
 
-/// Create a page that shows the transaction processing on the blockchain with
-/// a status bar that updates and moves closer to the end once a 60-minute
-/// timer is up.
-///
-/// Add a button at the bottom of the page that allows user to return to home
-/// page
 class DuressProcessingTransactionWidget extends StatefulWidget {
   const DuressProcessingTransactionWidget({
     super.key,
@@ -39,8 +33,15 @@ class DuressProcessingTransactionWidget extends StatefulWidget {
 
 class _DuressProcessingTransactionWidgetState
     extends State<DuressProcessingTransactionWidget> {
-  late DuressProcessingTransactionModel _model;
+  static const _pageBackground = Color(0xFF080C0D);
+  static const _panelBackground = Color(0xFF121819);
+  static const _panelRaised = Color(0xFF1A2224);
+  static const _mutedText = Color(0xFF8C979A);
+  static const _softBorder = Color(0xFF253033);
+  static const _track = Color(0xFF283236);
+  static const _success = Color(0xFF29D17D);
 
+  late DuressProcessingTransactionModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -48,7 +49,6 @@ class _DuressProcessingTransactionWidgetState
     super.initState();
     _model = createModel(context, () => DuressProcessingTransactionModel());
 
-    // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.pagetimers?.cancel();
       if (FFAppState().txStatus == 'complete') {
@@ -66,7 +66,7 @@ class _DuressProcessingTransactionWidgetState
         if ((_model.remainingMins > 0) &&
             (FFAppState().txStatus == 'awaiting')) {
           _model.pagetimers = InstantTimer.periodic(
-            duration: Duration(milliseconds: 60000),
+            duration: const Duration(milliseconds: 60000),
             callback: (timer) async {
               _model.elapsedMins = functions.incElapsedFromStart(
                   FFAppState().txStartAt!, getCurrentTimestamp);
@@ -95,13 +95,47 @@ class _DuressProcessingTransactionWidgetState
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
+  }
+
+  String get _statusTitle {
+    if (_model.progress01 >= 1.0) {
+      return 'Transaction Confirmed';
+    }
+    if (_model.progress01 >= 0.5) {
+      return 'Awaiting Confirmation';
+    }
+    if (_model.progress01 >= 0.05) {
+      return 'In Mempool';
+    }
+    return 'Broadcasting';
+  }
+
+  String get _statusSubtitle {
+    if (_model.progress01 >= 1.0) {
+      return 'Confirmed on the Bitcoin network';
+    }
+    if (_model.progress01 >= 0.5) {
+      return 'Seen by peers and waiting for the next block';
+    }
+    if (_model.progress01 >= 0.05) {
+      return 'Transaction relayed and pending inclusion';
+    }
+    return 'Relaying transaction to Bitcoin peers';
   }
 
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+
+    final orange = FlutterFlowTheme.of(context).primary;
+    final progress = _model.progress01.clamp(0.0, 1.0);
+    final isComplete = progress >= 1.0;
+    final amountText =
+        '${functions.formatBtcTrim(widget.amountBtc ?? '0')} BTC';
+    final feeText = '${functions.formatBtcTrim(
+      (widget.feeBtc ?? 0.0).toString(),
+    )} BTC';
 
     return GestureDetector(
       onTap: () {
@@ -112,489 +146,61 @@ class _DuressProcessingTransactionWidgetState
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: _pageBackground,
           body: SafeArea(
             top: true,
-            child: Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
+            child: Center(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 34.0),
+                shrinkWrap: true,
                 children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 400.0,
-                          height: 700.0,
-                          decoration: BoxDecoration(),
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Processing Transaction',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .headlineMedium
-                                        .override(
-                                          fontFamily: 'hello',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(14.0),
-                                    child: Text(
-                                      'Your transaction is being confirmed on the blockchain. This process typically takes up to 60 minutes.',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'hello',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
-                                            letterSpacing: 0.0,
-                                            lineHeight: 1.4,
-                                          ),
-                                    ),
-                                  ),
-                                ].divide(SizedBox(height: 16.0)),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(20.0),
-                                child: Container(
-                                  width: 400.0,
-                                  decoration: BoxDecoration(
-                                    color: Color(0x9D343739),
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Transaction Hash:',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'hello',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryBackground,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                            ),
-                                            Text(
-                                              '0x7a8f...9b2c',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodySmall
-                                                  .override(
-                                                    fontFamily: 'hello',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Network:',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'hello',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryBackground,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                            ),
-                                            Text(
-                                              'BitcoinCore',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'hello',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondaryText,
-                                                        letterSpacing: 0.0,
-                                                      ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Gas Fee:',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'hello',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryBackground,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                            ),
-                                            Text(
-                                              '${widget.feeBtc?.toString()} BTC',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'hello',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondaryText,
-                                                        letterSpacing: 0.0,
-                                                      ),
-                                            ),
-                                          ],
-                                        ),
-                                        Divider(
-                                          height: 1.0,
-                                          thickness: 1.0,
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Estimated Time:',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'hello',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryBackground,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                            ),
-                                            Text(
-                                              '${_model.remainingMins.toString()} minutes remaining',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodySmall
-                                                  .override(
-                                                    fontFamily: 'hello',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ].divide(SizedBox(height: 16.0)),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Progress',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelMedium
-                                              .override(
-                                                fontFamily: 'hello',
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                        ),
-                                        Text(
-                                          '${formatNumber(
-                                            _model.progress01,
-                                            formatType: FormatType.percent,
-                                          )}',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelMedium
-                                              .override(
-                                                fontFamily: 'hello',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: double.infinity,
-                                    height: 8.0,
-                                    constraints: BoxConstraints(
-                                      maxWidth: double.infinity,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                    child: LinearPercentIndicator(
-                                      percent: _model.progress01,
-                                      width: 345.0,
-                                      lineHeight: 12.0,
-                                      animation: true,
-                                      animateFromLastPercent: true,
-                                      progressColor:
-                                          FlutterFlowTheme.of(context).primary,
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context).accent4,
-                                      barRadius: Radius.circular(12.0),
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                  ),
-                                ].divide(SizedBox(height: 12.0)),
-                              ),
-                              Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 1670),
-                                            curve: Curves.easeInOut,
-                                            width: 8.0,
-                                            height: 8.0,
-                                            decoration: BoxDecoration(
-                                              color: valueOrDefault<Color>(
-                                                _model.progress01 >= 0.0
-                                                    ? FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary
-                                                    : FlutterFlowTheme.of(
-                                                            context)
-                                                        .alternate,
-                                                FlutterFlowTheme.of(context)
-                                                    .alternate,
-                                              ),
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Text(
-                                              'Transaction initiated',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'hello',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondaryText,
-                                                        letterSpacing: 0.0,
-                                                      ),
-                                            ),
-                                          ),
-                                        ].divide(SizedBox(width: 8.0)),
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                              Duration(milliseconds: 2000),
-                                          curve: Curves.easeInOut,
-                                          width: 8.0,
-                                          height: 8.0,
-                                          decoration: BoxDecoration(
-                                            color: _model.progress01 >= 0.05
-                                                ? FlutterFlowTheme.of(context)
-                                                    .primary
-                                                : FlutterFlowTheme.of(context)
-                                                    .alternate,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Broadcasted to network',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodySmall
-                                              .override(
-                                                fontFamily: 'hello',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                letterSpacing: 0.0,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(width: 8.0)),
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                              Duration(milliseconds: 1370),
-                                          curve: Curves.easeInOut,
-                                          width: 8.0,
-                                          height: 8.0,
-                                          decoration: BoxDecoration(
-                                            color: _model.progress01 >= 0.5
-                                                ? FlutterFlowTheme.of(context)
-                                                    .primary
-                                                : FlutterFlowTheme.of(context)
-                                                    .alternate,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Awaiting confirmations',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodySmall
-                                              .override(
-                                                fontFamily: 'hello',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(width: 8.0)),
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                              Duration(milliseconds: 1440),
-                                          curve: Curves.easeInOut,
-                                          width: 8.0,
-                                          height: 8.0,
-                                          decoration: BoxDecoration(
-                                            color: _model.progress01 >= 1.0
-                                                ? FlutterFlowTheme.of(context)
-                                                    .primary
-                                                : FlutterFlowTheme.of(context)
-                                                    .alternate,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Transaction complete',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodySmall
-                                              .override(
-                                                fontFamily: 'hello',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                letterSpacing: 0.0,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(width: 8.0)),
-                                    ),
-                                  ].divide(SizedBox(height: 8.0)),
-                                ),
-                              ),
-                              FFButtonWidget(
-                                onPressed: () async {
-                                  context
-                                      .goNamed(DuressHomePageWidget.routeName);
-                                },
-                                text: 'Return to Home',
-                                options: FFButtonOptions(
-                                  width: 400.0,
-                                  height: 56.0,
-                                  padding: EdgeInsets.all(8.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'hello',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                  elevation: 3.0,
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                              ),
-                            ]
-                                .divide(SizedBox(height: 32.0))
-                                .addToStart(SizedBox(height: 32.0)),
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 390.0),
+                      child: Column(
+                        children: [
+                          _statusHeader(context, orange, progress, isComplete),
+                          const SizedBox(height: 18.0),
+                          _detailCard(
+                            context,
+                            orange: orange,
+                            amountText: amountText,
+                            feeText: feeText,
                           ),
-                        ),
-                      ].divide(SizedBox(height: 24.0)),
+                          const SizedBox(height: 16.0),
+                          _progressCard(context, orange, progress, isComplete),
+                          const SizedBox(height: 16.0),
+                          _timelineCard(context, orange, progress),
+                          const SizedBox(height: 22.0),
+                          FFButtonWidget(
+                            onPressed: () async {
+                              context.goNamed(DuressHomePageWidget.routeName);
+                            },
+                            text: 'Return to Home',
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 56.0,
+                              padding: const EdgeInsets.all(8.0),
+                              iconPadding: EdgeInsetsDirectional.zero,
+                              color: orange,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    fontFamily: 'InterTight',
+                                    color: FlutterFlowTheme.of(context).info,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                              elevation: 0.0,
+                              borderSide: const BorderSide(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -603,6 +209,422 @@ class _DuressProcessingTransactionWidgetState
           ),
         ),
       ),
+    );
+  }
+
+  Widget _statusHeader(
+    BuildContext context,
+    Color orange,
+    double progress,
+    bool isComplete,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18.0, 20.0, 18.0, 18.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              CircularPercentIndicator(
+                radius: 66.0,
+                lineWidth: 7.0,
+                percent: progress,
+                animation: true,
+                animateFromLastPercent: true,
+                circularStrokeCap: CircularStrokeCap.round,
+                progressColor: isComplete ? _success : orange,
+                backgroundColor: _track,
+              ),
+              SizedBox(
+                width: 82.0,
+                height: 82.0,
+                child: isComplete
+                    ? DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: _success.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check_rounded,
+                          color: _success,
+                          size: 34.0,
+                        ),
+                      )
+                    : CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: orange.withValues(alpha: 0.78),
+                        backgroundColor: Colors.transparent,
+                      ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18.0),
+          Text(
+            _statusTitle,
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'InterTight',
+                  color: FlutterFlowTheme.of(context).info,
+                  fontSize: 27.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+          const SizedBox(height: 7.0),
+          Text(
+            _statusSubtitle,
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: _mutedText,
+                  fontSize: 14.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w600,
+                  lineHeight: 1.35,
+                ),
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            children: [
+              Expanded(
+                child: _metricPill(
+                  context,
+                  label: 'ETA',
+                  value: isComplete ? 'Complete' : '${_model.remainingMins}m',
+                  color: isComplete ? _success : orange,
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              Expanded(
+                child: _metricPill(
+                  context,
+                  label: 'Confirmations',
+                  value: isComplete ? '1 / 1' : '0 / 1',
+                  color: isComplete ? _success : orange,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailCard(
+    BuildContext context, {
+    required Color orange,
+    required String amountText,
+    required String feeText,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          _detailRow(context, 'Amount', amountText),
+          _divider(),
+          _detailRow(
+            context,
+            'To',
+            functions.maskAddress(widget.toAddress ?? '', 8, 8),
+            accent: orange,
+          ),
+          _divider(),
+          _detailRow(context, 'Network', 'Bitcoin'),
+          _divider(),
+          _detailRow(context, 'Network Fee', feeText),
+          _divider(),
+          _detailRow(
+            context,
+            'Tx ID',
+            'b38f6a2d...e91c0b77',
+            accent: orange,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _progressCard(
+    BuildContext context,
+    Color orange,
+    double progress,
+    bool isComplete,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Network Progress',
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'InterTight',
+                        color: FlutterFlowTheme.of(context).info,
+                        fontSize: 14.0,
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+              ),
+              Text(
+                formatNumber(
+                  progress,
+                  formatType: FormatType.percent,
+                ),
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: 'InterTight',
+                      color: isComplete ? _success : orange,
+                      fontSize: 14.0,
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w800,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 13.0),
+          LinearPercentIndicator(
+            percent: progress,
+            lineHeight: 8.0,
+            animation: true,
+            animateFromLastPercent: true,
+            progressColor: isComplete ? _success : orange,
+            backgroundColor: _track,
+            barRadius: const Radius.circular(4.0),
+            padding: EdgeInsets.zero,
+          ),
+          const SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _smallLabel(context, 'Broadcast'),
+              _smallLabel(context, 'Mempool'),
+              _smallLabel(context, 'Block'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _timelineCard(BuildContext context, Color orange, double progress) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          _timelineRow(
+            context,
+            label: 'Transaction initiated',
+            active: progress >= 0.0,
+            color: orange,
+          ),
+          _timelineConnector(progress >= 0.05 ? orange : _track),
+          _timelineRow(
+            context,
+            label: 'Broadcasted to network',
+            active: progress >= 0.05,
+            color: orange,
+          ),
+          _timelineConnector(progress >= 0.5 ? orange : _track),
+          _timelineRow(
+            context,
+            label: 'Awaiting confirmations',
+            active: progress >= 0.5,
+            color: orange,
+          ),
+          _timelineConnector(progress >= 1.0 ? _success : _track),
+          _timelineRow(
+            context,
+            label: 'Transaction complete',
+            active: progress >= 1.0,
+            color: _success,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _metricPill(
+    BuildContext context, {
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+      decoration: BoxDecoration(
+        color: _panelRaised,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: _mutedText,
+                  fontSize: 11.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+          const SizedBox(height: 4.0),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: color,
+                  fontSize: 15.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailRow(
+    BuildContext context,
+    String label,
+    String value, {
+    Color? accent,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'InterTight',
+                    color: _mutedText,
+                    fontSize: 13.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value.isEmpty ? '--' : value,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'InterTight',
+                    color: accent ?? FlutterFlowTheme.of(context).info,
+                    fontSize: 13.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w800,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _timelineRow(
+    BuildContext context, {
+    required String label,
+    required bool active,
+    required Color color,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 24.0,
+          height: 24.0,
+          decoration: BoxDecoration(
+            color: active ? color.withValues(alpha: 0.16) : _panelRaised,
+            shape: BoxShape.circle,
+            border: Border.all(color: active ? color : _track),
+          ),
+          child: Icon(
+            active ? Icons.check_rounded : Icons.more_horiz_rounded,
+            color: active ? color : _mutedText,
+            size: 15.0,
+          ),
+        ),
+        const SizedBox(width: 12.0),
+        Expanded(
+          child: Text(
+            label,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color:
+                      active ? FlutterFlowTheme.of(context).info : _mutedText,
+                  fontSize: 13.0,
+                  letterSpacing: 0.0,
+                  fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+                ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _timelineConnector(Color color) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        width: 1.0,
+        height: 18.0,
+        margin: const EdgeInsets.only(left: 12.0),
+        color: color,
+      ),
+    );
+  }
+
+  Widget _smallLabel(BuildContext context, String value) {
+    return Text(
+      value,
+      style: FlutterFlowTheme.of(context).bodyMedium.override(
+            fontFamily: 'InterTight',
+            color: _mutedText,
+            fontSize: 11.0,
+            letterSpacing: 0.0,
+            fontWeight: FontWeight.w700,
+          ),
+    );
+  }
+
+  Widget _divider() {
+    return Container(
+      height: 1.0,
+      color: _softBorder,
     );
   }
 }

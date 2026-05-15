@@ -507,7 +507,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
   Widget _buildMarketCard(BuildContext context) {
     final change24h = _model.pctChange24h;
     final change1y = _model.pctChange1y;
-    final lineColor = _changeColor(change24h ?? change1y);
+    final lineColor = FlutterFlowTheme.of(context).primary;
 
     return Container(
       width: double.infinity,
