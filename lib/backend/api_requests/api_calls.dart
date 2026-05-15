@@ -182,6 +182,41 @@ class BtcChartOneYearCall {
       ) as List?;
 }
 
+class BtcCurrentPriceCall {
+  static Future<ApiCallResponse> call() async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'btcCurrentPrice',
+      apiUrl:
+          'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/coingecko-proxy?path=simple/price&ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_last_updated_at=true',
+      callType: ApiCallType.GET,
+      headers: {
+        'Accept': 'application/json',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static double? usd(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.bitcoin.usd''',
+      ));
+  static double? usd24hChange(dynamic response) =>
+      castToType<double>(getJsonField(
+        response,
+        r'''$.bitcoin.usd_24h_change''',
+      ));
+  static int? lastUpdatedAt(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.bitcoin.last_updated_at''',
+      ));
+}
+
 class SetPINCall {
   static Future<ApiCallResponse> call({
     String? type = '',

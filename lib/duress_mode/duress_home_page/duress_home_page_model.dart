@@ -31,6 +31,12 @@ class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
 
   double? pctChange1y;
 
+  double? pctChange24h;
+
+  DateTime? lastUpdatedAt;
+
+  bool? pricePulseUp;
+
   List<dynamic> prices1y = [];
   void addToPrices1y(dynamic item) => prices1y.add(item);
   void removeFromPrices1y(dynamic item) => prices1y.remove(item);
@@ -69,6 +75,10 @@ class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
   ApiCallResponse? btcResp4;
   // Stores action output result for [Backend Call - API (btcChartOneYear)] action in IconButton widget.
   ApiCallResponse? btcResp5;
+  // Stores action output result for [Backend Call - API (btcCurrentPrice)] action in DuressHomePage widget.
+  ApiCallResponse? currentPriceResp;
+  // Stores action output result for [Backend Call - API (btcCurrentPrice)] action in live refresh timer.
+  ApiCallResponse? currentPriceRefreshResp;
 
   @override
   void initState(BuildContext context) {}
