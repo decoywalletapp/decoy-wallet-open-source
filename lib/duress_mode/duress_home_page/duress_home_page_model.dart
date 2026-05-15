@@ -79,6 +79,8 @@ class DuressHomePageModel extends FlutterFlowModel<DuressHomePageWidget> {
   ApiCallResponse? currentPriceResp;
   // Stores action output result for [Backend Call - API (btcCurrentPrice)] action in live refresh timer.
   ApiCallResponse? currentPriceRefreshResp;
+  // Stores action output result for [Backend Call - API (btcCoinbaseStats)] action in live refresh timer.
+  ApiCallResponse? currentPriceStatsResp;
 
   @override
   void initState(BuildContext context) {}

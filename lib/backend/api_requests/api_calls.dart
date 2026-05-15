@@ -186,8 +186,7 @@ class BtcCurrentPriceCall {
   static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'btcCurrentPrice',
-      apiUrl:
-          'https://vxmrthyumzrfgtuvjqmr.functions.supabase.co/coingecko-proxy?path=simple/price&ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_last_updated_at=true',
+      apiUrl: 'https://api.exchange.coinbase.com/products/BTC-USD/ticker',
       callType: ApiCallType.GET,
       headers: {
         'Accept': 'application/json',
@@ -204,16 +203,41 @@ class BtcCurrentPriceCall {
 
   static double? usd(dynamic response) => castToType<double>(getJsonField(
         response,
-        r'''$.bitcoin.usd''',
+        r'''$.price''',
       ));
-  static double? usd24hChange(dynamic response) =>
-      castToType<double>(getJsonField(
+  static String? lastUpdatedAt(dynamic response) =>
+      castToType<String>(getJsonField(
         response,
-        r'''$.bitcoin.usd_24h_change''',
+        r'''$.time''',
       ));
-  static int? lastUpdatedAt(dynamic response) => castToType<int>(getJsonField(
+}
+
+class BtcCoinbaseStatsCall {
+  static Future<ApiCallResponse> call() async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'btcCoinbaseStats',
+      apiUrl: 'https://api.exchange.coinbase.com/products/BTC-USD/stats',
+      callType: ApiCallType.GET,
+      headers: {
+        'Accept': 'application/json',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static double? open(dynamic response) => castToType<double>(getJsonField(
         response,
-        r'''$.bitcoin.last_updated_at''',
+        r'''$.open''',
+      ));
+  static double? last(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.last''',
       ));
 }
 

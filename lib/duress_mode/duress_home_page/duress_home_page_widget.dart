@@ -26,7 +26,8 @@ class DuressHomePageWidget extends StatefulWidget {
 }
 
 class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
-  static const _priceRefreshInterval = Duration(seconds: 30);
+  static const _priceRefreshInterval = Duration(seconds: 5);
+  static const _statsRefreshInterval = Duration(seconds: 30);
   static const _pageBackground = Color(0xFF080C0D);
   static const _panelBackground = Color(0xFF121819);
   static const _panelRaised = Color(0xFF1A2224);
@@ -39,6 +40,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
   late DuressHomePageModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Timer? _priceRefreshTimer;
+  DateTime? _lastStatsRefreshAt;
   bool _startedMarketLoop = false;
 
   @override
@@ -100,25 +102,52 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     }
 
     final jsonBody = response.jsonBody ?? '';
-    final price = _asDouble(getJsonField(jsonBody, r'''$.bitcoin.usd'''));
+    final price = _asDouble(getJsonField(jsonBody, r'''$.price''')) ??
+        _asDouble(getJsonField(jsonBody, r'''$.data.amount''')) ??
+        _asDouble(getJsonField(jsonBody, r'''$.bitcoin.usd'''));
     if (price == null || price <= 0) {
       safeSetState(() {});
       return;
     }
 
-    final change24h =
-        _asDouble(getJsonField(jsonBody, r'''$.bitcoin.usd_24h_change'''));
-    final updatedSeconds =
-        _asInt(getJsonField(jsonBody, r'''$.bitcoin.last_updated_at'''));
-    final updatedAt = updatedSeconds == null
-        ? DateTime.now()
-        : DateTime.fromMillisecondsSinceEpoch(updatedSeconds * 1000);
+    final updatedAt =
+        _asDateTime(getJsonField(jsonBody, r'''$.time''')) ?? DateTime.now();
 
     _applyCurrentPrice(
       price,
-      pct24h: change24h,
       updatedAt: updatedAt,
     );
+
+    final shouldRefreshStats = initial ||
+        _lastStatsRefreshAt == null ||
+        DateTime.now().difference(_lastStatsRefreshAt!) >=
+            _statsRefreshInterval;
+    if (shouldRefreshStats) {
+      _lastStatsRefreshAt = DateTime.now();
+      await _refresh24hStats(price);
+    }
+  }
+
+  Future<void> _refresh24hStats(double livePrice) async {
+    final response = await BtcCoinbaseStatsCall.call();
+    if (!mounted) {
+      return;
+    }
+    _model.currentPriceStatsResp = response;
+    if (response.succeeded != true) {
+      safeSetState(() {});
+      return;
+    }
+
+    final jsonBody = response.jsonBody ?? '';
+    final open = _asDouble(getJsonField(jsonBody, r'''$.open'''));
+    if (open == null || open <= 0) {
+      safeSetState(() {});
+      return;
+    }
+
+    _model.pctChange24h = functions.percentageChange(open, livePrice);
+    safeSetState(() {});
   }
 
   Future<void> _loadChart() async {
@@ -238,14 +267,12 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     return double.tryParse(value?.toString() ?? '');
   }
 
-  int? _asInt(dynamic value) {
-    if (value is int) {
-      return value;
+  DateTime? _asDateTime(dynamic value) {
+    final text = value?.toString();
+    if (text == null || text.isEmpty) {
+      return null;
     }
-    if (value is num) {
-      return value.toInt();
-    }
-    return int.tryParse(value?.toString() ?? '');
+    return DateTime.tryParse(text);
   }
 
   String _formatUsd(double? value, {int decimalDigits = 2}) {
