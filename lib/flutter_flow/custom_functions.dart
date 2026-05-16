@@ -211,11 +211,27 @@ String formatBtcTrim(String text) {
   final raw = (text ?? '').trim();
   if (raw.isEmpty) return '0';
 
-  // While typing "1." keep it as-is so the UX doesn’t jump.
-  if (raw.endsWith('.')) return raw;
-
-  // Keep digits and dot only; ignore commas etc.
   final cleaned = raw.replaceAll(',', '').replaceAll(RegExp(r'[^0-9\.]'), '');
+  if (cleaned.isEmpty) return '0';
+
+  final firstDot = cleaned.indexOf('.');
+  if (firstDot >= 0) {
+    final beforeDot = cleaned.substring(0, firstDot).replaceAll('.', '');
+    final afterDot = cleaned
+        .substring(firstDot + 1)
+        .replaceAll('.', '')
+        .replaceAll(RegExp(r'\D'), '');
+    final intPart = beforeDot.isEmpty
+        ? '0'
+        : beforeDot.replaceFirst(RegExp(r'^0+(?=\d)'), '');
+    final cappedFraction =
+        afterDot.length > 8 ? afterDot.substring(0, 8) : afterDot;
+
+    if (cappedFraction.length < 8) {
+      return '$intPart.$cappedFraction';
+    }
+  }
+
   final v = double.tryParse(cleaned);
   if (v == null || v.isNaN || v.isInfinite) return '0';
 
@@ -259,6 +275,23 @@ String totalAfterFee(
   if (t <= 0) return '0';
   final s = t.toStringAsFixed(8);
   return s.replaceFirst(RegExp(r'\.?0+$'), '');
+}
+
+double fakeBtcBalanceAfterSend(
+  double currentBalance,
+  String grossSendAmountText,
+  double feeBtc,
+) {
+  final balance = (currentBalance.isNaN || currentBalance.isInfinite)
+      ? 0.0
+      : currentBalance;
+  final grossSendAmount = amountToDouble(grossSendAmountText);
+  final fee = feeBtc.isFinite && feeBtc > 0.0 ? feeBtc : 0.0;
+  final remaining = balance - grossSendAmount;
+  final floor = fee + 0.00000001;
+
+  if (remaining <= floor) return 0.0;
+  return double.parse(remaining.toStringAsFixed(8));
 }
 
 String maskAddress(

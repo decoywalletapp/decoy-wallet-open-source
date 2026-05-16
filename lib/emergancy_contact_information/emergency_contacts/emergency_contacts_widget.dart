@@ -39,6 +39,163 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Map<String, String> _contactSnapshot(int slot) {
+    switch (slot) {
+      case 1:
+        return {
+          'first': _model.c1FirstTFTextController?.text ?? '',
+          'last': _model.c1LastTFTextController?.text ?? '',
+          'phone': _model.c1PhoneTFTextController?.text ?? '',
+          'status': _model.c1Status,
+        };
+      case 2:
+        return {
+          'first': _model.c2FirstTFTextController?.text ?? '',
+          'last': _model.c2LastTFTextController?.text ?? '',
+          'phone': _model.c2PhoneTFTextController?.text ?? '',
+          'status': _model.c2Status,
+        };
+      case 3:
+        return {
+          'first': _model.c3FirstTFTextController?.text ?? '',
+          'last': _model.c3LastTFTextController?.text ?? '',
+          'phone': _model.c3PhoneTFTextController?.text ?? '',
+          'status': _model.c3Status,
+        };
+      case 4:
+        return {
+          'first': _model.c4FirstTFTextController?.text ?? '',
+          'last': _model.c4LastTFTextController?.text ?? '',
+          'phone': _model.c4PhoneTFTextController?.text ?? '',
+          'status': _model.c4Status,
+        };
+      case 5:
+        return {
+          'first': _model.c5FirstTFTextController?.text ?? '',
+          'last': _model.c5LastTFTextController?.text ?? '',
+          'phone': _model.c5PhoneTFTextController?.text ?? '',
+          'status': _model.c5Status,
+        };
+      default:
+        return _emptyContactSnapshot();
+    }
+  }
+
+  Map<String, String> _emptyContactSnapshot() => {
+        'first': '',
+        'last': '',
+        'phone': '',
+        'status': 'Not sent',
+      };
+
+  void _setContactSlot(int slot, Map<String, String> contact) {
+    final first = contact['first'] ?? '';
+    final last = contact['last'] ?? '';
+    final phone = functions.sanitizePhoneDigits(contact['phone'] ?? '');
+    final status =
+        functions.emergencyContactStatusLabel(contact['status'] ?? 'Not sent');
+
+    switch (slot) {
+      case 1:
+        _model.c1FirstTFTextController?.text = first;
+        _model.c1LastTFTextController?.text = last;
+        _model.c1PhoneTFTextController?.text = phone;
+        _model.c1PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: phone),
+        );
+        _model.c1Status = status;
+        return;
+      case 2:
+        _model.c2FirstTFTextController?.text = first;
+        _model.c2LastTFTextController?.text = last;
+        _model.c2PhoneTFTextController?.text = phone;
+        _model.c2PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: phone),
+        );
+        _model.c2Status = status;
+        return;
+      case 3:
+        _model.c3FirstTFTextController?.text = first;
+        _model.c3LastTFTextController?.text = last;
+        _model.c3PhoneTFTextController?.text = phone;
+        _model.c3PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: phone),
+        );
+        _model.c3Status = status;
+        return;
+      case 4:
+        _model.c4FirstTFTextController?.text = first;
+        _model.c4LastTFTextController?.text = last;
+        _model.c4PhoneTFTextController?.text = phone;
+        _model.c4PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: phone),
+        );
+        _model.c4Status = status;
+        return;
+      case 5:
+        _model.c5FirstTFTextController?.text = first;
+        _model.c5LastTFTextController?.text = last;
+        _model.c5PhoneTFTextController?.text = phone;
+        _model.c5PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: phone),
+        );
+        _model.c5Status = status;
+        return;
+    }
+  }
+
+  void _deleteContactSlot(int slot) {
+    final deleteIndex = slot - 1;
+    if (deleteIndex < 0 || deleteIndex >= _model.contactsCount) {
+      return;
+    }
+
+    final contacts = List<Map<String, String>>.generate(
+      5,
+      (index) => _contactSnapshot(index + 1),
+    );
+    contacts.removeAt(deleteIndex);
+    contacts.add(_emptyContactSnapshot());
+
+    safeSetState(() {
+      for (var index = 0; index < 5; index++) {
+        _setContactSlot(index + 1, contacts[index]);
+      }
+      _model.contactsCount = (_model.contactsCount - 1).clamp(0, 5).toInt();
+    });
+  }
+
+  String _storedConsentStatusForContact(int index) {
+    final raw = getJsonField(
+      _model.contactsObj,
+      '\$.contacts[$index].consent_status',
+    )?.toString();
+    return functions.emergencyContactStatusLabel(raw);
+  }
+
+  void _applyStoredConsentStatusFallbacks() {
+    final stored = List<String>.generate(
+      5,
+      (index) => _storedConsentStatusForContact(index),
+    );
+
+    if (_model.c1Status == 'Not sent' && stored[0] != 'Not sent') {
+      _model.c1Status = stored[0];
+    }
+    if (_model.c2Status == 'Not sent' && stored[1] != 'Not sent') {
+      _model.c2Status = stored[1];
+    }
+    if (_model.c3Status == 'Not sent' && stored[2] != 'Not sent') {
+      _model.c3Status = stored[2];
+    }
+    if (_model.c4Status == 'Not sent' && stored[3] != 'Not sent') {
+      _model.c4Status = stored[3];
+    }
+    if (_model.c5Status == 'Not sent' && stored[4] != 'Not sent') {
+      _model.c5Status = stored[4];
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -133,6 +290,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               return 0;
             }
           }();
+          _applyStoredConsentStatusFallbacks();
           safeSetState(() {});
           if (getJsonField(
                 _model.contactsObj,
@@ -873,164 +1031,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           size: 16.0,
                                                         ),
                                                         onPressed: () async {
-                                                          safeSetState(() {
-                                                            _model.c1FirstTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c2FirstTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c1LastTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c2LastTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c1PhoneTFTextController
-                                                                    ?.text =
-                                                                functions.sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c2PhoneTFTextController
-                                                                        .text);
-                                                            _model.c1PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c1PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c2FirstTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c3FirstTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c2LastTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c3LastTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c2PhoneTFTextController
-                                                                    ?.text =
-                                                                functions.sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c3PhoneTFTextController
-                                                                        .text);
-                                                            _model.c2PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c2PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c3FirstTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c4FirstTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c3LastTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c4LastTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c3PhoneTFTextController
-                                                                    ?.text =
-                                                                functions.sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c4PhoneTFTextController
-                                                                        .text);
-                                                            _model.c3PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c3PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4FirstTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c5FirstTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4LastTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c5LastTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4PhoneTFTextController
-                                                                    ?.text =
-                                                                functions.sanitizePhoneDigits(
-                                                                    functions.sanitizePhoneDigits(_model
-                                                                        .c5PhoneTFTextController
-                                                                        .text));
-                                                            _model.c4PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c4PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c5PhoneTFTextController
-                                                                    ?.text =
-                                                                _model.c5Phone;
-
-                                                            _model.c5PhoneTFMask
-                                                                .updateMask(
-                                                              newValue: TextEditingValue(
-                                                                  text: _model
-                                                                      .c5Phone),
-                                                            );
-                                                            _model.c5LastTFTextController
-                                                                    ?.text =
-                                                                _model.c5Last;
-
-                                                            _model.c5FirstTFTextController
-                                                                    ?.text =
-                                                                _model.c5First;
-                                                          });
-                                                          _model.c1Status =
-                                                              _model.c2Status;
-                                                          _model.c2Status =
-                                                              _model.c3Status;
-                                                          _model.c3Status =
-                                                              _model.c4Status;
-                                                          _model.c4Status =
-                                                              _model.c5Status;
-                                                          _model.c5Status =
-                                                              'Not sent';
-                                                          safeSetState(() {});
-                                                          _model.contactsCount =
-                                                              _model.contactsCount -
-                                                                  1;
-                                                          safeSetState(() {});
+                                                          _deleteContactSlot(1);
                                                         },
                                                       ),
                                                     ],
@@ -2408,137 +2409,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             size: 16.0,
                                                           ),
                                                           onPressed: () async {
-                                                            safeSetState(() {
-                                                              _model.c2FirstTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c3FirstTFTextController
-                                                                      .text;
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c2LastTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c3LastTFTextController
-                                                                      .text;
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c2PhoneTFTextController
-                                                                      ?.text =
-                                                                  functions.sanitizePhoneDigits(
-                                                                      _model
-                                                                          .c3PhoneTFTextController
-                                                                          .text);
-                                                              _model
-                                                                  .c2PhoneTFMask
-                                                                  .updateMask(
-                                                                newValue:
-                                                                    TextEditingValue(
-                                                                  text: _model
-                                                                      .c2PhoneTFTextController!
-                                                                      .text,
-                                                                ),
-                                                              );
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c3FirstTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c4FirstTFTextController
-                                                                      .text;
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c3LastTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c4LastTFTextController
-                                                                      .text;
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c3PhoneTFTextController
-                                                                      ?.text =
-                                                                  functions.sanitizePhoneDigits(
-                                                                      _model
-                                                                          .c4PhoneTFTextController
-                                                                          .text);
-                                                              _model
-                                                                  .c3PhoneTFMask
-                                                                  .updateMask(
-                                                                newValue:
-                                                                    TextEditingValue(
-                                                                  text: _model
-                                                                      .c3PhoneTFTextController!
-                                                                      .text,
-                                                                ),
-                                                              );
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c4FirstTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c5FirstTFTextController
-                                                                      .text;
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c4LastTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c5LastTFTextController
-                                                                      .text;
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c4PhoneTFTextController
-                                                                      ?.text =
-                                                                  functions.sanitizePhoneDigits(
-                                                                      _model
-                                                                          .c5PhoneTFTextController
-                                                                          .text);
-                                                              _model
-                                                                  .c4PhoneTFMask
-                                                                  .updateMask(
-                                                                newValue:
-                                                                    TextEditingValue(
-                                                                  text: _model
-                                                                      .c4PhoneTFTextController!
-                                                                      .text,
-                                                                ),
-                                                              );
-                                                            });
-                                                            safeSetState(() {
-                                                              _model.c5PhoneTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c5Phone;
-
-                                                              _model
-                                                                  .c5PhoneTFMask
-                                                                  .updateMask(
-                                                                newValue: TextEditingValue(
-                                                                    text: _model
-                                                                        .c5Phone),
-                                                              );
-                                                              _model.c5LastTFTextController
-                                                                      ?.text =
-                                                                  _model.c5Last;
-
-                                                              _model.c5FirstTFTextController
-                                                                      ?.text =
-                                                                  _model
-                                                                      .c5First;
-                                                            });
-                                                            _model.c2Status =
-                                                                _model.c3Status;
-                                                            _model.c3Status =
-                                                                _model.c4Status;
-                                                            _model.c4Status =
-                                                                _model.c5Status;
-                                                            _model.c5Status =
-                                                                'Not sent';
-                                                            safeSetState(() {});
-                                                            _model.contactsCount =
-                                                                _model.contactsCount -
-                                                                    1;
-                                                            safeSetState(() {});
+                                                            _deleteContactSlot(
+                                                                2);
                                                           },
                                                         ),
                                                       ],
@@ -3870,98 +3742,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           size: 16.0,
                                                         ),
                                                         onPressed: () async {
-                                                          safeSetState(() {
-                                                            _model.c3FirstTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c4FirstTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c3LastTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c4LastTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c3PhoneTFTextController
-                                                                    ?.text =
-                                                                functions.sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c4PhoneTFTextController
-                                                                        .text);
-                                                            _model.c3PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c3PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4FirstTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c5FirstTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4LastTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c5LastTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4PhoneTFTextController
-                                                                    ?.text =
-                                                                functions.sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c5PhoneTFTextController
-                                                                        .text);
-                                                            _model.c4PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c4PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c5PhoneTFTextController
-                                                                    ?.text =
-                                                                _model.c5Phone;
-
-                                                            _model.c5PhoneTFMask
-                                                                .updateMask(
-                                                              newValue: TextEditingValue(
-                                                                  text: _model
-                                                                      .c5Phone),
-                                                            );
-                                                            _model.c5LastTFTextController
-                                                                    ?.text =
-                                                                _model.c5Last;
-
-                                                            _model.c5FirstTFTextController
-                                                                    ?.text =
-                                                                _model.c5First;
-                                                          });
-                                                          _model.c3Status =
-                                                              _model.c4Status;
-                                                          _model.c4Status =
-                                                              _model.c5Status;
-                                                          _model.c5Status =
-                                                              'Not sent';
-                                                          safeSetState(() {});
-                                                          _model.contactsCount =
-                                                              _model.contactsCount -
-                                                                  1;
-                                                          safeSetState(() {});
+                                                          _deleteContactSlot(3);
                                                         },
                                                       ),
                                                     ],
@@ -5301,65 +5082,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           size: 16.0,
                                                         ),
                                                         onPressed: () async {
-                                                          safeSetState(() {
-                                                            _model.c4FirstTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c5FirstTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4LastTFTextController
-                                                                    ?.text =
-                                                                _model
-                                                                    .c5LastTFTextController
-                                                                    .text;
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c4PhoneTFTextController
-                                                                    ?.text =
-                                                                functions.sanitizePhoneDigits(
-                                                                    _model
-                                                                        .c5PhoneTFTextController
-                                                                        .text);
-                                                            _model.c4PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c4PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                          safeSetState(() {
-                                                            _model.c5PhoneTFTextController
-                                                                    ?.text =
-                                                                _model.c5Phone;
-
-                                                            _model.c5PhoneTFMask
-                                                                .updateMask(
-                                                              newValue: TextEditingValue(
-                                                                  text: _model
-                                                                      .c5Phone),
-                                                            );
-                                                            _model.c5LastTFTextController
-                                                                    ?.text =
-                                                                _model.c5Last;
-
-                                                            _model.c5FirstTFTextController
-                                                                    ?.text =
-                                                                _model.c5First;
-                                                          });
-                                                          _model.c4Status =
-                                                              _model.c5Status;
-                                                          _model.c5Status =
-                                                              'Not sent';
-                                                          safeSetState(() {});
-                                                          _model.contactsCount =
-                                                              _model.contactsCount -
-                                                                  1;
-                                                          safeSetState(() {});
+                                                          _deleteContactSlot(4);
                                                         },
                                                       ),
                                                     ],
@@ -6730,33 +6453,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           size: 16.0,
                                                         ),
                                                         onPressed: () async {
-                                                          safeSetState(() {
-                                                            _model.c5FirstTFTextController
-                                                                    ?.text =
-                                                                _model.c5First;
-
-                                                            _model.c5LastTFTextController
-                                                                    ?.text =
-                                                                _model.c5Last;
-
-                                                            _model.c5PhoneTFTextController
-                                                                    ?.text =
-                                                                _model.c5Phone;
-
-                                                            _model.c5PhoneTFMask
-                                                                .updateMask(
-                                                              newValue: TextEditingValue(
-                                                                  text: _model
-                                                                      .c5Phone),
-                                                            );
-                                                          });
-                                                          _model.c5Status =
-                                                              'Not sent';
-                                                          safeSetState(() {});
-                                                          _model.contactsCount =
-                                                              _model.contactsCount -
-                                                                  1;
-                                                          safeSetState(() {});
+                                                          _deleteContactSlot(5);
                                                         },
                                                       ),
                                                     ],

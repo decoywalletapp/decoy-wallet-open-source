@@ -60,6 +60,24 @@ class _DuressConfirmTransactionSendWidgetState
     super.dispose();
   }
 
+  void _applyDuressSendBalance(String grossAmountText) {
+    final nextBalance = functions.fakeBtcBalanceAfterSend(
+      FFAppState().fakeBtcBalance,
+      grossAmountText,
+      _model.feeBtc,
+    );
+    FFAppState().update(() {
+      FFAppState().fakeBtcBalance = nextBalance;
+      FFAppState().fakeUsdValue = valueOrDefault<double>(
+        functions.usdFromBtc(
+          nextBalance,
+          FFAppState().currentPriceMultiple,
+        ),
+        0.0,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -403,6 +421,8 @@ class _DuressConfirmTransactionSendWidgetState
                                               functions.totalAfterFee(
                                                   sendAmountBtcForFlow,
                                                   _model.feeBtc);
+                                          _applyDuressSendBalance(
+                                              sendAmountBtcForFlow);
                                           FFAppState().txStartAt =
                                               getCurrentTimestamp;
                                           FFAppState().txTotalMins = 60;
@@ -576,6 +596,8 @@ class _DuressConfirmTransactionSendWidgetState
                                                                   sendAmountBtcForFlow,
                                                                   _model
                                                                       .feeBtc);
+                                                          _applyDuressSendBalance(
+                                                              sendAmountBtcForFlow);
                                                           safeSetState(() {});
                                                           FFAppState()
                                                                   .txStartAt =
