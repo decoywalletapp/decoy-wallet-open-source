@@ -221,3 +221,103 @@ workflows:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
+
+  android_beta_firebase:
+    name: Android Beta (Firebase App Distribution)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      flutter: 3.38.5
+      groups:
+        - android_signing
+        - firebase_app_distribution
+
+    scripts:
+      - name: Show build context
+        script: |
+          set -e
+          echo "Branch: $CM_BRANCH"
+          echo "Commit: $CM_COMMIT"
+          echo "CodeMagic run number: $BUILD_NUMBER"
+          flutter --version
+
+      - name: Prepare Android release signing
+        script: |
+          set -euo pipefail
+          : "${CM_KEYSTORE:?Missing CM_KEYSTORE in android_signing group}"
+          : "${CM_KEYSTORE_PASSWORD:?Missing CM_KEYSTORE_PASSWORD in android_signing group}"
+          : "${CM_KEY_PASSWORD:?Missing CM_KEY_PASSWORD in android_signing group}"
+          : "${CM_KEY_ALIAS:?Missing CM_KEY_ALIAS in android_signing group}"
+
+          KEYSTORE_PATH="$CM_BUILD_DIR/android/app/decoy-release-key.jks"
+          echo "$CM_KEYSTORE" | base64 --decode > "$KEYSTORE_PATH"
+          cat > "$CM_BUILD_DIR/android/key.properties" <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=$KEYSTORE_PATH
+          EOF
+
+      - name: Apply generated-code guardrails
+        script: |
+          set -e
+          /usr/bin/python3 scripts/codemagic_generated_field_fixes.py
+          /usr/bin/python3 scripts/codemagic_contact_quote_guardrail.py
+
+      - name: Confirm fake BTC persistence guardrail
+        script: |
+          set -e
+          if ! grep -q "shouldSeedFakeBtcBalance" lib/app_state.dart; then
+            echo "Missing fake BTC seed guardrail in app_state.dart"
+            exit 1
+          fi
+          PIN_PAGE="lib/pin_pages/p_i_n_page/p_i_n_page_widget.dart"
+          if [ ! -f "$PIN_PAGE" ]; then
+            echo "Missing expected duress PIN entry page: $PIN_PAGE"
+            exit 1
+          fi
+          if ! grep -q "sendEmergencyAlertsCall" "$PIN_PAGE"; then
+            echo "Duress PIN entry page no longer calls SendEmergencyAlerts"
+            exit 1
+          fi
+          if grep -q "if (true)" "$PIN_PAGE"; then
+            echo "Dangerous flattened duress alert gate detected"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        script: |
+          set -e
+          flutter pub get
+
+      - name: Build APK
+        script: |
+          set -e
+          ANDROID_BUILD_NUMBER="$(date -u +%Y%m%d%H%M%S)"
+          echo "Using Android beta build number: $ANDROID_BUILD_NUMBER"
+          flutter build apk --release \
+            --build-name=0.1.0 \
+            --build-number=$ANDROID_BUILD_NUMBER
+
+      - name: Verify APK exists
+        script: |
+          set -e
+          APK_REL="build/app/outputs/flutter-apk/app-release.apk"
+          test -f "$APK_REL"
+          APK_ABS="$(/usr/bin/python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$APK_REL")"
+          echo "APK_ABS=$APK_ABS" >> $CM_ENV
+          echo "APK ready: $APK_ABS"
+
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      - flutter_drive.log
+
+    publishing:
+      firebase:
+        firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
+        android:
+          app_id: 1:866378207353:android:074e76d4b54f11c914c4a8
+          groups:
+            - android-beta-testers
+          artifact_type: apk
