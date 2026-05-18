@@ -250,13 +250,14 @@ workflows:
           : "${CM_KEY_PASSWORD:?Missing CM_KEY_PASSWORD in android_signing group}"
           : "${CM_KEY_ALIAS:?Missing CM_KEY_ALIAS in android_signing group}"
 
-          KEYSTORE_PATH="$CM_BUILD_DIR/android/app/decoy-release-key.jks"
+          KEYSTORE_PATH="$CM_BUILD_DIR/android/app/decoy-release-key.p12"
           echo "$CM_KEYSTORE" | base64 --decode > "$KEYSTORE_PATH"
           cat > "$CM_BUILD_DIR/android/key.properties" <<EOF
           storePassword=$CM_KEYSTORE_PASSWORD
           keyPassword=$CM_KEY_PASSWORD
           keyAlias=$CM_KEY_ALIAS
           storeFile=$KEYSTORE_PATH
+          storeType=pkcs12
           EOF
 
       - name: Apply generated-code guardrails
