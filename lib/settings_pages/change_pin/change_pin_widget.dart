@@ -2794,7 +2794,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                   decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .primaryBackground,
+                                                        .info,
                                                   ),
                                                 ),
                                                 FFButtonWidget(
