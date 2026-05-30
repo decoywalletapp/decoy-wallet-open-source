@@ -13,6 +13,8 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'create_decoy_emergency_contacts_setup_model.dart';
 export 'create_decoy_emergency_contacts_setup_model.dart';
 
+const bool _showHomeAddressSetupCard = false;
+
 /// Create Decoy Setup page
 /// Title: “Decoy Emergency Setup.” Show two large cards: “Add Home Address”
 /// and “Add Emergency Contacts.” Each card navigates to its page.
@@ -623,7 +625,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                         ),
                                       ],
                                     ),
-                                    Stack(
+                                    if (_showHomeAddressSetupCard)
+                                      Stack(
                                       children: [
                                         Align(
                                           alignment:
@@ -1207,7 +1210,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                               Border.all(
                                                                             color:
                                                                                 valueOrDefault<Color>(
-                                                                              (personalComplete == true) && (addressComplete == true) && (contactsComplete == true) ? Color(0xFF0CD40B) : FlutterFlowTheme.of(context).primary,
+                                                                              (personalComplete == true) && (contactsComplete == true) ? Color(0xFF0CD40B) : FlutterFlowTheme.of(context).primary,
                                                                               FlutterFlowTheme.of(context).primary,
                                                                             ),
                                                                             width:
@@ -1260,7 +1263,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       color: valueOrDefault<
                                                                           Color>(
                                                                         (personalComplete == true) &&
-                                                                                (addressComplete == true) &&
                                                                                 (contactsComplete == true)
                                                                             ? Color(0xFF0CD40B)
                                                                             : FlutterFlowTheme.of(context).primaryText,
@@ -1296,7 +1298,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       color: valueOrDefault<
                                                                           Color>(
                                                                         (personalComplete == true) &&
-                                                                                (addressComplete == true) &&
                                                                                 (contactsComplete == true)
                                                                             ? Color(0xFF0CD40B)
                                                                             : FlutterFlowTheme.of(context).primaryText,

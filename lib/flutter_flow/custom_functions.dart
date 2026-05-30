@@ -568,10 +568,9 @@ double computeEmergencyProgress(
   bool? contactsComplete,
 ) {
   final count = ((personalComplete ?? false) ? 1 : 0) +
-      ((addressComplete ?? false) ? 1 : 0) +
       ((contactsComplete ?? false) ? 1 : 0);
 
-  return count / 3.0;
+  return count / 2.0;
 }
 
 int computeEmergencyPercent(
@@ -580,10 +579,9 @@ int computeEmergencyPercent(
   bool? contactsComplete,
 ) {
   final count = ((personalComplete ?? false) ? 1 : 0) +
-      ((addressComplete ?? false) ? 1 : 0) +
       ((contactsComplete ?? false) ? 1 : 0);
 
-  return ((count / 3.0) * 100).round();
+  return ((count / 2.0) * 100).round();
 }
 
 bool hasConfirmedEmergencyContact(
