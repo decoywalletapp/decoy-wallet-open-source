@@ -196,6 +196,34 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     }
   }
 
+  void _resetConsentStatusAfterPhoneEdit(int slot) {
+    switch (slot) {
+      case 1:
+        if (_model.c1Status == 'Not sent') return;
+        _model.c1Status = 'Not sent';
+        break;
+      case 2:
+        if (_model.c2Status == 'Not sent') return;
+        _model.c2Status = 'Not sent';
+        break;
+      case 3:
+        if (_model.c3Status == 'Not sent') return;
+        _model.c3Status = 'Not sent';
+        break;
+      case 4:
+        if (_model.c4Status == 'Not sent') return;
+        _model.c4Status = 'Not sent';
+        break;
+      case 5:
+        if (_model.c5Status == 'Not sent') return;
+        _model.c5Status = 'Not sent';
+        break;
+      default:
+        return;
+    }
+    safeSetState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -290,7 +318,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
               return 0;
             }
           }();
-          _applyStoredConsentStatusFallbacks();
+          if (!(_model.topConsentResp?.succeeded ?? false)) {
+            _applyStoredConsentStatusFallbacks();
+          }
           safeSetState(() {});
           if (getJsonField(
                 _model.contactsObj,
@@ -1357,8 +1387,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .c1PhoneTFTextController,
                                                     focusNode: _model
                                                         .c1PhoneTFFocusNode,
-                                                    onChanged: (_) =>
-                                                        EasyDebounce.debounce(
+                                                    onChanged: (_) {
+                                                      _resetConsentStatusAfterPhoneEdit(
+                                                          1);
+                                                      EasyDebounce.debounce(
                                                       '_model.c1PhoneTFTextController',
                                                       Duration(
                                                           milliseconds: 2000),
@@ -1395,7 +1427,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           });
                                                         }
                                                       },
-                                                    ),
+                                                      );
+                                                    },
                                                     autofocus: false,
                                                     enabled: true,
                                                     textInputAction:
@@ -2760,8 +2793,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           .c2PhoneTFTextController,
                                                       focusNode: _model
                                                           .c2PhoneTFFocusNode,
-                                                      onChanged: (_) =>
-                                                          EasyDebounce.debounce(
+                                                      onChanged: (_) {
+                                                        _resetConsentStatusAfterPhoneEdit(
+                                                            2);
+                                                        EasyDebounce.debounce(
                                                         '_model.c2PhoneTFTextController',
                                                         Duration(
                                                             milliseconds: 2000),
@@ -2799,7 +2834,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             });
                                                           }
                                                         },
-                                                      ),
+                                                        );
+                                                      },
                                                       autofocus: false,
                                                       textInputAction:
                                                           TextInputAction.next,
@@ -4068,8 +4104,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .c3PhoneTFTextController,
                                                     focusNode: _model
                                                         .c3PhoneTFFocusNode,
-                                                    onChanged: (_) =>
-                                                        EasyDebounce.debounce(
+                                                    onChanged: (_) {
+                                                      _resetConsentStatusAfterPhoneEdit(
+                                                          3);
+                                                      EasyDebounce.debounce(
                                                       '_model.c3PhoneTFTextController',
                                                       Duration(
                                                           milliseconds: 2000),
@@ -4106,7 +4144,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           });
                                                         }
                                                       },
-                                                    ),
+                                                      );
+                                                    },
                                                     autofocus: false,
                                                     textInputAction:
                                                         TextInputAction.next,
@@ -5408,8 +5447,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .c4PhoneTFTextController,
                                                     focusNode: _model
                                                         .c4PhoneTFFocusNode,
-                                                    onChanged: (_) =>
-                                                        EasyDebounce.debounce(
+                                                    onChanged: (_) {
+                                                      _resetConsentStatusAfterPhoneEdit(
+                                                          4);
+                                                      EasyDebounce.debounce(
                                                       '_model.c4PhoneTFTextController',
                                                       Duration(
                                                           milliseconds: 2000),
@@ -5446,7 +5487,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           });
                                                         }
                                                       },
-                                                    ),
+                                                      );
+                                                    },
                                                     autofocus: false,
                                                     textInputAction:
                                                         TextInputAction.next,
@@ -6779,8 +6821,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         .c5PhoneTFTextController,
                                                     focusNode: _model
                                                         .c5PhoneTFFocusNode,
-                                                    onChanged: (_) =>
-                                                        EasyDebounce.debounce(
+                                                    onChanged: (_) {
+                                                      _resetConsentStatusAfterPhoneEdit(
+                                                          5);
+                                                      EasyDebounce.debounce(
                                                       '_model.c5PhoneTFTextController',
                                                       Duration(
                                                           milliseconds: 2000),
@@ -6799,25 +6843,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .length ==
                                                                 10)) {
                                                           safeSetState(() {
-                                                            _model.c4PhoneTFTextController
+                                                            _model.c5PhoneTFTextController
                                                                     ?.text =
                                                                 functions
                                                                     .formatAsUsPhone(
                                                                         _model
-                                                                            .c4PhoneDigits!);
-                                                            _model.c4PhoneTFMask
+                                                                            .c5PhoneDigits!);
+                                                            _model.c5PhoneTFMask
                                                                 .updateMask(
                                                               newValue:
                                                                   TextEditingValue(
                                                                 text: _model
-                                                                    .c4PhoneTFTextController!
+                                                                    .c5PhoneTFTextController!
                                                                     .text,
                                                               ),
                                                             );
                                                           });
                                                         }
                                                       },
-                                                    ),
+                                                      );
+                                                    },
                                                     autofocus: false,
                                                     textInputAction:
                                                         TextInputAction.done,
