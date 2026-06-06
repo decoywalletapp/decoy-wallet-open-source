@@ -771,7 +771,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               Expanded(
                                                 child: Container(
                                                   width: double.infinity,
-                                                  height: 25.0,
+                                                  height:
+                                                      _model.notificationState == 0
+                                                          ? 25.0
+                                                          : 48.0,
                                                   decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
                                                             context)
