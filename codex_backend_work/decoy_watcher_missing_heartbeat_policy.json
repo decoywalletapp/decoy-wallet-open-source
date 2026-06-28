@@ -1,0 +1,32 @@
+{
+  "displayName": "Decoy Watcher Missing Heartbeat",
+  "documentation": {
+    "content": "The Decoy Seed watcher has not emitted WATCHER_HEALTH_OK for 10 minutes. Check Cloud Scheduler and decoy-watcher Cloud Run immediately.",
+    "mimeType": "text/markdown"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "conditions": [
+    {
+      "displayName": "No WATCHER_HEALTH_OK heartbeat for 10 minutes",
+      "conditionAbsent": {
+        "filter": "metric.type=\"logging.googleapis.com/user/decoy_watcher_health_ok\" AND resource.type=\"cloud_run_revision\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "duration": "600s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "notificationChannels": [
+    "projects/decoywallet-a283b/notificationChannels/11575546428005095301",
+    "projects/decoywallet-a283b/notificationChannels/8194423537344343054"
+  ]
+}

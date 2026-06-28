@@ -68,7 +68,7 @@ if (!blockbookUrl.trim()) {
 
 console.log(`Restoring QuickNode reserve config from ${sourceRevision}.`);
 console.log(`Provider: ${redactedHost(blockbookUrl)}`);
-console.log('Mode: fallback_only, max 1 request per watcher run, address batch disabled.');
+console.log('Mode: fallback_only, max 40 requests per watcher run, address batch fallback enabled.');
 
 const previousRevision = runGcloud([
   'run',
@@ -96,11 +96,11 @@ runGcloud(
     [
       `BLOCKBOOK_BASE_URL=${blockbookUrl}`,
       'BLOCKBOOK_USAGE_MODE=fallback_only',
-      'BLOCKBOOK_MAX_REQUESTS_PER_RUN=1',
+      'BLOCKBOOK_MAX_REQUESTS_PER_RUN=40',
       'BLOCKBOOK_DISABLE_ON_429_MS=3600000',
-      'BLOCKBOOK_ADDRESS_BATCH_ENABLED=false',
+      'BLOCKBOOK_ADDRESS_BATCH_ENABLED=true',
       'WATCH_KEY_FAST_PASSES=1',
-      'CODEX_DEPLOY_MARKER=watcher-quicknode-reserve-20260628',
+      'CODEX_DEPLOY_MARKER=watcher-quicknode-bounded-reserve-20260628',
     ].join(','),
     '--quiet',
   ],
