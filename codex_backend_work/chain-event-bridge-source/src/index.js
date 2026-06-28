@@ -1,10 +1,12 @@
 const http = require('node:http');
 const crypto = require('node:crypto');
+const zlib = require('node:zlib');
 
 const PORT = Number(process.env.PORT || 8080);
 const WATCHER_URL = (process.env.WATCHER_URL || '').replace(/\/+$/, '');
 const WATCHER_CHAIN_EVENT_SECRET = (process.env.WATCHER_CHAIN_EVENT_SECRET || '').trim();
 const CHAIN_EVENT_BRIDGE_SECRET = (process.env.CHAIN_EVENT_BRIDGE_SECRET || '').trim();
+const QUICKNODE_STREAM_SECURITY_TOKEN = (process.env.QUICKNODE_STREAM_SECURITY_TOKEN || '').trim();
 const JSON_BODY_LIMIT_BYTES = Math.max(1024, Math.min(5 * 1024 * 1024, Number(process.env.JSON_BODY_LIMIT_BYTES || 1024 * 1024)));
 const FORWARD_TIMEOUT_MS = Math.max(1000, Math.min(60000, Number(process.env.FORWARD_TIMEOUT_MS || 15000)));
 
@@ -33,11 +35,37 @@ function timingSafeSecretEquals(expected, actual) {
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
-function authorized(req) {
+function timingSafeHexEquals(expectedHex, actualHex) {
+  const expected = String(expectedHex || '').trim();
+  const actual = String(actualHex || '').trim();
+  if (!/^[0-9a-f]+$/i.test(expected) || !/^[0-9a-f]+$/i.test(actual)) return false;
+  const a = Buffer.from(expected, 'hex');
+  const b = Buffer.from(actual, 'hex');
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+function quicknodeSignatureValid(req, decodedBodyText) {
+  if (!QUICKNODE_STREAM_SECURITY_TOKEN) return false;
+
+  const nonce = req.headers['x-qn-nonce'];
+  const timestamp = req.headers['x-qn-timestamp'];
+  const signature = req.headers['x-qn-signature'];
+  if (!nonce || !timestamp || !signature) return false;
+
+  const signedPayload = String(nonce) + String(timestamp) + decodedBodyText;
+  const expected = crypto
+    .createHmac('sha256', Buffer.from(QUICKNODE_STREAM_SECURITY_TOKEN))
+    .update(Buffer.from(signedPayload))
+    .digest('hex');
+  return timingSafeHexEquals(expected, signature);
+}
+
+function authorized(req, decodedBodyText) {
+  if (quicknodeSignatureValid(req, decodedBodyText)) return true;
   return timingSafeSecretEquals(CHAIN_EVENT_BRIDGE_SECRET, secretFromRequest(req));
 }
 
-function readBody(req) {
+function readBodyBuffer(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
     let total = 0;
@@ -53,8 +81,17 @@ function readBody(req) {
     });
 
     req.on('error', reject);
-    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8') || '{}'));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
   });
+}
+
+function decodedBodyText(req, bodyBuffer) {
+  const encoding = String(req.headers['content-encoding'] || '').trim().toLowerCase();
+  if (encoding === 'gzip') return zlib.gunzipSync(bodyBuffer).toString('utf8') || '{}';
+  if (encoding && encoding !== 'identity') {
+    throw Object.assign(new Error(`unsupported content encoding: ${encoding}`), { status: 415 });
+  }
+  return bodyBuffer.toString('utf8') || '{}';
 }
 
 async function getIdentityToken() {
@@ -104,17 +141,24 @@ async function handleChainEvent(req, res) {
     return;
   }
 
-  if (!authorized(req)) {
+  let bodyText;
+  try {
+    const bodyBuffer = await readBodyBuffer(req);
+    bodyText = decodedBodyText(req, bodyBuffer);
+  } catch (error) {
+    sendJson(res, error.status || 400, { ok: false, error: error.status === 413 ? 'body too large' : error.message || 'invalid body' });
+    return;
+  }
+
+  if (!authorized(req, bodyText)) {
     sendJson(res, 401, { ok: false, error: 'unauthorized' });
     return;
   }
 
-  let bodyText;
   try {
-    bodyText = await readBody(req);
     JSON.parse(bodyText);
   } catch (error) {
-    sendJson(res, error.status || 400, { ok: false, error: error.status === 413 ? 'body too large' : 'invalid json' });
+    sendJson(res, 400, { ok: false, error: 'invalid json' });
     return;
   }
 
@@ -136,6 +180,7 @@ const server = http.createServer((req, res) => {
       service: 'decoy-chain-event-bridge',
       watcherConfigured: !!WATCHER_URL,
       secretConfigured: !!CHAIN_EVENT_BRIDGE_SECRET,
+      quicknodeHmacConfigured: !!QUICKNODE_STREAM_SECURITY_TOKEN,
     });
     return;
   }
@@ -154,5 +199,6 @@ server.listen(PORT, () => {
     watcherConfigured: !!WATCHER_URL,
     bridgeSecretConfigured: !!CHAIN_EVENT_BRIDGE_SECRET,
     watcherSecretConfigured: !!WATCHER_CHAIN_EVENT_SECRET,
+    quicknodeHmacConfigured: !!QUICKNODE_STREAM_SECURITY_TOKEN,
   });
 });

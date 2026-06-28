@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
 
 const GCLOUD =
   '/Users/mitchellwleblanc/Documents/Codex/2026-04-26/i-need-help-connecting-my-entire/tools/google-cloud-sdk/bin/gcloud';
@@ -45,6 +46,7 @@ const bridge = serviceJson(BRIDGE_SERVICE);
 const bridgeUrl = bridge?.status?.url || bridge?.status?.address?.url;
 const values = envMap(bridge);
 const bridgeSecret = (values.get('CHAIN_EVENT_BRIDGE_SECRET') || '').trim();
+const quicknodeStreamSecurityToken = (values.get('QUICKNODE_STREAM_SECURITY_TOKEN') || '').trim();
 
 if (!bridgeUrl || !bridgeSecret) {
   throw new Error('Missing bridge URL or bridge secret');
@@ -76,6 +78,40 @@ const authorized = await fetch(`${bridgeUrl}/chain-event`, {
 
 const authorizedBody = await authorized.json().catch(() => null);
 
+let hmacStatus = null;
+let hmacBody = null;
+if (quicknodeStreamSecurityToken) {
+  const hmacPayload = JSON.stringify({
+    transactions: [
+      {
+        txid: `codex-bridge-hmac-smoke-${Date.now()}`,
+        vin: [{ prevout: { scriptpubkey_address: 'bc1qcodexbridgehmac0000000000000000000000000' } }],
+        status: { confirmed: false },
+      },
+    ],
+  });
+  const nonce = crypto.randomBytes(16).toString('hex');
+  const timestamp = String(Date.now());
+  const signature = crypto
+    .createHmac('sha256', Buffer.from(quicknodeStreamSecurityToken))
+    .update(Buffer.from(nonce + timestamp + hmacPayload))
+    .digest('hex');
+
+  const hmacAuthorized = await fetch(`${bridgeUrl}/chain-event`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-qn-nonce': nonce,
+      'x-qn-timestamp': timestamp,
+      'x-qn-signature': signature,
+      'x-decoy-chain-event-source': 'codex-bridge-hmac-smoke',
+    },
+    body: hmacPayload,
+  });
+  hmacStatus = hmacAuthorized.status;
+  hmacBody = await hmacAuthorized.json().catch(() => null);
+}
+
 console.log(
   JSON.stringify(
     {
@@ -84,10 +120,15 @@ console.log(
         authorized.status === 200 &&
         authorizedBody?.ok === true &&
         authorizedBody?.shadowMode === true &&
-        authorizedBody?.newTriggers === 0,
+        authorizedBody?.newTriggers === 0 &&
+        (!quicknodeStreamSecurityToken ||
+          (hmacStatus === 200 && hmacBody?.ok === true && hmacBody?.shadowMode === true && hmacBody?.newTriggers === 0)),
       unauthorizedStatus: unauthorized.status,
       authorizedStatus: authorized.status,
       authorizedBody,
+      hmacConfigured: !!quicknodeStreamSecurityToken,
+      hmacStatus,
+      hmacBody,
     },
     null,
     2

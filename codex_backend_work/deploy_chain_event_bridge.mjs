@@ -68,9 +68,23 @@ const watcherSecret = (watcherEnv.get('CHAIN_EVENT_SECRET') || '').trim();
 const existingBridge = tryServiceJson(BRIDGE_SERVICE);
 const existingBridgeEnv = envMap(existingBridge);
 const bridgeSecret = (existingBridgeEnv.get('CHAIN_EVENT_BRIDGE_SECRET') || '').trim() || crypto.randomBytes(32).toString('hex');
+const quicknodeStreamSecurityToken = (existingBridgeEnv.get('QUICKNODE_STREAM_SECURITY_TOKEN') || '').trim();
 
 if (!watcherUrl || !watcherSecret) {
   throw new Error('decoy-watcher must have a URL and CHAIN_EVENT_SECRET before deploying the bridge');
+}
+
+const envVars = [
+  `WATCHER_URL=${watcherUrl}`,
+  `WATCHER_CHAIN_EVENT_SECRET=${watcherSecret}`,
+  `CHAIN_EVENT_BRIDGE_SECRET=${bridgeSecret}`,
+  'JSON_BODY_LIMIT_BYTES=1048576',
+  'FORWARD_TIMEOUT_MS=15000',
+  'CODEX_DEPLOY_MARKER=chain-event-bridge-hmac-20260628',
+];
+
+if (quicknodeStreamSecurityToken) {
+  envVars.push(`QUICKNODE_STREAM_SECURITY_TOKEN=${quicknodeStreamSecurityToken}`);
 }
 
 gcloud([
@@ -85,14 +99,7 @@ gcloud([
   REGION,
   '--allow-unauthenticated',
   '--set-env-vars',
-  [
-    `WATCHER_URL=${watcherUrl}`,
-    `WATCHER_CHAIN_EVENT_SECRET=${watcherSecret}`,
-    `CHAIN_EVENT_BRIDGE_SECRET=${bridgeSecret}`,
-    'JSON_BODY_LIMIT_BYTES=1048576',
-    'FORWARD_TIMEOUT_MS=15000',
-    'CODEX_DEPLOY_MARKER=chain-event-bridge-shadow-20260628',
-  ].join(','),
+  envVars.join(','),
   '--quiet',
 ]);
 
@@ -126,6 +133,7 @@ console.log(
       bridgeUrl,
       publicIngress: true,
       bridgeSecretPresent: true,
+      quicknodeHmacPreserved: !!quicknodeStreamSecurityToken,
       watcherService: WATCHER_SERVICE,
       watcherPrivateTargetConfigured: !!watcherUrl,
       watcherSecretPresent: true,
