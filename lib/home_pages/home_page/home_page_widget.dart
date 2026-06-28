@@ -752,7 +752,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   children: [
                                                     Container(
                                                       width: 240.0,
-                                                      height: 100.0,
+                                                      height: 94.0,
                                                       decoration:
                                                           BoxDecoration(),
                                                       child: Align(

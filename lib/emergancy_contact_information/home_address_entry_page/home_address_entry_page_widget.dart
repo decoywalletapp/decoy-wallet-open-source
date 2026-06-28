@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -8,12 +10,20 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'home_address_entry_page_model.dart';
 export 'home_address_entry_page_model.dart';
+
+void _debugLog(String message) {
+  if (kDebugMode) {
+    debugPrint(message);
+  }
+}
 
 /// create a page where the user enters their home address and then save
 /// button at bottom
@@ -34,6 +44,178 @@ class _HomeAddressEntryPageWidgetState
   late HomeAddressEntryPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  static const _dataKeyStorage = FlutterSecureStorage();
+  static const _dataKeyName = 'decoy_data_key_b64';
+
+  String? _normalizeDataKeyB64(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty || text.toLowerCase() == 'null') {
+      return null;
+    }
+
+    try {
+      var normalized = text.replaceAll('-', '+').replaceAll('_', '/');
+      final pad = normalized.length % 4;
+      if (pad != 0) {
+        normalized = normalized + ('=' * (4 - pad));
+      }
+
+      final bytes = base64.decode(normalized);
+      if (bytes.length != 16 && bytes.length != 32) {
+        return null;
+      }
+      return base64UrlEncode(bytes);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String _cleanLoadedValue(dynamic value) {
+    if (value == null) return '';
+    final text = value.toString().trim();
+    return text.toLowerCase() == 'null' ? '' : text;
+  }
+
+  String _jsonValue(dynamic json, String path) {
+    return _cleanLoadedValue(getJsonField(json, path));
+  }
+
+  String? _storageKeyForCurrentUser(String name) {
+    final userId = currentUserUid.trim();
+    if (userId.isEmpty) {
+      return null;
+    }
+    return '$name.$userId';
+  }
+
+  Future<void> _rememberDataKey(String keyB64) async {
+    final normalized = _normalizeDataKeyB64(keyB64);
+    if (normalized == null) {
+      return;
+    }
+
+    try {
+      await _dataKeyStorage.write(key: _dataKeyName, value: normalized);
+      final userKey = _storageKeyForCurrentUser(_dataKeyName);
+      if (userKey != null) {
+        await _dataKeyStorage.write(key: userKey, value: normalized);
+      }
+    } catch (_) {}
+  }
+
+  Future<String> _newOrStoredDataKey() async {
+    final key = await actions.generateDataKeyIfMissing();
+    return _normalizeDataKeyB64(key) ?? key;
+  }
+
+  Future<String> _jwtForApi() async {
+    final cached = currentJwtToken.trim();
+    if (cached.isNotEmpty) {
+      return cached;
+    }
+
+    try {
+      final session = SupaFlow.client.auth.currentSession;
+      final sessionToken = session?.accessToken.trim() ?? '';
+      if (sessionToken.isNotEmpty) {
+        return sessionToken;
+      }
+
+      final refreshed = await SupaFlow.client.auth.refreshSession();
+      return refreshed.session?.accessToken.trim() ?? '';
+    } catch (error) {
+      _debugLog('[HomeAddress] JWT lookup failed: $error');
+      return '';
+    }
+  }
+
+  String _extractUnwrappedDataKey(dynamic response) {
+    for (final path in const [
+      r'''$.dataKeyB64''',
+      r'''$.data_key_b64''',
+      r'''$.unwrappedB64''',
+      r'''$.keyB64''',
+      r'''$.plaintextB64''',
+    ]) {
+      final value = _jsonValue(response, path);
+      if (value.isNotEmpty) return value;
+    }
+    return _cleanLoadedValue(response);
+  }
+
+  Future<String?> _dataKeyForWrappedRow(String? wrappedB64) async {
+    final wrapped = wrappedB64?.trim() ?? '';
+    if (wrapped.isEmpty) {
+      return null;
+    }
+
+    try {
+      final jwt = await _jwtForApi();
+      final unwrapResp = await WrapDataKeyUnwrapCall.call(
+        wrappedB64: wrapped,
+        jwt: jwt,
+      );
+      final key = _normalizeDataKeyB64(
+        _extractUnwrappedDataKey(unwrapResp.jsonBody),
+      );
+      if (unwrapResp.succeeded && key != null) {
+        return key;
+      }
+      _debugLog(
+        '[HomeAddress] data key unwrap failed: '
+        'status=${unwrapResp.statusCode}, jwt=${jwt.isNotEmpty}, '
+        'key=${key != null}',
+      );
+    } catch (error) {
+      _debugLog('[HomeAddress] data key unwrap threw: $error');
+    }
+    return null;
+  }
+
+  Future<String?> _currentRowDataKeyForSave() async {
+    var wrapped = (_model.wrappedB64 ?? '').trim();
+    if (wrapped.isEmpty) {
+      try {
+        final rows = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .order('updated_at', ascending: false),
+          limit: 1,
+        );
+        if (rows.isNotEmpty) {
+          wrapped = (rows.first.wrappedDatakey ?? '').trim();
+          _model.wrappedB64 = wrapped;
+        }
+      } catch (error) {
+        _debugLog('[HomeAddress] save key row lookup failed: $error');
+      }
+    }
+
+    return _dataKeyForWrappedRow(wrapped);
+  }
+
+  void _setAddressFields(dynamic addrObj) {
+    _model.streetAddressTextController?.text =
+        _jsonValue(addrObj, r'''$.street''');
+    _model.cityTextController?.text = _jsonValue(addrObj, r'''$.city''');
+    _model.stateTextController?.text = _jsonValue(addrObj, r'''$.state''');
+    _model.zipTextController?.text = _jsonValue(addrObj, r'''$.zip''');
+    final country = _jsonValue(addrObj, r'''$.country''');
+    _model.countryTextController?.text = country.isNotEmpty ? country : 'USA';
+    _model.apartmentTextController?.text = _jsonValue(addrObj, r'''$.apt''');
+  }
+
+  void _clearAddressFields() {
+    _model.streetAddressTextController?.clear();
+    _model.cityTextController?.clear();
+    _model.stateTextController?.clear();
+    _model.zipTextController?.clear();
+    _model.countryTextController?.text = 'USA';
+    _model.apartmentTextController?.clear();
+  }
 
   @override
   void initState() {
@@ -50,75 +232,61 @@ class _HomeAddressEntryPageWidgetState
               'user_id',
               currentUserUid,
             )
-            .order('updated_at'),
+            .order('updated_at', ascending: false),
+        limit: 10,
       );
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
-        _model.rowCipherB64 =
-            _model.rows?.elementAtOrNull(0)?.addressCiphertext;
-        _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.addressNonce;
-        _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
-        safeSetState(() {});
-        _model.dataKeyOut = await actions.generateDataKeyIfMissing();
-        _model.dataKeyB64 = _model.dataKeyOut;
-        safeSetState(() {});
-        _model.addrObj = await actions.aesGcmDecryptToMap(
-          _model.rowCipherB64!,
-          _model.rowNonceB64!,
-          _model.dataKeyB64!,
+        final selectedRow = _model.rows!.firstWhere(
+          (row) =>
+              (row.addressCiphertext ?? '').trim().isNotEmpty &&
+              (row.addressNonce ?? '').trim().isNotEmpty,
+          orElse: () => _model.rows!.first,
         );
-        _model.debugJSON = _model.addrObj?.toString();
+        _model.rowCipherB64 = selectedRow.addressCiphertext;
+        _model.rowNonceB64 = selectedRow.addressNonce;
+        _model.wrappedB64 = selectedRow.wrappedDatakey;
         safeSetState(() {});
-        safeSetState(() {
-          _model.streetAddressTextController?.text = getJsonField(
-            _model.addrObj,
-            r'''$.street''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.cityTextController?.text = getJsonField(
-            _model.addrObj,
-            r'''$.city''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.stateTextController?.text = getJsonField(
-            _model.addrObj,
-            r'''$.state''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.zipTextController?.text = getJsonField(
-            _model.addrObj,
-            r'''$.zip''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.countryTextController?.text = getJsonField(
-            _model.addrObj,
-            r'''$.country''',
-          ).toString();
-        });
-        safeSetState(() {
-          _model.apartmentTextController?.text = getJsonField(
-            _model.addrObj,
-            r'''$.apt''',
-          ).toString();
-        });
+        final hasSavedAddressPayload =
+            (_model.rowCipherB64 ?? '').trim().isNotEmpty &&
+                (_model.rowNonceB64 ?? '').trim().isNotEmpty;
+        if (hasSavedAddressPayload) {
+          _model.dataKeyOut = await _dataKeyForWrappedRow(_model.wrappedB64);
+          if ((_model.dataKeyOut ?? '').trim().isNotEmpty) {
+            _model.dataKeyB64 = _model.dataKeyOut;
+            _model.addrObj = await actions.aesGcmDecryptToMap(
+              _model.rowCipherB64!,
+              _model.rowNonceB64!,
+              _model.dataKeyB64!,
+            );
+            _model.debugJSON = _model.addrObj?.toString();
+            if (getJsonField(_model.addrObj, r'''$._ok''') == false) {
+              _debugLog(
+                '[HomeAddress] address decrypt failed: '
+                '${getJsonField(_model.addrObj, r'''$._error''')}',
+              );
+              _clearAddressFields();
+            } else {
+              _setAddressFields(_model.addrObj);
+              await _rememberDataKey(_model.dataKeyB64!);
+            }
+          } else {
+            _clearAddressFields();
+          }
+        } else {
+          _model.dataKeyOut2 = await _dataKeyForWrappedRow(_model.wrappedB64) ??
+              await _newOrStoredDataKey();
+          _model.dataKeyB64 = _model.dataKeyOut2;
+          _clearAddressFields();
+        }
       } else {
-        _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
+        _model.dataKeyOut2 = await _newOrStoredDataKey();
         _model.dataKeyB64 = _model.dataKeyOut2;
         _model.rowCipherB64 = '';
         _model.rowNonceB64 = '';
         _model.wrappedB64 = '';
-        safeSetState(() {});
-        safeSetState(() {
-          _model.streetAddressTextController?.clear();
-          _model.cityTextController?.clear();
-          _model.stateTextController?.clear();
-          _model.zipTextController?.clear();
-          _model.apartmentTextController?.clear();
-        });
+        _clearAddressFields();
       }
+      safeSetState(() {});
     });
 
     _model.streetAddressTextController ??= TextEditingController();
@@ -1162,8 +1330,10 @@ class _HomeAddressEntryPageWidgetState
                                     _model.addressJson = _model.playload;
                                     safeSetState(() {});
                                     if (loggedIn == true) {
-                                      _model.keyOut = await actions
-                                          .generateDataKeyIfMissing();
+                                      _model.keyOut =
+                                          await _currentRowDataKeyForSave();
+                                      _model.keyOut ??=
+                                          await _newOrStoredDataKey();
                                       _model.dataKeyB64 = _model.keyOut;
                                       safeSetState(() {});
                                       _model.enc =
@@ -1182,14 +1352,16 @@ class _HomeAddressEntryPageWidgetState
                                       safeSetState(() {});
                                       _model.wrap = await WrapDataKeyCall.call(
                                         dataKeyB64: _model.dataKeyB64,
-                                        jwt: currentJwtToken,
+                                        jwt: await _jwtForApi(),
                                       );
 
-                                      if ((_model.wrap?.succeeded ?? true)) {
-                                        _model.wrappedB64 = getJsonField(
+                                      if ((_model.wrap?.succeeded ?? false)) {
+                                        _model.wrappedB64 = _jsonValue(
                                           (_model.wrap?.jsonBody ?? ''),
                                           r'''$.wrappedB64''',
-                                        ).toString();
+                                        );
+                                        await _rememberDataKey(
+                                            _model.dataKeyB64!);
                                         safeSetState(() {});
                                         _model.supaRows =
                                             await DecoyWalletTable().queryRows(
@@ -1211,18 +1383,19 @@ class _HomeAddressEntryPageWidgetState
                                               'updated_at':
                                                   supaSerialize<DateTime>(
                                                       getCurrentTimestamp),
-                                              'address_complete': (_model.streetAddressTextController
-                                                                  .text !=
-                                                              '') &&
+                                              'address_complete': (_model
+                                                              .streetAddressTextController
+                                                              .text !=
+                                                          '') &&
                                                       (_model.cityTextController
-                                                                  .text !=
-                                                              '') &&
+                                                              .text !=
+                                                          '') &&
                                                       (_model.stateTextController
-                                                                  .text !=
-                                                              '') &&
+                                                              .text !=
+                                                          '') &&
                                                       (_model.zipTextController
-                                                                  .text !=
-                                                              '')
+                                                              .text !=
+                                                          '')
                                                   ? true
                                                   : false,
                                             },
@@ -1260,18 +1433,19 @@ class _HomeAddressEntryPageWidgetState
                                             'updated_at':
                                                 supaSerialize<DateTime>(
                                                     getCurrentTimestamp),
-                                            'address_complete': (_model.streetAddressTextController
-                                                                .text !=
-                                                            '') &&
+                                            'address_complete': (_model
+                                                            .streetAddressTextController
+                                                            .text !=
+                                                        '') &&
                                                     (_model.cityTextController
-                                                                .text !=
-                                                            '') &&
+                                                            .text !=
+                                                        '') &&
                                                     (_model.stateTextController
-                                                                .text !=
-                                                            '') &&
+                                                            .text !=
+                                                        '') &&
                                                     (_model.zipTextController
-                                                                .text !=
-                                                            '')
+                                                            .text !=
+                                                        '')
                                                 ? true
                                                 : false,
                                           });

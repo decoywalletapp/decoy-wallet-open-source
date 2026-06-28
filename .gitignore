@@ -23,6 +23,7 @@ firebase-adminsdk*.json
 # Flutter / Dart
 .dart_tool/
 .build/
+build/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
@@ -31,6 +32,7 @@ pubspec.lock
 
 # Android
 android/.gradle/
+android/build/
 android/local.properties
 android/**/key.properties
 android/**/keystore.jks
@@ -39,6 +41,7 @@ android/**/*.keystore
 # iOS
 ios/Pods/
 ios/.symlinks/
+ios/Flutter/ephemeral/
 ios/Flutter/Generated.xcconfig
 ios/Flutter/flutter_export_environment.sh
 ios/Runner/GeneratedPluginRegistrant.*

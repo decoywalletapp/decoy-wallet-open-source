@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import, unused_import
+
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/backend/supabase/supabase.dart';
@@ -6,12 +8,10 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/custom_code/actions/index.dart'; // Imports custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
+import '/index.dart';
 import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
-
-import '/custom_code/actions/index.dart'; // Imports other custom actions
-import '/flutter_flow/custom_functions.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,6 +32,14 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   AppLinks? _appLinks;
   StreamSubscription<Uri>? _sub;
   bool _navigated = false;
+  static final Set<String> _linksInFlight = <String>{};
+  static final Set<String> _linksCompleted = <String>{};
+
+  void _debugLog(String message) {
+    if (kDebugMode) {
+      debugPrint(message);
+    }
+  }
 
   @override
   void initState() {
@@ -45,30 +53,39 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     // Cold start
     try {
       final uri = await _appLinks!.getInitialLink();
-      if (kDebugMode) debugPrint('[VerifyAnyLink] initial link: $uri');
+      if (kDebugMode) _debugLog('[VerifyAnyLink] initial link: $uri');
       if (uri != null) _handleUri(uri);
     } catch (e, st) {
       if (kDebugMode)
-        debugPrint('[VerifyAnyLink] getInitialLink error: $e\n$st');
+        _debugLog('[VerifyAnyLink] getInitialLink error: $e\n$st');
     }
 
     // Warm
     _sub = _appLinks!.uriLinkStream.listen(
       (uri) {
-        if (kDebugMode) debugPrint('[VerifyAnyLink] stream link: $uri');
+        if (kDebugMode) _debugLog('[VerifyAnyLink] stream link: $uri');
         _handleUri(uri);
       },
       onError: (e) {
-        if (kDebugMode) debugPrint('[VerifyAnyLink] stream error: $e');
+        if (kDebugMode) _debugLog('[VerifyAnyLink] stream error: $e');
       },
     );
   }
 
   Future<void> _handleUri(Uri uri) async {
-    final p = uri.queryParameters;
-    final tokenHash = p['token_hash'] ?? p['tokenHash'];
+    final linkKey = uri.toString();
+    if (_linksCompleted.contains(linkKey) || !_linksInFlight.add(linkKey)) {
+      if (kDebugMode) _debugLog('[VerifyAnyLink] duplicate link skipped: $uri');
+      return;
+    }
+
+    var completed = false;
+    final p = _allParams(uri);
+    final tokenHash = p['token_hash'] ?? p['tokenHash'] ?? p['token'];
+    final refreshToken = p['refresh_token'] ?? p['refreshToken'];
+    final accessToken = p['access_token'] ?? p['accessToken'];
     final t = (p['type'] ?? 'signup').toLowerCase();
-    if (tokenHash == null || tokenHash.isEmpty) return;
+    final isRecoveryLink = t == 'recovery';
 
     final typeMap = <String, OtpType>{
       'signup': OtpType.signup,
@@ -81,16 +98,42 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     final client = Supabase.instance.client;
 
     try {
-      final res = await client.auth.verifyOTP(
-        type: otpType,
-        tokenHash: tokenHash,
-      );
+      AuthResponse? res;
+
+      if (tokenHash != null && tokenHash.isNotEmpty) {
+        res = await client.auth.verifyOTP(
+          type: otpType,
+          tokenHash: tokenHash,
+        );
+      } else if (refreshToken != null && refreshToken.isNotEmpty) {
+        await client.auth.setSession(refreshToken);
+      } else if (accessToken != null && accessToken.isNotEmpty) {
+        await client.auth.getSessionFromUrl(uri);
+      } else {
+        if (kDebugMode) {
+          _debugLog('[VerifyAnyLink] no auth payload in link: $uri');
+        }
+        return;
+      }
 
       // let session hydrate
       await Future.delayed(const Duration(milliseconds: 300));
-      final session = client.auth.currentSession ?? res.session;
-      final ok = session != null || res.user != null;
+      final session = client.auth.currentSession ?? res?.session;
+      final ok = session != null || res?.user != null;
       if (!ok || !mounted) return;
+      completed = true;
+
+      if (isRecoveryLink) {
+        if (!_navigated && mounted) {
+          _navigated = true;
+          if (kDebugMode) {
+            _debugLog(
+                '[VerifyAnyLink] verified recovery link; routing updatePasswordPage');
+          }
+          context.goNamed(UpdatePasswordPageWidget.routeName);
+        }
+        return;
+      }
 
       // Optional: promote pending_email -> email on your profile row
       try {
@@ -124,16 +167,20 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         }
       } catch (e, st) {
         if (kDebugMode)
-          debugPrint('[VerifyAnyLink] profile promote err: $e\n$st');
+          _debugLog('[VerifyAnyLink] profile promote err: $e\n$st');
       }
 
       if (!_navigated && mounted) {
         _navigated = true;
-        context.goNamed('phoneNumberInput'); // next step in your flow
+        if (kDebugMode) {
+          _debugLog('[VerifyAnyLink] verified link; routing phoneNumberInput');
+        }
+        context.goNamed(PhoneNumberInputWidget.routeName);
       }
     } on AuthApiException catch (e, st) {
       if (e.code == 'otp_expired' || e.statusCode == 403) {
-        if (kDebugMode) debugPrint('[VerifyAnyLink] expired/403: $e\n$st');
+        completed = true;
+        if (kDebugMode) _debugLog('[VerifyAnyLink] expired/403: $e\n$st');
         return;
       }
       if (!mounted) return;
@@ -142,11 +189,35 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       );
     } catch (e, st) {
       if (!mounted) return;
-      if (kDebugMode) debugPrint('[VerifyAnyLink] ERROR: $e\n$st');
+      if (kDebugMode) _debugLog('[VerifyAnyLink] ERROR: $e\n$st');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
+    } finally {
+      _linksInFlight.remove(linkKey);
+      if (completed) {
+        _linksCompleted.add(linkKey);
+      }
     }
+  }
+
+  Map<String, String> _allParams(Uri uri) {
+    final params = <String, String>{...uri.queryParameters};
+    final fragment = uri.fragment;
+    if (fragment.isEmpty) {
+      return params;
+    }
+
+    final cleanFragment =
+        fragment.startsWith('?') ? fragment.substring(1) : fragment;
+    try {
+      params.addAll(Uri.splitQueryString(cleanFragment));
+    } catch (_) {
+      if (kDebugMode) {
+        _debugLog('[VerifyAnyLink] ignored non-query fragment: $fragment');
+      }
+    }
+    return params;
   }
 
   @override

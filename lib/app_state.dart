@@ -130,6 +130,19 @@ class FFAppState extends ChangeNotifier {
               _draftDerivationPath;
     });
     await _safeInitAsync(() async {
+      _draftXpub = await secureStorage.getString('ff_draftXpub') ?? _draftXpub;
+    });
+    await _safeInitAsync(() async {
+      _draftWatchPublicKey =
+          await secureStorage.getString('ff_draftWatchPublicKey') ??
+              _draftWatchPublicKey;
+    });
+    await _safeInitAsync(() async {
+      _draftWatchPublicKeyType =
+          await secureStorage.getString('ff_draftWatchPublicKeyType') ??
+              _draftWatchPublicKeyType;
+    });
+    await _safeInitAsync(() async {
       _currentPriceMultiple =
           await secureStorage.getDouble('ff_currentPriceMultiple') ??
               _currentPriceMultiple;
@@ -589,6 +602,39 @@ class FFAppState extends ChangeNotifier {
 
   void deleteDraftDerivationPath() {
     secureStorage.delete(key: 'ff_draftDerivationPath');
+  }
+
+  String _draftXpub = '';
+  String get draftXpub => _draftXpub;
+  set draftXpub(String value) {
+    _draftXpub = value;
+    secureStorage.setString('ff_draftXpub', value);
+  }
+
+  void deleteDraftXpub() {
+    secureStorage.delete(key: 'ff_draftXpub');
+  }
+
+  String _draftWatchPublicKey = '';
+  String get draftWatchPublicKey => _draftWatchPublicKey;
+  set draftWatchPublicKey(String value) {
+    _draftWatchPublicKey = value;
+    secureStorage.setString('ff_draftWatchPublicKey', value);
+  }
+
+  void deleteDraftWatchPublicKey() {
+    secureStorage.delete(key: 'ff_draftWatchPublicKey');
+  }
+
+  String _draftWatchPublicKeyType = '';
+  String get draftWatchPublicKeyType => _draftWatchPublicKeyType;
+  set draftWatchPublicKeyType(String value) {
+    _draftWatchPublicKeyType = value;
+    secureStorage.setString('ff_draftWatchPublicKeyType', value);
+  }
+
+  void deleteDraftWatchPublicKeyType() {
+    secureStorage.delete(key: 'ff_draftWatchPublicKeyType');
   }
 
   double _currentPriceMultiple = 0.0;

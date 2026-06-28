@@ -256,7 +256,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -399,7 +400,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -542,7 +544,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -685,7 +688,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -828,7 +832,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -971,7 +976,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1114,7 +1120,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1257,7 +1264,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1400,7 +1408,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1543,7 +1552,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1686,7 +1696,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1829,7 +1840,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1972,7 +1984,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -2115,7 +2128,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -2258,7 +2272,8 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 175.0,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [

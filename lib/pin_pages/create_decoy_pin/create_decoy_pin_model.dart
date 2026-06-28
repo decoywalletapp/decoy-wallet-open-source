@@ -10,8 +10,13 @@ class CreateDecoyPinModel extends FlutterFlowModel<CreateDecoyPinWidget> {
   List<String> pinDecoyInput = [];
   void addToPinDecoyInput(String item) => pinDecoyInput.add(item);
   void removeFromPinDecoyInput(String item) => pinDecoyInput.remove(item);
-  void removeAtIndexFromPinDecoyInput(int index) =>
-      pinDecoyInput.removeAt(index);
+  void removeAtIndexFromPinDecoyInput(int index) {
+    if (index < 0 || index >= pinDecoyInput.length) {
+      return;
+    }
+    pinDecoyInput.removeAt(index);
+  }
+
   void insertAtIndexInPinDecoyInput(int index, String item) =>
       pinDecoyInput.insert(index, item);
   void updatePinDecoyInputAtIndex(int index, Function(String) updateFn) =>
@@ -27,8 +32,13 @@ class CreateDecoyPinModel extends FlutterFlowModel<CreateDecoyPinWidget> {
       confirmedDecoyPinInput.add(item);
   void removeFromConfirmedDecoyPinInput(String item) =>
       confirmedDecoyPinInput.remove(item);
-  void removeAtIndexFromConfirmedDecoyPinInput(int index) =>
-      confirmedDecoyPinInput.removeAt(index);
+  void removeAtIndexFromConfirmedDecoyPinInput(int index) {
+    if (index < 0 || index >= confirmedDecoyPinInput.length) {
+      return;
+    }
+    confirmedDecoyPinInput.removeAt(index);
+  }
+
   void insertAtIndexInConfirmedDecoyPinInput(int index, String item) =>
       confirmedDecoyPinInput.insert(index, item);
   void updateConfirmedDecoyPinInputAtIndex(

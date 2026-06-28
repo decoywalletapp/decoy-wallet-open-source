@@ -88,28 +88,25 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Container(
-                                    width: 400.0,
-                                    height: 150.0,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context).info,
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Container(
+                                  width: 400.0,
+                                  height: 150.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).info,
+                                    borderRadius: BorderRadius.circular(0.0),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        6.0, 0.0, 0.0, 0.0),
+                                    child: ClipRRect(
                                       borderRadius: BorderRadius.circular(0.0),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          6.0, 0.0, 0.0, 0.0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(0.0),
-                                        child: Image.asset(
-                                          'assets/images/DecoyLogo1-WOHiRes.jpg',
-                                          width: 200.0,
-                                          height: 200.0,
-                                          fit: BoxFit.cover,
-                                        ),
+                                      child: Image.asset(
+                                        'assets/images/DecoyLogo1-WOHiRes.jpg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
@@ -268,8 +265,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               key: _model.emailAddressKey,
                                               controller: textEditingController,
                                               focusNode: focusNode,
-                                              onEditingComplete:
-                                                  onEditingComplete,
+                                              onEditingComplete: () {
+                                                _model
+                                                    .passwordCreateAccountFocusNode
+                                                    ?.requestFocus();
+                                              },
                                               autofocus: false,
                                               enabled: true,
                                               autofillHints: [
@@ -353,6 +353,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                   ),
                                               keyboardType:
                                                   TextInputType.emailAddress,
+                                              onFieldSubmitted: (_) async {
+                                                _model
+                                                    .passwordCreateAccountFocusNode
+                                                    ?.requestFocus();
+                                              },
                                               enableInteractiveSelection: false,
                                               validator: _model
                                                   .emailAddressTextControllerValidator
@@ -449,8 +454,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                   .passwordCreateAccountKey,
                                               controller: textEditingController,
                                               focusNode: focusNode,
-                                              onEditingComplete:
-                                                  onEditingComplete,
+                                              onEditingComplete: () {
+                                                _model.passwordConfirmFocusNode
+                                                    ?.requestFocus();
+                                              },
                                               autofocus: false,
                                               enabled: true,
                                               autofillHints: [
@@ -562,6 +569,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                     letterSpacing: 0.25,
                                                     fontWeight: FontWeight.w500,
                                                   ),
+                                              onFieldSubmitted: (_) async {
+                                                _model.passwordConfirmFocusNode
+                                                    ?.requestFocus();
+                                              },
                                               validator: _model
                                                   .passwordCreateAccountTextControllerValidator
                                                   .asValidator(context),
@@ -641,8 +652,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               key: _model.passwordConfirmKey,
                                               controller: textEditingController,
                                               focusNode: focusNode,
-                                              onEditingComplete:
-                                                  onEditingComplete,
+                                              onEditingComplete: () {
+                                                FocusScope.of(context)
+                                                    .unfocus();
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
                                               autofocus: false,
                                               autofillHints: [
                                                 AutofillHints.password
@@ -754,6 +770,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                               minLines: 1,
+                                              onFieldSubmitted: (_) async {
+                                                await actions.dismissKeyboard(
+                                                  context,
+                                                );
+                                              },
                                               validator: _model
                                                   .passwordConfirmTextControllerValidator
                                                   .asValidator(context),
@@ -761,7 +782,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           },
                                         ),
                                       ),
-                                      Expanded(
+                                      SizedBox(
+                                        height: _model.notificationState == 0
+                                            ? 25.0
+                                            : 48.0,
                                         child: Align(
                                           alignment:
                                               AlignmentDirectional(0.0, 0.0),
@@ -772,7 +796,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                 child: Container(
                                                   width: double.infinity,
                                                   height:
-                                                      _model.notificationState == 0
+                                                      _model.notificationState ==
+                                                              0
                                                           ? 25.0
                                                           : 48.0,
                                                   decoration: BoxDecoration(
@@ -1086,10 +1111,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           ),
                                         ],
                                       ),
-                                      Expanded(
+                                      SizedBox(
+                                        height: 25.0,
                                         child: Container(
                                           width: double.infinity,
-                                          height: 25.0,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,

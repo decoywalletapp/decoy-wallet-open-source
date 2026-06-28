@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -9,12 +11,20 @@ import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'personal_information_model.dart';
 export 'personal_information_model.dart';
+
+void _debugLog(String message) {
+  if (kDebugMode) {
+    debugPrint(message);
+  }
+}
 
 /// Create a page that allows users to add emergency contact information,
 /// which is just going to be fields to enter in the person's first and last
@@ -36,6 +46,335 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
   late PersonalInformationModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  static const _dataKeyStorage = FlutterSecureStorage();
+  static const _dataKeyName = 'decoy_data_key_b64';
+
+  String? _normalizeDataKeyB64(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty || text.toLowerCase() == 'null') {
+      return null;
+    }
+
+    try {
+      var normalized = text.replaceAll('-', '+').replaceAll('_', '/');
+      final pad = normalized.length % 4;
+      if (pad != 0) {
+        normalized = normalized + ('=' * (4 - pad));
+      }
+
+      final bytes = base64.decode(normalized);
+      if (bytes.length != 16 && bytes.length != 32) {
+        return null;
+      }
+      return base64UrlEncode(bytes);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _rememberDataKey(String keyB64) async {
+    final normalized = _normalizeDataKeyB64(keyB64);
+    if (normalized == null) {
+      return;
+    }
+
+    try {
+      await _dataKeyStorage.write(key: _dataKeyName, value: normalized);
+      final userKey = _storageKeyForCurrentUser(_dataKeyName);
+      if (userKey != null) {
+        await _dataKeyStorage.write(key: userKey, value: normalized);
+      }
+    } catch (_) {
+      try {
+        await _dataKeyStorage.delete(key: _dataKeyName);
+        await _dataKeyStorage.write(key: _dataKeyName, value: normalized);
+        final userKey = _storageKeyForCurrentUser(_dataKeyName);
+        if (userKey != null) {
+          await _dataKeyStorage.delete(key: userKey);
+          await _dataKeyStorage.write(key: userKey, value: normalized);
+        }
+      } catch (_) {}
+    }
+  }
+
+  Future<String> _newOrStoredDataKey() async {
+    final key = await actions.generateDataKeyIfMissing();
+    return _normalizeDataKeyB64(key) ?? key;
+  }
+
+  Future<String?> _storedDataKeyOrNull() async {
+    try {
+      final userKey = _storageKeyForCurrentUser(_dataKeyName);
+      if (userKey != null) {
+        final userValue = _normalizeDataKeyB64(
+          await _dataKeyStorage.read(key: userKey),
+        );
+        if (userValue != null) {
+          return userValue;
+        }
+      }
+      return _normalizeDataKeyB64(
+        await _dataKeyStorage.read(key: _dataKeyName),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String> _jwtForApi() async {
+    final cached = currentJwtToken.trim();
+    if (cached.isNotEmpty) {
+      return cached;
+    }
+
+    try {
+      final session = SupaFlow.client.auth.currentSession;
+      final sessionToken = session?.accessToken.trim() ?? '';
+      if (sessionToken.isNotEmpty) {
+        return sessionToken;
+      }
+
+      final refreshed = await SupaFlow.client.auth.refreshSession();
+      return refreshed.session?.accessToken.trim() ?? '';
+    } catch (error) {
+      _debugLog('[PersonalInformation] JWT lookup failed: $error');
+      return '';
+    }
+  }
+
+  String? _storageKeyForCurrentUser(String name) {
+    final userId = currentUserUid.trim();
+    if (userId.isEmpty) {
+      return null;
+    }
+    return '$name.$userId';
+  }
+
+  String _cleanLoadedValue(dynamic value) {
+    if (value == null) return '';
+    final text = value.toString().trim();
+    return text.toLowerCase() == 'null' ? '' : text;
+  }
+
+  String _jsonValue(dynamic json, String path) {
+    return _cleanLoadedValue(getJsonField(json, path));
+  }
+
+  String _displayPersonalPhone(String phone) {
+    final cleaned = _cleanLoadedValue(phone);
+    return cleaned.isEmpty ? '' : functions.displayUSPhone(cleaned);
+  }
+
+  Future<String?> _dataKeyForWrappedRow(
+    String wrappedB64, {
+    bool allowCreateFallback = true,
+    bool remember = false,
+  }) async {
+    final wrapped = wrappedB64.trim();
+    if (wrapped.isNotEmpty) {
+      try {
+        final jwt = await _jwtForApi();
+        final unwrapResp = await WrapDataKeyUnwrapCall.call(
+          wrappedB64: wrapped,
+          jwt: jwt,
+        );
+        final key = _normalizeDataKeyB64(
+          _extractUnwrappedDataKey(unwrapResp.jsonBody),
+        );
+        if ((unwrapResp.succeeded) && key != null) {
+          if (remember) {
+            await _rememberDataKey(key);
+          }
+          return key;
+        }
+        _debugLog(
+          '[PersonalInformation] data key unwrap failed: '
+          'status=${unwrapResp.statusCode}, jwt=${jwt.isNotEmpty}, '
+          'wrapped=${wrapped.isNotEmpty}, key=${key != null}',
+        );
+      } catch (error) {
+        _debugLog('[PersonalInformation] data key unwrap threw: $error');
+      }
+    }
+
+    if (allowCreateFallback) {
+      return _newOrStoredDataKey();
+    }
+    return null;
+  }
+
+  String _extractUnwrappedDataKey(dynamic response) {
+    for (final path in const [
+      r'''$.dataKeyB64''',
+      r'''$.data_key_b64''',
+      r'''$.unwrappedB64''',
+      r'''$.keyB64''',
+      r'''$.plaintextB64''',
+    ]) {
+      final value = _jsonValue(response, path);
+      if (value.isNotEmpty) return value;
+    }
+    return _cleanLoadedValue(response);
+  }
+
+  void _setPersonalFields({
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String email,
+  }) {
+    final displayPhone = _displayPersonalPhone(phone);
+    _model.firstNameTextController?.text = _cleanLoadedValue(firstName);
+    _model.lastNameTextController?.text = _cleanLoadedValue(lastName);
+    _model.phoneTextController?.text = displayPhone;
+    _model.phoneMask.updateMask(
+      newValue: TextEditingValue(text: displayPhone),
+    );
+    _model.emailTextController?.text = _cleanLoadedValue(email);
+  }
+
+  Future<List<String>> _storedDataKeyCandidates({
+    String? excluding,
+  }) async {
+    final candidates = <String>[];
+    final excluded = _normalizeDataKeyB64(excluding);
+
+    void addCandidate(String? value) {
+      final normalized = _normalizeDataKeyB64(value);
+      if (normalized == null || normalized == excluded) {
+        return;
+      }
+      if (!candidates.contains(normalized)) {
+        candidates.add(normalized);
+      }
+    }
+
+    try {
+      final userKey = _storageKeyForCurrentUser(_dataKeyName);
+      if (userKey != null) {
+        addCandidate(await _dataKeyStorage.read(key: userKey));
+      }
+      addCandidate(await _dataKeyStorage.read(key: _dataKeyName));
+    } catch (_) {}
+
+    return candidates;
+  }
+
+  Future<Map<String, dynamic>?> _decryptPersonalWithCandidateKeys(
+    String? primaryKey,
+  ) async {
+    final candidates = <String>[];
+
+    void addCandidate(String? value) {
+      final normalized = _normalizeDataKeyB64(value);
+      if (normalized == null || candidates.contains(normalized)) {
+        return;
+      }
+      candidates.add(normalized);
+    }
+
+    addCandidate(primaryKey);
+    for (final key in await _storedDataKeyCandidates(excluding: primaryKey)) {
+      addCandidate(key);
+    }
+
+    dynamic lastError;
+    for (final key in candidates) {
+      final obj = await actions.aesGcmDecryptToMap(
+        _model.rowCipherB64!,
+        _model.rowNonceB64!,
+        key,
+      );
+      if (getJsonField(obj, r'''$._ok''') == true) {
+        return {
+          'key': key,
+          'obj': obj,
+        };
+      }
+      lastError = getJsonField(obj, r'''$._error''');
+    }
+
+    _debugLog(
+      '[PersonalInformation] personal decrypt failed for all candidate keys: '
+      '$lastError',
+    );
+    return null;
+  }
+
+  Future<void> _repairPersonalPayloadToKey({
+    required dynamic personalObj,
+    required String targetKey,
+  }) async {
+    final normalizedKey = _normalizeDataKeyB64(targetKey);
+    if (normalizedKey == null) {
+      return;
+    }
+
+    try {
+      final personalJson = await actions.buildPersonalJson(
+        _jsonValue(personalObj, r'''$.firstName'''),
+        _jsonValue(personalObj, r'''$.lastName'''),
+        _jsonValue(personalObj, r'''$.phone'''),
+        _jsonValue(personalObj, r'''$.email'''),
+      );
+      final enc = await actions.aesGcmEncryptString(
+        personalJson,
+        normalizedKey,
+      );
+      await DecoyWalletTable().update(
+        data: {
+          'personal_ciphertext': _jsonValue(enc, r'''$.ciphertextB64'''),
+          'personal_nonce': _jsonValue(enc, r'''$.nonceB64'''),
+          'personal_version': 1,
+          'personal_complete':
+              _jsonValue(personalObj, r'''$.firstName''').isNotEmpty &&
+                  _jsonValue(personalObj, r'''$.lastName''').isNotEmpty,
+          'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
+        },
+        matchingRows: (rows) => rows.eqOrNull(
+          'user_id',
+          currentUserUid,
+        ),
+      );
+      await _rememberDataKey(normalizedKey);
+      _debugLog('[PersonalInformation] repaired personal payload row key');
+    } catch (error) {
+      _debugLog('[PersonalInformation] personal repair failed: $error');
+    }
+  }
+
+  Future<String?> _currentRowDataKeyForSave() async {
+    var wrapped = (_model.wrappedB64 ?? '').trim();
+    if (wrapped.isEmpty) {
+      try {
+        final rows = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .order('updated_at', ascending: false),
+          limit: 1,
+        );
+        if (rows.isNotEmpty) {
+          wrapped = (rows.first.wrappedDatakey ?? '').trim();
+          _model.wrappedB64 = wrapped;
+        }
+      } catch (error) {
+        _debugLog('[PersonalInformation] save key row lookup failed: $error');
+      }
+    }
+
+    if (wrapped.isNotEmpty) {
+      return _dataKeyForWrappedRow(
+        wrapped,
+        allowCreateFallback: false,
+        remember: false,
+      );
+    }
+
+    return null;
+  }
 
   @override
   void initState() {
@@ -52,122 +391,104 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
               'user_id',
               currentUserUid,
             )
-            .order('updated_at'),
+            .order('updated_at', ascending: false),
+        limit: 10,
       );
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
-        _model.rowCipherB64 =
-            _model.rows?.elementAtOrNull(0)?.personalCiphertext;
-        _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.personalNonce;
-        _model.wrappedB64 = _model.rows?.elementAtOrNull(0)?.wrappedDatakey;
+        final selectedRow = _model.rows!.firstWhere(
+          (row) =>
+              (row.personalCiphertext ?? '').trim().isNotEmpty &&
+              (row.personalNonce ?? '').trim().isNotEmpty,
+          orElse: () => _model.rows!.first,
+        );
+        _model.rowCipherB64 = selectedRow.personalCiphertext;
+        _model.rowNonceB64 = selectedRow.personalNonce;
+        _model.wrappedB64 = selectedRow.wrappedDatakey ?? '';
         _model.origEmail = currentUserEmail;
         safeSetState(() {});
-        _model.dataKeyOut = await actions.generateDataKeyIfMissing();
-        _model.dataKeyB64 = _model.dataKeyOut;
-        safeSetState(() {});
-        _model.personalObj = await actions.aesGcmDecryptToMap(
-          _model.rowCipherB64!,
-          _model.rowNonceB64!,
-          _model.dataKeyB64!,
-        );
-        _model.origPhone = functions.sanitizePhoneNumber(getJsonField(
-          _model.personalObj,
-          r'''$.phone''',
-        ).toString());
-        safeSetState(() {});
-        if (getJsonField(
-              _model.personalObj,
-              r'''$.firstName''',
-            ) ==
-            null) {
-          safeSetState(() {
-            _model.firstNameTextController?.text = '';
-          });
-        } else {
-          safeSetState(() {
-            _model.firstNameTextController?.text = getJsonField(
-              _model.personalObj,
-              r'''$.firstName''',
-            ).toString();
-          });
-        }
 
-        if (getJsonField(
-              _model.personalObj,
-              r'''$.lastName''',
-            ) ==
-            null) {
-          safeSetState(() {
-            _model.lastNameTextController?.text = '';
-          });
-        } else {
-          safeSetState(() {
-            _model.lastNameTextController?.text = getJsonField(
-              _model.personalObj,
-              r'''$.lastName''',
-            ).toString();
-          });
-        }
+        final hasSavedPersonalPayload =
+            (_model.rowCipherB64 ?? '').trim().isNotEmpty &&
+                (_model.rowNonceB64 ?? '').trim().isNotEmpty;
+        if (hasSavedPersonalPayload) {
+          final canonicalKey = (_model.wrappedB64 ?? '').trim().isNotEmpty
+              ? await _dataKeyForWrappedRow(
+                  _model.wrappedB64!,
+                  allowCreateFallback: false,
+                  remember: false,
+                )
+              : null;
+          final decryptResult =
+              await _decryptPersonalWithCandidateKeys(canonicalKey);
 
-        if (getJsonField(
-              _model.personalObj,
-              r'''$.phone''',
-            ) ==
-            null) {
-          safeSetState(() {
-            _model.phoneTextController?.text = '';
-            _model.phoneMask.updateMask(
-              newValue: TextEditingValue(
-                text: _model.phoneTextController!.text,
-              ),
+          if (decryptResult == null) {
+            _model.personalObj = {
+              '_ok': false,
+              '_error': 'unrecoverable local data key mismatch',
+            };
+            _model.dataKeyB64 = canonicalKey ?? await _newOrStoredDataKey();
+            _model.origPhone = '';
+            _setPersonalFields(
+              firstName: '',
+              lastName: '',
+              phone: '',
+              email: currentUserEmail,
             );
-          });
-        } else {
-          safeSetState(() {
-            _model.phoneTextController?.text =
-                functions.displayUSPhone(getJsonField(
-              _model.personalObj,
-              r'''$.phone''',
-            ).toString());
-            _model.phoneMask.updateMask(
-              newValue: TextEditingValue(
-                text: _model.phoneTextController!.text,
-              ),
+          } else {
+            _model.dataKeyB64 = decryptResult['key'] as String?;
+            _model.personalObj = decryptResult['obj'];
+            final loadedPhone = _jsonValue(_model.personalObj, r'''$.phone''');
+            final loadedEmail = _jsonValue(_model.personalObj, r'''$.email''');
+            _model.origPhone = functions.sanitizePhoneNumber(loadedPhone);
+            _setPersonalFields(
+              firstName: _jsonValue(_model.personalObj, r'''$.firstName'''),
+              lastName: _jsonValue(_model.personalObj, r'''$.lastName'''),
+              phone: loadedPhone,
+              email: currentUserEmail != '' ? currentUserEmail : loadedEmail,
             );
-          });
-        }
-
-        if (currentUserEmail != '') {
-          safeSetState(() {
-            _model.emailTextController?.text = currentUserEmail;
-          });
-        } else if (getJsonField(
-              _model.personalObj,
-              r'''$.email''',
-            ) ==
-            null) {
-          safeSetState(() {
-            _model.emailTextController?.text = '';
-          });
+            final loadedKey = _normalizeDataKeyB64(_model.dataKeyB64);
+            final normalizedCanonical = _normalizeDataKeyB64(canonicalKey);
+            if (normalizedCanonical != null) {
+              if (loadedKey != normalizedCanonical) {
+                await _repairPersonalPayloadToKey(
+                  personalObj: _model.personalObj,
+                  targetKey: normalizedCanonical,
+                );
+                _model.dataKeyB64 = normalizedCanonical;
+              } else {
+                await _rememberDataKey(normalizedCanonical);
+              }
+            } else if (loadedKey != null) {
+              await _rememberDataKey(loadedKey);
+            }
+          }
         } else {
-          safeSetState(() {
-            _model.emailTextController?.text = getJsonField(
-              _model.personalObj,
-              r'''$.email''',
-            ).toString();
-          });
+          _model.dataKeyOut2 = (_model.wrappedB64 ?? '').trim().isNotEmpty
+              ? await _dataKeyForWrappedRow(
+                  _model.wrappedB64!,
+                  allowCreateFallback: false,
+                  remember: false,
+                )
+              : await _newOrStoredDataKey();
+          _model.dataKeyB64 = _model.dataKeyOut2;
+          _setPersonalFields(
+            firstName: '',
+            lastName: '',
+            phone: '',
+            email: currentUserEmail,
+          );
         }
       } else {
-        _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
+        _model.dataKeyOut2 = await _newOrStoredDataKey();
         _model.dataKeyB64 = _model.dataKeyOut2;
-        safeSetState(() {});
-        safeSetState(() {
-          _model.firstNameTextController?.clear();
-          _model.lastNameTextController?.clear();
-          _model.phoneTextController?.clear();
-          _model.phoneMask.clear();
-          _model.emailTextController?.clear();
-        });
+        _setPersonalFields(
+          firstName: '',
+          lastName: '',
+          phone: '',
+          email: currentUserEmail,
+        );
       }
+      safeSetState(() {});
     });
 
     _model.firstNameTextController ??= TextEditingController();
@@ -869,9 +1190,10 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     await actions.buildPersonalJson(
                                   _model.firstNameTextController.text,
                                   _model.lastNameTextController.text,
-                                  _model.origPhone != _model.changedPhone
-                                      ? (_model.origPhone ?? '')
-                                      : _model.phoneTextController.text,
+                                  (_model.changedPhone != null &&
+                                          _model.changedPhone != '')
+                                      ? _model.phoneTextController.text
+                                      : (_model.origPhone ?? ''),
                                   (currentUserEmail != '') &&
                                           (functions.normalizeEmail(
                                                   currentUserEmail) !=
@@ -884,8 +1206,12 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                 safeSetState(() {});
                                 if (loggedIn == true) {
                                   _model.keyOut =
+                                      await _currentRowDataKeyForSave();
+                                  _model.keyOut ??=
                                       await actions.generateDataKeyIfMissing();
-                                  _model.dataKeyB64 = _model.keyOut;
+                                  _model.dataKeyB64 =
+                                      _normalizeDataKeyB64(_model.keyOut) ??
+                                          _model.keyOut;
                                   safeSetState(() {});
                                   _model.enc =
                                       await actions.aesGcmEncryptString(
@@ -903,14 +1229,15 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                   safeSetState(() {});
                                   _model.wrap = await WrapDataKeyCall.call(
                                     dataKeyB64: _model.dataKeyB64,
-                                    jwt: currentJwtToken,
+                                    jwt: await _jwtForApi(),
                                   );
 
-                                  if ((_model.wrap?.succeeded ?? true)) {
-                                    _model.wrappedB64 = getJsonField(
+                                  if ((_model.wrap?.succeeded ?? false)) {
+                                    _model.wrappedB64 = _jsonValue(
                                       (_model.wrap?.jsonBody ?? ''),
                                       r'''$.wrappedB64''',
-                                    ).toString();
+                                    );
+                                    await _rememberDataKey(_model.dataKeyB64!);
                                     safeSetState(() {});
                                     _model.supaRows =
                                         await DecoyWalletTable().queryRows(
@@ -971,14 +1298,16 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                               _model.changedEmail != '')) {
                                         _model.changedEmailHash =
                                             await GetEmailHashCall.call(
-                                          jwt: currentJwtToken,
+                                          jwt: await _jwtForApi(),
                                           email: functions.normalizeEmail(
                                               _model.changedEmail),
                                         );
 
                                         await DecoyWalletTable().update(
                                           data: {
-                                            'pending_email': null,
+                                            'pending_email':
+                                                functions.normalizeEmail(
+                                                    _model.changedEmail),
                                             'email_verified': false,
                                             'email_verified_at':
                                                 supaSerialize<DateTime>(
@@ -1011,6 +1340,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           return;
                                         }
 
+                                        AppStateNotifier.instance
+                                            .updateNotifyOnAuthChange(false);
                                         await authManager.updateEmail(
                                           email: _model.changedEmail!,
                                           context: context,

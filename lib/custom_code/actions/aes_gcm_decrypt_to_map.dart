@@ -34,7 +34,11 @@ Future<dynamic> aesGcmDecryptToMap(
     // decode inputs
     final data = _decodeB64Any(ciphertextB64); // [ciphertext || 16-byte tag]
     final nonce = _decodeB64Any(nonceB64);
-    final key = SecretKey(_decodeB64Any(base64DataKey));
+    final keyBytes = _decodeB64Any(base64DataKey);
+    if (keyBytes.length != 16 && keyBytes.length != 32) {
+      return {'_ok': false, '_error': 'invalid key length'};
+    }
+    final key = SecretKey(keyBytes);
 
     if (data.length < 17) {
       return {'_ok': false, '_error': 'ciphertext too short'};
@@ -46,7 +50,8 @@ Future<dynamic> aesGcmDecryptToMap(
     final mac = Mac(data.sublist(ctLen));
 
     // decrypt
-    final algo = AesGcm.with128bits();
+    final algo =
+        keyBytes.length == 32 ? AesGcm.with256bits() : AesGcm.with128bits();
     final box = SecretBox(ct, nonce: nonce, mac: mac);
     final bytes = await algo.decrypt(box, secretKey: key);
 

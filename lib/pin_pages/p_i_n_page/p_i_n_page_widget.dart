@@ -4,17 +4,26 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:convert';
 import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'p_i_n_page_model.dart';
 export 'p_i_n_page_model.dart';
+
+void _debugLog(String message) {
+  if (kDebugMode) {
+    debugPrint(message);
+  }
+}
 
 /// I want a PIN code page where the user is propted to create a pin to enter
 /// to the home page.
@@ -36,9 +45,114 @@ class _PINPageWidgetState extends State<PINPageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng? currentUserLocationValue;
 
+  String? _normalizeDataKeyB64(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty || text.toLowerCase() == 'null') {
+      return null;
+    }
+
+    try {
+      var normalized = text.replaceAll('-', '+').replaceAll('_', '/');
+      final pad = normalized.length % 4;
+      if (pad != 0) {
+        normalized = normalized + ('=' * (4 - pad));
+      }
+
+      final bytes = base64.decode(normalized);
+      if (bytes.length != 16 && bytes.length != 32) {
+        return null;
+      }
+      return base64UrlEncode(bytes);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String _cleanLoadedValue(dynamic value) {
+    if (value == null) return '';
+    final text = value.toString().trim();
+    return text.toLowerCase() == 'null' ? '' : text;
+  }
+
+  String _jsonValue(dynamic json, String path) {
+    return _cleanLoadedValue(getJsonField(json, path));
+  }
+
+  Future<String> _jwtForApi() async {
+    final cached = currentJwtToken.trim();
+    if (cached.isNotEmpty) {
+      return cached;
+    }
+
+    try {
+      final session = SupaFlow.client.auth.currentSession;
+      final sessionToken = session?.accessToken.trim() ?? '';
+      if (sessionToken.isNotEmpty) {
+        return sessionToken;
+      }
+
+      final refreshed = await SupaFlow.client.auth.refreshSession();
+      return refreshed.session?.accessToken.trim() ?? '';
+    } catch (error) {
+      _debugLog('[PINPage] JWT lookup failed: $error');
+      return '';
+    }
+  }
+
+  String _extractUnwrappedDataKey(dynamic response) {
+    for (final path in const [
+      r'''$.dataKeyB64''',
+      r'''$.data_key_b64''',
+      r'''$.unwrappedB64''',
+      r'''$.keyB64''',
+      r'''$.plaintextB64''',
+    ]) {
+      final value = _jsonValue(response, path);
+      if (value.isNotEmpty) return value;
+    }
+    return _cleanLoadedValue(response);
+  }
+
+  Future<String?> _dataKeyForWrappedRow(String? wrappedB64) async {
+    final wrapped = wrappedB64?.trim() ?? '';
+    if (wrapped.isEmpty) {
+      return null;
+    }
+
+    try {
+      final jwt = await _jwtForApi();
+      final unwrapResp = await WrapDataKeyUnwrapCall.call(
+        wrappedB64: wrapped,
+        jwt: jwt,
+      );
+      final key = _normalizeDataKeyB64(
+        _extractUnwrappedDataKey(unwrapResp.jsonBody),
+      );
+      if (unwrapResp.succeeded && key != null) {
+        return key;
+      }
+      _debugLog(
+        '[PINPage] data key unwrap failed: '
+        'status=${unwrapResp.statusCode}, jwt=${jwt.isNotEmpty}, '
+        'key=${key != null}',
+      );
+    } catch (error) {
+      _debugLog('[PINPage] data key unwrap threw: $error');
+    }
+    return null;
+  }
+
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
     _model = createModel(context, () => PINPageModel());
 
     // On page load action.
@@ -61,6 +175,14 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
   @override
   void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
     _model.dispose();
 
     super.dispose();
@@ -79,7 +201,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: Colors.black,
           body: SafeArea(
             top: true,
             child: Column(
@@ -92,7 +214,13 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: Container(
                         width: 400.0,
-                        decoration: BoxDecoration(),
+                        height: MediaQuery.sizeOf(context).height -
+                            MediaQuery.viewPaddingOf(context).top -
+                            MediaQuery.viewPaddingOf(context).bottom -
+                            12.0,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                        ),
                         child: Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
                           child: Padding(
@@ -104,8 +232,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                               children: [
                                 Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
+                                  heightFactor: 1.0,
                                   child: Column(
-                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -113,6 +242,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                       Align(
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
+                                        heightFactor: 1.0,
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           mainAxisAlignment:
@@ -137,24 +267,22 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                 child: Text(
                                                   'ENTER PIN',
                                                   textAlign: TextAlign.center,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .headlineMedium
-                                                      .override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .headlineMediumFamily,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .info,
-                                                        letterSpacing: 0.0,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme
-                                                                    .of(context)
-                                                                .headlineMediumIsCustom,
-                                                      ),
+                                                  style:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .headlineMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .headlineMediumFamily,
+                                                            color: Colors.white,
+                                                            letterSpacing: 0.0,
+                                                            useGoogleFonts:
+                                                                !FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .headlineMediumIsCustom,
+                                                          ),
                                                 ),
                                               ),
                                             ),
@@ -663,107 +791,105 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                 ),
                                               ],
                                             ),
-                                            Expanded(
-                                              child: Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, 0.0),
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  height: 34.0,
-                                                  decoration: BoxDecoration(),
-                                                  child: Stack(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    children: [
-                                                      if (_model
-                                                              .ppNotificationValue
-                                                              .toString() ==
-                                                          '1')
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        20.0),
-                                                            child: Text(
-                                                              'PLEASE ENTER AT LEAST FOUR DIGITS',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyMediumFamily,
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primary,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .bodyMediumIsCustom,
-                                                                  ),
-                                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: 34.0,
+                                                decoration: BoxDecoration(),
+                                                child: Stack(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  children: [
+                                                    if (_model
+                                                            .ppNotificationValue
+                                                            .toString() ==
+                                                        '1')
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      20.0),
+                                                          child: Text(
+                                                            'PLEASE ENTER AT LEAST FOUR DIGITS',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumFamily,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primary,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMediumIsCustom,
+                                                                ),
                                                           ),
                                                         ),
-                                                      if (_model
-                                                              .ppNotificationValue
-                                                              .toString() ==
-                                                          '2')
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, 0.0),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        20.0),
-                                                            child: Text(
-                                                              'INVALID PIN - TRY AGAIN',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyMediumFamily,
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primary,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .bodyMediumIsCustom,
-                                                                  ),
-                                                            ),
+                                                      ),
+                                                    if (_model
+                                                            .ppNotificationValue
+                                                            .toString() ==
+                                                        '2')
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      20.0),
+                                                          child: Text(
+                                                            'INVALID PIN - TRY AGAIN',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumFamily,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primary,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMediumIsCustom,
+                                                                ),
                                                           ),
                                                         ),
-                                                    ],
-                                                  ),
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -1339,9 +1465,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             buttonSize: 70.0,
                                             icon: Icon(
                                               Icons.backspace_outlined,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
+                                              color: Colors.white,
                                               size: 28.0,
                                             ),
                                             onPressed: () async {
@@ -1413,7 +1537,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                 _model.verifyResp =
                                                     await VerifyPINCall.call(
                                                   pin: _model.joinedPin,
-                                                  jwt: currentJwtToken,
+                                                  jwt: await _jwtForApi(),
                                                 );
 
                                                 if (VerifyPINCall.ok(
@@ -1449,34 +1573,36 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                             'user_id',
                                                             currentUserUid,
                                                           )
-                                                          .order('updated_at'),
+                                                          .order('updated_at',
+                                                              ascending: false),
                                                     );
+                                                    final walletRow = _model
+                                                        .walletRow
+                                                        ?.elementAtOrNull(0);
                                                     _model.dataKeyB64 =
-                                                        await actions
-                                                            .generateDataKeyIfMissing();
+                                                        await _dataKeyForWrappedRow(
+                                                              walletRow
+                                                                  ?.wrappedDatakey,
+                                                            ) ??
+                                                            await actions
+                                                                .generateDataKeyIfMissing();
                                                     _model.keyOut =
                                                         _model.dataKeyB64;
                                                     safeSetState(() {});
                                                     _model.contactObj =
                                                         await actions
                                                             .aesGcmDecryptToMap(
-                                                      _model.walletRow!
-                                                          .elementAtOrNull(0)!
+                                                      walletRow!
                                                           .contactsCiphertext!,
-                                                      _model.walletRow!
-                                                          .elementAtOrNull(0)!
-                                                          .contactsNonce!,
+                                                      walletRow.contactsNonce!,
                                                       _model.dataKeyB64!,
                                                     );
                                                     _model.personalObj =
                                                         await actions
                                                             .aesGcmDecryptToMap(
-                                                      _model.walletRow!
-                                                          .elementAtOrNull(0)!
+                                                      walletRow
                                                           .personalCiphertext!,
-                                                      _model.walletRow!
-                                                          .elementAtOrNull(0)!
-                                                          .personalNonce!,
+                                                      walletRow.personalNonce!,
                                                       _model.dataKeyB64!,
                                                     );
                                                     var liveContactsComplete = _model
@@ -1487,7 +1613,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                     final liveConsentStatusesResp =
                                                         await GetConsentStatusesCall
                                                             .call(
-                                                      jwt: currentJwtToken,
+                                                      jwt: await _jwtForApi(),
                                                     );
                                                     if (liveConsentStatusesResp
                                                         .succeeded) {

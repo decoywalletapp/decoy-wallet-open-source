@@ -29,4 +29,22 @@ class ArmedDecoySeedsRow extends SupabaseDataRow {
 
   dynamic get addresses => getField<dynamic>('addresses');
   set addresses(dynamic value) => setField<dynamic>('addresses', value);
+
+  String? get xpub => getField<String>('xpub');
+  set xpub(String? value) => setField<String>('xpub', value);
+
+  String? get zpub => getField<String>('zpub');
+  set zpub(String? value) => setField<String>('zpub', value);
+
+  String? get watchPublicKey => getField<String>('watch_public_key');
+  set watchPublicKey(String? value) =>
+      setField<String>('watch_public_key', value);
+
+  String? get watchPublicKeyType => getField<String>('watch_public_key_type');
+  set watchPublicKeyType(String? value) =>
+      setField<String>('watch_public_key_type', value);
+
+  String? get derivationPath => getField<String>('derivation_path');
+  set derivationPath(String? value) =>
+      setField<String>('derivation_path', value);
 }

@@ -591,7 +591,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                             children: [
                                               Opacity(
                                                 opacity: _model.checkboxValue!
-                                                    ? 100.0
+                                                    ? 1.0
                                                     : 0.0,
                                                 child: FFButtonWidget(
                                                   onPressed:
@@ -661,8 +661,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                                           .openRenewalFromPush =
                                                                       false;
                                                                   FFAppState()
-                                                                          .pendingStripeCheckoutSessionId =
-                                                                      '';
+                                                                      .pendingStripeCheckoutSessionId = '';
                                                                   safeSetState(
                                                                       () {});
 

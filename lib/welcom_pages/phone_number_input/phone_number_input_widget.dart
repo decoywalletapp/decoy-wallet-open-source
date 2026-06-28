@@ -286,7 +286,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                       }
                                                     },
                                                   ),
-                                                  autofocus: true,
+                                                  autofocus: false,
                                                   enabled: true,
                                                   autofillHints: [
                                                     AutofillHints
@@ -593,7 +593,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                         ),
                                       ),
                                     ),
-                                    Expanded(
+                                    SizedBox(
+                                      height: 24.0,
                                       child: Align(
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),

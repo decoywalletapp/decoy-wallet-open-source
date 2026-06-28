@@ -36,7 +36,7 @@ class EmergencyContactsModel extends FlutterFlowModel<EmergencyContactsWidget> {
   void updateContactsListAtIndex(int index, Function(dynamic) updateFn) =>
       contactsList[index] = updateFn(contactsList[index]);
 
-  int contactsCount = 0;
+  int contactsCount = 1;
 
   String? c1PhoneDigits;
 

@@ -165,6 +165,20 @@ class _GenerateDecoySeedPhraseWidgetState
                                     _model.decoyDraftOut,
                                     r'''$.derivation_path''',
                                   ).toString();
+                                  FFAppState().draftXpub = getJsonField(
+                                    _model.decoyDraftOut,
+                                    r'''$.xpub''',
+                                  ).toString();
+                                  FFAppState().draftWatchPublicKey =
+                                      getJsonField(
+                                    _model.decoyDraftOut,
+                                    r'''$.watch_public_key''',
+                                  ).toString();
+                                  FFAppState().draftWatchPublicKeyType =
+                                      getJsonField(
+                                    _model.decoyDraftOut,
+                                    r'''$.watch_public_key_type''',
+                                  ).toString();
                                   safeSetState(() {});
                                   FFAppState().decoySeedArmed = false;
                                   safeSetState(() {});

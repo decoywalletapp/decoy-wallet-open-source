@@ -43,10 +43,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
   static const _pinRouteFadeDuration = Duration(milliseconds: 220);
 
   Future<void> _goToPinPageAfterCleanHandoff() async {
-    safeSetState(() {
-      _hideContentForPinHandoff = true;
-    });
-    await Future.delayed(_pinHandoffFadeOutDuration);
     if (!mounted) {
       return;
     }
@@ -66,6 +62,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
     _model = createModel(context, () => AuthRouterModel());
 
     // On page load action.
@@ -292,7 +296,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       (_model.entitlementRow1 != null &&
                               (_model.entitlementRow1)!.isNotEmpty) &&
                           functions.isEntitlementUsableForProtection(
-                            _model.entitlementRow1?.elementAtOrNull(0)?.isActive,
+                            _model.entitlementRow1
+                                ?.elementAtOrNull(0)
+                                ?.isActive,
                             _model.entitlementRow1
                                 ?.elementAtOrNull(0)
                                 ?.currentPeriodEnd,
@@ -516,7 +522,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: Colors.black,
           body: SafeArea(
             top: true,
             child: AnimatedOpacity(
@@ -532,8 +538,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 0.0, 0.0, 40.0),
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 40.0),
                         child: Container(
                           width: double.infinity,
                           height: 80.0,

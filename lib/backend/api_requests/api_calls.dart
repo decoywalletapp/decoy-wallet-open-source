@@ -745,14 +745,20 @@ class CommitDecoyCall {
     String? decoyId = '',
     String? derivationPath = '',
     List<String>? addressesList,
+    String? xpub = '',
+    String? watchPublicKey = '',
+    String? watchPublicKeyType = '',
   }) async {
     final addresses = _serializeList(addressesList);
 
     final ffApiRequestBody = '''
 {
-  "decoyId": "${decoyId}",
-  "derivation_path": "${derivationPath}",
-  "addresses": ${addresses}
+  "decoyId": "${escapeStringForJson(decoyId)}",
+  "derivation_path": "${escapeStringForJson(derivationPath)}",
+  "addresses": ${addresses},
+  "xpub": "${escapeStringForJson(xpub)}",
+  "watch_public_key": "${escapeStringForJson(watchPublicKey)}",
+  "watch_public_key_type": "${escapeStringForJson(watchPublicKeyType)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'commitDecoy',

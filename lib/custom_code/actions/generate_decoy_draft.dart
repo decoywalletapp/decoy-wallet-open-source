@@ -9,10 +9,6 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import '/custom_code/actions/index.dart';
-import '/flutter_flow/custom_functions.dart';
-
-import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:uuid/uuid.dart';
 import 'package:bip39/bip39.dart' as bip39;
@@ -74,6 +70,103 @@ String _bech32Encode(String hrp, List<int> data) {
   return sb.toString();
 }
 
+const String _base58Alphabet =
+    '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+Uint8List _base58Decode(String value) {
+  var number = BigInt.zero;
+  for (final codeUnit in value.codeUnits) {
+    final index = _base58Alphabet.indexOf(String.fromCharCode(codeUnit));
+    if (index < 0) {
+      throw Exception('Invalid base58 character');
+    }
+    number = number * BigInt.from(58) + BigInt.from(index);
+  }
+
+  final bytes = <int>[];
+  while (number > BigInt.zero) {
+    bytes.insert(0, (number % BigInt.from(256)).toInt());
+    number = number ~/ BigInt.from(256);
+  }
+
+  for (final codeUnit in value.codeUnits) {
+    if (String.fromCharCode(codeUnit) == '1') {
+      bytes.insert(0, 0);
+    } else {
+      break;
+    }
+  }
+
+  return Uint8List.fromList(bytes);
+}
+
+String _base58Encode(Uint8List bytes) {
+  var number = BigInt.zero;
+  for (final byte in bytes) {
+    number = number * BigInt.from(256) + BigInt.from(byte);
+  }
+
+  final chars = <String>[];
+  while (number > BigInt.zero) {
+    final remainder = (number % BigInt.from(58)).toInt();
+    chars.insert(0, _base58Alphabet[remainder]);
+    number = number ~/ BigInt.from(58);
+  }
+
+  for (final byte in bytes) {
+    if (byte == 0) {
+      chars.insert(0, '1');
+    } else {
+      break;
+    }
+  }
+
+  return chars.join();
+}
+
+bool _bytesEqual(List<int> a, List<int> b) {
+  if (a.length != b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+  return true;
+}
+
+Uint8List _base58CheckDecode(String value) {
+  final decoded = _base58Decode(value);
+  if (decoded.length < 5) {
+    throw Exception('Invalid base58check payload');
+  }
+
+  final payload = decoded.sublist(0, decoded.length - 4);
+  final checksum = decoded.sublist(decoded.length - 4);
+  final expected = _sha256(_sha256(Uint8List.fromList(payload))).sublist(0, 4);
+  if (!_bytesEqual(checksum, expected)) {
+    throw Exception('Invalid base58check checksum');
+  }
+
+  return Uint8List.fromList(payload);
+}
+
+String _base58CheckEncode(Uint8List payload) {
+  final checksum = _sha256(_sha256(payload)).sublist(0, 4);
+  return _base58Encode(Uint8List.fromList([...payload, ...checksum]));
+}
+
+String _convertXpubToZpub(String xpub) {
+  final payload = _base58CheckDecode(xpub);
+  if (payload.length != 78) {
+    throw Exception('Invalid extended public key length');
+  }
+
+  final zpub = Uint8List.fromList(payload);
+  zpub[0] = 0x04;
+  zpub[1] = 0xb2;
+  zpub[2] = 0x47;
+  zpub[3] = 0x46;
+  return _base58CheckEncode(zpub);
+}
+
 List<int> _convertBits(List<int> data, int from, int to, {bool pad = true}) {
   int acc = 0;
   int bits = 0;
@@ -131,13 +224,16 @@ Future<dynamic> generateDecoyDraft() async {
     final seed = bip39.mnemonicToSeed(mnemonic);
 
     final root = bip32.BIP32.fromSeed(seed);
-    const String derivationPathPrefix = "m/84'/0'/0'/0/";
+    const String accountDerivationPath = "m/84'/0'/0'";
+    final account = root.derivePath(accountDerivationPath);
+    final xpub = account.neutered().toBase58();
+    final zpub = _convertXpubToZpub(xpub);
+    const String derivationPathPrefix = "$accountDerivationPath/0/";
     final List<String> addresses = <String>[];
 
     for (int i = 0; i < 30; i++) {
       final node = root.derivePath('$derivationPathPrefix$i');
       final pub = node.publicKey;
-      if (pub == null) throw Exception('Missing publicKey at index $i');
       addresses
           .add(_p2wpkhAddressFromPubkey(Uint8List.fromList(pub), hrp: 'bc'));
     }
@@ -150,7 +246,11 @@ Future<dynamic> generateDecoyDraft() async {
       'mnemonic': mnemonic,
       'addresses': addresses,
       'addressesCount': addresses.length,
-      'derivation_path': "m/84'/0'/0'",
+      'derivation_path': accountDerivationPath,
+      'xpub': xpub,
+      'zpub': zpub,
+      'watch_public_key': zpub,
+      'watch_public_key_type': 'bip84-account-zpub',
     };
   } catch (e) {
     return {

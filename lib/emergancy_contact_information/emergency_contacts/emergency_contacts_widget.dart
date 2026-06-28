@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -9,14 +11,22 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'emergency_contacts_model.dart';
 export 'emergency_contacts_model.dart';
+
+void _debugLog(String message) {
+  if (kDebugMode) {
+    debugPrint(message);
+  }
+}
 
 /// generate a page that allows the user to add up to five emergency
 /// contacts...
@@ -38,6 +48,116 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
   late EmergencyContactsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _contactsListController = ScrollController();
+  static const _dataKeyStorage = FlutterSecureStorage();
+  static const _dataKeyName = 'decoy_data_key_b64';
+  static const _contactsCipherCacheName = 'decoy_contacts_cipher_b64';
+  static const _contactsNonceCacheName = 'decoy_contacts_nonce_b64';
+  static const _contactsWrappedCacheName = 'decoy_contacts_wrapped_b64';
+  static List<Map<String, String>>? _sessionContactsCache;
+  static int? _sessionContactsCountCache;
+  static String? _sessionContactsUserIdCache;
+
+  String? _normalizeDataKeyB64(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty || text.toLowerCase() == 'null') {
+      return null;
+    }
+
+    try {
+      var normalized = text.replaceAll('-', '+').replaceAll('_', '/');
+      final pad = normalized.length % 4;
+      if (pad != 0) {
+        normalized = normalized + ('=' * (4 - pad));
+      }
+
+      final bytes = base64.decode(normalized);
+      if (bytes.length != 16 && bytes.length != 32) {
+        return null;
+      }
+      return base64UrlEncode(bytes);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _rememberDataKey(String keyB64) async {
+    final normalized = _normalizeDataKeyB64(keyB64);
+    if (normalized == null) {
+      return;
+    }
+
+    try {
+      await _dataKeyStorage.write(key: _dataKeyName, value: normalized);
+      final userKey = _storageKeyForCurrentUser(_dataKeyName);
+      if (userKey != null) {
+        await _dataKeyStorage.write(key: userKey, value: normalized);
+      }
+    } catch (_) {
+      try {
+        await _dataKeyStorage.delete(key: _dataKeyName);
+        await _dataKeyStorage.write(key: _dataKeyName, value: normalized);
+        final userKey = _storageKeyForCurrentUser(_dataKeyName);
+        if (userKey != null) {
+          await _dataKeyStorage.delete(key: userKey);
+          await _dataKeyStorage.write(key: userKey, value: normalized);
+        }
+      } catch (_) {}
+    }
+  }
+
+  Future<String> _newOrStoredDataKey() async {
+    final key = await actions.generateDataKeyIfMissing();
+    return _normalizeDataKeyB64(key) ?? key;
+  }
+
+  Future<String?> _storedDataKeyOrNull() async {
+    try {
+      final userKey = _storageKeyForCurrentUser(_dataKeyName);
+      if (userKey != null) {
+        final userValue = _normalizeDataKeyB64(
+          await _dataKeyStorage.read(key: userKey),
+        );
+        if (userValue != null) {
+          return userValue;
+        }
+      }
+      return _normalizeDataKeyB64(
+        await _dataKeyStorage.read(key: _dataKeyName),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String> _jwtForApi() async {
+    final cached = currentJwtToken.trim();
+    if (cached.isNotEmpty) {
+      return cached;
+    }
+
+    try {
+      final session = SupaFlow.client.auth.currentSession;
+      final sessionToken = session?.accessToken.trim() ?? '';
+      if (sessionToken.isNotEmpty) {
+        return sessionToken;
+      }
+
+      final refreshed = await SupaFlow.client.auth.refreshSession();
+      return refreshed.session?.accessToken.trim() ?? '';
+    } catch (error) {
+      _debugLog('[EmergencyContacts] JWT lookup failed: $error');
+      return '';
+    }
+  }
+
+  String? _storageKeyForCurrentUser(String name) {
+    final userId = currentUserUid.trim();
+    if (userId.isEmpty) {
+      return null;
+    }
+    return '$name.$userId';
+  }
 
   Map<String, String> _contactSnapshot(int slot) {
     switch (slot) {
@@ -161,8 +281,152 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       for (var index = 0; index < 5; index++) {
         _setContactSlot(index + 1, contacts[index]);
       }
-      _model.contactsCount = (_model.contactsCount - 1).clamp(0, 5).toInt();
+      _model.contactsCount = (_model.contactsCount - 1).clamp(1, 5).toInt();
     });
+  }
+
+  bool _hydrateSessionContactsCache() {
+    final cachedContacts = _sessionContactsCache;
+    if (cachedContacts == null ||
+        cachedContacts.isEmpty ||
+        _sessionContactsUserIdCache != currentUserUid) {
+      return false;
+    }
+
+    for (var index = 0; index < 5; index++) {
+      final contact = index < cachedContacts.length
+          ? cachedContacts[index]
+          : _emptyContactSnapshot();
+      _setContactFields(
+        index + 1,
+        first: contact['first'] ?? '',
+        last: contact['last'] ?? '',
+        phone: contact['phone'] ?? '',
+      );
+      _setContactSlotStatus(
+        index + 1,
+        functions.emergencyContactStatusLabel(contact['status'] ?? 'Not sent'),
+      );
+    }
+    _model.contactsCount = (_sessionContactsCountCache ?? 1).clamp(1, 5);
+    _debugLog('[EmergencyContacts] hydrated session contacts cache');
+    return true;
+  }
+
+  void _rememberSessionContactsCache() {
+    _sessionContactsCache = List<Map<String, String>>.generate(
+      5,
+      (index) => _contactSnapshot(index + 1),
+    );
+    _sessionContactsCountCache = _model.contactsCount.clamp(1, 5);
+    _sessionContactsUserIdCache = currentUserUid;
+  }
+
+  Future<bool> _hydrateEncryptedContactsCache() async {
+    final cipherKey = _storageKeyForCurrentUser(_contactsCipherCacheName);
+    final nonceKey = _storageKeyForCurrentUser(_contactsNonceCacheName);
+    if (cipherKey == null || nonceKey == null) {
+      return false;
+    }
+
+    try {
+      final dataKey = await _storedDataKeyOrNull();
+      if (dataKey == null || dataKey.isEmpty) {
+        return false;
+      }
+
+      final cipherB64 =
+          (await _dataKeyStorage.read(key: cipherKey))?.trim() ?? '';
+      final nonceB64 =
+          (await _dataKeyStorage.read(key: nonceKey))?.trim() ?? '';
+      if (cipherB64.isEmpty || nonceB64.isEmpty) {
+        return false;
+      }
+
+      final contactsObj = await actions.aesGcmDecryptToMap(
+        cipherB64,
+        nonceB64,
+        dataKey,
+      );
+      if (getJsonField(contactsObj, r'''$._ok''') == false) {
+        _debugLog(
+          '[EmergencyContacts] encrypted cache decrypt failed: '
+          '${getJsonField(contactsObj, r'''$._error''')}',
+        );
+        return false;
+      }
+
+      _model.dataKeyB64 = dataKey;
+      _model.contactsObj = contactsObj;
+      _model.contactsJson = contactsObj.toString();
+      _applyStoredContactsToFields();
+      _applyStoredConsentStatusFallbacks();
+      _syncContactsCountToLoadedFields();
+      _debugLog('[EmergencyContacts] hydrated encrypted contacts cache');
+      return true;
+    } catch (error) {
+      _debugLog('[EmergencyContacts] encrypted cache load threw: $error');
+      return false;
+    }
+  }
+
+  Future<void> _rememberEncryptedContactsCache({
+    required String cipherB64,
+    required String nonceB64,
+    required String wrappedB64,
+  }) async {
+    final cipherKey = _storageKeyForCurrentUser(_contactsCipherCacheName);
+    final nonceKey = _storageKeyForCurrentUser(_contactsNonceCacheName);
+    final wrappedKey = _storageKeyForCurrentUser(_contactsWrappedCacheName);
+    if (cipherKey == null || nonceKey == null || wrappedKey == null) {
+      return;
+    }
+
+    try {
+      await _dataKeyStorage.write(key: cipherKey, value: cipherB64.trim());
+      await _dataKeyStorage.write(key: nonceKey, value: nonceB64.trim());
+      await _dataKeyStorage.write(key: wrappedKey, value: wrappedB64.trim());
+      _debugLog('[EmergencyContacts] remembered encrypted contacts cache');
+    } catch (error) {
+      _debugLog('[EmergencyContacts] encrypted cache write threw: $error');
+    }
+  }
+
+  Future<void> _clearEncryptedContactsCache() async {
+    final cipherKey = _storageKeyForCurrentUser(_contactsCipherCacheName);
+    final nonceKey = _storageKeyForCurrentUser(_contactsNonceCacheName);
+    final wrappedKey = _storageKeyForCurrentUser(_contactsWrappedCacheName);
+    if (cipherKey == null || nonceKey == null || wrappedKey == null) {
+      return;
+    }
+
+    try {
+      await _dataKeyStorage.delete(key: cipherKey);
+      await _dataKeyStorage.delete(key: nonceKey);
+      await _dataKeyStorage.delete(key: wrappedKey);
+    } catch (error) {
+      _debugLog('[EmergencyContacts] encrypted cache clear threw: $error');
+    }
+  }
+
+  void _setContactSlotStatus(int slot, String status) {
+    switch (slot) {
+      case 1:
+        _model.c1Status = status;
+        return;
+      case 2:
+        _model.c2Status = status;
+        return;
+      case 3:
+        _model.c3Status = status;
+        return;
+      case 4:
+        _model.c4Status = status;
+        return;
+      case 5:
+        _model.c5Status = status;
+        return;
+    }
   }
 
   String _storedConsentStatusForContact(int index) {
@@ -224,6 +488,400 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     safeSetState(() {});
   }
 
+  String _cleanLoadedValue(dynamic value) {
+    if (value == null) return '';
+    final text = value.toString().trim();
+    return text.toLowerCase() == 'null' ? '' : text;
+  }
+
+  String _jsonValue(dynamic json, String path) {
+    return _cleanLoadedValue(getJsonField(json, path));
+  }
+
+  bool _hasContactText(String first, String last, String phone) {
+    return first.trim().isNotEmpty ||
+        last.trim().isNotEmpty ||
+        phone.trim().isNotEmpty;
+  }
+
+  String _displayContactPhone(String phone) {
+    final cleaned = _cleanLoadedValue(phone);
+    return cleaned.isEmpty ? '' : functions.displayUSPhone(cleaned);
+  }
+
+  Future<String?> _dataKeyForWrappedRow(
+    String wrappedB64, {
+    bool allowCreateFallback = true,
+  }) async {
+    final wrapped = wrappedB64.trim();
+    if (wrapped.isNotEmpty) {
+      try {
+        final jwt = await _jwtForApi();
+        final unwrapResp = await WrapDataKeyUnwrapCall.call(
+          wrappedB64: wrapped,
+          jwt: jwt,
+        );
+        final key = _normalizeDataKeyB64(
+          _extractUnwrappedDataKey(unwrapResp.jsonBody),
+        );
+        if ((unwrapResp.succeeded) && key != null) {
+          await _rememberDataKey(key);
+          return key;
+        }
+        _debugLog(
+          '[EmergencyContacts] data key unwrap failed: '
+          'status=${unwrapResp.statusCode}, jwt=${jwt.isNotEmpty}, '
+          'wrapped=${wrapped.isNotEmpty}, key=${key != null}',
+        );
+      } catch (error) {
+        _debugLog('[EmergencyContacts] data key unwrap threw: $error');
+      }
+    }
+
+    if (allowCreateFallback) {
+      return _newOrStoredDataKey();
+    }
+    return _storedDataKeyOrNull();
+  }
+
+  Future<String> _currentRowDataKeyForSave() async {
+    var wrapped = _model.wrappedB64.trim();
+    if (wrapped.isEmpty) {
+      try {
+        final rows = await DecoyWalletTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull(
+                'user_id',
+                currentUserUid,
+              )
+              .order('updated_at', ascending: false),
+          limit: 1,
+        );
+        if (rows.isNotEmpty) {
+          wrapped = (rows.first.wrappedDatakey ?? '').trim();
+          _model.wrappedB64 = wrapped;
+        }
+      } catch (error) {
+        _debugLog('[EmergencyContacts] save key row lookup failed: $error');
+      }
+    }
+
+    if (wrapped.isNotEmpty) {
+      final key = await _dataKeyForWrappedRow(wrapped);
+      if ((key ?? '').trim().isNotEmpty) {
+        return key!;
+      }
+    }
+
+    return _newOrStoredDataKey();
+  }
+
+  String _extractUnwrappedDataKey(dynamic response) {
+    for (final path in const [
+      r'''$.dataKeyB64''',
+      r'''$.data_key_b64''',
+      r'''$.unwrappedB64''',
+      r'''$.keyB64''',
+      r'''$.plaintextB64''',
+    ]) {
+      final value = _jsonValue(response, path);
+      if (value.isNotEmpty) return value;
+    }
+    return _cleanLoadedValue(response);
+  }
+
+  void _setContactFields(
+    int slot, {
+    required String first,
+    required String last,
+    required String phone,
+  }) {
+    final cleanFirst = _cleanLoadedValue(first);
+    final cleanLast = _cleanLoadedValue(last);
+    final displayPhone = _displayContactPhone(phone);
+
+    switch (slot) {
+      case 1:
+        _model.c1FirstTFTextController?.text = cleanFirst;
+        _model.c1LastTFTextController?.text = cleanLast;
+        _model.c1PhoneTFTextController?.text = displayPhone;
+        _model.c1PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: displayPhone),
+        );
+        return;
+      case 2:
+        _model.c2FirstTFTextController?.text = cleanFirst;
+        _model.c2LastTFTextController?.text = cleanLast;
+        _model.c2PhoneTFTextController?.text = displayPhone;
+        _model.c2PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: displayPhone),
+        );
+        return;
+      case 3:
+        _model.c3FirstTFTextController?.text = cleanFirst;
+        _model.c3LastTFTextController?.text = cleanLast;
+        _model.c3PhoneTFTextController?.text = displayPhone;
+        _model.c3PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: displayPhone),
+        );
+        return;
+      case 4:
+        _model.c4FirstTFTextController?.text = cleanFirst;
+        _model.c4LastTFTextController?.text = cleanLast;
+        _model.c4PhoneTFTextController?.text = displayPhone;
+        _model.c4PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: displayPhone),
+        );
+        return;
+      case 5:
+        _model.c5FirstTFTextController?.text = cleanFirst;
+        _model.c5LastTFTextController?.text = cleanLast;
+        _model.c5PhoneTFTextController?.text = displayPhone;
+        _model.c5PhoneTFMask.updateMask(
+          newValue: TextEditingValue(text: displayPhone),
+        );
+        return;
+    }
+  }
+
+  bool _contactSlotHasText(int slot) {
+    switch (slot) {
+      case 1:
+        return _hasContactText(
+          _model.c1FirstTFTextController?.text ?? '',
+          _model.c1LastTFTextController?.text ?? '',
+          _model.c1PhoneTFTextController?.text ?? '',
+        );
+      case 2:
+        return _hasContactText(
+          _model.c2FirstTFTextController?.text ?? '',
+          _model.c2LastTFTextController?.text ?? '',
+          _model.c2PhoneTFTextController?.text ?? '',
+        );
+      case 3:
+        return _hasContactText(
+          _model.c3FirstTFTextController?.text ?? '',
+          _model.c3LastTFTextController?.text ?? '',
+          _model.c3PhoneTFTextController?.text ?? '',
+        );
+      case 4:
+        return _hasContactText(
+          _model.c4FirstTFTextController?.text ?? '',
+          _model.c4LastTFTextController?.text ?? '',
+          _model.c4PhoneTFTextController?.text ?? '',
+        );
+      case 5:
+        return _hasContactText(
+          _model.c5FirstTFTextController?.text ?? '',
+          _model.c5LastTFTextController?.text ?? '',
+          _model.c5PhoneTFTextController?.text ?? '',
+        );
+      default:
+        return false;
+    }
+  }
+
+  void _raiseContactsCountTo(int slot) {
+    if (slot > _model.contactsCount) {
+      _model.contactsCount = slot.clamp(1, 5).toInt();
+    }
+  }
+
+  void _syncContactsCountToLoadedFields() {
+    for (var slot = 5; slot >= 1; slot--) {
+      if (_contactSlotHasText(slot)) {
+        _model.contactsCount = slot;
+        return;
+      }
+    }
+    _model.contactsCount = 1;
+  }
+
+  void _applyStoredContactsToFields() {
+    if (_model.contactsObj == null ||
+        getJsonField(_model.contactsObj, r'''$._ok''') == false) {
+      return;
+    }
+
+    for (var index = 0; index < 5; index++) {
+      final first = _jsonValue(
+        _model.contactsObj,
+        '\$.contacts[$index].first',
+      );
+      final last = _jsonValue(
+        _model.contactsObj,
+        '\$.contacts[$index].last',
+      );
+      final phone = _jsonValue(
+        _model.contactsObj,
+        '\$.contacts[$index].phone',
+      );
+      if (_hasContactText(first, last, phone)) {
+        _setContactFields(
+          index + 1,
+          first: first,
+          last: last,
+          phone: phone,
+        );
+      }
+    }
+    _syncContactsCountToLoadedFields();
+  }
+
+  bool _applyLegacyContactPayload(dynamic payload) {
+    dynamic decoded = payload;
+    if (decoded is String) {
+      final text = decoded.trim();
+      if (text.isEmpty || text.toLowerCase() == 'null') return false;
+      try {
+        decoded = jsonDecode(text);
+      } catch (_) {
+        return false;
+      }
+    }
+
+    dynamic contacts;
+    if (decoded is List) {
+      contacts = decoded;
+    } else if (decoded is Map) {
+      contacts = decoded['contacts'] ??
+          decoded['emergencyContacts'] ??
+          decoded['emergency_contacts'] ??
+          decoded['contactsJson'];
+      if (contacts is String) {
+        try {
+          contacts = jsonDecode(contacts);
+        } catch (_) {
+          contacts = null;
+        }
+      }
+    }
+
+    if (contacts is! List) return false;
+
+    var applied = false;
+    for (var index = 0; index < contacts.length && index < 5; index++) {
+      final contact = contacts[index];
+      if (contact is! Map) continue;
+      final slot = int.tryParse(_cleanLoadedValue(contact['slot'])) ??
+          int.tryParse(_cleanLoadedValue(contact['contact_slot'])) ??
+          index + 1;
+      if (slot < 1 || slot > 5 || _contactSlotHasText(slot)) continue;
+
+      final first = _cleanLoadedValue(
+        contact['first'] ?? contact['firstName'] ?? contact['first_name'],
+      );
+      final last = _cleanLoadedValue(
+        contact['last'] ?? contact['lastName'] ?? contact['last_name'],
+      );
+      final phone = _cleanLoadedValue(
+        contact['phone'] ?? contact['phoneNumber'] ?? contact['phone_number'],
+      );
+      if (!_hasContactText(first, last, phone)) continue;
+
+      _setContactFields(
+        slot,
+        first: first,
+        last: last,
+        phone: phone,
+      );
+      _setContactSlotStatus(
+        slot,
+        functions.emergencyContactStatusLabel(
+          contact['consent_status'] ?? contact['status'],
+        ),
+      );
+      _raiseContactsCountTo(slot);
+      applied = true;
+    }
+
+    return applied;
+  }
+
+  void _applyConsentDetailsFallbacks() {
+    if (!(_model.topConsentResp?.succeeded ?? false)) return;
+
+    final body = _model.topConsentResp?.jsonBody ?? '';
+    void apply(
+      int slot,
+      dynamic first,
+      dynamic last,
+      dynamic phone, [
+      dynamic status,
+    ]) {
+      if (_contactSlotHasText(slot)) return;
+      final cleanFirst = _cleanLoadedValue(first);
+      final cleanLast = _cleanLoadedValue(last);
+      final cleanPhone = _cleanLoadedValue(phone);
+      if (!_hasContactText(cleanFirst, cleanLast, cleanPhone)) return;
+
+      _setContactFields(
+        slot,
+        first: cleanFirst,
+        last: cleanLast,
+        phone: cleanPhone,
+      );
+      final cleanStatus = functions.emergencyContactStatusLabel(status);
+      if (cleanStatus != 'Not sent') {
+        _setContactSlotStatus(slot, cleanStatus);
+      }
+      _raiseContactsCountTo(slot);
+    }
+
+    apply(
+      1,
+      GetConsentStatusesCall.slot1First(body),
+      GetConsentStatusesCall.slot1Last(body),
+      GetConsentStatusesCall.slot1Phone(body),
+    );
+    apply(
+      2,
+      GetConsentStatusesCall.slot2First(body),
+      GetConsentStatusesCall.slot2Last(body),
+      GetConsentStatusesCall.slot2Phone(body),
+    );
+    apply(
+      3,
+      GetConsentStatusesCall.slot3First(body),
+      GetConsentStatusesCall.slot3Last(body),
+      GetConsentStatusesCall.slot3Phone(body),
+    );
+    apply(
+      4,
+      GetConsentStatusesCall.slot4First(body),
+      GetConsentStatusesCall.slot4Last(body),
+      GetConsentStatusesCall.slot4Phone(body),
+    );
+    apply(
+      5,
+      GetConsentStatusesCall.slot5First(body),
+      GetConsentStatusesCall.slot5Last(body),
+      GetConsentStatusesCall.slot5Phone(body),
+    );
+
+    final consents = GetConsentStatusesCall.consents(body);
+    if (consents is List) {
+      for (final consent in consents) {
+        if (consent is! Map) continue;
+        final slot = int.tryParse(_cleanLoadedValue(consent['contact_slot'])) ??
+            int.tryParse(_cleanLoadedValue(consent['contactSlot'])) ??
+            int.tryParse(_cleanLoadedValue(consent['slot']));
+        if (slot == null || slot < 1 || slot > 5) continue;
+
+        apply(
+          slot,
+          consent['first_name'] ?? consent['firstName'] ?? consent['first'],
+          consent['last_name'] ?? consent['lastName'] ?? consent['last'],
+          consent['phone_number'] ?? consent['phoneNumber'] ?? consent['phone'],
+          consent['status'] ?? consent['consent_status'],
+        );
+      }
+      _debugLog(
+        '[EmergencyContacts] consent fallback rows: ${consents.length}',
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -231,57 +889,97 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.topConsentResp = await GetConsentStatusesCall.call(
-        jwt: currentJwtToken,
-      );
-
-      if ((_model.topConsentResp?.succeeded ?? true)) {
-        _model.c1Status = functions
-            .emergencyContactStatusLabel(GetConsentStatusesCall.slot1Status(
-          (_model.topConsentResp?.jsonBody ?? ''),
-        )?.toString());
-        _model.c2Status = functions
-            .emergencyContactStatusLabel(GetConsentStatusesCall.slot2Status(
-          (_model.topConsentResp?.jsonBody ?? ''),
-        )?.toString());
-        _model.c3Status = functions
-            .emergencyContactStatusLabel(GetConsentStatusesCall.slot3Status(
-          (_model.topConsentResp?.jsonBody ?? ''),
-        )?.toString());
-        _model.c4Status = functions
-            .emergencyContactStatusLabel(GetConsentStatusesCall.slot4Status(
-          (_model.topConsentResp?.jsonBody ?? ''),
-        )?.toString());
-        _model.c5Status = functions
-            .emergencyContactStatusLabel(GetConsentStatusesCall.slot5Status(
-          (_model.topConsentResp?.jsonBody ?? ''),
-        )?.toString());
+      final hydratedFromSession = _hydrateSessionContactsCache();
+      if (hydratedFromSession) {
+        safeSetState(() {});
+      } else if (await _hydrateEncryptedContactsCache()) {
+        _rememberSessionContactsCache();
         safeSetState(() {});
       }
+
+      final apiJwt = await _jwtForApi();
+      final Future<ApiCallResponse?> consentStatusFuture =
+          GetConsentStatusesCall.call(
+        jwt: apiJwt,
+      ).then<ApiCallResponse?>((response) => response).catchError((error) {
+        _debugLog('[EmergencyContacts] consent status load threw: $error');
+        return null;
+      });
       _model.rows = await DecoyWalletTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
               'user_id',
               currentUserUid,
             )
-            .order('updated_at'),
+            .order('updated_at', ascending: false),
+        limit: 10,
       );
       if (_model.rows != null && (_model.rows)!.isNotEmpty) {
-        _model.rowCipherB64 =
-            _model.rows?.elementAtOrNull(0)?.contactsCiphertext;
-        _model.rowNonceB64 = _model.rows?.elementAtOrNull(0)?.contactsNonce;
-        _model.wrappedB64 = _model.rows!.elementAtOrNull(0)!.wrappedDatakey!;
+        final selectedRow = _model.rows!.firstWhere(
+          (row) =>
+              (row.contactsCiphertext ?? '').trim().isNotEmpty &&
+              (row.contactsNonce ?? '').trim().isNotEmpty,
+          orElse: () => _model.rows!.first,
+        );
+        _model.rowCipherB64 = selectedRow.contactsCiphertext;
+        _model.rowNonceB64 = selectedRow.contactsNonce;
+        _model.wrappedB64 = selectedRow.wrappedDatakey ?? '';
         safeSetState(() {});
-        if (_model.wrappedB64 != '') {
-          _model.dataKeyOut = await actions.generateDataKeyIfMissing();
-          _model.dataKeyB64 = _model.dataKeyOut!;
-          safeSetState(() {});
-          _model.contactsObj = await actions.aesGcmDecryptToMap(
-            _model.rowCipherB64!,
-            _model.rowNonceB64!,
-            _model.dataKeyB64,
-          );
+        final hasSavedContactPayload =
+            (_model.rowCipherB64 ?? '').trim().isNotEmpty &&
+                (_model.rowNonceB64 ?? '').trim().isNotEmpty;
+        _debugLog(
+          '[EmergencyContacts] saved contact payload: '
+          'rows=${_model.rows?.length ?? 0}, selectedHasContacts=$hasSavedContactPayload, cipher=${(_model.rowCipherB64 ?? '').trim().isNotEmpty}, '
+          'nonce=${(_model.rowNonceB64 ?? '').trim().isNotEmpty}, wrapped=${_model.wrappedB64.trim().isNotEmpty}',
+        );
+        if (hasSavedContactPayload) {
+          _model.dataKeyOut = _model.wrappedB64.trim().isNotEmpty
+              ? await _dataKeyForWrappedRow(
+                  _model.wrappedB64,
+                  allowCreateFallback: false,
+                )
+              : await _storedDataKeyOrNull();
+          if ((_model.dataKeyOut ?? '').trim().isNotEmpty) {
+            _model.dataKeyB64 = _model.dataKeyOut!;
+            safeSetState(() {});
+            _model.contactsObj = await actions.aesGcmDecryptToMap(
+              _model.rowCipherB64!,
+              _model.rowNonceB64!,
+              _model.dataKeyB64,
+            );
+          } else {
+            _model.contactsObj = {
+              '_ok': false,
+              '_error': 'missing data key',
+            };
+          }
           _model.contactsJson = _model.contactsObj!.toString();
+          if (getJsonField(_model.contactsObj, r'''$._ok''') == false) {
+            _debugLog(
+              '[EmergencyContacts] contacts decrypt failed: '
+              '${getJsonField(_model.contactsObj, r'''$._error''')}',
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'ERROR #008 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+          } else {
+            await _rememberEncryptedContactsCache(
+              cipherB64: _model.rowCipherB64!,
+              nonceB64: _model.rowNonceB64!,
+              wrappedB64: _model.wrappedB64,
+            );
+          }
+          _applyStoredContactsToFields();
           safeSetState(() {});
           _model.contactsCount = () {
             if (getJsonField(
@@ -315,7 +1013,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 null) {
               return (1);
             } else {
-              return 0;
+              return 1;
             }
           }();
           if (!(_model.topConsentResp?.succeeded ?? false)) {
@@ -632,21 +1330,16 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             });
           }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'ERROR #008 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).secondary,
-            ),
-          );
+          await _clearEncryptedContactsCache();
+          _model.dataKeyOut2 = _model.wrappedB64.trim().isNotEmpty
+              ? await _dataKeyForWrappedRow(_model.wrappedB64)
+              : await _newOrStoredDataKey();
+          _model.dataKeyB64 = _model.dataKeyOut2!;
+          safeSetState(() {});
         }
       } else {
-        _model.dataKeyOut2 = await actions.generateDataKeyIfMissing();
+        await _clearEncryptedContactsCache();
+        _model.dataKeyOut2 = await _newOrStoredDataKey();
         _model.dataKeyB64 = _model.dataKeyOut2!;
         safeSetState(() {});
         safeSetState(() {
@@ -697,6 +1390,39 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           );
         });
       }
+      _model.topConsentResp = await consentStatusFuture;
+      _debugLog(
+        '[EmergencyContacts] consent status load: '
+        'status=${_model.topConsentResp?.statusCode}, jwt=${apiJwt.isNotEmpty}',
+      );
+
+      if ((_model.topConsentResp?.succeeded ?? false)) {
+        _model.c1Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot1Status(
+          (_model.topConsentResp?.jsonBody ?? ''),
+        )?.toString());
+        _model.c2Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot2Status(
+          (_model.topConsentResp?.jsonBody ?? ''),
+        )?.toString());
+        _model.c3Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot3Status(
+          (_model.topConsentResp?.jsonBody ?? ''),
+        )?.toString());
+        _model.c4Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot4Status(
+          (_model.topConsentResp?.jsonBody ?? ''),
+        )?.toString());
+        _model.c5Status = functions
+            .emergencyContactStatusLabel(GetConsentStatusesCall.slot5Status(
+          (_model.topConsentResp?.jsonBody ?? ''),
+        )?.toString());
+        safeSetState(() {});
+      }
+      _applyConsentDetailsFallbacks();
+      _syncContactsCountToLoadedFields();
+      _rememberSessionContactsCache();
+      safeSetState(() {});
     });
 
     _model.c1FirstTFTextController ??=
@@ -769,6 +1495,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
   @override
   void dispose() {
+    _contactsListController.dispose();
     _model.dispose();
 
     super.dispose();
@@ -933,6 +1660,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                 ),
                 Expanded(
                   child: ListView(
+                    controller: _contactsListController,
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
@@ -1391,42 +2119,43 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _resetConsentStatusAfterPhoneEdit(
                                                           1);
                                                       EasyDebounce.debounce(
-                                                      '_model.c1PhoneTFTextController',
-                                                      Duration(
-                                                          milliseconds: 2000),
-                                                      () async {
-                                                        _model.c1PhoneDigits = functions
-                                                            .sanitizePhoneDigits(
-                                                                _model
-                                                                    .c1PhoneTFTextController
-                                                                    .text);
-                                                        safeSetState(() {});
-                                                        if ((_model.c1PhoneDigits !=
-                                                                    null &&
-                                                                _model.c1PhoneDigits !=
-                                                                    '') &&
-                                                            ((_model.c1PhoneDigits!)
-                                                                    .length ==
-                                                                10)) {
-                                                          safeSetState(() {
-                                                            _model.c1PhoneTFTextController
-                                                                    ?.text =
-                                                                functions
-                                                                    .formatAsUsPhone(
-                                                                        _model
-                                                                            .c1PhoneDigits!);
-                                                            _model.c1PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c1PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                        }
-                                                      },
+                                                        '_model.c1PhoneTFTextController',
+                                                        Duration(
+                                                            milliseconds: 2000),
+                                                        () async {
+                                                          _model.c1PhoneDigits =
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c1PhoneTFTextController
+                                                                      .text);
+                                                          safeSetState(() {});
+                                                          if ((_model.c1PhoneDigits !=
+                                                                      null &&
+                                                                  _model.c1PhoneDigits !=
+                                                                      '') &&
+                                                              ((_model.c1PhoneDigits!)
+                                                                      .length ==
+                                                                  10)) {
+                                                            safeSetState(() {
+                                                              _model.c1PhoneTFTextController
+                                                                      ?.text =
+                                                                  functions
+                                                                      .formatAsUsPhone(
+                                                                          _model
+                                                                              .c1PhoneDigits!);
+                                                              _model
+                                                                  .c1PhoneTFMask
+                                                                  .updateMask(
+                                                                newValue:
+                                                                    TextEditingValue(
+                                                                  text: _model
+                                                                      .c1PhoneTFTextController!
+                                                                      .text,
+                                                                ),
+                                                              );
+                                                            });
+                                                          }
+                                                        },
                                                       );
                                                     },
                                                     autofocus: false,
@@ -1567,7 +2296,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model.c1PhoneTFMask
                                                     ],
                                                   ),
-                                                  Expanded(
+                                                  SizedBox(
+                                                    height: 30.0,
                                                     child: Align(
                                                       alignment:
                                                           AlignmentDirectional(
@@ -1839,8 +2569,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             if (loggedIn ==
                                                                 true) {
                                                               _model.keyOutslot1 =
-                                                                  await actions
-                                                                      .generateDataKeyIfMissing();
+                                                                  await _currentRowDataKeyForSave();
                                                               _model.dataKeyB64 =
                                                                   _model
                                                                       .keyOutslot1!;
@@ -1872,20 +2601,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 dataKeyB64: _model
                                                                     .dataKeyB64,
                                                                 jwt:
-                                                                    currentJwtToken,
+                                                                    await _jwtForApi(),
                                                               );
 
                                                               if ((_model
                                                                       .wrapslot1
                                                                       ?.succeeded ??
-                                                                  true)) {
+                                                                  false)) {
                                                                 _model.wrappedB64 =
-                                                                    getJsonField(
+                                                                    _jsonValue(
                                                                   (_model.wrapslot1
                                                                           ?.jsonBody ??
                                                                       ''),
                                                                   r'''$.wrappedB64''',
-                                                                ).toString();
+                                                                );
                                                                 safeSetState(
                                                                     () {});
                                                                 _model.updslot1 =
@@ -2797,43 +3526,43 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         _resetConsentStatusAfterPhoneEdit(
                                                             2);
                                                         EasyDebounce.debounce(
-                                                        '_model.c2PhoneTFTextController',
-                                                        Duration(
-                                                            milliseconds: 2000),
-                                                        () async {
-                                                          _model.c2PhoneDigits =
-                                                              functions.sanitizePhoneDigits(
-                                                                  _model
-                                                                      .c2PhoneTFTextController
-                                                                      .text);
-                                                          safeSetState(() {});
-                                                          if ((_model.c2PhoneDigits !=
-                                                                      null &&
-                                                                  _model.c2PhoneDigits !=
-                                                                      '') &&
-                                                              ((_model.c2PhoneDigits!)
-                                                                      .length ==
-                                                                  10)) {
-                                                            safeSetState(() {
-                                                              _model.c2PhoneTFTextController
-                                                                      ?.text =
-                                                                  functions
-                                                                      .formatAsUsPhone(
-                                                                          _model
-                                                                              .c2PhoneDigits!);
-                                                              _model
-                                                                  .c2PhoneTFMask
-                                                                  .updateMask(
-                                                                newValue:
-                                                                    TextEditingValue(
-                                                                  text: _model
-                                                                      .c2PhoneTFTextController!
-                                                                      .text,
-                                                                ),
-                                                              );
-                                                            });
-                                                          }
-                                                        },
+                                                          '_model.c2PhoneTFTextController',
+                                                          Duration(
+                                                              milliseconds:
+                                                                  2000),
+                                                          () async {
+                                                            _model.c2PhoneDigits =
+                                                                functions.sanitizePhoneDigits(
+                                                                    _model
+                                                                        .c2PhoneTFTextController
+                                                                        .text);
+                                                            safeSetState(() {});
+                                                            if ((_model.c2PhoneDigits !=
+                                                                        null &&
+                                                                    _model.c2PhoneDigits !=
+                                                                        '') &&
+                                                                ((_model.c2PhoneDigits!)
+                                                                        .length ==
+                                                                    10)) {
+                                                              safeSetState(() {
+                                                                _model.c2PhoneTFTextController
+                                                                        ?.text =
+                                                                    functions.formatAsUsPhone(
+                                                                        _model
+                                                                            .c2PhoneDigits!);
+                                                                _model
+                                                                    .c2PhoneTFMask
+                                                                    .updateMask(
+                                                                  newValue:
+                                                                      TextEditingValue(
+                                                                    text: _model
+                                                                        .c2PhoneTFTextController!
+                                                                        .text,
+                                                                  ),
+                                                                );
+                                                              });
+                                                            }
+                                                          },
                                                         );
                                                       },
                                                       autofocus: false,
@@ -2984,7 +3713,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         _model.c2PhoneTFMask
                                                       ],
                                                     ),
-                                                    Expanded(
+                                                    SizedBox(
+                                                      height: 30.0,
                                                       child: Align(
                                                         alignment:
                                                             AlignmentDirectional(
@@ -3263,8 +3993,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 if (loggedIn ==
                                                                     true) {
                                                                   _model.keyOutslot2 =
-                                                                      await actions
-                                                                          .generateDataKeyIfMissing();
+                                                                      await _currentRowDataKeyForSave();
                                                                   _model.dataKeyB64 =
                                                                       _model
                                                                           .keyOutslot2!;
@@ -3299,20 +4028,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         _model
                                                                             .dataKeyB64,
                                                                     jwt:
-                                                                        currentJwtToken,
+                                                                        await _jwtForApi(),
                                                                   );
 
                                                                   if ((_model
                                                                           .wrapslot2
                                                                           ?.succeeded ??
-                                                                      true)) {
+                                                                      false)) {
                                                                     _model.wrappedB64 =
-                                                                        getJsonField(
+                                                                        _jsonValue(
                                                                       (_model.wrapslot2
                                                                               ?.jsonBody ??
                                                                           ''),
                                                                       r'''$.wrappedB64''',
-                                                                    ).toString();
+                                                                    );
                                                                     safeSetState(
                                                                         () {});
                                                                     _model.updslot2 =
@@ -4108,42 +4837,43 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _resetConsentStatusAfterPhoneEdit(
                                                           3);
                                                       EasyDebounce.debounce(
-                                                      '_model.c3PhoneTFTextController',
-                                                      Duration(
-                                                          milliseconds: 2000),
-                                                      () async {
-                                                        _model.c3PhoneDigits = functions
-                                                            .sanitizePhoneDigits(
-                                                                _model
-                                                                    .c3PhoneTFTextController
-                                                                    .text);
-                                                        safeSetState(() {});
-                                                        if ((_model.c3PhoneDigits !=
-                                                                    null &&
-                                                                _model.c3PhoneDigits !=
-                                                                    '') &&
-                                                            ((_model.c3PhoneDigits!)
-                                                                    .length ==
-                                                                10)) {
-                                                          safeSetState(() {
-                                                            _model.c3PhoneTFTextController
-                                                                    ?.text =
-                                                                functions
-                                                                    .formatAsUsPhone(
-                                                                        _model
-                                                                            .c3PhoneDigits!);
-                                                            _model.c3PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c3PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                        }
-                                                      },
+                                                        '_model.c3PhoneTFTextController',
+                                                        Duration(
+                                                            milliseconds: 2000),
+                                                        () async {
+                                                          _model.c3PhoneDigits =
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c3PhoneTFTextController
+                                                                      .text);
+                                                          safeSetState(() {});
+                                                          if ((_model.c3PhoneDigits !=
+                                                                      null &&
+                                                                  _model.c3PhoneDigits !=
+                                                                      '') &&
+                                                              ((_model.c3PhoneDigits!)
+                                                                      .length ==
+                                                                  10)) {
+                                                            safeSetState(() {
+                                                              _model.c3PhoneTFTextController
+                                                                      ?.text =
+                                                                  functions
+                                                                      .formatAsUsPhone(
+                                                                          _model
+                                                                              .c3PhoneDigits!);
+                                                              _model
+                                                                  .c3PhoneTFMask
+                                                                  .updateMask(
+                                                                newValue:
+                                                                    TextEditingValue(
+                                                                  text: _model
+                                                                      .c3PhoneTFTextController!
+                                                                      .text,
+                                                                ),
+                                                              );
+                                                            });
+                                                          }
+                                                        },
                                                       );
                                                     },
                                                     autofocus: false,
@@ -4283,7 +5013,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model.c3PhoneTFMask
                                                     ],
                                                   ),
-                                                  Expanded(
+                                                  SizedBox(
+                                                    height: 30.0,
                                                     child: Align(
                                                       alignment:
                                                           AlignmentDirectional(
@@ -4557,8 +5288,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               if (loggedIn ==
                                                                   true) {
                                                                 _model.keyOutslot3 =
-                                                                    await actions
-                                                                        .generateDataKeyIfMissing();
+                                                                    await _currentRowDataKeyForSave();
                                                                 _model.dataKeyB64 =
                                                                     _model
                                                                         .keyOutslot3!;
@@ -4592,20 +5322,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   dataKeyB64: _model
                                                                       .dataKeyB64,
                                                                   jwt:
-                                                                      currentJwtToken,
+                                                                      await _jwtForApi(),
                                                                 );
 
                                                                 if ((_model
                                                                         .wrapslot3
                                                                         ?.succeeded ??
-                                                                    true)) {
+                                                                    false)) {
                                                                   _model.wrappedB64 =
-                                                                      getJsonField(
+                                                                      _jsonValue(
                                                                     (_model.wrapslot3
                                                                             ?.jsonBody ??
                                                                         ''),
                                                                     r'''$.wrappedB64''',
-                                                                  ).toString();
+                                                                  );
                                                                   safeSetState(
                                                                       () {});
                                                                   _model.updslot3 =
@@ -5451,42 +6181,43 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _resetConsentStatusAfterPhoneEdit(
                                                           4);
                                                       EasyDebounce.debounce(
-                                                      '_model.c4PhoneTFTextController',
-                                                      Duration(
-                                                          milliseconds: 2000),
-                                                      () async {
-                                                        _model.c4PhoneDigits = functions
-                                                            .sanitizePhoneDigits(
-                                                                _model
-                                                                    .c4PhoneTFTextController
-                                                                    .text);
-                                                        safeSetState(() {});
-                                                        if ((_model.c4PhoneDigits !=
-                                                                    null &&
-                                                                _model.c4PhoneDigits !=
-                                                                    '') &&
-                                                            ((_model.c4PhoneDigits!)
-                                                                    .length ==
-                                                                10)) {
-                                                          safeSetState(() {
-                                                            _model.c4PhoneTFTextController
-                                                                    ?.text =
-                                                                functions
-                                                                    .formatAsUsPhone(
-                                                                        _model
-                                                                            .c4PhoneDigits!);
-                                                            _model.c4PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c4PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                        }
-                                                      },
+                                                        '_model.c4PhoneTFTextController',
+                                                        Duration(
+                                                            milliseconds: 2000),
+                                                        () async {
+                                                          _model.c4PhoneDigits =
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c4PhoneTFTextController
+                                                                      .text);
+                                                          safeSetState(() {});
+                                                          if ((_model.c4PhoneDigits !=
+                                                                      null &&
+                                                                  _model.c4PhoneDigits !=
+                                                                      '') &&
+                                                              ((_model.c4PhoneDigits!)
+                                                                      .length ==
+                                                                  10)) {
+                                                            safeSetState(() {
+                                                              _model.c4PhoneTFTextController
+                                                                      ?.text =
+                                                                  functions
+                                                                      .formatAsUsPhone(
+                                                                          _model
+                                                                              .c4PhoneDigits!);
+                                                              _model
+                                                                  .c4PhoneTFMask
+                                                                  .updateMask(
+                                                                newValue:
+                                                                    TextEditingValue(
+                                                                  text: _model
+                                                                      .c4PhoneTFTextController!
+                                                                      .text,
+                                                                ),
+                                                              );
+                                                            });
+                                                          }
+                                                        },
                                                       );
                                                     },
                                                     autofocus: false,
@@ -5626,7 +6357,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model.c4PhoneTFMask
                                                     ],
                                                   ),
-                                                  Expanded(
+                                                  SizedBox(
+                                                    height: 30.0,
                                                     child: Align(
                                                       alignment:
                                                           AlignmentDirectional(
@@ -5901,8 +6633,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             if (loggedIn ==
                                                                 true) {
                                                               _model.keyOutslot4 =
-                                                                  await actions
-                                                                      .generateDataKeyIfMissing();
+                                                                  await _currentRowDataKeyForSave();
                                                               _model.dataKeyB64 =
                                                                   _model
                                                                       .keyOutslot4!;
@@ -5934,20 +6665,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 dataKeyB64: _model
                                                                     .dataKeyB64,
                                                                 jwt:
-                                                                    currentJwtToken,
+                                                                    await _jwtForApi(),
                                                               );
 
                                                               if ((_model
                                                                       .wrapslot4
                                                                       ?.succeeded ??
-                                                                  true)) {
+                                                                  false)) {
                                                                 _model.wrappedB64 =
-                                                                    getJsonField(
+                                                                    _jsonValue(
                                                                   (_model.wrapslot4
                                                                           ?.jsonBody ??
                                                                       ''),
                                                                   r'''$.wrappedB64''',
-                                                                ).toString();
+                                                                );
                                                                 safeSetState(
                                                                     () {});
                                                                 _model.updslot4 =
@@ -6825,42 +7556,43 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _resetConsentStatusAfterPhoneEdit(
                                                           5);
                                                       EasyDebounce.debounce(
-                                                      '_model.c5PhoneTFTextController',
-                                                      Duration(
-                                                          milliseconds: 2000),
-                                                      () async {
-                                                        _model.c5PhoneDigits = functions
-                                                            .sanitizePhoneDigits(
-                                                                _model
-                                                                    .c5PhoneTFTextController
-                                                                    .text);
-                                                        safeSetState(() {});
-                                                        if ((_model.c5PhoneDigits !=
-                                                                    null &&
-                                                                _model.c5PhoneDigits !=
-                                                                    '') &&
-                                                            ((_model.c5PhoneDigits!)
-                                                                    .length ==
-                                                                10)) {
-                                                          safeSetState(() {
-                                                            _model.c5PhoneTFTextController
-                                                                    ?.text =
-                                                                functions
-                                                                    .formatAsUsPhone(
-                                                                        _model
-                                                                            .c5PhoneDigits!);
-                                                            _model.c5PhoneTFMask
-                                                                .updateMask(
-                                                              newValue:
-                                                                  TextEditingValue(
-                                                                text: _model
-                                                                    .c5PhoneTFTextController!
-                                                                    .text,
-                                                              ),
-                                                            );
-                                                          });
-                                                        }
-                                                      },
+                                                        '_model.c5PhoneTFTextController',
+                                                        Duration(
+                                                            milliseconds: 2000),
+                                                        () async {
+                                                          _model.c5PhoneDigits =
+                                                              functions.sanitizePhoneDigits(
+                                                                  _model
+                                                                      .c5PhoneTFTextController
+                                                                      .text);
+                                                          safeSetState(() {});
+                                                          if ((_model.c5PhoneDigits !=
+                                                                      null &&
+                                                                  _model.c5PhoneDigits !=
+                                                                      '') &&
+                                                              ((_model.c5PhoneDigits!)
+                                                                      .length ==
+                                                                  10)) {
+                                                            safeSetState(() {
+                                                              _model.c5PhoneTFTextController
+                                                                      ?.text =
+                                                                  functions
+                                                                      .formatAsUsPhone(
+                                                                          _model
+                                                                              .c5PhoneDigits!);
+                                                              _model
+                                                                  .c5PhoneTFMask
+                                                                  .updateMask(
+                                                                newValue:
+                                                                    TextEditingValue(
+                                                                  text: _model
+                                                                      .c5PhoneTFTextController!
+                                                                      .text,
+                                                                ),
+                                                              );
+                                                            });
+                                                          }
+                                                        },
                                                       );
                                                     },
                                                     autofocus: false,
@@ -7000,7 +7732,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _model.c5PhoneTFMask
                                                     ],
                                                   ),
-                                                  Expanded(
+                                                  SizedBox(
+                                                    height: 30.0,
                                                     child: Align(
                                                       alignment:
                                                           AlignmentDirectional(
@@ -7272,8 +8005,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             if (loggedIn ==
                                                                 true) {
                                                               _model.keyOutslot5 =
-                                                                  await actions
-                                                                      .generateDataKeyIfMissing();
+                                                                  await _currentRowDataKeyForSave();
                                                               _model.dataKeyB64 =
                                                                   _model
                                                                       .keyOutslot5!;
@@ -7305,20 +8037,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 dataKeyB64: _model
                                                                     .dataKeyB64,
                                                                 jwt:
-                                                                    currentJwtToken,
+                                                                    await _jwtForApi(),
                                                               );
 
                                                               if ((_model
                                                                       .wrapslot5
                                                                       ?.succeeded ??
-                                                                  true)) {
+                                                                  false)) {
                                                                 _model.wrappedB64 =
-                                                                    getJsonField(
+                                                                    _jsonValue(
                                                                   (_model.wrapslot5
                                                                           ?.jsonBody ??
                                                                       ''),
                                                                   r'''$.wrappedB64''',
-                                                                ).toString();
+                                                                );
                                                                 safeSetState(
                                                                     () {});
                                                                 _model.updslot5 =
@@ -7768,9 +8500,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           size: 35.0,
                                         ),
                                         onPressed: () async {
-                                          _model.contactsCount =
-                                              _model.contactsCount + 1;
-                                          safeSetState(() {});
+                                          safeSetState(() {
+                                            _model.contactsCount =
+                                                (_model.contactsCount + 1)
+                                                    .clamp(1, 5)
+                                                    .toInt();
+                                          });
                                         },
                                       ),
                                     Align(
@@ -7808,8 +8543,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               _model.contactsPayload!;
                                           safeSetState(() {});
                                           if (loggedIn == true) {
-                                            _model.keyOut = await actions
-                                                .generateDataKeyIfMissing();
+                                            _model.keyOut =
+                                                await _currentRowDataKeyForSave();
                                             _model.dataKeyB64 = _model.keyOut!;
                                             safeSetState(() {});
                                             _model.enc = await actions
@@ -7829,15 +8564,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                             _model.wrap =
                                                 await WrapDataKeyCall.call(
                                               dataKeyB64: _model.dataKeyB64,
-                                              jwt: currentJwtToken,
+                                              jwt: await _jwtForApi(),
                                             );
 
                                             if ((_model.wrap?.succeeded ??
-                                                true)) {
-                                              _model.wrappedB64 = getJsonField(
+                                                false)) {
+                                              _model.wrappedB64 = _jsonValue(
                                                 (_model.wrap?.jsonBody ?? ''),
                                                 r'''$.wrappedB64''',
-                                              ).toString();
+                                              );
                                               safeSetState(() {});
                                               _model.upd =
                                                   await DecoyWalletTable()
@@ -7928,6 +8663,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 safeSetState(() {});
                                               }
 
+                                              await _rememberDataKey(
+                                                  _model.dataKeyB64);
+                                              await _rememberEncryptedContactsCache(
+                                                cipherB64: _model.ctB64,
+                                                nonceB64: _model.nonceB64,
+                                                wrappedB64: _model.wrappedB64,
+                                              );
+                                              _rememberSessionContactsCache();
                                               _model.consentSlotsList = functions
                                                   .buildConsentSlotsListFINAL(
                                                       _model
@@ -7986,7 +8729,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               _model.syncConsentResp =
                                                   await SyncConsentSlotsCall
                                                       .call(
-                                                jwt: currentJwtToken,
+                                                jwt: await _jwtForApi(),
                                                 slotsJsonJson:
                                                     _model.consentSlotsList,
                                               );

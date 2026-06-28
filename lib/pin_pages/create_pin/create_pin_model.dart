@@ -11,7 +11,13 @@ class CreatePinModel extends FlutterFlowModel<CreatePinWidget> {
   List<String> pinInput = [];
   void addToPinInput(String item) => pinInput.add(item);
   void removeFromPinInput(String item) => pinInput.remove(item);
-  void removeAtIndexFromPinInput(int index) => pinInput.removeAt(index);
+  void removeAtIndexFromPinInput(int index) {
+    if (index < 0 || index >= pinInput.length) {
+      return;
+    }
+    pinInput.removeAt(index);
+  }
+
   void insertAtIndexInPinInput(int index, String item) =>
       pinInput.insert(index, item);
   void updatePinInputAtIndex(int index, Function(String) updateFn) =>
@@ -26,8 +32,13 @@ class CreatePinModel extends FlutterFlowModel<CreatePinWidget> {
   void addToConfirmedPinInput(String item) => confirmedPinInput.add(item);
   void removeFromConfirmedPinInput(String item) =>
       confirmedPinInput.remove(item);
-  void removeAtIndexFromConfirmedPinInput(int index) =>
-      confirmedPinInput.removeAt(index);
+  void removeAtIndexFromConfirmedPinInput(int index) {
+    if (index < 0 || index >= confirmedPinInput.length) {
+      return;
+    }
+    confirmedPinInput.removeAt(index);
+  }
+
   void insertAtIndexInConfirmedPinInput(int index, String item) =>
       confirmedPinInput.insert(index, item);
   void updateConfirmedPinInputAtIndex(int index, Function(String) updateFn) =>

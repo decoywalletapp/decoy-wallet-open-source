@@ -367,9 +367,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                       ),
                                     ],
                                   ),
-                                  Container(
-                                    width: double.infinity,
-                                    height: 359.64,
+                                  Expanded(
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           0.0, 0.0, 0.0, 40.0),

@@ -21,11 +21,20 @@ import 'package:cryptography/cryptography.dart';
 List<int> _randomBytes(int len) =>
     List<int>.generate(len, (_) => Random.secure().nextInt(256));
 
+List<int> _decodeB64Any(String s) {
+  var normalized = s.replaceAll('-', '+').replaceAll('_', '/');
+  final pad = normalized.length % 4;
+  if (pad != 0) {
+    normalized = normalized + ('=' * (4 - pad));
+  }
+  return base64.decode(normalized);
+}
+
 Future<dynamic> aesGcmEncryptString(
   String plaintext,
   String base64DataKey,
 ) async {
-  final keyBytes = base64Url.decode(base64DataKey);
+  final keyBytes = _decodeB64Any(base64DataKey);
 
   // Choose AES-GCM variant from key length: 16 -> 128-bit, 32 -> 256-bit
   final AesGcm algo = (keyBytes.length == 32)

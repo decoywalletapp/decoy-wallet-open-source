@@ -267,8 +267,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Material(
+                                Material(
                                     color: Colors.transparent,
                                     elevation: 5.0,
                                     shape: RoundedRectangleBorder(
@@ -353,7 +352,6 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                         ],
                                       ),
                                     ),
-                                  ),
                                 ),
                                 Material(
                                   color: Colors.transparent,

@@ -51,10 +51,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Colors.white,
-          body: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+          body: SafeArea(
+            top: true,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -88,8 +90,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: Align(
+                    Align(
                         alignment: AlignmentDirectional(0.0, 0.0),
                         child: Material(
                           color: Colors.transparent,
@@ -155,7 +156,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             ),
                           ),
                         ),
-                      ),
                     ),
                   ],
                 ),
@@ -220,7 +220,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     text: '',
                                     options: FFButtonOptions(
                                       width: double.infinity,
-                                      height: double.infinity,
+                                      height: 60.0,
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 0.0, 16.0, 0.0),
                                       iconPadding:
@@ -295,7 +295,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                       text: '',
                                       options: FFButtonOptions(
                                         width: double.infinity,
-                                        height: double.infinity,
+                                        height: 60.0,
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             16.0, 0.0, 16.0, 0.0),
                                         iconPadding:
@@ -370,7 +370,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   text: '',
                                   options: FFButtonOptions(
                                     width: double.infinity,
-                                    height: double.infinity,
+                                    height: 60.0,
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16.0, 0.0, 16.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -440,7 +440,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   text: '',
                                   options: FFButtonOptions(
                                     width: double.infinity,
-                                    height: double.infinity,
+                                    height: 60.0,
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16.0, 0.0, 16.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -546,7 +546,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     text: '',
                                     options: FFButtonOptions(
                                       width: double.infinity,
-                                      height: double.infinity,
+                                      height: 60.0,
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 0.0, 16.0, 0.0),
                                       iconPadding:
@@ -618,7 +618,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   text: '',
                                   options: FFButtonOptions(
                                     width: double.infinity,
-                                    height: double.infinity,
+                                    height: 60.0,
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16.0, 0.0, 16.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -688,7 +688,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   text: '',
                                   options: FFButtonOptions(
                                     width: double.infinity,
-                                    height: double.infinity,
+                                    height: 60.0,
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16.0, 0.0, 16.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -762,7 +762,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     text: '',
                                     options: FFButtonOptions(
                                       width: double.infinity,
-                                      height: double.infinity,
+                                      height: 60.0,
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           16.0, 0.0, 16.0, 0.0),
                                       iconPadding:
@@ -793,8 +793,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         ),
                       ],
                     ),
-                    Expanded(
-                      child: Padding(
+                    Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
                         child: Row(
@@ -1001,7 +1000,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             ),
                           ],
                         ),
-                      ),
                     ),
                     FFButtonWidget(
                       onPressed: () async {
@@ -1039,7 +1037,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   ].divide(SizedBox(height: 16.0)),
                 ),
               ),
-            ].divide(SizedBox(height: 24.0)),
+              ].divide(SizedBox(height: 24.0)),
+            ),
           ),
         ),
       ),

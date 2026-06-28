@@ -9,7 +9,13 @@ class ChangePinModel extends FlutterFlowModel<ChangePinWidget> {
   List<String> newPinInput = [];
   void addToNewPinInput(String item) => newPinInput.add(item);
   void removeFromNewPinInput(String item) => newPinInput.remove(item);
-  void removeAtIndexFromNewPinInput(int index) => newPinInput.removeAt(index);
+  void removeAtIndexFromNewPinInput(int index) {
+    if (index < 0 || index >= newPinInput.length) {
+      return;
+    }
+    newPinInput.removeAt(index);
+  }
+
   void insertAtIndexInNewPinInput(int index, String item) =>
       newPinInput.insert(index, item);
   void updateNewPinInputAtIndex(int index, Function(String) updateFn) =>
@@ -24,8 +30,13 @@ class ChangePinModel extends FlutterFlowModel<ChangePinWidget> {
   void addToConfirmedNewPinInput(String item) => confirmedNewPinInput.add(item);
   void removeFromConfirmedNewPinInput(String item) =>
       confirmedNewPinInput.remove(item);
-  void removeAtIndexFromConfirmedNewPinInput(int index) =>
-      confirmedNewPinInput.removeAt(index);
+  void removeAtIndexFromConfirmedNewPinInput(int index) {
+    if (index < 0 || index >= confirmedNewPinInput.length) {
+      return;
+    }
+    confirmedNewPinInput.removeAt(index);
+  }
+
   void insertAtIndexInConfirmedNewPinInput(int index, String item) =>
       confirmedNewPinInput.insert(index, item);
   void updateConfirmedNewPinInputAtIndex(
@@ -37,7 +48,13 @@ class ChangePinModel extends FlutterFlowModel<ChangePinWidget> {
   List<String> oldPinInput = [];
   void addToOldPinInput(String item) => oldPinInput.add(item);
   void removeFromOldPinInput(String item) => oldPinInput.remove(item);
-  void removeAtIndexFromOldPinInput(int index) => oldPinInput.removeAt(index);
+  void removeAtIndexFromOldPinInput(int index) {
+    if (index < 0 || index >= oldPinInput.length) {
+      return;
+    }
+    oldPinInput.removeAt(index);
+  }
+
   void insertAtIndexInOldPinInput(int index, String item) =>
       oldPinInput.insert(index, item);
   void updateOldPinInputAtIndex(int index, Function(String) updateFn) =>

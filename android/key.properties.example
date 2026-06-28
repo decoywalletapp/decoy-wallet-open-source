@@ -1,0 +1,5 @@
+storeFile=/absolute/path/to/decoywallet-upload-keystore.jks
+storeType=PKCS12
+storePassword=replace-with-keystore-password
+keyAlias=decoywallet-upload
+keyPassword=replace-with-key-password

@@ -50,6 +50,21 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng? currentUserLocationValue;
 
+  dynamic _decoySeedArmedAtForSave() {
+    final currentRow = _model.decoyWalletRow?.elementAtOrNull(0);
+
+    if (!FFAppState().decoySeedArmed) {
+      return null;
+    }
+
+    final existingArmedAt = currentRow?.decoySeedArmedAt;
+    if (currentRow?.decoySeedArmed == true && existingArmedAt != null) {
+      return supaSerialize<DateTime>(existingArmedAt);
+    }
+
+    return supaSerialize<DateTime>(getCurrentTimestamp);
+  }
+
   Future<void> _syncPushPreferenceBeforeSave() async {
     final wantsPush = _model.pushNotifTileValue == true;
     FFAppState().pushEnabled = wantsPush;
@@ -59,13 +74,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
           await actions.requestPushPermissionAndGetToken();
       _model.pushPermissionRefreshResult =
           await actions.getPushPermissionStatus();
-      _model.pushPermissionGranted =
-          _model.pushPermissionRefreshResult == true;
+      _model.pushPermissionGranted = _model.pushPermissionRefreshResult == true;
     } else {
       _model.pushPermissionRefreshResult =
           await actions.getPushPermissionStatus();
-      _model.pushPermissionGranted =
-          _model.pushPermissionRefreshResult == true;
+      _model.pushPermissionGranted = _model.pushPermissionRefreshResult == true;
     }
 
     safeSetState(() {});
@@ -404,13 +417,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         child: SwitchListTile(
                                           value: _model.pINPoliceTileValue ??=
                                               false,
-                                          onChanged: true
-                                              ? null
-                                              : (newValue) async {
-                                                  safeSetState(() => _model
-                                                          .pINPoliceTileValue =
-                                                      newValue);
-                                                },
+                                          onChanged: null,
                                           title: Text(
                                             '911 Trigger',
                                             style: FlutterFlowTheme.of(context)
@@ -567,7 +574,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                           ],
                                         ),
                                       ),
-                                      Expanded(
+                                      SizedBox(
+                                        height: 28.0,
                                         child: Align(
                                           alignment:
                                               AlignmentDirectional(0.0, 0.0),
@@ -860,7 +868,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                           ],
                                         ),
                                       ),
-                                      Expanded(
+                                      SizedBox(
+                                        height: 28.0,
                                         child: Align(
                                           alignment:
                                               AlignmentDirectional(0.0, 0.0),
@@ -1225,7 +1234,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         ],
                                       ),
                                     ),
-                                    Expanded(
+                                    SizedBox(
+                                      height: 28.0,
                                       child: Align(
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
@@ -1585,7 +1595,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         ],
                                       ),
                                     ),
-                                    Expanded(
+                                    SizedBox(
+                                      height: 28.0,
                                       child: Align(
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
@@ -2070,7 +2081,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         ],
                                       ),
                                     ),
-                                    Expanded(
+                                    SizedBox(
+                                      height: 28.0,
                                       child: Align(
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
@@ -2240,8 +2252,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                             ),
                                             if (((_model.pushNotifTileValue ==
                                                         true) ||
-                                                    (FFAppState()
-                                                            .pushEnabled ==
+                                                    (FFAppState().pushEnabled ==
                                                         true)) &&
                                                 (_model.pushPermissionGranted ==
                                                     false))
@@ -2568,7 +2579,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         ],
                                       ),
                                     ),
-                                    Expanded(
+                                    SizedBox(
+                                      height: 28.0,
                                       child: Align(
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
@@ -2881,6 +2893,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     'decoy_seed_contacts_enabled':
                                                         FFAppState()
                                                             .decoySeedArmed,
+                                                    'decoy_seed_armed_at':
+                                                        _decoySeedArmedAtForSave(),
+                                                    'updated_at': supaSerialize<
+                                                            DateTime>(
+                                                        getCurrentTimestamp),
                                                     'decoy_pin_911_enabled':
                                                         FFAppState()
                                                             .decoyPin911Enabled,
@@ -2982,6 +2999,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         'decoy_seed_contacts_enabled':
                                                             FFAppState()
                                                                 .decoySeedArmed,
+                                                        'decoy_seed_armed_at':
+                                                            _decoySeedArmedAtForSave(),
+                                                        'updated_at': supaSerialize<
+                                                                DateTime>(
+                                                            getCurrentTimestamp),
                                                         'decoy_pin_911_enabled':
                                                             FFAppState()
                                                                 .decoyPin911Enabled,
@@ -3075,6 +3097,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         'decoy_seed_contacts_enabled':
                                                             FFAppState()
                                                                 .decoySeedArmed,
+                                                        'decoy_seed_armed_at':
+                                                            _decoySeedArmedAtForSave(),
+                                                        'updated_at': supaSerialize<
+                                                                DateTime>(
+                                                            getCurrentTimestamp),
                                                         'decoy_pin_911_enabled':
                                                             FFAppState()
                                                                 .decoyPin911Enabled,
@@ -3151,6 +3178,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                       'decoy_seed_contacts_enabled':
                                                           FFAppState()
                                                               .decoySeedArmed,
+                                                      'decoy_seed_armed_at':
+                                                          _decoySeedArmedAtForSave(),
+                                                      'updated_at': supaSerialize<
+                                                              DateTime>(
+                                                          getCurrentTimestamp),
                                                       'decoy_pin_911_enabled':
                                                           FFAppState()
                                                               .decoyPin911Enabled,

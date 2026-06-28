@@ -107,12 +107,14 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                   ),
                 ),
                 Expanded(
-                  child: Padding(
+                  child: SingleChildScrollView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 24.0),
                     child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Align(
@@ -471,7 +473,8 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                                             context)
                                                         .bodyMediumIsCustom,
                                               ),
-                                          maxLines: 16,
+                                          minLines: 15,
+                                          maxLines: 18,
                                           keyboardType: TextInputType.multiline,
                                           cursorColor:
                                               FlutterFlowTheme.of(context)
@@ -697,7 +700,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                         ),
                       ]
                           .divide(SizedBox(height: 16.0))
-                          .addToEnd(SizedBox(height: 84.0)),
+                          .addToEnd(SizedBox(height: 24.0)),
                     ),
                   ),
                 ),
