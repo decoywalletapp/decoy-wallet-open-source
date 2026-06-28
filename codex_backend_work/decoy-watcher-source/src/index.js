@@ -70,8 +70,10 @@ const BLOCKBOOK_DISABLE_ON_429_MS = Math.max(
   Math.min(24 * 60 * 60 * 1000, Number(process.env.BLOCKBOOK_DISABLE_ON_429_MS || 60 * 60 * 1000))
 );
 const CHAIN_EVENT_INGEST_ENABLED = parseEnvBool(process.env.CHAIN_EVENT_INGEST_ENABLED, false);
+const CHAIN_EVENT_SHADOW_MODE = parseEnvBool(process.env.CHAIN_EVENT_SHADOW_MODE, true);
 const CHAIN_EVENT_SECRET = (process.env.CHAIN_EVENT_SECRET || '').trim();
 const CHAIN_EVENT_MAX_TXS = Math.max(1, Math.min(5000, Number(process.env.CHAIN_EVENT_MAX_TXS || 500)));
+const CHAIN_EVENT_MATCH_LOG_LIMIT = Math.max(0, Math.min(50, Number(process.env.CHAIN_EVENT_MATCH_LOG_LIMIT || 10)));
 
 // Required for tank txid storage
 const TXID_HMAC_KEY = (process.env.TXID_HMAC_KEY || '').trim();
@@ -1018,6 +1020,12 @@ function addressLabel(address) {
   return `${a.slice(0, 6)}...${a.slice(-6)}`;
 }
 
+function idLabel(id) {
+  const s = String(id || '');
+  if (s.length <= 10) return s;
+  return `${s.slice(0, 8)}...${s.slice(-4)}`;
+}
+
 function orderedAddresses(addresses, lastIndex) {
   if (!Array.isArray(addresses) || addresses.length === 0) return [];
 
@@ -1357,7 +1365,9 @@ async function processChainEventRequest(req) {
     'chain-event';
   const processedPairs = new Set();
   let matchedInputs = 0;
+  let candidateTriggers = 0;
   let newTriggers = 0;
+  let shadowMatchesLogged = 0;
 
   for (const tx of txs) {
     const txid = tx && (tx.txid || tx.txId || tx.id);
@@ -1381,6 +1391,23 @@ async function processChainEventRequest(req) {
         if (processedPairs.has(pairKey)) continue;
         processedPairs.add(pairKey);
 
+        candidateTriggers += 1;
+
+        if (CHAIN_EVENT_SHADOW_MODE) {
+          if (shadowMatchesLogged < CHAIN_EVENT_MATCH_LOG_LIMIT) {
+            shadowMatchesLogged += 1;
+            healthLog('info', 'CHAIN_EVENT_SHADOW_MATCH', {
+              source,
+              confirmed: isConfirmedTx(tx),
+              decoyRef: idLabel(watch.decoyId),
+              userRef: idLabel(watch.userId),
+              addressRef: addressLabel(address),
+              txidHmacRef: hmacTxid(txid).slice(0, 16),
+            });
+          }
+          continue;
+        }
+
         const created = await recordSeedTrigger(
           watch.decoyId,
           watch.userId,
@@ -1392,7 +1419,7 @@ async function processChainEventRequest(req) {
     }
   }
 
-  if (newTriggers > 0) {
+  if (!CHAIN_EVENT_SHADOW_MODE && newTriggers > 0) {
     const kick = await kickSmsWorkerIfConfigured();
     log('sms-worker kick result:', kick);
   }
@@ -1400,8 +1427,11 @@ async function processChainEventRequest(req) {
   healthLog('info', 'CHAIN_EVENT_INGEST_OK', {
     txsReceived: txs.length,
     eligibleSeedRecords: watches.length,
+    shadowMode: CHAIN_EVENT_SHADOW_MODE,
     matchedInputs,
+    candidateTriggers,
     newTriggers,
+    shadowMatchesLogged,
   });
 
   return {
@@ -1410,7 +1440,9 @@ async function processChainEventRequest(req) {
       ok: true,
       txsReceived: txs.length,
       eligibleSeedRecords: watches.length,
+      shadowMode: CHAIN_EVENT_SHADOW_MODE,
       matchedInputs,
+      candidateTriggers,
       newTriggers,
     },
   };
