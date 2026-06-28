@@ -115,13 +115,14 @@ function ref(value) {
 
 const creds = loadCloudRunEnv();
 
-const [seeds, wallets, baselines, scanStates, triggers, alerts, smsQueue, consents, seenTxs] = await Promise.all([
+const [seeds, wallets, decoys, baselines, scanStates, triggers, alerts, smsQueue, consents, seenTxs] = await Promise.all([
   fetchAll(creds, 'armed_decoy_seeds', 'user_id,decoy_id,addresses'),
   fetchAll(
     creds,
     'decoy_wallet',
     'user_id,decoy_seed_armed,decoy_seed_armed_at,decoy_seed_decoy_id,decoy_seed_contacts_enabled,decoy_seed_last_triggered_at'
   ),
+  fetchAll(creds, 'decoys', 'id,xpub,zpub,watch_public_key,watch_public_key_type'),
   fetchAll(creds, 'decoy_seed_baselines', 'decoy_id,baselined_at'),
   fetchAll(creds, 'decoy_seed_scan_state', 'decoy_id,last_index,updated_at'),
   fetchAll(creds, 'decoy_triggers', 'decoy_id,user_id,trigger_type,observed_at,txid_hmac'),
@@ -134,6 +135,7 @@ const [seeds, wallets, baselines, scanStates, triggers, alerts, smsQueue, consen
 const seedUsers = new Set(seeds.map((s) => s.user_id).filter(Boolean));
 const seedDecoys = new Set(seeds.map((s) => s.decoy_id).filter(Boolean));
 const walletByUser = new Map(wallets.map((w) => [w.user_id, w]));
+const decoyById = new Map(decoys.map((d) => [d.id, d]));
 const baselineByDecoy = new Map(baselines.map((b) => [b.decoy_id, b]));
 const scanByDecoy = new Map(scanStates.map((s) => [s.decoy_id, s]));
 
@@ -144,6 +146,13 @@ const maxAddressesPerSeed = seedAddressCounts.length ? Math.max(...seedAddressCo
 const avgAddressesPerSeed = seedAddressCounts.length
   ? Number((totalWatchedAddresses / seedAddressCounts.length).toFixed(2))
   : 0;
+const seedRowsWithWatchPublicKey = seeds.filter((seed) => {
+  const decoy = decoyById.get(seed.decoy_id) || {};
+  const key = decoy.watch_public_key || decoy.zpub || decoy.xpub || '';
+  return /^([xyz]pub|[tuv]pub)/i.test(String(key));
+}).length;
+const seedRowsAddressOnly = seeds.length - seedRowsWithWatchPublicKey;
+const monthlyRuns = 43200;
 
 const activeSeedWallets = [...seedUsers].map((userId) => walletByUser.get(userId)).filter(Boolean);
 const missingWalletForSeedUser = [...seedUsers].filter((userId) => !walletByUser.has(userId)).length;
@@ -212,6 +221,14 @@ const output = {
     maxAddressesPerSeed,
     seedRowsWithNoAddresses,
     missingWalletForSeedUser,
+  },
+  watcherScaleShape: {
+    seedRowsWithWatchPublicKey,
+    seedRowsAddressOnly,
+    estimatedMonthlyFullScanSeedBatchCalls: seeds.length * monthlyRuns,
+    estimatedMonthlyLegacyAddressPollCallsIfQuickNodePrimary: totalWatchedAddresses * monthlyRuns,
+    estimatedMonthlyWatchKeyCallsIfQuickNodePrimaryForWatchKeyRows: seedRowsWithWatchPublicKey * monthlyRuns,
+    estimatedMonthlyQuickNodeCallsAtCurrentReserveCap: monthlyRuns,
   },
   armingGate: {
     seedUsersWithWalletRows: activeSeedWallets.length,

@@ -17,7 +17,7 @@ const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 
 const PORT = process.env.PORT || 8080;
 
@@ -69,6 +69,9 @@ const BLOCKBOOK_DISABLE_ON_429_MS = Math.max(
   0,
   Math.min(24 * 60 * 60 * 1000, Number(process.env.BLOCKBOOK_DISABLE_ON_429_MS || 60 * 60 * 1000))
 );
+const CHAIN_EVENT_INGEST_ENABLED = parseEnvBool(process.env.CHAIN_EVENT_INGEST_ENABLED, false);
+const CHAIN_EVENT_SECRET = (process.env.CHAIN_EVENT_SECRET || '').trim();
+const CHAIN_EVENT_MAX_TXS = Math.max(1, Math.min(5000, Number(process.env.CHAIN_EVENT_MAX_TXS || 500)));
 
 // Required for tank txid storage
 const TXID_HMAC_KEY = (process.env.TXID_HMAC_KEY || '').trim();
@@ -120,6 +123,16 @@ let blockbookDisabledUntilMs = 0;
 
 app.get('/', (req, res) => {
   res.json({ ok: true, service: 'decoy-watcher' });
+});
+
+app.post('/chain-event', async (req, res) => {
+  try {
+    const result = await processChainEventRequest(req);
+    res.status(result.status).json(result.body);
+  } catch (e) {
+    console.error('[decoy-watcher] chain event ingest failed', e && e.message ? e.message : e);
+    res.status(500).json({ ok: false, error: 'chain event ingest failed' });
+  }
 });
 
 function sleep(ms) {
@@ -451,6 +464,87 @@ function normalizeBlockchainTx(tx) {
       block_time: Number.isFinite(time) && time > 0 ? time : null,
     },
   };
+}
+
+function txidFromEventTx(tx) {
+  return tx && (tx.txid || tx.txId || tx.hash || tx.id);
+}
+
+function eventInputAddress(input) {
+  return (
+    blockbookInputAddress(input) ||
+    firstAddress(input && input.prev_out && [input.prev_out.addr, input.prev_out.address]) ||
+    firstAddress(input && [input.scriptpubkey_address, input.scriptPubKeyAddress])
+  );
+}
+
+function normalizeEventTx(tx) {
+  if (!tx || typeof tx !== 'object') return null;
+
+  const nested = tx.tx || tx.transaction || null;
+  if (nested && typeof nested === 'object' && !txidFromEventTx(tx)) {
+    return normalizeEventTx(nested);
+  }
+
+  const txid = txidFromEventTx(tx);
+  if (!txid) return null;
+
+  const rawInputs = Array.isArray(tx.vin)
+    ? tx.vin
+    : Array.isArray(tx.inputs)
+      ? tx.inputs
+      : Array.isArray(tx.ins)
+        ? tx.ins
+        : [];
+
+  const confirmations = Number(tx.confirmations);
+  const blockHeight = Number(tx.blockHeight || tx.block_height || tx.block);
+  const blockTime = Number(tx.blockTime || tx.blocktime || tx.block_time || tx.time);
+  const confirmed =
+    (tx.status && tx.status.confirmed === true) ||
+    (Number.isFinite(confirmations) && confirmations > 0) ||
+    (Number.isFinite(blockHeight) && blockHeight > 0);
+
+  return {
+    txid,
+    vin: rawInputs.map((input) => ({
+      prevout: {
+        scriptpubkey_address: eventInputAddress(input),
+      },
+    })),
+    status: {
+      confirmed,
+      block_time: Number.isFinite(blockTime) && blockTime > 0 ? blockTime : null,
+    },
+  };
+}
+
+function collectEventTxs(value, out = [], depth = 0) {
+  if (out.length >= CHAIN_EVENT_MAX_TXS || depth > 5 || value === null || value === undefined) return out;
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (out.length >= CHAIN_EVENT_MAX_TXS) break;
+      collectEventTxs(item, out, depth + 1);
+    }
+    return out;
+  }
+
+  if (typeof value !== 'object') return out;
+
+  const normalized = normalizeEventTx(value);
+  if (normalized) {
+    out.push(normalized);
+    return out;
+  }
+
+  for (const key of ['tx', 'transaction', 'transactions', 'txs', 'data', 'event', 'events', 'result', 'body']) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+      collectEventTxs(value[key], out, depth + 1);
+    }
+  }
+
+  return out;
 }
 
 function blockbookTxidsFromAddressData(data) {
@@ -1173,6 +1267,153 @@ async function recordSeedTrigger(decoyId, userId, tx, source) {
 
   log('seed trigger recorded', 'source=', source, 'confirmed=', isConfirmedTx(tx));
   return true;
+}
+
+function chainEventSecretFromRequest(req) {
+  const explicit = req.get('x-decoy-chain-event-secret') || req.get('x-chain-event-secret') || '';
+  if (explicit) return explicit.trim();
+
+  const authorization = req.get('authorization') || '';
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1].trim() : '';
+}
+
+function chainEventAuthorized(req) {
+  if (!CHAIN_EVENT_SECRET) return false;
+
+  const supplied = chainEventSecretFromRequest(req);
+  if (!supplied) return false;
+
+  const expected = Buffer.from(CHAIN_EVENT_SECRET);
+  const actual = Buffer.from(supplied);
+  return expected.length === actual.length && crypto.timingSafeEqual(expected, actual);
+}
+
+async function loadEligibleArmedSeedWatches() {
+  const { data: seedRows, error: seedsError } = await loadArmedDecoySeeds();
+  if (seedsError) throw new Error(`error loading armed_decoy_seeds: ${seedsError.message || seedsError}`);
+
+  const seeds = await hydrateSeedWatchMetadata(seedRows || []);
+  const userIds = [...new Set(seeds.map((seed) => seed.user_id).filter(Boolean))];
+  const gateMap = await getSeedGateMap(userIds);
+  const decoyIds = [...new Set(seeds.map((seed) => seed.decoy_id).filter(Boolean))];
+  const baselineMap = await getBaselineMap(decoyIds);
+  const watches = [];
+
+  for (const seed of seeds) {
+    const { decoy_id, user_id } = seed || {};
+    const watch = normalizeSeedWatch(seed);
+    const addresses = watch.addresses;
+    if (!decoy_id || !user_id || !Array.isArray(addresses) || !addresses.length) continue;
+
+    const gate = gateMap.get(user_id) || { armed: false, armedAt: null };
+    if (gate.armed !== true) continue;
+
+    watches.push({
+      decoyId: decoy_id,
+      userId: user_id,
+      addresses,
+      addressSet: new Set(addresses.filter(Boolean)),
+      armedAt: toDateOrNull(gate.armedAt),
+      lastBaseline: toDateOrNull(baselineMap.get(decoy_id)),
+    });
+  }
+
+  return watches;
+}
+
+async function processChainEventRequest(req) {
+  if (!CHAIN_EVENT_INGEST_ENABLED) {
+    return { status: 404, body: { ok: false, error: 'chain event ingest disabled' } };
+  }
+
+  if (!CHAIN_EVENT_SECRET) {
+    return { status: 503, body: { ok: false, error: 'chain event secret missing' } };
+  }
+
+  if (!chainEventAuthorized(req)) {
+    return { status: 401, body: { ok: false, error: 'unauthorized' } };
+  }
+
+  const txs = collectEventTxs(req.body);
+  if (!txs.length) {
+    return { status: 200, body: { ok: true, txsReceived: 0, matchedInputs: 0, newTriggers: 0 } };
+  }
+
+  const watches = await loadEligibleArmedSeedWatches();
+  const watchesByAddress = new Map();
+
+  for (const watch of watches) {
+    for (const address of watch.addressSet) {
+      if (!watchesByAddress.has(address)) watchesByAddress.set(address, []);
+      watchesByAddress.get(address).push(watch);
+    }
+  }
+
+  const source =
+    req.get('x-decoy-chain-event-source') ||
+    req.get('x-quicknode-stream-id') ||
+    req.get('x-webhook-source') ||
+    'chain-event';
+  const processedPairs = new Set();
+  let matchedInputs = 0;
+  let newTriggers = 0;
+
+  for (const tx of txs) {
+    const txid = tx && (tx.txid || tx.txId || tx.id);
+    if (!txid) continue;
+
+    const inputAddresses = new Set(
+      (Array.isArray(tx.vin) ? tx.vin : [])
+        .map((input) => input && input.prevout && input.prevout.scriptpubkey_address)
+        .filter(Boolean)
+    );
+
+    for (const address of inputAddresses) {
+      const addressWatches = watchesByAddress.get(address) || [];
+      if (!addressWatches.length) continue;
+      matchedInputs += addressWatches.length;
+
+      for (const watch of addressWatches) {
+        if (!shouldProcessOutboundTx(tx, address, watch.armedAt, watch.lastBaseline)) continue;
+
+        const pairKey = `${watch.decoyId}:${txid}`;
+        if (processedPairs.has(pairKey)) continue;
+        processedPairs.add(pairKey);
+
+        const created = await recordSeedTrigger(
+          watch.decoyId,
+          watch.userId,
+          tx,
+          isConfirmedTx(tx) ? `chain-event-confirmed:${source}` : `chain-event-mempool:${source}`
+        );
+        if (created) newTriggers += 1;
+      }
+    }
+  }
+
+  if (newTriggers > 0) {
+    const kick = await kickSmsWorkerIfConfigured();
+    log('sms-worker kick result:', kick);
+  }
+
+  healthLog('info', 'CHAIN_EVENT_INGEST_OK', {
+    txsReceived: txs.length,
+    eligibleSeedRecords: watches.length,
+    matchedInputs,
+    newTriggers,
+  });
+
+  return {
+    status: 200,
+    body: {
+      ok: true,
+      txsReceived: txs.length,
+      eligibleSeedRecords: watches.length,
+      matchedInputs,
+      newTriggers,
+    },
+  };
 }
 
 async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
