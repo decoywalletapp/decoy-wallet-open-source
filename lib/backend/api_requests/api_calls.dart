@@ -409,12 +409,14 @@ class SendSupportTicketCall {
 class CreateCheckoutSessionCall {
   static Future<ApiCallResponse> call({
     String? currentUserUid = '',
+    String? billingInterval = 'monthly',
     int? trialEnd,
     String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(currentUserUid)}",
+  "billing_interval": "${escapeStringForJson(billingInterval)}",
   "trial_end": ${trialEnd == null ? 'null' : trialEnd}
 }''';
     return ApiManager.instance.makeApiCall(
@@ -452,11 +454,13 @@ class CreateCheckoutSessionCall {
 class CreateBTCPayInvoiceCall {
   static Future<ApiCallResponse> call({
     String? currentUserUid = '',
+    String? billingInterval = 'monthly',
     String? jwt = '',
   }) async {
     final ffApiRequestBody = '''
 {
-  "user_id": "${escapeStringForJson(currentUserUid)}"
+  "user_id": "${escapeStringForJson(currentUserUid)}",
+  "billing_interval": "${escapeStringForJson(billingInterval)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'CreateBTCPayInvoice',

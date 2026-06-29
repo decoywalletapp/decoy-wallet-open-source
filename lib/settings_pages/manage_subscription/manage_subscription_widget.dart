@@ -41,8 +41,154 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
   late ManageSubscriptionModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String _billingInterval = 'monthly';
+
+  bool get _isYearly => _billingInterval == 'yearly';
+
+  String get _bitcoinPriceLabel =>
+      _isYearly ? '\$39.42 / year' : '\$3.94 / month';
+
+  String get _cardPriceLabel => _isYearly ? '\$49.90 / year' : '\$4.99 / month';
 
   bool _hasText(String? value) => value != null && value.isNotEmpty;
+
+  void _showPaymentError(String code) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '$code - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+          style: TextStyle(
+            color: FlutterFlowTheme.of(context).primaryText,
+          ),
+        ),
+        duration: Duration(milliseconds: 4000),
+        backgroundColor: FlutterFlowTheme.of(context).secondary,
+      ),
+    );
+  }
+
+  Future<bool> _openPaymentUrl(String? url, String errorCode) async {
+    if (_hasText(url)) {
+      await actions.openExternalUrl(url!);
+      return true;
+    }
+
+    _showPaymentError(errorCode);
+    return false;
+  }
+
+  Widget _buildPriceLabel({
+    required BuildContext context,
+    required String priceLabel,
+    required String yearlyCompareLabel,
+  }) {
+    final priceStyle = FlutterFlowTheme.of(context).bodyMedium.override(
+          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+          color: FlutterFlowTheme.of(context).primary,
+          fontSize: 16.0,
+          letterSpacing: 0.0,
+          fontWeight: FontWeight.w700,
+          useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+        );
+
+    if (!_isYearly) {
+      return Text(
+        priceLabel,
+        textAlign: TextAlign.center,
+        style: priceStyle,
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          yearlyCompareLabel,
+          textAlign: TextAlign.center,
+          style: priceStyle.copyWith(
+            color: FlutterFlowTheme.of(context).error,
+            decoration: TextDecoration.lineThrough,
+            decorationColor: FlutterFlowTheme.of(context).error,
+            decorationThickness: 2.0,
+            fontSize: 14.0,
+          ),
+        ),
+        Text(
+          priceLabel,
+          textAlign: TextAlign.center,
+          style: priceStyle,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPlanChoice({
+    required BuildContext context,
+    required String interval,
+    required String title,
+    required String subtitle,
+  }) {
+    final selected = _billingInterval == interval;
+
+    return Expanded(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10.0),
+        onTap: () => safeSetState(() => _billingInterval = interval),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 160),
+          padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 10.0),
+          decoration: BoxDecoration(
+            color: selected
+                ? FlutterFlowTheme.of(context).primary
+                : FlutterFlowTheme.of(context).info,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(
+              color: FlutterFlowTheme.of(context).primary,
+              width: 2.0,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                      color: selected
+                          ? FlutterFlowTheme.of(context).info
+                          : FlutterFlowTheme.of(context).primaryText,
+                      fontSize: 14.0,
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w700,
+                      useGoogleFonts: !FlutterFlowTheme.of(
+                        context,
+                      ).bodyMediumIsCustom,
+                    ),
+              ),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: FlutterFlowTheme.of(context).bodySmall.override(
+                      fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
+                      color: selected
+                          ? FlutterFlowTheme.of(context).info
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      fontSize: 11.0,
+                      letterSpacing: 0.0,
+                      useGoogleFonts: !FlutterFlowTheme.of(
+                        context,
+                      ).bodySmallIsCustom,
+                    ),
+              ),
+            ].divide(SizedBox(height: 2.0)),
+          ),
+        ),
+      ),
+    );
+  }
 
   bool _isConfirmedPendingStripeSwitch(UserEntitlementsRow? row) =>
       row?.pendingProvider == 'stripe' &&
@@ -78,14 +224,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
   Future<void> _refreshEntitlementFromBackend() async {
     _model.stripeCheckoutRefreshQuery = await UserEntitlementsTable().queryRows(
       queryFn: (q) => q
-          .eqOrNull(
-            'user_id',
-            currentUserUid,
-          )
-          .eqOrNull(
-            'entitlement',
-            'decoy_wallet',
-          ),
+          .eqOrNull('user_id', currentUserUid)
+          .eqOrNull('entitlement', 'decoy_wallet'),
     );
     _model.manageQue = _model.stripeCheckoutRefreshQuery;
     _applyEntitlementRow(_model.stripeCheckoutRefreshQuery?.elementAtOrNull(0));
@@ -146,14 +286,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.manageQue = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
-            .eqOrNull(
-              'user_id',
-              currentUserUid,
-            )
-            .eqOrNull(
-              'entitlement',
-              'decoy_wallet',
-            ),
+            .eqOrNull('user_id', currentUserUid)
+            .eqOrNull('entitlement', 'decoy_wallet'),
       );
       _applyEntitlementRow(_model.manageQue?.elementAtOrNull(0));
       safeSetState(() {});
@@ -176,14 +310,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
         if ((_model.btcpayFinalizeResp?.succeeded ?? true)) {
           _model.btcpayFinalQuery = await UserEntitlementsTable().queryRows(
             queryFn: (q) => q
-                .eqOrNull(
-                  'user_id',
-                  currentUserUid,
-                )
-                .eqOrNull(
-                  'entitlement',
-                  'decoy_wallet',
-                ),
+                .eqOrNull('user_id', currentUserUid)
+                .eqOrNull('entitlement', 'decoy_wallet'),
           );
           _applyEntitlementRow(_model.btcpayFinalQuery?.elementAtOrNull(0));
           safeSetState(() {});
@@ -191,14 +319,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
       }
       _model.trueBranchQue = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
-            .eqOrNull(
-              'user_id',
-              currentUserUid,
-            )
-            .eqOrNull(
-              'entitlement',
-              'decoy_wallet',
-            ),
+            .eqOrNull('user_id', currentUserUid)
+            .eqOrNull('entitlement', 'decoy_wallet'),
       );
       _model.manageQue = _model.trueBranchQue;
       _applyEntitlementRow(_model.trueBranchQue?.elementAtOrNull(0));
@@ -256,18 +378,26 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                       ),
                     ),
                     Expanded(
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Material(
+                      child: SingleChildScrollView(
+                        primary: true,
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                          0.0,
+                          0.0,
+                          0.0,
+                          24.0,
+                        ),
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Material(
                                     color: Colors.transparent,
                                     elevation: 5.0,
                                     shape: RoundedRectangleBorder(
@@ -277,13 +407,16 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                       width: 300.0,
                                       height: 72.0,
                                       decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        color: FlutterFlowTheme.of(
+                                          context,
+                                        ).primary,
+                                        borderRadius: BorderRadius.circular(
+                                          10.0,
+                                        ),
                                         border: Border.all(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
+                                          color: FlutterFlowTheme.of(
+                                            context,
+                                          ).primary,
                                         ),
                                       ),
                                       alignment: AlignmentDirectional(0.0, 0.0),
@@ -295,25 +428,32 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 12.0, 0.0, 0.0),
+                                              0.0,
+                                              12.0,
+                                              0.0,
+                                              0.0,
+                                            ),
                                             child: Stack(
                                               children: [
                                                 Align(
                                                   alignment:
                                                       AlignmentDirectional(
-                                                          0.02, 0.0),
+                                                    0.02,
+                                                    0.0,
+                                                  ),
                                                   child: Text(
                                                     'MANAGE ACCESS',
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
+                                                      context,
+                                                    ).bodyMedium.override(
                                                           fontFamily:
                                                               'DECOY BEBAS',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .info,
+                                                          color:
+                                                              FlutterFlowTheme
+                                                                  .of(
+                                                            context,
+                                                          ).info,
                                                           fontSize: 48.0,
                                                           letterSpacing: 0.5,
                                                           fontWeight:
@@ -325,19 +465,22 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                 Align(
                                                   alignment:
                                                       AlignmentDirectional(
-                                                          -0.02, 0.0),
+                                                    -0.02,
+                                                    0.0,
+                                                  ),
                                                   child: Text(
                                                     'MANAGE ACCESS',
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
+                                                      context,
+                                                    ).bodyMedium.override(
                                                           fontFamily:
                                                               'DECOY BEBAS',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .info,
+                                                          color:
+                                                              FlutterFlowTheme
+                                                                  .of(
+                                                            context,
+                                                          ).info,
                                                           fontSize: 48.0,
                                                           letterSpacing: 0.5,
                                                           fontWeight:
@@ -352,410 +495,1052 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                         ],
                                       ),
                                     ),
-                                ),
-                                Material(
-                                  color: Colors.transparent,
-                                  elevation: 5.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(10.0),
-                                    ),
                                   ),
-                                  child: Container(
-                                    width: 175.0,
-                                    height: 60.0,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                  Material(
+                                    color: Colors.transparent,
+                                    elevation: 5.0,
+                                    shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
                                         bottomLeft: Radius.circular(10.0),
                                         bottomRight: Radius.circular(10.0),
                                       ),
                                     ),
-                                    child: Column(
+                                    child: Container(
+                                      width: 175.0,
+                                      height: 60.0,
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(
+                                          context,
+                                        ).primary,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(10.0),
+                                          bottomRight: Radius.circular(10.0),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Stack(
+                                            children: [
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                  0.01,
+                                                  0.0,
+                                                ),
+                                                child: Text(
+                                                  'METHOD',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                    context,
+                                                  ).bodyMedium.override(
+                                                        fontFamily:
+                                                            'DECOY BEBAS',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                          context,
+                                                        ).info,
+                                                        fontSize: 48.0,
+                                                        letterSpacing: 0.5,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        lineHeight: 1.0,
+                                                      ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                  0.0,
+                                                  0.0,
+                                                ),
+                                                child: Text(
+                                                  'METHOD',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                    context,
+                                                  ).bodyMedium.override(
+                                                        fontFamily:
+                                                            'DECOY BEBAS',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                          context,
+                                                        ).info,
+                                                        fontSize: 48.0,
+                                                        letterSpacing: 0.5,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        lineHeight: 1.0,
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0,
+                                  0.0,
+                                  16.0,
+                                  0.0,
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  elevation: 2.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Container(
+                                    width: 350.0,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context).info,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      border: Border.all(
+                                        color: FlutterFlowTheme.of(
+                                          context,
+                                        ).primary,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(6.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          _buildPlanChoice(
+                                            context: context,
+                                            interval: 'monthly',
+                                            title: 'Monthly',
+                                            subtitle: 'Flexible access',
+                                          ),
+                                          _buildPlanChoice(
+                                            context: context,
+                                            interval: 'yearly',
+                                            title: 'Yearly',
+                                            subtitle: '2 months free',
+                                          ),
+                                        ].divide(SizedBox(width: 6.0)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0,
+                                  0.0,
+                                  16.0,
+                                  0.0,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Material(
+                                      color: Colors.transparent,
+                                      elevation: 3.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      child: Container(
+                                        width: 350.0,
+                                        height: _isYearly ? 238.0 : 220.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(
+                                            context,
+                                          ).info,
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
+                                          ),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(
+                                              context,
+                                            ).primary,
+                                            width: 3.0,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                            20.0,
+                                            0.0,
+                                            20.0,
+                                            0.0,
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                    0.0,
+                                                    5.0,
+                                                    0.0,
+                                                    0.0,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                          0.0,
+                                                          0.0,
+                                                          0.0,
+                                                          5.0,
+                                                        ),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            8.0,
+                                                          ),
+                                                          child: Image.asset(
+                                                            'assets/images/Bitcoin-Logo.png',
+                                                            width: 200.0,
+                                                            height: 120.0,
+                                                            fit: BoxFit.contain,
+                                                            alignment:
+                                                                Alignment(
+                                                              0.0,
+                                                              0.0,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      _buildPriceLabel(
+                                                        context: context,
+                                                        priceLabel:
+                                                            _bitcoinPriceLabel,
+                                                        yearlyCompareLabel:
+                                                            '\$47.28 / year',
+                                                      ),
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                          0.0,
+                                                          0.0,
+                                                        ),
+                                                        child: FFButtonWidget(
+                                                          onPressed: () async {
+                                                            if (_model
+                                                                    .provider !=
+                                                                'stripe') {
+                                                              _model.apiResultk1h =
+                                                                  await CreateBTCPayInvoiceCall
+                                                                      .call(
+                                                                currentUserUid:
+                                                                    currentUserUid,
+                                                                billingInterval:
+                                                                    _billingInterval,
+                                                                jwt:
+                                                                    currentJwtToken,
+                                                              );
+
+                                                              if ((_model
+                                                                      .apiResultk1h
+                                                                      ?.succeeded ??
+                                                                  false)) {
+                                                                final opened =
+                                                                    await _openPaymentUrl(
+                                                                  CreateBTCPayInvoiceCall
+                                                                      .invoiceUrl(
+                                                                    (_model.apiResultk1h
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                  ),
+                                                                  'ERROR #018',
+                                                                );
+                                                                if (!opened) {
+                                                                  safeSetState(
+                                                                      () {});
+                                                                  return;
+                                                                }
+                                                                await Future
+                                                                    .delayed(
+                                                                  Duration(
+                                                                    milliseconds:
+                                                                        2000,
+                                                                  ),
+                                                                );
+                                                                await _refreshEntitlementFromBackend();
+                                                              } else {
+                                                                _showPaymentError(
+                                                                    'ERROR #018');
+                                                              }
+                                                            } else {
+                                                              _model.btcSwitchResult =
+                                                                  await ScheduleBtcpaySwitchCall
+                                                                      .call(
+                                                                currentUserUid:
+                                                                    currentUserUid,
+                                                                jwt:
+                                                                    currentJwtToken,
+                                                              );
+
+                                                              _model.fBAPIresult =
+                                                                  await CreateBTCPayInvoiceCall
+                                                                      .call(
+                                                                currentUserUid:
+                                                                    currentUserUid,
+                                                                billingInterval:
+                                                                    _billingInterval,
+                                                                jwt:
+                                                                    currentJwtToken,
+                                                              );
+
+                                                              if ((_model
+                                                                      .fBAPIresult
+                                                                      ?.succeeded ??
+                                                                  false)) {
+                                                                final opened =
+                                                                    await _openPaymentUrl(
+                                                                  CreateBTCPayInvoiceCall
+                                                                      .invoiceUrl(
+                                                                    (_model.fBAPIresult
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                  ),
+                                                                  'ERROR #027',
+                                                                );
+                                                                if (!opened) {
+                                                                  safeSetState(
+                                                                      () {});
+                                                                  return;
+                                                                }
+                                                                await Future
+                                                                    .delayed(
+                                                                  Duration(
+                                                                    milliseconds:
+                                                                        2000,
+                                                                  ),
+                                                                );
+                                                                await _refreshEntitlementFromBackend();
+                                                              } else {
+                                                                _showPaymentError(
+                                                                    'ERROR #027');
+                                                              }
+                                                            }
+
+                                                            safeSetState(() {});
+                                                          },
+                                                          text: () {
+                                                            if (_model
+                                                                    .provider ==
+                                                                'btcpay') {
+                                                              return 'Renew Bitcoin Payments';
+                                                            } else if (_model
+                                                                    .pendingProvider ==
+                                                                'btcpay') {
+                                                              return 'Stack More Days';
+                                                            } else {
+                                                              return 'Switch to Bitcoin Payments';
+                                                            }
+                                                          }(),
+                                                          options:
+                                                              FFButtonOptions(
+                                                            width: 250.0,
+                                                            height: 50.0,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                              8.0,
+                                                            ),
+                                                            iconPadding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                              0.0,
+                                                              0.0,
+                                                              0.0,
+                                                              0.0,
+                                                            ),
+                                                            color:
+                                                                FlutterFlowTheme
+                                                                    .of(
+                                                              context,
+                                                            ).primary,
+                                                            textStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleMedium
+                                                                    .override(
+                                                                      font: GoogleFonts
+                                                                          .heebo(
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        fontStyle:
+                                                                            FlutterFlowTheme.of(
+                                                                          context,
+                                                                        ).titleMedium.fontStyle,
+                                                                      ),
+                                                                      color:
+                                                                          FlutterFlowTheme
+                                                                              .of(
+                                                                        context,
+                                                                      ).info,
+                                                                      letterSpacing:
+                                                                          0.25,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontStyle:
+                                                                          FlutterFlowTheme
+                                                                              .of(
+                                                                        context,
+                                                                      ).titleMedium.fontStyle,
+                                                                    ),
+                                                            elevation: 3.0,
+                                                            borderSide:
+                                                                BorderSide(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 1.0,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              8.0,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ].divide(
+                                                        SizedBox(height: 0.0)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Material(
+                                      color: Colors.transparent,
+                                      elevation: 3.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      child: Container(
+                                        width: 350.0,
+                                        height: _isYearly ? 238.0 : 220.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(
+                                            context,
+                                          ).info,
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
+                                          ),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(
+                                              context,
+                                            ).primary,
+                                            width: 3.0,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                            20.0,
+                                            0.0,
+                                            20.0,
+                                            0.0,
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                      0.0,
+                                                      0.0,
+                                                      0.0,
+                                                      20.0,
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        8.0,
+                                                      ),
+                                                      child: Image.asset(
+                                                        'assets/images/Stripe_Logo,_revised_2016.svg.png',
+                                                        width: 200.0,
+                                                        height: 73.5,
+                                                        fit: BoxFit.cover,
+                                                        alignment: Alignment(
+                                                          0.0,
+                                                          0.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  _buildPriceLabel(
+                                                    context: context,
+                                                    priceLabel: _cardPriceLabel,
+                                                    yearlyCompareLabel:
+                                                        '\$59.88 / year',
+                                                  ),
+                                                  FFButtonWidget(
+                                                    onPressed: () async {
+                                                      if ((_model.providerCustomerId !=
+                                                                  null &&
+                                                              _model.providerCustomerId !=
+                                                                  '') &&
+                                                          (_model.provider ==
+                                                              'stripe')) {
+                                                        _model.portalRespManage =
+                                                            await CreateBillingPortalSessionCall
+                                                                .call(
+                                                          customerId: _model
+                                                              .providerCustomerId,
+                                                          userId:
+                                                              currentUserUid,
+                                                          returnUrl:
+                                                              'https://decoywalletapp.com/open',
+                                                          jwt: currentJwtToken,
+                                                        );
+
+                                                        final portalOpened =
+                                                            await _openPaymentUrl(
+                                                          CreateBillingPortalSessionCall
+                                                              .url(
+                                                            (_model.portalRespManage
+                                                                    ?.jsonBody ??
+                                                                ''),
+                                                          ),
+                                                          'ERROR #017',
+                                                        );
+                                                        if (!portalOpened) {
+                                                          safeSetState(() {});
+                                                          return;
+                                                        }
+                                                        await Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 2000,
+                                                          ),
+                                                        );
+                                                        _model.requery3 =
+                                                            await UserEntitlementsTable()
+                                                                .queryRows(
+                                                          queryFn: (q) =>
+                                                              q.eqOrNull(
+                                                            'user_id',
+                                                            currentUserUid,
+                                                          ),
+                                                        );
+                                                        _model.manageQue =
+                                                            _model.requery3;
+                                                        _applyEntitlementRow(
+                                                          _model.requery3
+                                                              ?.elementAtOrNull(
+                                                            0,
+                                                          ),
+                                                        );
+                                                        safeSetState(() {});
+                                                        safeSetState(() {});
+                                                      } else {
+                                                        if ((_model.provider ==
+                                                                'btcpay') &&
+                                                            (_model.currentPeriodEnd !=
+                                                                null)) {
+                                                          _model.apiResult5g4 =
+                                                              await CreateCheckoutSessionCall
+                                                                  .call(
+                                                            currentUserUid:
+                                                                currentUserUid,
+                                                            billingInterval:
+                                                                _billingInterval,
+                                                            trialEnd:
+                                                                _stripeSwitchTrialEndSeconds(),
+                                                            jwt:
+                                                                currentJwtToken,
+                                                          );
+
+                                                          if ((_model
+                                                                  .apiResult5g4
+                                                                  ?.succeeded ??
+                                                              false)) {
+                                                            final checkoutSessionId =
+                                                                CreateCheckoutSessionCall
+                                                                    .sessionId(
+                                                              (_model.apiResult5g4
+                                                                      ?.jsonBody ??
+                                                                  ''),
+                                                            );
+                                                            _model.stripeCheckoutSessionId =
+                                                                checkoutSessionId;
+                                                            FFAppState()
+                                                                    .pendingStripeCheckoutSessionId =
+                                                                checkoutSessionId ??
+                                                                    '';
+                                                            final checkoutOpened =
+                                                                await _openPaymentUrl(
+                                                              CreateCheckoutSessionCall
+                                                                  .url(
+                                                                (_model.apiResult5g4
+                                                                        ?.jsonBody ??
+                                                                    ''),
+                                                              ),
+                                                              'ERROR #028',
+                                                            );
+                                                            if (!checkoutOpened) {
+                                                              safeSetState(
+                                                                  () {});
+                                                              return;
+                                                            }
+                                                            await Future
+                                                                .delayed(
+                                                              Duration(
+                                                                milliseconds:
+                                                                    2000,
+                                                              ),
+                                                            );
+                                                            _model.requery5 =
+                                                                await UserEntitlementsTable()
+                                                                    .queryRows(
+                                                              queryFn: (q) =>
+                                                                  q.eqOrNull(
+                                                                'user_id',
+                                                                currentUserUid,
+                                                              ),
+                                                            );
+                                                            _model.manageQue =
+                                                                _model.requery5;
+                                                            _applyEntitlementRow(
+                                                              _model.requery5
+                                                                  ?.elementAtOrNull(
+                                                                0,
+                                                              ),
+                                                            );
+                                                            safeSetState(() {});
+                                                            safeSetState(() {});
+                                                          } else {
+                                                            _showPaymentError(
+                                                                'ERROR #028');
+                                                          }
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                            context,
+                                                          ).showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                'ERROR #029 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      FlutterFlowTheme
+                                                                          .of(
+                                                                    context,
+                                                                  ).primaryText,
+                                                                ),
+                                                              ),
+                                                              duration:
+                                                                  Duration(
+                                                                milliseconds:
+                                                                    4000,
+                                                              ),
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme
+                                                                      .of(
+                                                                context,
+                                                              ).secondary,
+                                                            ),
+                                                          );
+                                                        }
+                                                      }
+
+                                                      safeSetState(() {});
+                                                    },
+                                                    text: () {
+                                                      if (_model.provider ==
+                                                          'stripe') {
+                                                        return 'Manage Card Payments';
+                                                      } else if (_model
+                                                              .pendingProvider ==
+                                                          'stripe') {
+                                                        return 'Card Payments Scheduled';
+                                                      } else {
+                                                        return 'Switch to Card Payments';
+                                                      }
+                                                    }(),
+                                                    options: FFButtonOptions(
+                                                      width: 250.0,
+                                                      height: 50.0,
+                                                      padding: EdgeInsets.all(
+                                                        8.0,
+                                                      ),
+                                                      iconPadding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                      ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).primary,
+                                                      textStyle:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).titleMedium.override(
+                                                                font:
+                                                                    GoogleFonts
+                                                                        .heebo(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontStyle: FlutterFlowTheme
+                                                                          .of(
+                                                                    context,
+                                                                  )
+                                                                      .titleMedium
+                                                                      .fontStyle,
+                                                                ),
+                                                                color:
+                                                                    FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).info,
+                                                                letterSpacing:
+                                                                    0.25,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontStyle: FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                )
+                                                                    .titleMedium
+                                                                    .fontStyle,
+                                                              ),
+                                                      elevation: 3.0,
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent,
+                                                        width: 1.0,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        8.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ].divide(SizedBox(height: 0.0)),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
+                                        Text(
+                                          'Account Subscription Status:  ',
+                                          textAlign: TextAlign.start,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: FlutterFlowTheme.of(
+                                                  context,
+                                                ).bodyMediumFamily,
+                                                fontSize: 16.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                  context,
+                                                ).bodyMediumIsCustom,
+                                              ),
+                                        ),
                                         Stack(
                                           children: [
                                             Align(
                                               alignment: AlignmentDirectional(
-                                                  0.01, 0.0),
-                                              child: Text(
-                                                'METHOD',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.5,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.0,
-                                                    ),
+                                                0.0,
+                                                0.0,
                                               ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Text(
-                                                'METHOD',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.5,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.0,
-                                                    ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Material(
-                                    color: Colors.transparent,
-                                    elevation: 3.0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Container(
-                                      width: 350.0,
-                                      height: 200.0,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            FlutterFlowTheme.of(context).info,
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        border: Border.all(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 3.0,
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            20.0, 0.0, 20.0, 0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 5.0, 0.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  5.0),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                        child: Image.asset(
-                                                          'assets/images/Bitcoin-Logo.png',
-                                                          width: 200.0,
-                                                          height: 120.0,
-                                                          fit: BoxFit.contain,
-                                                          alignment: Alignment(
-                                                              0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  if ((_model.manageQue
+                                                              ?.elementAtOrNull(
+                                                                  0)
+                                                              ?.isActive ==
+                                                          true) &&
+                                                      (_model.manageQue
+                                                              ?.elementAtOrNull(
+                                                                  0)
+                                                              ?.currentPeriodEnd !=
+                                                          null) &&
+                                                      (_model.pendingSwitchToStripe ==
+                                                          false))
                                                     Align(
                                                       alignment:
                                                           AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: FFButtonWidget(
-                                                        onPressed: () async {
-                                                          if (_model.provider !=
-                                                              'stripe') {
-                                                            _model.apiResultk1h =
-                                                                await CreateBTCPayInvoiceCall
-                                                                    .call(
-                                                              currentUserUid:
-                                                                  currentUserUid,
-                                                              jwt:
-                                                                  currentJwtToken,
-                                                            );
-
-                                                            if ((_model
-                                                                    .apiResultk1h
-                                                                    ?.succeeded ??
-                                                                true)) {
-                                                              await actions
-                                                                  .openExternalUrl(
-                                                                CreateBTCPayInvoiceCall
-                                                                    .invoiceUrl(
-                                                                  (_model.apiResultk1h
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                )!,
-                                                              );
-                                                            } else {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                SnackBar(
-                                                                  content: Text(
-                                                                    'ERROR #018 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryText,
-                                                                    ),
-                                                                  ),
-                                                                  duration: Duration(
-                                                                      milliseconds:
-                                                                          4000),
-                                                                  backgroundColor:
-                                                                      FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .secondary,
+                                                        0.0,
+                                                        0.0,
+                                                      ),
+                                                      child: Text(
+                                                        functions
+                                                            .daysLeftFromPeriodEnd(
+                                                              _model.manageQue
+                                                                  ?.elementAtOrNull(
+                                                                    0,
+                                                                  )
+                                                                  ?.currentPeriodEnd,
+                                                            )
+                                                            .toString(),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                          context,
+                                                        ).bodyMedium.override(
+                                                                  fontFamily:
+                                                                      FlutterFlowTheme
+                                                                          .of(
+                                                                    context,
+                                                                  ).bodyMediumFamily,
+                                                                  color:
+                                                                      FlutterFlowTheme
+                                                                          .of(
+                                                                    context,
+                                                                  ).success,
+                                                                  fontSize:
+                                                                      16.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme
+                                                                          .of(
+                                                                    context,
+                                                                  ).bodyMediumIsCustom,
                                                                 ),
-                                                              );
-                                                            }
-                                                          } else {
-                                                            _model.btcSwitchResult =
-                                                                await ScheduleBtcpaySwitchCall
-                                                                    .call(
-                                                              currentUserUid:
-                                                                  currentUserUid,
-                                                              jwt:
-                                                                  currentJwtToken,
-                                                            );
-
-                                                            _model.fBAPIresult =
-                                                                await CreateBTCPayInvoiceCall
-                                                                    .call(
-                                                              currentUserUid:
-                                                                  currentUserUid,
-                                                              jwt:
-                                                                  currentJwtToken,
-                                                            );
-
-                                                            if ((_model
-                                                                    .fBAPIresult
-                                                                    ?.succeeded ??
-                                                                true)) {
-                                                              await actions
-                                                                  .openExternalUrl(
-                                                                CreateBTCPayInvoiceCall
-                                                                    .invoiceUrl(
-                                                                  (_model.fBAPIresult
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                )!,
-                                                              );
-                                                            } else {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                SnackBar(
-                                                                  content: Text(
-                                                                    'ERROR #027 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryText,
-                                                                    ),
-                                                                  ),
-                                                                  duration: Duration(
-                                                                      milliseconds:
-                                                                          4000),
-                                                                  backgroundColor:
-                                                                      FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .secondary,
-                                                                ),
-                                                              );
-                                                            }
-                                                          }
-
-                                                          safeSetState(() {});
-                                                        },
-                                                        text: () {
-                                                          if (_model.provider ==
-                                                              'btcpay') {
-                                                            return 'Renew Bitcoin Payments';
-                                                          } else if (_model
-                                                                  .pendingProvider ==
-                                                              'btcpay') {
-                                                            return 'Stack More Days';
-                                                          } else {
-                                                            return 'Switch to Bitcoin Payments';
-                                                          }
-                                                        }(),
-                                                        options:
-                                                            FFButtonOptions(
-                                                          width: 250.0,
-                                                          height: 50.0,
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  8.0),
-                                                          iconPadding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          textStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleMedium
-                                                                  .override(
-                                                                    font: GoogleFonts
-                                                                        .heebo(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleMedium
-                                                                          .fontStyle,
-                                                                    ),
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .info,
-                                                                    letterSpacing:
-                                                                        0.25,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                          elevation: 3.0,
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Colors
-                                                                .transparent,
-                                                            width: 1.0,
-                                                          ),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                        ),
                                                       ),
                                                     ),
-                                                  ].divide(
-                                                      SizedBox(height: 0.0)),
-                                                ),
+                                                  if ((_model.manageQue
+                                                              ?.elementAtOrNull(
+                                                                  0)
+                                                              ?.isActive ==
+                                                          true) &&
+                                                      (_model.manageQue
+                                                              ?.elementAtOrNull(
+                                                                  0)
+                                                              ?.currentPeriodEnd !=
+                                                          null) &&
+                                                      (_model.pendingSwitchToStripe ==
+                                                          false))
+                                                    Text(
+                                                      ' DAYS LEFT',
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).bodyMedium.override(
+                                                                fontFamily:
+                                                                    FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).bodyMediumFamily,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).bodyMediumIsCustom,
+                                                              ),
+                                                    ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Material(
-                                    color: Colors.transparent,
-                                    elevation: 3.0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Container(
-                                      width: 350.0,
-                                      height: 200.0,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            FlutterFlowTheme.of(context).info,
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        border: Border.all(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 3.0,
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            20.0, 0.0, 20.0, 0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Column(
+                                            Row(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 0.0, 0.0, 20.0),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    child: Image.asset(
-                                                      'assets/images/Stripe_Logo,_revised_2016.svg.png',
-                                                      width: 200.0,
-                                                      height: 73.5,
-                                                      fit: BoxFit.cover,
-                                                      alignment:
-                                                          Alignment(0.0, 0.0),
+                                                if (_model.manageQue
+                                                        ?.elementAtOrNull(0)
+                                                        ?.isActive ==
+                                                    false)
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                      0.0,
+                                                      0.0,
+                                                    ),
+                                                    child: Text(
+                                                      'INACTIVE',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).bodyMedium.override(
+                                                                fontFamily:
+                                                                    FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).bodyMediumFamily,
+                                                                color:
+                                                                    FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).error,
+                                                                fontSize: 16.0,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).bodyMediumIsCustom,
+                                                              ),
                                                     ),
                                                   ),
-                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                if (_model
+                                                        .pendingSwitchToStripe ==
+                                                    true)
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                      0.0,
+                                                      0.0,
+                                                    ),
+                                                    child: Text(
+                                                      'Stripe will take over on  ',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).bodyMedium.override(
+                                                                fontFamily:
+                                                                    FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).bodyMediumFamily,
+                                                                color:
+                                                                    FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).primaryText,
+                                                                fontSize: 16.0,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme
+                                                                        .of(
+                                                                  context,
+                                                                ).bodyMediumIsCustom,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                if (_model
+                                                        .pendingSwitchToStripe ==
+                                                    true)
+                                                  Text(
+                                                    dateTimeFormat(
+                                                      "yMd",
+                                                      _model.pendingStartsAt!,
+                                                    ),
+                                                    style: FlutterFlowTheme.of(
+                                                      context,
+                                                    ).bodyMedium.override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme
+                                                                  .of(
+                                                            context,
+                                                          ).bodyMediumFamily,
+                                                          color:
+                                                              FlutterFlowTheme
+                                                                  .of(
+                                                            context,
+                                                          ).success,
+                                                          letterSpacing: 0.0,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                  .of(
+                                                            context,
+                                                          ).bodyMediumIsCustom,
+                                                        ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ].divide(SizedBox(height: 8.0)),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                        20.0,
+                                        0.0,
+                                        20.0,
+                                        0.0,
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Align(
+                                            alignment: AlignmentDirectional(
+                                              0.0,
+                                              1.0,
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
                                                 FFButtonWidget(
                                                   onPressed: () async {
-                                                    if ((_model.providerCustomerId !=
-                                                                null &&
-                                                            _model.providerCustomerId !=
-                                                                '') &&
-                                                        (_model.provider ==
-                                                            'stripe')) {
-                                                      _model.portalRespManage =
+                                                    if (_model.providerCustomerId !=
+                                                            null &&
+                                                        _model.providerCustomerId !=
+                                                            '') {
+                                                      _model.portalRespCancel =
                                                           await CreateBillingPortalSessionCall
                                                               .call(
                                                         customerId: _model
@@ -766,163 +1551,23 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                         jwt: currentJwtToken,
                                                       );
 
-                                                      await actions
-                                                          .openExternalUrl(
+                                                      await _openPaymentUrl(
                                                         CreateBillingPortalSessionCall
                                                             .url(
-                                                          (_model.portalRespManage
+                                                          (_model.portalRespCancel
                                                                   ?.jsonBody ??
                                                               ''),
-                                                        )!,
-                                                      );
-                                                      await Future.delayed(
-                                                        Duration(
-                                                          milliseconds: 2000,
                                                         ),
+                                                        'ERROR #017',
                                                       );
-                                                      _model.requery3 =
-                                                          await UserEntitlementsTable()
-                                                              .queryRows(
-                                                        queryFn: (q) =>
-                                                            q.eqOrNull(
-                                                          'user_id',
-                                                          currentUserUid,
-                                                        ),
-                                                      );
-                                                      _model.manageQue =
-                                                          _model.requery3;
-                                                      _applyEntitlementRow(
-                                                          _model.requery3
-                                                              ?.elementAtOrNull(
-                                                                  0));
-                                                      safeSetState(() {});
-                                                      safeSetState(() {});
                                                     } else {
-                                                      if ((_model.provider ==
-                                                              'btcpay') &&
-                                                          (_model.currentPeriodEnd !=
-                                                              null)) {
-                                                        _model.apiResult5g4 =
-                                                            await CreateCheckoutSessionCall
-                                                                .call(
-                                                          currentUserUid:
-                                                              currentUserUid,
-                                                          trialEnd:
-                                                              _stripeSwitchTrialEndSeconds(),
-                                                          jwt: currentJwtToken,
-                                                        );
-
-                                                        if ((_model.apiResult5g4
-                                                                ?.succeeded ??
-                                                            true)) {
-                                                          final checkoutSessionId =
-                                                              CreateCheckoutSessionCall
-                                                                  .sessionId(
-                                                            (_model.apiResult5g4
-                                                                    ?.jsonBody ??
-                                                                ''),
-                                                          );
-                                                          _model.stripeCheckoutSessionId =
-                                                              checkoutSessionId;
-                                                          FFAppState()
-                                                                  .pendingStripeCheckoutSessionId =
-                                                              checkoutSessionId ??
-                                                                  '';
-                                                          await actions
-                                                              .openExternalUrl(
-                                                            CreateCheckoutSessionCall
-                                                                .url(
-                                                              (_model.apiResult5g4
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            )!,
-                                                          );
-                                                          await Future.delayed(
-                                                            Duration(
-                                                              milliseconds:
-                                                                  2000,
-                                                            ),
-                                                          );
-                                                          _model.requery5 =
-                                                              await UserEntitlementsTable()
-                                                                  .queryRows(
-                                                            queryFn: (q) =>
-                                                                q.eqOrNull(
-                                                              'user_id',
-                                                              currentUserUid,
-                                                            ),
-                                                          );
-                                                          _model.manageQue =
-                                                              _model.requery5;
-                                                          _applyEntitlementRow(
-                                                              _model.requery5
-                                                                  ?.elementAtOrNull(
-                                                                      0));
-                                                          safeSetState(() {});
-                                                          safeSetState(() {});
-                                                        } else {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            SnackBar(
-                                                              content: Text(
-                                                                'ERROR #028 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryText,
-                                                                ),
-                                                              ),
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      4000),
-                                                              backgroundColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                            ),
-                                                          );
-                                                        }
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                              'ERROR #029 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                              style: TextStyle(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                              ),
-                                                            ),
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    4000),
-                                                            backgroundColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
-                                                          ),
-                                                        );
-                                                      }
+                                                      _showPaymentError(
+                                                          'ERROR #017');
                                                     }
 
                                                     safeSetState(() {});
                                                   },
-                                                  text: () {
-                                                    if (_model.provider ==
-                                                        'stripe') {
-                                                      return 'Manage Card Payments';
-                                                    } else if (_model
-                                                            .pendingProvider ==
-                                                        'stripe') {
-                                                      return 'Card Payments Scheduled';
-                                                    } else {
-                                                      return 'Switch to Card Payments';
-                                                    }
-                                                  }(),
+                                                  text: 'Cancel Subscription',
                                                   options: FFButtonOptions(
                                                     width: 250.0,
                                                     height: 50.0,
@@ -930,34 +1575,44 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                         EdgeInsets.all(8.0),
                                                     iconPadding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 0.0),
+                                                            .fromSTEB(
+                                                      0.0,
+                                                      0.0,
+                                                      0.0,
+                                                      0.0,
+                                                    ),
                                                     color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
+                                                      context,
+                                                    ).error,
                                                     textStyle: FlutterFlowTheme
-                                                            .of(context)
-                                                        .titleMedium
-                                                        .override(
+                                                            .of(
+                                                      context,
+                                                    ).titleMedium.override(
                                                           font:
                                                               GoogleFonts.heebo(
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                             fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
+                                                                FlutterFlowTheme
+                                                                        .of(
+                                                              context,
+                                                            )
                                                                     .titleMedium
                                                                     .fontStyle,
                                                           ),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .info,
+                                                          color:
+                                                              FlutterFlowTheme
+                                                                  .of(
+                                                            context,
+                                                          ).info,
                                                           letterSpacing: 0.25,
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
+                                                              FlutterFlowTheme
+                                                                      .of(
+                                                            context,
+                                                          )
                                                                   .titleMedium
                                                                   .fontStyle,
                                                         ),
@@ -968,359 +1623,24 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                     ),
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            8.0),
+                                                      8.0,
+                                                    ),
                                                   ),
                                                 ),
                                               ].divide(SizedBox(height: 0.0)),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Account Subscription Status:  ',
-                                        textAlign: TextAlign.start,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMediumFamily,
-                                              fontSize: 16.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w600,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .bodyMediumIsCustom,
-                                            ),
-                                      ),
-                                      Stack(
-                                        children: [
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                if ((_model.manageQue
-                                                            ?.elementAtOrNull(0)
-                                                            ?.isActive ==
-                                                        true) &&
-                                                    (_model.manageQue
-                                                            ?.elementAtOrNull(0)
-                                                            ?.currentPeriodEnd !=
-                                                        null) &&
-                                                    (_model.pendingSwitchToStripe ==
-                                                        false))
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Text(
-                                                      functions
-                                                          .daysLeftFromPeriodEnd(_model
-                                                              .manageQue
-                                                              ?.elementAtOrNull(
-                                                                  0)
-                                                              ?.currentPeriodEnd)
-                                                          .toString(),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .success,
-                                                            fontSize: 16.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumIsCustom,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                if ((_model.manageQue
-                                                            ?.elementAtOrNull(0)
-                                                            ?.isActive ==
-                                                        true) &&
-                                                    (_model.manageQue
-                                                            ?.elementAtOrNull(0)
-                                                            ?.currentPeriodEnd !=
-                                                        null) &&
-                                                    (_model.pendingSwitchToStripe ==
-                                                        false))
-                                                  Text(
-                                                    ' DAYS LEFT',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          letterSpacing: 0.0,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMediumIsCustom,
-                                                        ),
-                                                  ),
-                                              ],
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              if (_model.manageQue
-                                                      ?.elementAtOrNull(0)
-                                                      ?.isActive ==
-                                                  false)
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Text(
-                                                    'INACTIVE',
-                                                    textAlign: TextAlign.center,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .error,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMediumIsCustom,
-                                                        ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              if (_model
-                                                      .pendingSwitchToStripe ==
-                                                  true)
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Text(
-                                                    'Stripe will take over on  ',
-                                                    textAlign: TextAlign.center,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryText,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMediumIsCustom,
-                                                        ),
-                                                  ),
-                                                ),
-                                              if (_model
-                                                      .pendingSwitchToStripe ==
-                                                  true)
-                                                Text(
-                                                  dateTimeFormat("yMd",
-                                                      _model.pendingStartsAt!),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMediumFamily,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .success,
-                                                        letterSpacing: 0.0,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMediumIsCustom,
-                                                      ),
-                                                ),
-                                            ],
                                           ),
                                         ],
                                       ),
-                                    ].divide(SizedBox(height: 8.0)),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        20.0, 0.0, 20.0, 0.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 1.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              FFButtonWidget(
-                                                onPressed: () async {
-                                                  if (_model.providerCustomerId !=
-                                                          null &&
-                                                      _model.providerCustomerId !=
-                                                          '') {
-                                                    _model.portalRespCancel =
-                                                        await CreateBillingPortalSessionCall
-                                                            .call(
-                                                      customerId: _model
-                                                          .providerCustomerId,
-                                                      userId: currentUserUid,
-                                                      returnUrl:
-                                                          'https://decoywalletapp.com/open',
-                                                      jwt: currentJwtToken,
-                                                    );
-
-                                                    await actions
-                                                        .openExternalUrl(
-                                                      CreateBillingPortalSessionCall
-                                                          .url(
-                                                        (_model.portalRespCancel
-                                                                ?.jsonBody ??
-                                                            ''),
-                                                      )!,
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'ERROR #017 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
-                                                    );
-                                                  }
-
-                                                  safeSetState(() {});
-                                                },
-                                                text: 'Cancel Subscription',
-                                                options: FFButtonOptions(
-                                                  width: 250.0,
-                                                  height: 50.0,
-                                                  padding: EdgeInsets.all(8.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .error,
-                                                  textStyle: FlutterFlowTheme
-                                                          .of(context)
-                                                      .titleMedium
-                                                      .override(
-                                                        font: GoogleFonts.heebo(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .info,
-                                                        letterSpacing: 0.25,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleMedium
-                                                                .fontStyle,
-                                                      ),
-                                                  elevation: 3.0,
-                                                  borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 1.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                ),
-                                              ),
-                                            ].divide(SizedBox(height: 0.0)),
-                                          ),
-                                        ),
-                                      ],
                                     ),
-                                  ),
-                                ].divide(SizedBox(height: 18.0)),
+                                  ].divide(SizedBox(height: 18.0)),
+                                ),
                               ),
-                            ),
-                          ]
-                              .divide(SizedBox(height: 20.0))
-                              .addToStart(SizedBox(height: 6.0))
-                              .addToEnd(SizedBox(height: 64.0)),
+                            ]
+                                .divide(SizedBox(height: 20.0))
+                                .addToStart(SizedBox(height: 6.0))
+                                .addToEnd(SizedBox(height: 64.0)),
+                          ),
                         ),
                       ),
                     ),
