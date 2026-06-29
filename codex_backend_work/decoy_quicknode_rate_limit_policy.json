@@ -1,0 +1,34 @@
+{
+  "displayName": "Decoy QuickNode Rate Limit",
+  "documentation": {
+    "content": "The Decoy Seed watcher hit a QuickNode rate limit. QuickNode reserve may be unavailable until the pause window expires. Check QuickNode usage, watcher mode, and recent decoy-watcher logs immediately.",
+    "mimeType": "text/markdown"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "conditions": [
+    {
+      "displayName": "Any QuickNode rate-limit log entry",
+      "conditionThreshold": {
+        "filter": "metric.type=\"logging.googleapis.com/user/decoy_quicknode_rate_limit\" AND resource.type=\"cloud_run_revision\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0,
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "notificationChannels": [
+    "projects/decoywallet-a283b/notificationChannels/11575546428005095301",
+    "projects/decoywallet-a283b/notificationChannels/8194423537344343054"
+  ]
+}

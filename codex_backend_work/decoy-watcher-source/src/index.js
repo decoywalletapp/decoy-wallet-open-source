@@ -122,6 +122,7 @@ function incrementCounter(map, key) {
 let runInProgress = false;
 let activeBlockbookRunBudget = null;
 let blockbookDisabledUntilMs = 0;
+let blockbookRateLimitedThisRun = false;
 
 app.get('/', (req, res) => {
   res.json({ ok: true, service: 'decoy-watcher' });
@@ -213,11 +214,16 @@ function blockbookModeAllowsFallback() {
   ].includes(BLOCKBOOK_USAGE_MODE);
 }
 
+function blockbookModeIsReserveOnly() {
+  return ['fallback', 'fallback_only', 'reserve'].includes(BLOCKBOOK_USAGE_MODE);
+}
+
 function beginBlockbookRunBudget() {
   activeBlockbookRunBudget = {
     max: BLOCKBOOK_MAX_REQUESTS_PER_RUN,
     used: 0,
   };
+  blockbookRateLimitedThisRun = false;
 }
 
 function blockbookRuntimeDisabledReason() {
@@ -366,6 +372,7 @@ async function fetchJsonFromBlockbookProviders(path, params, label, address) {
       lastErr = e;
       if (String(errorMessage(e) || '').includes('429 Too Many Requests') && BLOCKBOOK_DISABLE_ON_429_MS > 0) {
         blockbookDisabledUntilMs = Date.now() + BLOCKBOOK_DISABLE_ON_429_MS;
+        blockbookRateLimitedThisRun = true;
       }
       console.warn(
         '[decoy-watcher]',
@@ -1802,6 +1809,14 @@ async function processRun(options = {}) {
     newTriggers,
     baselinedDecoys,
   };
+
+  if (healthPayload.blockbookRequestsUsed > 0 && blockbookModeIsReserveOnly()) {
+    healthLog('warn', 'WATCHER_QUICKNODE_RESERVE_USED', healthPayload);
+  }
+
+  if (blockbookRateLimitedThisRun) {
+    healthLog('error', 'WATCHER_QUICKNODE_RATE_LIMIT', healthPayload);
+  }
 
   if (
     runBudgetExhausted ||
