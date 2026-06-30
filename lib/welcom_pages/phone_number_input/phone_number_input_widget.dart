@@ -270,20 +270,29 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                               null &&
                                                           _model.pnDigits10 !=
                                                               '') {
-                                                        safeSetState(() {
-                                                          _model.phoneNumberFieldTextController
-                                                                  ?.text =
-                                                              functions
-                                                                  .formatAsUsPhone(
-                                                                      _model
-                                                                          .pnDigits10!);
-                                                        });
-                                                      } else {
-                                                        safeSetState(() {
-                                                          _model
-                                                              .phoneNumberFieldTextController
-                                                              ?.text = '';
-                                                        });
+                                                        final formattedPhone =
+                                                            functions
+                                                                .formatAsUsPhone(
+                                                                    _model
+                                                                        .pnDigits10!);
+                                                        if (formattedPhone !=
+                                                            _model
+                                                                .phoneNumberFieldTextController
+                                                                .text) {
+                                                          safeSetState(() {
+                                                            _model.phoneNumberFieldTextController
+                                                                    ?.text =
+                                                                formattedPhone;
+                                                            _model.phoneNumberFieldTextController
+                                                                    ?.selection =
+                                                                TextSelection
+                                                                    .collapsed(
+                                                              offset:
+                                                                  formattedPhone
+                                                                      .length,
+                                                            );
+                                                          });
+                                                        }
                                                       }
                                                     },
                                                   ),
