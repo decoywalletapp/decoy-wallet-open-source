@@ -162,7 +162,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
 
   String _displayPersonalPhone(String phone) {
     final cleaned = _cleanLoadedValue(phone);
-    return cleaned.isEmpty ? '' : functions.displayUSPhone(cleaned);
+    return cleaned.isEmpty ? '' : functions.displayPhoneNumber(cleaned);
   }
 
   Future<String?> _dataKeyForWrappedRow(
@@ -1052,7 +1052,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         validator: _model
                                             .phoneTextControllerValidator
                                             .asValidator(context),
-                                        inputFormatters: [_model.phoneMask],
                                       ),
                                     ].divide(SizedBox(height: 8.0)),
                                   ),

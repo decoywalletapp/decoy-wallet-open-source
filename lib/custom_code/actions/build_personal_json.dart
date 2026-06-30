@@ -20,19 +20,8 @@ Future<String> buildPersonalJson(
 ) async {
   String _s(String? v) => (v ?? '').trim();
 
-  // very forgiving E.164-ish normalizer: keeps digits and a single leading +
   String _normalizePhone(String? input) {
-    final raw = (input ?? '').trim();
-    if (raw.isEmpty) return '';
-    final digits = raw.replaceAll(RegExp(r'[^0-9+]'), '');
-    if (digits.startsWith('+')) return '+' + digits.replaceAll('+', '');
-    // if 11 digits and starts with 1, assume US
-    final onlyNums = digits.replaceAll(RegExp(r'[^0-9]'), '');
-    if (onlyNums.length == 11 && onlyNums.startsWith('1')) {
-      return '+$onlyNums';
-    }
-    // fallback: just return digits
-    return onlyNums;
+    return normalizePhoneToE164(input);
   }
 
   final m = <String, dynamic>{

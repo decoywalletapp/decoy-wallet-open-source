@@ -506,7 +506,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
   String _displayContactPhone(String phone) {
     final cleaned = _cleanLoadedValue(phone);
-    return cleaned.isEmpty ? '' : functions.displayUSPhone(cleaned);
+    return cleaned.isEmpty ? '' : functions.displayPhoneNumber(cleaned);
   }
 
   Future<String?> _dataKeyForWrappedRow(
@@ -2292,9 +2292,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     validator: _model
                                                         .c1PhoneTFTextControllerValidator
                                                         .asValidator(context),
-                                                    inputFormatters: [
-                                                      _model.c1PhoneTFMask
-                                                    ],
                                                   ),
                                                   SizedBox(
                                                     height: 30.0,
@@ -3709,9 +3706,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       validator: _model
                                                           .c2PhoneTFTextControllerValidator
                                                           .asValidator(context),
-                                                      inputFormatters: [
-                                                        _model.c2PhoneTFMask
-                                                      ],
                                                     ),
                                                     SizedBox(
                                                       height: 30.0,
@@ -5009,9 +5003,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     validator: _model
                                                         .c3PhoneTFTextControllerValidator
                                                         .asValidator(context),
-                                                    inputFormatters: [
-                                                      _model.c3PhoneTFMask
-                                                    ],
                                                   ),
                                                   SizedBox(
                                                     height: 30.0,
@@ -6353,9 +6344,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     validator: _model
                                                         .c4PhoneTFTextControllerValidator
                                                         .asValidator(context),
-                                                    inputFormatters: [
-                                                      _model.c4PhoneTFMask
-                                                    ],
                                                   ),
                                                   SizedBox(
                                                     height: 30.0,
@@ -7728,9 +7716,6 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     validator: _model
                                                         .c5PhoneTFTextControllerValidator
                                                         .asValidator(context),
-                                                    inputFormatters: [
-                                                      _model.c5PhoneTFMask
-                                                    ],
                                                   ),
                                                   SizedBox(
                                                     height: 30.0,

@@ -339,7 +339,8 @@ class _PhoneNumberVerificationWidgetState
                                             ),
                                             TextSpan(
                                               text: valueOrDefault<String>(
-                                                widget.cleanPhone,
+                                                functions.displayPhoneNumber(
+                                                    widget.cleanPhone),
                                                 '\"\"',
                                               ),
                                               style: TextStyle(

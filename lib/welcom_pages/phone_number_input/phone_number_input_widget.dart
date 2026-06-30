@@ -39,15 +39,15 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.cleanPhone =
-          functions.toE164US(_model.phoneNumberFieldTextController.text);
+      _model.cleanPhone = functions
+          .normalizePhoneToE164(_model.phoneNumberFieldTextController.text);
       _model.notificationInt = 0;
       safeSetState(() {});
-      if (functions.formatUSPhone(_model.phoneNumberFieldTextController.text) !=
-          _model.phoneNumberFieldTextController.text) {
+      final displayPhone = functions
+          .displayPhoneNumber(_model.phoneNumberFieldTextController.text);
+      if (displayPhone != _model.phoneNumberFieldTextController.text) {
         safeSetState(() {
-          _model.phoneNumberFieldTextController?.text = functions
-              .formatUSPhone(_model.phoneNumberFieldTextController.text);
+          _model.phoneNumberFieldTextController?.text = displayPhone;
         });
       }
     });
@@ -261,9 +261,10 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                                   .phoneNumberFieldTextController
                                                                   .text);
                                                       _model.cleanPhone = functions
-                                                          .toE164USpt2(_model
-                                                              .phoneNumberFieldTextController
-                                                              .text);
+                                                          .normalizePhoneToE164(
+                                                              _model
+                                                                  .phoneNumberFieldTextController
+                                                                  .text);
                                                       safeSetState(() {});
                                                       if (_model.pnDigits10 !=
                                                               null &&
@@ -297,7 +298,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                   obscureText: false,
                                                   decoration: InputDecoration(
                                                     labelText: 'Phone Number',
-                                                    hintText: '(555) 123-4567',
+                                                    hintText:
+                                                        '(555) 123-4567 or +44 7700 900123',
                                                     hintStyle:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -715,9 +717,22 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                               _model.pnDigits10 =
                                   functions.normalizeToTenDigits(_model
                                       .phoneNumberFieldTextController.text);
-                              _model.cleanPhone = functions.toE164USpt2(
-                                  _model.phoneNumberFieldTextController.text);
+                              _model.cleanPhone =
+                                  functions.normalizePhoneToE164(_model
+                                      .phoneNumberFieldTextController.text);
                               safeSetState(() {});
+                              if (_model.cleanPhone == '') {
+                                _model.notificationInt = 1;
+                                safeSetState(() {});
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 3000,
+                                  ),
+                                );
+                                _model.notificationInt = 0;
+                                safeSetState(() {});
+                                return;
+                              }
                               _model.phoneHashResp =
                                   await GetPhoneHashCall.call(
                                 cleanPhone: _model.cleanPhone,
@@ -780,54 +795,42 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   _model.phoneHash = '';
                                   safeSetState(() {});
                                 } else {
-                                  if (_model.cleanPhone != '') {
-                                    _model.sendRes =
-                                        await SendVerificationCodeCall.call(
-                                      cleanPhone: _model.cleanPhone,
-                                      jwt: currentJwtToken,
-                                    );
+                                  _model.sendRes =
+                                      await SendVerificationCodeCall.call(
+                                    cleanPhone: _model.cleanPhone,
+                                    jwt: currentJwtToken,
+                                  );
 
-                                    if ((_model.sendRes?.succeeded ?? true)) {
-                                      await UserConsentsTable().insert({
-                                        'user_id': currentUserUid,
-                                        'feature': 'sms_terms',
-                                        'consent_version':
-                                            'sms_terms_user_2026_05_09',
-                                        'checkboxes': {
-                                          'accepted_sms_terms': true,
-                                          'sms_terms_url':
-                                              'https://www.decoywalletapp.com/sms-terms',
-                                          'privacy_policy_url':
-                                              'https://www.decoywalletapp.com/privacy-policy',
-                                          'phone_e164_hash': _model.phoneHash,
-                                          'consent_text':
-                                              'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See SMS Terms and Privacy Policy.',
-                                        },
-                                        'created_at': supaSerialize<DateTime>(
-                                            getCurrentTimestamp),
-                                      });
-                                      context.pushNamed(
-                                        PhoneNumberVerificationWidget.routeName,
-                                        queryParameters: {
-                                          'cleanPhone': serializeParam(
-                                            _model.cleanPhone,
-                                            ParamType.String,
-                                          ),
-                                        }.withoutNulls,
-                                      );
-                                    } else {
-                                      _model.notificationInt = 2;
-                                      safeSetState(() {});
-                                      await Future.delayed(
-                                        Duration(
-                                          milliseconds: 3000,
+                                  if ((_model.sendRes?.succeeded ?? true)) {
+                                    await UserConsentsTable().insert({
+                                      'user_id': currentUserUid,
+                                      'feature': 'sms_terms',
+                                      'consent_version':
+                                          'sms_terms_user_2026_05_09',
+                                      'checkboxes': {
+                                        'accepted_sms_terms': true,
+                                        'sms_terms_url':
+                                            'https://www.decoywalletapp.com/sms-terms',
+                                        'privacy_policy_url':
+                                            'https://www.decoywalletapp.com/privacy-policy',
+                                        'phone_e164_hash': _model.phoneHash,
+                                        'consent_text':
+                                            'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See SMS Terms and Privacy Policy.',
+                                      },
+                                      'created_at': supaSerialize<DateTime>(
+                                          getCurrentTimestamp),
+                                    });
+                                    context.pushNamed(
+                                      PhoneNumberVerificationWidget.routeName,
+                                      queryParameters: {
+                                        'cleanPhone': serializeParam(
+                                          _model.cleanPhone,
+                                          ParamType.String,
                                         ),
-                                      );
-                                      _model.notificationInt = 0;
-                                      safeSetState(() {});
-                                    }
+                                      }.withoutNulls,
+                                    );
                                   } else {
-                                    _model.notificationInt = 1;
+                                    _model.notificationInt = 2;
                                     safeSetState(() {});
                                     await Future.delayed(
                                       Duration(

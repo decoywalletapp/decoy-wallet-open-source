@@ -43,19 +43,19 @@ function normalizePhoneForTwilio(v: unknown) {
   const s = String(v ?? "").trim();
   if (!s || s.toLowerCase() === "null") return "";
 
-  const raw = s.replace(/[^\d+]/g, "");
+  let raw = s.replace(/[^\d+]/g, "");
+  if (raw.startsWith("00")) {
+    raw = `+${raw.slice(2)}`;
+  }
 
   if (raw.startsWith("+")) {
     const digits = raw.replace(/[^\d]/g, "");
-    if (digits.length === 11 && digits.startsWith("1")) {
-      return `+${digits}`;
-    }
-    return "";
+    return /^[1-9]\d{7,14}$/.test(digits) ? `+${digits}` : "";
   }
 
   const digits = raw.replace(/[^\d]/g, "");
-  if (digits.length === 10) return `+1${digits}`;
-  if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+  if (/^[2-9]\d{2}[2-9]\d{6}$/.test(digits)) return `+1${digits}`;
+  if (/^1[2-9]\d{2}[2-9]\d{6}$/.test(digits)) return `+${digits}`;
 
   return "";
 }

@@ -15,19 +15,7 @@ import 'dart:convert';
 String _s(String? v) => (v ?? '').trim();
 
 String _normalizePhone(String? input) {
-  final raw = (input ?? '').replaceAll(RegExp(r'[^0-9+]'), '');
-  if (raw.isEmpty) return '';
-
-  if (raw.startsWith('+')) {
-    final only = raw.replaceAll(RegExp(r'[^0-9]'), '');
-    return RegExp(r'^1\d{10}$').hasMatch(only) ? '+$only' : '';
-  }
-
-  final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
-  if (digits.length == 10) return '+1$digits';
-  if (digits.length == 11 && digits.startsWith('1')) return '+$digits';
-
-  return '';
+  return normalizePhoneToE164(input);
 }
 
 String _normalizeConsentStatus(String? status) {

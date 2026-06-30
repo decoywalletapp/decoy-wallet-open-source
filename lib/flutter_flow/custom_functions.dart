@@ -29,24 +29,35 @@ String joinVerificationCode(
 }
 
 String sanitizePhoneNumber(String input) {
-// Strip everything except digits
-  final digits = input.replaceAll(RegExp(r'\D'), '');
+  return normalizePhoneToE164(input);
+}
 
-// NANP: area code NXX and prefix NXX (N = 2–9)
-  final tenDigit = RegExp(r'^[2-9]\d{2}[2-9]\d{6}$');
+String normalizePhoneToE164(String? input) {
+  final trimmed = (input ?? '').trim();
+  if (trimmed.isEmpty || trimmed.toLowerCase() == 'null') return '';
 
-// Case 1: user types 10 digits
-  if (tenDigit.hasMatch(digits)) {
-    return '+1$digits';
+  var raw = trimmed.replaceAll(RegExp(r'[^0-9+]'), '');
+  if (raw.startsWith('00')) {
+    raw = '+${raw.substring(2)}';
   }
 
-// Case 2: user pasted 11 digits starting with 1 (e.g. 1XXXXXXXXXX)
-  if (RegExp(r'^1([2-9]\d{2}[2-9]\d{6})$').hasMatch(digits)) {
+  if (raw.startsWith('+')) {
+    final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
+    return RegExp(r'^[1-9]\d{7,14}$').hasMatch(digits) ? '+$digits' : '';
+  }
+
+  final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
+  final tenDigitNanp = RegExp(r'^[2-9]\d{2}[2-9]\d{6}$');
+  if (tenDigitNanp.hasMatch(digits)) return '+1$digits';
+  if (RegExp(r'^1[2-9]\d{2}[2-9]\d{6}$').hasMatch(digits)) {
     return '+$digits';
   }
 
-// Not a valid US number
   return '';
+}
+
+bool isValidE164PhoneNumber(String? input) {
+  return normalizePhoneToE164(input).isNotEmpty;
 }
 
 bool isCodeSixDigits(String code) {
@@ -404,14 +415,41 @@ String displayTenDigits(String input) {
 }
 
 String displayUSPhone(String? input) {
-  if (input == null) return '';
-  // keep only digits
-  final digits = input.replaceAll(RegExp(r'\D'), '');
-  // take last 10 so it works for +1XXXXXXXXXX too
-  final ten =
-      digits.length >= 10 ? digits.substring(digits.length - 10) : digits;
-  if (ten.length != 10) return digits; // not a 10-digit US number, show as-is
-  return '(${ten.substring(0, 3)}) ${ten.substring(3, 6)}-${ten.substring(6)}';
+  return displayPhoneNumber(input);
+}
+
+String displayPhoneNumber(String? input) {
+  final cleaned = sanitizePhoneInput(input);
+  if (cleaned.isEmpty) return '';
+
+  final normalized = normalizePhoneToE164(cleaned);
+  final value = normalized.isNotEmpty ? normalized : cleaned;
+  final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+  if (value.startsWith('+1') && digits.length == 11) {
+    final ten = digits.substring(1);
+    return '(${ten.substring(0, 3)}) ${ten.substring(3, 6)}-${ten.substring(6)}';
+  }
+
+  if (!value.startsWith('+') && digits.length == 10) {
+    return '(${digits.substring(0, 3)}) ${digits.substring(3, 6)}-${digits.substring(6)}';
+  }
+
+  if (value.startsWith('+')) return value;
+  return cleaned;
+}
+
+String sanitizePhoneInput(String? input) {
+  final trimmed = (input ?? '').trim();
+  if (trimmed.isEmpty || trimmed.toLowerCase() == 'null') return '';
+  final raw = trimmed.replaceAll(RegExp(r'[^0-9+]'), '');
+  if (raw.startsWith('+')) {
+    return '+${raw.replaceAll(RegExp(r'[^0-9]'), '')}';
+  }
+  if (raw.startsWith('00')) {
+    return '+${raw.substring(2).replaceAll(RegExp(r'[^0-9]'), '')}';
+  }
+  return raw.replaceAll(RegExp(r'[^0-9]'), '');
 }
 
 String displayTenFromE164(String input) {
@@ -423,20 +461,7 @@ String displayTenFromE164(String input) {
 }
 
 String toE164US(String input) {
-  final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
-  if (digits.isEmpty) return '';
-  // if user/device provides 11 with leading 1
-  if (digits.length >= 11 && digits.startsWith('1')) {
-    final d11 = digits.substring(0, 11);
-    return '+$d11';
-  }
-  // otherwise use last 10 as US number
-  if (digits.length >= 10) {
-    final last10 = digits.substring(digits.length - 10);
-    return '+1$last10';
-  }
-  // partial typing
-  return '+1$digits';
+  return normalizePhoneToE164(input);
 }
 
 String formatUSPhone(String input) {
@@ -456,14 +481,16 @@ String formatUSPhone(String input) {
 }
 
 String normalizeToTenDigits(String input) {
+  final trimmed = input.trim();
+  if (trimmed.startsWith('+') || trimmed.startsWith('00')) return '';
   final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
   if (digits.length >= 11 && digits.startsWith('1')) {
     // drop leading country digit
     final core = digits.substring(1);
     return core.length >= 10 ? core.substring(0, 10) : core;
   }
-  // not starting with 1; just take first 10
-  return digits.length >= 10 ? digits.substring(0, 10) : digits;
+  if (digits.length > 10) return '';
+  return digits;
 }
 
 String formatAsUsPhone(String d10) {
@@ -482,23 +509,7 @@ String formatAsUsPhone(String d10) {
 }
 
 String toE164USpt2(String input) {
-  final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
-  if (digits.isEmpty) return '';
-
-  // Case: iOS/keyboard provides 11 with leading 1
-  if (digits.length >= 11 && digits.startsWith('1')) {
-    final d11 = digits.substring(0, 11); // keep only the first 11
-    return '+$d11'; // +1##########
-  }
-
-  // Case: any 10+ digits → use the last 10 as US number
-  if (digits.length >= 10) {
-    final last10 = digits.substring(digits.length - 10);
-    return '+1$last10';
-  }
-
-  // Partial typing → not yet valid
-  return '';
+  return normalizePhoneToE164(input);
 }
 
 int stringLength(String? s) {
@@ -559,7 +570,7 @@ double lngFromLatLng(LatLng? location) {
 }
 
 String sanitizePhoneDigits(String input) {
-  return input.replaceAll(RegExp(r'[^0-9]'), '');
+  return sanitizePhoneInput(input);
 }
 
 double computeEmergencyProgress(
@@ -822,24 +833,7 @@ List<dynamic> buildConsentSlotsListFINAL(
   }
 
   String normalizePhone(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return '';
-
-    final raw = trimmed.replaceAll(RegExp(r'[^0-9+]'), '');
-
-    if (raw.startsWith('+')) {
-      final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
-      if (digits.length == 11 && digits.startsWith('1')) {
-        return '+$digits';
-      }
-      return '';
-    }
-
-    final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digits.length == 10) return '+1$digits';
-    if (digits.length == 11 && digits.startsWith('1')) return '+$digits';
-
-    return '';
+    return normalizePhoneToE164(value);
   }
 
   String normalizeStatus(String value) {
