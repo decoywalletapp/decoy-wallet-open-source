@@ -1,0 +1,34 @@
+{
+  "displayName": "Decoy Watch-Key Capacity",
+  "documentation": {
+    "content": "The Decoy Seed watcher is approaching or has reached the configured watch-key scan budget. This means armed Decoy Seeds may soon need a higher QuickNode budget, more workers, or watcher sharding before public growth continues.",
+    "mimeType": "text/markdown"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "conditions": [
+    {
+      "displayName": "Any watch-key capacity threshold log entry",
+      "conditionThreshold": {
+        "filter": "metric.type=\"logging.googleapis.com/user/decoy_watch_key_capacity\" AND resource.type=\"cloud_run_revision\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0,
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "notificationChannels": [
+    "projects/decoywallet-a283b/notificationChannels/11575546428005095301",
+    "projects/decoywallet-a283b/notificationChannels/8194423537344343054"
+  ]
+}

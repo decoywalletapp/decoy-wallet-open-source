@@ -103,11 +103,25 @@ const metrics = [
     filter:
       'resource.type="cloud_run_revision" AND resource.labels.service_name="decoy-watcher" AND textPayload:"WATCHER_QUICKNODE_RATE_LIMIT"',
   }),
+  applyLogMetric({
+    name: 'decoy_watch_key_capacity',
+    description: 'Decoy watcher reached a watch-key capacity threshold',
+    filter:
+      'resource.type="cloud_run_revision" AND resource.labels.service_name="decoy-watcher" AND (textPayload:"WATCHER_WATCH_KEY_CAPACITY_WARN" OR textPayload:"WATCHER_WATCH_KEY_CAPACITY_URGENT" OR textPayload:"WATCHER_WATCH_KEY_CAPACITY_EXHAUSTED")',
+  }),
+  applyLogMetric({
+    name: 'decoy_stale_seed_checks',
+    description: 'Decoy watcher found armed seed records that were not checked within the stale window',
+    filter:
+      'resource.type="cloud_run_revision" AND resource.labels.service_name="decoy-watcher" AND textPayload:"WATCHER_STALE_SEED_CHECKS"',
+  }),
 ];
 
 const policies = [
   applyPolicy('codex_backend_work/decoy_quicknode_reserve_usage_policy.json'),
   applyPolicy('codex_backend_work/decoy_quicknode_rate_limit_policy.json'),
+  applyPolicy('codex_backend_work/decoy_watch_key_capacity_policy.json'),
+  applyPolicy('codex_backend_work/decoy_stale_seed_checks_policy.json'),
 ];
 
 console.log(JSON.stringify({ ok: true, metrics, policies }, null, 2));

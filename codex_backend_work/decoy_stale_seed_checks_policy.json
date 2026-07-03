@@ -1,0 +1,34 @@
+{
+  "displayName": "Decoy Stale Seed Checks",
+  "documentation": {
+    "content": "One or more armed Decoy Seed records has not been successfully checked within the configured stale window. Check decoy-watcher logs immediately; this may indicate scan budget exhaustion, provider failure, or a watcher runtime issue.",
+    "mimeType": "text/markdown"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "conditions": [
+    {
+      "displayName": "Any stale armed seed check log entry",
+      "conditionThreshold": {
+        "filter": "metric.type=\"logging.googleapis.com/user/decoy_stale_seed_checks\" AND resource.type=\"cloud_run_revision\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0,
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "notificationChannels": [
+    "projects/decoywallet-a283b/notificationChannels/11575546428005095301",
+    "projects/decoywallet-a283b/notificationChannels/8194423537344343054"
+  ]
+}

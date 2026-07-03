@@ -66,6 +66,22 @@ const BLOCKBOOK_MAX_REQUESTS_PER_RUN = Math.max(
   0,
   Math.min(200, Number(process.env.BLOCKBOOK_MAX_REQUESTS_PER_RUN || 2))
 );
+const WATCH_KEY_CAPACITY_WARN_THRESHOLD = Math.max(
+  0,
+  Math.min(100000, Number(process.env.WATCH_KEY_CAPACITY_WARN_THRESHOLD || 25))
+);
+const WATCH_KEY_CAPACITY_URGENT_THRESHOLD = Math.max(
+  WATCH_KEY_CAPACITY_WARN_THRESHOLD,
+  Math.min(100000, Number(process.env.WATCH_KEY_CAPACITY_URGENT_THRESHOLD || 35))
+);
+const WATCH_KEY_STALE_AFTER_MS = Math.max(
+  60 * 1000,
+  Math.min(24 * 60 * 60 * 1000, Number(process.env.WATCH_KEY_STALE_AFTER_MS || 3 * 60 * 1000))
+);
+const WATCH_KEY_STALE_SAMPLE_LIMIT = Math.max(
+  0,
+  Math.min(25, Number(process.env.WATCH_KEY_STALE_SAMPLE_LIMIT || 10))
+);
 const BLOCKBOOK_DISABLE_ON_429_MS = Math.max(
   0,
   Math.min(24 * 60 * 60 * 1000, Number(process.env.BLOCKBOOK_DISABLE_ON_429_MS || 60 * 60 * 1000))
@@ -252,6 +268,33 @@ function blockbookRunBudgetSnapshot() {
     max: BLOCKBOOK_MAX_REQUESTS_PER_RUN,
     used: 0,
   };
+}
+
+function ageMsFromDate(date, nowMs) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
+  return Math.max(0, nowMs - date.getTime());
+}
+
+function staleSeedSummaries(eligibleSeeds, scannedDecoyIds, staleAfterMs, nowMs) {
+  const scanned = scannedDecoyIds instanceof Set ? scannedDecoyIds : new Set();
+  const stale = [];
+
+  for (const item of eligibleSeeds || []) {
+    const decoyId = item && item.seed && item.seed.decoy_id;
+    if (!decoyId || scanned.has(decoyId)) continue;
+
+    const lastScanAgeMs = ageMsFromDate(item.lastScanAt, nowMs);
+    if (lastScanAgeMs !== null && lastScanAgeMs <= staleAfterMs) continue;
+
+    stale.push({
+      decoy_id: decoyId,
+      watch_key: !!(item.watch && item.watch.watchPublicKey),
+      last_scan_at: item.lastScanAt ? item.lastScanAt.toISOString() : null,
+      stale_seconds: lastScanAgeMs === null ? null : Math.round(lastScanAgeMs / 1000),
+    });
+  }
+
+  return stale;
 }
 
 async function mapWithConcurrency(items, limit, mapper) {
@@ -1847,6 +1890,9 @@ async function processRun(options = {}) {
     `blockbookProviders=${BLOCKBOOK_BASE_URLS.length ? BLOCKBOOK_BASE_URLS.map(providerLabel).join(',') : 'disabled'}`,
     `blockbookUsageMode=${BLOCKBOOK_USAGE_MODE}`,
     `blockbookMaxRequestsPerRun=${BLOCKBOOK_MAX_REQUESTS_PER_RUN}`,
+    `watchKeyCapacityWarnThreshold=${WATCH_KEY_CAPACITY_WARN_THRESHOLD}`,
+    `watchKeyCapacityUrgentThreshold=${WATCH_KEY_CAPACITY_URGENT_THRESHOLD}`,
+    `watchKeyStaleAfterMs=${WATCH_KEY_STALE_AFTER_MS}`,
     `blockbookAddressBatchEnabled=${BLOCKBOOK_ADDRESS_BATCH_ENABLED}`,
     `blockbookAddressConcurrency=${BLOCKBOOK_ADDRESS_CONCURRENCY}`,
     `blockbookTxConcurrency=${BLOCKBOOK_TX_CONCURRENCY}`,
@@ -1888,6 +1934,7 @@ async function processRun(options = {}) {
   let batchScanSuccesses = 0;
   let batchScanFailures = 0;
   let baselineBatchFailures = 0;
+  const successfullyScannedDecoyIds = new Set();
   const batchTelemetry = {
     blockbookBatchAttempts: 0,
     blockbookBatchSuccesses: 0,
@@ -2005,6 +2052,7 @@ async function processRun(options = {}) {
 
         totalAddressesChecked += addresses.length;
         await upsertScanState(decoy_id, addresses.length - 1);
+        successfullyScannedDecoyIds.add(decoy_id);
         newTriggers += utxoScan.createdTriggers;
 
         if (needsBaseline) {
@@ -2045,6 +2093,7 @@ async function processRun(options = {}) {
       const baseline = await baselineDecoyNow(decoy_id, user_id, watch, armedAt);
       recordBatchTelemetry(batchTelemetry, baseline);
       await upsertBaseline(decoy_id);
+      successfullyScannedDecoyIds.add(decoy_id);
 
       baselinedDecoys += 1;
       newTriggers += baseline.createdTriggers;
@@ -2069,6 +2118,7 @@ async function processRun(options = {}) {
       batchScanSuccesses += 1;
       totalAddressesChecked += addresses.length;
       await upsertScanState(decoy_id, addresses.length - 1);
+      successfullyScannedDecoyIds.add(decoy_id);
 
       const addressSet = new Set(addresses.filter(Boolean));
       const seenTxids = new Set();
@@ -2153,6 +2203,7 @@ async function processRun(options = {}) {
   );
 
   const healthPayload = {
+    checkedAt: new Date().toISOString(),
     runMode,
     watchKeyOnly,
     eligibleSeedRecords: eligibleSeeds.length,
@@ -2182,6 +2233,17 @@ async function processRun(options = {}) {
     blockbookUsageMode: BLOCKBOOK_USAGE_MODE,
     blockbookRequestsUsed: blockbookRunBudgetSnapshot().used,
     blockbookMaxRequestsPerRun: blockbookRunBudgetSnapshot().max,
+    watchKeyCapacityWarnThreshold: WATCH_KEY_CAPACITY_WARN_THRESHOLD,
+    watchKeyCapacityUrgentThreshold: WATCH_KEY_CAPACITY_URGENT_THRESHOLD,
+    watchKeyCapacityWarn: watchKeyUtxoTelemetry.watchKeyRecords >= WATCH_KEY_CAPACITY_WARN_THRESHOLD,
+    watchKeyCapacityUrgent: watchKeyUtxoTelemetry.watchKeyRecords >= WATCH_KEY_CAPACITY_URGENT_THRESHOLD,
+    watchKeyCapacityExhausted:
+      BLOCKBOOK_MAX_REQUESTS_PER_RUN > 0 && watchKeyUtxoTelemetry.watchKeyRecords >= BLOCKBOOK_MAX_REQUESTS_PER_RUN,
+    watchKeyCapacityRemaining:
+      BLOCKBOOK_MAX_REQUESTS_PER_RUN > 0
+        ? Math.max(0, BLOCKBOOK_MAX_REQUESTS_PER_RUN - watchKeyUtxoTelemetry.watchKeyRecords)
+        : null,
+    watchKeyStaleAfterSeconds: Math.round(WATCH_KEY_STALE_AFTER_MS / 1000),
     blockbookPausedAfterRateLimit: blockbookDisabledUntilMs > Date.now(),
     runBudgetExhausted,
     batchScanSuccesses,
@@ -2190,6 +2252,28 @@ async function processRun(options = {}) {
     newTriggers,
     baselinedDecoys,
   };
+
+  const staleSeeds = staleSeedSummaries(
+    eligibleSeeds,
+    successfullyScannedDecoyIds,
+    WATCH_KEY_STALE_AFTER_MS,
+    Date.now()
+  );
+  healthPayload.staleSeedRecords = staleSeeds.length;
+  healthPayload.staleWatchKeySeedRecords = staleSeeds.filter((seed) => seed.watch_key).length;
+  healthPayload.staleSeedSamples = staleSeeds.slice(0, WATCH_KEY_STALE_SAMPLE_LIMIT);
+
+  if (healthPayload.watchKeyCapacityExhausted) {
+    healthLog('error', 'WATCHER_WATCH_KEY_CAPACITY_EXHAUSTED', healthPayload);
+  } else if (healthPayload.watchKeyCapacityUrgent) {
+    healthLog('error', 'WATCHER_WATCH_KEY_CAPACITY_URGENT', healthPayload);
+  } else if (healthPayload.watchKeyCapacityWarn) {
+    healthLog('warn', 'WATCHER_WATCH_KEY_CAPACITY_WARN', healthPayload);
+  }
+
+  if (healthPayload.staleSeedRecords > 0) {
+    healthLog('error', 'WATCHER_STALE_SEED_CHECKS', healthPayload);
+  }
 
   if (
     healthPayload.blockbookRequestsUsed > 0 &&
@@ -2209,7 +2293,9 @@ async function processRun(options = {}) {
     batchScanFailures > 0 ||
     baselineBatchFailures > 0 ||
     watchKeyUtxoTelemetry.tableUnavailable ||
-    watchKeyUtxoTelemetry.failures > 0
+    watchKeyUtxoTelemetry.failures > 0 ||
+    healthPayload.watchKeyCapacityExhausted ||
+    healthPayload.staleSeedRecords > 0
   ) {
     healthLog('error', 'WATCHER_HEALTH_FAIL', healthPayload);
   } else {
