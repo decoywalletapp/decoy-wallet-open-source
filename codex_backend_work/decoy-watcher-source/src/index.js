@@ -51,6 +51,7 @@ const WATCH_KEY_FAST_INTERVAL_MS = Math.max(
     Number(process.env.WATCH_KEY_FAST_INTERVAL_MS || process.env.WATCHER_WATCH_KEY_FAST_INTERVAL_MS || 10000)
   )
 );
+const WATCH_KEY_UTXO_ENABLED = parseEnvBool(process.env.WATCH_KEY_UTXO_ENABLED, true);
 const BLOCKCHAIN_MULTIADDR_URL = (process.env.BLOCKCHAIN_MULTIADDR_URL || 'https://blockchain.info/multiaddr').trim();
 const BLOCKCHAIN_MULTIADDR_LIMIT = Number(process.env.BLOCKCHAIN_MULTIADDR_LIMIT || 50);
 const BLOCKBOOK_ADDRESS_PAGE_SIZE = Math.max(1, Math.min(1000, Number(process.env.BLOCKBOOK_ADDRESS_PAGE_SIZE || 25)));
@@ -587,6 +588,55 @@ function blockbookTxsFromXpubData(data) {
   return blockbookTxsFromAddressData(data);
 }
 
+function normalizeBlockbookUtxo(utxo) {
+  if (!utxo || typeof utxo !== 'object') return null;
+
+  const txid = utxo.txid || utxo.txId || utxo.hash || utxo.transactionHash || utxo.transaction_id;
+  const rawVout = utxo.vout ?? utxo.n ?? utxo.index ?? utxo.outputIndex ?? utxo.output_index;
+  const vout = Number(rawVout);
+  if (!txid || !Number.isInteger(vout) || vout < 0) return null;
+
+  const confirmations = Number(utxo.confirmations);
+  const height = Number(utxo.height || utxo.blockHeight || utxo.block_height);
+  const value = utxo.value ?? utxo.satoshis ?? utxo.amount ?? null;
+  const address = firstAddress([
+    utxo.address,
+    utxo.addr,
+    utxo.addresses,
+    utxo.scriptPubKey && utxo.scriptPubKey.address,
+    utxo.scriptPubKey && utxo.scriptPubKey.addresses,
+  ]);
+
+  return {
+    txid: String(txid),
+    vout,
+    outpoint: `${txid}:${vout}`,
+    address,
+    value,
+    path: utxo.path || utxo.derivationPath || utxo.derivation_path || null,
+    confirmed: (Number.isFinite(confirmations) && confirmations > 0) || (Number.isFinite(height) && height > 0),
+  };
+}
+
+function blockbookUtxosFromData(data) {
+  const candidates = [];
+  if (Array.isArray(data)) candidates.push(...data);
+  if (Array.isArray(data && data.utxos)) candidates.push(...data.utxos);
+  if (Array.isArray(data && data.unspent)) candidates.push(...data.unspent);
+  if (Array.isArray(data && data.unspentOutputs)) candidates.push(...data.unspentOutputs);
+  if (Array.isArray(data && data.outputs)) candidates.push(...data.outputs);
+
+  const seen = new Set();
+  const out = [];
+  for (const item of candidates) {
+    const utxo = normalizeBlockbookUtxo(item);
+    if (!utxo || seen.has(utxo.outpoint)) continue;
+    seen.add(utxo.outpoint);
+    out.push(utxo);
+  }
+  return out;
+}
+
 function isWatchPublicKey(value) {
   return /^(xpub|ypub|zpub|tpub|upub|vpub)/i.test(String(value || '').trim());
 }
@@ -752,6 +802,29 @@ async function fetchBlockbookWatchKeyCandidateTxs(watch) {
     ...watchKeyResult,
     txs,
     provider: (watchKeyResult.provider || 'blockbook').replace('blockbook:', 'blockbook-watch-key:'),
+  };
+}
+
+async function fetchBlockbookWatchKeyUtxos(watch) {
+  const cleanWatch = normalizeSeedWatch(watch);
+  const watchPublicKey = cleanWatch.watchPublicKey;
+  if (!WATCH_KEY_UTXO_ENABLED || !watchPublicKey || !BLOCKBOOK_BASE_URLS.length) {
+    return { ok: false, utxos: [], provider: null, error: new Error('blockbook watch-key utxo source disabled') };
+  }
+
+  const utxoResult = await fetchJsonFromBlockbookProviders(
+    `/utxo/${encodeURIComponent(watchPublicKey)}`,
+    { confirmed: 'false' },
+    'blockbook-watch-key-utxo',
+    'watch-key'
+  );
+
+  if (!utxoResult.ok) return { ...utxoResult, utxos: [] };
+
+  return {
+    ...utxoResult,
+    utxos: blockbookUtxosFromData(utxoResult.data),
+    provider: (utxoResult.provider || 'blockbook').replace('blockbook:', 'blockbook-watch-key-utxo:'),
   };
 }
 
@@ -1189,9 +1262,16 @@ function hmacTxid(txid) {
   return crypto.createHmac('sha256', TXID_HMAC_KEY).update(String(txid)).digest('hex');
 }
 
+function hmacOutpoint(outpoint) {
+  return crypto.createHmac('sha256', TXID_HMAC_KEY).update(`utxo:${String(outpoint)}`).digest('hex');
+}
+
 async function markSeenTx(decoyId, txid) {
+  return await markSeenHmac(decoyId, hmacTxid(txid));
+}
+
+async function markSeenHmac(decoyId, txid_hmac) {
   const nowIso = new Date().toISOString();
-  const txid_hmac = hmacTxid(txid);
 
   const { data, error } = await supabase
     .from('decoy_seen_txs')
@@ -1206,6 +1286,11 @@ async function markSeenTx(decoyId, txid) {
   }
 
   return { isNew: !!(data && data.length) };
+}
+
+function isMissingRelationError(error) {
+  const message = String((error && error.message) || '').toLowerCase();
+  return error && (error.code === '42P01' || message.includes('relation') || message.includes('does not exist'));
 }
 
 // OUTBOUND ONLY: address appears in vin prevout.scriptpubkey_address
@@ -1282,6 +1367,208 @@ async function recordSeedTrigger(decoyId, userId, tx, source) {
 
   log('seed trigger recorded', 'source=', source, 'confirmed=', isConfirmedTx(tx));
   return true;
+}
+
+async function recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source) {
+  if (!outpointHmac) return false;
+
+  const seen = await markSeenHmac(decoyId, outpointHmac);
+  if (!seen.isNew) return false;
+
+  const { error: insertTrigErr } = await supabase.from('decoy_triggers').insert({
+    decoy_id: decoyId,
+    user_id: userId,
+    trigger_type: 'SEED_DECOY',
+    txid: null,
+    txid_hmac: outpointHmac,
+    observed_at: new Date().toISOString(),
+    raw_event: null,
+  });
+
+  if (insertTrigErr) {
+    if (insertTrigErr.code === '23505') return false;
+    console.error('[decoy-watcher] error inserting decoy_triggers for utxo spend:', insertTrigErr);
+    return false;
+  }
+
+  log('seed utxo trigger recorded', 'source=', source);
+  return true;
+}
+
+async function getOpenUtxoStateMap(decoyIds) {
+  const cleanIds = [...new Set((decoyIds || []).filter(Boolean))];
+  const out = new Map();
+  if (!cleanIds.length) return { ok: true, unavailable: false, map: out };
+
+  const { data, error } = await supabase
+    .from('decoy_seed_utxo_state')
+    .select('decoy_id, outpoint_hmac, first_seen_at, last_seen_at, spent_at, trigger_recorded_at')
+    .in('decoy_id', cleanIds)
+    .is('spent_at', null);
+
+  if (error) {
+    if (isMissingRelationError(error)) {
+      console.warn('[decoy-watcher]', 'decoy_seed_utxo_state unavailable; falling back to address monitoring');
+      return { ok: false, unavailable: true, map: out, error };
+    }
+
+    console.error('[decoy-watcher] error loading decoy_seed_utxo_state', error);
+    return { ok: false, unavailable: false, map: out, error };
+  }
+
+  for (const row of data || []) {
+    if (!out.has(row.decoy_id)) out.set(row.decoy_id, []);
+    out.get(row.decoy_id).push(row);
+  }
+
+  return { ok: true, unavailable: false, map: out };
+}
+
+async function upsertCurrentUtxoStates(decoyId, utxos, source) {
+  const nowIso = new Date().toISOString();
+  const rows = (utxos || [])
+    .map((utxo) => ({
+      decoy_id: decoyId,
+      outpoint_hmac: hmacOutpoint(utxo.outpoint),
+      last_seen_at: nowIso,
+      source: source || 'blockbook-watch-key-utxo',
+      updated_at: nowIso,
+    }))
+    .filter((row) => row.decoy_id && row.outpoint_hmac);
+
+  if (!rows.length) return { ok: true, count: 0 };
+
+  const { error } = await supabase
+    .from('decoy_seed_utxo_state')
+    .upsert(rows, { onConflict: 'decoy_id,outpoint_hmac' });
+
+  if (error) {
+    console.error('[decoy-watcher] error upserting decoy_seed_utxo_state', error);
+    return { ok: false, count: 0, error };
+  }
+
+  return { ok: true, count: rows.length };
+}
+
+async function markUtxoStateSpent(decoyId, outpointHmac, source) {
+  const nowIso = new Date().toISOString();
+  const { error } = await supabase
+    .from('decoy_seed_utxo_state')
+    .update({
+      spent_at: nowIso,
+      trigger_recorded_at: nowIso,
+      source: source || 'blockbook-watch-key-utxo',
+      updated_at: nowIso,
+    })
+    .eq('decoy_id', decoyId)
+    .eq('outpoint_hmac', outpointHmac)
+    .is('spent_at', null);
+
+  if (error) {
+    console.error('[decoy-watcher] error marking decoy_seed_utxo_state spent', error);
+    return false;
+  }
+
+  return true;
+}
+
+async function closeUtxoStateWithoutTrigger(decoyId, outpointHmac, source) {
+  const nowIso = new Date().toISOString();
+  const { error } = await supabase
+    .from('decoy_seed_utxo_state')
+    .update({
+      spent_at: nowIso,
+      source: source || 'watch-key-utxo-baseline-reset',
+      updated_at: nowIso,
+    })
+    .eq('decoy_id', decoyId)
+    .eq('outpoint_hmac', outpointHmac)
+    .is('spent_at', null);
+
+  if (error) {
+    console.error('[decoy-watcher] error closing decoy_seed_utxo_state without trigger', error);
+    return false;
+  }
+
+  return true;
+}
+
+async function processWatchKeyUtxosForDecoy(decoyId, userId, watch, needsBaseline, priorOpenRows) {
+  const fetched = await fetchBlockbookWatchKeyUtxos(watch);
+  if (!fetched.ok) {
+    return {
+      ok: false,
+      provider: fetched.provider,
+      error: fetched.error,
+      attempted: true,
+      currentUtxos: 0,
+      initialized: false,
+      spentDetected: 0,
+      createdTriggers: 0,
+    };
+  }
+
+  const utxos = fetched.utxos || [];
+  const currentHmacs = new Set(utxos.map((utxo) => hmacOutpoint(utxo.outpoint)));
+  const priorRows = Array.isArray(priorOpenRows) ? priorOpenRows : [];
+  const initialized = priorRows.length === 0;
+
+  const upsert = await upsertCurrentUtxoStates(decoyId, utxos, fetched.provider || 'blockbook-watch-key-utxo');
+  if (!upsert.ok) {
+    return {
+      ok: false,
+      provider: fetched.provider,
+      error: upsert.error,
+      attempted: true,
+      currentUtxos: utxos.length,
+      initialized,
+      spentDetected: 0,
+      createdTriggers: 0,
+    };
+  }
+
+  if (needsBaseline) {
+    for (const row of priorRows) {
+      const outpointHmac = row && row.outpoint_hmac;
+      if (!outpointHmac || currentHmacs.has(outpointHmac)) continue;
+      await closeUtxoStateWithoutTrigger(decoyId, outpointHmac, 'watch-key-utxo-baseline-reset');
+    }
+  }
+
+  if (needsBaseline || initialized) {
+    return {
+      ok: true,
+      provider: fetched.provider,
+      attempted: true,
+      currentUtxos: utxos.length,
+      initialized,
+      spentDetected: 0,
+      createdTriggers: 0,
+    };
+  }
+
+  let spentDetected = 0;
+  let createdTriggers = 0;
+  for (const row of priorRows) {
+    const outpointHmac = row && row.outpoint_hmac;
+    if (!outpointHmac || currentHmacs.has(outpointHmac)) continue;
+
+    spentDetected += 1;
+    const source = `watch-key-utxo-spent:${fetched.provider || 'blockbook'}`;
+    const created = await recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source);
+    await markUtxoStateSpent(decoyId, outpointHmac, source);
+    if (created) createdTriggers += 1;
+  }
+
+  return {
+    ok: true,
+    provider: fetched.provider,
+    attempted: true,
+    currentUtxos: utxos.length,
+    initialized,
+    spentDetected,
+    createdTriggers,
+  };
 }
 
 function chainEventSecretFromRequest(req) {
@@ -1568,7 +1855,8 @@ async function processRun(options = {}) {
     `runMaxMs=${WATCHER_RUN_MAX_MS}`,
     `watchKeyOnly=${watchKeyOnly}`,
     `watchKeyFastPasses=${WATCH_KEY_FAST_PASSES}`,
-    `watchKeyFastIntervalMs=${WATCH_KEY_FAST_INTERVAL_MS}`
+    `watchKeyFastIntervalMs=${WATCH_KEY_FAST_INTERVAL_MS}`,
+    `watchKeyUtxoEnabled=${WATCH_KEY_UTXO_ENABLED}`
   );
 
   const { data: seedRows, error: seedsError } = await loadArmedDecoySeeds();
@@ -1609,6 +1897,18 @@ async function processRun(options = {}) {
     blockbookWatchKeyFailures: 0,
     blockbookFallbackSuccesses: 0,
     blockchainBatchSuccesses: 0,
+    providerCounts: {},
+  };
+  const watchKeyUtxoTelemetry = {
+    watchKeyRecords: 0,
+    attempts: 0,
+    successes: 0,
+    failures: 0,
+    tableUnavailable: false,
+    initializedRecords: 0,
+    currentUtxosSeen: 0,
+    spentDetected: 0,
+    createdTriggers: 0,
     providerCounts: {},
   };
 
@@ -1659,17 +1959,87 @@ async function processRun(options = {}) {
     return aBaseline - bBaseline;
   });
 
+  const watchKeySeedDecoyIds = eligibleSeeds
+    .filter((item) => item.watch && item.watch.watchPublicKey)
+    .map((item) => item.seed && item.seed.decoy_id)
+    .filter(Boolean);
+  watchKeyUtxoTelemetry.watchKeyRecords = watchKeySeedDecoyIds.length;
+
+  const utxoState = WATCH_KEY_UTXO_ENABLED
+    ? await getOpenUtxoStateMap(watchKeySeedDecoyIds)
+    : { ok: true, unavailable: false, map: new Map() };
+  const openUtxoStateMap = utxoState.map || new Map();
+  watchKeyUtxoTelemetry.tableUnavailable = !!utxoState.unavailable;
+
   log(
     'eligible armed seed records',
     eligibleSeeds.length,
     'baselinePending',
-    eligibleSeeds.filter((s) => s.needsBaseline).length
+    eligibleSeeds.filter((s) => s.needsBaseline).length,
+    'watchKeyRecords',
+    watchKeySeedDecoyIds.length
   );
 
   for (const item of eligibleSeeds) {
     const { seed, watch, armedAt, lastBaseline, needsBaseline, scanState } = item;
     const { decoy_id, user_id } = seed;
     const addresses = watch.addresses;
+
+    if (watch.watchPublicKey && WATCH_KEY_UTXO_ENABLED && !utxoState.unavailable) {
+      watchKeyUtxoTelemetry.attempts += 1;
+      const utxoScan = await processWatchKeyUtxosForDecoy(
+        decoy_id,
+        user_id,
+        watch,
+        needsBaseline,
+        openUtxoStateMap.get(decoy_id) || []
+      );
+
+      if (utxoScan.ok) {
+        watchKeyUtxoTelemetry.successes += 1;
+        watchKeyUtxoTelemetry.currentUtxosSeen += utxoScan.currentUtxos;
+        watchKeyUtxoTelemetry.spentDetected += utxoScan.spentDetected;
+        watchKeyUtxoTelemetry.createdTriggers += utxoScan.createdTriggers;
+        if (utxoScan.initialized) watchKeyUtxoTelemetry.initializedRecords += 1;
+        if (utxoScan.provider) incrementCounter(watchKeyUtxoTelemetry.providerCounts, utxoScan.provider);
+
+        totalAddressesChecked += addresses.length;
+        await upsertScanState(decoy_id, addresses.length - 1);
+        newTriggers += utxoScan.createdTriggers;
+
+        if (needsBaseline) {
+          await upsertBaseline(decoy_id);
+          baselinedDecoys += 1;
+          log(
+            'watch-key utxo baseline completed for decoy_id',
+            decoy_id,
+            'current_utxos',
+            utxoScan.currentUtxos
+          );
+        } else {
+          log(
+            'watch-key utxo scan completed for decoy_id',
+            decoy_id,
+            'current_utxos',
+            utxoScan.currentUtxos,
+            'spent_detected',
+            utxoScan.spentDetected,
+            'created_triggers',
+            utxoScan.createdTriggers
+          );
+        }
+
+        continue;
+      }
+
+      watchKeyUtxoTelemetry.failures += 1;
+      log(
+        'watch-key utxo scan failed for decoy_id',
+        decoy_id,
+        'falling back to stored-address monitoring',
+        errorMessage(utxoScan.error)
+      );
+    }
 
     if (needsBaseline) {
       const baseline = await baselineDecoyNow(decoy_id, user_id, watch, armedAt);
@@ -1797,6 +2167,17 @@ async function processRun(options = {}) {
     blockbookWatchKeyFailures: batchTelemetry.blockbookWatchKeyFailures,
     blockbookFallbackSuccesses: batchTelemetry.blockbookFallbackSuccesses,
     blockchainBatchSuccesses: batchTelemetry.blockchainBatchSuccesses,
+    watchKeyUtxoEnabled: WATCH_KEY_UTXO_ENABLED,
+    watchKeyRecords: watchKeyUtxoTelemetry.watchKeyRecords,
+    watchKeyUtxoAttempts: watchKeyUtxoTelemetry.attempts,
+    watchKeyUtxoSuccesses: watchKeyUtxoTelemetry.successes,
+    watchKeyUtxoFailures: watchKeyUtxoTelemetry.failures,
+    watchKeyUtxoTableUnavailable: watchKeyUtxoTelemetry.tableUnavailable,
+    watchKeyUtxoInitializedRecords: watchKeyUtxoTelemetry.initializedRecords,
+    watchKeyUtxoCurrentUtxosSeen: watchKeyUtxoTelemetry.currentUtxosSeen,
+    watchKeyUtxoSpentDetected: watchKeyUtxoTelemetry.spentDetected,
+    watchKeyUtxoCreatedTriggers: watchKeyUtxoTelemetry.createdTriggers,
+    watchKeyUtxoProviderCounts: watchKeyUtxoTelemetry.providerCounts,
     providerCounts: batchTelemetry.providerCounts,
     blockbookUsageMode: BLOCKBOOK_USAGE_MODE,
     blockbookRequestsUsed: blockbookRunBudgetSnapshot().used,
@@ -1810,7 +2191,11 @@ async function processRun(options = {}) {
     baselinedDecoys,
   };
 
-  if (healthPayload.blockbookRequestsUsed > 0 && blockbookModeIsReserveOnly()) {
+  if (
+    healthPayload.blockbookRequestsUsed > 0 &&
+    blockbookModeIsReserveOnly() &&
+    watchKeyUtxoTelemetry.attempts === 0
+  ) {
     healthLog('warn', 'WATCHER_QUICKNODE_RESERVE_USED', healthPayload);
   }
 
@@ -1822,7 +2207,9 @@ async function processRun(options = {}) {
     runBudgetExhausted ||
     totalAddressesChecked < expectedAddresses ||
     batchScanFailures > 0 ||
-    baselineBatchFailures > 0
+    baselineBatchFailures > 0 ||
+    watchKeyUtxoTelemetry.tableUnavailable ||
+    watchKeyUtxoTelemetry.failures > 0
   ) {
     healthLog('error', 'WATCHER_HEALTH_FAIL', healthPayload);
   } else {

@@ -1,6 +1,13 @@
 import { execFileSync } from 'node:child_process';
 import crypto from 'node:crypto';
 
+const candidateAddresses = process.argv
+  .find((arg) => arg.startsWith('--candidates='))
+  ?.replace(/^--candidates=/, '')
+  .split(',')
+  .map((value) => value.trim())
+  .filter(Boolean) || [];
+
 const gcloud =
   '/Users/mitchellwleblanc/Documents/Codex/2026-04-26/i-need-help-connecting-my-entire/tools/google-cloud-sdk/bin/gcloud';
 const python =
@@ -68,6 +75,23 @@ async function fetchAll({ supabaseUrl, serviceKey }, table, select, extra = {}) 
   return rows;
 }
 
+async function fetchOptionalAll(creds, table, select, extra = {}) {
+  try {
+    return { available: true, rows: await fetchAll(creds, table, select, extra) };
+  } catch (error) {
+    const message = String(error && error.message ? error.message : error).toLowerCase();
+    if (
+      message.includes('could not find the table') ||
+      message.includes('relation') ||
+      message.includes('does not exist') ||
+      message.includes('404')
+    ) {
+      return { available: false, rows: [], error: error.message || String(error) };
+    }
+    throw error;
+  }
+}
+
 function parseDate(value) {
   const date = value ? new Date(value) : null;
   return date && !Number.isNaN(date.getTime()) ? date : null;
@@ -113,6 +137,56 @@ function ref(value) {
   return crypto.createHash('sha256').update(`decoy-audit:${value || ''}`).digest('hex').slice(0, 10);
 }
 
+function addressRef(value) {
+  return crypto.createHash('sha256').update(`address:${value || ''}`).digest('hex').slice(0, 12);
+}
+
+function matchCandidateAddresses(seeds) {
+  return candidateAddresses.map((address, candidateIndex) => {
+    const exactMatches = [];
+    const fuzzyMatches = [];
+
+    for (const seed of seeds) {
+      const addresses = Array.isArray(seed.addresses) ? seed.addresses : [];
+      const exactIndex = addresses.indexOf(address);
+      if (exactIndex >= 0) {
+        exactMatches.push({
+          userRef: ref(seed.user_id),
+          decoyRef: ref(seed.decoy_id),
+          index: exactIndex,
+        });
+      }
+
+      for (let i = 0; i < addresses.length; i += 1) {
+        const stored = addresses[i];
+        if (!stored) continue;
+        const prefixLength = Math.min(12, stored.length, address.length);
+        const suffixLength = Math.min(8, stored.length, address.length);
+        const prefixMatch = stored.slice(0, prefixLength) === address.slice(0, prefixLength);
+        const suffixMatch = stored.slice(-suffixLength) === address.slice(-suffixLength);
+        if (prefixMatch || suffixMatch) {
+          fuzzyMatches.push({
+            userRef: ref(seed.user_id),
+            decoyRef: ref(seed.decoy_id),
+            index: i,
+            prefixMatch,
+            suffixMatch,
+          });
+        }
+      }
+    }
+
+    return {
+      candidateIndex,
+      candidateRef: addressRef(address),
+      exactMatchCount: exactMatches.length,
+      exactMatches,
+      fuzzyMatchCount: fuzzyMatches.length,
+      fuzzyMatches: fuzzyMatches.slice(0, 10),
+    };
+  });
+}
+
 const creds = loadCloudRunEnv();
 
 const [seeds, wallets, decoys, baselines, scanStates, triggers, alerts, smsQueue, consents, seenTxs] = await Promise.all([
@@ -131,6 +205,11 @@ const [seeds, wallets, decoys, baselines, scanStates, triggers, alerts, smsQueue
   fetchAll(creds, 'emergency_contact_consents', 'user_id,status,confirmed_at,denied_at,opted_out_at'),
   fetchAll(creds, 'decoy_seen_txs', 'decoy_id,first_seen_at,txid_hmac'),
 ]);
+const utxoState = await fetchOptionalAll(
+  creds,
+  'decoy_seed_utxo_state',
+  'decoy_id,outpoint_hmac,first_seen_at,last_seen_at,spent_at,trigger_recorded_at'
+);
 
 const seedUsers = new Set(seeds.map((s) => s.user_id).filter(Boolean));
 const seedDecoys = new Set(seeds.map((s) => s.decoy_id).filter(Boolean));
@@ -194,6 +273,12 @@ const perSeedHealth = seeds.map((seed) => {
   const wallet = walletByUser.get(seed.user_id);
   const baseline = baselineByDecoy.get(seed.decoy_id);
   const scan = scanByDecoy.get(seed.decoy_id);
+  const decoy = decoyById.get(seed.decoy_id) || {};
+  const watchPublicKey = decoy.watch_public_key || decoy.zpub || decoy.xpub || '';
+  const hasWatchPublicKey = /^([xyz]pub|[tuv]pub)/i.test(String(watchPublicKey));
+  const openUtxoStateCount = utxoState.rows.filter(
+    (row) => row.decoy_id === seed.decoy_id && !row.spent_at
+  ).length;
   return {
     userRef: ref(seed.user_id),
     decoyRef: ref(seed.decoy_id),
@@ -202,6 +287,9 @@ const perSeedHealth = seeds.map((seed) => {
     hasArmedAt: !!wallet?.decoy_seed_armed_at,
     contactsEnabled: wallet?.decoy_seed_contacts_enabled === true,
     confirmedContactCount: confirmedContactCountByUser.get(seed.user_id) || 0,
+    hasWatchPublicKey,
+    watchPublicKeyType: decoy.watch_public_key_type || null,
+    openUtxoStateCount,
     hasBaseline: !!baseline,
     baselineAgeMinutes: ageMinutes(baseline?.baselined_at || null),
     hasScanState: !!scan,
@@ -251,7 +339,12 @@ const output = {
     oldestScanAgeMinutes: ageMinutes(oldestScanUpdatedAt),
     seenTxRows: seenTxs.length,
     latestSeenTxAt,
+    utxoStateTableAvailable: utxoState.available,
+    openUtxoStateRows: utxoState.rows.filter((row) => !row.spent_at).length,
   },
+  candidateAddressMatches: candidateAddresses.length
+    ? matchCandidateAddresses(seeds)
+    : [],
   triggerAndAlertPipeline: {
     totalTriggers: triggers.length,
     triggerTypes: countBy(triggers, (t) => t.trigger_type || 'null'),
