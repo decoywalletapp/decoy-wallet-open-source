@@ -15,6 +15,7 @@
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
+const { AsyncLocalStorage } = require('async_hooks');
 
 const app = express();
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
@@ -49,6 +50,17 @@ const WATCH_KEY_FAST_INTERVAL_MS = Math.max(
   Math.min(
     30000,
     Number(process.env.WATCH_KEY_FAST_INTERVAL_MS || process.env.WATCHER_WATCH_KEY_FAST_INTERVAL_MS || 10000)
+  )
+);
+const WATCHER_DEFAULT_SHARD_COUNT = Math.max(
+  1,
+  Math.min(10000, Number(process.env.WATCHER_SHARD_COUNT || process.env.DECOY_WATCHER_SHARD_COUNT || 1))
+);
+const WATCHER_DEFAULT_SHARD_INDEX = Math.max(
+  0,
+  Math.min(
+    WATCHER_DEFAULT_SHARD_COUNT - 1,
+    Number(process.env.WATCHER_SHARD_INDEX || process.env.DECOY_WATCHER_SHARD_INDEX || 0)
   )
 );
 const WATCH_KEY_UTXO_ENABLED = parseEnvBool(process.env.WATCH_KEY_UTXO_ENABLED, true);
@@ -136,10 +148,82 @@ function incrementCounter(map, key) {
   map[safeKey] = (map[safeKey] || 0) + 1;
 }
 
-let runInProgress = false;
-let activeBlockbookRunBudget = null;
+function parseBoundedInteger(value, fallback, min, max) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.max(min, Math.min(max, Math.trunc(parsed)));
+}
+
+function requestValue(req, bodyKeys, headerName) {
+  const body = req && req.body && typeof req.body === 'object' ? req.body : {};
+  for (const key of bodyKeys) {
+    if (body[key] !== undefined && body[key] !== null && body[key] !== '') return body[key];
+  }
+  if (req && typeof req.get === 'function') {
+    const headerValue = req.get(headerName);
+    if (headerValue !== undefined && headerValue !== null && headerValue !== '') return headerValue;
+  }
+  return undefined;
+}
+
+function resolveWatcherShard(options = {}) {
+  const shardCount = parseBoundedInteger(
+    options.shardCount ?? options.shard_count,
+    WATCHER_DEFAULT_SHARD_COUNT,
+    1,
+    10000
+  );
+  const shardIndex = parseBoundedInteger(
+    options.shardIndex ?? options.shard_index,
+    WATCHER_DEFAULT_SHARD_INDEX,
+    0,
+    Math.max(0, shardCount - 1)
+  );
+
+  return {
+    index: shardIndex,
+    count: shardCount,
+    active: shardCount > 1,
+    key: `${shardIndex}/${shardCount}`,
+  };
+}
+
+function runOptionsFromRequest(req) {
+  return {
+    shardIndex: requestValue(req, ['shardIndex', 'shard_index'], 'x-decoy-watcher-shard-index'),
+    shardCount: requestValue(req, ['shardCount', 'shard_count'], 'x-decoy-watcher-shard-count'),
+  };
+}
+
+function shardIndexForId(id, shardCount) {
+  const count = Math.max(1, Number(shardCount) || 1);
+  const digest = crypto.createHash('sha256').update(String(id || '')).digest();
+  return digest.readUInt32BE(0) % count;
+}
+
+function belongsToWatcherShard(id, shard) {
+  if (!shard || !shard.active) return true;
+  return shardIndexForId(id, shard.count) === shard.index;
+}
+
+function currentRunContext() {
+  return runContextStorage.getStore() || null;
+}
+
+function createRunContext(options = {}) {
+  return {
+    shard: resolveWatcherShard(options),
+    blockbookRunBudget: {
+      max: BLOCKBOOK_MAX_REQUESTS_PER_RUN,
+      used: 0,
+    },
+    blockbookRateLimitedThisRun: false,
+  };
+}
+
+const runContextStorage = new AsyncLocalStorage();
+const activeRunKeys = new Set();
 let blockbookDisabledUntilMs = 0;
-let blockbookRateLimitedThisRun = false;
 
 app.get('/', (req, res) => {
   res.json({ ok: true, service: 'decoy-watcher' });
@@ -235,22 +319,17 @@ function blockbookModeIsReserveOnly() {
   return ['fallback', 'fallback_only', 'reserve'].includes(BLOCKBOOK_USAGE_MODE);
 }
 
-function beginBlockbookRunBudget() {
-  activeBlockbookRunBudget = {
-    max: BLOCKBOOK_MAX_REQUESTS_PER_RUN,
-    used: 0,
-  };
-  blockbookRateLimitedThisRun = false;
-}
-
 function blockbookRuntimeDisabledReason() {
+  const context = currentRunContext();
+  const budget = context ? context.blockbookRunBudget : null;
+
   if (!BLOCKBOOK_BASE_URLS.length) return 'blockbook source disabled';
   if (blockbookModeIsDisabled()) return `blockbook usage mode ${BLOCKBOOK_USAGE_MODE}`;
   if (blockbookDisabledUntilMs > Date.now()) {
     return `blockbook paused after rate limit until ${new Date(blockbookDisabledUntilMs).toISOString()}`;
   }
-  if (activeBlockbookRunBudget && activeBlockbookRunBudget.used >= activeBlockbookRunBudget.max) {
-    return `blockbook run budget exhausted (${activeBlockbookRunBudget.max})`;
+  if (budget && budget.used >= budget.max) {
+    return `blockbook run budget exhausted (${budget.max})`;
   }
   return null;
 }
@@ -259,12 +338,14 @@ function consumeBlockbookRunBudget() {
   const reason = blockbookRuntimeDisabledReason();
   if (reason) return { ok: false, reason };
 
-  if (activeBlockbookRunBudget) activeBlockbookRunBudget.used += 1;
+  const context = currentRunContext();
+  if (context && context.blockbookRunBudget) context.blockbookRunBudget.used += 1;
   return { ok: true, reason: null };
 }
 
 function blockbookRunBudgetSnapshot() {
-  return activeBlockbookRunBudget || {
+  const context = currentRunContext();
+  return (context && context.blockbookRunBudget) || {
     max: BLOCKBOOK_MAX_REQUESTS_PER_RUN,
     used: 0,
   };
@@ -416,7 +497,8 @@ async function fetchJsonFromBlockbookProviders(path, params, label, address) {
       lastErr = e;
       if (String(errorMessage(e) || '').includes('429 Too Many Requests') && BLOCKBOOK_DISABLE_ON_429_MS > 0) {
         blockbookDisabledUntilMs = Date.now() + BLOCKBOOK_DISABLE_ON_429_MS;
-        blockbookRateLimitedThisRun = true;
+        const context = currentRunContext();
+        if (context) context.blockbookRateLimitedThisRun = true;
       }
       console.warn(
         '[decoy-watcher]',
@@ -1877,13 +1959,18 @@ async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
 }
 
 async function processRun(options = {}) {
+  const runContext = createRunContext(options);
+  return await runContextStorage.run(runContext, () => processRunInContext(options, runContext));
+}
+
+async function processRunInContext(options = {}, runContext) {
   const runMode = options.runMode || 'full';
   const watchKeyOnly = options.watchKeyOnly === true;
+  const watcherShard = runContext && runContext.shard ? runContext.shard : resolveWatcherShard(options);
   const startedAtMs = Date.now();
   const nowIso = new Date().toISOString();
-  beginBlockbookRunBudget();
   console.log('--------------------------------------------');
-  log('/run at', nowIso, `mode=${runMode}`);
+  log('/run at', nowIso, `mode=${runMode}`, `shard=${watcherShard.key}`);
   log(
     'config',
     `providers=${ESPLORA_BASE_URLS.map(providerLabel).join(',')}`,
@@ -1902,7 +1989,9 @@ async function processRun(options = {}) {
     `watchKeyOnly=${watchKeyOnly}`,
     `watchKeyFastPasses=${WATCH_KEY_FAST_PASSES}`,
     `watchKeyFastIntervalMs=${WATCH_KEY_FAST_INTERVAL_MS}`,
-    `watchKeyUtxoEnabled=${WATCH_KEY_UTXO_ENABLED}`
+    `watchKeyUtxoEnabled=${WATCH_KEY_UTXO_ENABLED}`,
+    `watcherShardIndex=${watcherShard.index}`,
+    `watcherShardCount=${watcherShard.count}`
   );
 
   const { data: seedRows, error: seedsError } = await loadArmedDecoySeeds();
@@ -1959,7 +2048,7 @@ async function processRun(options = {}) {
     providerCounts: {},
   };
 
-  const eligibleSeeds = [];
+  const allEligibleSeeds = [];
 
   for (const seed of seeds) {
     const { decoy_id, user_id } = seed || {};
@@ -1982,7 +2071,7 @@ async function processRun(options = {}) {
     const scanState = scanStateMap.get(decoy_id) || { lastIndex: -1, updatedAt: null };
     const lastScanAt = toDateOrNull(scanState.updatedAt);
 
-    eligibleSeeds.push({
+    allEligibleSeeds.push({
       seed,
       watch,
       armedAt,
@@ -1992,6 +2081,12 @@ async function processRun(options = {}) {
       lastScanAt,
     });
   }
+
+  const unshardedEligibleSeedRecords = allEligibleSeeds.length;
+  const unshardedWatchKeyRecords = allEligibleSeeds.filter((item) => item.watch && item.watch.watchPublicKey).length;
+  const eligibleSeeds = allEligibleSeeds.filter((item) =>
+    belongsToWatcherShard(item && item.seed && item.seed.decoy_id, watcherShard)
+  );
 
   eligibleSeeds.sort((a, b) => {
     if (a.needsBaseline !== b.needsBaseline) return a.needsBaseline ? -1 : 1;
@@ -2021,10 +2116,16 @@ async function processRun(options = {}) {
   log(
     'eligible armed seed records',
     eligibleSeeds.length,
+    'allShards',
+    unshardedEligibleSeedRecords,
+    'shard',
+    watcherShard.key,
     'baselinePending',
     eligibleSeeds.filter((s) => s.needsBaseline).length,
     'watchKeyRecords',
-    watchKeySeedDecoyIds.length
+    watchKeySeedDecoyIds.length,
+    'watchKeyRecordsAllShards',
+    unshardedWatchKeyRecords
   );
 
   for (const item of eligibleSeeds) {
@@ -2206,6 +2307,12 @@ async function processRun(options = {}) {
     checkedAt: new Date().toISOString(),
     runMode,
     watchKeyOnly,
+    watcherShardIndex: watcherShard.index,
+    watcherShardCount: watcherShard.count,
+    watcherShardActive: watcherShard.active,
+    watcherShardKey: watcherShard.key,
+    unshardedEligibleSeedRecords,
+    unshardedWatchKeyRecords,
     eligibleSeedRecords: eligibleSeeds.length,
     expectedAddresses,
     totalAddressesChecked,
@@ -2235,6 +2342,10 @@ async function processRun(options = {}) {
     blockbookMaxRequestsPerRun: blockbookRunBudgetSnapshot().max,
     watchKeyCapacityWarnThreshold: WATCH_KEY_CAPACITY_WARN_THRESHOLD,
     watchKeyCapacityUrgentThreshold: WATCH_KEY_CAPACITY_URGENT_THRESHOLD,
+    watchKeyShardCapacityWarn: watchKeyUtxoTelemetry.watchKeyRecords >= WATCH_KEY_CAPACITY_WARN_THRESHOLD,
+    watchKeyShardCapacityUrgent: watchKeyUtxoTelemetry.watchKeyRecords >= WATCH_KEY_CAPACITY_URGENT_THRESHOLD,
+    watchKeyTotalCapacityWarn: unshardedWatchKeyRecords >= WATCH_KEY_CAPACITY_WARN_THRESHOLD,
+    watchKeyTotalCapacityUrgent: unshardedWatchKeyRecords >= WATCH_KEY_CAPACITY_URGENT_THRESHOLD,
     watchKeyCapacityWarn: watchKeyUtxoTelemetry.watchKeyRecords >= WATCH_KEY_CAPACITY_WARN_THRESHOLD,
     watchKeyCapacityUrgent: watchKeyUtxoTelemetry.watchKeyRecords >= WATCH_KEY_CAPACITY_URGENT_THRESHOLD,
     watchKeyCapacityExhausted:
@@ -2271,6 +2382,12 @@ async function processRun(options = {}) {
     healthLog('warn', 'WATCHER_WATCH_KEY_CAPACITY_WARN', healthPayload);
   }
 
+  if (healthPayload.watchKeyTotalCapacityUrgent && !healthPayload.watchKeyCapacityUrgent) {
+    healthLog('warn', 'WATCHER_WATCH_KEY_TOTAL_CAPACITY_URGENT', healthPayload);
+  } else if (healthPayload.watchKeyTotalCapacityWarn && !healthPayload.watchKeyCapacityWarn) {
+    healthLog('warn', 'WATCHER_WATCH_KEY_TOTAL_CAPACITY_WARN', healthPayload);
+  }
+
   if (healthPayload.staleSeedRecords > 0) {
     healthLog('error', 'WATCHER_STALE_SEED_CHECKS', healthPayload);
   }
@@ -2283,7 +2400,7 @@ async function processRun(options = {}) {
     healthLog('warn', 'WATCHER_QUICKNODE_RESERVE_USED', healthPayload);
   }
 
-  if (blockbookRateLimitedThisRun) {
+  if (runContext && runContext.blockbookRateLimitedThisRun) {
     healthLog('error', 'WATCHER_QUICKNODE_RATE_LIMIT', healthPayload);
   }
 
@@ -2305,12 +2422,24 @@ async function processRun(options = {}) {
     healthLog('info', 'WATCHER_HEALTH_OK', healthPayload);
   }
 
-  return { ok: true, processed: newTriggers, baselinedDecoys, totalAddressesChecked, runBudgetExhausted };
+  return {
+    ok: true,
+    processed: newTriggers,
+    baselinedDecoys,
+    totalAddressesChecked,
+    runBudgetExhausted,
+    watcherShardIndex: watcherShard.index,
+    watcherShardCount: watcherShard.count,
+    eligibleSeedRecords: eligibleSeeds.length,
+    unshardedEligibleSeedRecords,
+    watchKeyRecords: watchKeyUtxoTelemetry.watchKeyRecords,
+    unshardedWatchKeyRecords,
+  };
 }
 
-async function processScheduledRun() {
+async function processScheduledRun(options = {}) {
   const results = [];
-  const first = await processRun({ runMode: 'full' });
+  const first = await processRun({ ...options, runMode: 'full' });
   results.push(first);
 
   if (!first || first.ok !== true || WATCH_KEY_FAST_PASSES <= 1) {
@@ -2320,6 +2449,7 @@ async function processScheduledRun() {
   for (let pass = 2; pass <= WATCH_KEY_FAST_PASSES; pass += 1) {
     await sleep(WATCH_KEY_FAST_INTERVAL_MS);
     const result = await processRun({
+      ...options,
       runMode: `watch-key-fast-${pass}`,
       watchKeyOnly: true,
     });
@@ -2336,24 +2466,40 @@ async function processScheduledRun() {
     runBudgetExhausted: results.some((result) => !!(result && result.runBudgetExhausted)),
     passes: results.length,
     fastWatchKeyPasses: Math.max(0, results.length - 1),
+    watcherShardIndex: first && first.watcherShardIndex,
+    watcherShardCount: first && first.watcherShardCount,
+    eligibleSeedRecords: first && first.eligibleSeedRecords,
+    unshardedEligibleSeedRecords: first && first.unshardedEligibleSeedRecords,
+    watchKeyRecords: first && first.watchKeyRecords,
+    unshardedWatchKeyRecords: first && first.unshardedWatchKeyRecords,
   };
 }
 
 app.post('/run', async (req, res) => {
-  if (runInProgress) {
-    log('skipping overlapping /run request');
-    return res.status(202).json({ ok: true, skipped: true, reason: 'run already in progress' });
+  const runOptions = runOptionsFromRequest(req);
+  const watcherShard = resolveWatcherShard(runOptions);
+  const runKey = watcherShard.key;
+
+  if (activeRunKeys.has(runKey)) {
+    log('skipping overlapping /run request for shard', runKey);
+    return res.status(202).json({
+      ok: true,
+      skipped: true,
+      reason: 'run already in progress for shard',
+      watcherShardIndex: watcherShard.index,
+      watcherShardCount: watcherShard.count,
+    });
   }
 
-  runInProgress = true;
+  activeRunKeys.add(runKey);
   try {
-    const result = await processScheduledRun();
+    const result = await processScheduledRun(runOptions);
     res.json(result);
   } catch (err) {
     console.error('[decoy-watcher] fatal /run error:', err);
     res.status(500).json({ ok: false, error: 'internal error' });
   } finally {
-    runInProgress = false;
+    activeRunKeys.delete(runKey);
   }
 });
 
