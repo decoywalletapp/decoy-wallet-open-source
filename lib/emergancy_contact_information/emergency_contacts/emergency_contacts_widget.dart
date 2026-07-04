@@ -18,7 +18,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'emergency_contacts_model.dart';
 export 'emergency_contacts_model.dart';
 
@@ -57,6 +56,42 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
   static List<Map<String, String>>? _sessionContactsCache;
   static int? _sessionContactsCountCache;
   static String? _sessionContactsUserIdCache;
+  final Set<int> _recentConsentInviteSlots = <int>{};
+
+  bool _showingConsentInviteSent(int contactSlot) =>
+      _recentConsentInviteSlots.contains(contactSlot);
+
+  String _consentInviteButtonLabel(int contactSlot, String status) {
+    if (_showingConsentInviteSent(contactSlot)) {
+      return 'Confirmation Link Sent';
+    }
+
+    return status == 'Not sent'
+        ? 'Send Confirmation Link'
+        : 'Resend Confirmation Link';
+  }
+
+  IconData _consentInviteButtonIcon(int contactSlot) {
+    return _showingConsentInviteSent(contactSlot)
+        ? Icons.check_circle_rounded
+        : Icons.send_rounded;
+  }
+
+  void _showConsentInviteSent(int contactSlot) {
+    safeSetState(() {
+      _recentConsentInviteSlots.add(contactSlot);
+    });
+
+    Future.delayed(const Duration(seconds: 5), () {
+      if (!mounted || !_recentConsentInviteSlots.contains(contactSlot)) {
+        return;
+      }
+
+      safeSetState(() {
+        _recentConsentInviteSlots.remove(contactSlot);
+      });
+    });
+  }
 
   String? _normalizeDataKeyB64(String? value) {
     final text = value?.trim() ?? '';
@@ -2450,10 +2485,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .center,
                                                             children: [
                                                               Text(
-                                                                _model.c1Status ==
-                                                                        'Not sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
+                                                                _consentInviteButtonLabel(
+                                                                    1,
+                                                                    _model
+                                                                        .c1Status),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -2477,8 +2512,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     ),
                                                               ),
                                                               Icon(
-                                                                Icons
-                                                                    .send_rounded,
+                                                                _consentInviteButtonIcon(
+                                                                    1),
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
                                                                     .info,
@@ -2493,6 +2528,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            if (_showingConsentInviteSent(
+                                                                1)) {
+                                                              return;
+                                                            }
                                                             _model.c1PhoneDigits =
                                                                 functions.sanitizePhoneDigits(
                                                                     _model
@@ -2878,30 +2917,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             dynamic>();
                                                                     safeSetState(
                                                                         () {});
-                                                                    if (isiOS) {
-                                                                      await launchUrl(
-                                                                          Uri.parse(
-                                                                              "sms:${_model.c1PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                        (_model.createConsentResp1?.jsonBody ??
-                                                                            ''),
-                                                                      ).toString()}')}"));
-                                                                    } else {
-                                                                      await launchUrl(
-                                                                          Uri(
-                                                                        scheme:
-                                                                            'sms',
-                                                                        path: _model
-                                                                            .c1PhoneDigits!,
-                                                                        queryParameters: <String,
-                                                                            String>{
-                                                                          'body':
-                                                                              'Hi ${_model.c1FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                            (_model.createConsentResp1?.jsonBody ??
-                                                                                ''),
-                                                                          ).toString()}',
-                                                                        },
-                                                                      ));
-                                                                    }
+                                                                    _showConsentInviteSent(
+                                                                        1);
 
                                                                     _model.ohcoolDiffslot1 =
                                                                         await GetConsentStatusesCall
@@ -3863,10 +3880,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       .center,
                                                               children: [
                                                                 Text(
-                                                                  _model.c2Status ==
-                                                                          'Not sent'
-                                                                      ? 'Send Confirmation Link'
-                                                                      : 'Resend Confirmation Link',
+                                                                  _consentInviteButtonLabel(
+                                                                      2,
+                                                                      _model
+                                                                          .c2Status),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyMedium
@@ -3886,8 +3903,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       ),
                                                                 ),
                                                                 Icon(
-                                                                  Icons
-                                                                      .send_rounded,
+                                                                  _consentInviteButtonIcon(
+                                                                      2),
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
                                                                       .info,
@@ -3908,6 +3925,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 FFButtonWidget(
                                                               onPressed:
                                                                   () async {
+                                                                if (_showingConsentInviteSent(
+                                                                    2)) {
+                                                                  return;
+                                                                }
                                                                 _model.c2PhoneDigits =
                                                                     functions.sanitizePhoneDigits(_model
                                                                         .c2PhoneTFTextController
@@ -4250,27 +4271,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             .cast<dynamic>();
                                                                         safeSetState(
                                                                             () {});
-                                                                        if (isiOS) {
-                                                                          await launchUrl(
-                                                                              Uri.parse("sms:${_model.c2PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c2FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                            (_model.createConsentResp2slot2?.jsonBody ??
-                                                                                ''),
-                                                                          ).toString()}')}"));
-                                                                        } else {
-                                                                          await launchUrl(
-                                                                              Uri(
-                                                                            scheme:
-                                                                                'sms',
-                                                                            path:
-                                                                                _model.c2PhoneDigits!,
-                                                                            queryParameters: <String,
-                                                                                String>{
-                                                                              'body': 'Hi ${_model.c2FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                                (_model.createConsentResp2slot2?.jsonBody ?? ''),
-                                                                              ).toString()}',
-                                                                            },
-                                                                          ));
-                                                                        }
+                                                                        _showConsentInviteSent(
+                                                                            2);
 
                                                                         _model.prettycooolslot2 =
                                                                             await GetConsentStatusesCall.call(
@@ -5164,10 +5166,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       .center,
                                                               children: [
                                                                 Text(
-                                                                  _model.c3Status ==
-                                                                          'Not sent'
-                                                                      ? 'Send Confirmation Link'
-                                                                      : 'Resend Confirmation Link',
+                                                                  _consentInviteButtonLabel(
+                                                                      3,
+                                                                      _model
+                                                                          .c3Status),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyMedium
@@ -5187,8 +5189,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       ),
                                                                 ),
                                                                 Icon(
-                                                                  Icons
-                                                                      .send_rounded,
+                                                                  _consentInviteButtonIcon(
+                                                                      3),
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
                                                                       .info,
@@ -5204,6 +5206,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           child: FFButtonWidget(
                                                             onPressed:
                                                                 () async {
+                                                              if (_showingConsentInviteSent(
+                                                                  3)) {
+                                                                return;
+                                                              }
                                                               _model.c3PhoneDigits =
                                                                   functions.sanitizePhoneDigits(
                                                                       _model
@@ -5565,28 +5571,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           .cast<dynamic>();
                                                                       safeSetState(
                                                                           () {});
-                                                                      if (isiOS) {
-                                                                        await launchUrl(
-                                                                            Uri.parse("sms:${_model.c3PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c3FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                          (_model.createConsentResp2slot3?.jsonBody ??
-                                                                              ''),
-                                                                        ).toString()}')}"));
-                                                                      } else {
-                                                                        await launchUrl(
-                                                                            Uri(
-                                                                          scheme:
-                                                                              'sms',
-                                                                          path:
-                                                                              _model.c3PhoneDigits!,
-                                                                          queryParameters: <String,
-                                                                              String>{
-                                                                            'body':
-                                                                                'Hi ${_model.c3FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                              (_model.createConsentResp2slot3?.jsonBody ?? ''),
-                                                                            ).toString()}',
-                                                                          },
-                                                                        ));
-                                                                      }
+                                                                      _showConsentInviteSent(
+                                                                          3);
 
                                                                       _model.prettycooolslot3 =
                                                                           await GetConsentStatusesCall
@@ -6505,10 +6491,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .center,
                                                             children: [
                                                               Text(
-                                                                _model.c4Status ==
-                                                                        'Not sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
+                                                                _consentInviteButtonLabel(
+                                                                    4,
+                                                                    _model
+                                                                        .c4Status),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -6532,8 +6518,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     ),
                                                               ),
                                                               Icon(
-                                                                Icons
-                                                                    .send_rounded,
+                                                                _consentInviteButtonIcon(
+                                                                    4),
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
                                                                     .info,
@@ -6548,6 +6534,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            if (_showingConsentInviteSent(
+                                                                4)) {
+                                                              return;
+                                                            }
                                                             _model.c4PhoneDigits =
                                                                 functions.sanitizePhoneDigits(
                                                                     _model
@@ -6933,30 +6923,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         'Pending';
                                                                     safeSetState(
                                                                         () {});
-                                                                    if (isiOS) {
-                                                                      await launchUrl(
-                                                                          Uri.parse(
-                                                                              "sms:${_model.c4PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c4FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                        (_model.createConsentResp2slot4?.jsonBody ??
-                                                                            ''),
-                                                                      ).toString()}')}"));
-                                                                    } else {
-                                                                      await launchUrl(
-                                                                          Uri(
-                                                                        scheme:
-                                                                            'sms',
-                                                                        path: _model
-                                                                            .c4PhoneDigits!,
-                                                                        queryParameters: <String,
-                                                                            String>{
-                                                                          'body':
-                                                                              'Hi ${_model.c4FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                            (_model.createConsentResp2slot4?.jsonBody ??
-                                                                                ''),
-                                                                          ).toString()}',
-                                                                        },
-                                                                      ));
-                                                                    }
+                                                                    _showConsentInviteSent(
+                                                                        4);
 
                                                                     _model.prettycooolslot4 =
                                                                         await GetConsentStatusesCall
@@ -7874,10 +7842,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     .center,
                                                             children: [
                                                               Text(
-                                                                _model.c5Status ==
-                                                                        'Not sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
+                                                                _consentInviteButtonLabel(
+                                                                    5,
+                                                                    _model
+                                                                        .c5Status),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -7901,8 +7869,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     ),
                                                               ),
                                                               Icon(
-                                                                Icons
-                                                                    .send_rounded,
+                                                                _consentInviteButtonIcon(
+                                                                    5),
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
                                                                     .info,
@@ -7917,6 +7885,10 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         opacity: 0.0,
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            if (_showingConsentInviteSent(
+                                                                5)) {
+                                                              return;
+                                                            }
                                                             _model.c5PhoneDigits =
                                                                 functions.sanitizePhoneDigits(
                                                                     _model
@@ -8302,30 +8274,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         'Pending';
                                                                     safeSetState(
                                                                         () {});
-                                                                    if (isiOS) {
-                                                                      await launchUrl(
-                                                                          Uri.parse(
-                                                                              "sms:${_model.c5PhoneDigits!}&body=${Uri.encodeComponent('Hi ${_model.c5FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                        (_model.createConsentResp2slot5?.jsonBody ??
-                                                                            ''),
-                                                                      ).toString()}')}"));
-                                                                    } else {
-                                                                      await launchUrl(
-                                                                          Uri(
-                                                                        scheme:
-                                                                            'sms',
-                                                                        path: _model
-                                                                            .c5PhoneDigits!,
-                                                                        queryParameters: <String,
-                                                                            String>{
-                                                                          'body':
-                                                                              'Hi ${_model.c5FirstTFTextController.text}, please confirm that you agree to receive emergency alert text messages from Decoy Wallet by using this secure link: ${CreateConsentRequestCall.link(
-                                                                            (_model.createConsentResp2slot5?.jsonBody ??
-                                                                                ''),
-                                                                          ).toString()}',
-                                                                        },
-                                                                      ));
-                                                                    }
+                                                                    _showConsentInviteSent(
+                                                                        5);
 
                                                                     _model.prettycooolslot5 =
                                                                         await GetConsentStatusesCall
