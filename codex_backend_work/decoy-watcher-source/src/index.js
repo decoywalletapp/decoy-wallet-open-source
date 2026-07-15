@@ -94,6 +94,13 @@ const WATCH_KEY_STALE_SAMPLE_LIMIT = Math.max(
   0,
   Math.min(25, Number(process.env.WATCH_KEY_STALE_SAMPLE_LIMIT || 10))
 );
+const CONFIRMED_CATCHUP_MAX_AGE_MS = Math.max(
+  5 * 60 * 1000,
+  Math.min(
+    24 * 60 * 60 * 1000,
+    Number(process.env.CONFIRMED_CATCHUP_MAX_AGE_MS || 2 * 60 * 60 * 1000)
+  )
+);
 const BLOCKBOOK_DISABLE_ON_429_MS = Math.max(
   0,
   Math.min(24 * 60 * 60 * 1000, Number(process.env.BLOCKBOOK_DISABLE_ON_429_MS || 60 * 60 * 1000))
@@ -1459,11 +1466,14 @@ function shouldProcessOutboundTx(tx, addr, armedAt, baselineAt) {
 
   // Confirmed txs are the safety net. Only count transactions confirmed after the
   // current arm/baseline window, so old seed history cannot fire a fresh alert.
+  // Also require the confirmed transaction to be recent. This prevents stale
+  // provider catch-up from sending emergency SMS for days-old transactions.
   const observedAt = confirmedAt(tx);
   const cutoff = baselineAt || armedAt;
   if (!observedAt || !cutoff) return false;
 
-  return observedAt.getTime() > cutoff.getTime();
+  const ageMs = Date.now() - observedAt.getTime();
+  return observedAt.getTime() > cutoff.getTime() && ageMs <= CONFIRMED_CATCHUP_MAX_AGE_MS;
 }
 
 async function recordSeedTrigger(decoyId, userId, tx, source) {
