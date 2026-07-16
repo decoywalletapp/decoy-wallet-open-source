@@ -16,6 +16,7 @@ const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
 const { AsyncLocalStorage } = require('async_hooks');
+const watcherTxFilter = require('./watcher_tx_filter');
 
 const app = express();
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
@@ -1427,53 +1428,25 @@ function isMissingRelationError(error) {
 
 // OUTBOUND ONLY: address appears in vin prevout.scriptpubkey_address
 function isOutboundForAddress(tx, addr) {
-  const vin = tx && Array.isArray(tx.vin) ? tx.vin : [];
-  for (const input of vin) {
-    const prevout = input && input.prevout ? input.prevout : null;
-    const a = prevout && prevout.scriptpubkey_address ? prevout.scriptpubkey_address : null;
-    if (a && a === addr) return true;
-  }
-  return false;
+  return watcherTxFilter.isOutboundForAddress(tx, addr);
 }
 
 function outboundWatchedAddress(tx, addressSet) {
-  const vin = tx && Array.isArray(tx.vin) ? tx.vin : [];
-  for (const input of vin) {
-    const prevout = input && input.prevout ? input.prevout : null;
-    const addr = prevout && prevout.scriptpubkey_address ? prevout.scriptpubkey_address : null;
-    if (addr && addressSet.has(addr)) return addr;
-  }
-  return null;
+  return watcherTxFilter.outboundWatchedAddress(tx, addressSet);
 }
 
 function isConfirmedTx(tx) {
-  return !!(tx && tx.status && tx.status.confirmed === true);
+  return watcherTxFilter.isConfirmedTx(tx);
 }
 
 function confirmedAt(tx) {
-  if (!isConfirmedTx(tx)) return null;
-  const blockTime = Number(tx.status.block_time);
-  if (!Number.isFinite(blockTime) || blockTime <= 0) return null;
-  const d = new Date(blockTime * 1000);
-  return Number.isNaN(d.getTime()) ? null : d;
+  return watcherTxFilter.confirmedAt(tx);
 }
 
 function shouldProcessOutboundTx(tx, addr, armedAt, baselineAt) {
-  if (!isOutboundForAddress(tx, addr)) return false;
-
-  // Unconfirmed txs are the fast path. They should trigger immediately when seen.
-  if (!isConfirmedTx(tx)) return true;
-
-  // Confirmed txs are the safety net. Only count transactions confirmed after the
-  // current arm/baseline window, so old seed history cannot fire a fresh alert.
-  // Also require the confirmed transaction to be recent. This prevents stale
-  // provider catch-up from sending emergency SMS for days-old transactions.
-  const observedAt = confirmedAt(tx);
-  const cutoff = baselineAt || armedAt;
-  if (!observedAt || !cutoff) return false;
-
-  const ageMs = Date.now() - observedAt.getTime();
-  return observedAt.getTime() > cutoff.getTime() && ageMs <= CONFIRMED_CATCHUP_MAX_AGE_MS;
+  return watcherTxFilter.shouldProcessOutboundTx(tx, addr, armedAt, baselineAt, {
+    confirmedCatchupMaxAgeMs: CONFIRMED_CATCHUP_MAX_AGE_MS,
+  });
 }
 
 async function recordSeedTrigger(decoyId, userId, tx, source) {
@@ -2513,6 +2486,17 @@ app.post('/run', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  log(`listening on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    log(`listening on port ${PORT}`);
+  });
+}
+
+module.exports = {
+  _test: {
+    confirmedAt,
+    isConfirmedTx,
+    isOutboundForAddress,
+    shouldProcessOutboundTx,
+  },
+};
