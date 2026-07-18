@@ -1,0 +1,76 @@
+# Secrets and env
+.env
+.env.*
+*.env
+.envrc
+*.local
+*.secret
+*.secrets
+*.pem
+*.p12
+*.pfx
+*.key
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+*.mobileprovision
+*.json.key
+serviceAccount*.json
+firebase-adminsdk*.json
+
+# Flutter / Dart
+.dart_tool/
+.build/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+pubspec.lock
+
+# Android
+android/.gradle/
+android/build/
+android/local.properties
+android/**/key.properties
+android/**/keystore.jks
+android/**/*.keystore
+android/app/google-services.json
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Runner.xcworkspace/
+ios/Runner/GoogleService-Info.plist
+
+# Firebase
+firebase/.runtimeconfig.json
+firebase/.env
+firebase/.env.*
+firebase/functions/.env
+firebase/functions/.env.*
+firebase/functions/.runtimeconfig.json
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Private operations and release artifacts
+codex_backend_work/
+release-artifacts/
+play-console-assets/
+supabase/.temp/
+
+# General
+.DS_Store
+.idea/
+.vscode/
+*.log

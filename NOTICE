@@ -1,0 +1,24 @@
+Decoy Wallet App
+Copyright (c) 2026 Decoy Wallet LLC.
+
+This source tree is prepared as a sanitized public-source candidate for the
+Decoy Wallet mobile application. Project source code is licensed under the MIT
+License unless a file states otherwise.
+
+Third-party Flutter and Dart dependencies remain subject to their upstream
+licenses.
+
+Bundled font files are subject to their upstream font licenses. See
+`THIRD_PARTY_NOTICES.md` and `third_party/licenses/`.
+
+Generated FlutterFlow support code, legal copy, app icons, Decoy brand
+materials, and third-party dependencies may have additional attribution or
+license requirements.
+
+The MIT License does not grant rights to Decoy Wallet names, logos, trade dress,
+domain names, social handles, or other brand identifiers except as required to
+identify this source distribution. See `TRADEMARKS.md`.
+
+Before public publication, review `docs/THIRD_PARTY_ASSET_REVIEW.md`, add any
+required third-party license text or attribution, and decide whether Decoy brand
+assets are included in or excluded from the repository license grant.
