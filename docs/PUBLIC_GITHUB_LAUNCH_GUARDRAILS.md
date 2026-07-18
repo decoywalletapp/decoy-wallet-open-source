@@ -21,8 +21,7 @@ Create a new GitHub repository that is not connected to the private repository:
 
 - New repository, not a fork.
 - Start empty: no generated README, license, or `.gitignore` from GitHub.
-- Use a neutral public repo name such as `decoy-wallet-app` or
-  `decoy-wallet-mobile`.
+- Use a clear public repo name such as `decoy-wallet-open-source`.
 - Create it as private first if available, review the pushed contents, then
   switch visibility to public only after final approval.
 - Enable security features before launch, including private vulnerability
