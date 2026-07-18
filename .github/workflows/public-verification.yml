@@ -1,0 +1,84 @@
+name: Public Verification
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+      - android-v*
+      - ios-v*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  flutter-android-debug:
+    name: Test and build Android debug artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out public source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
+
+      - name: Read app version
+        id: version
+        shell: bash
+        run: |
+          version_line="$(grep '^version:' pubspec.yaml | awk '{print $2}')"
+          echo "build_name=${version_line%%+*}" >> "$GITHUB_OUTPUT"
+          echo "build_number=${version_line##*+}" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build debug APK with source metadata
+        run: >
+          flutter build apk --debug
+          --build-name "${{ steps.version.outputs.build_name }}"
+          --build-number "${{ steps.version.outputs.build_number }}"
+          --dart-define=DECOY_SOURCE_REPOSITORY=https://github.com/${{ github.repository }}
+          --dart-define=DECOY_SOURCE_REF=${{ github.ref_name }}
+          --dart-define=DECOY_SOURCE_COMMIT=${{ github.sha }}
+          --dart-define=DECOY_BUILD_CHANNEL=github-actions
+          --dart-define=DECOY_BUILD_PLATFORM=android
+          --dart-define=DECOY_BUILD_VERSION=${{ steps.version.outputs.build_name }}
+          --dart-define=DECOY_BUILD_NUMBER=${{ steps.version.outputs.build_number }}
+          --dart-define=DECOY_BUILD_VERIFICATION=public-debug-build
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: decoy-wallet-public-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+
+      - name: Attest debug APK provenance
+        if: github.event_name != 'pull_request'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: build/app/outputs/flutter-apk/app-debug.apk

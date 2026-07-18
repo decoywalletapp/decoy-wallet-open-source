@@ -75,6 +75,22 @@ flutter run \
   --dart-define=DECOY_TUTORIAL_VIDEO_BASE_URL=https://your-video-bucket
 ```
 
+Public Decoy release builds also inject source provenance values so users can
+compare the installed app with a public GitHub tag or commit:
+
+```sh
+--dart-define=DECOY_SOURCE_REPOSITORY=https://github.com/decoywalletapp/decoy-wallet-open-source
+--dart-define=DECOY_SOURCE_REF=android-v1.0.5+10005
+--dart-define=DECOY_SOURCE_COMMIT=<public-git-commit-sha>
+--dart-define=DECOY_BUILD_CHANNEL=codemagic
+--dart-define=DECOY_BUILD_PLATFORM=android
+--dart-define=DECOY_BUILD_VERSION=1.0.5
+--dart-define=DECOY_BUILD_NUMBER=10005
+--dart-define=DECOY_BUILD_VERIFICATION=store-release
+```
+
+See `docs/BUILD_PROVENANCE.md` for the release-tagging and verification model.
+
 For Android release builds, create `android/key.properties` locally with your
 own signing key details. Do not commit signing files or service credentials.
 
@@ -92,11 +108,11 @@ must be deployed and audited separately before running a production service.
 
 ## Public release status
 
-This repository is a local public-source candidate until the owner completes
-manual review and explicitly approves public publication. The source-code
-license is prepared as MIT, with Decoy Wallet brand materials handled separately
-in `TRADEMARKS.md`. See `docs/PUBLICATION_PLAN.md`,
+This repository is Decoy Wallet's sanitized public-source mobile app tree. The
+source-code license is MIT, with Decoy Wallet brand materials handled separately
+in `TRADEMARKS.md`. See `docs/BUILD_PROVENANCE.md`,
 `docs/PUBLIC_GITHUB_LAUNCH_GUARDRAILS.md`,
 `docs/FINAL_SANITIZATION_AUDIT.md`, `THIRD_PARTY_NOTICES.md`, and
-`docs/THIRD_PARTY_ASSET_REVIEW.md` before publishing. Do not make the private
-development repository public, fork it, or import it into a public repository.
+`docs/THIRD_PARTY_ASSET_REVIEW.md` for the publication and verification model.
+Do not make the private development repository public, fork it, or import it
+into a public repository.

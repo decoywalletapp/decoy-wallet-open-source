@@ -1,5 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
+import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -1105,6 +1106,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ],
                         ),
                       ),
+                      _buildSourceProvenanceCard(context),
                       FFButtonWidget(
                         onPressed: () async {
                           GoRouter.of(context).prepareAuthEvent();
@@ -1145,6 +1147,137 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSourceProvenanceCard(BuildContext context) {
+    final commitUrl = DecoyBuildProvenance.commitUrl;
+    final statusLabel = DecoyBuildProvenance.hasSourceCommit
+        ? DecoyBuildProvenance.buildVerification
+        : 'unverified local build';
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Color(0xFFF7F8FA),
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          color: Color(0xFFE0E3EB),
+          width: 1.0,
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(14.0, 12.0, 14.0, 12.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Icon(
+                  Icons.verified_outlined,
+                  color: FlutterFlowTheme.of(context).primary,
+                  size: 20.0,
+                ),
+                SizedBox(width: 8.0),
+                Expanded(
+                  child: Text(
+                    'Source Verification',
+                    style: FlutterFlowTheme.of(context).titleMedium.override(
+                          fontFamily: 'InterTight',
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.0),
+            _buildProvenanceLine(
+              context,
+              'Version',
+              DecoyBuildProvenance.versionLabel,
+            ),
+            _buildProvenanceLine(
+              context,
+              'Source',
+              DecoyBuildProvenance.repositoryLabel,
+              url: DecoyBuildProvenance.repository,
+            ),
+            _buildProvenanceLine(
+              context,
+              'Ref',
+              DecoyBuildProvenance.sourceRef,
+            ),
+            _buildProvenanceLine(
+              context,
+              'Commit',
+              DecoyBuildProvenance.shortCommit,
+              url: commitUrl,
+            ),
+            _buildProvenanceLine(
+              context,
+              'Build',
+              '${DecoyBuildProvenance.buildChannel} / '
+                  '${DecoyBuildProvenance.buildPlatform}',
+            ),
+            _buildProvenanceLine(context, 'Status', statusLabel),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProvenanceLine(
+    BuildContext context,
+    String label,
+    String value, {
+    String? url,
+  }) {
+    final valueWidget = Text(
+      value,
+      softWrap: true,
+      style: FlutterFlowTheme.of(context).bodySmall.override(
+            fontFamily: 'Inter',
+            color: url == null
+                ? FlutterFlowTheme.of(context).secondaryText
+                : FlutterFlowTheme.of(context).primary,
+            letterSpacing: 0.0,
+            fontWeight: FontWeight.w600,
+          ),
+    );
+
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 3.0, 0.0, 3.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 64.0,
+            child: Text(
+              label,
+              style: FlutterFlowTheme.of(context).bodySmall.override(
+                    fontFamily: 'Inter',
+                    color: FlutterFlowTheme.of(context).secondaryText,
+                    letterSpacing: 0.0,
+                  ),
+            ),
+          ),
+          Expanded(
+            child: url == null
+                ? valueWidget
+                : InkWell(
+                    onTap: () async {
+                      await launchURL(url);
+                    },
+                    child: valueWidget,
+                  ),
+          ),
+        ],
       ),
     );
   }
