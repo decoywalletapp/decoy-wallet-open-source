@@ -41,6 +41,10 @@ alone as a complete production safety system.
 
 ## Local setup
 
+The current public verification workflow pins Flutter `3.41.6` with Dart
+`3.11.4`. Use that toolchain for release-candidate verification unless the
+dependency set is intentionally upgraded.
+
 This app needs Firebase and Supabase configuration to run against a real
 backend. Copy the example files and provide your own project values:
 

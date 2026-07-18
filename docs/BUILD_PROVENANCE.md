@@ -18,9 +18,12 @@ For each production release:
 
 1. Land the actual source change in the public repository before building.
 2. Tag the exact source commit used for the store submission.
-3. Build from that public tag.
+3. Build from that public tag using the documented Flutter toolchain.
 4. Inject provenance values with `--dart-define`.
 5. Publish release notes that map each store version to its tag and commit.
+
+The current public verification workflow pins Flutter `3.41.6` with Dart
+`3.11.4`.
 
 Example Android build metadata:
 
