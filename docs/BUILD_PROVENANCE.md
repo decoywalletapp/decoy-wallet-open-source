@@ -27,7 +27,8 @@ The current public verification workflow pins Flutter `3.41.6` with Dart
 
 Before a production provenance release, run a rehearsal build from the public
 repository. The first iOS rehearsal path is documented in
-`docs/CODEMAGIC_TESTFLIGHT_REHEARSAL.md`.
+`docs/CODEMAGIC_TESTFLIGHT_REHEARSAL.md`, and device verification is tracked in
+`docs/RELEASE_REHEARSAL_DEVICE_TESTS.md`.
 
 Example Android build metadata:
 

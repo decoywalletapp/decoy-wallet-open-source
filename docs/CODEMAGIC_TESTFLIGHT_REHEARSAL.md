@@ -95,6 +95,7 @@ The iOS bundle id is `com.decoywalletapp.app`.
    TestFlight testers.
 7. Install the build from TestFlight on a real iPhone.
 8. Open Decoy Settings and check Source Verification.
+9. Run the P0 device checklist in `docs/RELEASE_REHEARSAL_DEVICE_TESTS.md`.
 
 The Settings values should show:
 

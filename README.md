@@ -97,7 +97,8 @@ See `docs/BUILD_PROVENANCE.md` for the release-tagging and verification model.
 
 The public source tree also includes a manual CodeMagic rehearsal workflow for
 iOS TestFlight. See `docs/CODEMAGIC_TESTFLIGHT_REHEARSAL.md` before connecting
-CodeMagic or uploading a rehearsal build.
+CodeMagic or uploading a rehearsal build, and use
+`docs/RELEASE_REHEARSAL_DEVICE_TESTS.md` for real-device sign-off.
 
 For Android release builds, create `android/key.properties` locally with your
 own signing key details. Do not commit signing files or service credentials.
@@ -122,5 +123,7 @@ in `TRADEMARKS.md`. See `docs/BUILD_PROVENANCE.md`,
 `docs/PUBLIC_GITHUB_LAUNCH_GUARDRAILS.md`,
 `docs/FINAL_SANITIZATION_AUDIT.md`, `THIRD_PARTY_NOTICES.md`, and
 `docs/THIRD_PARTY_ASSET_REVIEW.md` for the publication and verification model.
+Use `docs/RELEASE_REHEARSAL_DEVICE_TESTS.md` for real-device release
+rehearsal sign-off.
 Do not make the private development repository public, fork it, or import it
 into a public repository.

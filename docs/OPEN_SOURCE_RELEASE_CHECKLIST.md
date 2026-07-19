@@ -60,6 +60,8 @@ production secrets, private backend operations, app-store release material, or u
   requirements have been reviewed.
 - `docs/THIRD_PARTY_ASSET_REVIEW.md` has no unresolved asset/license/trademark
   blockers.
+- A public-source TestFlight or internal-testing rehearsal has passed the P0
+  device checks in `docs/RELEASE_REHEARSAL_DEVICE_TESTS.md`.
 
 ## Release Steps
 
