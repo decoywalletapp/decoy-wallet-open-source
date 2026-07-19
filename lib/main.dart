@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui';
+
 import '/custom_code/actions/index.dart' as actions;
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
@@ -13,8 +16,18 @@ import '/backend/supabase/supabase.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() {
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    _configureGlobalErrorHandling();
+
+    await _startApp();
+  }, (error, _) {
+    _logSafeStartupError('Uncaught async error', error);
+  });
+}
+
+Future<void> _startApp() async {
   try {
     GoRouter.optionURLReflectsImperativeAPIs = true;
     usePathUrlStrategy();
@@ -43,9 +56,25 @@ void main() async {
     ));
   } catch (error) {
     final errorLabel = _startupErrorLabel(error);
-    debugPrint('App startup failed: $errorLabel');
+    _logSafeStartupError('App startup failed', error);
     runApp(_StartupFailureApp(errorLabel: errorLabel));
   }
+}
+
+void _configureGlobalErrorHandling() {
+  FlutterError.onError = (details) {
+    _logSafeStartupError('Flutter framework error', details.exception);
+    FlutterError.presentError(details);
+  };
+
+  PlatformDispatcher.instance.onError = (error, _) {
+    _logSafeStartupError('Uncaught platform error', error);
+    return true;
+  };
+}
+
+void _logSafeStartupError(String prefix, Object error) {
+  debugPrint('$prefix: ${_startupErrorLabel(error)}');
 }
 
 String _startupErrorLabel(Object error) {
