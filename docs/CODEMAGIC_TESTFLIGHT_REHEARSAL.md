@@ -27,7 +27,7 @@ CodeMagic UI.
 Add an App Store Connect integration in CodeMagic named:
 
 ```text
-decoy-app-store-connect
+DecoyWallet Codemagic
 ```
 
 The App Store Connect API key should have App Manager permission. CodeMagic will
@@ -115,7 +115,7 @@ If the first rehearsal fails, the likely causes are:
 
 - CodeMagic is connected to the wrong repository.
 - The App Store Connect integration name does not match
-  `decoy-app-store-connect`.
+  `DecoyWallet Codemagic`.
 - The Apple signing certificate or provisioning profile is missing in
   CodeMagic/App Store Connect.
 - One of the required environment variables is missing.
