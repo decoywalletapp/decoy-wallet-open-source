@@ -41,6 +41,12 @@ decoy_public_runtime
 decoy_ios_testflight
 ```
 
+For a CodeMagic Personal Account, add these from the app's Environment
+variables tab. As each variable is added, type or select the matching group name
+in the group field and keep `Secret` enabled. Personal-account global variables
+may be read-only, so do not rely on team-level global variables for this
+rehearsal.
+
 `decoy_public_runtime` should contain the public runtime values used by the app:
 
 ```text
