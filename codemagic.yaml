@@ -79,6 +79,73 @@ workflows:
             echo "Missing required CodeMagic environment variables:$missing"
             exit 1
           fi
+
+          invalid=""
+          require_https_url() {
+            name="$1"
+            eval "value=\${$name:-}"
+            case "$value" in
+              *[[:space:]]*) invalid="$invalid $name(has whitespace)" ;;
+            esac
+            case "$value" in
+              https://*) ;;
+              *) invalid="$invalid $name(must start with https://)" ;;
+            esac
+          }
+          require_scheme_url() {
+            name="$1"
+            eval "value=\${$name:-}"
+            case "$value" in
+              *[[:space:]]*) invalid="$invalid $name(has whitespace)" ;;
+            esac
+            case "$value" in
+              *://*) ;;
+              *) invalid="$invalid $name(must be a URL or deep link)" ;;
+            esac
+          }
+
+          for var in \
+            DECOY_SUPABASE_URL \
+            DECOY_FIREBASE_FUNCTIONS_BASE_URL \
+            DECOY_ALERT_BASE_URL \
+            DECOY_DATA_KEY_BASE_URL \
+            DECOY_PAYMENT_BASE_URL \
+            DECOY_VERIFY_BASE_URL \
+            DECOY_EMAIL_CONFIRM_URL \
+            DECOY_LEGAL_BASE_URL \
+            DECOY_TUTORIAL_VIDEO_BASE_URL
+          do
+            require_https_url "$var"
+          done
+          require_scheme_url DECOY_EMAIL_CONFIRM_DEEP_LINK
+          require_scheme_url DECOY_BILLING_RETURN_URL
+
+          case "$DECOY_SUPABASE_ANON_KEY" in
+            *[[:space:]]*) invalid="$invalid DECOY_SUPABASE_ANON_KEY(has whitespace)" ;;
+          esac
+          case "$DECOY_SUPABASE_ANON_KEY" in
+            *.*.*) ;;
+            *) invalid="$invalid DECOY_SUPABASE_ANON_KEY(expected JWT shape)" ;;
+          esac
+          case "$DECOY_SUPPORT_EMAIL" in
+            *[[:space:]]*) invalid="$invalid DECOY_SUPPORT_EMAIL(has whitespace)" ;;
+          esac
+          case "$DECOY_SUPPORT_EMAIL" in
+            *@*.*) ;;
+            *) invalid="$invalid DECOY_SUPPORT_EMAIL(expected email shape)" ;;
+          esac
+          case "$IOS_FIREBASE_SENDER_ID" in
+            ""|*[!0-9]*) invalid="$invalid IOS_FIREBASE_SENDER_ID(expected digits)" ;;
+          esac
+          case "$IOS_FIREBASE_APP_ID" in
+            1:*:ios:*) ;;
+            *) invalid="$invalid IOS_FIREBASE_APP_ID(expected iOS app id shape)" ;;
+          esac
+
+          if [ -n "$invalid" ]; then
+            echo "Invalid CodeMagic environment variables:$invalid"
+            exit 1
+          fi
       - name: Create iOS Firebase plist
         script: |
           set -eu
