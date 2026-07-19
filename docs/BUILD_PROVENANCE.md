@@ -25,6 +25,10 @@ For each production release:
 The current public verification workflow pins Flutter `3.41.6` with Dart
 `3.11.4`.
 
+Before a production provenance release, run a rehearsal build from the public
+repository. The first iOS rehearsal path is documented in
+`docs/CODEMAGIC_TESTFLIGHT_REHEARSAL.md`.
+
 Example Android build metadata:
 
 ```sh
@@ -72,6 +76,10 @@ users cannot independently reproduce Apple's final App Store-signed binary in
 the same way Android users can inspect APKs. The practical iOS trust bridge is
 public source tags, public build logs, visible in-app commit metadata, release
 notes, and independent auditability of the source.
+
+For TestFlight rehearsals, the `ios-testflight-rehearsal` CodeMagic workflow
+builds from the public repository, injects the public commit into the app, and
+uploads an `.ipa` to App Store Connect without submitting an App Store release.
 
 ## Boundaries
 

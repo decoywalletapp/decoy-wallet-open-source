@@ -25,7 +25,9 @@ production secrets, private backend operations, app-store release material, or u
   deployment code that exposes production internals.
 - Twilio, Stripe, BTCPay, QuickNode, Cloud Run, Google Cloud, and GitHub tokens or webhook
   secrets.
-- Codemagic configuration and release/deployment helper scripts.
+- Private Codemagic credentials, signing identities, release/deployment helper
+  scripts, and any generated CI files containing secrets. Public CI workflow
+  configuration is allowed only when all credentials stay in the CI provider.
 - Decoy seed watcher source, operational policies, live monitoring scripts, and alerting
   runbooks, unless they go through a separate backend-specific public-source review.
 - App-store screenshots, APK/AAB/IPA artifacts, signing keys, provisioning profiles, and
@@ -40,6 +42,8 @@ production secrets, private backend operations, app-store release material, or u
 - Operator-owned legal URLs, support email addresses, billing return URLs, and auth
   deep links are provided through documented build settings or placeholder domains.
 - The app can be analyzed and built from the sanitized worktree.
+- Public CI configuration does not contain signing files, provisioning profiles,
+  service credentials, backend secrets, or private repository references.
 - A secret scan returns no production credentials or live project identifiers.
 - README setup instructions explain that backend services must be supplied by the operator.
 - The legal/privacy copy has been reviewed for public-source distribution.

@@ -1,0 +1,212 @@
+workflows:
+  ios-testflight-rehearsal:
+    name: iOS TestFlight Rehearsal
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    integrations:
+      app_store_connect: decoy-app-store-connect
+    environment:
+      groups:
+        - decoy_public_runtime
+        - decoy_ios_testflight
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.decoywalletapp.app
+      vars:
+        BUNDLE_ID: "com.decoywalletapp.app"
+        DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
+        DECOY_BUILD_CHANNEL: "codemagic"
+        DECOY_BUILD_PLATFORM: "ios"
+        DECOY_BUILD_VERIFICATION: "testflight-rehearsal"
+      flutter: "3.41.6"
+      xcode: latest
+      cocoapods: default
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+        - ~/Library/Caches/CocoaPods
+    scripts:
+      - name: Confirm public source checkout
+        script: |
+          set -eu
+          if [ "${CM_REPO_SLUG:-}" != "decoywalletapp/decoy-wallet-open-source" ]; then
+            echo "This rehearsal must run from decoywalletapp/decoy-wallet-open-source."
+            exit 1
+          fi
+          if [ -z "${CM_COMMIT:-}" ]; then
+            echo "CM_COMMIT is required for source provenance."
+            exit 1
+          fi
+          echo "Building public source ${CM_REPO_SLUG} at ${CM_COMMIT}."
+      - name: Validate rehearsal environment
+        script: |
+          set -eu
+          missing=""
+          for var in \
+            APP_STORE_APPLE_ID \
+            DECOY_SUPABASE_URL \
+            DECOY_SUPABASE_ANON_KEY \
+            DECOY_FIREBASE_WEB_API_KEY \
+            DECOY_FIREBASE_WEB_AUTH_DOMAIN \
+            DECOY_FIREBASE_PROJECT_ID \
+            DECOY_FIREBASE_STORAGE_BUCKET \
+            DECOY_FIREBASE_MESSAGING_SENDER_ID \
+            DECOY_FIREBASE_WEB_APP_ID \
+            DECOY_FIREBASE_FUNCTIONS_BASE_URL \
+            DECOY_ALERT_BASE_URL \
+            DECOY_DATA_KEY_BASE_URL \
+            DECOY_PAYMENT_BASE_URL \
+            DECOY_VERIFY_BASE_URL \
+            DECOY_EMAIL_CONFIRM_URL \
+            DECOY_EMAIL_CONFIRM_DEEP_LINK \
+            DECOY_LEGAL_BASE_URL \
+            DECOY_SUPPORT_EMAIL \
+            DECOY_BILLING_RETURN_URL \
+            DECOY_TUTORIAL_VIDEO_BASE_URL \
+            IOS_FIREBASE_API_KEY \
+            IOS_FIREBASE_SENDER_ID \
+            IOS_FIREBASE_PROJECT_ID \
+            IOS_FIREBASE_STORAGE_BUCKET \
+            IOS_FIREBASE_APP_ID
+          do
+            eval "value=\${$var:-}"
+            if [ -z "$value" ]; then
+              missing="$missing $var"
+            fi
+          done
+
+          if [ -n "$missing" ]; then
+            echo "Missing required CodeMagic environment variables:$missing"
+            exit 1
+          fi
+      - name: Create iOS Firebase plist
+        script: |
+          set -eu
+          cat > ios/Runner/GoogleService-Info.plist <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+            "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key>
+            <string>${IOS_FIREBASE_API_KEY}</string>
+            <key>GCM_SENDER_ID</key>
+            <string>${IOS_FIREBASE_SENDER_ID}</string>
+            <key>PLIST_VERSION</key>
+            <string>1</string>
+            <key>BUNDLE_ID</key>
+            <string>${BUNDLE_ID}</string>
+            <key>PROJECT_ID</key>
+            <string>${IOS_FIREBASE_PROJECT_ID}</string>
+            <key>STORAGE_BUCKET</key>
+            <string>${IOS_FIREBASE_STORAGE_BUCKET}</string>
+            <key>IS_ADS_ENABLED</key>
+            <false/>
+            <key>IS_ANALYTICS_ENABLED</key>
+            <false/>
+            <key>IS_APPINVITE_ENABLED</key>
+            <true/>
+            <key>IS_GCM_ENABLED</key>
+            <true/>
+            <key>IS_SIGNIN_ENABLED</key>
+            <true/>
+            <key>GOOGLE_APP_ID</key>
+            <string>${IOS_FIREBASE_APP_ID}</string>
+          </dict>
+          </plist>
+          PLIST
+          plutil -lint ios/Runner/GoogleService-Info.plist
+      - name: Resolve version and source ref
+        script: |
+          set -eu
+          app_version="$(awk '/^version:/ {print $2; exit}' pubspec.yaml | cut -d+ -f1)"
+          if [ -z "$app_version" ]; then
+            echo "Could not read app version from pubspec.yaml."
+            exit 1
+          fi
+
+          latest_build_number="$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || true)"
+          case "$latest_build_number" in
+            ""|*[!0-9]*) latest_build_number=0 ;;
+          esac
+
+          app_build_number=$((latest_build_number + 1))
+          source_ref="${CM_TAG:-${CM_BRANCH:-manual}}"
+
+          echo "APP_VERSION=$app_version" >> "$CM_ENV"
+          echo "APP_BUILD_NUMBER=$app_build_number" >> "$CM_ENV"
+          echo "DECOY_SOURCE_REF=$source_ref" >> "$CM_ENV"
+      - name: Set up iOS code signing
+        script: |
+          set -eu
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Install Flutter packages
+        script: |
+          set -eu
+          flutter pub get
+      - name: Install CocoaPods
+        script: |
+          set -eu
+          find . -name "Podfile" -execdir pod install \;
+      - name: Run Flutter tests
+        script: |
+          set -eu
+          flutter test
+      - name: Build TestFlight IPA with source provenance
+        script: |
+          set -eu
+          flutter build ipa --release \
+            --build-name="$APP_VERSION" \
+            --build-number="$APP_BUILD_NUMBER" \
+            --export-options-plist=/Users/builder/export_options.plist \
+            --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
+            --dart-define=DECOY_SUPABASE_ANON_KEY="$DECOY_SUPABASE_ANON_KEY" \
+            --dart-define=DECOY_FIREBASE_CONFIGURED=true \
+            --dart-define=DECOY_FIREBASE_WEB_API_KEY="$DECOY_FIREBASE_WEB_API_KEY" \
+            --dart-define=DECOY_FIREBASE_WEB_AUTH_DOMAIN="$DECOY_FIREBASE_WEB_AUTH_DOMAIN" \
+            --dart-define=DECOY_FIREBASE_PROJECT_ID="$DECOY_FIREBASE_PROJECT_ID" \
+            --dart-define=DECOY_FIREBASE_STORAGE_BUCKET="$DECOY_FIREBASE_STORAGE_BUCKET" \
+            --dart-define=DECOY_FIREBASE_MESSAGING_SENDER_ID="$DECOY_FIREBASE_MESSAGING_SENDER_ID" \
+            --dart-define=DECOY_FIREBASE_WEB_APP_ID="$DECOY_FIREBASE_WEB_APP_ID" \
+            --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL="$DECOY_FIREBASE_FUNCTIONS_BASE_URL" \
+            --dart-define=DECOY_ALERT_BASE_URL="$DECOY_ALERT_BASE_URL" \
+            --dart-define=DECOY_DATA_KEY_BASE_URL="$DECOY_DATA_KEY_BASE_URL" \
+            --dart-define=DECOY_PAYMENT_BASE_URL="$DECOY_PAYMENT_BASE_URL" \
+            --dart-define=DECOY_VERIFY_BASE_URL="$DECOY_VERIFY_BASE_URL" \
+            --dart-define=DECOY_EMAIL_CONFIRM_URL="$DECOY_EMAIL_CONFIRM_URL" \
+            --dart-define=DECOY_EMAIL_CONFIRM_DEEP_LINK="$DECOY_EMAIL_CONFIRM_DEEP_LINK" \
+            --dart-define=DECOY_LEGAL_BASE_URL="$DECOY_LEGAL_BASE_URL" \
+            --dart-define=DECOY_SUPPORT_EMAIL="$DECOY_SUPPORT_EMAIL" \
+            --dart-define=DECOY_BILLING_RETURN_URL="$DECOY_BILLING_RETURN_URL" \
+            --dart-define=DECOY_TUTORIAL_VIDEO_BASE_URL="$DECOY_TUTORIAL_VIDEO_BASE_URL" \
+            --dart-define=DECOY_SOURCE_REPOSITORY="$DECOY_SOURCE_REPOSITORY" \
+            --dart-define=DECOY_SOURCE_REF="$DECOY_SOURCE_REF" \
+            --dart-define=DECOY_SOURCE_COMMIT="$CM_COMMIT" \
+            --dart-define=DECOY_BUILD_CHANNEL="$DECOY_BUILD_CHANNEL" \
+            --dart-define=DECOY_BUILD_PLATFORM="$DECOY_BUILD_PLATFORM" \
+            --dart-define=DECOY_BUILD_VERSION="$APP_VERSION" \
+            --dart-define=DECOY_BUILD_NUMBER="$APP_BUILD_NUMBER" \
+            --dart-define=DECOY_BUILD_VERIFICATION="$DECOY_BUILD_VERIFICATION"
+      - name: Write public provenance summary
+        script: |
+          set -eu
+          mkdir -p build/provenance
+          cat > build/provenance/ios-testflight-rehearsal.txt <<EOF
+          repository=${DECOY_SOURCE_REPOSITORY}
+          ref=${DECOY_SOURCE_REF}
+          commit=${CM_COMMIT}
+          channel=${DECOY_BUILD_CHANNEL}
+          platform=${DECOY_BUILD_PLATFORM}
+          version=${APP_VERSION}
+          build=${APP_BUILD_NUMBER}
+          verification=${DECOY_BUILD_VERIFICATION}
+          EOF
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/provenance/*.txt
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false

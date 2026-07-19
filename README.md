@@ -95,6 +95,10 @@ compare the installed app with a public GitHub tag or commit:
 
 See `docs/BUILD_PROVENANCE.md` for the release-tagging and verification model.
 
+The public source tree also includes a manual CodeMagic rehearsal workflow for
+iOS TestFlight. See `docs/CODEMAGIC_TESTFLIGHT_REHEARSAL.md` before connecting
+CodeMagic or uploading a rehearsal build.
+
 For Android release builds, create `android/key.properties` locally with your
 own signing key details. Do not commit signing files or service credentials.
 
