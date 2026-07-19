@@ -192,12 +192,17 @@ workflows:
             exit 1
           fi
 
+          timestamp_build_number="$(date -u +%Y%m%d%H%M%S)"
           latest_build_number="$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || true)"
           case "$latest_build_number" in
             ""|*[!0-9]*) latest_build_number=0 ;;
           esac
 
-          app_build_number=$((latest_build_number + 1))
+          if [ "$timestamp_build_number" -le "$latest_build_number" ]; then
+            app_build_number=$((latest_build_number + 1))
+          else
+            app_build_number="$timestamp_build_number"
+          fi
           source_ref="${CM_TAG:-${CM_BRANCH:-manual}}"
 
           echo "APP_VERSION=$app_version" >> "$CM_ENV"
