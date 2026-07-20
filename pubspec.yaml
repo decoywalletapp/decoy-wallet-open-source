@@ -62,10 +62,8 @@ dependencies:
   firebase_performance_web: 0.1.7+13
   fl_chart: 1.0.0
   flutter_animate: 4.5.0
-  flutter_barcode_scanner: 
-    git:
-      url: https://github.com/FlutterFlow/flutter_barcode_scanner
-      ref: 3b315cdeb48e06d1758c5110b3d2dbc3e922a7ce
+  flutter_barcode_scanner:
+    path: ./dependencies/flutter_barcode_scanner
   flutter_cache_manager: 3.4.1
   flutter_plugin_android_lifecycle: 2.0.28
   flutter_secure_storage: 10.0.0-beta.4
