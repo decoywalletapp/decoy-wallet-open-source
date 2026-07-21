@@ -29,8 +29,9 @@ Wallet mobile app. It has not been published publicly.
   bundled fonts.
 - Added a third-party asset review record for bundled fonts, Decoy brand assets,
   app icons, and third-party brand references.
-- Removed avoidable third-party logo image assets and replaced their app usage
-  with generic UI.
+- Removed avoidable third-party logo image assets for Bitcoin and Stripe.
+  Settings social logo assets remain bundled for production UI parity and are
+  tracked for manual trademark / redistribution review.
 - Removed the unused generated icon font asset after replacing its only app
   usages with built-in Material location icons.
 - Scanned for common credential patterns and live service hostnames. Findings

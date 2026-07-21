@@ -11,9 +11,10 @@ It is a release-readiness record, not legal advice.
 - `assets/images/ChatGPT_Image_Feb_9,_2026,_12_38_23_PM.png` was not referenced
   by app code and had unclear publication value, so it was removed from the
   public-source candidate.
-- Third-party logo image files for Bitcoin, Stripe, Primal, Rumble, and X were
-  removed from the bundled source assets. The app now uses generic UI marks in
-  those spots.
+- Third-party logo image files for Bitcoin and Stripe were removed from the
+  bundled source assets. The settings social-link logos for Primal, Rumble, and
+  X remain bundled to preserve the production app UI and require trademark /
+  redistribution review before public launch.
 - `assets/fonts/MyFlutterApp.ttf` was removed after its only app usages were
   replaced with built-in Material location icons.
 
@@ -82,8 +83,15 @@ Publication action:
 
 ## Third-Party Brand and Logo Assets
 
-The candidate no longer bundles third-party logo image files for Bitcoin,
-Stripe, Primal, Rumble, or X.
+The settings page bundles third-party logo image assets for social links:
+
+- `assets/images/primallogo.png`
+- `assets/images/rumble.jpg`
+- `assets/images/xlogo.png`
+
+The YouTube social link is rendered with `FontAwesomeIcons.youtube`.
+The local `assets/images/rumble.jpg` metadata identifies Icons8 as the image
+source and copyright holder.
 
 Social and payment links still refer to third-party platforms and services in
 the app UI and should be reviewed for public-facing accuracy.
@@ -92,6 +100,8 @@ Publication action:
 
 - Confirm third-party platform and payment references are accurate and do not
   imply sponsorship, endorsement, or affiliation.
+- Confirm the public repository may redistribute the bundled social logo image
+  assets, or replace them with generic UI marks before public launch.
 
 ## Placeholder Directory Assets
 

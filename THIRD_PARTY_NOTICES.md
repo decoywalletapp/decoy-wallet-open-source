@@ -47,7 +47,19 @@ whose redistribution value was unclear:
 - `assets/images/ChatGPT_Image_Feb_9,_2026,_12_38_23_PM.png`
 - `assets/images/Bitcoin-Logo.png`
 - `assets/images/Stripe_Logo,_revised_2016.svg.png`
+- `assets/fonts/MyFlutterApp.ttf`
+
+## Social Platform Logos
+
+The settings page includes social-platform logo assets for outbound Decoy
+social links:
+
 - `assets/images/primallogo.png`
 - `assets/images/rumble.jpg`
 - `assets/images/xlogo.png`
-- `assets/fonts/MyFlutterApp.ttf`
+
+Those logos and platform names are third-party brand/trademark materials owned
+by their respective operators. They are not granted under Decoy Wallet's MIT
+source-code license. The local `assets/images/rumble.jpg` metadata identifies
+Icons8 as the image source and copyright holder; confirm its license and
+attribution requirements before public launch.
