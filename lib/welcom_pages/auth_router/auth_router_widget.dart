@@ -38,73 +38,15 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _hideContentForPinHandoff = false;
-  bool _didUnlockWithBiometrics = false;
 
   static const _pinHandoffFadeOutDuration = Duration(milliseconds: 180);
   static const _pinRouteFadeDuration = Duration(milliseconds: 220);
-  static const _biometricSupportTimeout = Duration(seconds: 5);
-  static const _biometricPromptTimeout = Duration(seconds: 35);
-
-  Future<T?> _waitForStartupStep<T>(
-    Future<T> future,
-    Duration timeout,
-    String stepName,
-  ) async {
-    try {
-      return await future.timeout(timeout);
-    } catch (error) {
-      debugPrint('AuthRouter $stepName failed or timed out: $error');
-      return null;
-    }
-  }
-
-  Future<bool> _authenticateForWalletUnlock() async {
-    final localAuth = LocalAuthentication();
-    final isSupported = await _waitForStartupStep<bool>(
-          localAuth.isDeviceSupported(),
-          _biometricSupportTimeout,
-          'biometric support check',
-        ) ??
-        false;
-
-    if (!isSupported) {
-      return false;
-    }
-
-    try {
-      return await localAuth
-          .authenticate(
-            localizedReason: 'Please authenticate to unlock your wallet',
-            options: const AuthenticationOptions(
-              stickyAuth: true,
-              useErrorDialogs: true,
-            ),
-          )
-          .timeout(_biometricPromptTimeout, onTimeout: () => false);
-    } on PlatformException catch (error) {
-      debugPrint('AuthRouter biometric unlock failed: $error');
-      return false;
-    }
-  }
-
-  Future<void> _signOutToLogin() async {
-    if (!mounted) {
-      return;
-    }
-    GoRouter.of(context).prepareAuthEvent();
-    await authManager.signOut();
-    if (!mounted) {
-      return;
-    }
-    GoRouter.of(context).clearRedirectLocation();
-
-    FFAppState().isLocked = false;
-    safeSetState(() {});
-
-    context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
-  }
 
   Future<void> _goToPinPageAfterCleanHandoff() async {
+    safeSetState(() {
+      _hideContentForPinHandoff = true;
+    });
+    await Future.delayed(_pinHandoffFadeOutDuration);
     if (!mounted) {
       return;
     }
@@ -124,14 +66,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.black,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
     _model = createModel(context, () => AuthRouterModel());
 
     // On page load action.
@@ -159,23 +93,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           );
         }
       } else {
-        FFAppState().isLocked = true;
-        safeSetState(() {});
-
-        if (FFAppState().biometricsEnabled == true) {
-          _didUnlockWithBiometrics = await _authenticateForWalletUnlock();
-          if (!mounted) {
-            return;
-          }
-          if (_didUnlockWithBiometrics != true) {
-            await _signOutToLogin();
-            return;
-          }
-          _model.authRouterBioResult = true;
-          FFAppState().isLocked = false;
-          safeSetState(() {});
-        }
-
         _model.pushRoute = await actions.initPushTapListener(
           context,
         );
@@ -297,12 +214,17 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 PhoneNumberInputWidget.routeName, context.mounted);
           } else {
             if (FFAppState().biometricsEnabled == true) {
-              if (_didUnlockWithBiometrics == true) {
-                _model.authRouterBioResult = true;
-                safeSetState(() {});
-              } else {
-                _model.authRouterBioResult =
-                    await _authenticateForWalletUnlock();
+              final _localAuth = LocalAuthentication();
+              bool _isBiometricSupported = await _localAuth.isDeviceSupported();
+
+              if (_isBiometricSupported) {
+                try {
+                  _model.authRouterBioResult = await _localAuth.authenticate(
+                      localizedReason:
+                          'Please authenticate to unlock your wallet');
+                } on PlatformException {
+                  _model.authRouterBioResult = false;
+                }
                 safeSetState(() {});
               }
 
@@ -434,7 +356,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   }
                 }
               } else {
-                await _signOutToLogin();
+                GoRouter.of(context).prepareAuthEvent();
+                await authManager.signOut();
+                GoRouter.of(context).clearRedirectLocation();
+
+                FFAppState().isLocked = false;
+                safeSetState(() {});
+
+                context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
               }
             } else {
               FFAppState().isLocked = false;
@@ -589,7 +518,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Colors.black,
+          backgroundColor: Color(0x001D2428),
           body: SafeArea(
             top: true,
             child: AnimatedOpacity(
