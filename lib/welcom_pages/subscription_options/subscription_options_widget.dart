@@ -50,40 +50,24 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
 
   bool _hasText(String? value) => value != null && value.isNotEmpty;
 
-  Widget _buildPaymentMethodHeader({
+  Widget _buildStripeWordmarkHeader({
     required BuildContext context,
-    required IconData icon,
-    required String label,
     required double height,
   }) {
-    final primaryColor = FlutterFlowTheme.of(context).primary;
-
     return SizedBox(
       width: 200.0,
       height: height,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: primaryColor,
-            size: height >= 100.0 ? 54.0 : 34.0,
+      child: Center(
+        child: Text(
+          'stripe',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.interTight(
+            color: Color(0xFF635BFF),
+            fontSize: height >= 100.0 ? 54.0 : 44.0,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0.0,
           ),
-          SizedBox(height: 8.0),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: FlutterFlowTheme.of(context).titleMedium.override(
-                  fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
-                  color: primaryColor,
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w700,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).titleMediumIsCustom,
-                ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -900,11 +884,8 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                         8.0,
                                                       ),
                                                       child:
-                                                          _buildPaymentMethodHeader(
+                                                          _buildStripeWordmarkHeader(
                                                         context: context,
-                                                        icon: Icons
-                                                            .credit_card_rounded,
-                                                        label: 'Card',
                                                         height: 73.5,
                                                       ),
                                                     ),

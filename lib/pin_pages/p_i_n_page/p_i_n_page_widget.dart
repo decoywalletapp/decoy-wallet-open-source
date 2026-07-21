@@ -904,9 +904,10 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                     alignment: AlignmentDirectional(0.0, -1.0),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          6.0, 0.0, 6.0, 36.0),
+                                          6.0, 0.0, 6.0, 0.0),
                                       child: GridView(
                                         padding: EdgeInsets.zero,
+                                        physics: NeverScrollableScrollPhysics(),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 3,

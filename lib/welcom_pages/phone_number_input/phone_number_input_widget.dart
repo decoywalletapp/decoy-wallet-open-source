@@ -67,6 +67,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0.0;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -77,6 +79,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Colors.white,
+          resizeToAvoidBottomInset: true,
           body: SafeArea(
             top: true,
             child: Align(
@@ -84,6 +87,10 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                 child: SingleChildScrollView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                      0.0, 0.0, 0.0, keyboardOpen ? 16.0 : 0.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -937,8 +944,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                         ].divide(SizedBox(height: 16.0)),
                       ),
                     ]
-                        .divide(SizedBox(height: 64.0))
-                        .addToEnd(SizedBox(height: 64.0)),
+                        .divide(SizedBox(height: keyboardOpen ? 32.0 : 64.0))
+                        .addToEnd(SizedBox(height: keyboardOpen ? 24.0 : 64.0)),
                   ),
                 ),
               ),
