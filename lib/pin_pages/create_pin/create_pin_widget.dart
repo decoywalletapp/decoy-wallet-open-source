@@ -801,10 +801,11 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           Expanded(
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 0.0, 0.0, 24.0),
+                                                  .fromSTEB(6.0, 0.0, 6.0, 0.0),
                                               child: GridView(
                                                 padding: EdgeInsets.zero,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
                                                 gridDelegate:
                                                     SliverGridDelegateWithFixedCrossAxisCount(
                                                   crossAxisCount: 3,
@@ -2238,10 +2239,11 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           Expanded(
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 0.0, 0.0, 24.0),
+                                                  .fromSTEB(6.0, 0.0, 6.0, 0.0),
                                               child: GridView(
                                                 padding: EdgeInsets.zero,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
                                                 gridDelegate:
                                                     SliverGridDelegateWithFixedCrossAxisCount(
                                                   crossAxisCount: 3,

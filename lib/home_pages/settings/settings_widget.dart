@@ -1127,8 +1127,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     final commitUrl = DecoyBuildProvenance.commitUrl;
     final sourceLine =
         'Source: ${DecoyBuildProvenance.sourceRef} @ ${DecoyBuildProvenance.shortCommit}';
-    final buildLine =
-        '${DecoyBuildProvenance.buildPlatform} ${DecoyBuildProvenance.versionLabel} - ${DecoyBuildProvenance.buildVerification}';
+    final buildLine = 'Version ${DecoyBuildProvenance.versionLabel}';
 
     final textStyle = FlutterFlowTheme.of(context).bodySmall.override(
           fontFamily: 'Inter',
