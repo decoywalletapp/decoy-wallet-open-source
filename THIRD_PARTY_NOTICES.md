@@ -45,19 +45,19 @@ The public-source candidate intentionally removes unused or avoidable assets
 whose redistribution value was unclear:
 
 - `assets/images/ChatGPT_Image_Feb_9,_2026,_12_38_23_PM.png`
-- `assets/images/Bitcoin-Logo.png`
 - `assets/fonts/MyFlutterApp.ttf`
 
-## Payment Platform Logo
+## Payment Platform Logos
 
-The payment selection UI includes a Stripe logo image:
+The payment selection UI includes Bitcoin and Stripe logo images:
 
+- `assets/images/Bitcoin-Logo.png`
 - `assets/images/Stripe_Logo,_revised_2016.svg.png`
 
-Stripe and the Stripe logo are third-party brand/trademark materials owned by
-Stripe, Inc. The logo is included only to identify the Stripe card checkout
-option and is not granted under Decoy Wallet's MIT source-code license.
-Confirm Stripe brand-guideline compliance before public launch.
+Bitcoin and Stripe logos are third-party brand/trademark materials. They are
+included only to identify the BTCPay Bitcoin checkout and Stripe card checkout
+options and are not granted under Decoy Wallet's MIT source-code license.
+Confirm brand-guideline compliance before public launch.
 
 ## Social Platform Logos
 

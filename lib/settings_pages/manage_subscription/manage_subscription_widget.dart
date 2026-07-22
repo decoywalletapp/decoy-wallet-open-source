@@ -53,44 +53,6 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
 
   bool _hasText(String? value) => value != null && value.isNotEmpty;
 
-  Widget _buildPaymentMethodHeader({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required double height,
-  }) {
-    final primaryColor = FlutterFlowTheme.of(context).primary;
-
-    return SizedBox(
-      width: 200.0,
-      height: height,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: primaryColor,
-            size: height >= 100.0 ? 54.0 : 34.0,
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: FlutterFlowTheme.of(context).titleMedium.override(
-                  fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
-                  color: primaryColor,
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w700,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).titleMediumIsCustom,
-                ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showPaymentError(String code) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -746,13 +708,16 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                                   .circular(
                                                             8.0,
                                                           ),
-                                                          child:
-                                                              _buildPaymentMethodHeader(
-                                                            context: context,
-                                                            icon: Icons
-                                                                .account_balance_wallet_rounded,
-                                                            label: 'Bitcoin',
+                                                          child: Image.asset(
+                                                            'assets/images/Bitcoin-Logo.png',
+                                                            width: 200.0,
                                                             height: 120.0,
+                                                            fit: BoxFit.contain,
+                                                            alignment:
+                                                                Alignment(
+                                                              0.0,
+                                                              0.0,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
