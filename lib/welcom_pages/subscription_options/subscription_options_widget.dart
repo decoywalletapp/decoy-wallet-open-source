@@ -50,28 +50,6 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
 
   bool _hasText(String? value) => value != null && value.isNotEmpty;
 
-  Widget _buildStripeWordmarkHeader({
-    required BuildContext context,
-    required double height,
-  }) {
-    return SizedBox(
-      width: 200.0,
-      height: height,
-      child: Center(
-        child: Text(
-          'stripe',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.interTight(
-            color: Color(0xFF635BFF),
-            fontSize: height >= 100.0 ? 54.0 : 44.0,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 0.0,
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showPaymentError(String code) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -883,10 +861,15 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                           BorderRadius.circular(
                                                         8.0,
                                                       ),
-                                                      child:
-                                                          _buildStripeWordmarkHeader(
-                                                        context: context,
+                                                      child: Image.asset(
+                                                        'assets/images/Stripe_Logo,_revised_2016.svg.png',
+                                                        width: 200.0,
                                                         height: 73.5,
+                                                        fit: BoxFit.cover,
+                                                        alignment: Alignment(
+                                                          0.0,
+                                                          0.0,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

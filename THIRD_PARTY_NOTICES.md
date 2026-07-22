@@ -46,8 +46,18 @@ whose redistribution value was unclear:
 
 - `assets/images/ChatGPT_Image_Feb_9,_2026,_12_38_23_PM.png`
 - `assets/images/Bitcoin-Logo.png`
-- `assets/images/Stripe_Logo,_revised_2016.svg.png`
 - `assets/fonts/MyFlutterApp.ttf`
+
+## Payment Platform Logo
+
+The payment selection UI includes a Stripe logo image:
+
+- `assets/images/Stripe_Logo,_revised_2016.svg.png`
+
+Stripe and the Stripe logo are third-party brand/trademark materials owned by
+Stripe, Inc. The logo is included only to identify the Stripe card checkout
+option and is not granted under Decoy Wallet's MIT source-code license.
+Confirm Stripe brand-guideline compliance before public launch.
 
 ## Social Platform Logos
 

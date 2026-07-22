@@ -11,10 +11,10 @@ It is a release-readiness record, not legal advice.
 - `assets/images/ChatGPT_Image_Feb_9,_2026,_12_38_23_PM.png` was not referenced
   by app code and had unclear publication value, so it was removed from the
   public-source candidate.
-- Third-party logo image files for Bitcoin and Stripe were removed from the
-  bundled source assets. The settings social-link logos for Primal, Rumble, and
-  X remain bundled to preserve the production app UI and require trademark /
-  redistribution review before public launch.
+- The third-party Bitcoin logo image file was removed from the bundled source
+  assets. The Stripe card-checkout logo and settings social-link logos for
+  Primal, Rumble, and X remain bundled to preserve the production app UI and
+  require trademark / redistribution review before public launch.
 - `assets/fonts/MyFlutterApp.ttf` was removed after its only app usages were
   replaced with built-in Material location icons.
 
@@ -85,6 +85,8 @@ Publication action:
 
 The settings page bundles third-party logo image assets for social links:
 
+- `assets/images/Stripe_Logo,_revised_2016.svg.png` for the card checkout
+  option on subscription screens
 - `assets/images/primallogo.png`
 - `assets/images/rumble.jpg`
 - `assets/images/xlogo.png`
