@@ -291,11 +291,9 @@ workflows:
       groups:
         - decoy_public_runtime
         - android_signing
-        - firebase_app_distribution
       vars:
         ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
         ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
-        FIREBASE_APP_DISTRIBUTION_GROUPS: "android-beta-testers"
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
@@ -347,7 +345,6 @@ workflows:
             CM_KEYSTORE_PASSWORD \
             CM_KEY_PASSWORD \
             CM_KEY_ALIAS \
-            FIREBASE_SERVICE_ACCOUNT \
             ANDROID_PACKAGE_NAME \
             ANDROID_FIREBASE_APP_ID
           do
@@ -577,17 +574,8 @@ workflows:
           build=${APP_BUILD_NUMBER}
           verification=${DECOY_BUILD_VERIFICATION}
           firebase_app_id=${ANDROID_FIREBASE_APP_ID}
-          distribution_groups=${FIREBASE_APP_DISTRIBUTION_GROUPS}
           EOF
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
       - build/provenance/*.txt
       - flutter_drive.log
-    publishing:
-      firebase:
-        firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
-        android:
-          app_id: 1:866378207353:android:074e76d4b54f11c914c4a8
-          groups:
-            - android-beta-testers
-          artifact_type: apk

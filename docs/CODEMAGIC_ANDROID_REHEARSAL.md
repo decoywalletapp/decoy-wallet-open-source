@@ -19,9 +19,12 @@ It builds:
 
 - `build/app/outputs/flutter-apk/app-release.apk`
 
-It publishes to:
+It produces a downloadable CodeMagic artifact:
 
-- Firebase App Distribution group `android-beta-testers`
+- `build/app/outputs/flutter-apk/app-release.apk`
+
+Firebase App Distribution can be re-enabled after the public CodeMagic app has a
+service-account variable available to the workflow.
 
 ## Secure Inputs
 
@@ -31,7 +34,6 @@ build time through secure variable groups:
 
 - `decoy_public_runtime`
 - `android_signing`
-- `firebase_app_distribution`
 
 The workflow generates these private build files only inside the CodeMagic
 worker:
