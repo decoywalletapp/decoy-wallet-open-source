@@ -475,7 +475,7 @@ workflows:
             echo "Could not read app version from pubspec.yaml."
             exit 1
           fi
-          app_build_number="$(date -u +%Y%m%d%H%M%S)"
+          app_build_number="$(date -u +%s)"
           source_ref="${CM_TAG:-${CM_BRANCH:-manual}}"
 
           echo "APP_VERSION=$app_version" >> "$CM_ENV"
