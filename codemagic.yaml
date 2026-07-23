@@ -562,3 +562,311 @@ workflows:
       - build/app/outputs/flutter-apk/app-debug.apk
       - build/provenance/*.txt
       - flutter_drive.log
+
+  android-signed-release-rehearsal:
+    name: Android Signed Release Rehearsal
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    environment:
+      groups:
+        - decoy_public_runtime
+        - decoy_android_release_signing
+      vars:
+        ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
+        ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
+        DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
+        DECOY_BUILD_CHANNEL: "codemagic"
+        DECOY_BUILD_PLATFORM: "android"
+        DECOY_BUILD_VERIFICATION: "signed-release-rehearsal"
+      flutter: "3.41.6"
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
+    scripts:
+      - name: Confirm public source checkout
+        script: |
+          set -eu
+          if [ "${CM_REPO_SLUG:-}" != "decoywalletapp/decoy-wallet-open-source" ]; then
+            echo "This rehearsal must run from decoywalletapp/decoy-wallet-open-source."
+            exit 1
+          fi
+          if [ -z "${CM_COMMIT:-}" ]; then
+            echo "CM_COMMIT is required for source provenance."
+            exit 1
+          fi
+          echo "Building signed public Android source ${CM_REPO_SLUG} at ${CM_COMMIT}."
+      - name: Validate Android rehearsal environment
+        script: |
+          set -eu
+          missing=""
+          for var in \
+            DECOY_SUPABASE_URL \
+            DECOY_SUPABASE_ANON_KEY \
+            DECOY_FIREBASE_WEB_API_KEY \
+            DECOY_FIREBASE_WEB_AUTH_DOMAIN \
+            DECOY_FIREBASE_PROJECT_ID \
+            DECOY_FIREBASE_STORAGE_BUCKET \
+            DECOY_FIREBASE_MESSAGING_SENDER_ID \
+            DECOY_FIREBASE_WEB_APP_ID \
+            DECOY_FIREBASE_FUNCTIONS_BASE_URL \
+            DECOY_ALERT_BASE_URL \
+            DECOY_DATA_KEY_BASE_URL \
+            DECOY_PAYMENT_BASE_URL \
+            DECOY_VERIFY_BASE_URL \
+            DECOY_EMAIL_CONFIRM_URL \
+            DECOY_EMAIL_CONFIRM_DEEP_LINK \
+            DECOY_LEGAL_BASE_URL \
+            DECOY_SUPPORT_EMAIL \
+            DECOY_BILLING_RETURN_URL \
+            DECOY_TUTORIAL_VIDEO_BASE_URL \
+            ANDROID_PACKAGE_NAME \
+            ANDROID_FIREBASE_APP_ID \
+            ANDROID_KEYSTORE_BASE64 \
+            ANDROID_KEYSTORE_PASSWORD \
+            ANDROID_KEY_PASSWORD \
+            ANDROID_KEY_ALIAS
+          do
+            eval "value=\${$var:-}"
+            if [ -z "$value" ]; then
+              missing="$missing $var"
+            fi
+          done
+
+          if [ -n "$missing" ]; then
+            echo "Missing required CodeMagic environment variables:$missing"
+            exit 1
+          fi
+
+          invalid=""
+          require_https_url() {
+            name="$1"
+            eval "value=\${$name:-}"
+            case "$value" in
+              *[[:space:]]*) invalid="$invalid $name(has whitespace)" ;;
+            esac
+            case "$value" in
+              https://*) ;;
+              *) invalid="$invalid $name(must start with https://)" ;;
+            esac
+          }
+          require_scheme_url() {
+            name="$1"
+            eval "value=\${$name:-}"
+            case "$value" in
+              *[[:space:]]*) invalid="$invalid $name(has whitespace)" ;;
+            esac
+            case "$value" in
+              *://*) ;;
+              *) invalid="$invalid $name(must be a URL or deep link)" ;;
+            esac
+          }
+
+          for var in \
+            DECOY_SUPABASE_URL \
+            DECOY_FIREBASE_FUNCTIONS_BASE_URL \
+            DECOY_ALERT_BASE_URL \
+            DECOY_DATA_KEY_BASE_URL \
+            DECOY_PAYMENT_BASE_URL \
+            DECOY_VERIFY_BASE_URL \
+            DECOY_EMAIL_CONFIRM_URL \
+            DECOY_LEGAL_BASE_URL \
+            DECOY_TUTORIAL_VIDEO_BASE_URL
+          do
+            require_https_url "$var"
+          done
+          require_scheme_url DECOY_EMAIL_CONFIRM_DEEP_LINK
+          require_scheme_url DECOY_BILLING_RETURN_URL
+
+          case "$DECOY_SUPABASE_ANON_KEY" in
+            *[[:space:]]*) invalid="$invalid DECOY_SUPABASE_ANON_KEY(has whitespace)" ;;
+          esac
+          case "$DECOY_SUPABASE_ANON_KEY" in
+            *.*.*) ;;
+            *) invalid="$invalid DECOY_SUPABASE_ANON_KEY(expected JWT shape)" ;;
+          esac
+          case "$DECOY_SUPPORT_EMAIL" in
+            *[[:space:]]*) invalid="$invalid DECOY_SUPPORT_EMAIL(has whitespace)" ;;
+          esac
+          case "$DECOY_SUPPORT_EMAIL" in
+            *@*.*) ;;
+            *) invalid="$invalid DECOY_SUPPORT_EMAIL(expected email shape)" ;;
+          esac
+          case "$DECOY_FIREBASE_MESSAGING_SENDER_ID" in
+            ""|*[!0-9]*) invalid="$invalid DECOY_FIREBASE_MESSAGING_SENDER_ID(expected digits)" ;;
+          esac
+          case "$ANDROID_FIREBASE_APP_ID" in
+            1:*:android:*) ;;
+            *) invalid="$invalid ANDROID_FIREBASE_APP_ID(expected Android app id shape)" ;;
+          esac
+          case "$ANDROID_PACKAGE_NAME" in
+            com.decoywalletapp.app) ;;
+            *) invalid="$invalid ANDROID_PACKAGE_NAME(expected com.decoywalletapp.app)" ;;
+          esac
+          if [ -n "$invalid" ]; then
+            echo "Invalid CodeMagic environment variables:$invalid"
+            exit 1
+          fi
+      - name: Create Android Firebase config
+        script: |
+          set -eu
+          /usr/bin/python3 - <<'PY'
+          import json
+          import os
+
+          config = {
+              "project_info": {
+                  "project_number": os.environ["DECOY_FIREBASE_MESSAGING_SENDER_ID"],
+                  "project_id": os.environ["DECOY_FIREBASE_PROJECT_ID"],
+                  "storage_bucket": os.environ["DECOY_FIREBASE_STORAGE_BUCKET"],
+              },
+              "client": [
+                  {
+                      "client_info": {
+                          "mobilesdk_app_id": os.environ["ANDROID_FIREBASE_APP_ID"],
+                          "android_client_info": {
+                              "package_name": os.environ["ANDROID_PACKAGE_NAME"],
+                          },
+                      },
+                      "api_key": [
+                          {
+                              "current_key": os.environ["DECOY_FIREBASE_WEB_API_KEY"],
+                          }
+                      ],
+                      "services": {
+                          "appinvite_service": {
+                              "other_platform_oauth_client": [],
+                          }
+                      },
+                  }
+              ],
+              "configuration_version": "1",
+          }
+
+          path = "android/app/google-services.json"
+          with open(path, "w", encoding="utf-8") as f:
+              json.dump(config, f, indent=2)
+              f.write("\n")
+          print(f"Wrote {path} for {os.environ['ANDROID_PACKAGE_NAME']}.")
+          PY
+          /usr/bin/python3 -m json.tool android/app/google-services.json >/dev/null
+      - name: Create Android release signing files
+        script: |
+          set -eu
+          keystore_path="$CM_BUILD_DIR/android/app/release-keystore.jks"
+          keystore_b64="$(printf '%s' "$ANDROID_KEYSTORE_BASE64" | tr -d '[:space:]')"
+          if ! printf '%s' "$keystore_b64" | base64 --decode > "$keystore_path" 2>/dev/null; then
+            printf '%s' "$keystore_b64" | base64 -D > "$keystore_path"
+          fi
+          cat > android/key.properties <<EOF
+          storeFile=$keystore_path
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          EOF
+          if [ -n "${ANDROID_KEYSTORE_TYPE:-}" ]; then
+            echo "storeType=$ANDROID_KEYSTORE_TYPE" >> android/key.properties
+          fi
+          test -s "$keystore_path"
+      - name: Resolve version and source ref
+        script: |
+          set -eu
+          app_version="$(awk '/^version:/ {print $2; exit}' pubspec.yaml | cut -d+ -f1)"
+          if [ -z "$app_version" ]; then
+            echo "Could not read app version from pubspec.yaml."
+            exit 1
+          fi
+          app_build_number="$(date -u +%s)"
+          source_ref="${CM_TAG:-${CM_BRANCH:-manual}}"
+
+          echo "APP_VERSION=$app_version" >> "$CM_ENV"
+          echo "APP_BUILD_NUMBER=$app_build_number" >> "$CM_ENV"
+          echo "DECOY_SOURCE_REF=$source_ref" >> "$CM_ENV"
+      - name: Install Flutter packages
+        script: |
+          set -eu
+          flutter pub get
+      - name: Confirm safety-critical guardrails
+        script: |
+          set -eu
+          if ! grep -q "shouldSeedFakeBtcBalance" lib/app_state.dart; then
+            echo "Missing fake BTC seed guardrail in app_state.dart"
+            exit 1
+          fi
+          pin_page="lib/pin_pages/p_i_n_page/p_i_n_page_widget.dart"
+          if ! grep -q "sendEmergencyAlertsCall" "$pin_page"; then
+            echo "Duress PIN entry page no longer calls SendEmergencyAlerts"
+            exit 1
+          fi
+          if grep -q "if (true)" "$pin_page"; then
+            echo "Dangerous flattened duress alert gate detected"
+            exit 1
+          fi
+          if ! grep -R "CommitDecoyCall.call" lib/create_decoy_seed >/dev/null; then
+            echo "Decoy seed setup no longer calls commitDecoy"
+            exit 1
+          fi
+      - name: Run Flutter tests
+        script: |
+          set -eu
+          flutter test
+      - name: Build signed Android APK and app bundle with source provenance
+        script: |
+          set -eu
+          common_args="
+            --release
+            --build-name=$APP_VERSION
+            --build-number=$APP_BUILD_NUMBER
+            --dart-define=DECOY_SUPABASE_URL=$DECOY_SUPABASE_URL
+            --dart-define=DECOY_SUPABASE_ANON_KEY=$DECOY_SUPABASE_ANON_KEY
+            --dart-define=DECOY_FIREBASE_CONFIGURED=true
+            --dart-define=DECOY_FIREBASE_WEB_API_KEY=$DECOY_FIREBASE_WEB_API_KEY
+            --dart-define=DECOY_FIREBASE_WEB_AUTH_DOMAIN=$DECOY_FIREBASE_WEB_AUTH_DOMAIN
+            --dart-define=DECOY_FIREBASE_PROJECT_ID=$DECOY_FIREBASE_PROJECT_ID
+            --dart-define=DECOY_FIREBASE_STORAGE_BUCKET=$DECOY_FIREBASE_STORAGE_BUCKET
+            --dart-define=DECOY_FIREBASE_MESSAGING_SENDER_ID=$DECOY_FIREBASE_MESSAGING_SENDER_ID
+            --dart-define=DECOY_FIREBASE_WEB_APP_ID=$DECOY_FIREBASE_WEB_APP_ID
+            --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=$DECOY_FIREBASE_FUNCTIONS_BASE_URL
+            --dart-define=DECOY_ALERT_BASE_URL=$DECOY_ALERT_BASE_URL
+            --dart-define=DECOY_DATA_KEY_BASE_URL=$DECOY_DATA_KEY_BASE_URL
+            --dart-define=DECOY_PAYMENT_BASE_URL=$DECOY_PAYMENT_BASE_URL
+            --dart-define=DECOY_VERIFY_BASE_URL=$DECOY_VERIFY_BASE_URL
+            --dart-define=DECOY_EMAIL_CONFIRM_URL=$DECOY_EMAIL_CONFIRM_URL
+            --dart-define=DECOY_EMAIL_CONFIRM_DEEP_LINK=$DECOY_EMAIL_CONFIRM_DEEP_LINK
+            --dart-define=DECOY_LEGAL_BASE_URL=$DECOY_LEGAL_BASE_URL
+            --dart-define=DECOY_SUPPORT_EMAIL=$DECOY_SUPPORT_EMAIL
+            --dart-define=DECOY_BILLING_RETURN_URL=$DECOY_BILLING_RETURN_URL
+            --dart-define=DECOY_TUTORIAL_VIDEO_BASE_URL=$DECOY_TUTORIAL_VIDEO_BASE_URL
+            --dart-define=DECOY_SOURCE_REPOSITORY=$DECOY_SOURCE_REPOSITORY
+            --dart-define=DECOY_SOURCE_REF=$DECOY_SOURCE_REF
+            --dart-define=DECOY_SOURCE_COMMIT=$CM_COMMIT
+            --dart-define=DECOY_BUILD_CHANNEL=$DECOY_BUILD_CHANNEL
+            --dart-define=DECOY_BUILD_PLATFORM=$DECOY_BUILD_PLATFORM
+            --dart-define=DECOY_BUILD_VERSION=$APP_VERSION
+            --dart-define=DECOY_BUILD_NUMBER=$APP_BUILD_NUMBER
+            --dart-define=DECOY_BUILD_VERIFICATION=$DECOY_BUILD_VERIFICATION
+          "
+          flutter build apk $common_args
+          flutter build appbundle $common_args
+      - name: Write public provenance summary
+        script: |
+          set -eu
+          mkdir -p build/provenance
+          cat > build/provenance/android-signed-release-rehearsal.txt <<EOF
+          repository=${DECOY_SOURCE_REPOSITORY}
+          ref=${DECOY_SOURCE_REF}
+          commit=${CM_COMMIT}
+          channel=${DECOY_BUILD_CHANNEL}
+          platform=${DECOY_BUILD_PLATFORM}
+          version=${APP_VERSION}
+          build=${APP_BUILD_NUMBER}
+          verification=${DECOY_BUILD_VERIFICATION}
+          firebase_app_id=${ANDROID_FIREBASE_APP_ID}
+          package=${ANDROID_PACKAGE_NAME}
+          EOF
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/bundle/release/app-release.aab
+      - build/provenance/*.txt
+      - flutter_drive.log

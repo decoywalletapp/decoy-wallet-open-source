@@ -1,33 +1,37 @@
 # CodeMagic Android Rehearsal
 
-This document tracks the public-source Android rehearsal workflow for Decoy
-Wallet. The workflow is intended to prove that the public repository can produce
-a signed Android test build with the same runtime configuration needed for
-device testing.
+This document tracks the public-source Android rehearsal workflows for Decoy
+Wallet. The debug workflow proves that the public repository can produce an
+Android build with the same runtime configuration needed for device testing. The
+signed workflow is the production-style rehearsal path for installing over an
+existing release-signed Android app or submitting to Google Play testing.
 
 ## Workflow
 
-CodeMagic workflow:
+CodeMagic workflows:
 
 - `android-debug-rehearsal`
+- `android-signed-release-rehearsal`
 
 The workflow must run from:
 
 - `decoywalletapp/decoy-wallet-open-source`
 
-It builds:
+The debug workflow builds:
 
 - `build/app/outputs/flutter-apk/app-debug.apk`
 
-It produces a downloadable CodeMagic artifact:
+The signed release workflow builds:
 
-- `build/app/outputs/flutter-apk/app-debug.apk`
+- `build/app/outputs/flutter-apk/app-release.apk`
+- `build/app/outputs/bundle/release/app-release.aab`
 
 Firebase App Distribution can be re-enabled after the public CodeMagic app has a
 service-account variable available to the workflow.
 
-Release APK signing can be re-enabled after the public CodeMagic app has the
-Android keystore variables available to the workflow.
+The signed release workflow requires the public CodeMagic app to have Android
+keystore variables available in the `decoy_android_release_signing` secure
+variable group.
 
 ## Secure Inputs
 
@@ -36,16 +40,29 @@ keystores, passwords, or service-account JSON. CodeMagic injects those values at
 build time through secure variable groups:
 
 - `decoy_public_runtime`
+- `decoy_android_release_signing`
+
+The signed release workflow expects these private signing variables in
+CodeMagic only:
+
+- `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_KEYSTORE_PASSWORD`
+- `ANDROID_KEY_PASSWORD`
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEYSTORE_TYPE` (optional)
+
 The workflow generates these private build files only inside the CodeMagic
 worker:
 
 - `android/app/google-services.json`
+- `android/app/release-keystore.jks`
+- `android/key.properties`
 
 Those generated files must never be committed.
 
 ## Provenance
 
-The Android rehearsal injects public-source metadata into the app:
+Both Android rehearsal workflows inject public-source metadata into the app:
 
 - `DECOY_SOURCE_REPOSITORY`
 - `DECOY_SOURCE_REF`
@@ -57,13 +74,14 @@ The Android rehearsal injects public-source metadata into the app:
 - `DECOY_BUILD_VERIFICATION`
 
 The app Settings page should show the public commit used for the build. The
-build also writes:
+builds also write:
 
 - `build/provenance/android-firebase-rehearsal.txt`
+- `build/provenance/android-signed-release-rehearsal.txt`
 
 ## Device Test Goal
 
-For Android device testing, install the CodeMagic debug APK on a real Android
+For Android device testing, install the CodeMagic artifact on a real Android
 device and verify:
 
 - the app launches and authenticates
@@ -72,3 +90,8 @@ device and verify:
 - decoy seed setup and alert behavior work
 - emergency contact and location behavior work
 - subscription screens and payment buttons route correctly
+
+If the device already has a release-signed Decoy app installed, Android will not
+replace it with the debug APK because the signing certificates differ. Use the
+signed release APK for upgrade-style rehearsal testing, or uninstall the
+existing app before installing the debug APK on a disposable test device.
