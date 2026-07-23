@@ -283,21 +283,20 @@ workflows:
         auth: integration
         submit_to_testflight: false
 
-  android-firebase-rehearsal:
-    name: Android Firebase Rehearsal
+  android-debug-rehearsal:
+    name: Android Debug APK Rehearsal
     instance_type: mac_mini_m2
     max_build_duration: 90
     environment:
       groups:
         - decoy_public_runtime
-        - android_signing
       vars:
         ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
         ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
-        DECOY_BUILD_VERIFICATION: "firebase-rehearsal"
+        DECOY_BUILD_VERIFICATION: "debug-apk-rehearsal"
       flutter: "3.41.6"
     cache:
       cache_paths:
@@ -341,10 +340,6 @@ workflows:
             DECOY_SUPPORT_EMAIL \
             DECOY_BILLING_RETURN_URL \
             DECOY_TUTORIAL_VIDEO_BASE_URL \
-            CM_KEYSTORE \
-            CM_KEYSTORE_PASSWORD \
-            CM_KEY_PASSWORD \
-            CM_KEY_ALIAS \
             ANDROID_PACKAGE_NAME \
             ANDROID_FIREBASE_APP_ID
           do
@@ -472,18 +467,6 @@ workflows:
           print(f"Wrote {path} for {os.environ['ANDROID_PACKAGE_NAME']}.")
           PY
           /usr/bin/python3 -m json.tool android/app/google-services.json >/dev/null
-      - name: Prepare Android release signing
-        script: |
-          set -eu
-          key_store_path="$CM_BUILD_DIR/android/app/decoy-release-key.p12"
-          echo "$CM_KEYSTORE" | base64 --decode > "$key_store_path"
-          cat > "$CM_BUILD_DIR/android/key.properties" <<EOF
-          storePassword=$CM_KEYSTORE_PASSWORD
-          keyPassword=$CM_KEY_PASSWORD
-          keyAlias=$CM_KEY_ALIAS
-          storeFile=$key_store_path
-          storeType=pkcs12
-          EOF
       - name: Resolve version and source ref
         script: |
           set -eu
@@ -526,10 +509,10 @@ workflows:
         script: |
           set -eu
           flutter test
-      - name: Build Android APK with source provenance
+      - name: Build Android debug APK with source provenance
         script: |
           set -eu
-          flutter build apk --release \
+          flutter build apk --debug \
             --build-name="$APP_VERSION" \
             --build-number="$APP_BUILD_NUMBER" \
             --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
@@ -576,6 +559,6 @@ workflows:
           firebase_app_id=${ANDROID_FIREBASE_APP_ID}
           EOF
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter-apk/app-debug.apk
       - build/provenance/*.txt
       - flutter_drive.log

@@ -9,7 +9,7 @@ device testing.
 
 CodeMagic workflow:
 
-- `android-firebase-rehearsal`
+- `android-debug-rehearsal`
 
 The workflow must run from:
 
@@ -17,14 +17,17 @@ The workflow must run from:
 
 It builds:
 
-- `build/app/outputs/flutter-apk/app-release.apk`
+- `build/app/outputs/flutter-apk/app-debug.apk`
 
 It produces a downloadable CodeMagic artifact:
 
-- `build/app/outputs/flutter-apk/app-release.apk`
+- `build/app/outputs/flutter-apk/app-debug.apk`
 
 Firebase App Distribution can be re-enabled after the public CodeMagic app has a
 service-account variable available to the workflow.
+
+Release APK signing can be re-enabled after the public CodeMagic app has the
+Android keystore variables available to the workflow.
 
 ## Secure Inputs
 
@@ -33,14 +36,10 @@ keystores, passwords, or service-account JSON. CodeMagic injects those values at
 build time through secure variable groups:
 
 - `decoy_public_runtime`
-- `android_signing`
-
 The workflow generates these private build files only inside the CodeMagic
 worker:
 
 - `android/app/google-services.json`
-- `android/key.properties`
-- `android/app/decoy-release-key.p12`
 
 Those generated files must never be committed.
 
@@ -64,8 +63,8 @@ build also writes:
 
 ## Device Test Goal
 
-For Android release-candidate testing, install the Firebase App Distribution APK
-on a real Android device and verify:
+For Android device testing, install the CodeMagic debug APK on a real Android
+device and verify:
 
 - the app launches and authenticates
 - Settings shows the expected public commit
