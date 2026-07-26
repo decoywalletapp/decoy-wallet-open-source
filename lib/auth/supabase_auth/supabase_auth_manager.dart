@@ -46,15 +46,19 @@ class SupabaseAuthManager extends AuthManager
       }
       await currentUser?.updateEmail(email);
     } on AuthException catch (e) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.message}')),
+        );
+      }
       return false;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Email change confirmation email sent')),
-    );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Email change confirmation email sent')),
+      );
+    }
     return true;
   }
 
