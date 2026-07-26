@@ -1303,8 +1303,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                     _model.changedEmail),
                                             'email_verified': false,
                                             'email_verified_at':
-                                                supaSerialize<DateTime>(
-                                                    getCurrentTimestamp),
+                                                supaSerialize<DateTime>(null),
                                             'pending_email_hash':
                                                 GetEmailHashCall.emailHash(
                                               (_model.changedEmailHash

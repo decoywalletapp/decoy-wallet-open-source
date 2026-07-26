@@ -162,6 +162,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               'email_hash': GetEmailHashCall.emailHash(
                 (_model.emailHashResp?.jsonBody ?? ''),
               ).toString(),
+              'pending_email': null,
               'pending_email_hash': null,
             },
             matchingRows: (rows) => rows.eqOrNull(

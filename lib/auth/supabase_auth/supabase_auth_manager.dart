@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import '/auth/auth_manager.dart';
+import '/backend/public_config.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'email_auth.dart';
@@ -44,7 +45,11 @@ class SupabaseAuthManager extends AuthManager
         print('Error: update email attempted with no logged in user!');
         return;
       }
-      await currentUser?.updateEmail(email);
+      final redirectTo = requiredPublicConfig(
+        'DECOY_EMAIL_CONFIRM_DEEP_LINK',
+        kEmailConfirmDeepLink,
+      );
+      await currentUser?.updateEmail(email, emailRedirectTo: redirectTo);
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
