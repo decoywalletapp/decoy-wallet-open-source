@@ -1,5 +1,7 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter/foundation.dart';
 
+import '/backend/public_config.dart';
 import '/backend/supabase/supabase.dart';
 import '../base_auth_user_provider.dart';
 
@@ -22,12 +24,43 @@ class DecoyWalletAppSupabaseUser extends BaseAuthUser {
       throw UnsupportedError('The delete user operation is not yet supported.');
 
   @override
-  Future? updateEmail(String email) async {
-    final response =
-        await SupaFlow.client.auth.updateUser(UserAttributes(email: email));
+  Future<bool>? updateEmail(String email) async {
+    final redirectTo = requiredPublicConfig(
+      'DECOY_EMAIL_CONFIRM_URL',
+      kEmailConfirmUrl,
+    );
+    final response = await SupaFlow.client.auth.updateUser(
+      UserAttributes(email: email),
+      emailRedirectTo: redirectTo,
+    );
     if (response.user != null) {
       user = response.user;
     }
+    if (kDebugMode) {
+      debugPrint(
+        '[DecoyEmailChange] updateUser accepted=${response.user != null} '
+        'pendingNewEmail=${response.user?.newEmail?.isNotEmpty == true} '
+        'emailChangeSentAt=${response.user?.emailChangeSentAt?.isNotEmpty == true}',
+      );
+    }
+    if (response.user?.newEmail?.isNotEmpty == true) {
+      try {
+        await SupaFlow.client.auth.resend(
+          email: email,
+          type: OtpType.emailChange,
+          emailRedirectTo: redirectTo,
+        );
+        if (kDebugMode) {
+          debugPrint('[DecoyEmailChange] resend email_change accepted');
+        }
+      } on AuthException catch (e) {
+        if (kDebugMode) {
+          debugPrint('[DecoyEmailChange] resend email_change skipped: '
+              '${e.message}');
+        }
+      }
+    }
+    return response.user != null;
   }
 
   @override

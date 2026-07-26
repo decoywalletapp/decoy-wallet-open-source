@@ -103,11 +103,11 @@ CodeMagic or uploading a rehearsal build, and use
 For Android release builds, create `android/key.properties` locally with your
 own signing key details. Do not commit signing files or service credentials.
 
-The Android manifest uses `example.com` as the placeholder web deep-link host
-for email confirmation. Replace that with your own verified domain before
-shipping an Android build. Fork operators should also replace bundle IDs, app
-names, support contacts, legal URLs, billing return URLs, and deep-link schemes
-with values they control.
+The Android manifest includes Decoy's public email-confirmation host so release
+rehearsal builds can handle verification links. Fork operators should replace
+that domain, bundle IDs, app names, support contacts, legal URLs, billing return
+URLs, and deep-link schemes with values they control before shipping their own
+builds.
 
 ## Security note
 
