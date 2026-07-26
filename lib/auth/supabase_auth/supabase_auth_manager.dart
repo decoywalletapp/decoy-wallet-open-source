@@ -44,10 +44,7 @@ class SupabaseAuthManager extends AuthManager
         print('Error: update email attempted with no logged in user!');
         return false;
       }
-      final updateSent = await currentUser?.updateEmail(email);
-      if (updateSent != true) {
-        return false;
-      }
+      await currentUser?.updateEmail(email);
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
