@@ -102,25 +102,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
     return _normalizeDataKeyB64(key) ?? key;
   }
 
-  Future<String?> _storedDataKeyOrNull() async {
-    try {
-      final userKey = _storageKeyForCurrentUser(_dataKeyName);
-      if (userKey != null) {
-        final userValue = _normalizeDataKeyB64(
-          await _dataKeyStorage.read(key: userKey),
-        );
-        if (userValue != null) {
-          return userValue;
-        }
-      }
-      return _normalizeDataKeyB64(
-        await _dataKeyStorage.read(key: _dataKeyName),
-      );
-    } catch (_) {
-      return null;
-    }
-  }
-
   Future<String> _jwtForApi() async {
     final cached = currentJwtToken.trim();
     if (cached.isNotEmpty) {
@@ -163,6 +144,18 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
   String _displayPersonalPhone(String phone) {
     final cleaned = _cleanLoadedValue(phone);
     return cleaned.isEmpty ? '' : functions.displayPhoneNumber(cleaned);
+  }
+
+  String _verifiedPhoneForPersonalSave({
+    required String? originalPhone,
+    required String? editedPhone,
+  }) {
+    final original = functions.sanitizePhoneNumber(originalPhone ?? '');
+    final edited = functions.sanitizePhoneNumber(editedPhone ?? '');
+    if (edited.isNotEmpty && edited == original) {
+      return edited;
+    }
+    return original;
   }
 
   Future<String?> _dataKeyForWrappedRow(
@@ -1189,10 +1182,11 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     await actions.buildPersonalJson(
                                   _model.firstNameTextController.text,
                                   _model.lastNameTextController.text,
-                                  (_model.changedPhone != null &&
-                                          _model.changedPhone != '')
-                                      ? _model.phoneTextController.text
-                                      : (_model.origPhone ?? ''),
+                                  _verifiedPhoneForPersonalSave(
+                                    originalPhone: _model.origPhone,
+                                    editedPhone:
+                                        _model.phoneTextController.text,
+                                  ),
                                   (currentUserEmail != '') &&
                                           (functions.normalizeEmail(
                                                   currentUserEmail) !=
