@@ -22,11 +22,9 @@ class DecoyWalletAppSupabaseUser extends BaseAuthUser {
       throw UnsupportedError('The delete user operation is not yet supported.');
 
   @override
-  Future? updateEmail(String email, {String? emailRedirectTo}) async {
-    final response = await SupaFlow.client.auth.updateUser(
-      UserAttributes(email: email),
-      emailRedirectTo: emailRedirectTo,
-    );
+  Future? updateEmail(String email) async {
+    final response =
+        await SupaFlow.client.auth.updateUser(UserAttributes(email: email));
     if (response.user != null) {
       user = response.user;
     }
