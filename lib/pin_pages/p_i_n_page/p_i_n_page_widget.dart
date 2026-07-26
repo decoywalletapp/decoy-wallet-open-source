@@ -899,7 +899,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                     ].divide(SizedBox(height: 32.0)),
                                   ),
                                 ),
-                                Expanded(
+                                SizedBox(
+                                  height: 405.0,
                                   child: Align(
                                     alignment: AlignmentDirectional(0.0, -1.0),
                                     child: Padding(

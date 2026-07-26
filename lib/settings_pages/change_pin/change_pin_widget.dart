@@ -770,7 +770,8 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                               ),
                                             ].divide(SizedBox(height: 32.0)),
                                           ),
-                                          Expanded(
+                                          SizedBox(
+                                            height: 405.0,
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(6.0, 0.0, 6.0, 0.0),
@@ -2421,7 +2422,8 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                               ),
                                             ].divide(SizedBox(height: 32.0)),
                                           ),
-                                          Expanded(
+                                          SizedBox(
+                                            height: 405.0,
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(6.0, 0.0, 6.0, 0.0),
@@ -3946,7 +3948,8 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                               ),
                                             ].divide(SizedBox(height: 32.0)),
                                           ),
-                                          Expanded(
+                                          SizedBox(
+                                            height: 405.0,
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(6.0, 0.0, 6.0, 0.0),
