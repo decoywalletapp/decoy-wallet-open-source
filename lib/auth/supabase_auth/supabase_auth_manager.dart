@@ -35,14 +35,14 @@ class SupabaseAuthManager extends AuthManager
   }
 
   @override
-  Future updateEmail({
+  Future<bool> updateEmail({
     required String email,
     required BuildContext context,
   }) async {
     try {
       if (!loggedIn) {
         print('Error: update email attempted with no logged in user!');
-        return;
+        return false;
       }
       await currentUser?.updateEmail(email);
     } on AuthException catch (e) {
@@ -50,11 +50,12 @@ class SupabaseAuthManager extends AuthManager
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.message}')),
       );
-      return;
+      return false;
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Email change confirmation email sent')),
     );
+    return true;
   }
 
   @override

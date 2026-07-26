@@ -1303,7 +1303,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                     _model.changedEmail),
                                             'email_verified': false,
                                             'email_verified_at':
-                                                supaSerialize<DateTime>(null),
+                                                supaSerialize<DateTime>(
+                                                    getCurrentTimestamp),
                                             'pending_email_hash':
                                                 GetEmailHashCall.emailHash(
                                               (_model.changedEmailHash
@@ -1334,11 +1335,35 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
 
                                         AppStateNotifier.instance
                                             .updateNotifyOnAuthChange(false);
-                                        await authManager.updateEmail(
+                                        final emailUpdateSent =
+                                            await authManager.updateEmail(
                                           email: _model.changedEmail!,
                                           context: context,
                                         );
                                         safeSetState(() {});
+                                        if (!emailUpdateSent) {
+                                          await DecoyWalletTable().update(
+                                            data: {
+                                              'pending_email': null,
+                                              'email_verified': true,
+                                              'email_verified_at':
+                                                  supaSerialize<DateTime>(
+                                                      getCurrentTimestamp),
+                                              'pending_email_hash': null,
+                                            },
+                                            matchingRows: (rows) =>
+                                                rows.eqOrNull(
+                                              'user_id',
+                                              currentUserUid,
+                                            ),
+                                          );
+                                          FFAppState().userEmail =
+                                              currentUserEmail;
+                                          AppStateNotifier.instance
+                                              .updateNotifyOnAuthChange(true);
+                                          safeSetState(() {});
+                                          return;
+                                        }
 
                                         context.pushNamed(
                                           ConfirmEmailPageWidget.routeName,

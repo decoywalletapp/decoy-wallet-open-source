@@ -5,7 +5,10 @@ import 'base_auth_user_provider.dart';
 abstract class AuthManager {
   Future signOut();
   Future deleteUser(BuildContext context);
-  Future updateEmail({required String email, required BuildContext context});
+  Future<bool> updateEmail({
+    required String email,
+    required BuildContext context,
+  });
   Future updatePassword({
     required String newPassword,
     required BuildContext context,
