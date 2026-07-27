@@ -44,12 +44,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   @override
   Widget build(BuildContext context) {
     final useCompactSettingsLayout = MediaQuery.sizeOf(context).height < 880.0;
-    final settingsSectionGap = useCompactSettingsLayout ? 14.0 : 24.0;
-    final settingsContentGap = useCompactSettingsLayout ? 10.0 : 16.0;
-    final settingsRowHeight = useCompactSettingsLayout ? 54.0 : 60.0;
-    final settingsRowPadding = useCompactSettingsLayout ? 13.0 : 16.0;
-    final settingsBackTopPadding = useCompactSettingsLayout ? 0.0 : 8.0;
-    final settingsSocialBottomPadding = useCompactSettingsLayout ? 4.0 : 10.0;
+    final settingsSectionGap = useCompactSettingsLayout ? 22.0 : 24.0;
+    final settingsContentGap = useCompactSettingsLayout ? 15.0 : 16.0;
+    final settingsRowHeight = useCompactSettingsLayout ? 58.0 : 60.0;
+    final settingsRowPadding = useCompactSettingsLayout ? 15.0 : 16.0;
+    final settingsBackTopPadding = 8.0;
+    final settingsSocialBottomPadding = useCompactSettingsLayout ? 8.0 : 10.0;
 
     return GestureDetector(
       onTap: () {
