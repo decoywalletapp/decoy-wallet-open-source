@@ -43,6 +43,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final useCompactSettingsLayout = MediaQuery.sizeOf(context).height < 880.0;
+    final settingsSectionGap = useCompactSettingsLayout ? 14.0 : 24.0;
+    final settingsContentGap = useCompactSettingsLayout ? 10.0 : 16.0;
+    final settingsRowHeight = useCompactSettingsLayout ? 54.0 : 60.0;
+    final settingsRowPadding = useCompactSettingsLayout ? 13.0 : 16.0;
+    final settingsBackTopPadding = useCompactSettingsLayout ? 0.0 : 8.0;
+    final settingsSocialBottomPadding = useCompactSettingsLayout ? 4.0 : 10.0;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -66,8 +74,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     Align(
                       alignment: AlignmentDirectional(-1.0, -1.0),
                       child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(12.0, 8.0, 0.0, 0.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            12.0, settingsBackTopPadding, 0.0, 0.0),
                         child: FlutterFlowIconButton(
                           borderColor: Colors.transparent,
                           borderRadius: 30.0,
@@ -172,12 +180,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 0.0, 0.0, 0.0, 1.0),
                             child: Container(
                               width: 400.0,
-                              height: 60.0,
+                              height: settingsRowHeight,
                               decoration: BoxDecoration(),
                               child: Stack(
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.all(16.0),
+                                    padding: EdgeInsets.all(settingsRowPadding),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -246,14 +254,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 0.0, 0.0, 0.0, 1.0),
                             child: Container(
                               width: 400.0,
-                              height: 60.0,
+                              height: settingsRowHeight,
                               decoration: BoxDecoration(),
                               child: Container(
                                 width: 400.0,
                                 child: Stack(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.all(16.0),
+                                      padding:
+                                          EdgeInsets.all(settingsRowPadding),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -327,12 +336,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                           Container(
                             width: double.infinity,
-                            height: 60.0,
+                            height: settingsRowHeight,
                             decoration: BoxDecoration(),
                             child: Stack(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: EdgeInsets.all(settingsRowPadding),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -400,12 +409,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                           Container(
                             width: double.infinity,
-                            height: 60.0,
+                            height: settingsRowHeight,
                             decoration: BoxDecoration(),
                             child: Stack(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: EdgeInsets.all(settingsRowPadding),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -476,12 +485,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 0.0, 0.0, 0.0, 1.0),
                             child: Container(
                               width: double.infinity,
-                              height: 60.0,
+                              height: settingsRowHeight,
                               decoration: BoxDecoration(),
                               child: Stack(
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.all(16.0),
+                                    padding: EdgeInsets.all(settingsRowPadding),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -582,12 +591,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                           Container(
                             width: double.infinity,
-                            height: 60.0,
+                            height: settingsRowHeight,
                             decoration: BoxDecoration(),
                             child: Stack(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: EdgeInsets.all(settingsRowPadding),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -655,12 +664,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                           Container(
                             width: double.infinity,
-                            height: 60.0,
+                            height: settingsRowHeight,
                             decoration: BoxDecoration(),
                             child: Stack(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: EdgeInsets.all(settingsRowPadding),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -731,12 +740,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 0.0, 0.0, 0.0, 1.0),
                             child: Container(
                               width: double.infinity,
-                              height: 60.0,
+                              height: settingsRowHeight,
                               decoration: BoxDecoration(),
                               child: Stack(
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.all(16.0),
+                                    padding: EdgeInsets.all(settingsRowPadding),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -807,8 +816,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         ],
                       ),
                       Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            0.0, 0.0, 0.0, settingsSocialBottomPadding),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1122,10 +1131,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           _buildCompactSourceVerification(context),
                         ],
                       ),
-                    ].divide(SizedBox(height: 16.0)),
+                    ].divide(SizedBox(height: settingsContentGap)),
                   ),
                 ),
-              ].divide(SizedBox(height: 24.0)),
+              ].divide(SizedBox(height: settingsSectionGap)),
             ),
           ),
         ),
