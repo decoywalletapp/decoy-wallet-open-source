@@ -564,20 +564,20 @@ workflows:
       - flutter_drive.log
 
   android-signed-release-rehearsal:
-    name: Android Signed Release Rehearsal
+    name: Android Google Play Release
     instance_type: mac_mini_m2
     max_build_duration: 120
     environment:
       groups:
         - decoy_public_runtime
-        - decoy_android_release_signing
+        - android_signing
       vars:
         ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
         ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
-        DECOY_BUILD_VERIFICATION: "signed-release-rehearsal"
+        DECOY_BUILD_VERIFICATION: "store-release"
       flutter: "3.41.6"
     cache:
       cache_paths:
@@ -623,10 +623,10 @@ workflows:
             DECOY_TUTORIAL_VIDEO_BASE_URL \
             ANDROID_PACKAGE_NAME \
             ANDROID_FIREBASE_APP_ID \
-            ANDROID_KEYSTORE_BASE64 \
-            ANDROID_KEYSTORE_PASSWORD \
-            ANDROID_KEY_PASSWORD \
-            ANDROID_KEY_ALIAS
+            CM_KEYSTORE \
+            CM_KEYSTORE_PASSWORD \
+            CM_KEY_PASSWORD \
+            CM_KEY_ALIAS
           do
             eval "value=\${$var:-}"
             if [ -z "$value" ]; then
@@ -754,20 +754,18 @@ workflows:
       - name: Create Android release signing files
         script: |
           set -eu
-          keystore_path="$CM_BUILD_DIR/android/app/release-keystore.jks"
-          keystore_b64="$(printf '%s' "$ANDROID_KEYSTORE_BASE64" | tr -d '[:space:]')"
+          keystore_path="$CM_BUILD_DIR/android/app/decoy-release-key.p12"
+          keystore_b64="$(printf '%s' "$CM_KEYSTORE" | tr -d '[:space:]')"
           if ! printf '%s' "$keystore_b64" | base64 --decode > "$keystore_path" 2>/dev/null; then
             printf '%s' "$keystore_b64" | base64 -D > "$keystore_path"
           fi
           cat > android/key.properties <<EOF
           storeFile=$keystore_path
-          storePassword=$ANDROID_KEYSTORE_PASSWORD
-          keyPassword=$ANDROID_KEY_PASSWORD
-          keyAlias=$ANDROID_KEY_ALIAS
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeType=pkcs12
           EOF
-          if [ -n "${ANDROID_KEYSTORE_TYPE:-}" ]; then
-            echo "storeType=$ANDROID_KEYSTORE_TYPE" >> android/key.properties
-          fi
           test -s "$keystore_path"
       - name: Resolve version and source ref
         script: |
@@ -853,7 +851,7 @@ workflows:
         script: |
           set -eu
           mkdir -p build/provenance
-          cat > build/provenance/android-signed-release-rehearsal.txt <<EOF
+          cat > build/provenance/android-google-play-release.txt <<EOF
           repository=${DECOY_SOURCE_REPOSITORY}
           ref=${DECOY_SOURCE_REF}
           commit=${CM_COMMIT}
