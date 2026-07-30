@@ -81,6 +81,13 @@ notes, and independent auditability of the source.
 For TestFlight rehearsals, the `ios-testflight-rehearsal` CodeMagic workflow
 builds from the public repository, injects the public commit into the app, and
 uploads an `.ipa` to App Store Connect without submitting an App Store release.
+That workflow uses Apple's TestFlight-internal-only export option, so those
+builds are not intended for App Store review.
+
+For production App Store submissions, use the `ios-app-store-release` CodeMagic
+workflow. It builds from the same public source pattern, injects `store-release`
+provenance, and uploads a production-eligible `.ipa` to App Store Connect
+without submitting the release automatically.
 
 ## Boundaries
 
