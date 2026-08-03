@@ -18,10 +18,6 @@ Use GitHub private vulnerability reporting if it is enabled on the public
 repository. If private reporting is not available, email the maintainer
 privately at:
 
-security@decoywalletapp.com
-
-If that address is unavailable, use:
-
 support@decoywalletapp.com
 
 Please include:
