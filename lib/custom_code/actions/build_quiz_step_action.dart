@@ -11,9 +11,6 @@ import 'package:flutter/material.dart';
 
 import 'dart:math' as math;
 
-import 'dart:convert';
-import 'dart:math' as math;
-
 Future<dynamic> buildQuizStepAction(
   List<String> words,
   List<int> quizIndices,
@@ -26,7 +23,7 @@ Future<dynamic> buildQuizStepAction(
   final correct = words[quizWordIndex];
 
   // pick two distinct distractors (not the correct index)
-  final rng = math.Random();
+  final rng = math.Random.secure();
   int a, b;
   do {
     a = rng.nextInt(words.length);

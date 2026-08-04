@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:math';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'decoy_seed_entropy.dart';
 
 // ---------------- Backend registration (never throws) ----------------
 Future<Map<String, dynamic>> _registerDecoy({
@@ -79,8 +79,10 @@ Future<dynamic> createAndRegisterDecoy(
       };
     }
 
-    // 1) Generate mnemonic + seed
-    final mnemonic = bip39.generateMnemonic();
+    // 1) Generate mnemonic + seed.
+    // Entropy is generated explicitly in Decoy code with Random.secure() and
+    // full byte values 0..255 before conversion to a BIP39 mnemonic.
+    final mnemonic = generateDecoyMnemonic();
     final seed = bip39.mnemonicToSeed(mnemonic);
 
     // 2) Derive BIP84 account (mainnet): m/84'/0'/0'

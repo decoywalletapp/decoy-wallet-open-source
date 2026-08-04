@@ -25,6 +25,8 @@ export 'load_decoy_mnemonic_from_storage.dart'
     show loadDecoyMnemonicFromStorage;
 export 'build_location_json_string.dart' show buildLocationJsonString;
 export 'refresh_supabase_session.dart' show refreshSupabaseSession;
+export 'decoy_seed_entropy.dart'
+    show decoySeedEntropyBytes, decoySeedWordCount, generateDecoyMnemonic;
 export 'generate_decoy_draft.dart' show generateDecoyDraft;
 export 'finalize_register_decoy.dart' show finalizeRegisterDecoy;
 export 'supa_update_password.dart' show supaUpdatePassword;

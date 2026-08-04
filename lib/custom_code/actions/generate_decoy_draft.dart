@@ -15,6 +15,8 @@ import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:pointycastle/export.dart';
 
+import 'decoy_seed_entropy.dart';
+
 // -------------------- BIP173 Bech32 helpers --------------------
 const String _charset = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 
@@ -220,7 +222,9 @@ String _p2wpkhAddressFromPubkey(Uint8List compressedPubkey,
 // Returns a draft package to drive UI + quiz
 Future<dynamic> generateDecoyDraft() async {
   try {
-    final mnemonic = bip39.generateMnemonic();
+    // Entropy is generated explicitly in Decoy code with Random.secure() and
+    // full byte values 0..255 before conversion to a BIP39 mnemonic.
+    final mnemonic = generateDecoyMnemonic();
     final seed = bip39.mnemonicToSeed(mnemonic);
 
     final root = bip32.BIP32.fromSeed(seed);
