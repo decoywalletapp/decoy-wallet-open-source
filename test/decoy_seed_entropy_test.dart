@@ -59,4 +59,22 @@ void main() {
     expect(source, isNot(contains('bip39.generateMnemonic')));
     expect(source, isNot(contains('Random();')));
   });
+
+  test('Decoy Seed setup does not use local mnemonic storage helpers', () {
+    final seedFlowSourceFiles = [
+      'lib/custom_code/actions/index.dart',
+      'lib/create_decoy_seed/generate_decoy_seed_phrase/generate_decoy_seed_phrase_widget.dart',
+      'lib/create_decoy_seed/show_decoy_seed_phrase/show_decoy_seed_phrase_widget.dart',
+      'lib/create_decoy_seed/seed_phrase_verification/seed_phrase_verification_widget.dart',
+      'lib/create_decoy_seed/decoy_seed_system_values/decoy_seed_system_values_widget.dart',
+    ];
+    final source = seedFlowSourceFiles
+        .map((path) => File(path).readAsStringSync())
+        .join('\n');
+
+    expect(source, isNot(contains('loadDecoyMnemonicFromStorage')));
+    expect(source, isNot(contains('decoy_aes_key')));
+    expect(source, isNot(contains('_ct')));
+    expect(source, isNot(contains('_iv')));
+  });
 }

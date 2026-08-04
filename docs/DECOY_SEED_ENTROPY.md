@@ -30,7 +30,12 @@ entropy.
 ## Backend Boundary
 
 The Decoy Seed mnemonic and derived private key material must not be sent to the
-backend.
+backend or stored on the device after setup.
+
+During setup, the mnemonic is passed through the seed display and verification
+screens so the user can write it down and confirm it. After the Decoy Seed is
+armed, the app commits watch-only public material and clears the draft Decoy
+Seed app state.
 
 The backend registration flow receives watch-only public material, including:
 

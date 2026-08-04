@@ -21,8 +21,6 @@ export 'build_personal_json.dart' show buildPersonalJson;
 export 'supa_email_sign_up.dart' show supaEmailSignUp;
 export 'delete_current_user_account.dart' show deleteCurrentUserAccount;
 export 'open_external_url.dart' show openExternalUrl;
-export 'load_decoy_mnemonic_from_storage.dart'
-    show loadDecoyMnemonicFromStorage;
 export 'build_location_json_string.dart' show buildLocationJsonString;
 export 'refresh_supabase_session.dart' show refreshSupabaseSession;
 export 'decoy_seed_entropy.dart'
