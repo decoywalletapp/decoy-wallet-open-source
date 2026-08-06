@@ -27,11 +27,11 @@ class DecoyBuildProvenance {
   );
   static const buildVersion = String.fromEnvironment(
     'DECOY_BUILD_VERSION',
-    defaultValue: '1.0.4',
+    defaultValue: '1.0.5',
   );
   static const buildNumber = String.fromEnvironment(
     'DECOY_BUILD_NUMBER',
-    defaultValue: '10004',
+    defaultValue: '10005',
   );
 
   static bool get hasSourceCommit =>
