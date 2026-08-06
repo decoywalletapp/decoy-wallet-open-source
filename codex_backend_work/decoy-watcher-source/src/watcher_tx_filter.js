@@ -52,10 +52,28 @@ function shouldProcessOutboundTx(tx, addr, armedAt, baselineAt, options = {}) {
   return observedAt.getTime() > cutoff.getTime() && ageMs <= maxAgeMs;
 }
 
+function dateMs(value) {
+  const date = value ? new Date(value) : null;
+  const ms = date ? date.getTime() : NaN;
+  return Number.isFinite(ms) ? ms : null;
+}
+
+function shouldTriggerMissingUtxo(row, nowMs, missingConfirmationMs) {
+  const minMissingMs = Math.max(0, Number(missingConfirmationMs) || 0);
+  if (minMissingMs === 0) return true;
+
+  const lastSeenMs = dateMs(row && (row.last_seen_at || row.first_seen_at));
+  if (lastSeenMs === null) return false;
+
+  const observedNowMs = Number.isFinite(Number(nowMs)) ? Number(nowMs) : Date.now();
+  return observedNowMs - lastSeenMs >= minMissingMs;
+}
+
 module.exports = {
   confirmedAt,
   isConfirmedTx,
   isOutboundForAddress,
   outboundWatchedAddress,
+  shouldTriggerMissingUtxo,
   shouldProcessOutboundTx,
 };

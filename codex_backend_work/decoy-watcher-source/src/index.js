@@ -91,6 +91,13 @@ const WATCH_KEY_STALE_AFTER_MS = Math.max(
   60 * 1000,
   Math.min(24 * 60 * 60 * 1000, Number(process.env.WATCH_KEY_STALE_AFTER_MS || 3 * 60 * 1000))
 );
+const WATCH_KEY_UTXO_MISSING_CONFIRMATION_MS = Math.max(
+  0,
+  Math.min(
+    60 * 60 * 1000,
+    Number(process.env.WATCH_KEY_UTXO_MISSING_CONFIRMATION_MS || WATCH_KEY_STALE_AFTER_MS)
+  )
+);
 const WATCH_KEY_STALE_SAMPLE_LIMIT = Math.max(
   0,
   Math.min(25, Number(process.env.WATCH_KEY_STALE_SAMPLE_LIMIT || 10))
@@ -1503,6 +1510,25 @@ async function recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source) {
   return true;
 }
 
+async function hasSeedTriggerSince(decoyId, sinceDate) {
+  if (!decoyId || !sinceDate) return false;
+
+  const { data, error } = await supabase
+    .from('decoy_triggers')
+    .select('id')
+    .eq('decoy_id', decoyId)
+    .eq('trigger_type', 'SEED_DECOY')
+    .gte('observed_at', sinceDate.toISOString())
+    .limit(1);
+
+  if (error) {
+    console.error('[decoy-watcher] error checking recent seed trigger:', error);
+    return false;
+  }
+
+  return Array.isArray(data) && data.length > 0;
+}
+
 async function getOpenUtxoStateMap(decoyIds) {
   const cleanIds = [...new Set((decoyIds || []).filter(Boolean))];
   const out = new Map();
@@ -1657,12 +1683,26 @@ async function processWatchKeyUtxosForDecoy(decoyId, userId, watch, needsBaselin
 
   let spentDetected = 0;
   let createdTriggers = 0;
+  let pendingMissing = 0;
+  const nowMs = Date.now();
   for (const row of priorRows) {
     const outpointHmac = row && row.outpoint_hmac;
     if (!outpointHmac || currentHmacs.has(outpointHmac)) continue;
 
+    if (!watcherTxFilter.shouldTriggerMissingUtxo(row, nowMs, WATCH_KEY_UTXO_MISSING_CONFIRMATION_MS)) {
+      pendingMissing += 1;
+      continue;
+    }
+
     spentDetected += 1;
     const source = `watch-key-utxo-spent:${fetched.provider || 'blockbook'}`;
+
+    const lastSeenAt = toDateOrNull(row.last_seen_at || row.first_seen_at);
+    if (await hasSeedTriggerSince(decoyId, lastSeenAt)) {
+      await closeUtxoStateWithoutTrigger(decoyId, outpointHmac, 'watch-key-utxo-already-triggered');
+      continue;
+    }
+
     const created = await recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source);
     await markUtxoStateSpent(decoyId, outpointHmac, source);
     if (created) createdTriggers += 1;
@@ -1675,6 +1715,7 @@ async function processWatchKeyUtxosForDecoy(decoyId, userId, watch, needsBaselin
     currentUtxos: utxos.length,
     initialized,
     spentDetected,
+    pendingMissing,
     createdTriggers,
   };
 }
@@ -1973,6 +2014,7 @@ async function processRunInContext(options = {}, runContext) {
     `watchKeyFastPasses=${WATCH_KEY_FAST_PASSES}`,
     `watchKeyFastIntervalMs=${WATCH_KEY_FAST_INTERVAL_MS}`,
     `watchKeyUtxoEnabled=${WATCH_KEY_UTXO_ENABLED}`,
+    `watchKeyUtxoMissingConfirmationMs=${WATCH_KEY_UTXO_MISSING_CONFIRMATION_MS}`,
     `watcherShardIndex=${watcherShard.index}`,
     `watcherShardCount=${watcherShard.count}`
   );
@@ -2027,6 +2069,7 @@ async function processRunInContext(options = {}, runContext) {
     initializedRecords: 0,
     currentUtxosSeen: 0,
     spentDetected: 0,
+    pendingMissing: 0,
     createdTriggers: 0,
     providerCounts: {},
   };
@@ -2130,6 +2173,7 @@ async function processRunInContext(options = {}, runContext) {
         watchKeyUtxoTelemetry.successes += 1;
         watchKeyUtxoTelemetry.currentUtxosSeen += utxoScan.currentUtxos;
         watchKeyUtxoTelemetry.spentDetected += utxoScan.spentDetected;
+        watchKeyUtxoTelemetry.pendingMissing += utxoScan.pendingMissing || 0;
         watchKeyUtxoTelemetry.createdTriggers += utxoScan.createdTriggers;
         if (utxoScan.initialized) watchKeyUtxoTelemetry.initializedRecords += 1;
         if (utxoScan.provider) incrementCounter(watchKeyUtxoTelemetry.providerCounts, utxoScan.provider);
@@ -2156,21 +2200,23 @@ async function processRunInContext(options = {}, runContext) {
             utxoScan.currentUtxos,
             'spent_detected',
             utxoScan.spentDetected,
+            'pending_missing',
+            utxoScan.pendingMissing || 0,
             'created_triggers',
             utxoScan.createdTriggers
           );
         }
 
-        continue;
+        if (utxoScan.createdTriggers > 0) continue;
+      } else {
+        watchKeyUtxoTelemetry.failures += 1;
+        log(
+          'watch-key utxo scan failed for decoy_id',
+          decoy_id,
+          'falling back to stored-address monitoring',
+          errorMessage(utxoScan.error)
+        );
       }
-
-      watchKeyUtxoTelemetry.failures += 1;
-      log(
-        'watch-key utxo scan failed for decoy_id',
-        decoy_id,
-        'falling back to stored-address monitoring',
-        errorMessage(utxoScan.error)
-      );
     }
 
     if (needsBaseline) {
@@ -2317,6 +2363,7 @@ async function processRunInContext(options = {}, runContext) {
     watchKeyUtxoInitializedRecords: watchKeyUtxoTelemetry.initializedRecords,
     watchKeyUtxoCurrentUtxosSeen: watchKeyUtxoTelemetry.currentUtxosSeen,
     watchKeyUtxoSpentDetected: watchKeyUtxoTelemetry.spentDetected,
+    watchKeyUtxoPendingMissing: watchKeyUtxoTelemetry.pendingMissing,
     watchKeyUtxoCreatedTriggers: watchKeyUtxoTelemetry.createdTriggers,
     watchKeyUtxoProviderCounts: watchKeyUtxoTelemetry.providerCounts,
     providerCounts: batchTelemetry.providerCounts,

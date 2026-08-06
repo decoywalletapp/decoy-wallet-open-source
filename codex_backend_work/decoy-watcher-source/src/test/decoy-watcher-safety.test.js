@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { shouldProcessOutboundTx } = require('../watcher_tx_filter');
+const { shouldProcessOutboundTx, shouldTriggerMissingUtxo } = require('../watcher_tx_filter');
 
 const watchedAddress = 'bc1qwatchedaddress0000000000000000000000000000000';
 const otherAddress = 'bc1qotheraddress00000000000000000000000000000000';
@@ -14,6 +14,32 @@ function outboundTx({ confirmed = false, blockTime = new Date(), address = watch
         prevout: {
           scriptpubkey_address: address,
         },
+      },
+    ],
+    status: confirmed
+      ? {
+          confirmed: true,
+          block_time: Math.floor(blockTime.getTime() / 1000),
+        }
+      : {
+          confirmed: false,
+        },
+  };
+}
+
+function inboundOnlyTx({ confirmed = false, blockTime = new Date(), address = watchedAddress } = {}) {
+  return {
+    txid: `receive-${confirmed ? 'confirmed' : 'mempool'}-${blockTime.getTime()}-${address}`,
+    vin: [
+      {
+        prevout: {
+          scriptpubkey_address: otherAddress,
+        },
+      },
+    ],
+    vout: [
+      {
+        scriptpubkey_address: address,
       },
     ],
     status: confirmed
@@ -69,4 +95,31 @@ test('transactions that do not spend the watched address do not trigger', () => 
   const armedAt = new Date(Date.now() - 60 * 60 * 1000);
 
   assert.equal(shouldAlert(tx, armedAt, armedAt), false);
+});
+
+test('receive-only transactions to the watched address do not trigger', () => {
+  const tx = inboundOnlyTx({ confirmed: false });
+  const armedAt = new Date(Date.now() - 60 * 60 * 1000);
+
+  assert.equal(shouldAlert(tx, armedAt, armedAt), false);
+});
+
+test('one transient missing watch-key UTXO snapshot does not trigger immediately', () => {
+  const nowMs = Date.parse('2026-08-06T23:13:10Z');
+  const row = {
+    first_seen_at: '2026-08-06T23:12:10Z',
+    last_seen_at: '2026-08-06T23:12:10Z',
+  };
+
+  assert.equal(shouldTriggerMissingUtxo(row, nowMs, 3 * 60 * 1000), false);
+});
+
+test('missing watch-key UTXO can trigger after the confirmation window', () => {
+  const nowMs = Date.parse('2026-08-06T23:16:11Z');
+  const row = {
+    first_seen_at: '2026-08-06T23:12:10Z',
+    last_seen_at: '2026-08-06T23:12:10Z',
+  };
+
+  assert.equal(shouldTriggerMissingUtxo(row, nowMs, 3 * 60 * 1000), true);
 });
