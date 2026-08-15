@@ -69,11 +69,28 @@ class _DecoyDisplayGuard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final platform = Theme.of(context).platform;
+    final reportedBottomInset =
+        mediaQuery.padding.bottom > mediaQuery.viewPadding.bottom
+            ? mediaQuery.padding.bottom
+            : mediaQuery.viewPadding.bottom;
+    final bottomNavigationGuard =
+        platform == TargetPlatform.android && reportedBottomInset < 24.0
+            ? 48.0
+            : null;
+    final guardedPadding = bottomNavigationGuard == null
+        ? mediaQuery.padding
+        : mediaQuery.padding.copyWith(bottom: bottomNavigationGuard);
+    final guardedViewPadding = bottomNavigationGuard == null
+        ? mediaQuery.viewPadding
+        : mediaQuery.viewPadding.copyWith(bottom: bottomNavigationGuard);
 
     return MediaQuery(
       data: mediaQuery.copyWith(
         boldText: false,
+        padding: guardedPadding,
         textScaler: TextScaler.noScaling,
+        viewPadding: guardedViewPadding,
       ),
       child: child,
     );
