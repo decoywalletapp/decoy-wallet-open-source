@@ -71,6 +71,7 @@ class _DecoySeedAcknowledgementsWidgetState
           body: SafeArea(
             top: true,
             child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -510,7 +511,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                     24.0,
                                     Theme.of(context).platform ==
                                             TargetPlatform.android
-                                        ? 128.0
+                                        ? 160.0
                                         : 12.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {

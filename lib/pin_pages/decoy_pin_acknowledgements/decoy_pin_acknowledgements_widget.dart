@@ -106,6 +106,7 @@ class _DecoyPinAcknowledgementsWidgetState
                     child: LayoutBuilder(
                       builder: (context, viewportConstraints) {
                         return SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                               minHeight: viewportConstraints.maxHeight,
@@ -647,7 +648,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                                     .platform ==
                                                                 TargetPlatform
                                                                     .android
-                                                            ? 128.0
+                                                            ? 160.0
                                                             : 12.0),
                                                 child: FFButtonWidget(
                                                   onPressed: () async {
