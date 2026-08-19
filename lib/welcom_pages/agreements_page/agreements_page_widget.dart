@@ -666,7 +666,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                   24.0,
                                   Theme.of(context).platform ==
                                           TargetPlatform.android
-                                      ? 96.0
+                                      ? 128.0
                                       : 12.0),
                               child: FFButtonWidget(
                                 onPressed: () async {

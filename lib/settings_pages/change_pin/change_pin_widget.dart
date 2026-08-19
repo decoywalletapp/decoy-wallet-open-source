@@ -100,7 +100,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           24.0,
                                           Theme.of(context).platform ==
                                                   TargetPlatform.android
-                                              ? 112.0
+                                              ? 160.0
                                               : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
@@ -1695,7 +1695,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           24.0,
                                           Theme.of(context).platform ==
                                                   TargetPlatform.android
-                                              ? 112.0
+                                              ? 160.0
                                               : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
@@ -3263,7 +3263,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                           24.0,
                                           Theme.of(context).platform ==
                                                   TargetPlatform.android
-                                              ? 112.0
+                                              ? 160.0
                                               : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,

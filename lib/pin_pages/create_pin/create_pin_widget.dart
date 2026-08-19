@@ -101,7 +101,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           18.0,
                                           Theme.of(context).platform ==
                                                   TargetPlatform.android
-                                              ? 112.0
+                                              ? 160.0
                                               : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
@@ -1573,7 +1573,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                           18.0,
                                           Theme.of(context).platform ==
                                                   TargetPlatform.android
-                                              ? 112.0
+                                              ? 160.0
                                               : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,

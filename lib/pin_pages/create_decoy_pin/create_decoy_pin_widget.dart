@@ -115,7 +115,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                 .platform ==
                                                             TargetPlatform
                                                                 .android
-                                                        ? 112.0
+                                                        ? 160.0
                                                         : 40.0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
@@ -1762,7 +1762,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                 .platform ==
                                                             TargetPlatform
                                                                 .android
-                                                        ? 112.0
+                                                        ? 160.0
                                                         : 40.0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,

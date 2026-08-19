@@ -647,7 +647,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                                     .platform ==
                                                                 TargetPlatform
                                                                     .android
-                                                            ? 96.0
+                                                            ? 128.0
                                                             : 12.0),
                                                 child: FFButtonWidget(
                                                   onPressed: () async {

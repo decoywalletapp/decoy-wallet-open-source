@@ -79,7 +79,7 @@ class _DecoyDisplayGuard extends StatelessWidget {
     // actions comfortably above that system navigation area.
     final bottomNavigationGuard =
         platform == TargetPlatform.android && reportedBottomInset < 24.0
-            ? 96.0
+            ? 128.0
             : null;
     final guardedPadding = bottomNavigationGuard == null
         ? mediaQuery.padding
