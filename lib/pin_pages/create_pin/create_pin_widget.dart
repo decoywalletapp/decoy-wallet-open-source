@@ -96,7 +96,13 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                     decoration: BoxDecoration(),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          18.0, 20.0, 18.0, 40.0),
+                                          18.0,
+                                          20.0,
+                                          18.0,
+                                          Theme.of(context).platform ==
+                                                  TargetPlatform.android
+                                              ? 112.0
+                                              : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -1562,7 +1568,13 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                     decoration: BoxDecoration(),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          18.0, 20.0, 18.0, 40.0),
+                                          18.0,
+                                          20.0,
+                                          18.0,
+                                          Theme.of(context).platform ==
+                                                  TargetPlatform.android
+                                              ? 112.0
+                                              : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:

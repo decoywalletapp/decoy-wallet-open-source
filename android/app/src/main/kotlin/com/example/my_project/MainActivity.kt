@@ -1,8 +1,11 @@
 package com.decoywalletapp.app
 
 import android.app.Activity
+import android.graphics.Color
 import android.content.Intent
 import android.database.Cursor
+import android.os.Build
+import android.os.Bundle
 import android.provider.ContactsContract
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -12,6 +15,23 @@ class MainActivity : FlutterFragmentActivity() {
     private val contactPickerChannelName = "decoy_wallet/contact_picker"
     private val pickContactRequestCode = 7301
     private var pendingContactResult: MethodChannel.Result? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        protectSystemBars()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        protectSystemBars()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            protectSystemBars()
+        }
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -24,6 +44,15 @@ class MainActivity : FlutterFragmentActivity() {
                 "pickContact" -> pickContact(result)
                 else -> result.notImplemented()
             }
+        }
+    }
+
+    private fun protectSystemBars() {
+        window.statusBarColor = Color.BLACK
+        window.navigationBarColor = Color.BLACK
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(true)
         }
     }
 

@@ -95,7 +95,13 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                     decoration: BoxDecoration(),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          24.0, 20.0, 24.0, 40.0),
+                                          24.0,
+                                          20.0,
+                                          24.0,
+                                          Theme.of(context).platform ==
+                                                  TargetPlatform.android
+                                              ? 112.0
+                                              : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -1684,7 +1690,13 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                     decoration: BoxDecoration(),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          24.0, 20.0, 24.0, 40.0),
+                                          24.0,
+                                          20.0,
+                                          24.0,
+                                          Theme.of(context).platform ==
+                                                  TargetPlatform.android
+                                              ? 112.0
+                                              : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -3246,7 +3258,13 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                     decoration: BoxDecoration(),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          24.0, 20.0, 24.0, 40.0),
+                                          24.0,
+                                          20.0,
+                                          24.0,
+                                          Theme.of(context).platform ==
+                                                  TargetPlatform.android
+                                              ? 112.0
+                                              : 40.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:

@@ -74,9 +74,12 @@ class _DecoyDisplayGuard extends StatelessWidget {
         mediaQuery.padding.bottom > mediaQuery.viewPadding.bottom
             ? mediaQuery.padding.bottom
             : mediaQuery.viewPadding.bottom;
+    // Some Samsung-style three-button navigation modes can draw over Flutter
+    // content while reporting little or no bottom inset. Keep required bottom
+    // actions comfortably above that system navigation area.
     final bottomNavigationGuard =
         platform == TargetPlatform.android && reportedBottomInset < 24.0
-            ? 48.0
+            ? 96.0
             : null;
     final guardedPadding = bottomNavigationGuard == null
         ? mediaQuery.padding

@@ -640,7 +640,15 @@ class _DecoyPinAcknowledgementsWidgetState
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
-                                                        24.0, 0.0, 24.0, 12.0),
+                                                        24.0,
+                                                        0.0,
+                                                        24.0,
+                                                        Theme.of(context)
+                                                                    .platform ==
+                                                                TargetPlatform
+                                                                    .android
+                                                            ? 96.0
+                                                            : 12.0),
                                                 child: FFButtonWidget(
                                                   onPressed: () async {
                                                     _model.ins1 =

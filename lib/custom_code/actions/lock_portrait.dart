@@ -15,6 +15,10 @@ Future lockPortrait() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  await SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: SystemUiOverlay.values,
+  );
 }
 
 // Set your action name, define your arguments and return parameter,
