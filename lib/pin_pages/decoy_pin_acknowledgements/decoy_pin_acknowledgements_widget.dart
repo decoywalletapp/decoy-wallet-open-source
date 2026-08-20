@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,6 +60,9 @@ class _DecoyPinAcknowledgementsWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final decoyPinAcknowledgementsBottomPadding =
+        decoyBottomActionPadding(context);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -106,6 +110,16 @@ class _DecoyPinAcknowledgementsWidgetState
                     child: LayoutBuilder(
                       builder: (context, viewportConstraints) {
                         return SingleChildScrollView(
+                          primary: false,
+                          physics: const AlwaysScrollableScrollPhysics(
+                            parent: ClampingScrollPhysics(),
+                          ),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                            0.0,
+                            0.0,
+                            0.0,
+                            decoyPinAcknowledgementsBottomPadding,
+                          ),
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                               minHeight: viewportConstraints.maxHeight,

@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -163,6 +164,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    final controlCenterBottomPadding =
+        decoyBottomActionPadding(context, extra: 20.0);
 
     return GestureDetector(
       onTap: () {
@@ -2829,8 +2832,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
                   child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                        0.0, 12.0, 0.0, controlCenterBottomPadding),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,

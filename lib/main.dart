@@ -2,6 +2,7 @@ import '/custom_code/actions/index.dart' as actions;
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -12,9 +13,14 @@ import 'auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_util.dart';
+import 'utils/android_display_guard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: SystemUiOverlay.values,
+  );
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
 
@@ -57,44 +63,6 @@ class MyAppScrollBehavior extends MaterialScrollBehavior {
         PointerDeviceKind.touch,
         PointerDeviceKind.mouse,
       };
-}
-
-class _DecoyDisplayGuard extends StatelessWidget {
-  const _DecoyDisplayGuard({
-    required this.child,
-  });
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final platform = Theme.of(context).platform;
-    final reportedBottomInset =
-        mediaQuery.padding.bottom > mediaQuery.viewPadding.bottom
-            ? mediaQuery.padding.bottom
-            : mediaQuery.viewPadding.bottom;
-    final bottomNavigationGuard =
-        platform == TargetPlatform.android && reportedBottomInset < 24.0
-            ? 48.0
-            : null;
-    final guardedPadding = bottomNavigationGuard == null
-        ? mediaQuery.padding
-        : mediaQuery.padding.copyWith(bottom: bottomNavigationGuard);
-    final guardedViewPadding = bottomNavigationGuard == null
-        ? mediaQuery.viewPadding
-        : mediaQuery.viewPadding.copyWith(bottom: bottomNavigationGuard);
-
-    return MediaQuery(
-      data: mediaQuery.copyWith(
-        boldText: false,
-        padding: guardedPadding,
-        textScaler: TextScaler.noScaling,
-        viewPadding: guardedViewPadding,
-      ),
-      child: child,
-    );
-  }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -156,7 +124,7 @@ class _MyAppState extends State<MyApp> {
       ),
       themeMode: _themeMode,
       routerConfig: _router,
-      builder: (context, child) => _DecoyDisplayGuard(
+      builder: (context, child) => DecoyDisplayGuard(
         child: child ?? const SizedBox.shrink(),
       ),
     );

@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/instant_timer.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -136,6 +137,7 @@ class _DuressProcessingTransactionWidgetState
     final feeText = '${functions.formatBtcTrim(
       (widget.feeBtc ?? 0.0).toString(),
     )} BTC';
+    final processingBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
       onTap: () {
@@ -151,7 +153,12 @@ class _DuressProcessingTransactionWidgetState
             top: true,
             child: Center(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 34.0),
+                padding: EdgeInsets.fromLTRB(
+                  20.0,
+                  24.0,
+                  20.0,
+                  processingBottomPadding,
+                ),
                 shrinkWrap: true,
                 children: [
                   Center(

@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -78,6 +79,7 @@ class _DuressOrderProcessedWidgetState
   @override
   Widget build(BuildContext context) {
     final orange = FlutterFlowTheme.of(context).primary;
+    final orderProcessedBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
       onTap: () {
@@ -93,7 +95,16 @@ class _DuressOrderProcessedWidgetState
             top: true,
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+                primary: false,
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: ClampingScrollPhysics(),
+                ),
+                padding: EdgeInsetsDirectional.fromSTEB(
+                  24.0,
+                  24.0,
+                  24.0,
+                  orderProcessedBottomPadding,
+                ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 390.0),
                   child: TweenAnimationBuilder<double>(

@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -58,6 +59,9 @@ class _DecoySeedAcknowledgementsWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final decoySeedAcknowledgementsBottomPadding =
+        decoyBottomActionPadding(context);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -70,7 +74,8 @@ class _DecoySeedAcknowledgementsWidgetState
           backgroundColor: Colors.white,
           body: SafeArea(
             top: true,
-            child: SingleChildScrollView(
+            child: DecoyBottomSafeScroll(
+              bottomPadding: decoySeedAcknowledgementsBottomPadding,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

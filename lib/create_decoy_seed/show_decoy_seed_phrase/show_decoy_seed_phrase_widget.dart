@@ -74,6 +74,10 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
         statusBarBrightness: Brightness.light,
       ),
     );
+    final mediaQuery = MediaQuery.of(context);
+    final bottomClearance =
+        mediaQuery.padding.bottom > 0.0 ? mediaQuery.padding.bottom : 24.0;
+    final seedPageBottomPadding = bottomClearance + 32.0;
 
     return GestureDetector(
       onTap: () {
@@ -88,10 +92,16 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
           body: SafeArea(
             top: true,
             child: SingleChildScrollView(
+              primary: false,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
+              padding: EdgeInsetsDirectional.fromSTEB(
+                  0.0, 0.0, 0.0, seedPageBottomPadding),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 24.0),
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Align(

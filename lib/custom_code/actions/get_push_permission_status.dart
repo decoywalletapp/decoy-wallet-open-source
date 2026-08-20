@@ -15,8 +15,12 @@ import '/flutter_flow/custom_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<bool?> getPushPermissionStatus() async {
-  final settings = await FirebaseMessaging.instance.getNotificationSettings();
+  try {
+    final settings = await FirebaseMessaging.instance.getNotificationSettings();
 
-  return settings.authorizationStatus == AuthorizationStatus.authorized ||
-      settings.authorizationStatus == AuthorizationStatus.provisional;
+    return settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional;
+  } catch (_) {
+    return false;
+  }
 }

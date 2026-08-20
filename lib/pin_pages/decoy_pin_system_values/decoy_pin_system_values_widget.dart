@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -93,6 +94,7 @@ class _DecoyPinSystemValuesWidgetState
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    final decoyPinSystemBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
       onTap: () {
@@ -115,9 +117,23 @@ class _DecoyPinSystemValuesWidgetState
               child: LayoutBuilder(
                 builder: (context, viewportConstraints) {
                   return SingleChildScrollView(
+                    primary: false,
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: ClampingScrollPhysics(),
+                    ),
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                      0.0,
+                      0.0,
+                      0.0,
+                      decoyPinSystemBottomPadding,
+                    ),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight,
+                        minHeight: viewportConstraints.maxHeight >
+                                decoyPinSystemBottomPadding
+                            ? viewportConstraints.maxHeight -
+                                decoyPinSystemBottomPadding
+                            : viewportConstraints.maxHeight,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,

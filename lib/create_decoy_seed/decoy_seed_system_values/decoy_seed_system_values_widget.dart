@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -313,6 +314,7 @@ class _DecoySeedSystemValuesWidgetState
   Widget _buildStableSeedSettingsPage(BuildContext context) {
     _model.seedMonitorArmTileValue ??= FFAppState().decoySeedArmed;
     final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? false;
+    final decoySeedSystemBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
       onTap: () {
@@ -335,9 +337,23 @@ class _DecoySeedSystemValuesWidgetState
               child: LayoutBuilder(
                 builder: (context, viewportConstraints) {
                   return SingleChildScrollView(
+                    primary: false,
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: ClampingScrollPhysics(),
+                    ),
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                      0.0,
+                      0.0,
+                      0.0,
+                      decoySeedSystemBottomPadding,
+                    ),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight,
+                        minHeight: viewportConstraints.maxHeight >
+                                decoySeedSystemBottomPadding
+                            ? viewportConstraints.maxHeight -
+                                decoySeedSystemBottomPadding
+                            : viewportConstraints.maxHeight,
                       ),
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -615,6 +631,8 @@ class _DecoySeedSystemValuesWidgetState
       return _buildStableSeedSettingsPage(context);
     }
 
+    final decoySeedSystemBottomPadding = decoyBottomActionPadding(context);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -627,7 +645,8 @@ class _DecoySeedSystemValuesWidgetState
           backgroundColor: Colors.white,
           body: SafeArea(
             top: true,
-            child: SingleChildScrollView(
+            child: DecoyBottomSafeScroll(
+              bottomPadding: decoySeedSystemBottomPadding,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,

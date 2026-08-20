@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    final sendBtcBottomPadding = decoyBottomActionPadding(context);
 
     final fakeBtcAvailableText = valueOrDefault<String>(
       formatNumber(
@@ -83,9 +85,17 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
           backgroundColor: Color(0x001D2428),
           body: SafeArea(
             top: true,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
+              primary: false,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
+              padding: EdgeInsetsDirectional.fromSTEB(
+                0.0,
+                12.0,
+                0.0,
+                sendBtcBottomPadding,
+              ),
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.max,
@@ -653,10 +663,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                     ),
                   ),
                 ),
-              ]
-                  .divide(SizedBox(height: 24.0))
-                  .addToStart(SizedBox(height: 12.0))
-                  .addToEnd(SizedBox(height: 24.0)),
+              ].divide(SizedBox(height: 24.0)).addToEnd(SizedBox(height: 24.0)),
             ),
           ),
         ),

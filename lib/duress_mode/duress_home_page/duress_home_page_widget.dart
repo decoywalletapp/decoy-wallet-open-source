@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -341,6 +342,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
 
     final btcBalance = FFAppState().fakeBtcBalance;
     final usdBalance = FFAppState().fakeUsdValue;
+    final duressHomeBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
       onTap: () {
@@ -359,7 +361,12 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                 _buildTopBar(context),
                 Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.fromLTRB(20.0, 22.0, 20.0, 34.0),
+                    padding: EdgeInsets.fromLTRB(
+                      20.0,
+                      22.0,
+                      20.0,
+                      duressHomeBottomPadding,
+                    ),
                     children: [
                       _centered(
                         _buildBalanceHeader(context, btcBalance, usdBalance),
