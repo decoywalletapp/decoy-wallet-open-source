@@ -71,7 +71,6 @@ class _DecoySeedAcknowledgementsWidgetState
           body: SafeArea(
             top: true,
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -506,13 +505,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                   : 0.0,
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0,
-                                    0.0,
-                                    24.0,
-                                    Theme.of(context).platform ==
-                                            TargetPlatform.android
-                                        ? 160.0
-                                        : 12.0),
+                                    24.0, 0.0, 24.0, 12.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
                                     _model.ins1 =
