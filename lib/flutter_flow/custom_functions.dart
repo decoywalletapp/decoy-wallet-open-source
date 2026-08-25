@@ -40,6 +40,9 @@ String normalizePhoneToE164(String? input) {
   if (raw.startsWith('00')) {
     raw = '+${raw.substring(2)}';
   }
+  if (raw.startsWith('011')) {
+    raw = '+${raw.substring(3)}';
+  }
 
   if (raw.startsWith('+')) {
     final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
@@ -47,9 +50,10 @@ String normalizePhoneToE164(String? input) {
   }
 
   final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
-  final tenDigitNanp = RegExp(r'^[2-9]\d{2}[2-9]\d{6}$');
-  if (tenDigitNanp.hasMatch(digits)) return '+1$digits';
-  if (RegExp(r'^1[2-9]\d{2}[2-9]\d{6}$').hasMatch(digits)) {
+  if (_isNanpTenDigit(digits)) return '+1$digits';
+  if (digits.length == 11 &&
+      digits.startsWith('1') &&
+      _isNanpTenDigit(digits.substring(1))) {
     return '+$digits';
   }
 
@@ -418,6 +422,10 @@ String displayUSPhone(String? input) {
   return displayPhoneNumber(input);
 }
 
+bool _isNanpTenDigit(String digits) {
+  return RegExp(r'^[2-9]\d{2}[2-9]\d{6}$').hasMatch(digits);
+}
+
 String displayPhoneNumber(String? input) {
   final cleaned = sanitizePhoneInput(input);
   if (cleaned.isEmpty) return '';
@@ -431,7 +439,7 @@ String displayPhoneNumber(String? input) {
     return '(${ten.substring(0, 3)}) ${ten.substring(3, 6)}-${ten.substring(6)}';
   }
 
-  if (!value.startsWith('+') && digits.length == 10) {
+  if (!value.startsWith('+') && _isNanpTenDigit(digits)) {
     return '(${digits.substring(0, 3)}) ${digits.substring(3, 6)}-${digits.substring(6)}';
   }
 
@@ -483,19 +491,24 @@ String formatUSPhone(String input) {
 String normalizeToTenDigits(String input) {
   final trimmed = input.trim();
   if (trimmed.startsWith('+') || trimmed.startsWith('00')) return '';
+  if (trimmed.startsWith('011')) return '';
   final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
-  if (digits.length >= 11 && digits.startsWith('1')) {
+  if (digits.length == 11 && digits.startsWith('1')) {
     // drop leading country digit
     final core = digits.substring(1);
-    return core.length >= 10 ? core.substring(0, 10) : core;
+    return _isNanpTenDigit(core) ? core : '';
   }
+  if (digits.length == 10) return _isNanpTenDigit(digits) ? digits : '';
   if (digits.length > 10) return '';
+  if (digits.isNotEmpty && !RegExp(r'^[2-9]').hasMatch(digits)) return '';
   return digits;
 }
 
 String formatAsUsPhone(String d10) {
   final d = d10.replaceAll(RegExp(r'[^0-9]'), '');
   if (d.length < 1) return '';
+  if (d.length == 10 && !_isNanpTenDigit(d)) return d;
+  if (d.length < 10 && !RegExp(r'^[2-9]').hasMatch(d)) return d;
   final b = StringBuffer('(')..write(d.substring(0, d.length.clamp(0, 3)));
   if (d.length > 3) {
     b.write(') ');

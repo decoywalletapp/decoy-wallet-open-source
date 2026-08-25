@@ -2395,7 +2395,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone Number',
+                                                            'Phone number (+country code)',
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -3775,7 +3775,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         decoration:
                                                             InputDecoration(
                                                           hintText:
-                                                              'Phone Number',
+                                                              'Phone number (+country code)',
                                                           hintStyle:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -5028,7 +5028,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone Number',
+                                                            'Phone number (+country code)',
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -6350,7 +6350,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone Number',
+                                                            'Phone number (+country code)',
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -7712,7 +7712,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone Number',
+                                                            'Phone number (+country code)',
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)

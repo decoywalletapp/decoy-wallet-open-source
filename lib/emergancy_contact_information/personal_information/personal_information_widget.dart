@@ -960,7 +960,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         textInputAction: TextInputAction.next,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          hintText: 'Enter phone number',
+                                          hintText:
+                                              '+1 555 123 4567 or +33 6 12 34 56 78',
                                           hintStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium

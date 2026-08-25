@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 bool _isE164(String s) {
-  final re = RegExp(r'^\+[1-9]\d{6,15}$');
+  final re = RegExp(r'^\+[1-9]\d{7,14}$');
   return re.hasMatch((s ?? '').trim());
 }
 
