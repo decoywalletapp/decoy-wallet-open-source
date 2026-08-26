@@ -119,4 +119,22 @@ void main() {
     expect(source, isNot(contains('supabaseFunctionUrl')));
     expect(source, isNot(contains('SupaFlow.client')));
   });
+
+  test('system-values screen commits the full watch-only draft contract', () {
+    final source = File(
+      'lib/create_decoy_seed/decoy_seed_system_values/'
+      'decoy_seed_system_values_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('final derivationPath'));
+    expect(source, contains('final watchPublicKey'));
+    expect(source, contains('final watchPublicKeyType'));
+    expect(source, contains('FFAppState().draftAddresses'));
+    expect(source, contains('CommitDecoyCall.call'));
+    expect(source, contains('derivationPath: derivationPath'));
+    expect(source, contains('addressesList: addresses'));
+    expect(source, contains('xpub: FFAppState().draftXpub.trim()'));
+    expect(source, contains('watchPublicKey: watchPublicKey'));
+    expect(source, contains('watchPublicKeyType: watchPublicKeyType'));
+  });
 }
