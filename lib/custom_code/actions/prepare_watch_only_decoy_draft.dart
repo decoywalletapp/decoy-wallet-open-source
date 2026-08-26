@@ -138,7 +138,7 @@ void _rejectSpendableSecretMaterial(String input) {
 
   final tokens = _watchOnlyTokens(input);
   for (final token in tokens) {
-    if (RegExp(r'^[xtuvyz]prv').hasMatch(token)) {
+    if (RegExp(r'^[xtuvyz]prv').hasMatch(token.toLowerCase())) {
       throw const _WatchOnlyImportException(
         'Do not paste private extended keys into Decoy. Paste only xpub/zpub or receive addresses.',
       );

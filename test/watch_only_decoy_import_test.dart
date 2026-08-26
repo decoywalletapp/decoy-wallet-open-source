@@ -71,6 +71,29 @@ void main() {
     expect(importDraft['watch_public_key'], '$address0\n$address1');
   });
 
+  test('receive address import accepts common mainnet address formats',
+      () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+    final generatedAddresses =
+        (generatedDraft['addresses'] as List).cast<String>();
+    final uppercaseBech32 = generatedAddresses.first.toUpperCase();
+    const p2pkhAddress = '1BoatSLRHtKNngkdXEeobR76b53LETtpyT';
+    const p2shAddress = '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy';
+
+    final importDraft = prepareWatchOnlyDecoyDraftPayload(
+      '$uppercaseBech32\n$p2pkhAddress\n$p2shAddress',
+      decoyId: 'format-test-id',
+    );
+
+    expect(importDraft['ok'], isTrue);
+    expect(importDraft['source_type'], 'address-list');
+    expect(importDraft['addresses'], <String>[
+      generatedAddresses.first,
+      p2pkhAddress,
+      p2shAddress,
+    ]);
+  });
+
   test('watch-only import rejects seed phrases and private keys', () async {
     final generatedDraft = await generateDecoyDraft() as Map;
 
@@ -78,6 +101,8 @@ void main() {
         await prepareWatchOnlyDecoyDraft(generatedDraft['mnemonic'] as String)
             as Map;
     final xprvResult = await prepareWatchOnlyDecoyDraft('xprv123') as Map;
+    final uppercaseXprvResult =
+        await prepareWatchOnlyDecoyDraft('XPRV123') as Map;
     final wifResult = await prepareWatchOnlyDecoyDraft(
       'KwdMAjHcbJ8e1S7p85GeEsjK9Uo9XvGCpMVqdpu4WzeUFHYyNe6Y',
     ) as Map;
@@ -86,6 +111,8 @@ void main() {
     expect(seedResult['error'], contains('Do not paste seed phrases'));
     expect(xprvResult['ok'], isFalse);
     expect(xprvResult['error'], contains('private extended keys'));
+    expect(uppercaseXprvResult['ok'], isFalse);
+    expect(uppercaseXprvResult['error'], contains('private extended keys'));
     expect(wifResult['ok'], isFalse);
     expect(wifResult['error'], contains('private keys'));
   });
@@ -105,6 +132,23 @@ void main() {
 
     expect(mixedCaseResult['ok'], isFalse);
     expect(invalidResult['ok'], isFalse);
+  });
+
+  test('watch-only import rejects testnet addresses and mixed input', () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+    final generatedAddresses =
+        (generatedDraft['addresses'] as List).cast<String>();
+
+    final testnetResult = await prepareWatchOnlyDecoyDraft(
+      'tb1qfm7pnj8jfyysgz4g0xjm9k6v3s6c9w5v0qypnl',
+    ) as Map;
+    final mixedResult = await prepareWatchOnlyDecoyDraft(
+      '${generatedDraft['zpub']} ${generatedAddresses.first}',
+    ) as Map;
+
+    expect(testnetResult['ok'], isFalse);
+    expect(mixedResult['ok'], isFalse);
+    expect(mixedResult['error'], contains('not both'));
   });
 
   test('watch-only import action does not store or send spendable material',
