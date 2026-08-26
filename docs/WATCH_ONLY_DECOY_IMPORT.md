@@ -48,18 +48,47 @@ sets:
 
 ## Backend/Staging Requirement
 
+For this feature, staging means a separate non-production Supabase/backend
+target. A staging mobile build must use staging runtime values for:
+
+- `DECOY_SUPABASE_URL`
+- `DECOY_SUPABASE_ANON_KEY`
+- any backend function, webhook, watcher, or alert configuration used by that
+  Supabase project
+
+Do not validate watch-only imports against the production Supabase project, the
+production `commit-decoy` function, production alert delivery, or production
+CodeMagic runtime values. The current public mobile repository contains the
+mobile app contract; the backend `commit-decoy` implementation must be checked
+and updated in the staging backend source/environment before production release.
+
+The existing generated Decoy Seed path must remain compatible with:
+
+- `watch_public_key_type`: `bip84-account-zpub`
+- `derivation_path`: `m/84'/0'/0'`
+- `watch_public_key`: zpub
+
+The new imported address-list path requires backend support for:
+
+- `watch_public_key_type`: `bitcoin-address-list`
+- `derivation_path`: `imported-addresses`
+- `watch_public_key`: newline-separated receive addresses
+
 Before releasing address-list imports, staging backend services must prove that
 `bitcoin-address-list` entries are registered, scanned, and alerted through the
 same emergency-contact path as generated Decoy Seed alerts.
 
 At minimum, staging should verify:
 
+- the staging mobile build points at the staging Supabase URL, not production.
 - zpub import registers and alerts on outbound movement.
 - xpub import registers as a zpub-compatible native SegWit watcher.
 - address-list import registers every supplied address.
 - address-list import alerts when any watched address has outbound movement.
+- generated Decoy Seed registration and alerting still work unchanged.
 - duplicate or replayed chain events do not send duplicate emergency alerts.
 - seed phrases and private keys are never accepted, logged, or sent.
+- production tables, functions, logs, and alert queues receive no test data.
 
 Do not treat this feature as production-ready until both mobile and staging
 backend tests pass.

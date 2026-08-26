@@ -116,6 +116,7 @@ void main() {
     expect(source, isNot(contains('mnemonicToSeed')));
     expect(source, isNot(contains('CommitDecoyCall')));
     expect(source, isNot(contains('ApiManager.instance.makeApiCall')));
+    expect(source, isNot(contains('supabaseFunctionUrl')));
     expect(source, isNot(contains('SupaFlow.client')));
   });
 }
