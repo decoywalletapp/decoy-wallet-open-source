@@ -10,6 +10,8 @@ void main() {
     final generatedAddresses =
         (generatedDraft['addresses'] as List).cast<String>();
 
+    expect(generatedDraft['source_type'], 'generated-seed');
+
     final importDraft = prepareWatchOnlyDecoyDraftPayload(
       generatedDraft['zpub'] as String,
       decoyId: 'test-decoy-id',

@@ -176,6 +176,10 @@ class _GenerateDecoySeedPhraseWidgetState
                                 _model.decoyDraftOut,
                                 r'''$.watch_public_key_type''',
                               ).toString();
+                              FFAppState().draftWatchSourceType = getJsonField(
+                                _model.decoyDraftOut,
+                                r'''$.source_type''',
+                              ).toString();
                               safeSetState(() {});
                               FFAppState().decoySeedArmed = false;
                               safeSetState(() {});

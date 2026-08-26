@@ -103,6 +103,10 @@ class _ImportWatchOnlyWalletWidgetState
         _model.watchOnlyDraftOut,
         r'''$.watch_public_key_type''',
       ).toString();
+      FFAppState().draftWatchSourceType = getJsonField(
+        _model.watchOnlyDraftOut,
+        r'''$.source_type''',
+      ).toString();
       FFAppState().decoySeedArmed = false;
       safeSetState(() {});
 
