@@ -181,4 +181,14 @@ void main() {
     expect(source, contains('watchPublicKey: watchPublicKey'));
     expect(source, contains('watchPublicKeyType: watchPublicKeyType'));
   });
+
+  test('watch-only import entry point is gated for staging builds', () {
+    final source = File(
+      'lib/create_decoy_seed/generate_decoy_seed_phrase/'
+      'generate_decoy_seed_phrase_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('DecoyBuildProvenance.watchOnlyImportEnabled'));
+    expect(source, contains('ImportWatchOnlyWalletWidget.routeName'));
+  });
 }

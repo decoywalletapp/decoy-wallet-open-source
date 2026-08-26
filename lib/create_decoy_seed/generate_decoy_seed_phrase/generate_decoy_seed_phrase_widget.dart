@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/build_provenance.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import '/utils/android_display_guard.dart';
@@ -110,7 +111,9 @@ class _GenerateDecoySeedPhraseWidgetState
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Text(
-                                'Generate a new Decoy Seed phrase or monitor watch-only wallet data you already control.',
+                                DecoyBuildProvenance.watchOnlyImportEnabled
+                                    ? 'Generate a new Decoy Seed phrase or monitor watch-only wallet data you already control.'
+                                    : 'Generate a new Decoy Seed phrase to monitor for outbound wallet activity.',
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
@@ -247,43 +250,44 @@ class _GenerateDecoySeedPhraseWidgetState
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                         ),
-                        FFButtonWidget(
-                          onPressed: () async {
-                            context.pushNamed(
-                                ImportWatchOnlyWalletWidget.routeName);
-                          },
-                          text: 'Monitor Existing Wallet',
-                          options: FFButtonOptions(
-                            width: 400.0,
-                            height: 56.0,
-                            padding: EdgeInsets.all(8.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: Colors.white,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleMedium
-                                .override(
-                                  font: GoogleFonts.heebo(
+                        if (DecoyBuildProvenance.watchOnlyImportEnabled)
+                          FFButtonWidget(
+                            onPressed: () async {
+                              context.pushNamed(
+                                  ImportWatchOnlyWalletWidget.routeName);
+                            },
+                            text: 'Monitor Existing Wallet',
+                            options: FFButtonOptions(
+                              width: 400.0,
+                              height: 56.0,
+                              padding: EdgeInsets.all(8.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: Colors.white,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleMedium
+                                  .override(
+                                    font: GoogleFonts.heebo(
+                                      fontWeight: FontWeight.w600,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .fontStyle,
+                                    ),
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .fontStyle,
-                                ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).primary,
-                              width: 2.0,
+                              elevation: 0.0,
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                        ),
                       ].divide(SizedBox(height: 20.0)),
                     ),
                   ),

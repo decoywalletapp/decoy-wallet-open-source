@@ -16,5 +16,6 @@ void main() {
     expect(DecoyBuildProvenance.backendEnvironment, 'production');
     expect(DecoyBuildProvenance.showBackendEnvironment, isFalse);
     expect(DecoyBuildProvenance.backendEnvironmentLabel, 'Backend: production');
+    expect(DecoyBuildProvenance.watchOnlyImportEnabled, isFalse);
   });
 }
