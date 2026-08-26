@@ -36,6 +36,8 @@ export '/pin_pages/create_decoy_pin/create_decoy_pin_widget.dart'
     show CreateDecoyPinWidget;
 export '/create_decoy_seed/generate_decoy_seed_phrase/generate_decoy_seed_phrase_widget.dart'
     show GenerateDecoySeedPhraseWidget;
+export '/create_decoy_seed/import_watch_only_wallet/import_watch_only_wallet_widget.dart'
+    show ImportWatchOnlyWalletWidget;
 export '/create_decoy_seed/seed_phrase_verification/seed_phrase_verification_widget.dart'
     show SeedPhraseVerificationWidget;
 export '/emergancy_contact_information/create_decoy_emergency_contacts_setup/create_decoy_emergency_contacts_setup_widget.dart'

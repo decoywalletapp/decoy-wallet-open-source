@@ -114,7 +114,8 @@ builds.
 The public app source is only one part of the Decoy system. Backend alert
 delivery, payment handling, phone verification, and monitoring infrastructure
 must be deployed and audited separately before running a production service.
-For the Decoy Seed entropy model, see `docs/DECOY_SEED_ENTROPY.md`.
+For the Decoy Seed entropy model, see `docs/DECOY_SEED_ENTROPY.md`. For the
+watch-only Decoy import contract, see `docs/WATCH_ONLY_DECOY_IMPORT.md`.
 
 ## Public release status
 

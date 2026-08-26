@@ -1,0 +1,119 @@
+import 'dart:io';
+
+import 'package:decoy_wallet_app/custom_code/actions/generate_decoy_draft.dart';
+import 'package:decoy_wallet_app/custom_code/actions/prepare_watch_only_decoy_draft.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('zpub import prepares the same BIP84 watch-only address set', () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+    final generatedAddresses =
+        (generatedDraft['addresses'] as List).cast<String>();
+
+    final importDraft = prepareWatchOnlyDecoyDraftPayload(
+      generatedDraft['zpub'] as String,
+      decoyId: 'test-decoy-id',
+    );
+
+    expect(importDraft['ok'], isTrue);
+    expect(importDraft['decoyId'], 'test-decoy-id');
+    expect(importDraft['derivation_path'], "m/84'/0'/0'");
+    expect(importDraft['xpub'], startsWith('xpub'));
+    expect(importDraft['zpub'], generatedDraft['zpub']);
+    expect(importDraft['watch_public_key'], generatedDraft['zpub']);
+    expect(importDraft['watch_public_key_type'], 'bip84-account-zpub');
+    expect(importDraft['source_type'], 'zpub');
+    expect(importDraft['addresses'], generatedAddresses);
+  });
+
+  test('xpub import normalizes to existing zpub watch-key format', () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+    final generatedAddresses =
+        (generatedDraft['addresses'] as List).cast<String>();
+
+    final importDraft = prepareWatchOnlyDecoyDraftPayload(
+      generatedDraft['xpub'] as String,
+      decoyId: 'test-decoy-id',
+    );
+
+    expect(importDraft['ok'], isTrue);
+    expect(importDraft['xpub'], generatedDraft['xpub']);
+    expect(importDraft['zpub'], generatedDraft['zpub']);
+    expect(importDraft['watch_public_key'], generatedDraft['zpub']);
+    expect(importDraft['watch_public_key_type'], 'bip84-account-zpub');
+    expect(importDraft['source_type'], 'xpub');
+    expect(importDraft['addresses'], generatedAddresses);
+  });
+
+  test('receive address import accepts address lists and bitcoin URIs',
+      () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+    final generatedAddresses =
+        (generatedDraft['addresses'] as List).cast<String>();
+    final address0 = generatedAddresses[0];
+    final address1 = generatedAddresses[1];
+
+    final importDraft = prepareWatchOnlyDecoyDraftPayload(
+      'bitcoin:$address0?amount=1\n$address1\n$address0',
+      decoyId: 'address-list-id',
+    );
+
+    expect(importDraft['ok'], isTrue);
+    expect(importDraft['decoyId'], 'address-list-id');
+    expect(importDraft['derivation_path'], 'imported-addresses');
+    expect(importDraft['xpub'], isEmpty);
+    expect(importDraft['zpub'], isEmpty);
+    expect(importDraft['watch_public_key_type'], 'bitcoin-address-list');
+    expect(importDraft['source_type'], 'address-list');
+    expect(importDraft['addresses'], <String>[address0, address1]);
+    expect(importDraft['watch_public_key'], '$address0\n$address1');
+  });
+
+  test('watch-only import rejects seed phrases and private keys', () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+
+    final seedResult =
+        await prepareWatchOnlyDecoyDraft(generatedDraft['mnemonic'] as String)
+            as Map;
+    final xprvResult = await prepareWatchOnlyDecoyDraft('xprv123') as Map;
+    final wifResult = await prepareWatchOnlyDecoyDraft(
+      'KwdMAjHcbJ8e1S7p85GeEsjK9Uo9XvGCpMVqdpu4WzeUFHYyNe6Y',
+    ) as Map;
+
+    expect(seedResult['ok'], isFalse);
+    expect(seedResult['error'], contains('Do not paste seed phrases'));
+    expect(xprvResult['ok'], isFalse);
+    expect(xprvResult['error'], contains('private extended keys'));
+    expect(wifResult['ok'], isFalse);
+    expect(wifResult['error'], contains('private keys'));
+  });
+
+  test('watch-only import rejects malformed or mixed-case address input',
+      () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+    final generatedAddresses =
+        (generatedDraft['addresses'] as List).cast<String>();
+    final mixedCaseAddress =
+        generatedAddresses.first.replaceFirst('bc1', 'bC1');
+
+    final mixedCaseResult =
+        await prepareWatchOnlyDecoyDraft(mixedCaseAddress) as Map;
+    final invalidResult =
+        await prepareWatchOnlyDecoyDraft('not-a-bitcoin-address') as Map;
+
+    expect(mixedCaseResult['ok'], isFalse);
+    expect(invalidResult['ok'], isFalse);
+  });
+
+  test('watch-only import action does not store or send spendable material',
+      () {
+    final source = File(
+      'lib/custom_code/actions/prepare_watch_only_decoy_draft.dart',
+    ).readAsStringSync();
+
+    expect(source, isNot(contains('mnemonicToSeed')));
+    expect(source, isNot(contains('CommitDecoyCall')));
+    expect(source, isNot(contains('ApiManager.instance.makeApiCall')));
+    expect(source, isNot(contains('SupaFlow.client')));
+  });
+}
