@@ -1186,6 +1186,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     final sourceLine =
         'Source: ${DecoyBuildProvenance.sourceRef} @ ${DecoyBuildProvenance.shortCommit}';
     final buildLine = 'Version ${DecoyBuildProvenance.versionLabel}';
+    final backendLine = DecoyBuildProvenance.backendEnvironmentLabel;
 
     final textStyle = FlutterFlowTheme.of(context).bodySmall.override(
           fontFamily: 'Inter',
@@ -1220,6 +1221,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               textAlign: TextAlign.center,
               style: textStyle,
             ),
+            if (DecoyBuildProvenance.showBackendEnvironment)
+              Text(
+                backendLine,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: textStyle,
+              ),
           ],
         ),
       ),

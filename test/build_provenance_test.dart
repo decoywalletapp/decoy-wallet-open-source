@@ -13,5 +13,8 @@ void main() {
     expect(DecoyBuildProvenance.shortCommit, 'unknown');
     expect(DecoyBuildProvenance.commitUrl, isNull);
     expect(DecoyBuildProvenance.versionLabel, '1.0.5+10005');
+    expect(DecoyBuildProvenance.backendEnvironment, 'production');
+    expect(DecoyBuildProvenance.showBackendEnvironment, isFalse);
+    expect(DecoyBuildProvenance.backendEnvironmentLabel, 'Backend: production');
   });
 }

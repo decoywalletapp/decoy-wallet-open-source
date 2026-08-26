@@ -33,9 +33,16 @@ class DecoyBuildProvenance {
     'DECOY_BUILD_NUMBER',
     defaultValue: '10005',
   );
+  static const backendEnvironment = String.fromEnvironment(
+    'DECOY_BACKEND_ENV',
+    defaultValue: 'production',
+  );
 
   static bool get hasSourceCommit =>
       sourceCommit.isNotEmpty && sourceCommit != 'unknown';
+
+  static bool get showBackendEnvironment =>
+      backendEnvironment.isNotEmpty && backendEnvironment != 'production';
 
   static String get shortCommit {
     if (!hasSourceCommit) {
@@ -59,6 +66,8 @@ class DecoyBuildProvenance {
     }
     return '$buildVersion+$buildNumber';
   }
+
+  static String get backendEnvironmentLabel => 'Backend: $backendEnvironment';
 
   static String? get commitUrl {
     if (!hasSourceCommit) {

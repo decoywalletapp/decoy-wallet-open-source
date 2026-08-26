@@ -51,10 +51,15 @@ sets:
 For this feature, staging means a separate non-production Supabase/backend
 target. A staging mobile build must use staging runtime values for:
 
+- `DECOY_BACKEND_ENV=staging`
 - `DECOY_SUPABASE_URL`
 - `DECOY_SUPABASE_ANON_KEY`
 - any backend function, webhook, watcher, or alert configuration used by that
   Supabase project
+
+When `DECOY_BACKEND_ENV` is set to `staging`, the Settings source-verification
+footer displays `Backend: staging`. Treat that as a required preflight check
+before testing imported watch-only data on a device.
 
 Do not validate watch-only imports against the production Supabase project, the
 production `commit-decoy` function, production alert delivery, or production
