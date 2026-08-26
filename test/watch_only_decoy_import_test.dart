@@ -191,4 +191,15 @@ void main() {
     expect(source, contains('DecoyBuildProvenance.watchOnlyImportEnabled'));
     expect(source, contains('ImportWatchOnlyWalletWidget.routeName'));
   });
+
+  test('watch-only import route is gated for staging builds', () {
+    final source = File(
+      'lib/create_decoy_seed/import_watch_only_wallet/'
+      'import_watch_only_wallet_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('DecoyBuildProvenance.watchOnlyImportEnabled'));
+    expect(source, contains('Watch-only wallet import is available'));
+    expect(source, contains('prepareWatchOnlyDecoyDraft'));
+  });
 }

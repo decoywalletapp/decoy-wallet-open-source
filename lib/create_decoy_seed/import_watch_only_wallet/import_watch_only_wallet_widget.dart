@@ -1,4 +1,5 @@
 import '/custom_code/actions/index.dart' as actions;
+import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -129,6 +130,57 @@ class _ImportWatchOnlyWalletWidgetState
   @override
   Widget build(BuildContext context) {
     final bottomPadding = decoyBottomActionPadding(context);
+
+    if (!DecoyBuildProvenance.watchOnlyImportEnabled) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          top: true,
+          child: Stack(
+            children: [
+              Center(
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                    24.0,
+                    24.0,
+                    24.0,
+                    24.0 + bottomPadding,
+                  ),
+                  child: Text(
+                    'Watch-only wallet import is available in staging builds only.',
+                    textAlign: TextAlign.center,
+                    style: FlutterFlowTheme.of(context).bodyLarge.override(
+                          fontFamily:
+                              FlutterFlowTheme.of(context).bodyLargeFamily,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          letterSpacing: 0.0,
+                          useGoogleFonts:
+                              !FlutterFlowTheme.of(context).bodyLargeIsCustom,
+                        ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                child: FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 20.0,
+                  buttonSize: 40.0,
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    context.safePop();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return GestureDetector(
       onTap: () {
