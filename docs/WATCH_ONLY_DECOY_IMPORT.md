@@ -74,6 +74,26 @@ The new imported address-list path requires backend support for:
 - `derivation_path`: `imported-addresses`
 - `watch_public_key`: newline-separated receive addresses
 
+The mobile app commits both generated and imported watch data through the
+existing `commit-decoy` call after the user arms monitoring. The request body is
+shaped as:
+
+```json
+{
+  "decoyId": "user-decoy-id",
+  "derivation_path": "m/84'/0'/0' or imported-addresses",
+  "addresses": ["bc1..."],
+  "xpub": "xpub... or empty string",
+  "watch_public_key": "zpub... or newline-separated addresses",
+  "watch_public_key_type": "bip84-account-zpub or bitcoin-address-list"
+}
+```
+
+For generated seeds, zpub imports, and xpub imports, staging should treat
+`bip84-account-zpub` the same way the current generated Decoy Seed flow works.
+For address-list imports, staging should store and watch each address directly
+without attempting to derive child addresses.
+
 Before releasing address-list imports, staging backend services must prove that
 `bitcoin-address-list` entries are registered, scanned, and alerted through the
 same emergency-contact path as generated Decoy Seed alerts.
