@@ -1,7 +1,8 @@
 # Watch-Only Decoy Import
 
 This note documents the app-side contract for importing existing wallet data
-into Decoy Keys.
+into Decoy Keys. The staging backend handoff lives in
+`docs/WATCH_ONLY_STAGING_BACKEND_HANDOFF.md`.
 
 ## Goal
 
