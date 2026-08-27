@@ -63,9 +63,11 @@ footer displays `Backend: staging`. Treat that as a required preflight check
 before testing imported watch-only data on a device.
 
 The `Monitor Existing Wallet` entry point is intentionally hidden unless
-`DECOY_ENABLE_WATCH_ONLY_IMPORT=true` is injected at build time. Keep that flag
-off for ordinary production builds until staging proves the backend supports
-both generated Decoy Seeds and imported address-list watches.
+`DECOY_ENABLE_WATCH_ONLY_IMPORT=true` is injected at build time. The import
+route itself also checks the same flag and shows a staging-only message if the
+screen is opened in a normal build. Keep that flag off for ordinary production
+builds until staging proves the backend supports both generated Decoy Seeds and
+imported address-list watches.
 
 Do not validate watch-only imports against the production Supabase project, the
 production `commit-decoy` function, production alert delivery, or production
