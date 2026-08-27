@@ -7,7 +7,7 @@ workflows:
       app_store_connect: "DecoyWallet Codemagic"
     environment:
       groups:
-        - decoy_public_runtime
+        - decoy_staging_runtime
         - decoy_ios_testflight
       ios_signing:
         distribution_type: app_store
@@ -17,7 +17,9 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
-        DECOY_BUILD_VERIFICATION: "testflight-rehearsal"
+        DECOY_BUILD_VERIFICATION: "watch-only-staging-testflight"
+        DECOY_BACKEND_ENV: "staging"
+        DECOY_ENABLE_WATCH_ONLY_IMPORT: "true"
       flutter: "3.41.6"
       xcode: latest
       cocoapods: default
@@ -46,6 +48,8 @@ workflows:
             APP_STORE_APPLE_ID \
             DECOY_SUPABASE_URL \
             DECOY_SUPABASE_ANON_KEY \
+            DECOY_BACKEND_ENV \
+            DECOY_ENABLE_WATCH_ONLY_IMPORT \
             DECOY_FIREBASE_WEB_API_KEY \
             DECOY_FIREBASE_WEB_AUTH_DOMAIN \
             DECOY_FIREBASE_PROJECT_ID \
@@ -141,6 +145,14 @@ workflows:
             1:*:ios:*) ;;
             *) invalid="$invalid IOS_FIREBASE_APP_ID(expected iOS app id shape)" ;;
           esac
+          case "$DECOY_BACKEND_ENV" in
+            staging) ;;
+            *) invalid="$invalid DECOY_BACKEND_ENV(expected staging)" ;;
+          esac
+          case "$DECOY_ENABLE_WATCH_ONLY_IMPORT" in
+            true) ;;
+            *) invalid="$invalid DECOY_ENABLE_WATCH_ONLY_IMPORT(expected true)" ;;
+          esac
 
           if [ -n "$invalid" ]; then
             echo "Invalid CodeMagic environment variables:$invalid"
@@ -233,6 +245,8 @@ workflows:
             --export-options-plist=/Users/builder/export_options.plist \
             --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
             --dart-define=DECOY_SUPABASE_ANON_KEY="$DECOY_SUPABASE_ANON_KEY" \
+            --dart-define=DECOY_BACKEND_ENV="$DECOY_BACKEND_ENV" \
+            --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT="$DECOY_ENABLE_WATCH_ONLY_IMPORT" \
             --dart-define=DECOY_FIREBASE_CONFIGURED=true \
             --dart-define=DECOY_FIREBASE_WEB_API_KEY="$DECOY_FIREBASE_WEB_API_KEY" \
             --dart-define=DECOY_FIREBASE_WEB_AUTH_DOMAIN="$DECOY_FIREBASE_WEB_AUTH_DOMAIN" \
@@ -272,6 +286,8 @@ workflows:
           version=${APP_VERSION}
           build=${APP_BUILD_NUMBER}
           verification=${DECOY_BUILD_VERIFICATION}
+          backend_environment=${DECOY_BACKEND_ENV}
+          watch_only_import=${DECOY_ENABLE_WATCH_ONLY_IMPORT}
           EOF
     artifacts:
       - build/ios/ipa/*.ipa
@@ -281,7 +297,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
 
   ios-app-store-release:
     name: iOS App Store Release

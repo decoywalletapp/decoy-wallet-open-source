@@ -38,6 +38,7 @@ Create these CodeMagic environment groups:
 
 ```text
 decoy_public_runtime
+decoy_staging_runtime
 decoy_ios_testflight
 ```
 
@@ -70,6 +71,18 @@ DECOY_SUPPORT_EMAIL
 DECOY_BILLING_RETURN_URL
 DECOY_TUTORIAL_VIDEO_BASE_URL
 ```
+
+For watch-only import TestFlight validation, use `decoy_staging_runtime` instead
+of `decoy_public_runtime`. It should contain the same variable names, but all
+Supabase/backend values must point to the non-production staging environment.
+The `ios-testflight-rehearsal` workflow injects:
+
+```text
+DECOY_BACKEND_ENV=staging
+DECOY_ENABLE_WATCH_ONLY_IMPORT=true
+```
+
+Do not run watch-only import validation against production runtime values.
 
 `decoy_ios_testflight` should contain the iOS/App Store Connect values:
 
