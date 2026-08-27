@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:decoy_wallet_app/backend/api_requests/api_calls.dart';
 import 'package:decoy_wallet_app/custom_code/actions/generate_decoy_draft.dart';
 import 'package:decoy_wallet_app/custom_code/actions/prepare_watch_only_decoy_draft.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -180,6 +181,18 @@ void main() {
     expect(source, contains('xpub: FFAppState().draftXpub.trim()'));
     expect(source, contains('watchPublicKey: watchPublicKey'));
     expect(source, contains('watchPublicKeyType: watchPublicKeyType'));
+  });
+
+  test('commit JSON escaping preserves address-list watch keys', () async {
+    final generatedDraft = await generateDecoyDraft() as Map;
+    final generatedAddresses =
+        (generatedDraft['addresses'] as List).cast<String>();
+    final watchKey = '${generatedAddresses[0]}\n${generatedAddresses[1]}';
+
+    expect(
+      escapeStringForJson(watchKey),
+      '${generatedAddresses[0]}\\n${generatedAddresses[1]}',
+    );
   });
 
   test('watch-only import entry point is gated for staging builds', () {
