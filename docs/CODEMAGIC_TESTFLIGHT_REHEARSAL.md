@@ -84,6 +84,21 @@ DECOY_ENABLE_WATCH_ONLY_IMPORT=true
 
 Do not run watch-only import validation against production runtime values.
 
+For the current watch-only staging project, the non-secret staging runtime URL
+shape is:
+
+```text
+DECOY_SUPABASE_URL=https://dxsihfandgbrkreeokkm.supabase.co
+DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/firebase
+DECOY_ALERT_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/alerts
+DECOY_DATA_KEY_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/data-key
+DECOY_PAYMENT_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/payment
+DECOY_VERIFY_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/verify
+```
+
+The staging Supabase anon key and all Firebase/iOS values must still be entered
+only in CodeMagic, not committed to this repository.
+
 `decoy_ios_testflight` should contain the iOS/App Store Connect values:
 
 ```text

@@ -1,11 +1,11 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+import {
+  cleanString,
+  errorResponse,
+  jsonResponse,
+  optionsResponse,
+  readJson,
+  requireUser,
+} from "../_shared/staging.ts";
 
 type CommitPayload = {
   decoyId?: unknown;
@@ -17,20 +17,6 @@ type CommitPayload = {
   watch_public_key?: unknown;
   watch_public_key_type?: unknown;
 };
-
-function response(status: number, body: Record<string, unknown>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "application/json",
-    },
-  });
-}
-
-function asCleanString(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
-}
 
 function rejectPrivateMaterial(value: string): boolean {
   const compact = value.trim();
@@ -74,7 +60,7 @@ function normalizeAddresses(raw: unknown): string[] {
   const addresses: string[] = [];
 
   for (const item of values) {
-    const text = asCleanString(item);
+    const text = cleanString(item);
     if (!text) continue;
 
     const parsed = text
@@ -106,206 +92,177 @@ function normalizeWatchAddressList(value: string): string[] {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return optionsResponse();
   }
 
   if (req.method !== "POST") {
-    return response(405, { ok: false, error: "Method not allowed" });
+    return jsonResponse(405, { ok: false, error: "Method not allowed" });
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-
-  if (!supabaseUrl || !anonKey || !serviceRoleKey) {
-    return response(500, {
-      ok: false,
-      error: "Staging backend is missing required Supabase environment values",
-    });
-  }
-
-  const authorization = req.headers.get("Authorization") ?? "";
-  if (!authorization.startsWith("Bearer ")) {
-    return response(401, { ok: false, error: "Missing user authorization" });
-  }
-
-  const authClient = createClient(supabaseUrl, anonKey, {
-    global: { headers: { Authorization: authorization } },
-  });
-
-  const { data: authData, error: authError } = await authClient.auth.getUser();
-  const user = authData?.user;
-  if (authError || !user) {
-    return response(401, { ok: false, error: "Invalid user authorization" });
-  }
-
-  let payload: CommitPayload;
   try {
-    payload = await req.json();
-  } catch (_) {
-    return response(400, { ok: false, error: "Invalid JSON body" });
-  }
+    const { user, admin } = await requireUser(req);
+    const payload = await readJson(req) as CommitPayload;
 
-  const decoyId = asCleanString(payload.decoyId || payload.id);
-  const derivationPath = asCleanString(payload.derivation_path);
-  const watchPublicKeyType = asCleanString(payload.watch_public_key_type);
-  const requestedWatchPublicKey = asCleanString(payload.watch_public_key);
-  const requestedXpub = asCleanString(payload.xpub);
-  const requestedZpub = asCleanString(payload.zpub);
+    const decoyId = cleanString(payload.decoyId || payload.id);
+    const derivationPath = cleanString(payload.derivation_path);
+    const watchPublicKeyType = cleanString(payload.watch_public_key_type);
+    const requestedWatchPublicKey = cleanString(payload.watch_public_key);
+    const requestedXpub = cleanString(payload.xpub);
+    const requestedZpub = cleanString(payload.zpub);
 
-  if (!decoyId) {
-    return response(400, { ok: false, error: "Missing decoy id" });
-  }
+    if (!decoyId) {
+      return jsonResponse(400, { ok: false, error: "Missing decoy id" });
+    }
 
-  if (!derivationPath) {
-    return response(400, { ok: false, error: "Missing derivation path" });
-  }
+    if (!derivationPath) {
+      return jsonResponse(400, { ok: false, error: "Missing derivation path" });
+    }
 
-  if (!watchPublicKeyType) {
-    return response(400, {
-      ok: false,
-      error: "Missing watch public key type",
-    });
-  }
+    if (!watchPublicKeyType) {
+      return jsonResponse(400, {
+        ok: false,
+        error: "Missing watch public key type",
+      });
+    }
 
-  if (
-    watchPublicKeyType !== "bip84-account-zpub" &&
-    watchPublicKeyType !== "bitcoin-address-list"
-  ) {
-    return response(400, {
-      ok: false,
-      error: "Unsupported watch public key type",
-    });
-  }
+    if (
+      watchPublicKeyType !== "bip84-account-zpub" &&
+      watchPublicKeyType !== "bitcoin-address-list"
+    ) {
+      return jsonResponse(400, {
+        ok: false,
+        error: "Unsupported watch public key type",
+      });
+    }
 
-  for (const candidate of [requestedXpub, requestedZpub]) {
-    if (candidate && rejectPrivateMaterial(candidate)) {
-      return response(400, {
+    for (const candidate of [requestedXpub, requestedZpub]) {
+      if (candidate && rejectPrivateMaterial(candidate)) {
+        return jsonResponse(400, {
+          ok: false,
+          error: "Private seed or key material is not accepted",
+        });
+      }
+    }
+
+    if (
+      watchPublicKeyType !== "bitcoin-address-list" &&
+      requestedWatchPublicKey &&
+      rejectPrivateMaterial(requestedWatchPublicKey)
+    ) {
+      return jsonResponse(400, {
         ok: false,
         error: "Private seed or key material is not accepted",
       });
     }
-  }
 
-  if (
-    watchPublicKeyType !== "bitcoin-address-list" &&
-    requestedWatchPublicKey &&
-    rejectPrivateMaterial(requestedWatchPublicKey)
-  ) {
-    return response(400, {
-      ok: false,
-      error: "Private seed or key material is not accepted",
-    });
-  }
-
-  let addresses: string[];
-  try {
-    addresses = normalizeAddresses(payload.addresses);
-  } catch (error) {
-    return response(400, {
-      ok: false,
-      error: error instanceof Error ? error.message : "Invalid addresses",
-    });
-  }
-
-  if (addresses.length === 0) {
-    return response(400, { ok: false, error: "Missing watch addresses" });
-  }
-
-  let xpub = "";
-  let zpub = "";
-  let watchPublicKey = requestedWatchPublicKey;
-
-  if (watchPublicKeyType === "bip84-account-zpub") {
-    xpub = requestedXpub;
-    zpub = requestedZpub || requestedWatchPublicKey;
-    watchPublicKey = requestedWatchPublicKey || zpub;
-
-    if (!watchPublicKey.startsWith("zpub")) {
-      return response(400, {
-        ok: false,
-        error: "BIP84 account imports must store a zpub watch key",
-      });
-    }
-
-    if (xpub && !xpub.startsWith("xpub")) {
-      return response(400, {
-        ok: false,
-        error: "Invalid xpub value",
-      });
-    }
-  } else if (watchPublicKeyType === "bitcoin-address-list") {
-    if (derivationPath !== "imported-addresses") {
-      return response(400, {
-        ok: false,
-        error: "Address-list imports must use imported-addresses path",
-      });
-    }
-
-    let watchAddresses: string[];
+    let addresses: string[];
     try {
-      watchAddresses = normalizeWatchAddressList(watchPublicKey);
+      addresses = normalizeAddresses(payload.addresses);
     } catch (error) {
-      return response(400, {
+      return jsonResponse(400, {
         ok: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Invalid watch address list",
+        error: error instanceof Error ? error.message : "Invalid addresses",
       });
     }
 
-    const expected = addresses.join("\n");
-    const supplied = watchAddresses.join("\n");
-    if (expected !== supplied) {
-      return response(400, {
+    if (addresses.length === 0) {
+      return jsonResponse(400, { ok: false, error: "Missing watch addresses" });
+    }
+
+    let xpub = "";
+    let zpub = "";
+    let watchPublicKey = requestedWatchPublicKey;
+
+    if (watchPublicKeyType === "bip84-account-zpub") {
+      xpub = requestedXpub;
+      zpub = requestedZpub || requestedWatchPublicKey;
+      watchPublicKey = requestedWatchPublicKey || zpub;
+
+      if (!watchPublicKey.startsWith("zpub")) {
+        return jsonResponse(400, {
+          ok: false,
+          error: "BIP84 account imports must store a zpub watch key",
+        });
+      }
+
+      if (xpub && !xpub.startsWith("xpub")) {
+        return jsonResponse(400, {
+          ok: false,
+          error: "Invalid xpub value",
+        });
+      }
+    } else if (watchPublicKeyType === "bitcoin-address-list") {
+      if (derivationPath !== "imported-addresses") {
+        return jsonResponse(400, {
+          ok: false,
+          error: "Address-list imports must use imported-addresses path",
+        });
+      }
+
+      let watchAddresses: string[];
+      try {
+        watchAddresses = normalizeWatchAddressList(watchPublicKey);
+      } catch (error) {
+        return jsonResponse(400, {
+          ok: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Invalid watch address list",
+        });
+      }
+
+      const expected = addresses.join("\n");
+      const supplied = watchAddresses.join("\n");
+      if (expected !== supplied) {
+        return jsonResponse(400, {
+          ok: false,
+          error: "Watch address list does not match submitted addresses",
+        });
+      }
+
+      watchPublicKey = expected;
+    } else {
+      return jsonResponse(400, {
         ok: false,
-        error: "Watch address list does not match submitted addresses",
+        error: "Unsupported watch public key type",
       });
     }
 
-    watchPublicKey = expected;
-  } else {
-    return response(400, {
-      ok: false,
-      error: "Unsupported watch public key type",
+    const { error: upsertError } = await admin.from("decoys").upsert(
+      {
+        id: decoyId,
+        user_id: user.id,
+        addresses,
+        active: true,
+        network: "mainnet",
+        derivation_path: derivationPath,
+        xpub: xpub || null,
+        zpub: zpub || null,
+        watch_public_key: watchPublicKey || null,
+        watch_public_key_type: watchPublicKeyType,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "id" },
+    );
+
+    if (upsertError) {
+      return jsonResponse(500, {
+        ok: false,
+        error: "Unable to store decoy watch data",
+        details: upsertError.message,
+      });
+    }
+
+    return jsonResponse(200, {
+      ok: true,
+      decoyId,
+      addressCount: addresses.length,
+      watchPublicKeyType,
+      storedWatchPublicKey: Boolean(watchPublicKey),
+      staging: true,
     });
+  } catch (error) {
+    return errorResponse(error);
   }
-
-  const admin = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false },
-  });
-
-  const { error: upsertError } = await admin.from("decoys").upsert(
-    {
-      id: decoyId,
-      user_id: user.id,
-      addresses,
-      active: true,
-      network: "mainnet",
-      derivation_path: derivationPath,
-      xpub: xpub || null,
-      zpub: zpub || null,
-      watch_public_key: watchPublicKey || null,
-      watch_public_key_type: watchPublicKeyType,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "id" },
-  );
-
-  if (upsertError) {
-    return response(500, {
-      ok: false,
-      error: "Unable to store decoy watch data",
-      details: upsertError.message,
-    });
-  }
-
-  return response(200, {
-    ok: true,
-    decoyId,
-    addressCount: addresses.length,
-    watchPublicKeyType,
-    storedWatchPublicKey: Boolean(watchPublicKey),
-  });
 });
