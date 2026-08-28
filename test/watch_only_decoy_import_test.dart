@@ -219,6 +219,7 @@ void main() {
   test('staging signup confirmation prefers app deep link', () {
     final redirectSource =
         File('lib/auth/supabase_auth/email_redirect.dart').readAsStringSync();
+    final mainSource = File('lib/main.dart').readAsStringSync();
     final customSignupSource = File(
       'lib/custom_code/actions/supa_email_sign_up.dart',
     ).readAsStringSync();
@@ -236,5 +237,8 @@ void main() {
     expect(generatedSignupSource, contains('emailConfirmationRedirect'));
     expect(userProviderSource, contains('emailConfirmationRedirect'));
     expect(userProviderSource, contains('emailRedirectTo'));
+    expect(mainSource, contains('VerifyAnyLink'));
+    expect(mainSource, contains('Stack'));
+    expect(mainSource, contains('IgnorePointer'));
   });
 }

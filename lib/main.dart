@@ -11,6 +11,7 @@ import 'auth/supabase_auth/supabase_user_provider.dart';
 import 'auth/supabase_auth/auth_util.dart';
 
 import '/backend/supabase/supabase.dart';
+import 'custom_code/widgets/verify_any_link.dart';
 import 'backend/environment_guard.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_util.dart';
@@ -128,7 +129,23 @@ class _MyAppState extends State<MyApp> {
       themeMode: _themeMode,
       routerConfig: _router,
       builder: (context, child) => DecoyDisplayGuard(
-        child: child ?? const SizedBox.shrink(),
+        child: Stack(
+          children: [
+            child ?? const SizedBox.shrink(),
+            const Positioned(
+              left: 0,
+              top: 0,
+              width: 1,
+              height: 1,
+              child: IgnorePointer(
+                child: Opacity(
+                  opacity: 0,
+                  child: VerifyAnyLink(width: 1, height: 1),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
