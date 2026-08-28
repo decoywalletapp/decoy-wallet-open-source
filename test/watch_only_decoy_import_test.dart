@@ -228,6 +228,9 @@ void main() {
     final userProviderSource = File(
       'lib/auth/supabase_auth/supabase_user_provider.dart',
     ).readAsStringSync();
+    final createAccountSource = File(
+      'lib/welcom_pages/create_account/create_account_widget.dart',
+    ).readAsStringSync();
 
     expect(redirectSource, contains('DecoyBuildProvenance.backendEnvironment'));
     expect(redirectSource, contains("backendEnvironment == 'staging'"));
@@ -237,8 +240,21 @@ void main() {
     expect(generatedSignupSource, contains('emailConfirmationRedirect'));
     expect(userProviderSource, contains('emailConfirmationRedirect'));
     expect(userProviderSource, contains('emailRedirectTo'));
+    expect(
+      createAccountSource,
+      isNot(contains("requiredPublicConfig(\n"
+          "                                                    'DECOY_EMAIL_CONFIRM_URL'")),
+    );
     expect(mainSource, contains('VerifyAnyLink'));
     expect(mainSource, contains('Stack'));
     expect(mainSource, contains('IgnorePointer'));
+  });
+
+  test('auth link handler does not write legacy profile rows', () {
+    final source =
+        File('lib/custom_code/widgets/verify_any_link.dart').readAsStringSync();
+
+    expect(source, isNot(contains(".from('profiles')")));
+    expect(source, isNot(contains('profile promote')));
   });
 }

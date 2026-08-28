@@ -142,6 +142,12 @@ List<String> inspectDecoyBackendEnvironment(
       snapshot.paymentBaseUrl,
       'payment',
     );
+    _requireStagingFunctionPath(
+      problems,
+      'DECOY_VERIFY_BASE_URL',
+      snapshot.verifyBaseUrl,
+      '/functions/v1/verify-link',
+    );
   } else {
     final productionValues = <String, String>{
       'DECOY_SUPABASE_URL': snapshot.supabaseUrl,
@@ -222,5 +228,20 @@ void _requireStagingApiRoute(
   if (uri?.host.toLowerCase() != _stagingSupabaseHost ||
       uri?.path != expectedPath) {
     problems.add('$name must point at staging-api/$route for staging builds');
+  }
+}
+
+void _requireStagingFunctionPath(
+  List<String> problems,
+  String name,
+  String value,
+  String expectedPath,
+) {
+  final uri = Uri.tryParse(value.trim());
+  if (uri?.host.toLowerCase() != _stagingSupabaseHost ||
+      uri?.path != expectedPath) {
+    problems.add(
+      '$name must point at $expectedPath on $_stagingSupabaseHost for staging builds',
+    );
   }
 }

@@ -89,6 +89,33 @@ void main() {
     );
   });
 
+  test('staging build rejects non-staging verify route', () {
+    final problems = inspectDecoyBackendEnvironment(
+      const DecoyBackendEnvironmentSnapshot(
+        backendEnvironment: 'staging',
+        supabaseUrl: 'https://dxsihfandgbrkreeokkm.supabase.co',
+        firebaseFunctionsBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/firebase',
+        alertBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/alerts',
+        dataKeyBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/data-key',
+        paymentBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/payment',
+        verifyBaseUrl: 'https://verify-production.example.com/confirm-email',
+        emailConfirmUrl: '',
+        emailConfirmDeepLink: 'decoywalletapp://confirm-email',
+      ),
+    );
+
+    expect(
+      problems,
+      contains(
+        'DECOY_VERIFY_BASE_URL must point at /functions/v1/verify-link on dxsihfandgbrkreeokkm.supabase.co for staging builds',
+      ),
+    );
+  });
+
   test('production build rejects staging Supabase routes', () {
     final problems = inspectDecoyBackendEnvironment(
       const DecoyBackendEnvironmentSnapshot(
@@ -154,6 +181,8 @@ void main() {
     expect(source, contains('_routingUserId'));
     expect(source, contains('_routingUserEmail'));
     expect(source, contains('_failAuthRouting'));
+    expect(source, contains('_runAuthStep'));
+    expect(source, contains('Staging auth stopped at:'));
     expect(source, contains('Decoy wallet account row was not available'));
     expect(source, isNot(contains('jwt: currentJwtToken')));
     expect(source, isNot(contains('userId: currentUserUid')));

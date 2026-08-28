@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
+import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -49,6 +52,35 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
   String get _routingUserId => activeUserUid;
   String get _routingUserEmail => activeUserEmail;
 
+  Duration get _authStepTimeout =>
+      DecoyBuildProvenance.backendEnvironment == 'staging'
+          ? const Duration(seconds: 15)
+          : const Duration(seconds: 45);
+
+  void _setAuthStep(String step) {
+    _model.dbgStep = step;
+    if (kDebugMode) {
+      debugPrint('[AuthRouter] $step');
+    }
+    if (mounted) {
+      safeSetState(() {});
+    }
+  }
+
+  Future<T> _runAuthStep<T>(
+    String step,
+    Future<T> future, {
+    Duration? timeout,
+  }) async {
+    _setAuthStep(step);
+    return future.timeout(
+      timeout ?? _authStepTimeout,
+      onTimeout: () {
+        throw TimeoutException('AuthRouter timed out while $step.');
+      },
+    );
+  }
+
   Future<void> _waitForActiveSession() async {
     for (var attempt = 0; attempt < _sessionWaitAttempts; attempt++) {
       if (_routingJwtToken.trim().isNotEmpty &&
@@ -72,10 +104,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
       return;
     }
 
+    final message = DecoyBuildProvenance.backendEnvironment == 'staging'
+        ? 'Staging auth stopped at: ${_model.dbgStep ?? 'unknown step'}. Please log in again.'
+        : 'We could not finish authentication. Please log in again.';
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'We could not finish authentication. Please log in again.',
+          message,
           style: TextStyle(
             color: FlutterFlowTheme.of(context).primaryText,
           ),
@@ -157,37 +193,55 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         }
       } else {
         try {
-          _model.pushRoute = await actions.initPushTapListener(
-            context,
+          _model.pushRoute = await _runAuthStep(
+            'initializing push-tap listener',
+            actions.initPushTapListener(context),
+            timeout: const Duration(seconds: 8),
           );
           if ((_model.pushRoute != null && _model.pushRoute != '') &&
               (_model.pushRoute == 'renew_btcpay')) {
             FFAppState().openRenewalFromPush = true;
             safeSetState(() {});
           }
-          _model.refreshOut = await actions.refreshSupabaseSession();
-          await _waitForActiveSession();
-          _model.authUserResp = await GetAuthUserCall.call(
-            jwt: _routingJwtToken,
+          _model.refreshOut = await _runAuthStep(
+            'refreshing active Supabase session',
+            actions.refreshSupabaseSession(),
+          );
+          await _runAuthStep(
+            'waiting for active Supabase session',
+            _waitForActiveSession(),
+            timeout: const Duration(seconds: 6),
+          );
+          _model.authUserResp = await _runAuthStep(
+            'loading auth user',
+            GetAuthUserCall.call(
+              jwt: _routingJwtToken,
+            ),
           );
 
-          _model.emailHashResp = await GetEmailHashCall.call(
-            jwt: _routingJwtToken,
-            email: functions.normalizeEmail(getJsonField(
-              (_model.authUserResp?.jsonBody ?? ''),
-              r'''$.email''',
-            ).toString()),
+          _model.emailHashResp = await _runAuthStep(
+            'hashing auth email',
+            GetEmailHashCall.call(
+              jwt: _routingJwtToken,
+              email: functions.normalizeEmail(getJsonField(
+                (_model.authUserResp?.jsonBody ?? ''),
+                r'''$.email''',
+              ).toString()),
+            ),
           );
 
           FFAppState().isLocked = true;
           safeSetState(() {});
-          _model.query1 = await DecoyWalletTable().queryRows(
-            queryFn: (q) => q
-                .eqOrNull(
-                  'user_id',
-                  _routingUserId,
-                )
-                .order('created_at'),
+          _model.query1 = await _runAuthStep(
+            'loading Decoy account row',
+            DecoyWalletTable().queryRows(
+              queryFn: (q) => q
+                  .eqOrNull(
+                    'user_id',
+                    _routingUserId,
+                  )
+                  .order('created_at'),
+            ),
           );
           _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
           _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
@@ -195,21 +249,27 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
           safeSetState(() {});
           if (_model.hasRow == false) {
-            _model.firstInsert = await DecoyWalletTable().insert({
-              'user_id': _routingUserId,
-              'email_verified': false,
-              'email_verified_at': supaSerialize<DateTime>(null),
-              'is_phone_verified': false,
-              'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
-              'email_hash': GetEmailHashCall.emailHash(
-                (_model.emailHashResp?.jsonBody ?? ''),
-              ).toString(),
-              'pending_email_hash': null,
-            });
-            _model.query2 = await DecoyWalletTable().queryRows(
-              queryFn: (q) => q.eqOrNull(
-                'user_id',
-                _routingUserId,
+            _model.firstInsert = await _runAuthStep(
+              'creating Decoy account row',
+              DecoyWalletTable().insert({
+                'user_id': _routingUserId,
+                'email_verified': false,
+                'email_verified_at': supaSerialize<DateTime>(null),
+                'is_phone_verified': false,
+                'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
+                'email_hash': GetEmailHashCall.emailHash(
+                  (_model.emailHashResp?.jsonBody ?? ''),
+                ).toString(),
+                'pending_email_hash': null,
+              }),
+            );
+            _model.query2 = await _runAuthStep(
+              'reloading created Decoy account row',
+              DecoyWalletTable().queryRows(
+                queryFn: (q) => q.eqOrNull(
+                  'user_id',
+                  _routingUserId,
+                ),
               ),
             );
             _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
@@ -221,26 +281,32 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 _model.query2?.elementAtOrNull(0)?.agreementsComplete;
             safeSetState(() {});
           } else {
-            await DecoyWalletTable().update(
-              data: {
-                'email_verified': true,
-                'email_verified_at':
-                    supaSerialize<DateTime>(getCurrentTimestamp),
-                'email_hash': GetEmailHashCall.emailHash(
-                  (_model.emailHashResp?.jsonBody ?? ''),
-                ).toString(),
-                'pending_email': null,
-                'pending_email_hash': null,
-              },
-              matchingRows: (rows) => rows.eqOrNull(
-                'user_id',
-                _routingUserId,
+            await _runAuthStep(
+              'updating Decoy account email verification',
+              DecoyWalletTable().update(
+                data: {
+                  'email_verified': true,
+                  'email_verified_at':
+                      supaSerialize<DateTime>(getCurrentTimestamp),
+                  'email_hash': GetEmailHashCall.emailHash(
+                    (_model.emailHashResp?.jsonBody ?? ''),
+                  ).toString(),
+                  'pending_email': null,
+                  'pending_email_hash': null,
+                },
+                matchingRows: (rows) => rows.eqOrNull(
+                  'user_id',
+                  _routingUserId,
+                ),
               ),
             );
-            _model.query3 = await DecoyWalletTable().queryRows(
-              queryFn: (q) => q.eqOrNull(
-                'user_id',
-                _routingUserId,
+            _model.query3 = await _runAuthStep(
+              'reloading Decoy account row after verification',
+              DecoyWalletTable().queryRows(
+                queryFn: (q) => q.eqOrNull(
+                  'user_id',
+                  _routingUserId,
+                ),
               ),
             );
             _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
@@ -253,20 +319,29 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             safeSetState(() {});
           }
 
-          _model.pushSettingsRows = await UserSettingsTable().queryRows(
-            queryFn: (q) => q.eqOrNull(
-              'user_id',
-              _routingUserId,
+          _model.pushSettingsRows = await _runAuthStep(
+            'loading push settings',
+            UserSettingsTable().queryRows(
+              queryFn: (q) => q.eqOrNull(
+                'user_id',
+                _routingUserId,
+              ),
             ),
           );
           FFAppState().pushEnabled =
               _model.pushSettingsRows?.elementAtOrNull(0)?.pushEnabled == true;
           safeSetState(() {});
           if (FFAppState().pushEnabled == true) {
-            _model.pushTokenRefreshResult =
-                await actions.requestPushPermissionAndGetToken();
-            _model.pushPermissionRefreshResult =
-                await actions.getPushPermissionStatus();
+            _model.pushTokenRefreshResult = await _runAuthStep(
+              'refreshing push notification token',
+              actions.requestPushPermissionAndGetToken(),
+              timeout: const Duration(seconds: 12),
+            );
+            _model.pushPermissionRefreshResult = await _runAuthStep(
+              'checking push notification permission',
+              actions.getPushPermissionStatus(),
+              timeout: const Duration(seconds: 8),
+            );
             safeSetState(() {});
           }
 
@@ -304,40 +379,46 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 if (_model.authRouterBioResult == true) {
                   FFAppState().isLocked = false;
                   safeSetState(() {});
-                  _model.entitlementRow1 =
-                      await UserEntitlementsTable().queryRows(
-                    queryFn: (q) => q
-                        .eqOrNull(
-                          'user_id',
-                          _routingUserId,
-                        )
-                        .eqOrNull(
-                          'entitlement',
-                          'decoy_wallet',
-                        ),
+                  _model.entitlementRow1 = await _runAuthStep(
+                    'loading subscription entitlement',
+                    UserEntitlementsTable().queryRows(
+                      queryFn: (q) => q
+                          .eqOrNull(
+                            'user_id',
+                            _routingUserId,
+                          )
+                          .eqOrNull(
+                            'entitlement',
+                            'decoy_wallet',
+                          ),
+                    ),
                   );
                   if ((_model.entitlementRow1?.elementAtOrNull(0)?.provider ==
                           'stripe') &&
                       (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
                           false)) {
-                    _model.apiResultRSE =
-                        await RepairStripeEntitlementCall.call(
-                      userId: _routingUserId,
-                      jwt: _routingJwtToken,
+                    _model.apiResultRSE = await _runAuthStep(
+                      'repairing Stripe entitlement',
+                      RepairStripeEntitlementCall.call(
+                        userId: _routingUserId,
+                        jwt: _routingJwtToken,
+                      ),
                     );
 
                     if ((_model.apiResultRSE?.succeeded ?? true)) {
-                      _model.secondEntitlementQue =
-                          await UserEntitlementsTable().queryRows(
-                        queryFn: (q) => q
-                            .eqOrNull(
-                              'user_id',
-                              _routingUserId,
-                            )
-                            .eqOrNull(
-                              'entitlement',
-                              'decoy_wallet',
-                            ),
+                      _model.secondEntitlementQue = await _runAuthStep(
+                        'reloading repaired subscription entitlement',
+                        UserEntitlementsTable().queryRows(
+                          queryFn: (q) => q
+                              .eqOrNull(
+                                'user_id',
+                                _routingUserId,
+                              )
+                              .eqOrNull(
+                                'entitlement',
+                                'decoy_wallet',
+                              ),
+                        ),
                       );
                       FFAppState().hasActiveSubscription =
                           (_model.secondEntitlementQue != null &&
@@ -443,40 +524,46 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               } else {
                 FFAppState().isLocked = false;
                 safeSetState(() {});
-                _model.entitlementRow2 =
-                    await UserEntitlementsTable().queryRows(
-                  queryFn: (q) => q
-                      .eqOrNull(
-                        'user_id',
-                        _routingUserId,
-                      )
-                      .eqOrNull(
-                        'entitlement',
-                        'decoy_wallet',
-                      ),
+                _model.entitlementRow2 = await _runAuthStep(
+                  'loading subscription entitlement',
+                  UserEntitlementsTable().queryRows(
+                    queryFn: (q) => q
+                        .eqOrNull(
+                          'user_id',
+                          _routingUserId,
+                        )
+                        .eqOrNull(
+                          'entitlement',
+                          'decoy_wallet',
+                        ),
+                  ),
                 );
                 if ((_model.entitlementRow2?.elementAtOrNull(0)?.provider ==
                         'stripe') &&
                     (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
                         false)) {
-                  _model.api2Result2RSE =
-                      await RepairStripeEntitlementCall.call(
-                    userId: _routingUserId,
-                    jwt: _routingJwtToken,
+                  _model.api2Result2RSE = await _runAuthStep(
+                    'repairing Stripe entitlement',
+                    RepairStripeEntitlementCall.call(
+                      userId: _routingUserId,
+                      jwt: _routingJwtToken,
+                    ),
                   );
 
                   if ((_model.api2Result2RSE?.succeeded ?? true)) {
-                    _model.thirdEntitlementQue =
-                        await UserEntitlementsTable().queryRows(
-                      queryFn: (q) => q
-                          .eqOrNull(
-                            'user_id',
-                            _routingUserId,
-                          )
-                          .eqOrNull(
-                            'entitlement',
-                            'decoy_wallet',
-                          ),
+                    _model.thirdEntitlementQue = await _runAuthStep(
+                      'reloading repaired subscription entitlement',
+                      UserEntitlementsTable().queryRows(
+                        queryFn: (q) => q
+                            .eqOrNull(
+                              'user_id',
+                              _routingUserId,
+                            )
+                            .eqOrNull(
+                              'entitlement',
+                              'decoy_wallet',
+                            ),
+                      ),
                     );
                     FFAppState().hasActiveSubscription =
                         (_model.thirdEntitlementQue != null &&
@@ -642,6 +729,23 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         ),
                       ),
                     ),
+                    if (DecoyBuildProvenance.backendEnvironment == 'staging')
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            24.0, 0.0, 24.0, 0.0),
+                        child: Text(
+                          'Staging auth: ${_model.dbgStep ?? 'starting'}',
+                          textAlign: TextAlign.center,
+                          style: FlutterFlowTheme.of(context)
+                              .bodySmall
+                              .override(
+                                fontFamily: 'Inter',
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                letterSpacing: 0.0,
+                              ),
+                        ),
+                      ),
                   ],
                 ),
               ),

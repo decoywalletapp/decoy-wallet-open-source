@@ -158,10 +158,9 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               ),
                                               child: Text(
                                                 'Let\'s get started by filling out the form below.',
-                                                style:
-                                                    FlutterFlowTheme.of(
-                                                      context,
-                                                    ).labelMedium.override(
+                                                style: FlutterFlowTheme.of(
+                                                  context,
+                                                ).labelMedium.override(
                                                       fontFamily: 'robot',
                                                       color: Colors.black,
                                                       fontSize: 14.0,
@@ -181,26 +180,25 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               ),
                                               child: Text(
                                                 'PASSWORDS DO NOT MATCH',
-                                                style:
-                                                    FlutterFlowTheme.of(
-                                                      context,
-                                                    ).bodyMedium.override(
+                                                style: FlutterFlowTheme.of(
+                                                  context,
+                                                ).bodyMedium.override(
                                                       fontFamily:
                                                           FlutterFlowTheme.of(
-                                                            context,
-                                                          ).bodyMediumFamily,
+                                                        context,
+                                                      ).bodyMediumFamily,
                                                       color:
                                                           FlutterFlowTheme.of(
-                                                            context,
-                                                          ).primary,
+                                                        context,
+                                                      ).primary,
                                                       fontSize: 14.0,
                                                       letterSpacing: 0.0,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       useGoogleFonts:
                                                           !FlutterFlowTheme.of(
-                                                            context,
-                                                          ).bodyMediumIsCustom,
+                                                        context,
+                                                      ).bodyMediumIsCustom,
                                                     ),
                                               ),
                                             ),
@@ -213,12 +211,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           optionsBuilder: (textEditingValue) {
                                             if (textEditingValue.text == '') {
                                               return const Iterable<
-                                                String
-                                              >.empty();
+                                                  String>.empty();
                                             }
                                             return ['Option 1'].where((option) {
-                                              final lowercaseOption = option
-                                                  .toLowerCase();
+                                              final lowercaseOption =
+                                                  option.toLowerCase();
                                               return lowercaseOption.contains(
                                                 textEditingValue.text
                                                     .toLowerCase(),
@@ -227,202 +224,189 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           },
                                           optionsViewBuilder:
                                               (context, onSelected, options) {
-                                                return AutocompleteOptionsList(
-                                                  textFieldKey:
-                                                      _model.emailAddressKey,
-                                                  textController: _model
-                                                      .emailAddressTextController!,
-                                                  options: options.toList(),
-                                                  onSelected: onSelected,
-                                                  textStyle:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                              context,
-                                                            ).bodyMediumFamily,
-                                                        letterSpacing: 0.0,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme.of(
-                                                              context,
-                                                            ).bodyMediumIsCustom,
-                                                      ),
-                                                  textHighlightStyle:
-                                                      TextStyle(),
-                                                  elevation: 4.0,
-                                                  optionBackgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).primaryBackground,
-                                                  optionHighlightColor:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).secondaryBackground,
-                                                  maxHeight: 200.0,
-                                                );
-                                              },
+                                            return AutocompleteOptionsList(
+                                              textFieldKey:
+                                                  _model.emailAddressKey,
+                                              textController: _model
+                                                  .emailAddressTextController!,
+                                              options: options.toList(),
+                                              onSelected: onSelected,
+                                              textStyle: FlutterFlowTheme.of(
+                                                context,
+                                              ).bodyMedium.override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                      context,
+                                                    ).bodyMediumFamily,
+                                                    letterSpacing: 0.0,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                      context,
+                                                    ).bodyMediumIsCustom,
+                                                  ),
+                                              textHighlightStyle: TextStyle(),
+                                              elevation: 4.0,
+                                              optionBackgroundColor:
+                                                  FlutterFlowTheme.of(
+                                                context,
+                                              ).primaryBackground,
+                                              optionHighlightColor:
+                                                  FlutterFlowTheme.of(
+                                                context,
+                                              ).secondaryBackground,
+                                              maxHeight: 200.0,
+                                            );
+                                          },
                                           onSelected: (String selection) {
                                             safeSetState(
-                                              () =>
-                                                  _model.emailAddressSelectedOption =
-                                                      selection,
+                                              () => _model
+                                                      .emailAddressSelectedOption =
+                                                  selection,
                                             );
                                             FocusScope.of(context).unfocus();
                                           },
-                                          fieldViewBuilder:
-                                              (
-                                                context,
-                                                textEditingController,
-                                                focusNode,
-                                                onEditingComplete,
-                                              ) {
-                                                _model.emailAddressFocusNode =
-                                                    focusNode;
+                                          fieldViewBuilder: (
+                                            context,
+                                            textEditingController,
+                                            focusNode,
+                                            onEditingComplete,
+                                          ) {
+                                            _model.emailAddressFocusNode =
+                                                focusNode;
 
-                                                _model.emailAddressTextController =
-                                                    textEditingController;
-                                                return TextFormField(
-                                                  key: _model.emailAddressKey,
-                                                  controller:
-                                                      textEditingController,
-                                                  focusNode: focusNode,
-                                                  onEditingComplete: () {
-                                                    _model
-                                                        .passwordCreateAccountFocusNode
-                                                        ?.requestFocus();
-                                                  },
-                                                  autofocus: false,
-                                                  enabled: true,
-                                                  autofillHints: [
-                                                    AutofillHints.email,
-                                                  ],
-                                                  textCapitalization:
-                                                      TextCapitalization.none,
-                                                  textInputAction:
-                                                      TextInputAction.next,
-                                                  obscureText: false,
-                                                  decoration: InputDecoration(
-                                                    labelText: 'Email',
-                                                    labelStyle:
-                                                        FlutterFlowTheme.of(
-                                                          context,
-                                                        ).labelMedium.override(
-                                                          fontFamily: 'robot',
-                                                          color:
-                                                              FlutterFlowTheme.of(
-                                                                context,
-                                                              ).secondaryText,
-                                                          fontSize: 14.0,
-                                                          letterSpacing: 0.25,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    errorBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Color(
-                                                          0xFFFA5E00,
-                                                        ),
-                                                        width: 2.0,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12.0,
-                                                          ),
-                                                    ),
-                                                    focusedErrorBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    filled: true,
-                                                    fillColor:
-                                                        FlutterFlowTheme.of(
-                                                          context,
-                                                        ).secondaryBackground,
-                                                  ),
-                                                  style:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                        fontFamily: 'robot',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                              context,
-                                                            ).primaryText,
-                                                        fontSize: 16.0,
-                                                        letterSpacing: 0.25,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                  keyboardType: TextInputType
-                                                      .emailAddress,
-                                                  onFieldSubmitted: (_) async {
-                                                    _model
-                                                        .passwordCreateAccountFocusNode
-                                                        ?.requestFocus();
-                                                  },
-                                                  enableInteractiveSelection:
-                                                      false,
-                                                  validator: _model
-                                                      .emailAddressTextControllerValidator
-                                                      .asValidator(context),
-                                                  inputFormatters: [
-                                                    if (!isAndroid && !isiOS)
-                                                      TextInputFormatter.withFunction((
-                                                        oldValue,
-                                                        newValue,
-                                                      ) {
-                                                        return TextEditingValue(
-                                                          selection: newValue
-                                                              .selection,
-                                                          text: newValue.text
-                                                              .toCapitalization(
-                                                                TextCapitalization
-                                                                    .none,
-                                                              ),
-                                                        );
-                                                      }),
-                                                  ],
-                                                );
+                                            _model.emailAddressTextController =
+                                                textEditingController;
+                                            return TextFormField(
+                                              key: _model.emailAddressKey,
+                                              controller: textEditingController,
+                                              focusNode: focusNode,
+                                              onEditingComplete: () {
+                                                _model
+                                                    .passwordCreateAccountFocusNode
+                                                    ?.requestFocus();
                                               },
+                                              autofocus: false,
+                                              enabled: true,
+                                              autofillHints: [
+                                                AutofillHints.email,
+                                              ],
+                                              textCapitalization:
+                                                  TextCapitalization.none,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              obscureText: false,
+                                              decoration: InputDecoration(
+                                                labelText: 'Email',
+                                                labelStyle: FlutterFlowTheme.of(
+                                                  context,
+                                                ).labelMedium.override(
+                                                      fontFamily: 'robot',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).secondaryText,
+                                                      fontSize: 14.0,
+                                                      letterSpacing: 0.25,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                focusedErrorBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                fillColor: FlutterFlowTheme.of(
+                                                  context,
+                                                ).secondaryBackground,
+                                              ),
+                                              style: FlutterFlowTheme.of(
+                                                context,
+                                              ).bodyMedium.override(
+                                                    fontFamily: 'robot',
+                                                    color: FlutterFlowTheme.of(
+                                                      context,
+                                                    ).primaryText,
+                                                    fontSize: 16.0,
+                                                    letterSpacing: 0.25,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
+                                              onFieldSubmitted: (_) async {
+                                                _model
+                                                    .passwordCreateAccountFocusNode
+                                                    ?.requestFocus();
+                                              },
+                                              enableInteractiveSelection: false,
+                                              validator: _model
+                                                  .emailAddressTextControllerValidator
+                                                  .asValidator(context),
+                                              inputFormatters: [
+                                                if (!isAndroid && !isiOS)
+                                                  TextInputFormatter
+                                                      .withFunction((
+                                                    oldValue,
+                                                    newValue,
+                                                  ) {
+                                                    return TextEditingValue(
+                                                      selection:
+                                                          newValue.selection,
+                                                      text: newValue.text
+                                                          .toCapitalization(
+                                                        TextCapitalization.none,
+                                                      ),
+                                                    );
+                                                  }),
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ),
                                       Container(
@@ -432,12 +416,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           optionsBuilder: (textEditingValue) {
                                             if (textEditingValue.text == '') {
                                               return const Iterable<
-                                                String
-                                              >.empty();
+                                                  String>.empty();
                                             }
                                             return <String>[].where((option) {
-                                              final lowercaseOption = option
-                                                  .toLowerCase();
+                                              final lowercaseOption =
+                                                  option.toLowerCase();
                                               return lowercaseOption.contains(
                                                 textEditingValue.text
                                                     .toLowerCase(),
@@ -446,218 +429,203 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           },
                                           optionsViewBuilder:
                                               (context, onSelected, options) {
-                                                return AutocompleteOptionsList(
-                                                  textFieldKey: _model
-                                                      .passwordCreateAccountKey,
-                                                  textController: _model
-                                                      .passwordCreateAccountTextController!,
-                                                  options: options.toList(),
-                                                  onSelected: onSelected,
-                                                  textStyle:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                              context,
-                                                            ).bodyMediumFamily,
-                                                        letterSpacing: 0.0,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme.of(
-                                                              context,
-                                                            ).bodyMediumIsCustom,
-                                                      ),
-                                                  textHighlightStyle:
-                                                      TextStyle(),
-                                                  elevation: 4.0,
-                                                  optionBackgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).primaryBackground,
-                                                  optionHighlightColor:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).secondaryBackground,
-                                                  maxHeight: 200.0,
-                                                );
-                                              },
+                                            return AutocompleteOptionsList(
+                                              textFieldKey: _model
+                                                  .passwordCreateAccountKey,
+                                              textController: _model
+                                                  .passwordCreateAccountTextController!,
+                                              options: options.toList(),
+                                              onSelected: onSelected,
+                                              textStyle: FlutterFlowTheme.of(
+                                                context,
+                                              ).bodyMedium.override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                      context,
+                                                    ).bodyMediumFamily,
+                                                    letterSpacing: 0.0,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                      context,
+                                                    ).bodyMediumIsCustom,
+                                                  ),
+                                              textHighlightStyle: TextStyle(),
+                                              elevation: 4.0,
+                                              optionBackgroundColor:
+                                                  FlutterFlowTheme.of(
+                                                context,
+                                              ).primaryBackground,
+                                              optionHighlightColor:
+                                                  FlutterFlowTheme.of(
+                                                context,
+                                              ).secondaryBackground,
+                                              maxHeight: 200.0,
+                                            );
+                                          },
                                           onSelected: (String selection) {
                                             safeSetState(
-                                              () =>
-                                                  _model.passwordCreateAccountSelectedOption =
-                                                      selection,
+                                              () => _model
+                                                      .passwordCreateAccountSelectedOption =
+                                                  selection,
                                             );
                                             FocusScope.of(context).unfocus();
                                           },
-                                          fieldViewBuilder:
-                                              (
-                                                context,
-                                                textEditingController,
-                                                focusNode,
-                                                onEditingComplete,
-                                              ) {
-                                                _model.passwordCreateAccountFocusNode =
-                                                    focusNode;
+                                          fieldViewBuilder: (
+                                            context,
+                                            textEditingController,
+                                            focusNode,
+                                            onEditingComplete,
+                                          ) {
+                                            _model.passwordCreateAccountFocusNode =
+                                                focusNode;
 
-                                                _model.passwordCreateAccountTextController =
-                                                    textEditingController;
-                                                return TextFormField(
-                                                  key: _model
-                                                      .passwordCreateAccountKey,
-                                                  controller:
-                                                      textEditingController,
-                                                  focusNode: focusNode,
-                                                  onEditingComplete: () {
-                                                    _model
-                                                        .passwordConfirmFocusNode
-                                                        ?.requestFocus();
-                                                  },
-                                                  autofocus: false,
-                                                  enabled: true,
-                                                  autofillHints: [
-                                                    AutofillHints.password,
-                                                  ],
-                                                  textInputAction:
-                                                      TextInputAction.next,
-                                                  obscureText: !_model
-                                                      .passwordCreateAccountVisibility,
-                                                  decoration: InputDecoration(
-                                                    labelText: 'Password',
-                                                    labelStyle:
-                                                        FlutterFlowTheme.of(
-                                                          context,
-                                                        ).labelMedium.override(
-                                                          font: GoogleFonts.plusJakartaSans(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                      context,
-                                                                    )
-                                                                    .labelMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color:
-                                                              FlutterFlowTheme.of(
-                                                                context,
-                                                              ).secondaryText,
-                                                          fontSize: 14.0,
-                                                          letterSpacing: 0.25,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                    context,
-                                                                  )
-                                                                  .labelMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    errorBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Color(
-                                                          0xFFFA5E00,
-                                                        ),
-                                                        width: 2.0,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12.0,
-                                                          ),
-                                                    ),
-                                                    focusedErrorBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    filled: true,
-                                                    fillColor: Color(
-                                                      0xF1FFFFFF,
-                                                    ),
-                                                    suffixIcon: InkWell(
-                                                      onTap: () async {
-                                                        safeSetState(
-                                                          () => _model.passwordCreateAccountVisibility =
-                                                              !_model
-                                                                  .passwordCreateAccountVisibility,
-                                                        );
-                                                      },
-                                                      focusNode: FocusNode(
-                                                        skipTraversal: true,
-                                                      ),
-                                                      child: Icon(
-                                                        _model.passwordCreateAccountVisibility
-                                                            ? Icons
-                                                                  .visibility_outlined
-                                                            : Icons
-                                                                  .visibility_off_outlined,
-                                                        color: Color(
-                                                          0xFF57636C,
-                                                        ),
-                                                        size: 24.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  style:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                        fontFamily: 'robot',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                              context,
-                                                            ).primaryText,
-                                                        fontSize: 16.0,
-                                                        letterSpacing: 0.25,
+                                            _model.passwordCreateAccountTextController =
+                                                textEditingController;
+                                            return TextFormField(
+                                              key: _model
+                                                  .passwordCreateAccountKey,
+                                              controller: textEditingController,
+                                              focusNode: focusNode,
+                                              onEditingComplete: () {
+                                                _model.passwordConfirmFocusNode
+                                                    ?.requestFocus();
+                                              },
+                                              autofocus: false,
+                                              enabled: true,
+                                              autofillHints: [
+                                                AutofillHints.password,
+                                              ],
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              obscureText: !_model
+                                                  .passwordCreateAccountVisibility,
+                                              decoration: InputDecoration(
+                                                labelText: 'Password',
+                                                labelStyle: FlutterFlowTheme.of(
+                                                  context,
+                                                ).labelMedium.override(
+                                                      font: GoogleFonts
+                                                          .plusJakartaSans(
                                                         fontWeight:
                                                             FontWeight.w500,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                          context,
+                                                        ).labelMedium.fontStyle,
                                                       ),
-                                                  onFieldSubmitted: (_) async {
-                                                    _model
-                                                        .passwordConfirmFocusNode
-                                                        ?.requestFocus();
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).secondaryText,
+                                                      fontSize: 14.0,
+                                                      letterSpacing: 0.25,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).labelMedium.fontStyle,
+                                                    ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                focusedErrorBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                fillColor: Color(
+                                                  0xF1FFFFFF,
+                                                ),
+                                                suffixIcon: InkWell(
+                                                  onTap: () async {
+                                                    safeSetState(
+                                                      () => _model
+                                                              .passwordCreateAccountVisibility =
+                                                          !_model
+                                                              .passwordCreateAccountVisibility,
+                                                    );
                                                   },
-                                                  validator: _model
-                                                      .passwordCreateAccountTextControllerValidator
-                                                      .asValidator(context),
-                                                );
+                                                  focusNode: FocusNode(
+                                                    skipTraversal: true,
+                                                  ),
+                                                  child: Icon(
+                                                    _model.passwordCreateAccountVisibility
+                                                        ? Icons
+                                                            .visibility_outlined
+                                                        : Icons
+                                                            .visibility_off_outlined,
+                                                    color: Color(
+                                                      0xFF57636C,
+                                                    ),
+                                                    size: 24.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              style: FlutterFlowTheme.of(
+                                                context,
+                                              ).bodyMedium.override(
+                                                    fontFamily: 'robot',
+                                                    color: FlutterFlowTheme.of(
+                                                      context,
+                                                    ).primaryText,
+                                                    fontSize: 16.0,
+                                                    letterSpacing: 0.25,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                              onFieldSubmitted: (_) async {
+                                                _model.passwordConfirmFocusNode
+                                                    ?.requestFocus();
                                               },
+                                              validator: _model
+                                                  .passwordCreateAccountTextControllerValidator
+                                                  .asValidator(context),
+                                            );
+                                          },
                                         ),
                                       ),
                                       Container(
@@ -667,12 +635,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           optionsBuilder: (textEditingValue) {
                                             if (textEditingValue.text == '') {
                                               return const Iterable<
-                                                String
-                                              >.empty();
+                                                  String>.empty();
                                             }
                                             return ['Option 1'].where((option) {
-                                              final lowercaseOption = option
-                                                  .toLowerCase();
+                                              final lowercaseOption =
+                                                  option.toLowerCase();
                                               return lowercaseOption.contains(
                                                 textEditingValue.text
                                                     .toLowerCase(),
@@ -681,224 +648,207 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           },
                                           optionsViewBuilder:
                                               (context, onSelected, options) {
-                                                return AutocompleteOptionsList(
-                                                  textFieldKey:
-                                                      _model.passwordConfirmKey,
-                                                  textController: _model
-                                                      .passwordConfirmTextController!,
-                                                  options: options.toList(),
-                                                  onSelected: onSelected,
-                                                  textStyle:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                              context,
-                                                            ).bodyMediumFamily,
-                                                        letterSpacing: 0.0,
-                                                        useGoogleFonts:
-                                                            !FlutterFlowTheme.of(
-                                                              context,
-                                                            ).bodyMediumIsCustom,
-                                                      ),
-                                                  textHighlightStyle:
-                                                      TextStyle(),
-                                                  elevation: 4.0,
-                                                  optionBackgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).primaryBackground,
-                                                  optionHighlightColor:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).secondaryBackground,
-                                                  maxHeight: 200.0,
-                                                );
-                                              },
+                                            return AutocompleteOptionsList(
+                                              textFieldKey:
+                                                  _model.passwordConfirmKey,
+                                              textController: _model
+                                                  .passwordConfirmTextController!,
+                                              options: options.toList(),
+                                              onSelected: onSelected,
+                                              textStyle: FlutterFlowTheme.of(
+                                                context,
+                                              ).bodyMedium.override(
+                                                    fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                      context,
+                                                    ).bodyMediumFamily,
+                                                    letterSpacing: 0.0,
+                                                    useGoogleFonts:
+                                                        !FlutterFlowTheme.of(
+                                                      context,
+                                                    ).bodyMediumIsCustom,
+                                                  ),
+                                              textHighlightStyle: TextStyle(),
+                                              elevation: 4.0,
+                                              optionBackgroundColor:
+                                                  FlutterFlowTheme.of(
+                                                context,
+                                              ).primaryBackground,
+                                              optionHighlightColor:
+                                                  FlutterFlowTheme.of(
+                                                context,
+                                              ).secondaryBackground,
+                                              maxHeight: 200.0,
+                                            );
+                                          },
                                           onSelected: (String selection) {
                                             safeSetState(
-                                              () =>
-                                                  _model.passwordConfirmSelectedOption =
-                                                      selection,
+                                              () => _model
+                                                      .passwordConfirmSelectedOption =
+                                                  selection,
                                             );
                                             FocusScope.of(context).unfocus();
                                           },
-                                          fieldViewBuilder:
-                                              (
-                                                context,
-                                                textEditingController,
-                                                focusNode,
-                                                onEditingComplete,
-                                              ) {
-                                                _model.passwordConfirmFocusNode =
-                                                    focusNode;
+                                          fieldViewBuilder: (
+                                            context,
+                                            textEditingController,
+                                            focusNode,
+                                            onEditingComplete,
+                                          ) {
+                                            _model.passwordConfirmFocusNode =
+                                                focusNode;
 
-                                                _model.passwordConfirmTextController =
-                                                    textEditingController;
-                                                return TextFormField(
-                                                  key:
-                                                      _model.passwordConfirmKey,
-                                                  controller:
-                                                      textEditingController,
-                                                  focusNode: focusNode,
-                                                  onEditingComplete: () {
-                                                    FocusScope.of(
-                                                      context,
-                                                    ).unfocus();
-                                                    FocusManager
-                                                        .instance
-                                                        .primaryFocus
-                                                        ?.unfocus();
-                                                  },
-                                                  autofocus: false,
-                                                  autofillHints: [
-                                                    AutofillHints.password,
-                                                  ],
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  obscureText: !_model
-                                                      .passwordConfirmVisibility,
-                                                  decoration: InputDecoration(
-                                                    labelText:
-                                                        'Confirm Password',
-                                                    labelStyle:
-                                                        FlutterFlowTheme.of(
-                                                          context,
-                                                        ).labelMedium.override(
-                                                          font: GoogleFonts.plusJakartaSans(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                      context,
-                                                                    )
-                                                                    .labelMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color:
-                                                              FlutterFlowTheme.of(
-                                                                context,
-                                                              ).secondaryText,
-                                                          fontSize: 14.0,
-                                                          letterSpacing: 0.25,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                    context,
-                                                                  )
-                                                                  .labelMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    errorBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Color(
-                                                          0xFFFA5E00,
-                                                        ),
-                                                        width: 2.0,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12.0,
-                                                          ),
-                                                    ),
-                                                    focusedErrorBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Color(
-                                                                  0xFFFA5E00,
-                                                                ),
-                                                                width: 2.0,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.0,
-                                                              ),
-                                                        ),
-                                                    filled: true,
-                                                    fillColor: Color(
-                                                      0xF1FFFFFF,
-                                                    ),
-                                                    suffixIcon: InkWell(
-                                                      onTap: () async {
-                                                        safeSetState(
-                                                          () => _model.passwordConfirmVisibility =
-                                                              !_model
-                                                                  .passwordConfirmVisibility,
-                                                        );
-                                                      },
-                                                      focusNode: FocusNode(
-                                                        skipTraversal: true,
-                                                      ),
-                                                      child: Icon(
-                                                        _model.passwordConfirmVisibility
-                                                            ? Icons
-                                                                  .visibility_outlined
-                                                            : Icons
-                                                                  .visibility_off_outlined,
-                                                        color: Color(
-                                                          0xFF57636C,
-                                                        ),
-                                                        size: 24.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  style:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                        fontFamily: 'robot',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                              context,
-                                                            ).primaryText,
-                                                        fontSize: 16.0,
-                                                        letterSpacing: 0.25,
+                                            _model.passwordConfirmTextController =
+                                                textEditingController;
+                                            return TextFormField(
+                                              key: _model.passwordConfirmKey,
+                                              controller: textEditingController,
+                                              focusNode: focusNode,
+                                              onEditingComplete: () {
+                                                FocusScope.of(
+                                                  context,
+                                                ).unfocus();
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              autofocus: false,
+                                              autofillHints: [
+                                                AutofillHints.password,
+                                              ],
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              obscureText: !_model
+                                                  .passwordConfirmVisibility,
+                                              decoration: InputDecoration(
+                                                labelText: 'Confirm Password',
+                                                labelStyle: FlutterFlowTheme.of(
+                                                  context,
+                                                ).labelMedium.override(
+                                                      font: GoogleFonts
+                                                          .plusJakartaSans(
                                                         fontWeight:
                                                             FontWeight.w500,
-                                                      ),
-                                                  minLines: 1,
-                                                  onFieldSubmitted: (_) async {
-                                                    await actions
-                                                        .dismissKeyboard(
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
                                                           context,
-                                                        );
+                                                        ).labelMedium.fontStyle,
+                                                      ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).secondaryText,
+                                                      fontSize: 14.0,
+                                                      letterSpacing: 0.25,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                        context,
+                                                      ).labelMedium.fontStyle,
+                                                    ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                focusedErrorBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(
+                                                      0xFFFA5E00,
+                                                    ),
+                                                    width: 2.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12.0,
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                fillColor: Color(
+                                                  0xF1FFFFFF,
+                                                ),
+                                                suffixIcon: InkWell(
+                                                  onTap: () async {
+                                                    safeSetState(
+                                                      () => _model
+                                                              .passwordConfirmVisibility =
+                                                          !_model
+                                                              .passwordConfirmVisibility,
+                                                    );
                                                   },
-                                                  validator: _model
-                                                      .passwordConfirmTextControllerValidator
-                                                      .asValidator(context),
+                                                  focusNode: FocusNode(
+                                                    skipTraversal: true,
+                                                  ),
+                                                  child: Icon(
+                                                    _model.passwordConfirmVisibility
+                                                        ? Icons
+                                                            .visibility_outlined
+                                                        : Icons
+                                                            .visibility_off_outlined,
+                                                    color: Color(
+                                                      0xFF57636C,
+                                                    ),
+                                                    size: 24.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              style: FlutterFlowTheme.of(
+                                                context,
+                                              ).bodyMedium.override(
+                                                    fontFamily: 'robot',
+                                                    color: FlutterFlowTheme.of(
+                                                      context,
+                                                    ).primaryText,
+                                                    fontSize: 16.0,
+                                                    letterSpacing: 0.25,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                              minLines: 1,
+                                              onFieldSubmitted: (_) async {
+                                                await actions.dismissKeyboard(
+                                                  context,
                                                 );
                                               },
+                                              validator: _model
+                                                  .passwordConfirmTextControllerValidator
+                                                  .asValidator(context),
+                                            );
+                                          },
                                         ),
                                       ),
                                       SizedBox(
@@ -918,9 +868,9 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                   width: double.infinity,
                                                   height:
                                                       _model.notificationState ==
-                                                          0
-                                                      ? 25.0
-                                                      : 48.0,
+                                                              0
+                                                          ? 25.0
+                                                          : 48.0,
                                                   decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
                                                       context,
@@ -934,34 +884,41 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                         Align(
                                                           alignment:
                                                               AlignmentDirectional(
-                                                                0.0,
-                                                                0.0,
-                                                              ),
+                                                            0.0,
+                                                            0.0,
+                                                          ),
                                                           child: Text(
                                                             'Password Must Be At Least 10 Characters',
                                                             style:
-                                                                FlutterFlowTheme.of(
-                                                                  context,
-                                                                ).bodyMedium.override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme.of(
+                                                                FlutterFlowTheme
+                                                                        .of(
+                                                              context,
+                                                            )
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).bodyMediumFamily,
-                                                                  color: FlutterFlowTheme.of(
-                                                                    context,
-                                                                  ).secondaryText,
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
+                                                                      color:
+                                                                          FlutterFlowTheme
+                                                                              .of(
+                                                                        context,
+                                                                      ).secondaryText,
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).bodyMediumIsCustom,
-                                                                ),
+                                                                    ),
                                                           ),
                                                         ),
                                                       if (_model
@@ -970,35 +927,41 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                         Align(
                                                           alignment:
                                                               AlignmentDirectional(
-                                                                0.0,
-                                                                0.0,
-                                                              ),
+                                                            0.0,
+                                                            0.0,
+                                                          ),
                                                           child: Text(
                                                             'INVALID PASSWORD - MUST BE AT LEAST 10 CHARACTERS',
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style:
-                                                                FlutterFlowTheme.of(
-                                                                  context,
-                                                                ).bodyMedium.override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme.of(
+                                                                FlutterFlowTheme
+                                                                        .of(
+                                                              context,
+                                                            )
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).bodyMediumFamily,
-                                                                  color:
-                                                                      FlutterFlowTheme.of(
+                                                                      color:
+                                                                          FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).primary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).bodyMediumIsCustom,
-                                                                ),
+                                                                    ),
                                                           ),
                                                         ),
                                                       if (_model
@@ -1007,35 +970,41 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                         Align(
                                                           alignment:
                                                               AlignmentDirectional(
-                                                                0.0,
-                                                                0.0,
-                                                              ),
+                                                            0.0,
+                                                            0.0,
+                                                          ),
                                                           child: Text(
                                                             'PASSWORDS DO NOT MATCH - TRY AGAIN',
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style:
-                                                                FlutterFlowTheme.of(
-                                                                  context,
-                                                                ).bodyMedium.override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme.of(
+                                                                FlutterFlowTheme
+                                                                        .of(
+                                                              context,
+                                                            )
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).bodyMediumFamily,
-                                                                  color:
-                                                                      FlutterFlowTheme.of(
+                                                                      color:
+                                                                          FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).primary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme
+                                                                              .of(
                                                                         context,
                                                                       ).bodyMediumIsCustom,
-                                                                ),
+                                                                    ),
                                                           ),
                                                         ),
                                                     ],
@@ -1057,19 +1026,15 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               _model
                                                   .passwordConfirmTextController
                                                   .text) {
-                                            _model.ctResult = await actions
-                                                .supaEmailSignUp(
-                                                  _model
-                                                      .emailAddressTextController
-                                                      .text,
-                                                  _model
-                                                      .passwordCreateAccountTextController
-                                                      .text,
-                                                  requiredPublicConfig(
-                                                    'DECOY_EMAIL_CONFIRM_URL',
-                                                    kEmailConfirmUrl,
-                                                  ),
-                                                );
+                                            _model.ctResult =
+                                                await actions.supaEmailSignUp(
+                                              _model.emailAddressTextController
+                                                  .text,
+                                              _model
+                                                  .passwordCreateAccountTextController
+                                                  .text,
+                                              kEmailConfirmUrl,
+                                            );
                                             if (_model.ctResult == 'ok') {
                                               context.pushNamed(
                                                 ConfirmEmailPageWidget
@@ -1110,29 +1075,28 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           height: 50.0,
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                0.0,
-                                                0.0,
-                                                0.0,
-                                                0.0,
-                                              ),
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                          ),
                                           iconPadding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                0.0,
-                                                0.0,
-                                                0.0,
-                                                0.0,
-                                              ),
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                          ),
                                           color: Color(0xFFFA5E00),
-                                          textStyle:
-                                              FlutterFlowTheme.of(
-                                                context,
-                                              ).titleSmall.override(
+                                          textStyle: FlutterFlowTheme.of(
+                                            context,
+                                          ).titleSmall.override(
                                                 font: GoogleFonts.heebo(
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
-                                                        context,
-                                                      ).titleSmall.fontStyle,
+                                                    context,
+                                                  ).titleSmall.fontStyle,
                                                 ),
                                                 color: Colors.white,
                                                 fontSize: 18.0,
@@ -1202,48 +1166,57 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                         ),
                                                         TextSpan(
                                                           text: 'Sign In here',
-                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                            font: GoogleFonts.plusJakartaSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                        context,
-                                                                      )
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                font: GoogleFonts
+                                                                    .plusJakartaSans(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontStyle: FlutterFlowTheme
+                                                                          .of(
+                                                                    context,
+                                                                  )
                                                                       .bodyMedium
                                                                       .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                              0xFFFA5E00,
-                                                            ),
-                                                            fontSize: 16.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                      context,
-                                                                    )
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                                ),
+                                                                color: Color(
+                                                                  0xFFFA5E00,
+                                                                ),
+                                                                fontSize: 16.0,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontStyle:
+                                                                    FlutterFlowTheme
+                                                                            .of(
+                                                                  context,
+                                                                )
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                              ),
                                                         ),
                                                       ],
                                                       style:
                                                           FlutterFlowTheme.of(
-                                                            context,
-                                                          ).labelLarge.override(
-                                                            fontFamily:
-                                                                'InterTight',
-                                                            color: Color(
-                                                              0xFFFA5E00,
-                                                            ),
-                                                            fontSize: 16.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
+                                                        context,
+                                                      ).labelLarge.override(
+                                                                fontFamily:
+                                                                    'InterTight',
+                                                                color: Color(
+                                                                  0xFFFA5E00,
+                                                                ),
+                                                                fontSize: 16.0,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
                                                     ),
                                                   ),
                                                 ),
@@ -1267,7 +1240,9 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                   ),
                                 ),
                               ),
-                            ].addToStart(SizedBox(height: 24.0)).addToEnd(SizedBox(height: 24.0)),
+                            ]
+                                .addToStart(SizedBox(height: 24.0))
+                                .addToEnd(SizedBox(height: 24.0)),
                           ),
                         ),
                       ),

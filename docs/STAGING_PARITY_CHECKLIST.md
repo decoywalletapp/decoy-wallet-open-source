@@ -46,7 +46,11 @@ For staging builds:
 - Alert calls must point to `staging-api/alerts`.
 - Data-key calls must point to `staging-api/data-key`.
 - Payment calls must point to `staging-api/payment`.
+- Verify-link calls must point to
+  `https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link`.
 - Email confirmation must use an app deep link, not localhost.
+- Staging AuthRouter shows the current routing step while loading so auth
+  failures do not look like a silent app freeze.
 
 For production builds:
 
@@ -63,6 +67,8 @@ Supabase Auth:
 - Staging app/site URL is not `localhost`.
 - Staging redirect allowlist includes the Decoy app deep link used by TestFlight
   and Android test builds.
+- Staging redirect allowlist includes the staging verify-link function URL when
+  that function is used as an email confirmation landing page.
 - Email templates use Decoy wording, not the default Supabase branding.
 - Sender/from configuration is set for staging if branded email delivery is
   required during tests.
