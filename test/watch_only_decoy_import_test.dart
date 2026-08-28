@@ -217,13 +217,24 @@ void main() {
   });
 
   test('staging signup confirmation prefers app deep link', () {
-    final source = File(
+    final redirectSource =
+        File('lib/auth/supabase_auth/email_redirect.dart').readAsStringSync();
+    final customSignupSource = File(
       'lib/custom_code/actions/supa_email_sign_up.dart',
     ).readAsStringSync();
+    final generatedSignupSource =
+        File('lib/auth/supabase_auth/email_auth.dart').readAsStringSync();
+    final userProviderSource = File(
+      'lib/auth/supabase_auth/supabase_user_provider.dart',
+    ).readAsStringSync();
 
-    expect(source, contains('DecoyBuildProvenance.backendEnvironment'));
-    expect(source, contains("backendEnvironment == 'staging'"));
-    expect(source, contains('kEmailConfirmDeepLink'));
-    expect(source, contains("host == 'localhost'"));
+    expect(redirectSource, contains('DecoyBuildProvenance.backendEnvironment'));
+    expect(redirectSource, contains("backendEnvironment == 'staging'"));
+    expect(redirectSource, contains('kEmailConfirmDeepLink'));
+    expect(redirectSource, contains("host == 'localhost'"));
+    expect(customSignupSource, contains('emailConfirmationRedirect'));
+    expect(generatedSignupSource, contains('emailConfirmationRedirect'));
+    expect(userProviderSource, contains('emailConfirmationRedirect'));
+    expect(userProviderSource, contains('emailRedirectTo'));
   });
 }

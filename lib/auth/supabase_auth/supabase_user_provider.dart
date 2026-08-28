@@ -2,6 +2,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '/backend/supabase/supabase.dart';
 import '../base_auth_user_provider.dart';
+import 'email_redirect.dart';
 
 export '../base_auth_user_provider.dart';
 
@@ -23,8 +24,10 @@ class DecoyWalletAppSupabaseUser extends BaseAuthUser {
 
   @override
   Future? updateEmail(String email) async {
-    final response =
-        await SupaFlow.client.auth.updateUser(UserAttributes(email: email));
+    final response = await SupaFlow.client.auth.updateUser(
+      UserAttributes(email: email),
+      emailRedirectTo: emailConfirmationRedirect(),
+    );
     if (response.user != null) {
       user = response.user;
     }

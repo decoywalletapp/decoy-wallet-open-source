@@ -1,4 +1,5 @@
 import '/backend/supabase/supabase.dart';
+import 'email_redirect.dart';
 
 Future<User?> emailSignInFunc(
   String email,
@@ -13,8 +14,11 @@ Future<User?> emailCreateAccountFunc(
   String email,
   String password,
 ) async {
-  final AuthResponse res =
-      await SupaFlow.client.auth.signUp(email: email, password: password);
+  final AuthResponse res = await SupaFlow.client.auth.signUp(
+    email: email,
+    password: password,
+    emailRedirectTo: emailConfirmationRedirect(),
+  );
 
   // If the Supabase project is configured to not let users sign in until the
   // email has been confirmed, the user returned in the AuthResponse still has

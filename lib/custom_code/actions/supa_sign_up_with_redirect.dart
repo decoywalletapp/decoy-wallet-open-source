@@ -2,6 +2,7 @@
 import '/backend/backend.dart';
 import '/backend/public_config.dart';
 import '/backend/supabase/supabase.dart';
+import '/auth/supabase_auth/email_redirect.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom actions
@@ -15,15 +16,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> supaSignUpWithRedirect(String email, String password) async {
   final client = Supabase.instance.client;
 
-  final redirect = requiredPublicConfig(
-    'DECOY_EMAIL_CONFIRM_DEEP_LINK',
-    kEmailConfirmDeepLink,
-  );
-
   await client.auth.signUp(
     email: email,
     password: password,
-    emailRedirectTo: redirect,
+    emailRedirectTo: emailConfirmationRedirect(),
   );
 }
 

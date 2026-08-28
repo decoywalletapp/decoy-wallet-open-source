@@ -2,7 +2,7 @@
 import '/backend/backend.dart';
 import '/backend/public_config.dart';
 import '/backend/supabase/supabase.dart';
-import '/build_provenance.dart';
+import '/auth/supabase_auth/email_redirect.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom actions
@@ -38,7 +38,7 @@ Future<String> supaEmailSignUp(
     final res = await client.auth.signUp(
       email: e,
       password: p,
-      emailRedirectTo: _emailConfirmationRedirect(redirectUrl),
+      emailRedirectTo: emailConfirmationRedirect(redirectUrl),
     );
 
     if (res.user != null) return 'ok';
@@ -48,22 +48,4 @@ Future<String> supaEmailSignUp(
   } catch (e) {
     return 'ERR: $e';
   }
-}
-
-String _emailConfirmationRedirect(String redirectUrl) {
-  final configured = redirectUrl.trim();
-  final deepLink = kEmailConfirmDeepLink.trim();
-
-  if (DecoyBuildProvenance.backendEnvironment == 'staging' &&
-      deepLink.isNotEmpty) {
-    return deepLink;
-  }
-
-  final uri = Uri.tryParse(configured);
-  final host = uri?.host.toLowerCase();
-  if ((host == 'localhost' || host == '127.0.0.1') && deepLink.isNotEmpty) {
-    return deepLink;
-  }
-
-  return configured;
 }
