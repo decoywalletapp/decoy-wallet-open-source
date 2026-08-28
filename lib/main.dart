@@ -11,6 +11,7 @@ import 'auth/supabase_auth/supabase_user_provider.dart';
 import 'auth/supabase_auth/auth_util.dart';
 
 import '/backend/supabase/supabase.dart';
+import 'backend/environment_guard.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'utils/android_display_guard.dart';
@@ -26,6 +27,8 @@ void main() async {
 
   final environmentValues = FFDevEnvironmentValues();
   await environmentValues.initialize();
+
+  validateDecoyBackendEnvironment();
 
   await initFirebase();
 

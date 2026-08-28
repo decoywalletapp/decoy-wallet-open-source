@@ -6,6 +6,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,61 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
   static const _pinHandoffFadeOutDuration = Duration(milliseconds: 180);
   static const _pinRouteFadeDuration = Duration(milliseconds: 220);
+  static const _sessionWaitAttempts = 16;
+  static const _sessionWaitDelay = Duration(milliseconds: 250);
+
+  String get _routingJwtToken => activeJwtToken;
+  String get _routingUserId => activeUserUid;
+  String get _routingUserEmail => activeUserEmail;
+
+  Future<void> _waitForActiveSession() async {
+    for (var attempt = 0; attempt < _sessionWaitAttempts; attempt++) {
+      if (_routingJwtToken.trim().isNotEmpty &&
+          _routingUserId.trim().isNotEmpty) {
+        return;
+      }
+      await Future.delayed(_sessionWaitDelay);
+    }
+    throw StateError('Authenticated Supabase session was not ready.');
+  }
+
+  Future<void> _failAuthRouting(Object error, [StackTrace? stackTrace]) async {
+    if (kDebugMode) {
+      debugPrint('AuthRouter failed: $error');
+      if (stackTrace != null) {
+        debugPrintStack(stackTrace: stackTrace);
+      }
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'We could not finish authentication. Please log in again.',
+          style: TextStyle(
+            color: FlutterFlowTheme.of(context).primaryText,
+          ),
+        ),
+        duration: Duration(milliseconds: 4000),
+        backgroundColor: FlutterFlowTheme.of(context).secondary,
+      ),
+    );
+
+    GoRouter.of(context).prepareAuthEvent();
+    await authManager.signOut();
+    GoRouter.of(context).clearRedirectLocation();
+
+    FFAppState().isLocked = false;
+    safeSetState(() {});
+
+    if (!mounted) {
+      return;
+    }
+    context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
+  }
 
   Future<void> _goToPinPageAfterCleanHandoff() async {
     safeSetState(() {
@@ -71,6 +127,13 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (widget.type == 'recovery') {
+        if ((widget.accessToken ?? '').trim().isEmpty ||
+            (widget.refreshToken ?? '').trim().isEmpty) {
+          await _failAuthRouting(
+            StateError('Password recovery link did not include auth tokens.'),
+          );
+          return;
+        }
         _model.refreshingOuuu = await actions.refreshSupabaseSession2(
           widget.accessToken!,
           widget.refreshToken!,
@@ -93,173 +156,322 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           );
         }
       } else {
-        _model.pushRoute = await actions.initPushTapListener(
-          context,
-        );
-        if ((_model.pushRoute != null && _model.pushRoute != '') &&
-            (_model.pushRoute == 'renew_btcpay')) {
-          FFAppState().openRenewalFromPush = true;
-          safeSetState(() {});
-        }
-        _model.refreshOut = await actions.refreshSupabaseSession();
-        _model.authUserResp = await GetAuthUserCall.call(
-          jwt: currentJwtToken,
-        );
-
-        _model.emailHashResp = await GetEmailHashCall.call(
-          jwt: currentJwtToken,
-          email: functions.normalizeEmail(getJsonField(
-            (_model.authUserResp?.jsonBody ?? ''),
-            r'''$.email''',
-          ).toString()),
-        );
-
-        FFAppState().isLocked = true;
-        safeSetState(() {});
-        _model.query1 = await DecoyWalletTable().queryRows(
-          queryFn: (q) => q
-              .eqOrNull(
-                'user_id',
-                currentUserUid,
-              )
-              .order('created_at'),
-        );
-        _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
-        _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
-        _model.authEmail = currentUserEmail;
-        _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
-        safeSetState(() {});
-        if (_model.hasRow == false) {
-          _model.firstInsert = await DecoyWalletTable().insert({
-            'user_id': currentUserUid,
-            'email_verified': false,
-            'email_verified_at': supaSerialize<DateTime>(null),
-            'is_phone_verified': false,
-            'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
-            'email_hash': GetEmailHashCall.emailHash(
-              (_model.emailHashResp?.jsonBody ?? ''),
-            ).toString(),
-            'pending_email_hash': null,
-          });
-          _model.query2 = await DecoyWalletTable().queryRows(
-            queryFn: (q) => q.eqOrNull(
-              'user_id',
-              currentUserUid,
-            ),
+        try {
+          _model.pushRoute = await actions.initPushTapListener(
+            context,
           );
-          _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
-          _model.hasRow = _model.query2 != null && (_model.query2)!.isNotEmpty;
-          _model.setupComplete =
-              _model.query2?.elementAtOrNull(0)?.setupComplete;
-          _model.agreementsComplete =
-              _model.query2?.elementAtOrNull(0)?.agreementsComplete;
+          if ((_model.pushRoute != null && _model.pushRoute != '') &&
+              (_model.pushRoute == 'renew_btcpay')) {
+            FFAppState().openRenewalFromPush = true;
+            safeSetState(() {});
+          }
+          _model.refreshOut = await actions.refreshSupabaseSession();
+          await _waitForActiveSession();
+          _model.authUserResp = await GetAuthUserCall.call(
+            jwt: _routingJwtToken,
+          );
+
+          _model.emailHashResp = await GetEmailHashCall.call(
+            jwt: _routingJwtToken,
+            email: functions.normalizeEmail(getJsonField(
+              (_model.authUserResp?.jsonBody ?? ''),
+              r'''$.email''',
+            ).toString()),
+          );
+
+          FFAppState().isLocked = true;
           safeSetState(() {});
-        } else {
-          await DecoyWalletTable().update(
-            data: {
-              'email_verified': true,
-              'email_verified_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          _model.query1 = await DecoyWalletTable().queryRows(
+            queryFn: (q) => q
+                .eqOrNull(
+                  'user_id',
+                  _routingUserId,
+                )
+                .order('created_at'),
+          );
+          _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
+          _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
+          _model.authEmail = _routingUserEmail;
+          _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
+          safeSetState(() {});
+          if (_model.hasRow == false) {
+            _model.firstInsert = await DecoyWalletTable().insert({
+              'user_id': _routingUserId,
+              'email_verified': false,
+              'email_verified_at': supaSerialize<DateTime>(null),
+              'is_phone_verified': false,
+              'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
               'email_hash': GetEmailHashCall.emailHash(
                 (_model.emailHashResp?.jsonBody ?? ''),
               ).toString(),
-              'pending_email': null,
               'pending_email_hash': null,
-            },
-            matchingRows: (rows) => rows.eqOrNull(
-              'user_id',
-              currentUserUid,
-            ),
-          );
-          _model.query3 = await DecoyWalletTable().queryRows(
+            });
+            _model.query2 = await DecoyWalletTable().queryRows(
+              queryFn: (q) => q.eqOrNull(
+                'user_id',
+                _routingUserId,
+              ),
+            );
+            _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
+            _model.hasRow =
+                _model.query2 != null && (_model.query2)!.isNotEmpty;
+            _model.setupComplete =
+                _model.query2?.elementAtOrNull(0)?.setupComplete;
+            _model.agreementsComplete =
+                _model.query2?.elementAtOrNull(0)?.agreementsComplete;
+            safeSetState(() {});
+          } else {
+            await DecoyWalletTable().update(
+              data: {
+                'email_verified': true,
+                'email_verified_at':
+                    supaSerialize<DateTime>(getCurrentTimestamp),
+                'email_hash': GetEmailHashCall.emailHash(
+                  (_model.emailHashResp?.jsonBody ?? ''),
+                ).toString(),
+                'pending_email': null,
+                'pending_email_hash': null,
+              },
+              matchingRows: (rows) => rows.eqOrNull(
+                'user_id',
+                _routingUserId,
+              ),
+            );
+            _model.query3 = await DecoyWalletTable().queryRows(
+              queryFn: (q) => q.eqOrNull(
+                'user_id',
+                _routingUserId,
+              ),
+            );
+            _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
+            _model.hasRow =
+                _model.query3 != null && (_model.query3)!.isNotEmpty;
+            _model.setupComplete =
+                _model.query3?.elementAtOrNull(0)?.setupComplete;
+            _model.agreementsComplete =
+                _model.query3?.elementAtOrNull(0)?.agreementsComplete;
+            safeSetState(() {});
+          }
+
+          _model.pushSettingsRows = await UserSettingsTable().queryRows(
             queryFn: (q) => q.eqOrNull(
               'user_id',
-              currentUserUid,
+              _routingUserId,
             ),
           );
-          _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
-          _model.hasRow = _model.query3 != null && (_model.query3)!.isNotEmpty;
-          _model.setupComplete =
-              _model.query3?.elementAtOrNull(0)?.setupComplete;
-          _model.agreementsComplete =
-              _model.query3?.elementAtOrNull(0)?.agreementsComplete;
+          FFAppState().pushEnabled =
+              _model.pushSettingsRows?.elementAtOrNull(0)?.pushEnabled == true;
           safeSetState(() {});
-        }
+          if (FFAppState().pushEnabled == true) {
+            _model.pushTokenRefreshResult =
+                await actions.requestPushPermissionAndGetToken();
+            _model.pushPermissionRefreshResult =
+                await actions.getPushPermissionStatus();
+            safeSetState(() {});
+          }
 
-        _model.pushSettingsRows = await UserSettingsTable().queryRows(
-          queryFn: (q) => q.eqOrNull(
-            'user_id',
-            currentUserUid,
-          ),
-        );
-        FFAppState().pushEnabled =
-            _model.pushSettingsRows?.elementAtOrNull(0)?.pushEnabled == true;
-        safeSetState(() {});
-        if (FFAppState().pushEnabled == true) {
-          _model.pushTokenRefreshResult =
-              await actions.requestPushPermissionAndGetToken();
-          _model.pushPermissionRefreshResult =
-              await actions.getPushPermissionStatus();
+          final walletRow = _model.dwList.elementAtOrNull(0);
+          if (walletRow == null) {
+            throw StateError('Decoy wallet account row was not available.');
+          }
+          _model.verifiedViaEmail = walletRow.emailVerified == true;
+          _model.needPhone = walletRow.isPhoneVerified != true;
           safeSetState(() {});
-        }
-
-        _model.verifiedViaEmail =
-            _model.dwList.elementAtOrNull(0)!.emailVerified!;
-        _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
-        safeSetState(() {});
-        if (_model.verifiedViaEmail == false) {
-          context.goNamedAuth(
-              ConfirmEmailPageWidget.routeName, context.mounted);
-        } else {
-          if (_model.needPhone == true) {
+          if (_model.verifiedViaEmail == false) {
             context.goNamedAuth(
-                PhoneNumberInputWidget.routeName, context.mounted);
+                ConfirmEmailPageWidget.routeName, context.mounted);
           } else {
-            if (FFAppState().biometricsEnabled == true) {
-              final _localAuth = LocalAuthentication();
-              bool _isBiometricSupported = await _localAuth.isDeviceSupported();
+            if (_model.needPhone == true) {
+              context.goNamedAuth(
+                  PhoneNumberInputWidget.routeName, context.mounted);
+            } else {
+              if (FFAppState().biometricsEnabled == true) {
+                final _localAuth = LocalAuthentication();
+                bool _isBiometricSupported =
+                    await _localAuth.isDeviceSupported();
 
-              if (_isBiometricSupported) {
-                try {
-                  _model.authRouterBioResult = await _localAuth.authenticate(
-                      localizedReason:
-                          'Please authenticate to unlock your wallet');
-                } on PlatformException {
-                  _model.authRouterBioResult = false;
+                if (_isBiometricSupported) {
+                  try {
+                    _model.authRouterBioResult = await _localAuth.authenticate(
+                        localizedReason:
+                            'Please authenticate to unlock your wallet');
+                  } on PlatformException {
+                    _model.authRouterBioResult = false;
+                  }
+                  safeSetState(() {});
                 }
-                safeSetState(() {});
-              }
 
-              if (_model.authRouterBioResult == true) {
+                if (_model.authRouterBioResult == true) {
+                  FFAppState().isLocked = false;
+                  safeSetState(() {});
+                  _model.entitlementRow1 =
+                      await UserEntitlementsTable().queryRows(
+                    queryFn: (q) => q
+                        .eqOrNull(
+                          'user_id',
+                          _routingUserId,
+                        )
+                        .eqOrNull(
+                          'entitlement',
+                          'decoy_wallet',
+                        ),
+                  );
+                  if ((_model.entitlementRow1?.elementAtOrNull(0)?.provider ==
+                          'stripe') &&
+                      (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
+                          false)) {
+                    _model.apiResultRSE =
+                        await RepairStripeEntitlementCall.call(
+                      userId: _routingUserId,
+                      jwt: _routingJwtToken,
+                    );
+
+                    if ((_model.apiResultRSE?.succeeded ?? true)) {
+                      _model.secondEntitlementQue =
+                          await UserEntitlementsTable().queryRows(
+                        queryFn: (q) => q
+                            .eqOrNull(
+                              'user_id',
+                              _routingUserId,
+                            )
+                            .eqOrNull(
+                              'entitlement',
+                              'decoy_wallet',
+                            ),
+                      );
+                      FFAppState().hasActiveSubscription =
+                          (_model.secondEntitlementQue != null &&
+                                  (_model.secondEntitlementQue)!.isNotEmpty) &&
+                              functions.isEntitlementUsableForProtection(
+                                _model.secondEntitlementQue
+                                    ?.elementAtOrNull(0)
+                                    ?.isActive,
+                                _model.secondEntitlementQue
+                                    ?.elementAtOrNull(0)
+                                    ?.currentPeriodEnd,
+                                _model.secondEntitlementQue
+                                    ?.elementAtOrNull(0)
+                                    ?.pendingProvider,
+                                _model.secondEntitlementQue
+                                    ?.elementAtOrNull(0)
+                                    ?.pendingStartsAt,
+                                _model.secondEntitlementQue
+                                    ?.elementAtOrNull(0)
+                                    ?.pendingProviderSubscriptionId,
+                              );
+                      safeSetState(() {});
+                    }
+                  } else {
+                    FFAppState().hasActiveSubscription =
+                        (_model.entitlementRow1 != null &&
+                                (_model.entitlementRow1)!.isNotEmpty) &&
+                            functions.isEntitlementUsableForProtection(
+                              _model.entitlementRow1
+                                  ?.elementAtOrNull(0)
+                                  ?.isActive,
+                              _model.entitlementRow1
+                                  ?.elementAtOrNull(0)
+                                  ?.currentPeriodEnd,
+                              _model.entitlementRow1
+                                  ?.elementAtOrNull(0)
+                                  ?.pendingProvider,
+                              _model.entitlementRow1
+                                  ?.elementAtOrNull(0)
+                                  ?.pendingStartsAt,
+                              _model.entitlementRow1
+                                  ?.elementAtOrNull(0)
+                                  ?.pendingProviderSubscriptionId,
+                            );
+                    safeSetState(() {});
+                  }
+
+                  if (FFAppState().hasActiveSubscription == true) {
+                    if (_model.agreementsComplete != true) {
+                      context.goNamedAuth(
+                          AgreementsPageWidget.routeName, context.mounted);
+                    } else {
+                      if (_model.setupComplete != true) {
+                        context.goNamedAuth(
+                            CreatePinWidget.routeName, context.mounted);
+                      } else {
+                        if (((_model.query2 != null &&
+                                    (_model.query2)!.isNotEmpty) &&
+                                (_model.setupComplete == true)) ||
+                            ((_model.query3 != null &&
+                                    (_model.query3)!.isNotEmpty) &&
+                                (_model.setupComplete == true))) {
+                          await _goToPinPageAfterCleanHandoff();
+                        } else {
+                          context.goNamedAuth(
+                            CreatePinWidget.routeName,
+                            context.mounted,
+                            extra: <String, dynamic>{
+                              '__transition_info__': TransitionInfo(
+                                hasTransition: true,
+                                transitionType: PageTransitionType.fade,
+                              ),
+                            },
+                          );
+                        }
+                      }
+                    }
+                  } else {
+                    if (_model.agreementsComplete != true) {
+                      context.goNamedAuth(
+                          AgreementsPageWidget.routeName, context.mounted);
+                    } else {
+                      if (_model.setupComplete != true) {
+                        context.goNamedAuth(
+                            CreatePinWidget.routeName, context.mounted);
+                      } else {
+                        context.goNamedAuth(
+                            HomePageWidget.routeName, context.mounted);
+                      }
+                    }
+                  }
+                } else {
+                  GoRouter.of(context).prepareAuthEvent();
+                  await authManager.signOut();
+                  GoRouter.of(context).clearRedirectLocation();
+
+                  FFAppState().isLocked = false;
+                  safeSetState(() {});
+
+                  context.goNamedAuth(
+                      LoginPageWidget.routeName, context.mounted);
+                }
+              } else {
                 FFAppState().isLocked = false;
                 safeSetState(() {});
-                _model.entitlementRow1 =
+                _model.entitlementRow2 =
                     await UserEntitlementsTable().queryRows(
                   queryFn: (q) => q
                       .eqOrNull(
                         'user_id',
-                        currentUserUid,
+                        _routingUserId,
                       )
                       .eqOrNull(
                         'entitlement',
                         'decoy_wallet',
                       ),
                 );
-                if ((_model.entitlementRow1?.elementAtOrNull(0)?.provider ==
+                if ((_model.entitlementRow2?.elementAtOrNull(0)?.provider ==
                         'stripe') &&
-                    (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
+                    (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
                         false)) {
-                  _model.apiResultRSE = await RepairStripeEntitlementCall.call(
-                    userId: currentUserUid,
-                    jwt: currentJwtToken,
+                  _model.api2Result2RSE =
+                      await RepairStripeEntitlementCall.call(
+                    userId: _routingUserId,
+                    jwt: _routingJwtToken,
                   );
 
-                  if ((_model.apiResultRSE?.succeeded ?? true)) {
-                    _model.secondEntitlementQue =
+                  if ((_model.api2Result2RSE?.succeeded ?? true)) {
+                    _model.thirdEntitlementQue =
                         await UserEntitlementsTable().queryRows(
                       queryFn: (q) => q
                           .eqOrNull(
                             'user_id',
-                            currentUserUid,
+                            _routingUserId,
                           )
                           .eqOrNull(
                             'entitlement',
@@ -267,22 +479,22 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           ),
                     );
                     FFAppState().hasActiveSubscription =
-                        (_model.secondEntitlementQue != null &&
-                                (_model.secondEntitlementQue)!.isNotEmpty) &&
+                        (_model.thirdEntitlementQue != null &&
+                                (_model.thirdEntitlementQue)!.isNotEmpty) &&
                             functions.isEntitlementUsableForProtection(
-                              _model.secondEntitlementQue
+                              _model.thirdEntitlementQue
                                   ?.elementAtOrNull(0)
                                   ?.isActive,
-                              _model.secondEntitlementQue
+                              _model.thirdEntitlementQue
                                   ?.elementAtOrNull(0)
                                   ?.currentPeriodEnd,
-                              _model.secondEntitlementQue
+                              _model.thirdEntitlementQue
                                   ?.elementAtOrNull(0)
                                   ?.pendingProvider,
-                              _model.secondEntitlementQue
+                              _model.thirdEntitlementQue
                                   ?.elementAtOrNull(0)
                                   ?.pendingStartsAt,
-                              _model.secondEntitlementQue
+                              _model.thirdEntitlementQue
                                   ?.elementAtOrNull(0)
                                   ?.pendingProviderSubscriptionId,
                             );
@@ -290,22 +502,22 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   }
                 } else {
                   FFAppState().hasActiveSubscription =
-                      (_model.entitlementRow1 != null &&
-                              (_model.entitlementRow1)!.isNotEmpty) &&
+                      (_model.entitlementRow2 != null &&
+                              (_model.entitlementRow2)!.isNotEmpty) &&
                           functions.isEntitlementUsableForProtection(
-                            _model.entitlementRow1
+                            _model.entitlementRow2
                                 ?.elementAtOrNull(0)
                                 ?.isActive,
-                            _model.entitlementRow1
+                            _model.entitlementRow2
                                 ?.elementAtOrNull(0)
                                 ?.currentPeriodEnd,
-                            _model.entitlementRow1
+                            _model.entitlementRow2
                                 ?.elementAtOrNull(0)
                                 ?.pendingProvider,
-                            _model.entitlementRow1
+                            _model.entitlementRow2
                                 ?.elementAtOrNull(0)
                                 ?.pendingStartsAt,
-                            _model.entitlementRow1
+                            _model.entitlementRow2
                                 ?.elementAtOrNull(0)
                                 ?.pendingProviderSubscriptionId,
                           );
@@ -356,142 +568,11 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     }
                   }
                 }
-              } else {
-                GoRouter.of(context).prepareAuthEvent();
-                await authManager.signOut();
-                GoRouter.of(context).clearRedirectLocation();
-
-                FFAppState().isLocked = false;
-                safeSetState(() {});
-
-                context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
-              }
-            } else {
-              FFAppState().isLocked = false;
-              safeSetState(() {});
-              _model.entitlementRow2 = await UserEntitlementsTable().queryRows(
-                queryFn: (q) => q
-                    .eqOrNull(
-                      'user_id',
-                      currentUserUid,
-                    )
-                    .eqOrNull(
-                      'entitlement',
-                      'decoy_wallet',
-                    ),
-              );
-              if ((_model.entitlementRow2?.elementAtOrNull(0)?.provider ==
-                      'stripe') &&
-                  (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
-                      false)) {
-                _model.api2Result2RSE = await RepairStripeEntitlementCall.call(
-                  userId: currentUserUid,
-                  jwt: currentJwtToken,
-                );
-
-                if ((_model.api2Result2RSE?.succeeded ?? true)) {
-                  _model.thirdEntitlementQue =
-                      await UserEntitlementsTable().queryRows(
-                    queryFn: (q) => q
-                        .eqOrNull(
-                          'user_id',
-                          currentUserUid,
-                        )
-                        .eqOrNull(
-                          'entitlement',
-                          'decoy_wallet',
-                        ),
-                  );
-                  FFAppState().hasActiveSubscription =
-                      (_model.thirdEntitlementQue != null &&
-                              (_model.thirdEntitlementQue)!.isNotEmpty) &&
-                          functions.isEntitlementUsableForProtection(
-                            _model.thirdEntitlementQue
-                                ?.elementAtOrNull(0)
-                                ?.isActive,
-                            _model.thirdEntitlementQue
-                                ?.elementAtOrNull(0)
-                                ?.currentPeriodEnd,
-                            _model.thirdEntitlementQue
-                                ?.elementAtOrNull(0)
-                                ?.pendingProvider,
-                            _model.thirdEntitlementQue
-                                ?.elementAtOrNull(0)
-                                ?.pendingStartsAt,
-                            _model.thirdEntitlementQue
-                                ?.elementAtOrNull(0)
-                                ?.pendingProviderSubscriptionId,
-                          );
-                  safeSetState(() {});
-                }
-              } else {
-                FFAppState().hasActiveSubscription =
-                    (_model.entitlementRow2 != null &&
-                            (_model.entitlementRow2)!.isNotEmpty) &&
-                        functions.isEntitlementUsableForProtection(
-                          _model.entitlementRow2?.elementAtOrNull(0)?.isActive,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.currentPeriodEnd,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.pendingProvider,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.pendingStartsAt,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.pendingProviderSubscriptionId,
-                        );
-                safeSetState(() {});
-              }
-
-              if (FFAppState().hasActiveSubscription == true) {
-                if (_model.agreementsComplete != true) {
-                  context.goNamedAuth(
-                      AgreementsPageWidget.routeName, context.mounted);
-                } else {
-                  if (_model.setupComplete != true) {
-                    context.goNamedAuth(
-                        CreatePinWidget.routeName, context.mounted);
-                  } else {
-                    if (((_model.query2 != null &&
-                                (_model.query2)!.isNotEmpty) &&
-                            (_model.setupComplete == true)) ||
-                        ((_model.query3 != null &&
-                                (_model.query3)!.isNotEmpty) &&
-                            (_model.setupComplete == true))) {
-                      await _goToPinPageAfterCleanHandoff();
-                    } else {
-                      context.goNamedAuth(
-                        CreatePinWidget.routeName,
-                        context.mounted,
-                        extra: <String, dynamic>{
-                          '__transition_info__': TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                          ),
-                        },
-                      );
-                    }
-                  }
-                }
-              } else {
-                if (_model.agreementsComplete != true) {
-                  context.goNamedAuth(
-                      AgreementsPageWidget.routeName, context.mounted);
-                } else {
-                  if (_model.setupComplete != true) {
-                    context.goNamedAuth(
-                        CreatePinWidget.routeName, context.mounted);
-                  } else {
-                    context.goNamedAuth(
-                        HomePageWidget.routeName, context.mounted);
-                  }
-                }
               }
             }
           }
+        } catch (error, stackTrace) {
+          await _failAuthRouting(error, stackTrace);
         }
       }
     });

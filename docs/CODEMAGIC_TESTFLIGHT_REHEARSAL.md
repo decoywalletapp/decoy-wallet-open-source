@@ -93,7 +93,9 @@ DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/funct
 DECOY_ALERT_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/alerts
 DECOY_DATA_KEY_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/data-key
 DECOY_PAYMENT_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/payment
-DECOY_VERIFY_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/verify
+DECOY_VERIFY_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link
+DECOY_EMAIL_CONFIRM_URL=https://dxsihfandgbrkreeokkm.supabase.co/auth/v1/verify
+DECOY_EMAIL_CONFIRM_DEEP_LINK=decoywalletapp://confirm-email
 ```
 
 The staging Supabase anon key and all Firebase/iOS values must still be entered

@@ -18,6 +18,15 @@ String get currentPhoneNumber => currentUser?.phoneNumber ?? '';
 
 String get currentJwtToken => _currentJwtToken ?? '';
 
+String get activeJwtToken =>
+    SupaFlow.client.auth.currentSession?.accessToken ?? currentJwtToken;
+
+String get activeUserUid =>
+    SupaFlow.client.auth.currentUser?.id ?? currentUserUid;
+
+String get activeUserEmail =>
+    SupaFlow.client.auth.currentUser?.email ?? currentUserEmail;
+
 bool get currentUserEmailVerified => currentUser?.emailVerified ?? false;
 
 /// Create a Stream that listens to the current user's JWT Token.
