@@ -215,4 +215,15 @@ void main() {
     expect(source, contains('Watch-only wallet import is available'));
     expect(source, contains('prepareWatchOnlyDecoyDraft'));
   });
+
+  test('staging signup confirmation prefers app deep link', () {
+    final source = File(
+      'lib/custom_code/actions/supa_email_sign_up.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('DecoyBuildProvenance.backendEnvironment'));
+    expect(source, contains("backendEnvironment == 'staging'"));
+    expect(source, contains('kEmailConfirmDeepLink'));
+    expect(source, contains("host == 'localhost'"));
+  });
 }
