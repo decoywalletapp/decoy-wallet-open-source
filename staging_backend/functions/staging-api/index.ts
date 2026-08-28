@@ -1,6 +1,5 @@
 import {
   cleanString,
-  createAdminClient,
   errorResponse,
   jsonResponse,
   optionsResponse,
@@ -168,7 +167,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    createAdminClient();
     const parts = pathAfterFunction(req);
     const group = parts[0] ?? "";
     const action = parts[1] ?? "";
