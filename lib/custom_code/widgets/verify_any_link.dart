@@ -82,6 +82,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     var completed = false;
     final p = _allParams(uri);
     final tokenHash = p['token_hash'] ?? p['tokenHash'] ?? p['token'];
+    final authCode = p['code'] ?? p['auth_code'];
     final refreshToken = p['refresh_token'] ?? p['refreshToken'];
     final accessToken = p['access_token'] ?? p['accessToken'];
     final t = (p['type'] ?? 'signup').toLowerCase();
@@ -99,16 +100,19 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
 
     try {
       AuthResponse? res;
+      AuthSessionUrlResponse? urlRes;
 
       if (tokenHash != null && tokenHash.isNotEmpty) {
         res = await client.auth.verifyOTP(
           type: otpType,
           tokenHash: tokenHash,
         );
+      } else if (authCode != null && authCode.isNotEmpty) {
+        urlRes = await client.auth.exchangeCodeForSession(authCode);
       } else if (refreshToken != null && refreshToken.isNotEmpty) {
         await client.auth.setSession(refreshToken);
       } else if (accessToken != null && accessToken.isNotEmpty) {
-        await client.auth.getSessionFromUrl(uri);
+        urlRes = await client.auth.getSessionFromUrl(uri);
       } else {
         if (kDebugMode) {
           _debugLog('[VerifyAnyLink] no auth payload in link: $uri');
@@ -116,11 +120,11 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         return;
       }
 
-      // let session hydrate
-      await Future.delayed(const Duration(milliseconds: 300));
-      final session = client.auth.currentSession ?? res?.session;
-      final ok = session != null || res?.user != null;
-      if (!ok || !mounted) return;
+      final session = await _waitForSession(client) ??
+          res?.session ??
+          urlRes?.session ??
+          client.auth.currentSession;
+      if (session == null || !mounted) return;
       completed = true;
 
       if (isRecoveryLink) {
@@ -183,6 +187,17 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       }
     }
     return params;
+  }
+
+  Future<Session?> _waitForSession(SupabaseClient client) async {
+    for (var attempt = 0; attempt < 20; attempt++) {
+      final session = client.auth.currentSession;
+      if (session != null) {
+        return session;
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    return null;
   }
 
   @override

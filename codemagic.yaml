@@ -153,6 +153,14 @@ workflows:
             true) ;;
             *) invalid="$invalid DECOY_ENABLE_WATCH_ONLY_IMPORT(expected true)" ;;
           esac
+          case "$DECOY_VERIFY_BASE_URL" in
+            https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link) ;;
+            *) invalid="$invalid DECOY_VERIFY_BASE_URL(expected staging verify-link)" ;;
+          esac
+          case "$DECOY_EMAIL_CONFIRM_URL" in
+            https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link) ;;
+            *) invalid="$invalid DECOY_EMAIL_CONFIRM_URL(expected staging verify-link)" ;;
+          esac
 
           if [ -n "$invalid" ]; then
             echo "Invalid CodeMagic environment variables:$invalid"
@@ -589,14 +597,16 @@ workflows:
     max_build_duration: 90
     environment:
       groups:
-        - decoy_public_runtime
+        - decoy_staging_runtime
       vars:
         ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
         ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
-        DECOY_BUILD_VERIFICATION: "debug-apk-rehearsal"
+        DECOY_BUILD_VERIFICATION: "watch-only-staging-debug-apk"
+        DECOY_BACKEND_ENV: "staging"
+        DECOY_ENABLE_WATCH_ONLY_IMPORT: "true"
       flutter: "3.41.6"
     cache:
       cache_paths:
@@ -623,6 +633,8 @@ workflows:
           for var in \
             DECOY_SUPABASE_URL \
             DECOY_SUPABASE_ANON_KEY \
+            DECOY_BACKEND_ENV \
+            DECOY_ENABLE_WATCH_ONLY_IMPORT \
             DECOY_FIREBASE_WEB_API_KEY \
             DECOY_FIREBASE_WEB_AUTH_DOMAIN \
             DECOY_FIREBASE_PROJECT_ID \
@@ -718,6 +730,22 @@ workflows:
           case "$ANDROID_PACKAGE_NAME" in
             com.decoywalletapp.app) ;;
             *) invalid="$invalid ANDROID_PACKAGE_NAME(expected com.decoywalletapp.app)" ;;
+          esac
+          case "$DECOY_BACKEND_ENV" in
+            staging) ;;
+            *) invalid="$invalid DECOY_BACKEND_ENV(expected staging)" ;;
+          esac
+          case "$DECOY_ENABLE_WATCH_ONLY_IMPORT" in
+            true) ;;
+            *) invalid="$invalid DECOY_ENABLE_WATCH_ONLY_IMPORT(expected true)" ;;
+          esac
+          case "$DECOY_VERIFY_BASE_URL" in
+            https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link) ;;
+            *) invalid="$invalid DECOY_VERIFY_BASE_URL(expected staging verify-link)" ;;
+          esac
+          case "$DECOY_EMAIL_CONFIRM_URL" in
+            https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link) ;;
+            *) invalid="$invalid DECOY_EMAIL_CONFIRM_URL(expected staging verify-link)" ;;
           esac
 
           if [ -n "$invalid" ]; then
@@ -817,6 +845,8 @@ workflows:
             --build-number="$APP_BUILD_NUMBER" \
             --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
             --dart-define=DECOY_SUPABASE_ANON_KEY="$DECOY_SUPABASE_ANON_KEY" \
+            --dart-define=DECOY_BACKEND_ENV="$DECOY_BACKEND_ENV" \
+            --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT="$DECOY_ENABLE_WATCH_ONLY_IMPORT" \
             --dart-define=DECOY_FIREBASE_CONFIGURED=true \
             --dart-define=DECOY_FIREBASE_WEB_API_KEY="$DECOY_FIREBASE_WEB_API_KEY" \
             --dart-define=DECOY_FIREBASE_WEB_AUTH_DOMAIN="$DECOY_FIREBASE_WEB_AUTH_DOMAIN" \
@@ -856,6 +886,8 @@ workflows:
           version=${APP_VERSION}
           build=${APP_BUILD_NUMBER}
           verification=${DECOY_BUILD_VERIFICATION}
+          backend_environment=${DECOY_BACKEND_ENV}
+          watch_only_import=${DECOY_ENABLE_WATCH_ONLY_IMPORT}
           firebase_app_id=${ANDROID_FIREBASE_APP_ID}
           EOF
     artifacts:

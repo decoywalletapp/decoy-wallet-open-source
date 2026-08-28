@@ -18,16 +18,25 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<bool> supaExchangeDeepLinkForSession(String link) async {
   try {
     final uri = Uri.parse(link);
+    final params = <String, String>{...uri.queryParameters};
+    if (uri.fragment.isNotEmpty) {
+      final cleanFragment = uri.fragment.startsWith('?')
+          ? uri.fragment.substring(1)
+          : uri.fragment;
+      params.addAll(Uri.splitQueryString(cleanFragment));
+    }
 
-    // token_hash is present in Supabase confirmation links
-    final tokenHash = uri.queryParameters['token_hash'];
-    if (tokenHash == null || tokenHash.isEmpty) return false;
+    final tokenHash =
+        params['token_hash'] ?? params['tokenHash'] ?? params['token'];
+    final authCode = params['code'] ?? params['auth_code'];
+    final refreshToken = params['refresh_token'] ?? params['refreshToken'];
+    final accessToken = params['access_token'] ?? params['accessToken'];
 
     // Map Supabase link type -> OtpType
-    final typeParam = (uri.queryParameters['type'] ?? 'signup').toLowerCase();
+    final typeParam = (params['type'] ?? 'signup').toLowerCase();
     final otpType = const {
           'signup': OtpType.signup,
-          'magiclink': OtpType.signup,
+          'magiclink': OtpType.magiclink,
           'recovery': OtpType.recovery,
           'invite': OtpType.invite,
           'email_change': OtpType.emailChange,
@@ -36,9 +45,25 @@ Future<bool> supaExchangeDeepLinkForSession(String link) async {
 
     // Verify and hydrate session
     final supa = Supabase.instance.client;
-    await supa.auth.verifyOTP(token: tokenHash, type: otpType);
+    if (tokenHash != null && tokenHash.isNotEmpty) {
+      await supa.auth.verifyOTP(type: otpType, tokenHash: tokenHash);
+    } else if (authCode != null && authCode.isNotEmpty) {
+      await supa.auth.exchangeCodeForSession(authCode);
+    } else if (refreshToken != null && refreshToken.isNotEmpty) {
+      await supa.auth.setSession(refreshToken);
+    } else if (accessToken != null && accessToken.isNotEmpty) {
+      await supa.auth.getSessionFromUrl(uri);
+    } else {
+      return false;
+    }
 
-    return supa.auth.currentSession != null;
+    for (var attempt = 0; attempt < 20; attempt++) {
+      if (supa.auth.currentSession != null) {
+        return true;
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    return false;
   } catch (_) {
     return false;
   }

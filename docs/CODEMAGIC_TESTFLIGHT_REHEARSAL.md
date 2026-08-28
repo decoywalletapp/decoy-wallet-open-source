@@ -94,9 +94,14 @@ DECOY_ALERT_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/stagi
 DECOY_DATA_KEY_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/data-key
 DECOY_PAYMENT_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/payment
 DECOY_VERIFY_BASE_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link
-DECOY_EMAIL_CONFIRM_URL=https://dxsihfandgbrkreeokkm.supabase.co/auth/v1/verify
+DECOY_EMAIL_CONFIRM_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link
 DECOY_EMAIL_CONFIRM_DEEP_LINK=decoywalletapp://confirm-email
 ```
+
+The staging email confirmation URL is an HTTPS bridge that receives Supabase's
+confirmation payload and redirects back into `decoywalletapp://confirm-email`.
+This prevents staging emails from falling back to a dashboard default such as
+`localhost`.
 
 The staging Supabase anon key and all Firebase/iOS values must still be entered
 only in CodeMagic, not committed to this repository.

@@ -148,6 +148,14 @@ List<String> inspectDecoyBackendEnvironment(
       snapshot.verifyBaseUrl,
       '/functions/v1/verify-link',
     );
+    if (snapshot.emailConfirmUrl.trim().isNotEmpty) {
+      _requireStagingFunctionPath(
+        problems,
+        'DECOY_EMAIL_CONFIRM_URL',
+        snapshot.emailConfirmUrl,
+        '/functions/v1/verify-link',
+      );
+    }
   } else {
     final productionValues = <String, String>{
       'DECOY_SUPABASE_URL': snapshot.supabaseUrl,

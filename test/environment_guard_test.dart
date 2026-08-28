@@ -37,6 +37,30 @@ void main() {
     expect(inspectDecoyBackendEnvironment(validStaging), isEmpty);
   });
 
+  test('staging build accepts staging email confirmation bridge', () {
+    final problems = inspectDecoyBackendEnvironment(
+      const DecoyBackendEnvironmentSnapshot(
+        backendEnvironment: 'staging',
+        supabaseUrl: 'https://dxsihfandgbrkreeokkm.supabase.co',
+        firebaseFunctionsBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/firebase',
+        alertBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/alerts',
+        dataKeyBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/data-key',
+        paymentBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/payment',
+        verifyBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link',
+        emailConfirmUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link',
+        emailConfirmDeepLink: 'decoywalletapp://confirm-email',
+      ),
+    );
+
+    expect(problems, isEmpty);
+  });
+
   test('staging build rejects localhost email confirmation URLs', () {
     final problems = inspectDecoyBackendEnvironment(
       const DecoyBackendEnvironmentSnapshot(
@@ -59,6 +83,35 @@ void main() {
 
     expect(problems, contains('DECOY_EMAIL_CONFIRM_URL must be an https URL'));
     expect(problems, contains('DECOY_EMAIL_CONFIRM_URL points at localhost'));
+  });
+
+  test('staging build rejects non-bridge email confirmation URLs', () {
+    final problems = inspectDecoyBackendEnvironment(
+      const DecoyBackendEnvironmentSnapshot(
+        backendEnvironment: 'staging',
+        supabaseUrl: 'https://dxsihfandgbrkreeokkm.supabase.co',
+        firebaseFunctionsBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/firebase',
+        alertBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/alerts',
+        dataKeyBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/data-key',
+        paymentBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/staging-api/payment',
+        verifyBaseUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link',
+        emailConfirmUrl:
+            'https://dxsihfandgbrkreeokkm.supabase.co/auth/v1/verify',
+        emailConfirmDeepLink: 'decoywalletapp://confirm-email',
+      ),
+    );
+
+    expect(
+      problems,
+      contains(
+        'DECOY_EMAIL_CONFIRM_URL must point at /functions/v1/verify-link on dxsihfandgbrkreeokkm.supabase.co for staging builds',
+      ),
+    );
   });
 
   test('staging build rejects production helper routes', () {
@@ -198,6 +251,29 @@ void main() {
     expect(guardIndex, lessThan(supaIndex));
   });
 
+  test('email link widget waits for a real Supabase session', () {
+    final source =
+        File('lib/custom_code/widgets/verify_any_link.dart').readAsStringSync();
+
+    expect(source, contains("p['code']"));
+    expect(source, contains('exchangeCodeForSession'));
+    expect(source, contains('_waitForSession'));
+    expect(source, contains('uri.fragment'));
+    expect(source, isNot(contains('res?.user != null')));
+  });
+
+  test('email link custom action handles staged auth payload shapes', () {
+    final source = File(
+      'lib/custom_code/actions/supa_exchange_deep_link_for_session.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('uri.fragment'));
+    expect(source, contains("params['code']"));
+    expect(source, contains('exchangeCodeForSession'));
+    expect(source, contains('tokenHash: tokenHash'));
+    expect(source, contains('getSessionFromUrl'));
+  });
+
   test('production baseline is still valid for the guard helper', () {
     expect(inspectDecoyBackendEnvironment(validProduction), isEmpty);
   });
@@ -236,16 +312,45 @@ void main() {
   test('staging backend runbook keeps Supabase gateway JWT enabled', () {
     final source = File('staging_backend/README.md').readAsStringSync();
 
-    expect(source, contains('gateway JWT verification enabled'));
+    expect(source, contains('gateway JWT'));
+    expect(source, contains('verification enabled'));
     expect(source, contains('user session JWT'));
-    expect(source, contains('staging Supabase anon JWT'));
-    expect(
-      source,
-      isNot(
-        contains(
-          'with JWT verification disabled at the Supabase edge-function gateway',
-        ),
-      ),
-    );
+    expect(source, contains('staging'));
+    expect(source, contains('Supabase anon JWT'));
+    expect(source, contains('verify-link'));
+    expect(source, contains('without gateway JWT'));
+    expect(source, contains('performs no backend writes'));
+    expect(source, contains('uses no service-role'));
+  });
+
+  test('staging verify-link function is redirect-only', () {
+    final source = File('staging_backend/functions/verify-link/index.ts')
+        .readAsStringSync();
+
+    expect(source, contains('redirectToApp'));
+    expect(source, contains('Location'));
+    expect(source, contains('decoywalletapp://confirm-email'));
+    expect(source, contains('verify-link is staging-only'));
+    expect(source, isNot(contains('SERVICE_ROLE')));
+    expect(source, isNot(contains('createAdminClient')));
+    expect(source, isNot(contains('requireUser')));
+  });
+
+  test('Android debug rehearsal uses staging runtime only', () {
+    final source = File('codemagic.yaml').readAsStringSync();
+    final start = source.indexOf('  android-debug-rehearsal:');
+    final end = source.indexOf('  android-signed-release-rehearsal:', start);
+
+    expect(start, greaterThan(-1));
+    expect(end, greaterThan(start));
+
+    final section = source.substring(start, end);
+    expect(section, contains('decoy_staging_runtime'));
+    expect(section, isNot(contains('decoy_public_runtime')));
+    expect(section, contains('DECOY_BACKEND_ENV: "staging"'));
+    expect(section, contains('DECOY_ENABLE_WATCH_ONLY_IMPORT: "true"'));
+    expect(section, contains('--dart-define=DECOY_BACKEND_ENV'));
+    expect(section, contains('--dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT'));
+    expect(section, contains('expected staging verify-link'));
   });
 }
