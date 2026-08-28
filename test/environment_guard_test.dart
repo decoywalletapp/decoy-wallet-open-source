@@ -259,6 +259,13 @@ void main() {
     expect(source, contains('exchangeCodeForSession'));
     expect(source, contains('_waitForSession'));
     expect(source, contains('uri.fragment'));
+    expect(source, contains('DecoyWalletAppSupabaseUser(session.user)'));
+    expect(source, contains('AppStateNotifier.instance.update(authUser)'));
+    expect(source, contains('context.goNamed(AuthRouterWidget.routeName)'));
+    expect(
+      source,
+      isNot(contains('context.goNamed(PhoneNumberInputWidget.routeName)')),
+    );
     expect(source, isNot(contains('res?.user != null')));
   });
 

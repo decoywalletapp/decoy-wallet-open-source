@@ -19,6 +19,8 @@ import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
+import '/auth/supabase_auth/supabase_user_provider.dart';
+
 class VerifyAnyLink extends StatefulWidget {
   final double? width;
   final double? height;
@@ -125,6 +127,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
           urlRes?.session ??
           client.auth.currentSession;
       if (session == null || !mounted) return;
+      _hydrateFlutterFlowAuth(session);
       completed = true;
 
       if (isRecoveryLink) {
@@ -142,9 +145,9 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       if (!_navigated && mounted) {
         _navigated = true;
         if (kDebugMode) {
-          _debugLog('[VerifyAnyLink] verified link; routing phoneNumberInput');
+          _debugLog('[VerifyAnyLink] verified link; routing authRouter');
         }
-        context.goNamed(PhoneNumberInputWidget.routeName);
+        context.goNamed(AuthRouterWidget.routeName);
       }
     } on AuthApiException catch (e, st) {
       if (e.code == 'otp_expired' || e.statusCode == 403) {
@@ -168,6 +171,12 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         _linksCompleted.add(linkKey);
       }
     }
+  }
+
+  void _hydrateFlutterFlowAuth(Session session) {
+    final authUser = DecoyWalletAppSupabaseUser(session.user);
+    currentUser = authUser;
+    AppStateNotifier.instance.update(authUser);
   }
 
   Map<String, String> _allParams(Uri uri) {
