@@ -32,8 +32,7 @@ class SendEmergencyAlertsCall {
     final baseUrl = DecoyAlertGroup.getBaseUrl();
 
     final contacts = _serializeJson(contactsJson);
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "userId": "${escapeStringForJson(userId)}",
   "triggerType": "${escapeStringForJson(triggerId)}",
@@ -72,19 +71,16 @@ class SendVerificationCodeCall {
     String? cleanPhone = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final apiUrl = firebaseFunctionUrl('sendVerificationCode');
+    final ffApiRequestBody = '''
 {
   "phone": "${cleanPhone}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'SendVerificationCode',
-      apiUrl: firebaseFunctionUrl('sendVerificationCode'),
+      apiUrl: apiUrl,
       callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt}',
-      },
+      headers: _jsonHeadersForUrl(apiUrl, jwt: jwt),
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -111,20 +107,17 @@ class CheckVerificationCodeCall {
     String? code = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final apiUrl = firebaseFunctionUrl('checkVerificationCode');
+    final ffApiRequestBody = '''
 {
   "phone": "${cleanPhone}",
   "code": "${code}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'CheckVerificationCode',
-      apiUrl: firebaseFunctionUrl('checkVerificationCode'),
+      apiUrl: apiUrl,
       callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt}',
-      },
+      headers: _jsonHeadersForUrl(apiUrl, jwt: jwt),
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -147,12 +140,13 @@ class CheckVerificationCodeCall {
 
 class BtcChartOneYearCall {
   static Future<ApiCallResponse> call() async {
+    final apiUrl =
+        '${supabaseFunctionUrl('coingecko-proxy')}?path=coins/bitcoin/market_chart&vs_currency=usd&days=365&interval=daily';
     return ApiManager.instance.makeApiCall(
       callName: 'btcChartOneYear',
-      apiUrl:
-          '${supabaseFunctionUrl('coingecko-proxy')}?path=coins/bitcoin/market_chart&vs_currency=usd&days=365&interval=daily',
+      apiUrl: apiUrl,
       callType: ApiCallType.GET,
-      headers: {'Accept': 'application/json'},
+      headers: _acceptHeadersForUrl(apiUrl),
       params: {},
       returnBody: true,
       encodeBodyUtf8: false,
@@ -219,8 +213,7 @@ class SetPINCall {
     String? pin = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "type": "${escapeStringForJson(type)}",
   "pin": "${escapeStringForJson(pin)}"
@@ -260,8 +253,7 @@ class VerifyPINCall {
     String? pin = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "pin": "${pin}"
 }''';
@@ -300,8 +292,7 @@ class WrapDataKeyCall {
     String? dataKeyB64 = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "dataKeyB64": "${escapeStringForJson(dataKeyB64)}"
 }''';
@@ -335,8 +326,8 @@ class SendSupportTicketCall {
     String? subject = '',
     String? message = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final apiUrl = firebaseFunctionUrl('sendSupportTicket');
+    final ffApiRequestBody = '''
 {
   "userEmail": "${escapeStringForJson(userEmail)}",
   "subject": "${escapeStringForJson(subject)}",
@@ -344,9 +335,9 @@ class SendSupportTicketCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'sendSupportTicket',
-      apiUrl: firebaseFunctionUrl('sendSupportTicket'),
+      apiUrl: apiUrl,
       callType: ApiCallType.POST,
-      headers: {'Content-Type': 'application/json'},
+      headers: _jsonHeadersForUrl(apiUrl),
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -367,8 +358,7 @@ class CreateCheckoutSessionCall {
     int? trialEnd,
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(currentUserUid)}",
   "billing_interval": "${escapeStringForJson(billingInterval)}",
@@ -408,8 +398,7 @@ class CreateBTCPayInvoiceCall {
     String? billingInterval = 'monthly',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(currentUserUid)}",
   "billing_interval": "${escapeStringForJson(billingInterval)}"
@@ -446,8 +435,7 @@ class CreateBillingPortalSessionCall {
     String? returnUrl = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
 "customer_id": "${escapeStringForJson(customerId)}",
 "user_id": "${escapeStringForJson(userId)}",
@@ -483,8 +471,7 @@ class WrapDataKeyUnwrapCall {
     String? wrappedB64 = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "wrappedB64": "${escapeStringForJson(wrappedB64)}"
 }''';
@@ -514,19 +501,16 @@ class GetPhoneHashCall {
     String? cleanPhone = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final apiUrl = firebaseFunctionUrl('getPhoneHash');
+    final ffApiRequestBody = '''
 {
   "cleanPhone": "${escapeStringForJson(cleanPhone)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'getPhoneHash',
-      apiUrl: firebaseFunctionUrl('getPhoneHash'),
+      apiUrl: apiUrl,
       callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt}',
-      },
+      headers: _jsonHeadersForUrl(apiUrl, jwt: jwt),
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -550,19 +534,16 @@ class GetEmailHashCall {
     String? email = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final apiUrl = firebaseFunctionUrl('getEmailHash');
+    final ffApiRequestBody = '''
 {
   "email": "${escapeStringForJson(email)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'getEmailHash',
-      apiUrl: firebaseFunctionUrl('getEmailHash'),
+      apiUrl: apiUrl,
       callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt}',
-      },
+      headers: _jsonHeadersForUrl(apiUrl, jwt: jwt),
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -590,8 +571,7 @@ class InsertAlertLogRestCall {
     String? locNonceB64 = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userId)}",
   "trigger_type": "PIN_DECOY",
@@ -659,8 +639,7 @@ class RegisterDecoyCall {
     String? decoyId = '',
     String? addr0 = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "id": "${escapeStringForJson(decoyId)}",
   "derivation_path": "m/84'/0'/0'",
@@ -699,8 +678,7 @@ class CommitDecoyCall {
   }) async {
     final addresses = _serializeList(addressesList);
 
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "decoyId": "${escapeStringForJson(decoyId)}",
   "derivation_path": "${escapeStringForJson(derivationPath)}",
@@ -735,8 +713,7 @@ class CheckPhoneTakenCall {
     String? jwt = '',
     String? phoneHash = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
 "phoneHash": "${escapeStringForJson(phoneHash)}"
 }''';
@@ -770,8 +747,7 @@ class FinalizeStripeSwitchCall {
     String? sessionId = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
 "user_id": "${escapeStringForJson(userId)}",
 "session_id": "${escapeStringForJson(sessionId)}"
@@ -803,8 +779,7 @@ class ScheduleBtcpaySwitchCall {
     String? currentUserUid = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "p_user_id": "${escapeStringForJson(currentUserUid)}"
 }''';
@@ -838,8 +813,7 @@ class FinalizeBtcpaySwitchCall {
     String? userId = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userId)}"
 }''';
@@ -870,8 +844,7 @@ class RepairStripeEntitlementCall {
     String? userId = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userId)}"
 }''';
@@ -906,8 +879,7 @@ class CreateConsentRequestCall {
     String? phoneNumber = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "userId": "${escapeStringForJson(userId)}",
   "contactSlot": ${contactSlot},
@@ -1010,8 +982,7 @@ class SyncConsentSlotsCall {
     dynamic slotsJsonJson,
   }) async {
     final slotsJson = _serializeJson(slotsJsonJson, true);
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "slots": ${slotsJson}
 }''';
@@ -1034,6 +1005,43 @@ class SyncConsentSlotsCall {
       alwaysAllowBody: false,
     );
   }
+}
+
+bool _isSupabaseEdgeUrl(String apiUrl) {
+  final uri = Uri.tryParse(apiUrl);
+  return uri != null &&
+      uri.scheme == 'https' &&
+      uri.host.endsWith('.supabase.co') &&
+      uri.path.startsWith('/functions/v1/');
+}
+
+String _bearerTokenForUrl(String apiUrl, String? jwt) {
+  final token = (jwt ?? '').trim();
+  if (token.isNotEmpty) {
+    return token;
+  }
+  if (_isSupabaseEdgeUrl(apiUrl)) {
+    return requiredPublicConfig('DECOY_SUPABASE_ANON_KEY', kSupabaseAnonKey);
+  }
+  return '';
+}
+
+Map<String, String> _jsonHeadersForUrl(String apiUrl, {String? jwt}) {
+  final headers = <String, String>{'Content-Type': 'application/json'};
+  final bearer = _bearerTokenForUrl(apiUrl, jwt);
+  if (bearer.isNotEmpty) {
+    headers['Authorization'] = 'Bearer $bearer';
+  }
+  return headers;
+}
+
+Map<String, String> _acceptHeadersForUrl(String apiUrl, {String? jwt}) {
+  final headers = <String, String>{'Accept': 'application/json'};
+  final bearer = _bearerTokenForUrl(apiUrl, jwt);
+  if (bearer.isNotEmpty) {
+    headers['Authorization'] = 'Bearer $bearer';
+  }
+  return headers;
 }
 
 String _toEncodable(dynamic item) {

@@ -25,9 +25,10 @@ Decoy imports without touching production infrastructure.
 
 1. Apply `supabase_sql/20260827_watch_only_staging_schema.sql` to the staging
    Supabase project.
-2. Deploy every folder in `functions/` to the staging Supabase project with JWT
-   verification disabled at the Supabase edge-function gateway. The helpers do
-   their own auth checks where auth is needed.
+2. Deploy every folder in `functions/` to the staging Supabase project with
+   gateway JWT verification enabled. The app sends either a user session JWT or
+   the staging Supabase anon JWT to staging helper routes, and the helpers still
+   perform their own auth checks where user auth is needed.
 3. Create the CodeMagic `decoy_staging_runtime` group with staging-only values.
 4. Run the `iOS TestFlight Rehearsal` workflow from the watch-only branch.
 

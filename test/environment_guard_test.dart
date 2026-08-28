@@ -172,4 +172,51 @@ void main() {
   test('production baseline is still valid for the guard helper', () {
     expect(inspectDecoyBackendEnvironment(validProduction), isEmpty);
   });
+
+  test('staging helper calls can satisfy protected Supabase edge gateway', () {
+    final source =
+        File('lib/backend/api_requests/api_calls.dart').readAsStringSync();
+
+    expect(source, contains('_isSupabaseEdgeUrl'));
+    expect(source, contains('_bearerTokenForUrl'));
+    expect(source, contains('_jsonHeadersForUrl'));
+    expect(source, contains('_acceptHeadersForUrl'));
+    expect(
+      source,
+      contains("requiredPublicConfig('DECOY_SUPABASE_ANON_KEY'"),
+    );
+
+    expect(
+      source,
+      contains("headers: _jsonHeadersForUrl(apiUrl, jwt: jwt)"),
+    );
+    expect(source, contains('headers: _acceptHeadersForUrl(apiUrl)'));
+
+    for (final callName in [
+      'SendVerificationCode',
+      'CheckVerificationCode',
+      'btcChartOneYear',
+      'sendSupportTicket',
+      'getPhoneHash',
+      'getEmailHash',
+    ]) {
+      expect(source, contains("callName: '$callName'"));
+    }
+  });
+
+  test('staging backend runbook keeps Supabase gateway JWT enabled', () {
+    final source = File('staging_backend/README.md').readAsStringSync();
+
+    expect(source, contains('gateway JWT verification enabled'));
+    expect(source, contains('user session JWT'));
+    expect(source, contains('staging Supabase anon JWT'));
+    expect(
+      source,
+      isNot(
+        contains(
+          'with JWT verification disabled at the Supabase edge-function gateway',
+        ),
+      ),
+    );
+  });
 }
