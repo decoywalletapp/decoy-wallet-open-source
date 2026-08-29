@@ -98,10 +98,12 @@ DECOY_EMAIL_CONFIRM_URL=https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/ve
 DECOY_EMAIL_CONFIRM_DEEP_LINK=decoywalletapp://confirm-email
 ```
 
-The staging email confirmation URL is an HTTPS bridge that receives Supabase's
-confirmation payload and redirects back into `decoywalletapp://confirm-email`.
-This prevents staging emails from falling back to a dashboard default such as
-`localhost`.
+Current staging builds should prefer
+`DECOY_EMAIL_CONFIRM_DEEP_LINK=decoywalletapp://confirm-email` so Supabase's
+confirmation payload returns directly to the app. `DECOY_EMAIL_CONFIRM_URL`
+still points to the staging `verify-link` HTTPS function as a fallback/manual
+bridge, and prevents staging emails from falling back to a dashboard default
+such as `localhost`.
 
 The staging Supabase anon key and all Firebase/iOS values must still be entered
 only in CodeMagic, not committed to this repository.
