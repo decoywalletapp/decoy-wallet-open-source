@@ -92,6 +92,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
     throw StateError('Authenticated Supabase session was not ready.');
   }
 
+  bool _authResponseEmailConfirmed(dynamic jsonBody) {
+    final confirmedAt = getJsonField(
+      jsonBody ?? '',
+      r'''$.email_confirmed_at''',
+    ).toString().trim().toLowerCase();
+    return confirmedAt.isNotEmpty && confirmedAt != 'null';
+  }
+
   Future<void> _failAuthRouting(Object error, [StackTrace? stackTrace]) async {
     if (kDebugMode) {
       debugPrint('AuthRouter failed: $error');
@@ -218,6 +226,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               jwt: _routingJwtToken,
             ),
           );
+          final authEmailConfirmed =
+              _authResponseEmailConfirmed(_model.authUserResp?.jsonBody);
 
           _model.emailHashResp = await _runAuthStep(
             'hashing auth email',
@@ -253,8 +263,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               'creating Decoy account row',
               DecoyWalletTable().insert({
                 'user_id': _routingUserId,
-                'email_verified': false,
-                'email_verified_at': supaSerialize<DateTime>(null),
+                'email_verified': authEmailConfirmed,
+                'email_verified_at': supaSerialize<DateTime>(
+                    authEmailConfirmed ? getCurrentTimestamp : null),
                 'is_phone_verified': false,
                 'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
                 'email_hash': GetEmailHashCall.emailHash(

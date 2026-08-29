@@ -241,6 +241,22 @@ void main() {
     expect(source, isNot(contains('userId: currentUserUid')));
   });
 
+  test('AuthRouter preserves verified email state on first account row', () {
+    final source = File(
+      'lib/welcom_pages/auth_router/auth_router_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('_authResponseEmailConfirmed'));
+    expect(source, contains(r'''$.email_confirmed_at'''));
+    expect(source, contains('final authEmailConfirmed'));
+    expect(source, contains("'email_verified': authEmailConfirmed"));
+    expect(
+      source,
+      contains('authEmailConfirmed ? getCurrentTimestamp : null'),
+    );
+    expect(source, isNot(contains("'email_verified': false")));
+  });
+
   test('environment guard runs before Supabase initialization', () {
     final source = File('lib/main.dart').readAsStringSync();
     final guardIndex = source.indexOf('validateDecoyBackendEnvironment()');
