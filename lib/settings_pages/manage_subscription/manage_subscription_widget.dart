@@ -633,6 +633,33 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                               ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
+                                  24.0,
+                                  0.0,
+                                  24.0,
+                                  0.0,
+                                ),
+                                child: Text(
+                                  'Emergency alerts, wallet monitoring, and emergency-contact notifications require an active paid subscription.',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(
+                                    context,
+                                  ).bodySmall.override(
+                                        fontFamily: FlutterFlowTheme.of(
+                                          context,
+                                        ).bodySmallFamily,
+                                        color: FlutterFlowTheme.of(
+                                          context,
+                                        ).secondaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodySmallIsCustom,
+                                      ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                   16.0,
                                   0.0,
                                   16.0,
