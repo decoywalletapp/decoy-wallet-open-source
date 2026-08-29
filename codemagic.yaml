@@ -20,6 +20,8 @@ workflows:
         DECOY_BUILD_VERIFICATION: "watch-only-staging-testflight"
         DECOY_BACKEND_ENV: "staging"
         DECOY_ENABLE_WATCH_ONLY_IMPORT: "true"
+        DECOY_VERIFY_BASE_URL: "https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link"
+        DECOY_EMAIL_CONFIRM_URL: "https://dxsihfandgbrkreeokkm.supabase.co/functions/v1/verify-link"
       flutter: "3.41.6"
       xcode: latest
       cocoapods: default
