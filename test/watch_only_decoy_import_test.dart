@@ -236,6 +236,10 @@ void main() {
     expect(redirectSource, contains("backendEnvironment == 'staging'"));
     expect(redirectSource, contains('kEmailConfirmDeepLink'));
     expect(redirectSource, contains("host == 'localhost'"));
+    expect(
+      redirectSource.indexOf('return deepLink;'),
+      lessThan(redirectSource.indexOf('return configured;')),
+    );
     expect(customSignupSource, contains('emailConfirmationRedirect'));
     expect(generatedSignupSource, contains('emailConfirmationRedirect'));
     expect(userProviderSource, contains('emailConfirmationRedirect'));

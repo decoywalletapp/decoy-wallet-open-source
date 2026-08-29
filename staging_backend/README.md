@@ -29,14 +29,18 @@ Decoy imports without touching production infrastructure.
    verification enabled. App requests use either a user session JWT or the
    staging Supabase anon JWT to reach staging helper routes, and the helpers
    still perform their own auth checks where user auth is needed.
-3. Deploy `verify-link` to the staging Supabase project without gateway JWT
-   verification. Email clients and mobile browsers do not send an Authorization
-   header when a user taps a Supabase confirmation email. This function is the
-   only staging exception: it performs no backend writes, uses no service-role
-   credentials, and only redirects Supabase Auth payloads back into the Decoy app
-   deep link.
-4. Create the CodeMagic `decoy_staging_runtime` group with staging-only values.
-5. Run the `iOS TestFlight Rehearsal` workflow from the watch-only branch.
+3. Configure staging builds to use
+   `DECOY_EMAIL_CONFIRM_DEEP_LINK=decoywalletapp://confirm-email`. New staging
+   emails should hand Supabase Auth payloads directly back to the app instead of
+   opening a browser page first.
+4. Deploy `verify-link` to the staging Supabase project without gateway JWT
+   verification as a fallback/manual bridge only. Email clients and mobile
+   browsers do not send an Authorization header when a user taps a Supabase
+   confirmation email. This function is the only staging exception: it performs
+   no backend writes, uses no service-role credentials, and only redirects
+   Supabase Auth payloads back into the Decoy app deep link.
+5. Create the CodeMagic `decoy_staging_runtime` group with staging-only values.
+6. Run the `iOS TestFlight Rehearsal` workflow from the watch-only branch.
 
 ## Staging Function Map
 
@@ -65,11 +69,14 @@ Deploy these functions to the staging project:
 - `payment/*`
 - `alerts/sendEmergencyAlerts`
 
-`verify-link` provides the staging email-confirmation bridge. It receives the
-Supabase Auth confirmation payload in the mobile browser and redirects it to
-`decoywalletapp://confirm-email` so the app can exchange the link for a real
-staging session. It must stay staging-only and must not perform backend writes
-or vendor side effects.
+`verify-link` provides the staging email-confirmation fallback bridge. Current
+staging app builds should prefer `decoywalletapp://confirm-email` directly so
+the app receives the Supabase Auth payload without a browser handoff. The bridge
+still opens a tiny browser-side page that preserves Supabase Auth query
+parameters and URL fragments before sending the user to the app deep link. It
+must stay staging-only and must not perform backend writes or vendor side
+effects. The bridge performs no backend writes and uses no service-role
+credentials.
 
 The production backend should not be changed until the staging TestFlight path
 has been tested end-to-end.

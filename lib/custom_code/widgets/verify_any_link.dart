@@ -20,6 +20,7 @@ import 'package:go_router/go_router.dart';
 import 'dart:async';
 
 import '/auth/supabase_auth/supabase_user_provider.dart';
+import '/build_provenance.dart';
 
 class VerifyAnyLink extends StatefulWidget {
   final double? width;
@@ -126,7 +127,25 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
           res?.session ??
           urlRes?.session ??
           client.auth.currentSession;
-      if (session == null || !mounted) return;
+      if (session == null) {
+        completed = true;
+        if (mounted && DecoyBuildProvenance.backendEnvironment == 'staging') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Staging email link opened, but no Supabase session payload reached the app.',
+                style: TextStyle(
+                  color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              ),
+              duration: Duration(milliseconds: 6000),
+              backgroundColor: FlutterFlowTheme.of(context).secondary,
+            ),
+          );
+        }
+        return;
+      }
+      if (!mounted) return;
       _hydrateFlutterFlowAuth(session);
       completed = true;
 

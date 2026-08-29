@@ -297,6 +297,21 @@ void main() {
     expect(source, contains('getSessionFromUrl'));
   });
 
+  test('staging login exposes sanitized Supabase auth diagnostics', () {
+    final actionSource = File('lib/custom_code/actions/supa_email_login.dart')
+        .readAsStringSync();
+    final loginSource =
+        File('lib/welcom_pages/login_page/login_page_widget.dart')
+            .readAsStringSync();
+
+    expect(actionSource, contains('supaLastEmailLoginError'));
+    expect(actionSource, contains('AuthApiException'));
+    expect(actionSource, contains("backendEnvironment == 'staging'"));
+    expect(loginSource, contains('supaLastEmailLoginError'));
+    expect(loginSource, contains('DecoyBuildProvenance'));
+    expect(loginSource, contains('backendEnvironment'));
+  });
+
   test('production baseline is still valid for the guard helper', () {
     expect(inspectDecoyBackendEnvironment(validProduction), isEmpty);
   });
@@ -346,12 +361,16 @@ void main() {
     expect(source, contains('uses no service-role'));
   });
 
-  test('staging verify-link function is redirect-only', () {
+  test('staging verify-link function preserves browser auth fragments', () {
     final source = File('staging_backend/functions/verify-link/index.ts')
         .readAsStringSync();
 
     expect(source, contains('redirectToApp'));
-    expect(source, contains('Location'));
+    expect(source, contains('window.location.hash'));
+    expect(source, contains('window.location.replace'));
+    expect(source, contains('status: 200'));
+    expect(source, isNot(contains('status: 302')));
+    expect(source, isNot(contains('"Location"')));
     expect(source, contains('decoywalletapp://confirm-email'));
     expect(source, contains('verify-link is staging-only'));
     expect(source, isNot(contains('SERVICE_ROLE')));

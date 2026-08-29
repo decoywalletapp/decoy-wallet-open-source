@@ -6,11 +6,11 @@ String emailConfirmationRedirect([String? configuredRedirectUrl]) {
   final deepLink = kEmailConfirmDeepLink.trim();
 
   if (DecoyBuildProvenance.backendEnvironment == 'staging') {
-    if (configured.isNotEmpty && !_isLocalhostRedirect(configured)) {
-      return configured;
-    }
     if (deepLink.isNotEmpty) {
       return deepLink;
+    }
+    if (configured.isNotEmpty && !_isLocalhostRedirect(configured)) {
+      return configured;
     }
   }
 

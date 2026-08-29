@@ -1,4 +1,5 @@
 import '/auth/base_auth_user_provider.dart';
+import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
@@ -470,6 +471,35 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                 AppStateNotifier.instance
                                                     .updateNotifyOnAuthChange(
                                                         true);
+                                                if (DecoyBuildProvenance
+                                                        .backendEnvironment ==
+                                                    'staging') {
+                                                  final stagingLoginError =
+                                                      await actions
+                                                          .supaLastEmailLoginError();
+                                                  if (context.mounted) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          stagingLoginError,
+                                                          style: TextStyle(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryText,
+                                                          ),
+                                                        ),
+                                                        duration: Duration(
+                                                            milliseconds: 6000),
+                                                        backgroundColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                      ),
+                                                    );
+                                                  }
+                                                }
                                                 _model.notificationValue = 1;
                                                 safeSetState(() {});
                                                 await Future.delayed(
