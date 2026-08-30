@@ -276,7 +276,8 @@ void main() {
     expect(source, contains('_waitForSession'));
     expect(source, contains('uri.fragment'));
     expect(source, contains('DecoyWalletAppSupabaseUser(session.user)'));
-    expect(source, contains('AppStateNotifier.instance.update(authUser)'));
+    expect(source, contains('updateNotifyOnAuthChange(false)'));
+    expect(source, contains('appState.update(authUser)'));
     expect(source, contains('context.goNamed(AuthRouterWidget.routeName)'));
     expect(
       source,

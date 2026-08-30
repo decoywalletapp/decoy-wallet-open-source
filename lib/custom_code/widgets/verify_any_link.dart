@@ -195,7 +195,9 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   void _hydrateFlutterFlowAuth(Session session) {
     final authUser = DecoyWalletAppSupabaseUser(session.user);
     currentUser = authUser;
-    AppStateNotifier.instance.update(authUser);
+    final appState = AppStateNotifier.instance;
+    appState.updateNotifyOnAuthChange(false);
+    appState.update(authUser);
   }
 
   Map<String, String> _allParams(Uri uri) {
