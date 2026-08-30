@@ -390,6 +390,15 @@ const List<LegalDocumentParagraph> kDecoyWalletTermsOfServiceParagraphs =
         r'''Decoy Wallet will make commercially reasonable efforts to maintain access to the App and its Services. However, Decoy Wallet may suspend, restrict, or disable access at any time and without notice.'''),
   ]),
   LegalDocumentParagraph(<LegalDocumentRun>[
+    LegalDocumentRun(r'''PAID SUBSCRIPTION; ACTIVE ACCESS REQUIREMENT''',
+        isBold: true),
+  ]),
+  LegalDocumentParagraph(<LegalDocumentRun>[
+    LegalDocumentRun(r'''Active Subscription Required.  ''', isBold: true),
+    LegalDocumentRun(
+        r'''Certain Decoy Wallet safety, monitoring, alert, emergency-contact notification, wallet-activity monitoring, and related Services require an active paid subscription. If your subscription expires, is canceled, unpaid, subject to a failed payment, refunded, charged back, or otherwise becomes inactive, Decoy Wallet may suspend, restrict, or disable access to those Services, including emergency alerts, wallet monitoring, and emergency-contact notifications, until access is restored. You are responsible for maintaining an active subscription and valid payment method if you intend to rely on paid Services.'''),
+  ]),
+  LegalDocumentParagraph(<LegalDocumentRun>[
     LegalDocumentRun(r'''MOBILE APPLICATION; DEVICE REQUIREMENTS''',
         isBold: true),
   ]),
