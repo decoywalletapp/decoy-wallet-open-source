@@ -29,6 +29,10 @@ function isWatchPublicKey(v: unknown) {
   return /^(xpub|ypub|zpub|tpub|upub|vpub)/i.test(cleanString(v));
 }
 
+function isAddressListWatchType(v: unknown) {
+  return cleanString(v) === "bitcoin-address-list";
+}
+
 function isMissingColumnError(error: any) {
   const message = cleanString(error?.message).toLowerCase();
   return error?.code === "42703" || message.includes("column") ||
@@ -78,12 +82,13 @@ serve(async (req) => {
     const zpub = cleanString(body.zpub);
     const watchPublicKey = cleanString(body.watch_public_key || zpub || xpub);
     const watchPublicKeyType = cleanString(body.watch_public_key_type);
+    const addressListWatch = isAddressListWatchType(watchPublicKeyType);
 
     if (!decoyId || !derivationPath || addresses.length === 0) {
       return json({ ok: false, error: "Missing required decoy fields" }, 400);
     }
 
-    if (watchPublicKey && !isWatchPublicKey(watchPublicKey)) {
+    if (watchPublicKey && !addressListWatch && !isWatchPublicKey(watchPublicKey)) {
       return json({ ok: false, error: "Invalid public watch key" }, 400);
     }
 
@@ -161,9 +166,11 @@ serve(async (req) => {
       ...basePayload,
       xpub: isWatchPublicKey(xpub) ? xpub : null,
       zpub: isWatchPublicKey(zpub) ? zpub : null,
-      watch_public_key: isWatchPublicKey(watchPublicKey)
-        ? watchPublicKey
-        : null,
+      watch_public_key: addressListWatch
+        ? addresses.join("\n")
+        : isWatchPublicKey(watchPublicKey)
+          ? watchPublicKey
+          : null,
       watch_public_key_type: watchPublicKeyType || null,
     };
 
