@@ -329,6 +329,7 @@ void main() {
       source,
       contains("requiredPublicConfig('DECOY_SUPABASE_ANON_KEY'"),
     );
+    expect(source, contains("headers['apikey']"));
 
     expect(
       source,
@@ -346,6 +347,40 @@ void main() {
     ]) {
       expect(source, contains("callName: '$callName'"));
     }
+  });
+
+  test('PIN flows use active Supabase session values', () {
+    final apiSource =
+        File('lib/backend/api_requests/api_calls.dart').readAsStringSync();
+    final createPinSource =
+        File('lib/pin_pages/create_pin/create_pin_widget.dart')
+            .readAsStringSync();
+    final createDecoyPinSource =
+        File('lib/pin_pages/create_decoy_pin/create_decoy_pin_widget.dart')
+            .readAsStringSync();
+    final changePinSource =
+        File('lib/settings_pages/change_pin/change_pin_widget.dart')
+            .readAsStringSync();
+
+    for (final callName in ['setPIN', 'verifyPIN']) {
+      final callIndex = apiSource.indexOf("callName: '$callName'");
+      expect(callIndex, isNot(-1));
+      final callBody = apiSource.substring(callIndex, callIndex + 250);
+      expect(callBody, contains('_jsonHeadersForUrl(apiUrl, jwt: jwt)'));
+    }
+
+    for (final source in [
+      createPinSource,
+      createDecoyPinSource,
+      changePinSource,
+    ]) {
+      expect(source, isNot(contains('jwt: currentJwtToken')));
+    }
+
+    expect(createPinSource, contains('activeJwtToken'));
+    expect(createPinSource, contains('activeUserUid'));
+    expect(createDecoyPinSource, contains('activeJwtToken'));
+    expect(changePinSource, contains('activeJwtToken'));
   });
 
   test('staging backend runbook keeps Supabase gateway JWT enabled', () {

@@ -213,6 +213,7 @@ class SetPINCall {
     String? pin = '',
     String? jwt = '',
   }) async {
+    final apiUrl = supabaseFunctionUrl('setPin');
     final ffApiRequestBody = '''
 {
   "type": "${escapeStringForJson(type)}",
@@ -220,12 +221,9 @@ class SetPINCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'setPIN',
-      apiUrl: supabaseFunctionUrl('setPin'),
+      apiUrl: apiUrl,
       callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt}',
-      },
+      headers: _jsonHeadersForUrl(apiUrl, jwt: jwt),
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -253,18 +251,16 @@ class VerifyPINCall {
     String? pin = '',
     String? jwt = '',
   }) async {
+    final apiUrl = supabaseFunctionUrl('verifyPin');
     final ffApiRequestBody = '''
 {
   "pin": "${pin}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'verifyPIN',
-      apiUrl: supabaseFunctionUrl('verifyPin'),
+      apiUrl: apiUrl,
       callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt}',
-      },
+      headers: _jsonHeadersForUrl(apiUrl, jwt: jwt),
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -1028,6 +1024,10 @@ String _bearerTokenForUrl(String apiUrl, String? jwt) {
 
 Map<String, String> _jsonHeadersForUrl(String apiUrl, {String? jwt}) {
   final headers = <String, String>{'Content-Type': 'application/json'};
+  if (_isSupabaseEdgeUrl(apiUrl)) {
+    headers['apikey'] =
+        requiredPublicConfig('DECOY_SUPABASE_ANON_KEY', kSupabaseAnonKey);
+  }
   final bearer = _bearerTokenForUrl(apiUrl, jwt);
   if (bearer.isNotEmpty) {
     headers['Authorization'] = 'Bearer $bearer';
@@ -1037,6 +1037,10 @@ Map<String, String> _jsonHeadersForUrl(String apiUrl, {String? jwt}) {
 
 Map<String, String> _acceptHeadersForUrl(String apiUrl, {String? jwt}) {
   final headers = <String, String>{'Accept': 'application/json'};
+  if (_isSupabaseEdgeUrl(apiUrl)) {
+    headers['apikey'] =
+        requiredPublicConfig('DECOY_SUPABASE_ANON_KEY', kSupabaseAnonKey);
+  }
   final bearer = _bearerTokenForUrl(apiUrl, jwt);
   if (bearer.isNotEmpty) {
     headers['Authorization'] = 'Bearer $bearer';

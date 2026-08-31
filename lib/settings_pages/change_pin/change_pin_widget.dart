@@ -1533,7 +1533,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                         type: 'account',
                                                         pin:
                                                             _model.joinedNewPin,
-                                                        jwt: currentJwtToken,
+                                                        jwt: activeJwtToken,
                                                       );
 
                                                       if (SetPINCall.ok(
@@ -1547,7 +1547,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                 .call(
                                                           pin: _model
                                                               .joinedNewPin,
-                                                          jwt: currentJwtToken,
+                                                          jwt: activeJwtToken,
                                                         );
 
                                                         if (VerifyPINCall
@@ -3175,7 +3175,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                               .call(
                                                         pin:
                                                             _model.joinedNewPin,
-                                                        jwt: currentJwtToken,
+                                                        jwt: activeJwtToken,
                                                       );
 
                                                       if ((_model.verifyNewPIN
@@ -4719,7 +4719,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                               .call(
                                                         pin:
                                                             _model.joinedOldPin,
-                                                        jwt: currentJwtToken,
+                                                        jwt: activeJwtToken,
                                                       );
 
                                                       if (VerifyPINCall.ok(

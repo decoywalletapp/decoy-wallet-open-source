@@ -1619,7 +1619,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                               pin: _model
                                                                   .joinedPin,
                                                               jwt:
-                                                                  currentJwtToken,
+                                                                  activeJwtToken,
                                                             );
 
                                                             if (VerifyPINCall
@@ -3220,7 +3220,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                               pin: _model
                                                                   .joinedDecoyConfirm,
                                                               jwt:
-                                                                  currentJwtToken,
+                                                                  activeJwtToken,
                                                             );
 
                                                             if (SetPINCall.ok(
@@ -3235,7 +3235,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                 pin: _model
                                                                     .joinedDecoyPin,
                                                                 jwt:
-                                                                    currentJwtToken,
+                                                                    activeJwtToken,
                                                               );
 
                                                               if (VerifyPINCall

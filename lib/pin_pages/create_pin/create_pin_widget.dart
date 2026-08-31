@@ -2988,7 +2988,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                           await SetPINCall.call(
                                                         type: 'account',
                                                         pin: _model.joinedPin,
-                                                        jwt: currentJwtToken,
+                                                        jwt: activeJwtToken,
                                                       );
 
                                                       if (SetPINCall.ok(
@@ -3001,7 +3001,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                             await VerifyPINCall
                                                                 .call(
                                                           pin: _model.joinedPin,
-                                                          jwt: currentJwtToken,
+                                                          jwt: activeJwtToken,
                                                         );
 
                                                         if (VerifyPINCall
@@ -3025,7 +3025,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                 (rows) => rows
                                                                     .eqOrNull(
                                                               'user_id',
-                                                              currentUserUid,
+                                                              activeUserUid,
                                                             ),
                                                           );
 
