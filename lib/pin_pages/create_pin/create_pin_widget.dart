@@ -1,6 +1,7 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
+import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -32,6 +33,65 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
   late CreatePinModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool get _isStagingBuild =>
+      DecoyBuildProvenance.backendEnvironment == 'staging';
+
+  void _showPinSetupSnackBar(
+    String message, {
+    bool center = false,
+    int durationMs = 6000,
+  }) {
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            color: FlutterFlowTheme.of(context).primaryText,
+          ),
+          textAlign: center ? TextAlign.center : TextAlign.start,
+        ),
+        duration: Duration(milliseconds: durationMs),
+        backgroundColor: FlutterFlowTheme.of(context).secondary,
+      ),
+    );
+  }
+
+  String _pinApiError(String fallback, ApiCallResponse? response) {
+    if (!_isStagingBuild) {
+      return fallback;
+    }
+
+    final pieces = <String>[];
+    if (response == null) {
+      pieces.add('no response');
+    } else {
+      pieces.add('HTTP ${response.statusCode}');
+      final error = getJsonField(
+        response.jsonBody ?? '',
+        r'''$.error''',
+      ).toString();
+      final details = getJsonField(
+        response.jsonBody ?? '',
+        r'''$.details''',
+      ).toString();
+      if (error.isNotEmpty && error.toLowerCase() != 'null') {
+        pieces.add(error);
+      }
+      if (details.isNotEmpty && details.toLowerCase() != 'null') {
+        pieces.add(details);
+      }
+      if (response.exception != null) {
+        pieces.add(response.exceptionMessage);
+      }
+    }
+
+    return '$fallback (${pieces.join(' - ')})';
+  }
 
   @override
   void initState() {
@@ -2984,11 +3044,36 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                     if (_model.joinedPin ==
                                                         _model
                                                             .joinedPinConfirm) {
+                                                      final pinSessionReady =
+                                                          await waitForActiveSupabaseSession(
+                                                        timeout: _isStagingBuild
+                                                            ? const Duration(
+                                                                seconds: 8)
+                                                            : const Duration(
+                                                                seconds: 4),
+                                                      );
+                                                      final pinSetupJwt =
+                                                          activeJwtToken.trim();
+                                                      final pinSetupUserId =
+                                                          activeUserUid.trim();
+                                                      if (!pinSessionReady ||
+                                                          pinSetupJwt.isEmpty ||
+                                                          pinSetupUserId
+                                                              .isEmpty) {
+                                                        _showPinSetupSnackBar(
+                                                          _isStagingBuild
+                                                              ? 'Staging PIN setup stopped: active Supabase session was not available. Please log in again.'
+                                                              : 'ERROR #004 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                          center: true,
+                                                        );
+                                                        return;
+                                                      }
+
                                                       _model.setPinResp =
                                                           await SetPINCall.call(
                                                         type: 'account',
                                                         pin: _model.joinedPin,
-                                                        jwt: activeJwtToken,
+                                                        jwt: pinSetupJwt,
                                                       );
 
                                                       if (SetPINCall.ok(
@@ -3001,7 +3086,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                             await VerifyPINCall
                                                                 .call(
                                                           pin: _model.joinedPin,
-                                                          jwt: activeJwtToken,
+                                                          jwt: pinSetupJwt,
                                                         );
 
                                                         if (VerifyPINCall
@@ -3025,7 +3110,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                 (rows) => rows
                                                                     .eqOrNull(
                                                               'user_id',
-                                                              activeUserUid,
+                                                              pinSetupUserId,
                                                             ),
                                                           );
 
@@ -3050,7 +3135,11 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               .showSnackBar(
                                                             SnackBar(
                                                               content: Text(
-                                                                'ERROR #005 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                _pinApiError(
+                                                                  'ERROR #005 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                  _model
+                                                                      .verifyResp,
+                                                                ),
                                                                 style:
                                                                     TextStyle(
                                                                   color: FlutterFlowTheme.of(
@@ -3085,7 +3174,11 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                             .showSnackBar(
                                                           SnackBar(
                                                             content: Text(
-                                                              'ERROR #004 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                              _pinApiError(
+                                                                'ERROR #004 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                _model
+                                                                    .setPinResp,
+                                                              ),
                                                               style: TextStyle(
                                                                 color: FlutterFlowTheme.of(
                                                                         context)

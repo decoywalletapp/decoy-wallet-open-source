@@ -352,6 +352,8 @@ void main() {
   test('PIN flows use active Supabase session values', () {
     final apiSource =
         File('lib/backend/api_requests/api_calls.dart').readAsStringSync();
+    final authUtilSource =
+        File('lib/auth/supabase_auth/auth_util.dart').readAsStringSync();
     final createPinSource =
         File('lib/pin_pages/create_pin/create_pin_widget.dart')
             .readAsStringSync();
@@ -379,8 +381,24 @@ void main() {
 
     expect(createPinSource, contains('activeJwtToken'));
     expect(createPinSource, contains('activeUserUid'));
+    expect(createPinSource, contains('waitForActiveSupabaseSession'));
+    expect(createPinSource, contains('Staging PIN setup stopped'));
+    expect(createPinSource, contains('_pinApiError'));
+    expect(createPinSource, contains('pinSetupJwt'));
+    expect(createPinSource, contains('pinSetupUserId'));
     expect(createDecoyPinSource, contains('activeJwtToken'));
     expect(changePinSource, contains('activeJwtToken'));
+    expect(authUtilSource, contains('waitForActiveSupabaseSession'));
+    expect(authUtilSource, contains('refreshSession'));
+  });
+
+  test('staging setPin completes account setup after saving account PIN', () {
+    final source =
+        File('staging_backend/functions/setPin/index.ts').readAsStringSync();
+
+    expect(source, contains('patch.account_pin_hash = pinHash'));
+    expect(source, contains('patch.setup_complete = true'));
+    expect(source, contains('patch.setup_completed_at = now'));
   });
 
   test('staging backend runbook keeps Supabase gateway JWT enabled', () {

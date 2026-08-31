@@ -48,6 +48,8 @@ Deno.serve(async (req) => {
       patch.account_pin_hash = pinHash;
       patch.account_pin_salt = salt;
       patch.account_pin_algo = "pbkdf2-sha256-100000";
+      patch.setup_complete = true;
+      patch.setup_completed_at = now;
     } else {
       patch.decoy_pin_hash = pinHash;
       patch.decoy_pin_salt = salt;
