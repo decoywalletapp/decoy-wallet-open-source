@@ -533,3 +533,23 @@ drop policy if exists "Users can read own entitlements" on public.user_entitleme
 create policy "Users can read own entitlements"
   on public.user_entitlements for select
   using (auth.uid() = user_id);
+
+grant usage on schema public to anon, authenticated;
+
+grant select, insert, update, delete on table
+  public.decoys,
+  public.decoy_wallet,
+  public.emergency_contacts,
+  public.emergency_contact_consents,
+  public.emergency_contact_consent_requests,
+  public.user_consents,
+  public.user_settings,
+  public.user_devices
+to authenticated;
+
+grant select on table
+  public.alert_logs,
+  public.sms_queue,
+  public.notification_jobs,
+  public.user_entitlements
+to authenticated;
