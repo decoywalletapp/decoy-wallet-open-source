@@ -26,6 +26,8 @@ export 'refresh_supabase_session.dart' show refreshSupabaseSession;
 export 'decoy_seed_entropy.dart'
     show decoySeedEntropyBytes, decoySeedWordCount, generateDecoyMnemonic;
 export 'generate_decoy_draft.dart' show generateDecoyDraft;
+export 'prepare_watch_only_decoy_draft.dart'
+    show prepareWatchOnlyDecoyDraft, prepareWatchOnlyDecoyDraftPayload;
 export 'finalize_register_decoy.dart' show finalizeRegisterDecoy;
 export 'supa_update_password.dart' show supaUpdatePassword;
 export 'supa_send_reset_password_email.dart' show supaSendResetPasswordEmail;

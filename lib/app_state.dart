@@ -47,8 +47,7 @@ class FFAppState extends ChangeNotifier {
       }
     });
     await _safeInitAsync(() async {
-      _currentBtcPrice =
-          await secureStorage.getDouble('ff_currentBtcPrice') ??
+      _currentBtcPrice = await secureStorage.getDouble('ff_currentBtcPrice') ??
           _currentBtcPrice;
     });
     await _safeInitAsync(() async {
@@ -58,17 +57,17 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _registerDecoyUrl =
           await secureStorage.getString('ff_registerDecoyUrl') ??
-          _registerDecoyUrl;
+              _registerDecoyUrl;
     });
     await _safeInitAsync(() async {
       _registerDecoyKey =
           await secureStorage.getString('ff_registerDecoyKey') ??
-          _registerDecoyKey;
+              _registerDecoyKey;
     });
     await _safeInitAsync(() async {
       _serverRegistrationUrl =
           await secureStorage.getString('ff_serverRegistrationUrl') ??
-          _serverRegistrationUrl;
+              _serverRegistrationUrl;
     });
     await _safeInitAsync(() async {
       _decoyActiveId =
@@ -77,12 +76,12 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _emergencyContactsIncrement =
           await secureStorage.getInt('ff_emergencyContactsIncrement') ??
-          _emergencyContactsIncrement;
+              _emergencyContactsIncrement;
     });
     await _safeInitAsync(() async {
       _biometricsEnabled =
           await secureStorage.getBool('ff_biometricsEnabled') ??
-          _biometricsEnabled;
+              _biometricsEnabled;
     });
     await _safeInitAsync(() async {
       _isLocked = await secureStorage.getBool('ff_isLocked') ?? _isLocked;
@@ -90,12 +89,12 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _decoyPin911Enabled =
           await secureStorage.getBool('ff_decoyPin911Enabled') ??
-          _decoyPin911Enabled;
+              _decoyPin911Enabled;
     });
     await _safeInitAsync(() async {
       _decoyPinContactsEnabled =
           await secureStorage.getBool('ff_decoyPinContactsEnabled') ??
-          _decoyPinContactsEnabled;
+              _decoyPinContactsEnabled;
     });
     await _safeInitAsync(() async {
       _decoySeedArmed =
@@ -104,17 +103,17 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _hasActiveSubscription =
           await secureStorage.getBool('ff_hasActiveSubscription') ??
-          _hasActiveSubscription;
+              _hasActiveSubscription;
     });
     await _safeInitAsync(() async {
       _entitlementCheckCompleted =
           await secureStorage.getBool('ff_entitlementCheckCompleted') ??
-          _entitlementCheckCompleted;
+              _entitlementCheckCompleted;
     });
     await _safeInitAsync(() async {
       _prevHasActiveSubscription =
           await secureStorage.getBool('ff_prevHasActiveSubscription') ??
-          _prevHasActiveSubscription;
+              _prevHasActiveSubscription;
     });
     await _safeInitAsync(() async {
       _locationEnabled =
@@ -127,12 +126,12 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _draftAddresses =
           await secureStorage.getStringList('ff_draftAddresses') ??
-          _draftAddresses;
+              _draftAddresses;
     });
     await _safeInitAsync(() async {
       _draftDerivationPath =
           await secureStorage.getString('ff_draftDerivationPath') ??
-          _draftDerivationPath;
+              _draftDerivationPath;
     });
     await _safeInitAsync(() async {
       _draftXpub = await secureStorage.getString('ff_draftXpub') ?? _draftXpub;
@@ -140,17 +139,22 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _draftWatchPublicKey =
           await secureStorage.getString('ff_draftWatchPublicKey') ??
-          _draftWatchPublicKey;
+              _draftWatchPublicKey;
     });
     await _safeInitAsync(() async {
       _draftWatchPublicKeyType =
           await secureStorage.getString('ff_draftWatchPublicKeyType') ??
-          _draftWatchPublicKeyType;
+              _draftWatchPublicKeyType;
+    });
+    await _safeInitAsync(() async {
+      _draftWatchSourceType =
+          await secureStorage.getString('ff_draftWatchSourceType') ??
+              _draftWatchSourceType;
     });
     await _safeInitAsync(() async {
       _currentPriceMultiple =
           await secureStorage.getDouble('ff_currentPriceMultiple') ??
-          _currentPriceMultiple;
+              _currentPriceMultiple;
     });
     await _safeInitAsync(() async {
       _pushEnabled =
@@ -159,12 +163,12 @@ class FFAppState extends ChangeNotifier {
     await _safeInitAsync(() async {
       _openRenewalFromPush =
           await secureStorage.getBool('ff_openRenewalFromPush') ??
-          _openRenewalFromPush;
+              _openRenewalFromPush;
     });
     await _safeInitAsync(() async {
       _pendingStripeCheckoutSessionId =
           await secureStorage.getString('ff_pendingStripeCheckoutSessionId') ??
-          _pendingStripeCheckoutSessionId;
+              _pendingStripeCheckoutSessionId;
     });
   }
 
@@ -192,8 +196,7 @@ class FFAppState extends ChangeNotifier {
       return false;
     }
 
-    final elapsedMs =
-        DateTime.now().toUtc().millisecondsSinceEpoch -
+    final elapsedMs = DateTime.now().toUtc().millisecondsSinceEpoch -
         seededAt.toUtc().millisecondsSinceEpoch;
     return elapsedMs >= const Duration(hours: 24).inMilliseconds;
   }
@@ -395,9 +398,8 @@ class FFAppState extends ChangeNotifier {
     secureStorage.delete(key: 'ff_registerDecoyKey');
   }
 
-  String _serverRegistrationUrl = kSupabaseUrl.isEmpty
-      ? ''
-      : supabaseFunctionUrl('register-decoy');
+  String _serverRegistrationUrl =
+      kSupabaseUrl.isEmpty ? '' : supabaseFunctionUrl('register-decoy');
   String get serverRegistrationUrl => _serverRegistrationUrl;
   set serverRegistrationUrl(String value) {
     _serverRegistrationUrl = value;
@@ -645,6 +647,17 @@ class FFAppState extends ChangeNotifier {
 
   void deleteDraftWatchPublicKeyType() {
     secureStorage.delete(key: 'ff_draftWatchPublicKeyType');
+  }
+
+  String _draftWatchSourceType = '';
+  String get draftWatchSourceType => _draftWatchSourceType;
+  set draftWatchSourceType(String value) {
+    _draftWatchSourceType = value;
+    secureStorage.setString('ff_draftWatchSourceType', value);
+  }
+
+  void deleteDraftWatchSourceType() {
+    secureStorage.delete(key: 'ff_draftWatchSourceType');
   }
 
   double _currentPriceMultiple = 0.0;

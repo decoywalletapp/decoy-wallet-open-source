@@ -255,6 +255,7 @@ Future<dynamic> generateDecoyDraft() async {
       'zpub': zpub,
       'watch_public_key': zpub,
       'watch_public_key_type': 'bip84-account-zpub',
+      'source_type': 'generated-seed',
     };
   } catch (e) {
     return {

@@ -33,6 +33,10 @@ class DecoyBuildProvenance {
     'DECOY_BUILD_NUMBER',
     defaultValue: '10005',
   );
+  static const watchOnlyImportEnabled = bool.fromEnvironment(
+    'DECOY_ENABLE_WATCH_ONLY_IMPORT',
+    defaultValue: false,
+  );
 
   static bool get hasSourceCommit =>
       sourceCommit.isNotEmpty && sourceCommit != 'unknown';

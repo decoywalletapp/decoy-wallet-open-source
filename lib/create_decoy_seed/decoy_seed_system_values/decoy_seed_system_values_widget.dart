@@ -244,6 +244,7 @@ class _DecoySeedSystemValuesWidgetState
     FFAppState().draftXpub = '';
     FFAppState().draftWatchPublicKey = '';
     FFAppState().draftWatchPublicKeyType = '';
+    FFAppState().draftWatchSourceType = '';
     if (!mounted) {
       return;
     }
@@ -314,6 +315,15 @@ class _DecoySeedSystemValuesWidgetState
   Widget _buildStableSeedSettingsPage(BuildContext context) {
     _model.seedMonitorArmTileValue ??= FFAppState().decoySeedArmed;
     final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? false;
+    final sourceType = FFAppState().draftWatchSourceType.trim();
+    final isImportedWatchOnly =
+        sourceType.isNotEmpty && sourceType != 'generated-seed';
+    final readyTitle =
+        isImportedWatchOnly ? 'WATCH-ONLY READY' : 'DECOY SEED READY';
+    final triggerTitle =
+        isImportedWatchOnly ? 'Watch-Only Triggers' : 'Decoy Seed Triggers';
+    final monitorTitle =
+        isImportedWatchOnly ? 'Wallet Activity Monitor' : 'Seed Phrase Monitor';
     final decoySeedSystemBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
@@ -402,7 +412,7 @@ class _DecoySeedSystemValuesWidgetState
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 14.0, 16.0, 14.0),
                                 child: Text(
-                                  'DECOY SEED READY',
+                                  readyTitle,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -439,7 +449,7 @@ class _DecoySeedSystemValuesWidgetState
                                     Align(
                                       alignment: AlignmentDirectional.center,
                                       child: Text(
-                                        'Decoy Seed Triggers',
+                                        triggerTitle,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
@@ -466,7 +476,7 @@ class _DecoySeedSystemValuesWidgetState
                                                       newValue);
                                                 },
                                       title: Text(
-                                        'Seed Phrase Monitor',
+                                        monitorTitle,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(

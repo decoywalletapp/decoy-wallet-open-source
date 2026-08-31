@@ -260,6 +260,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => GenerateDecoySeedPhraseWidget(),
       ),
       FFRoute(
+        name: ImportWatchOnlyWalletWidget.routeName,
+        path: ImportWatchOnlyWalletWidget.routePath,
+        builder: (context, params) => ImportWatchOnlyWalletWidget(),
+      ),
+      FFRoute(
         name: SeedPhraseVerificationWidget.routeName,
         path: SeedPhraseVerificationWidget.routePath,
         builder: (context, params) => SeedPhraseVerificationWidget(

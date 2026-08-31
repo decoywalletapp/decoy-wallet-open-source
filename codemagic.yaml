@@ -258,7 +258,8 @@ workflows:
             --dart-define=DECOY_BUILD_PLATFORM="$DECOY_BUILD_PLATFORM" \
             --dart-define=DECOY_BUILD_VERSION="$APP_VERSION" \
             --dart-define=DECOY_BUILD_NUMBER="$APP_BUILD_NUMBER" \
-            --dart-define=DECOY_BUILD_VERIFICATION="$DECOY_BUILD_VERIFICATION"
+            --dart-define=DECOY_BUILD_VERIFICATION="$DECOY_BUILD_VERIFICATION" \
+            --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
       - name: Write public provenance summary
         script: |
           set -eu
@@ -826,7 +827,8 @@ workflows:
             --dart-define=DECOY_BUILD_PLATFORM="$DECOY_BUILD_PLATFORM" \
             --dart-define=DECOY_BUILD_VERSION="$APP_VERSION" \
             --dart-define=DECOY_BUILD_NUMBER="$APP_BUILD_NUMBER" \
-            --dart-define=DECOY_BUILD_VERIFICATION="$DECOY_BUILD_VERIFICATION"
+            --dart-define=DECOY_BUILD_VERIFICATION="$DECOY_BUILD_VERIFICATION" \
+            --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
       - name: Write public provenance summary
         script: |
           set -eu
