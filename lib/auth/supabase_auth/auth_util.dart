@@ -16,7 +16,8 @@ String get currentUserPhoto => currentUser?.photoUrl ?? '';
 
 String get currentPhoneNumber => currentUser?.phoneNumber ?? '';
 
-String get currentJwtToken => _currentJwtToken ?? '';
+String get currentJwtToken =>
+    SupaFlow.client.auth.currentSession?.accessToken ?? _currentJwtToken ?? '';
 
 String get activeJwtToken =>
     SupaFlow.client.auth.currentSession?.accessToken ?? currentJwtToken;
