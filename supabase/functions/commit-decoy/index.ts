@@ -166,9 +166,7 @@ serve(async (req) => {
       ...basePayload,
       xpub: isWatchPublicKey(xpub) ? xpub : null,
       zpub: isWatchPublicKey(zpub) ? zpub : null,
-      watch_public_key: addressListWatch
-        ? addresses.join("\n")
-        : isWatchPublicKey(watchPublicKey)
+      watch_public_key: isWatchPublicKey(watchPublicKey)
           ? watchPublicKey
           : null,
       watch_public_key_type: watchPublicKeyType || null,

@@ -17,8 +17,8 @@ test('commit-decoy accepts address-list watches without changing xpub/zpub valid
   );
   assert.match(source, /xpub: isWatchPublicKey\(xpub\) \? xpub : null/);
   assert.match(source, /zpub: isWatchPublicKey\(zpub\) \? zpub : null/);
-  assert.match(source, /watch_public_key: addressListWatch/);
-  assert.match(source, /addresses\.join\("\\n"\)/);
+  assert.match(source, /watch_public_key: isWatchPublicKey\(watchPublicKey\)/);
+  assert.doesNotMatch(source, /addresses\.join\("\\n"\)/);
 });
 
 test('commit-decoy still restores previously active decoys on commit failure', () => {
