@@ -149,6 +149,7 @@ class _DecoySeedSystemValuesWidgetState
     final derivationPath = FFAppState().draftDerivationPath.trim();
     final watchPublicKey = FFAppState().draftWatchPublicKey.trim();
     final watchPublicKeyType = FFAppState().draftWatchPublicKeyType.trim();
+    final addressListWatch = watchPublicKeyType == 'bitcoin-address-list';
     final addresses = FFAppState()
         .draftAddresses
         .map((address) => address.trim())
@@ -169,7 +170,8 @@ class _DecoySeedSystemValuesWidgetState
       return;
     }
 
-    if (watchPublicKey.isEmpty || watchPublicKeyType.isEmpty) {
+    if (watchPublicKeyType.isEmpty ||
+        (watchPublicKey.isEmpty && !addressListWatch)) {
       _showSeedSaveError('025');
       return;
     }
@@ -205,7 +207,7 @@ class _DecoySeedSystemValuesWidgetState
         ) ==
         true;
 
-    if (!storedWatchPublicKey) {
+    if (!storedWatchPublicKey && !addressListWatch) {
       _debugLog(
         'commitDecoy missing stored watch key: '
         '${_commitResponseSummary(_model.commitResp)}',

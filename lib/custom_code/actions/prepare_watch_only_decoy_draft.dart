@@ -116,7 +116,7 @@ Map<String, dynamic> prepareWatchOnlyDecoyDraftPayload(
     'derivation_path': 'imported-addresses',
     'xpub': '',
     'zpub': '',
-    'watch_public_key': addresses.join('\n'),
+    'watch_public_key': '',
     'watch_public_key_type': 'bitcoin-address-list',
     'source_type': 'address-list',
   };

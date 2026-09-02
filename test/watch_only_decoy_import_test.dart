@@ -69,7 +69,7 @@ void main() {
     expect(importDraft['watch_public_key_type'], 'bitcoin-address-list');
     expect(importDraft['source_type'], 'address-list');
     expect(importDraft['addresses'], <String>[address0, address1]);
-    expect(importDraft['watch_public_key'], '$address0\n$address1');
+    expect(importDraft['watch_public_key'], isEmpty);
   });
 
   test('receive address import accepts common mainnet address formats',
@@ -174,6 +174,8 @@ void main() {
     expect(source, contains('final derivationPath'));
     expect(source, contains('final watchPublicKey'));
     expect(source, contains('final watchPublicKeyType'));
+    expect(source, contains("watchPublicKey.isEmpty && !addressListWatch"));
+    expect(source, contains('!storedWatchPublicKey && !addressListWatch'));
     expect(source, contains('FFAppState().draftAddresses'));
     expect(source, contains('CommitDecoyCall.call'));
     expect(source, contains('derivationPath: derivationPath'));
