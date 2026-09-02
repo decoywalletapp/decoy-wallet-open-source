@@ -56,4 +56,15 @@ void main() {
     expect(source, contains('CommitDecoyCall.call'));
     expect(source, isNot(contains('SendEmergencyAlertsCall')));
   });
+
+  test('decoy seed commit debug logs do not print backend bodies', () {
+    final source = File(
+      'lib/create_decoy_seed/decoy_seed_system_values/'
+      'decoy_seed_system_values_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('_commitResponseSummary'));
+    expect(source, contains('status='));
+    expect(source, isNot(contains('bodyText')));
+  });
 }

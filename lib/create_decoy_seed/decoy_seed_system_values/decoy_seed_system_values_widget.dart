@@ -22,6 +22,11 @@ void _debugLog(String message) {
   }
 }
 
+String _commitResponseSummary(ApiCallResponse? response) {
+  final statusCode = response?.statusCode;
+  return 'status=${statusCode ?? 'unknown'}, succeeded=${response?.succeeded == true}';
+}
+
 /// I want a PIN code page where the user is propted to create a pin to enter
 /// to the home page.
 ///
@@ -187,8 +192,8 @@ class _DecoySeedSystemValuesWidgetState
 
     if (_model.commitResp?.succeeded != true) {
       _debugLog(
-        'commitDecoy failed response: status=${_model.commitResp?.statusCode}, '
-        'body=${_model.commitResp?.bodyText}',
+        'commitDecoy failed response: '
+        '${_commitResponseSummary(_model.commitResp)}',
       );
       _showSeedSaveError('023');
       return;
@@ -202,8 +207,8 @@ class _DecoySeedSystemValuesWidgetState
 
     if (!storedWatchPublicKey) {
       _debugLog(
-        'commitDecoy missing stored watch key: status=${_model.commitResp?.statusCode}, '
-        'body=${_model.commitResp?.bodyText}',
+        'commitDecoy missing stored watch key: '
+        '${_commitResponseSummary(_model.commitResp)}',
       );
       _showSeedSaveError('026');
       return;
