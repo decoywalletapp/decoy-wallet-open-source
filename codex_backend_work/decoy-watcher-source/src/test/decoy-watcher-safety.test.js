@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const { shouldProcessOutboundTx, shouldTriggerMissingUtxo } = require('../watcher_tx_filter');
+const logRedaction = require('../watcher_log_redaction');
 
 const watchedAddress = 'bc1qwatchedaddress0000000000000000000000000000000';
 const otherAddress = 'bc1qotheraddress00000000000000000000000000000000';
@@ -122,4 +123,33 @@ test('missing watch-key UTXO can trigger after the confirmation window', () => {
   };
 
   assert.equal(shouldTriggerMissingUtxo(row, nowMs, 3 * 60 * 1000), true);
+});
+
+test('watcher log references do not expose raw addresses or row ids', () => {
+  const address = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080';
+  const rowId = '1f0wrdg4v0dhn2ct-row-id';
+  const hmacKey = 'test-hmac-key-for-log-redaction';
+
+  const addressRef = logRedaction.sensitiveRef('addr', address, hmacKey);
+  const idRef = logRedaction.sensitiveRef('id', rowId, hmacKey);
+
+  assert.match(addressRef, /^addr:[a-f0-9]{16}$/);
+  assert.match(idRef, /^id:[a-f0-9]{16}$/);
+  assert.doesNotMatch(addressRef, /bc1q|w508d6|ygt080/);
+  assert.doesNotMatch(idRef, /1f0wrd|row-id|v0dhn/);
+});
+
+test('watcher error text redacts public wallet identifiers', () => {
+  const text = [
+    'provider rejected bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080',
+    'legacy 1BoatSLRHtKNngkdXEeobR76b53LETtpyT',
+    'watch zpub6qQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ',
+  ].join(' ');
+
+  const redacted = logRedaction.redactSensitiveText(text);
+
+  assert.doesNotMatch(redacted, /bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080/);
+  assert.doesNotMatch(redacted, /1BoatSLRHtKNngkdXEeobR76b53LETtpyT/);
+  assert.doesNotMatch(redacted, /zpub6qQQQQ/);
+  assert.match(redacted, /\[redacted-watch-data\]/);
 });

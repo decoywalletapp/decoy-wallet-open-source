@@ -17,6 +17,7 @@ const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
 const { AsyncLocalStorage } = require('async_hooks');
 const watcherTxFilter = require('./watcher_tx_filter');
+const logRedaction = require('./watcher_log_redaction');
 
 const app = express();
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
@@ -307,7 +308,15 @@ function providerLabel(baseUrl) {
 
 function errorMessage(error) {
   if (!error) return null;
-  return error && error.message ? error.message : String(error);
+  return redactSensitiveText(error && error.message ? error.message : String(error));
+}
+
+function redactSensitiveText(value) {
+  return logRedaction.redactSensitiveText(value);
+}
+
+function sensitiveRef(scope, value) {
+  return logRedaction.sensitiveRef(scope, value, TXID_HMAC_KEY);
 }
 
 function blockbookModeIsDisabled() {
@@ -443,7 +452,7 @@ async function fetchJsonWithRetry(url, label, options = {}) {
 
       if (!resp.ok) {
         const bodyText = await resp.text().catch(() => '');
-        throw new Error(`${label} ${resp.status}: ${bodyText || 'bad response'}`);
+        throw new Error(`${label} ${resp.status}: ${redactSensitiveText(bodyText) || 'bad response'}`);
       }
 
       return await resp.json();
@@ -1026,14 +1035,14 @@ async function fetchBlockchainSeedBatchCandidateTxs(addresses) {
     if (resp.status === 429) throw new Error('batch-source 429 Too Many Requests');
     if (!resp.ok) {
       const bodyText = await resp.text().catch(() => '');
-      throw new Error(`batch-source ${resp.status}: ${bodyText || 'bad response'}`);
+      throw new Error(`batch-source ${resp.status}: ${redactSensitiveText(bodyText) || 'bad response'}`);
     }
 
     const data = await resp.json();
     const txs = Array.isArray(data && data.txs) ? data.txs.map(normalizeBlockchainTx).filter((tx) => tx.txid) : [];
     return { ok: true, txs, provider: `blockchain:${providerLabel(BLOCKCHAIN_MULTIADDR_URL)}` };
   } catch (e) {
-    console.warn('[decoy-watcher]', 'batch-source failed', e && e.message ? e.message : e);
+    console.warn('[decoy-watcher]', 'batch-source failed', errorMessage(e));
     return { ok: false, txs: [], provider: null, error: e };
   }
 }
@@ -1235,15 +1244,11 @@ function toDateOrNull(v) {
 }
 
 function addressLabel(address) {
-  const a = String(address || '');
-  if (a.length <= 14) return a;
-  return `${a.slice(0, 6)}...${a.slice(-6)}`;
+  return sensitiveRef('addr', address);
 }
 
 function idLabel(id) {
-  const s = String(id || '');
-  if (s.length <= 10) return s;
-  return `${s.slice(0, 8)}...${s.slice(-4)}`;
+  return sensitiveRef('id', id);
 }
 
 function orderedAddresses(addresses, lastIndex) {
@@ -2187,15 +2192,15 @@ async function processRunInContext(options = {}, runContext) {
           await upsertBaseline(decoy_id);
           baselinedDecoys += 1;
           log(
-            'watch-key utxo baseline completed for decoy_id',
-            decoy_id,
+            'watch-key utxo baseline completed for decoy_ref',
+            idLabel(decoy_id),
             'current_utxos',
             utxoScan.currentUtxos
           );
         } else {
           log(
-            'watch-key utxo scan completed for decoy_id',
-            decoy_id,
+            'watch-key utxo scan completed for decoy_ref',
+            idLabel(decoy_id),
             'current_utxos',
             utxoScan.currentUtxos,
             'spent_detected',
@@ -2211,8 +2216,8 @@ async function processRunInContext(options = {}, runContext) {
       } else {
         watchKeyUtxoTelemetry.failures += 1;
         log(
-          'watch-key utxo scan failed for decoy_id',
-          decoy_id,
+          'watch-key utxo scan failed for decoy_ref',
+          idLabel(decoy_id),
           'falling back to stored-address monitoring',
           errorMessage(utxoScan.error)
         );
@@ -2230,8 +2235,8 @@ async function processRunInContext(options = {}, runContext) {
       totalAddressesChecked += addresses.length;
       if (!baseline.batchOk) baselineBatchFailures += 1;
       log(
-        'baseline completed for decoy_id',
-        decoy_id,
+        'baseline completed for decoy_ref',
+        idLabel(decoy_id),
         'marked_seen',
         baseline.markedSeen,
         'created_triggers',
@@ -2541,9 +2546,13 @@ if (require.main === module) {
 
 module.exports = {
   _test: {
+    addressLabel,
     confirmedAt,
+    errorMessage,
+    idLabel,
     isConfirmedTx,
     isOutboundForAddress,
+    redactSensitiveText,
     shouldProcessOutboundTx,
   },
 };
