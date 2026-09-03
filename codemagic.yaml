@@ -850,7 +850,7 @@ workflows:
       - flutter_drive.log
 
   android-signed-release-rehearsal:
-    name: Android Google Play Release
+    name: Android Signed Release Rehearsal
     instance_type: mac_mini_m2
     max_build_duration: 120
     environment:
@@ -863,7 +863,7 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
-        DECOY_BUILD_VERIFICATION: "store-release"
+        DECOY_BUILD_VERIFICATION: "signed-release-rehearsal"
       flutter: "3.41.6"
     cache:
       cache_paths:
@@ -1130,6 +1130,7 @@ workflows:
             --dart-define=DECOY_BUILD_VERSION=$APP_VERSION
             --dart-define=DECOY_BUILD_NUMBER=$APP_BUILD_NUMBER
             --dart-define=DECOY_BUILD_VERIFICATION=$DECOY_BUILD_VERIFICATION
+            --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
           "
           flutter build apk $common_args
           flutter build appbundle $common_args
@@ -1137,7 +1138,7 @@ workflows:
         script: |
           set -eu
           mkdir -p build/provenance
-          cat > build/provenance/android-google-play-release.txt <<EOF
+          cat > build/provenance/android-signed-release-rehearsal.txt <<EOF
           repository=${DECOY_SOURCE_REPOSITORY}
           ref=${DECOY_SOURCE_REF}
           commit=${CM_COMMIT}
