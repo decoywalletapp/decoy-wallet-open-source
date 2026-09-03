@@ -39,6 +39,7 @@ fi
 
 echo "Checking watcher JavaScript syntax..."
 "$NODE" --check "$SOURCE_DIR/index.js"
+"$NODE" --check "$SOURCE_DIR/watch_address_fingerprint.js"
 
 echo ""
 echo "Type deploy-watch-key-watcher to continue."

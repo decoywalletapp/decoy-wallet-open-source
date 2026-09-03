@@ -190,6 +190,11 @@ const utxoState = await fetchOptionalAll(
   'decoy_seed_utxo_state',
   'decoy_id,outpoint_hmac,first_seen_at,last_seen_at,spent_at,trigger_recorded_at'
 );
+const watchAddressFingerprints = await fetchOptionalAll(
+  creds,
+  'decoy_watch_address_fingerprints',
+  'decoy_id,address_hmac,fingerprint_version,created_at'
+);
 
 const decoyById = new Map(decoys.map((row) => [row.id, row]));
 const walletByUser = new Map(wallets.map((row) => [row.user_id, row]));
@@ -197,6 +202,11 @@ const baselineByDecoy = new Map(baselines.map((row) => [row.decoy_id, row]));
 const scanByDecoy = new Map(scanStates.map((row) => [row.decoy_id, row]));
 const confirmedContactsByUser = new Map();
 const openUtxoStateByDecoy = new Map();
+const fingerprintRowsByDecoy = new Map();
+
+for (const row of watchAddressFingerprints.rows || []) {
+  fingerprintRowsByDecoy.set(row.decoy_id, (fingerprintRowsByDecoy.get(row.decoy_id) || 0) + 1);
+}
 
 for (const row of utxoState.rows || []) {
   if (row.spent_at) continue;
@@ -217,6 +227,7 @@ const perSeed = seeds.map((seed) => {
   const watchPublicKey = decoy.watch_public_key || decoy.zpub || decoy.xpub || '';
   const hasWatchPublicKey = isWatchPublicKey(watchPublicKey);
   const openUtxoStateCount = openUtxoStateByDecoy.get(seed.decoy_id) || 0;
+  const watchAddressFingerprintCount = fingerprintRowsByDecoy.get(seed.decoy_id) || 0;
   const armed = wallet.decoy_seed_armed === true;
   const contactsEnabled = wallet.decoy_seed_contacts_enabled === true;
   const confirmedContactCount = confirmedContactsByUser.get(seed.user_id) || 0;
@@ -243,6 +254,8 @@ const perSeed = seeds.map((seed) => {
     watchPublicKeyType: decoy.watch_public_key_type || null,
     openUtxoStateCount,
     hasOpenUtxoState: openUtxoStateCount > 0,
+    watchAddressFingerprintCount,
+    hasWatchAddressFingerprints: watchAddressFingerprintCount > 0,
     canSendSmsIfTriggerCreated,
     canTriggerStoredAddressSpend,
     canTriggerAnyDerivedSpend,
@@ -275,6 +288,11 @@ const output = {
     unprocessedSmsRows: unprocessedSms.length,
     utxoStateTableAvailable: utxoState.available,
     openUtxoStateRows: (utxoState.rows || []).filter((row) => !row.spent_at).length,
+    watchAddressFingerprintShadowTableAvailable: watchAddressFingerprints.available,
+    watchAddressFingerprintRows: watchAddressFingerprints.rows.length,
+    watchAddressFingerprintDecoys: fingerprintRowsByDecoy.size,
+    armedSeedRowsWithWatchAddressFingerprints: perSeed.filter((row) => row.hasWatchAddressFingerprints).length,
+    armedSeedRowsMissingWatchAddressFingerprints: perSeed.filter((row) => !row.hasWatchAddressFingerprints).length,
   },
   perSeed,
   candidateAddressMatches: candidateAddresses.length ? candidateMatches(seeds) : [],

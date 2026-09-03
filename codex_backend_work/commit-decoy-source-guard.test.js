@@ -25,3 +25,12 @@ test('commit-decoy still restores previously active decoys on commit failure', (
   assert.match(source, /restorePreviouslyActiveDecoys/);
   assert.match(source, /await restorePreviouslyActiveDecoys\(\)/);
 });
+
+test('commit-decoy writes watch address fingerprints as non-blocking shadow data', () => {
+  assert.match(source, /decoy_watch_address_fingerprints/);
+  assert.match(source, /Deno\.env\.get\("WATCH_ADDRESS_HMAC_KEY"\)/);
+  assert.match(source, /watchAddressFingerprintVersion = "watch-address-v1"/);
+  assert.match(source, /watchAddressFingerprintShadow: fingerprintShadow/);
+  assert.match(source, /return \{ enabled: false, stored: 0, addressCount: 0 \}/);
+  assert.match(source, /error: "shadow write failed"/);
+});

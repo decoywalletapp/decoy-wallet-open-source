@@ -1,11 +1,14 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const test = require('node:test');
 
 const { shouldProcessOutboundTx, shouldTriggerMissingUtxo } = require('../watcher_tx_filter');
 const logRedaction = require('../watcher_log_redaction');
+const watchAddressFingerprint = require('../watch_address_fingerprint');
 
 const watchedAddress = 'bc1qwatchedaddress0000000000000000000000000000000';
 const otherAddress = 'bc1qotheraddress00000000000000000000000000000000';
+const watcherSource = fs.readFileSync('codex_backend_work/decoy-watcher-source/src/index.js', 'utf8');
 
 function outboundTx({ confirmed = false, blockTime = new Date(), address = watchedAddress } = {}) {
   return {
@@ -152,4 +155,34 @@ test('watcher error text redacts public wallet identifiers', () => {
   assert.doesNotMatch(redacted, /1BoatSLRHtKNngkdXEeobR76b53LETtpyT/);
   assert.doesNotMatch(redacted, /zpub6qQQQQ/);
   assert.match(redacted, /\[redacted-watch-data\]/);
+});
+
+test('watch address fingerprinting is deterministic and case-safe for bech32', () => {
+  const key = 'test-watch-address-hmac-key';
+  const lower = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080';
+  const upper = lower.toUpperCase();
+  const legacy = '1BoatSLRHtKNngkdXEeobR76b53LETtpyT';
+
+  assert.equal(watchAddressFingerprint.FINGERPRINT_VERSION, 'watch-address-v1');
+  assert.equal(watchAddressFingerprint.normalizeWatchAddress(upper), lower);
+  assert.equal(watchAddressFingerprint.hmacWatchAddress(lower, key), watchAddressFingerprint.hmacWatchAddress(upper, key));
+  assert.match(watchAddressFingerprint.hmacWatchAddress(lower, key), /^[a-f0-9]{64}$/);
+  assert.notEqual(
+    watchAddressFingerprint.normalizeWatchAddress(legacy),
+    watchAddressFingerprint.normalizeWatchAddress(legacy).toLowerCase()
+  );
+});
+
+test('watch address fingerprint shadow path never records seed triggers directly', () => {
+  assert.match(watcherSource, /WATCH_ADDRESS_FINGERPRINT_SHADOW_MATCH/);
+  assert.match(watcherSource, /WATCH_ADDRESS_FINGERPRINT_SHADOW_MISMATCH/);
+
+  const start = watcherSource.indexOf('for (const address of inputAddresses)');
+  const livePath = watcherSource.indexOf('const addressWatches = watchesByAddress.get(address)', start);
+  assert.ok(start > 0);
+  assert.ok(livePath > start);
+
+  const fingerprintBlock = watcherSource.slice(start, livePath);
+  assert.doesNotMatch(fingerprintBlock, /recordSeedTrigger/);
+  assert.doesNotMatch(fingerprintBlock, /kickSmsWorkerIfConfigured/);
 });

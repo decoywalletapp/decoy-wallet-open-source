@@ -18,6 +18,7 @@ const crypto = require('crypto');
 const { AsyncLocalStorage } = require('async_hooks');
 const watcherTxFilter = require('./watcher_tx_filter');
 const logRedaction = require('./watcher_log_redaction');
+const watchAddressFingerprint = require('./watch_address_fingerprint');
 
 const app = express();
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
@@ -119,6 +120,15 @@ const CHAIN_EVENT_SHADOW_MODE = parseEnvBool(process.env.CHAIN_EVENT_SHADOW_MODE
 const CHAIN_EVENT_SECRET = (process.env.CHAIN_EVENT_SECRET || '').trim();
 const CHAIN_EVENT_MAX_TXS = Math.max(1, Math.min(5000, Number(process.env.CHAIN_EVENT_MAX_TXS || 500)));
 const CHAIN_EVENT_MATCH_LOG_LIMIT = Math.max(0, Math.min(50, Number(process.env.CHAIN_EVENT_MATCH_LOG_LIMIT || 10)));
+const WATCH_ADDRESS_FINGERPRINT_SHADOW_ENABLED = parseEnvBool(
+  process.env.WATCH_ADDRESS_FINGERPRINT_SHADOW_ENABLED,
+  false
+);
+const WATCH_ADDRESS_HMAC_KEY = (
+  process.env.WATCH_ADDRESS_HMAC_KEY ||
+  process.env.DECOY_WATCH_ADDRESS_HMAC_KEY ||
+  ''
+).trim();
 
 // Required for tank txid storage
 const TXID_HMAC_KEY = (process.env.TXID_HMAC_KEY || '').trim();
@@ -131,6 +141,10 @@ if (!supabaseUrl || !supabaseServiceKey) {
 if (!TXID_HMAC_KEY) {
   console.error('[decoy-watcher] Missing TXID_HMAC_KEY');
   process.exit(1);
+}
+
+if (WATCH_ADDRESS_FINGERPRINT_SHADOW_ENABLED && !WATCH_ADDRESS_HMAC_KEY) {
+  console.warn('[decoy-watcher] WATCH_ADDRESS_FINGERPRINT_SHADOW_ENABLED is true, but WATCH_ADDRESS_HMAC_KEY is missing');
 }
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
@@ -1411,6 +1425,10 @@ function hmacOutpoint(outpoint) {
   return crypto.createHmac('sha256', TXID_HMAC_KEY).update(`utxo:${String(outpoint)}`).digest('hex');
 }
 
+function hmacWatchAddress(address) {
+  return watchAddressFingerprint.hmacWatchAddress(address, WATCH_ADDRESS_HMAC_KEY);
+}
+
 async function markSeenTx(decoyId, txid) {
   return await markSeenHmac(decoyId, hmacTxid(txid));
 }
@@ -1778,6 +1796,52 @@ async function loadEligibleArmedSeedWatches() {
   return watches;
 }
 
+async function loadWatchAddressFingerprintShadow(watches) {
+  const stats = {
+    enabled: WATCH_ADDRESS_FINGERPRINT_SHADOW_ENABLED,
+    keyConfigured: !!WATCH_ADDRESS_HMAC_KEY,
+    rows: 0,
+    tableUnavailable: false,
+    loadFailed: false,
+  };
+  const byHmac = new Map();
+
+  if (!WATCH_ADDRESS_FINGERPRINT_SHADOW_ENABLED || !WATCH_ADDRESS_HMAC_KEY) {
+    return { byHmac, stats };
+  }
+
+  const watchByDecoyId = new Map((watches || []).map((watch) => [watch.decoyId, watch]));
+  const decoyIds = [...watchByDecoyId.keys()].filter(Boolean);
+  if (!decoyIds.length) return { byHmac, stats };
+
+  const { data, error } = await supabase
+    .from('decoy_watch_address_fingerprints')
+    .select('decoy_id, address_hmac')
+    .in('decoy_id', decoyIds);
+
+  if (error) {
+    stats.loadFailed = true;
+    stats.tableUnavailable = isMissingRelationError(error);
+    healthLog('warn', 'WATCH_ADDRESS_FINGERPRINT_SHADOW_UNAVAILABLE', {
+      tableUnavailable: stats.tableUnavailable,
+      error: errorMessage(error),
+    });
+    return { byHmac, stats };
+  }
+
+  for (const row of data || []) {
+    const watch = watchByDecoyId.get(row && row.decoy_id);
+    const addressHmac = String((row && row.address_hmac) || '').trim();
+    if (!watch || !addressHmac) continue;
+
+    if (!byHmac.has(addressHmac)) byHmac.set(addressHmac, []);
+    byHmac.get(addressHmac).push(watch);
+    stats.rows += 1;
+  }
+
+  return { byHmac, stats };
+}
+
 async function processChainEventRequest(req) {
   if (!CHAIN_EVENT_INGEST_ENABLED) {
     return { status: 404, body: { ok: false, error: 'chain event ingest disabled' } };
@@ -1797,6 +1861,7 @@ async function processChainEventRequest(req) {
   }
 
   const watches = await loadEligibleArmedSeedWatches();
+  const fingerprintShadow = await loadWatchAddressFingerprintShadow(watches);
   const watchesByAddress = new Map();
 
   for (const watch of watches) {
@@ -1812,10 +1877,14 @@ async function processChainEventRequest(req) {
     req.get('x-webhook-source') ||
     'chain-event';
   const processedPairs = new Set();
+  const fingerprintProcessedPairs = new Set();
   let matchedInputs = 0;
   let candidateTriggers = 0;
   let newTriggers = 0;
   let shadowMatchesLogged = 0;
+  let fingerprintShadowMatchedInputs = 0;
+  let fingerprintShadowCandidateTriggers = 0;
+  let fingerprintShadowMatchesLogged = 0;
 
   for (const tx of txs) {
     const txid = tx && (tx.txid || tx.txId || tx.id);
@@ -1828,6 +1897,36 @@ async function processChainEventRequest(req) {
     );
 
     for (const address of inputAddresses) {
+      const addressHmac = hmacWatchAddress(address);
+      const fingerprintWatches = addressHmac
+        ? fingerprintShadow.byHmac.get(addressHmac) || []
+        : [];
+
+      if (fingerprintWatches.length) {
+        fingerprintShadowMatchedInputs += fingerprintWatches.length;
+
+        for (const watch of fingerprintWatches) {
+          if (!shouldProcessOutboundTx(tx, address, watch.armedAt, watch.lastBaseline)) continue;
+
+          const pairKey = `${watch.decoyId}:${txid}`;
+          if (fingerprintProcessedPairs.has(pairKey)) continue;
+          fingerprintProcessedPairs.add(pairKey);
+          fingerprintShadowCandidateTriggers += 1;
+
+          if (fingerprintShadowMatchesLogged < CHAIN_EVENT_MATCH_LOG_LIMIT) {
+            fingerprintShadowMatchesLogged += 1;
+            healthLog('info', 'WATCH_ADDRESS_FINGERPRINT_SHADOW_MATCH', {
+              source,
+              confirmed: isConfirmedTx(tx),
+              decoyRef: idLabel(watch.decoyId),
+              userRef: idLabel(watch.userId),
+              addressHmacRef: addressHmac.slice(0, 16),
+              txidHmacRef: hmacTxid(txid).slice(0, 16),
+            });
+          }
+        }
+      }
+
       const addressWatches = watchesByAddress.get(address) || [];
       if (!addressWatches.length) continue;
       matchedInputs += addressWatches.length;
@@ -1867,6 +1966,30 @@ async function processChainEventRequest(req) {
     }
   }
 
+  const livePairsMissingFromFingerprint =
+    fingerprintShadow.stats.enabled && fingerprintShadow.stats.keyConfigured
+      ? [...processedPairs].filter((pairKey) => !fingerprintProcessedPairs.has(pairKey)).length
+      : 0;
+  const fingerprintPairsMissingFromLive =
+    fingerprintShadow.stats.enabled && fingerprintShadow.stats.keyConfigured
+      ? [...fingerprintProcessedPairs].filter((pairKey) => !processedPairs.has(pairKey)).length
+      : 0;
+
+  if (
+    fingerprintShadow.stats.enabled &&
+    fingerprintShadow.stats.keyConfigured &&
+    fingerprintShadow.stats.rows > 0 &&
+    (livePairsMissingFromFingerprint > 0 || fingerprintPairsMissingFromLive > 0)
+  ) {
+    healthLog('warn', 'WATCH_ADDRESS_FINGERPRINT_SHADOW_MISMATCH', {
+      source,
+      livePairs: processedPairs.size,
+      fingerprintPairs: fingerprintProcessedPairs.size,
+      livePairsMissingFromFingerprint,
+      fingerprintPairsMissingFromLive,
+    });
+  }
+
   if (!CHAIN_EVENT_SHADOW_MODE && newTriggers > 0) {
     const kick = await kickSmsWorkerIfConfigured();
     log('sms-worker kick result:', kick);
@@ -1880,6 +2003,12 @@ async function processChainEventRequest(req) {
     candidateTriggers,
     newTriggers,
     shadowMatchesLogged,
+    watchAddressFingerprintShadow: fingerprintShadow.stats,
+    fingerprintShadowMatchedInputs,
+    fingerprintShadowCandidateTriggers,
+    fingerprintShadowMatchesLogged,
+    livePairsMissingFromFingerprint,
+    fingerprintPairsMissingFromLive,
   });
 
   return {
@@ -1892,6 +2021,11 @@ async function processChainEventRequest(req) {
       matchedInputs,
       candidateTriggers,
       newTriggers,
+      watchAddressFingerprintShadow: fingerprintShadow.stats,
+      fingerprintShadowMatchedInputs,
+      fingerprintShadowCandidateTriggers,
+      livePairsMissingFromFingerprint,
+      fingerprintPairsMissingFromLive,
     },
   };
 }
