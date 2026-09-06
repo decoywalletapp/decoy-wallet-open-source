@@ -19,6 +19,7 @@ const { AsyncLocalStorage } = require('async_hooks');
 const watcherTxFilter = require('./watcher_tx_filter');
 const logRedaction = require('./watcher_log_redaction');
 const watchAddressFingerprint = require('./watch_address_fingerprint');
+const txDestinations = require('./watcher_tx_destinations');
 
 const app = express();
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
@@ -610,6 +611,9 @@ function normalizeBlockbookTx(tx) {
           },
         }))
       : [],
+    vout: txDestinations.normalizeTxOutputs(
+      (tx && (tx.vout || tx.outputs || tx.out)) || []
+    ),
     status: {
       confirmed,
       block_time: Number.isFinite(blockTime) && blockTime > 0 ? blockTime : null,
@@ -632,6 +636,9 @@ function normalizeBlockchainTx(tx) {
           },
         }))
       : [],
+    vout: txDestinations.normalizeTxOutputs(
+      (tx && (tx.out || tx.outputs || tx.vout)) || []
+    ),
     status: {
       confirmed,
       block_time: Number.isFinite(time) && time > 0 ? time : null,
@@ -669,6 +676,13 @@ function normalizeEventTx(tx) {
       : Array.isArray(tx.ins)
         ? tx.ins
         : [];
+  const rawOutputs = Array.isArray(tx.vout)
+    ? tx.vout
+    : Array.isArray(tx.outputs)
+      ? tx.outputs
+      : Array.isArray(tx.out)
+        ? tx.out
+        : [];
 
   const confirmations = Number(tx.confirmations);
   const blockHeight = Number(tx.blockHeight || tx.block_height || tx.block);
@@ -685,6 +699,7 @@ function normalizeEventTx(tx) {
         scriptpubkey_address: eventInputAddress(input),
       },
     })),
+    vout: txDestinations.normalizeTxOutputs(rawOutputs),
     status: {
       confirmed,
       block_time: Number.isFinite(blockTime) && blockTime > 0 ? blockTime : null,
@@ -1456,6 +1471,16 @@ function isMissingRelationError(error) {
   return error && (error.code === '42P01' || message.includes('relation') || message.includes('does not exist'));
 }
 
+function isMissingColumnError(error) {
+  const message = String((error && error.message) || '').toLowerCase();
+  return (
+    error &&
+    (error.code === '42703' ||
+      message.includes('column') ||
+      message.includes('schema cache'))
+  );
+}
+
 // OUTBOUND ONLY: address appears in vin prevout.scriptpubkey_address
 function isOutboundForAddress(tx, addr) {
   return watcherTxFilter.isOutboundForAddress(tx, addr);
@@ -1479,15 +1504,42 @@ function shouldProcessOutboundTx(tx, addr, armedAt, baselineAt) {
   });
 }
 
-async function recordSeedTrigger(decoyId, userId, tx, source) {
+async function insertSeedTriggerRow(row, allowDestinationFallback = true) {
+  const { error } = await supabase.from('decoy_triggers').insert(row);
+  if (!error) return { ok: true, duplicate: false };
+  if (error.code === '23505') return { ok: false, duplicate: true };
+
+  if (
+    allowDestinationFallback &&
+    (row.destination_addresses || row.destination_address_count !== undefined) &&
+    isMissingColumnError(error)
+  ) {
+    const fallbackRow = { ...row };
+    delete fallbackRow.destination_addresses;
+    delete fallbackRow.destination_address_count;
+    const fallback = await supabase.from('decoy_triggers').insert(fallbackRow);
+    if (!fallback.error) {
+      console.warn('[decoy-watcher] inserted seed trigger without destination columns after schema fallback');
+      return { ok: true, duplicate: false };
+    }
+    if (fallback.error.code === '23505') return { ok: false, duplicate: true };
+    return { ok: false, duplicate: false, error: fallback.error };
+  }
+
+  return { ok: false, duplicate: false, error };
+}
+
+async function recordSeedTrigger(decoyId, userId, tx, source, watchedAddresses = []) {
   const txid = tx && (tx.txid || tx.txId || tx.id);
   if (!txid) return false;
 
   const seen = await markSeenTx(decoyId, txid);
   if (!seen.isNew) return false;
 
+  const destinationAddresses = txDestinations.destinationAddressCandidates(tx, watchedAddresses);
+
   // Tank: do not store plaintext txid or raw event in decoy_triggers
-  const { error: insertTrigErr } = await supabase.from('decoy_triggers').insert({
+  const insertResult = await insertSeedTriggerRow({
     decoy_id: decoyId,
     user_id: userId,
     trigger_type: 'SEED_DECOY',
@@ -1495,11 +1547,13 @@ async function recordSeedTrigger(decoyId, userId, tx, source) {
     txid_hmac: hmacTxid(txid),
     observed_at: new Date().toISOString(),
     raw_event: null,
+    destination_addresses: destinationAddresses.length ? destinationAddresses : null,
+    destination_address_count: destinationAddresses.length,
   });
 
-  if (insertTrigErr) {
-    if (insertTrigErr.code === '23505') return false;
-    console.error('[decoy-watcher] error inserting decoy_triggers:', insertTrigErr);
+  if (!insertResult.ok) {
+    if (insertResult.duplicate) return false;
+    console.error('[decoy-watcher] error inserting decoy_triggers:', insertResult.error);
     return false;
   }
 
@@ -1959,7 +2013,8 @@ async function processChainEventRequest(req) {
           watch.decoyId,
           watch.userId,
           tx,
-          isConfirmedTx(tx) ? `chain-event-confirmed:${source}` : `chain-event-mempool:${source}`
+          isConfirmedTx(tx) ? `chain-event-confirmed:${source}` : `chain-event-mempool:${source}`,
+          watch.addresses
         );
         if (created) newTriggers += 1;
       }
@@ -2053,7 +2108,8 @@ async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
           decoyId,
           userId,
           tx,
-          isConfirmedTx(tx) ? `baseline-batch-confirmed:${batch.provider || 'unknown'}` : `baseline-batch-mempool:${batch.provider || 'unknown'}`
+          isConfirmedTx(tx) ? `baseline-batch-confirmed:${batch.provider || 'unknown'}` : `baseline-batch-mempool:${batch.provider || 'unknown'}`,
+          addresses
         );
         if (created) createdTriggers += 1;
       } else {
@@ -2095,7 +2151,8 @@ async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
           decoyId,
           userId,
           tx,
-          isConfirmedTx(tx) ? 'baseline-confirmed-catchup' : 'baseline-mempool'
+          isConfirmedTx(tx) ? 'baseline-confirmed-catchup' : 'baseline-mempool',
+          addresses
         );
         if (created) createdTriggers += 1;
       } else {
@@ -2404,7 +2461,8 @@ async function processRunInContext(options = {}, runContext) {
           decoy_id,
           user_id,
           tx,
-          isConfirmedTx(tx) ? `batch-confirmed:${batch.provider || 'unknown'}` : `batch-mempool:${batch.provider || 'unknown'}`
+          isConfirmedTx(tx) ? `batch-confirmed:${batch.provider || 'unknown'}` : `batch-mempool:${batch.provider || 'unknown'}`,
+          addresses
         );
         if (created) newTriggers += 1;
       }
@@ -2445,7 +2503,8 @@ async function processRunInContext(options = {}, runContext) {
           decoy_id,
           user_id,
           tx,
-          isConfirmedTx(tx) ? `confirmed-catchup:${provider || 'unknown'}` : `mempool:${provider || 'unknown'}`
+          isConfirmedTx(tx) ? `confirmed-catchup:${provider || 'unknown'}` : `mempool:${provider || 'unknown'}`,
+          addresses
         );
         if (created) newTriggers += 1;
       }

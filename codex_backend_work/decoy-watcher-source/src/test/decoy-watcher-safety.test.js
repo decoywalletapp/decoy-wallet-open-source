@@ -5,9 +5,11 @@ const test = require('node:test');
 const { shouldProcessOutboundTx, shouldTriggerMissingUtxo } = require('../watcher_tx_filter');
 const logRedaction = require('../watcher_log_redaction');
 const watchAddressFingerprint = require('../watch_address_fingerprint');
+const txDestinations = require('../watcher_tx_destinations');
 
 const watchedAddress = 'bc1qwatchedaddress0000000000000000000000000000000';
 const otherAddress = 'bc1qotheraddress00000000000000000000000000000000';
+const destinationAddress = 'bc1qdestination000000000000000000000000000000';
 const watcherSource = fs.readFileSync('codex_backend_work/decoy-watcher-source/src/index.js', 'utf8');
 
 function outboundTx({ confirmed = false, blockTime = new Date(), address = watchedAddress } = {}) {
@@ -106,6 +108,55 @@ test('receive-only transactions to the watched address do not trigger', () => {
   const armedAt = new Date(Date.now() - 60 * 60 * 1000);
 
   assert.equal(shouldAlert(tx, armedAt, armedAt), false);
+});
+
+test('destination extraction includes external outputs and excludes watched inputs', () => {
+  const tx = {
+    vin: [
+      {
+        prevout: {
+          scriptpubkey_address: watchedAddress,
+        },
+      },
+    ],
+    vout: [
+      { scriptpubkey_address: destinationAddress },
+      { scriptpubkey_address: watchedAddress },
+    ],
+  };
+
+  assert.deepEqual(
+    txDestinations.destinationAddressCandidates(tx, [watchedAddress]),
+    [destinationAddress]
+  );
+});
+
+test('destination extraction normalizes common provider output shapes', () => {
+  const rawOutputs = txDestinations.normalizeTxOutputs([
+    { scriptPubKey: { addresses: [destinationAddress] } },
+    { addr: otherAddress },
+  ]);
+
+  assert.deepEqual(rawOutputs, [
+    { scriptpubkey_address: destinationAddress },
+    { scriptpubkey_address: otherAddress },
+  ]);
+});
+
+test('destination extraction dedupes and limits output addresses', () => {
+  const tx = {
+    vin: [],
+    vout: [
+      { scriptpubkey_address: destinationAddress.toUpperCase() },
+      { scriptpubkey_address: destinationAddress },
+      { scriptpubkey_address: otherAddress },
+    ],
+  };
+
+  assert.deepEqual(
+    txDestinations.destinationAddressCandidates(tx, [], { maxCount: 1 }),
+    [destinationAddress.toUpperCase()]
+  );
 });
 
 test('one transient missing watch-key UTXO snapshot does not trigger immediately', () => {
