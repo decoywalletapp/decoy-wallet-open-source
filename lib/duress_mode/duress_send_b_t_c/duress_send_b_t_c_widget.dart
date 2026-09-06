@@ -95,45 +95,52 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
           backgroundColor: _pageBackground,
           body: SafeArea(
             top: true,
-            child: DecoyBottomSafeScroll(
-              bottomPadding: sendBtcBottomPadding,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  20.0,
-                  18.0,
-                  20.0,
-                  0.0,
-                ),
-                child: Center(
+            child: ListView(
+              primary: false,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: EdgeInsetsDirectional.fromSTEB(
+                20.0,
+                18.0,
+                20.0,
+                sendBtcBottomPadding,
+              ),
+              children: [
+                _topBar(context),
+                const SizedBox(height: 8.0),
+                Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 390.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _topBar(context),
-                        const SizedBox(height: 18.0),
-                        _titleBlock(context),
-                        const SizedBox(height: 16.0),
-                        _amountCard(
-                          context,
-                          orange: orange,
-                          fakeBtcAvailableText: fakeBtcAvailableText,
-                          fakeBtcAvailableForSend: fakeBtcAvailableForSend,
-                        ),
-                        const SizedBox(height: 14.0),
-                        _keypadCard(context),
-                        const SizedBox(height: 14.0),
-                        _nextButton(
-                          context,
-                          canContinue: canContinue,
-                          fakeBtcAvailableForSend: fakeBtcAvailableForSend,
-                        ),
-                        const SizedBox(height: 12.0),
-                      ],
+                    child: Transform.translate(
+                      offset: const Offset(0.0, -10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _titleBlock(context),
+                          const SizedBox(height: 14.0),
+                          _amountCard(
+                            context,
+                            orange: orange,
+                            fakeBtcAvailableText: fakeBtcAvailableText,
+                            fakeBtcAvailableForSend: fakeBtcAvailableForSend,
+                          ),
+                          const SizedBox(height: 12.0),
+                          _keypadCard(context),
+                          const SizedBox(height: 12.0),
+                          _nextButton(
+                            context,
+                            canContinue: canContinue,
+                            fakeBtcAvailableForSend: fakeBtcAvailableForSend,
+                          ),
+                          const SizedBox(height: 12.0),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -169,12 +176,12 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
           style: FlutterFlowTheme.of(context).headlineMedium.override(
                 fontFamily: 'InterTight',
                 color: FlutterFlowTheme.of(context).info,
-                fontSize: 31.0,
+                fontSize: 30.0,
                 letterSpacing: 0.0,
                 fontWeight: FontWeight.w800,
               ),
         ),
-        const SizedBox(height: 7.0),
+        const SizedBox(height: 5.0),
         Text(
           'Enter the amount you want to send',
           textAlign: TextAlign.center,
@@ -201,7 +208,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 16.0),
+      padding: const EdgeInsets.fromLTRB(18.0, 16.0, 18.0, 14.0),
       decoration: BoxDecoration(
         color: _panelBackground,
         borderRadius: BorderRadius.circular(8.0),
@@ -220,7 +227,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                   fontWeight: FontWeight.w800,
                 ),
           ),
-          const SizedBox(height: 8.0),
+          const SizedBox(height: 6.0),
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
@@ -230,13 +237,13 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
               style: FlutterFlowTheme.of(context).displayMedium.override(
                     fontFamily: 'InterTight',
                     color: FlutterFlowTheme.of(context).info,
-                    fontSize: 54.0,
+                    fontSize: 52.0,
                     letterSpacing: 0.0,
                     fontWeight: FontWeight.w900,
                   ),
             ),
           ),
-          const SizedBox(height: 4.0),
+          const SizedBox(height: 2.0),
           Text(
             'BTC',
             textAlign: TextAlign.center,
@@ -248,15 +255,15 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
                   fontWeight: FontWeight.w800,
                 ),
           ),
-          const SizedBox(height: 14.0),
+          const SizedBox(height: 12.0),
           _availabilityStatus(
             context,
             fakeBtcAvailableText: fakeBtcAvailableText,
           ),
-          const SizedBox(height: 12.0),
+          const SizedBox(height: 10.0),
           Container(
             padding:
-                const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
             decoration: BoxDecoration(
               color: _panelRaised,
               borderRadius: BorderRadius.circular(8.0),
@@ -330,33 +337,44 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
   }
 
   Widget _keypadCard(BuildContext context) {
-    final keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0'];
-
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: _panelBackground,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(color: _softBorder),
       ),
-      child: GridView(
-        padding: EdgeInsets.zero,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
-          childAspectRatio: 2.04,
-        ),
-        primary: false,
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
+      child: Column(
         children: [
-          ...keys.map((keyValue) => _amountKeyButton(context, keyValue)),
-          _backspaceKeyButton(context),
+          _keypadRow(context, ['1', '2', '3']),
+          const SizedBox(height: 10.0),
+          _keypadRow(context, ['4', '5', '6']),
+          const SizedBox(height: 10.0),
+          _keypadRow(context, ['7', '8', '9']),
+          const SizedBox(height: 10.0),
+          Row(
+            children: [
+              Expanded(child: _amountKeyButton(context, '.')),
+              const SizedBox(width: 10.0),
+              Expanded(child: _amountKeyButton(context, '0')),
+              const SizedBox(width: 10.0),
+              Expanded(child: _backspaceKeyButton(context)),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _keypadRow(BuildContext context, List<String> keys) {
+    return Row(
+      children: [
+        for (final keyValue in keys) ...[
+          Expanded(child: _amountKeyButton(context, keyValue)),
+          if (keyValue != keys.last) const SizedBox(width: 10.0),
+        ],
+      ],
     );
   }
 
@@ -383,22 +401,25 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
               functions.applyKey(_model.amountText, 'BACKSPACE', 8);
           safeSetState(() {});
         },
-        child: Ink(
-          decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).primary,
-            borderRadius: BorderRadius.circular(8.0),
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 4.0,
-                color: Color(0x33000000),
-                offset: Offset(0.0, 2.0),
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.keyboard_backspace_rounded,
-            color: FlutterFlowTheme.of(context).info,
-            size: 30.0,
+        child: SizedBox(
+          height: 54.0,
+          child: Ink(
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).primary,
+              borderRadius: BorderRadius.circular(8.0),
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 4.0,
+                  color: Color(0x33000000),
+                  offset: Offset(0.0, 2.0),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.keyboard_backspace_rounded,
+              color: FlutterFlowTheme.of(context).info,
+              size: 30.0,
+            ),
           ),
         ),
       ),
@@ -407,7 +428,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
 
   FFButtonOptions _keyButtonOptions(BuildContext context) {
     return FFButtonOptions(
-      height: 52.0,
+      height: 54.0,
       padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
       iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
       color: FlutterFlowTheme.of(context).primary,
