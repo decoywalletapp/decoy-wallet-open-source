@@ -32,6 +32,10 @@ class DuressSendBTCWidget extends StatefulWidget {
 
 class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
   static const _pageBackground = Color(0xFF080C0D);
+  static const _panelBackground = Color(0xFF121819);
+  static const _panelRaised = Color(0xFF1A2224);
+  static const _mutedText = Color(0xFF8C979A);
+  static const _softBorder = Color(0xFF253033);
 
   late DuressSendBTCModel _model;
 
@@ -63,6 +67,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
     final sendBtcBottomPadding = decoyBottomActionPadding(context);
+    final orange = FlutterFlowTheme.of(context).primary;
 
     final fakeBtcAvailableText = valueOrDefault<String>(
       formatNumber(
@@ -74,6 +79,9 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
     );
     final fakeBtcAvailableForSend =
         fakeBtcAvailableText == '0' ? 0.0 : FFAppState().fakeBtcBalance;
+    final amountValue = functions.amountToDouble(_model.amountText);
+    final canContinue =
+        amountValue <= fakeBtcAvailableForSend && amountValue > 0.0;
 
     return GestureDetector(
       onTap: () {
@@ -87,587 +95,385 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
           backgroundColor: _pageBackground,
           body: SafeArea(
             top: true,
-            child: ListView(
-              primary: false,
-              physics: const AlwaysScrollableScrollPhysics(
-                parent: ClampingScrollPhysics(),
-              ),
-              padding: EdgeInsetsDirectional.fromSTEB(
-                0.0,
-                12.0,
-                0.0,
-                sendBtcBottomPadding,
-              ),
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Align(
-                      alignment: AlignmentDirectional(-1.0, 0.0),
-                      child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-                        child: FlutterFlowIconButton(
-                          borderRadius: 20.0,
-                          buttonSize: 40.0,
-                          icon: Icon(
-                            Icons.arrow_back_rounded,
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            size: 24.0,
-                          ),
-                          onPressed: () async {
-                            context.safePop();
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+            child: DecoyBottomSafeScroll(
+              bottomPadding: sendBtcBottomPadding,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                  20.0,
+                  18.0,
+                  20.0,
+                  0.0,
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Enter the amount you want to send',
-                      textAlign: TextAlign.center,
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'hello',
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            letterSpacing: 0.0,
-                          ),
-                    ),
-                  ].divide(SizedBox(height: 16.0)),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 390.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          functions.formatBtcTrim(_model.amountText),
-                          textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .displayMedium
-                              .override(
-                                fontFamily: 'hello',
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                fontSize: 48.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        _topBar(context),
+                        const SizedBox(height: 18.0),
+                        _titleBlock(context),
+                        const SizedBox(height: 16.0),
+                        _amountCard(
+                          context,
+                          orange: orange,
+                          fakeBtcAvailableText: fakeBtcAvailableText,
+                          fakeBtcAvailableForSend: fakeBtcAvailableForSend,
                         ),
-                        Text(
-                          'BTC',
-                          textAlign: TextAlign.center,
-                          style:
-                              FlutterFlowTheme.of(context).bodyLarge.override(
-                                    fontFamily: 'hello',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                        const SizedBox(height: 14.0),
+                        _keypadCard(context),
+                        const SizedBox(height: 14.0),
+                        _nextButton(
+                          context,
+                          canContinue: canContinue,
+                          fakeBtcAvailableForSend: fakeBtcAvailableForSend,
                         ),
-                      ].divide(SizedBox(height: 8.0)),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Stack(
-                            children: [
-                              if (_model.notificationValue == 0)
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Text(
-                                    'Max available: $fakeBtcAvailableText',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'hello',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                  ),
-                                ),
-                              if (_model.notificationValue == 1)
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Text(
-                                    'AMOUNT EXCEEDS AVAILABLE BALANCE',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'hello',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Send Max',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: functions.amountToDouble(
-                                                _model.amountText) >
-                                            fakeBtcAvailableForSend
-                                        ? FlutterFlowTheme.of(context).error
-                                        : FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                    fontSize: 18.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                            Switch.adaptive(
-                              value: _model.switchValue!,
-                              onChanged: (newValue) async {
-                                safeSetState(
-                                    () => _model.switchValue = newValue);
-                                if (newValue) {
-                                  _model.sendMax = true;
-                                  _model.amountText =
-                                      fakeBtcAvailableForSend.toString();
-                                  safeSetState(() {});
-                                } else {
-                                  _model.sendMax = false;
-                                  safeSetState(() {});
-                                }
-                              },
-                              activeColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                              activeTrackColor:
-                                  FlutterFlowTheme.of(context).primary,
-                              inactiveTrackColor:
-                                  FlutterFlowTheme.of(context).alternate,
-                              inactiveThumbColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                          ].divide(SizedBox(width: 12.0)),
-                        ),
-                      ].divide(SizedBox(height: 12.0)),
-                    ),
-                  ].divide(SizedBox(height: 24.0)),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Container(
-                    width: 400.0,
-                    decoration: BoxDecoration(
-                      color: Color(0x9D343739),
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: GridView(
-                        padding: EdgeInsets.zero,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
-                          childAspectRatio: 2.0,
-                        ),
-                        primary: false,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: [
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '1', 8);
-                              safeSetState(() {});
-                            },
-                            text: '1',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '2', 8);
-                              safeSetState(() {});
-                            },
-                            text: '2',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '3', 8);
-                              safeSetState(() {});
-                            },
-                            text: '3',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '4', 8);
-                              safeSetState(() {});
-                            },
-                            text: '4',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '5', 8);
-                              safeSetState(() {});
-                            },
-                            text: '5',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '6', 8);
-                              safeSetState(() {});
-                            },
-                            text: '6',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '7', 8);
-                              safeSetState(() {});
-                            },
-                            text: '7',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '8', 8);
-                              safeSetState(() {});
-                            },
-                            text: '8',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '9', 8);
-                              safeSetState(() {});
-                            },
-                            text: '9',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '.', 8);
-                              safeSetState(() {});
-                            },
-                            text: '.',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.amountText =
-                                  functions.applyKey(_model.amountText, '0', 8);
-                              safeSetState(() {});
-                            },
-                            text: '0',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'hello',
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FlutterFlowIconButton(
-                            borderRadius: 8.0,
-                            buttonSize: 40.0,
-                            fillColor: FlutterFlowTheme.of(context).primary,
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: FlutterFlowTheme.of(context).info,
-                              size: 24.0,
-                            ),
-                            onPressed: () async {
-                              _model.sendMax = false;
-                              safeSetState(() {});
-                              _model.amountText = functions.applyKey(
-                                  _model.amountText, 'BACKSPACE', 8);
-                              safeSetState(() {});
-                            },
-                          ),
-                        ],
-                      ),
+                        const SizedBox(height: 12.0),
+                      ],
                     ),
                   ),
                 ),
-                AnimatedOpacity(
-                  opacity: (functions.amountToDouble(_model.amountText) <=
-                              fakeBtcAvailableForSend) &&
-                          (functions.amountToDouble(_model.amountText) > 0.0)
-                      ? 1.0
-                      : 0.5,
-                  duration: 250.0.ms,
-                  curve: Curves.easeInOut,
-                  child: Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          if ((functions.amountToDouble(_model.amountText) >
-                                  0.0) &&
-                              (functions.amountToDouble(_model.amountText) <=
-                                  fakeBtcAvailableForSend)) {
-                            FFAppState().sendAmountBtc =
-                                functions.formatBtc(_model.amountText)!;
-                            safeSetState(() {});
-
-                            context.pushNamed(
-                                DuressConfirmTransactionSendWidget.routeName);
-                          } else {
-                            _model.notificationValue = 1;
-                            safeSetState(() {});
-                            await Future.delayed(
-                              Duration(
-                                milliseconds: 2000,
-                              ),
-                            );
-                            _model.notificationValue = 0;
-                            safeSetState(() {});
-                          }
-                        },
-                        text: 'Next',
-                        options: FFButtonOptions(
-                          width: 350.0,
-                          height: 56.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleMedium.override(
-                                    fontFamily: 'hello',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                          elevation: 5.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ].divide(SizedBox(height: 24.0)).addToEnd(SizedBox(height: 24.0)),
+              ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _topBar(BuildContext context) {
+    return Row(
+      children: [
+        FlutterFlowIconButton(
+          borderRadius: 20.0,
+          buttonSize: 40.0,
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: FlutterFlowTheme.of(context).info,
+            size: 26.0,
+          ),
+          onPressed: () async {
+            context.safePop();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _titleBlock(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          'Send Amount',
+          textAlign: TextAlign.center,
+          style: FlutterFlowTheme.of(context).headlineMedium.override(
+                fontFamily: 'InterTight',
+                color: FlutterFlowTheme.of(context).info,
+                fontSize: 31.0,
+                letterSpacing: 0.0,
+                fontWeight: FontWeight.w800,
+              ),
+        ),
+        const SizedBox(height: 7.0),
+        Text(
+          'Enter the amount you want to send',
+          textAlign: TextAlign.center,
+          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                fontFamily: 'InterTight',
+                color: _mutedText,
+                fontSize: 14.0,
+                letterSpacing: 0.0,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _amountCard(
+    BuildContext context, {
+    required Color orange,
+    required String fakeBtcAvailableText,
+    required double fakeBtcAvailableForSend,
+  }) {
+    final amountExceedsAvailable =
+        functions.amountToDouble(_model.amountText) > fakeBtcAvailableForSend;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 16.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Amount',
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: _mutedText,
+                  fontSize: 12.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+          const SizedBox(height: 8.0),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              functions.formatBtcTrim(_model.amountText),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              style: FlutterFlowTheme.of(context).displayMedium.override(
+                    fontFamily: 'InterTight',
+                    color: FlutterFlowTheme.of(context).info,
+                    fontSize: 54.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w900,
+                  ),
+            ),
+          ),
+          const SizedBox(height: 4.0),
+          Text(
+            'BTC',
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).bodyLarge.override(
+                  fontFamily: 'InterTight',
+                  color: FlutterFlowTheme.of(context).info,
+                  fontSize: 18.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+          const SizedBox(height: 14.0),
+          _availabilityStatus(
+            context,
+            fakeBtcAvailableText: fakeBtcAvailableText,
+          ),
+          const SizedBox(height: 12.0),
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+            decoration: BoxDecoration(
+              color: _panelRaised,
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: _softBorder),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  'Send Max',
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'InterTight',
+                        color: amountExceedsAvailable
+                            ? FlutterFlowTheme.of(context).error
+                            : FlutterFlowTheme.of(context).info,
+                        fontSize: 17.0,
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+                const Spacer(),
+                Switch.adaptive(
+                  value: _model.switchValue!,
+                  onChanged: (newValue) async {
+                    safeSetState(() => _model.switchValue = newValue);
+                    if (newValue) {
+                      _model.sendMax = true;
+                      _model.amountText = fakeBtcAvailableForSend.toString();
+                      safeSetState(() {});
+                    } else {
+                      _model.sendMax = false;
+                      safeSetState(() {});
+                    }
+                  },
+                  activeThumbColor: FlutterFlowTheme.of(context).secondaryText,
+                  activeTrackColor: orange,
+                  inactiveTrackColor: _softBorder,
+                  inactiveThumbColor: _mutedText,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _availabilityStatus(
+    BuildContext context, {
+    required String fakeBtcAvailableText,
+  }) {
+    final showError = _model.notificationValue == 1;
+
+    return AnimatedSwitcher(
+      duration: 180.0.ms,
+      child: Text(
+        showError
+            ? 'AMOUNT EXCEEDS AVAILABLE BALANCE'
+            : 'Max available: $fakeBtcAvailableText',
+        key: ValueKey(showError),
+        textAlign: TextAlign.center,
+        style: FlutterFlowTheme.of(context).bodyMedium.override(
+              fontFamily: 'InterTight',
+              color:
+                  showError ? FlutterFlowTheme.of(context).primary : _mutedText,
+              fontSize: 14.0,
+              letterSpacing: 0.0,
+              fontWeight: FontWeight.w700,
+            ),
+      ),
+    );
+  }
+
+  Widget _keypadCard(BuildContext context) {
+    final keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0'];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: GridView(
+        padding: EdgeInsets.zero,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 12.0,
+          mainAxisSpacing: 12.0,
+          childAspectRatio: 2.04,
+        ),
+        primary: false,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        children: [
+          ...keys.map((keyValue) => _amountKeyButton(context, keyValue)),
+          _backspaceKeyButton(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _amountKeyButton(BuildContext context, String keyValue) {
+    return FFButtonWidget(
+      onPressed: () async {
+        _model.amountText = functions.applyKey(_model.amountText, keyValue, 8);
+        safeSetState(() {});
+      },
+      text: keyValue,
+      options: _keyButtonOptions(context),
+    );
+  }
+
+  Widget _backspaceKeyButton(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8.0),
+        onTap: () async {
+          _model.sendMax = false;
+          safeSetState(() {});
+          _model.amountText =
+              functions.applyKey(_model.amountText, 'BACKSPACE', 8);
+          safeSetState(() {});
+        },
+        child: Ink(
+          decoration: BoxDecoration(
+            color: FlutterFlowTheme.of(context).primary,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: const [
+              BoxShadow(
+                blurRadius: 4.0,
+                color: Color(0x33000000),
+                offset: Offset(0.0, 2.0),
+              ),
+            ],
+          ),
+          child: Icon(
+            Icons.keyboard_backspace_rounded,
+            color: FlutterFlowTheme.of(context).info,
+            size: 30.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  FFButtonOptions _keyButtonOptions(BuildContext context) {
+    return FFButtonOptions(
+      height: 52.0,
+      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+      iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+      color: FlutterFlowTheme.of(context).primary,
+      textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+            fontFamily: 'InterTight',
+            color: FlutterFlowTheme.of(context).info,
+            fontSize: 22.0,
+            letterSpacing: 0.0,
+            fontWeight: FontWeight.w800,
+          ),
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(8.0),
+    );
+  }
+
+  Widget _nextButton(
+    BuildContext context, {
+    required bool canContinue,
+    required double fakeBtcAvailableForSend,
+  }) {
+    return AnimatedOpacity(
+      opacity: canContinue ? 1.0 : 0.5,
+      duration: 250.0.ms,
+      curve: Curves.easeInOut,
+      child: FFButtonWidget(
+        onPressed: () async {
+          if ((functions.amountToDouble(_model.amountText) > 0.0) &&
+              (functions.amountToDouble(_model.amountText) <=
+                  fakeBtcAvailableForSend)) {
+            FFAppState().sendAmountBtc =
+                functions.formatBtc(_model.amountText)!;
+            safeSetState(() {});
+
+            context.pushNamed(DuressConfirmTransactionSendWidget.routeName);
+          } else {
+            _model.notificationValue = 1;
+            safeSetState(() {});
+            await Future.delayed(
+              const Duration(
+                milliseconds: 2000,
+              ),
+            );
+            _model.notificationValue = 0;
+            safeSetState(() {});
+          }
+        },
+        text: 'Next',
+        options: FFButtonOptions(
+          width: double.infinity,
+          height: 58.0,
+          padding: const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+          iconPadding:
+              const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+          color: FlutterFlowTheme.of(context).primary,
+          textStyle: FlutterFlowTheme.of(context).titleMedium.override(
+                fontFamily: 'InterTight',
+                color: FlutterFlowTheme.of(context).info,
+                letterSpacing: 0.0,
+                fontWeight: FontWeight.w800,
+              ),
+          elevation: 5.0,
+          borderSide: const BorderSide(
+            color: Colors.transparent,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(8.0),
         ),
       ),
     );
