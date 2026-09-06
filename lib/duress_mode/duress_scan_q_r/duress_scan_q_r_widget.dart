@@ -27,6 +27,8 @@ class DuressScanQRWidget extends StatefulWidget {
 }
 
 class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
+  static const _pageBackground = Color(0xFF080C0D);
+
   late DuressScanQRModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -60,9 +62,9 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: _pageBackground,
           appBar: AppBar(
-            backgroundColor: Color(0x001D2428),
+            backgroundColor: _pageBackground,
             automaticallyImplyLeading: false,
             leading: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),

@@ -30,6 +30,8 @@ class DuressSendBTCWidget extends StatefulWidget {
 }
 
 class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
+  static const _pageBackground = Color(0xFF080C0D);
+
   late DuressSendBTCModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -80,7 +82,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: _pageBackground,
           body: SafeArea(
             top: true,
             child: Column(
