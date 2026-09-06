@@ -9,19 +9,18 @@ import {
 const address = 'bc1qdestination000000000000000000000000000000';
 const secondAddress = '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy';
 
-test('seed destination lines include one possible transaction address', () => {
+test('seed destination lines include one transaction output address', () => {
   assert.deepEqual(seedDestinationLinesFromAlert({ destination_addresses: [address] }), [
-    'POSSIBLE TRANSACTION TO ADDRESS:',
-    address,
+    `TRANSACTION OUTPUT ADDRESS: ${address}`,
     '',
   ]);
 });
 
-test('seed destination lines include multiple possible transaction addresses', () => {
+test('seed destination lines include multiple transaction output addresses', () => {
   assert.deepEqual(
     seedDestinationLinesFromAlert({ destination_addresses: [address, secondAddress] }),
     [
-      'POSSIBLE TRANSACTION TO ADDRESSES:',
+      'TRANSACTION OUTPUT ADDRESSES:',
       `1. ${address}`,
       `2. ${secondAddress}`,
       '',

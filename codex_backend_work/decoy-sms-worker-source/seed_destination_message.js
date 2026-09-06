@@ -35,14 +35,13 @@ export function seedDestinationLinesFromAlert(alert, options = {}) {
 
   if (addresses.length === 1) {
     return [
-      'POSSIBLE TRANSACTION TO ADDRESS:',
-      addresses[0],
+      `TRANSACTION OUTPUT ADDRESS: ${addresses[0]}`,
       '',
     ];
   }
 
   return [
-    'POSSIBLE TRANSACTION TO ADDRESSES:',
+    'TRANSACTION OUTPUT ADDRESSES:',
     ...addresses.map((address, index) => `${index + 1}. ${address}`),
     '',
   ];
