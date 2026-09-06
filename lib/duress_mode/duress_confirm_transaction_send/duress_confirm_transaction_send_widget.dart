@@ -31,6 +31,11 @@ class DuressConfirmTransactionSendWidget extends StatefulWidget {
 class _DuressConfirmTransactionSendWidgetState
     extends State<DuressConfirmTransactionSendWidget> {
   static const _pageBackground = Color(0xFF080C0D);
+  static const _panelBackground = Color(0xFF121819);
+  static const _panelRaised = Color(0xFF1A2224);
+  static const _mutedText = Color(0xFF8C979A);
+  static const _softBorder = Color(0xFF253033);
+  static const _track = Color(0xFF101516);
 
   late DuressConfirmTransactionSendModel _model;
 
@@ -81,10 +86,59 @@ class _DuressConfirmTransactionSendWidgetState
     });
   }
 
+  void _resetSlider() {
+    _model.slideValue = 0.0;
+    _model.sliderValue = 0.0;
+    _model.slidePct = 0.0;
+    safeSetState(() {});
+  }
+
+  Future<void> _completeDuressSend(String sendAmountBtcForFlow) async {
+    if (_model.orderProcessed == 1) {
+      return;
+    }
+
+    final totalAfterFee =
+        functions.totalAfterFee(sendAmountBtcForFlow, _model.feeBtc);
+    if (totalAfterFee == '0') {
+      _resetSlider();
+      return;
+    }
+
+    _model.orderProcessed = 1;
+    FFAppState().sendAmountBtc = totalAfterFee;
+    _applyDuressSendBalance(sendAmountBtcForFlow);
+    FFAppState().txStartAt = getCurrentTimestamp;
+    FFAppState().txTotalMins = 60;
+    FFAppState().txStatus = 'awaiting';
+    safeSetState(() {});
+
+    context.pushNamed(
+      DuressOrderProcessedWidget.routeName,
+      queryParameters: {
+        'amountBtc': serializeParam(
+          totalAfterFee,
+          ParamType.String,
+        ),
+        'toAddress': serializeParam(
+          FFAppState().scannedAddress,
+          ParamType.String,
+        ),
+        'feeBtc': serializeParam(
+          _model.feeBtc,
+          ParamType.double,
+        ),
+      }.withoutNulls,
+    );
+
+    _resetSlider();
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
     final confirmTransactionBottomPadding = decoyBottomActionPadding(context);
+    final orange = FlutterFlowTheme.of(context).primary;
 
     final sendAmountBtcDisplayText = valueOrDefault<String>(
       formatNumber(
@@ -96,6 +150,9 @@ class _DuressConfirmTransactionSendWidgetState
     );
     final sendAmountBtcForFlow =
         sendAmountBtcDisplayText == '0' ? '0' : FFAppState().sendAmountBtc;
+    final feeText = functions.formatBtcTrim(_model.feeBtc.toString());
+    final totalText =
+        functions.totalAfterFee(sendAmountBtcForFlow, _model.feeBtc);
 
     return GestureDetector(
       onTap: () {
@@ -111,600 +168,447 @@ class _DuressConfirmTransactionSendWidgetState
             top: true,
             child: DecoyBottomSafeScroll(
               bottomPadding: confirmTransactionBottomPadding,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-                        child: FlutterFlowIconButton(
-                          borderRadius: 20.0,
-                          buttonSize: 40.0,
-                          icon: Icon(
-                            Icons.arrow_back_rounded,
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            size: 24.0,
-                          ),
-                          onPressed: () async {
-                            context.safePop();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(24.0),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                  20.0,
+                  18.0,
+                  20.0,
+                  0.0,
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 390.0),
                     child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Stack(
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Confirm Transaction',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .override(
-                                            fontFamily: 'hello',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                    ),
-                                    Text(
-                                      'Please review your transaction details',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'hello',
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                            letterSpacing: 0.0,
-                                          ),
-                                    ),
-                                  ].divide(SizedBox(height: 16.0)),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(24.0),
-                                    child: Container(
-                                      width: 300.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(0x9D343739),
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      '${functions.formatBtcTrim(sendAmountBtcForFlow)}',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .displayMedium
-                                                          .override(
-                                                            fontFamily: 'hello',
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryBackground,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      'BTC',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .displayMedium
-                                                          .override(
-                                                            fontFamily: 'hello',
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryBackground,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Text(
-                                                  '≈ ${functions.btcToUsdDisplay(sendAmountBtcForFlow, FFAppState().currentPriceMultiple)} USD',
-                                                  textAlign: TextAlign.center,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyLarge
-                                                      .override(
-                                                        fontFamily: 'hello',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondaryText,
-                                                        letterSpacing: 0.0,
-                                                      ),
-                                                ),
-                                              ].divide(SizedBox(height: 8.0)),
-                                            ),
-                                          ].divide(SizedBox(height: 24.0)),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Container(
-                                    width: 350.0,
-                                    decoration: BoxDecoration(
-                                      color: Color(0x9D343739),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(16.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Network Fee',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'hello',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          letterSpacing: 0.0,
-                                                        ),
-                                              ),
-                                              Text(
-                                                functions.formatBtcTrim(
-                                                    _model.feeBtc.toString()),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'hello',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Total Amount',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'hello',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                              ),
-                                              Text(
-                                                functions.totalAfterFee(
-                                                    sendAmountBtcForFlow,
-                                                    _model.feeBtc),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'hello',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                              ),
-                                            ],
-                                          ),
-                                          Divider(
-                                            thickness: 1.0,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'To Address',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'hello',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryBackground,
-                                                          letterSpacing: 0.0,
-                                                        ),
-                                              ),
-                                              Text(
-                                                functions.maskAddress(
-                                                    FFAppState().scannedAddress,
-                                                    6,
-                                                    6),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'hello',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                              ),
-                                            ],
-                                          ),
-                                        ].divide(SizedBox(height: 12.0)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: GestureDetector(
-                                        onHorizontalDragUpdate:
-                                            (details) async {
-                                          _model.slidePct =
-                                              details.globalPosition.dx;
-                                          safeSetState(() {});
-                                          _model.slidePct = _model.sliderValue!;
-                                          safeSetState(() {});
-                                          if ((_model.slidePct >= 100.0) &&
-                                              (functions.totalAfterFee(
-                                                      sendAmountBtcForFlow,
-                                                      _model.feeBtc) !=
-                                                  '0')) {
-                                            FFAppState().sendAmountBtc =
-                                                functions.totalAfterFee(
-                                                    sendAmountBtcForFlow,
-                                                    _model.feeBtc);
-                                            _applyDuressSendBalance(
-                                                sendAmountBtcForFlow);
-                                            FFAppState().txStartAt =
-                                                getCurrentTimestamp;
-                                            FFAppState().txTotalMins = 60;
-                                            FFAppState().txStatus = 'awaiting';
-                                            safeSetState(() {});
-
-                                            context.pushNamed(
-                                              DuressOrderProcessedWidget
-                                                  .routeName,
-                                              queryParameters: {
-                                                'amountBtc': serializeParam(
-                                                  functions.totalAfterFee(
-                                                      sendAmountBtcForFlow,
-                                                      _model.feeBtc),
-                                                  ParamType.String,
-                                                ),
-                                                'toAddress': serializeParam(
-                                                  FFAppState().scannedAddress,
-                                                  ParamType.String,
-                                                ),
-                                                'feeBtc': serializeParam(
-                                                  _model.feeBtc,
-                                                  ParamType.double,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-
-                                            _model.slideValue = 0.0;
-                                            safeSetState(() {});
-                                            _model.slidePct = 0.0;
-                                            safeSetState(() {});
-                                          } else {
-                                            _model.slideValue = 0.0;
-                                            safeSetState(() {});
-                                            safeSetState(() {
-                                              _model.sliderValue = 0.0;
-                                            });
-                                            _model.slidePct = 0.0;
-                                            safeSetState(() {});
-                                          }
-                                        },
-                                        child: Container(
-                                          width: 325.0,
-                                          height: 60.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .accent1,
-                                            borderRadius:
-                                                BorderRadius.circular(30.0),
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            child: Stack(
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Container(
-                                                    width: double.infinity,
-                                                    height: 100.0,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              32.0),
-                                                      shape: BoxShape.rectangle,
-                                                    ),
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          'Slide to Sign and Send',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'hello',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondaryText,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          valueOrDefault<
-                                                              double>(
-                                                            functions
-                                                                .alignXFromPercent(
-                                                                    _model
-                                                                        .slidePct),
-                                                            0.0,
-                                                          ),
-                                                          0.0),
-                                                  child: Container(
-                                                    width: 60.0,
-                                                    height: 60.0,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Icon(
-                                                        Icons
-                                                            .arrow_forward_rounded,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .info,
-                                                        size: 24.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Opacity(
-                                                  opacity: 0.01,
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      child: Slider(
-                                                        activeColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        inactiveColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .alternate,
-                                                        min: 0.0,
-                                                        max: 100.0,
-                                                        value: _model
-                                                                .sliderValue ??=
-                                                            _model.slideValue,
-                                                        onChanged:
-                                                            (newValue) async {
-                                                          safeSetState(() =>
-                                                              _model.sliderValue =
-                                                                  newValue);
-                                                          _model.slidePct =
-                                                              _model
-                                                                  .sliderValue!;
-                                                          safeSetState(() {});
-                                                          if ((_model.sliderValue! >=
-                                                                  100.0) &&
-                                                              (functions.totalAfterFee(
-                                                                      sendAmountBtcForFlow,
-                                                                      _model
-                                                                          .feeBtc) !=
-                                                                  '0')) {
-                                                            FFAppState()
-                                                                    .sendAmountBtc =
-                                                                functions.totalAfterFee(
-                                                                    sendAmountBtcForFlow,
-                                                                    _model
-                                                                        .feeBtc);
-                                                            _applyDuressSendBalance(
-                                                                sendAmountBtcForFlow);
-                                                            safeSetState(() {});
-                                                            FFAppState()
-                                                                    .txStartAt =
-                                                                getCurrentTimestamp;
-                                                            FFAppState()
-                                                                .txTotalMins = 60;
-                                                            FFAppState()
-                                                                    .txStatus =
-                                                                'awaiting';
-                                                            safeSetState(() {});
-
-                                                            context.pushNamed(
-                                                              DuressOrderProcessedWidget
-                                                                  .routeName,
-                                                              queryParameters: {
-                                                                'amountBtc':
-                                                                    serializeParam(
-                                                                  functions.totalAfterFee(
-                                                                      sendAmountBtcForFlow,
-                                                                      _model
-                                                                          .feeBtc),
-                                                                  ParamType
-                                                                      .String,
-                                                                ),
-                                                                'toAddress':
-                                                                    serializeParam(
-                                                                  FFAppState()
-                                                                      .scannedAddress,
-                                                                  ParamType
-                                                                      .String,
-                                                                ),
-                                                                'feeBtc':
-                                                                    serializeParam(
-                                                                  _model.feeBtc,
-                                                                  ParamType
-                                                                      .double,
-                                                                ),
-                                                              }.withoutNulls,
-                                                            );
-
-                                                            _model.slideValue =
-                                                                0.0;
-                                                            safeSetState(() {});
-                                                            _model.slidePct =
-                                                                0.0;
-                                                            safeSetState(() {});
-                                                          } else {
-                                                            _model.slideValue =
-                                                                0.0;
-                                                            safeSetState(() {});
-                                                            safeSetState(() {
-                                                              _model.sliderValue =
-                                                                  0.0;
-                                                            });
-                                                          }
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ].divide(SizedBox(height: 16.0)),
-                                ),
-                              ].divide(SizedBox(height: 24.0)),
-                            ),
-                          ],
+                        _topBar(context),
+                        const SizedBox(height: 34.0),
+                        _titleBlock(context, orange),
+                        const SizedBox(height: 22.0),
+                        _amountCard(
+                          context,
+                          orange: orange,
+                          amountBtc: sendAmountBtcForFlow,
                         ),
-                      ]
-                          .divide(SizedBox(height: 48.0))
-                          .addToStart(SizedBox(height: 12.0))
-                          .addToEnd(SizedBox(height: 24.0)),
+                        const SizedBox(height: 16.0),
+                        _detailsCard(
+                          context,
+                          orange: orange,
+                          feeText: feeText,
+                          totalText: totalText,
+                        ),
+                        const SizedBox(height: 18.0),
+                        _slideToSendControl(
+                          context,
+                          orange: orange,
+                          sendAmountBtcForFlow: sendAmountBtcForFlow,
+                        ),
+                        const SizedBox(height: 18.0),
+                      ],
                     ),
                   ),
-                ].addToEnd(SizedBox(height: 24.0)),
+                ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _topBar(BuildContext context) {
+    return Row(
+      children: [
+        FlutterFlowIconButton(
+          borderRadius: 20.0,
+          buttonSize: 40.0,
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: FlutterFlowTheme.of(context).info,
+            size: 26.0,
+          ),
+          onPressed: () async {
+            context.safePop();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _titleBlock(BuildContext context, Color orange) {
+    return Column(
+      children: [
+        Container(
+          width: 62.0,
+          height: 62.0,
+          decoration: BoxDecoration(
+            color: orange.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(
+              color: orange.withValues(alpha: 0.42),
+              width: 1.2,
+            ),
+          ),
+          child: Icon(
+            Icons.verified_user_outlined,
+            color: orange,
+            size: 32.0,
+          ),
+        ),
+        const SizedBox(height: 18.0),
+        Text(
+          'Confirm Transaction',
+          textAlign: TextAlign.center,
+          style: FlutterFlowTheme.of(context).headlineMedium.override(
+                fontFamily: 'InterTight',
+                color: FlutterFlowTheme.of(context).info,
+                fontSize: 31.0,
+                letterSpacing: 0.0,
+                fontWeight: FontWeight.w800,
+              ),
+        ),
+        const SizedBox(height: 7.0),
+        Text(
+          'Review details before broadcast',
+          textAlign: TextAlign.center,
+          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                fontFamily: 'InterTight',
+                color: _mutedText,
+                fontSize: 14.0,
+                letterSpacing: 0.0,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _amountCard(
+    BuildContext context, {
+    required Color orange,
+    required String amountBtc,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18.0, 22.0, 18.0, 20.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Amount',
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: _mutedText,
+                  fontSize: 12.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+          const SizedBox(height: 10.0),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${functions.formatBtcTrim(amountBtc)} BTC',
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              style: FlutterFlowTheme.of(context).displayMedium.override(
+                    fontFamily: 'InterTight',
+                    color: FlutterFlowTheme.of(context).info,
+                    fontSize: 56.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w900,
+                  ),
+            ),
+          ),
+          const SizedBox(height: 9.0),
+          Text(
+            '≈ ${functions.btcToUsdDisplay(amountBtc, FFAppState().currentPriceMultiple)} USD',
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: FlutterFlowTheme.of(context).bodyLarge.override(
+                  fontFamily: 'InterTight',
+                  color: _mutedText,
+                  fontSize: 17.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            children: [
+              Expanded(
+                child: _metricPill(
+                  context,
+                  label: 'Network',
+                  value: 'Bitcoin',
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              Expanded(
+                child: _metricPill(
+                  context,
+                  label: 'Status',
+                  value: 'Ready',
+                  accent: orange,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailsCard(
+    BuildContext context, {
+    required Color orange,
+    required String feeText,
+    required String totalText,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: _panelBackground,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          _detailRow(context, label: 'Network Fee', value: '$feeText BTC'),
+          _divider(),
+          _detailRow(
+            context,
+            label: 'Total Amount',
+            value: '$totalText BTC',
+            strong: true,
+          ),
+          _divider(),
+          _detailRow(
+            context,
+            label: 'To Address',
+            value: functions.maskAddress(FFAppState().scannedAddress, 8, 8),
+            accent: orange,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _slideToSendControl(
+    BuildContext context, {
+    required Color orange,
+    required String sendAmountBtcForFlow,
+  }) {
+    final sliderValue = (_model.sliderValue ?? _model.slideValue).clamp(
+      0.0,
+      100.0,
+    );
+    final progress = (sliderValue / 100.0).clamp(0.0, 1.0);
+
+    return Container(
+      width: double.infinity,
+      height: 72.0,
+      padding: const EdgeInsets.all(6.0),
+      decoration: BoxDecoration(
+        color: _track,
+        borderRadius: BorderRadius.circular(36.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: FractionallySizedBox(
+              widthFactor: progress,
+              child: Container(
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: orange.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+            ),
+          ),
+          Text(
+            'Slide to Sign and Send',
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: _mutedText,
+                  fontSize: 15.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(
+              valueOrDefault<double>(
+                functions.alignXFromPercent(sliderValue),
+                0.0,
+              ),
+              0.0,
+            ),
+            child: Container(
+              width: 60.0,
+              height: 60.0,
+              decoration: BoxDecoration(
+                color: orange,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: orange.withValues(alpha: 0.34),
+                    blurRadius: 18.0,
+                    offset: const Offset(0.0, 7.0),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.arrow_forward_rounded,
+                color: FlutterFlowTheme.of(context).info,
+                size: 31.0,
+              ),
+            ),
+          ),
+          Opacity(
+            opacity: 0.01,
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                trackHeight: 60.0,
+                thumbShape: const RoundSliderThumbShape(
+                  enabledThumbRadius: 30.0,
+                ),
+                overlayShape: SliderComponentShape.noOverlay,
+              ),
+              child: Slider(
+                activeColor: orange,
+                inactiveColor: _softBorder,
+                min: 0.0,
+                max: 100.0,
+                value: sliderValue,
+                onChanged: (newValue) async {
+                  _model.sliderValue = newValue;
+                  _model.slideValue = newValue;
+                  _model.slidePct = newValue;
+                  safeSetState(() {});
+
+                  if (newValue >= 100.0) {
+                    await _completeDuressSend(sendAmountBtcForFlow);
+                  }
+                },
+                onChangeEnd: (newValue) async {
+                  if (newValue < 100.0) {
+                    _resetSlider();
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _metricPill(
+    BuildContext context, {
+    required String label,
+    required String value,
+    Color? accent,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+      decoration: BoxDecoration(
+        color: _panelRaised,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: _softBorder),
+      ),
+      child: Column(
+        children: [
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: _mutedText,
+                  fontSize: 11.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+          const SizedBox(height: 4.0),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'InterTight',
+                  color: accent ?? FlutterFlowTheme.of(context).info,
+                  fontSize: 15.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailRow(
+    BuildContext context, {
+    required String label,
+    required String value,
+    Color? accent,
+    bool strong = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 11.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'InterTight',
+                    color: _mutedText,
+                    fontSize: 13.0,
+                    letterSpacing: 0.0,
+                    fontWeight: strong ? FontWeight.w800 : FontWeight.w600,
+                  ),
+            ),
+          ),
+          const SizedBox(width: 14.0),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'InterTight',
+                    color: accent ?? FlutterFlowTheme.of(context).info,
+                    fontSize: strong ? 14.0 : 13.0,
+                    letterSpacing: 0.0,
+                    fontWeight: strong ? FontWeight.w900 : FontWeight.w800,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _divider() {
+    return Container(
+      height: 1.0,
+      color: _softBorder,
     );
   }
 }
