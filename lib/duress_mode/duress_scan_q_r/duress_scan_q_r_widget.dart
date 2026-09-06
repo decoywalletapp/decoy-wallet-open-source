@@ -108,15 +108,15 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _topBar(context),
-                        const SizedBox(height: 28.0),
+                        const SizedBox(height: 18.0),
                         _titleBlock(context, orange),
-                        const SizedBox(height: 20.0),
-                        _scannerCard(context, orange),
                         const SizedBox(height: 16.0),
+                        _scannerCard(context, orange),
+                        const SizedBox(height: 12.0),
                         _manualAddressCard(context, orange),
-                        const SizedBox(height: 18.0),
+                        const SizedBox(height: 14.0),
                         _sendFundsButton(context),
-                        const SizedBox(height: 18.0),
+                        const SizedBox(height: 12.0),
                       ],
                     ),
                   ),
@@ -151,24 +151,6 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
   Widget _titleBlock(BuildContext context, Color orange) {
     return Column(
       children: [
-        Container(
-          width: 62.0,
-          height: 62.0,
-          decoration: BoxDecoration(
-            color: orange.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(
-              color: orange.withValues(alpha: 0.42),
-              width: 1.2,
-            ),
-          ),
-          child: Icon(
-            Icons.qr_code_scanner_rounded,
-            color: orange,
-            size: 32.0,
-          ),
-        ),
-        const SizedBox(height: 18.0),
         Text(
           'Send Bitcoin',
           textAlign: TextAlign.center,
@@ -197,12 +179,15 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
   }
 
   Widget _scannerCard(BuildContext context, Color orange) {
+    final scanFrameHeight =
+        (MediaQuery.sizeOf(context).height * 0.29).clamp(212.0, 260.0);
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _scanQrCode,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 18.0),
+        padding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 16.0),
         decoration: BoxDecoration(
           color: _panelBackground,
           borderRadius: BorderRadius.circular(8.0),
@@ -225,9 +210,9 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                 ),
               ],
             ),
-            const SizedBox(height: 22.0),
-            AspectRatio(
-              aspectRatio: 1.16,
+            const SizedBox(height: 14.0),
+            SizedBox(
+              height: scanFrameHeight.toDouble(),
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -257,8 +242,8 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                       ),
                     ),
                     Container(
-                      width: 116.0,
-                      height: 116.0,
+                      width: 96.0,
+                      height: 96.0,
                       decoration: BoxDecoration(
                         color: orange.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(8.0),
@@ -271,7 +256,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                         color: FlutterFlowTheme.of(context)
                             .info
                             .withValues(alpha: 0.74),
-                        size: 56.0,
+                        size: 48.0,
                       ),
                     ),
                     Positioned(
@@ -289,7 +274,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                 ),
               ),
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 12.0),
             Text(
               'Tap to open QR scanner',
               textAlign: TextAlign.center,
@@ -325,7 +310,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
         color: _panelBackground,
         borderRadius: BorderRadius.circular(8.0),
@@ -349,7 +334,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
               ),
             ],
           ),
-          const SizedBox(height: 14.0),
+          const SizedBox(height: 12.0),
           TextFormField(
             controller: _model.walletAddressTextController,
             focusNode: _model.walletAddressFocusNode,
