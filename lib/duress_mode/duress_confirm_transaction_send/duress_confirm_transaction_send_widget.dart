@@ -30,6 +30,8 @@ class DuressConfirmTransactionSendWidget extends StatefulWidget {
 
 class _DuressConfirmTransactionSendWidgetState
     extends State<DuressConfirmTransactionSendWidget> {
+  static const _pageBackground = Color(0xFF080C0D);
+
   late DuressConfirmTransactionSendModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -104,7 +106,7 @@ class _DuressConfirmTransactionSendWidgetState
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
+          backgroundColor: _pageBackground,
           body: SafeArea(
             top: true,
             child: DecoyBottomSafeScroll(
