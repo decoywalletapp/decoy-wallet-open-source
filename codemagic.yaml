@@ -154,7 +154,7 @@ workflows:
           IOS_BUILD_NUMBER="$(date -u +%Y%m%d%H%M%S)"
           echo "Using iOS/TestFlight build number: $IOS_BUILD_NUMBER"
           flutter build ipa --release \
-            --build-name=1.0.1 \
+            --build-name=1.0.13 \
             --build-number=$IOS_BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
 
