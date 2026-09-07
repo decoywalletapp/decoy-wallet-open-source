@@ -342,6 +342,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => ControlCenterWidget(),
       ),
       FFRoute(
+        name: DecoyKeysAdvancedWidget.routeName,
+        path: DecoyKeysAdvancedWidget.routePath,
+        builder: (context, params) => DecoyKeysAdvancedWidget(),
+      ),
+      FFRoute(
         name: DecoyPinSystemValuesWidget.routeName,
         path: DecoyPinSystemValuesWidget.routePath,
         builder: (context, params) => Container(

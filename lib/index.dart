@@ -57,6 +57,8 @@ export '/settings_pages/support_ticket/support_ticket_widget.dart'
     show SupportTicketWidget;
 export '/settings_pages/control_center/control_center_widget.dart'
     show ControlCenterWidget;
+export '/settings_pages/decoy_keys_advanced/decoy_keys_advanced_widget.dart'
+    show DecoyKeysAdvancedWidget;
 export '/pin_pages/decoy_pin_system_values/decoy_pin_system_values_widget.dart'
     show DecoyPinSystemValuesWidget;
 export '/create_decoy_seed/decoy_seed_system_values/decoy_seed_system_values_widget.dart'

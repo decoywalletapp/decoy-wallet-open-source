@@ -185,6 +185,7 @@ class _DecoySeedSystemValuesWidgetState
         xpub: FFAppState().draftXpub.trim(),
         watchPublicKey: watchPublicKey,
         watchPublicKeyType: watchPublicKeyType,
+        sourceType: FFAppState().draftWatchSourceType.trim(),
       );
     } catch (e) {
       _debugLog('commitDecoy failed: $e');
@@ -287,35 +288,47 @@ class _DecoySeedSystemValuesWidgetState
     String value,
     Color valueColor,
   ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          child: Text(
-            label,
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                  fontSize: 16.0,
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                ),
-          ),
-        ),
-        Text(
-          value,
-          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                color: valueColor,
-                fontSize: 16.0,
-                letterSpacing: 0.0,
-                fontWeight: FontWeight.w600,
-                useGoogleFonts:
-                    !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+    return SizedBox(
+      height: 28.0,
+      child: Row(
+        children: [
+          Expanded(
+            child: Align(
+              alignment: AlignmentDirectional(0.0, 0.0),
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                      fontSize: 16.0,
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w600,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                    ),
               ),
-        ),
-      ].divide(SizedBox(width: 16.0)),
+            ),
+          ),
+          Expanded(
+            child: Align(
+              alignment: AlignmentDirectional(0.0, 0.0),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                      color: valueColor,
+                      fontSize: 16.0,
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w600,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                    ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

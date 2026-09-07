@@ -183,6 +183,8 @@ void main() {
     expect(source, contains('xpub: FFAppState().draftXpub.trim()'));
     expect(source, contains('watchPublicKey: watchPublicKey'));
     expect(source, contains('watchPublicKeyType: watchPublicKeyType'));
+    expect(source,
+        contains('sourceType: FFAppState().draftWatchSourceType.trim()'));
   });
 
   test('commit JSON escaping preserves address-list watch keys', () async {
@@ -229,10 +231,27 @@ void main() {
     expect(source, contains('Icons.key'));
     expect(source, contains("'decoy_seed_armed'"));
     expect(source, contains('seedMonitorArmTileValue'));
+    expect(source, contains('DecoyKeysAdvancedWidget.routeName'));
     expect(source, isNot(contains('_isWatchOnlySeedMonitor')));
     expect(source, isNot(contains("'Watch-Only Triggers'")));
     expect(source, isNot(contains("'Decoy Seed Triggers'")));
     expect(source, isNot(contains('Icons.visibility_outlined')));
+  });
+
+  test('decoy keys advanced page manages individual monitors only', () {
+    final source = File(
+      'lib/settings_pages/decoy_keys_advanced/'
+      'decoy_keys_advanced_widget.dart',
+    ).readAsStringSync();
+    final navSource = File('lib/flutter_flow/nav/nav.dart').readAsStringSync();
+
+    expect(navSource, contains('DecoyKeysAdvancedWidget.routeName'));
+    expect(source, contains('ManageDecoyMonitorsCall.call'));
+    expect(source, contains("'setActive'"));
+    expect(source, contains("'delete'"));
+    expect(source, contains('Most Recent Seed Generated'));
+    expect(source, isNot(contains('SendEmergencyAlertsCall')));
+    expect(source, isNot(contains('decoyPin')));
   });
 
   test('decoy keys setup completion uses the shared monitor toggle wording',

@@ -1363,6 +1363,48 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         ),
                                       ),
                                     ),
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: FFButtonWidget(
+                                        onPressed: () async {
+                                          context.pushNamed(
+                                            DecoyKeysAdvancedWidget.routeName,
+                                          );
+                                        },
+                                        text: 'Advanced',
+                                        options: FFButtonOptions(
+                                          width: 180.0,
+                                          height: 42.0,
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 0.0, 16.0, 0.0),
+                                          iconPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 0.0),
+                                          color: Colors.white,
+                                          textStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .titleSmall
+                                              .override(
+                                                fontFamily: 'InterTight',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                fontSize: 16.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                          elevation: 0.0,
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            width: 1.5,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                      ),
+                                    ),
                                   ].divide(SizedBox(height: 16.0)),
                                 ),
                               ),

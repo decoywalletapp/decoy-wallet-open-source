@@ -32,8 +32,7 @@ class SendEmergencyAlertsCall {
     final baseUrl = DecoyAlertGroup.getBaseUrl();
 
     final contacts = _serializeJson(contactsJson);
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "userId": "${escapeStringForJson(userId)}",
   "triggerType": "${escapeStringForJson(triggerId)}",
@@ -72,8 +71,7 @@ class SendVerificationCodeCall {
     String? cleanPhone = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "phone": "${cleanPhone}"
 }''';
@@ -111,8 +109,7 @@ class CheckVerificationCodeCall {
     String? code = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "phone": "${cleanPhone}",
   "code": "${code}"
@@ -219,8 +216,7 @@ class SetPINCall {
     String? pin = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "type": "${escapeStringForJson(type)}",
   "pin": "${escapeStringForJson(pin)}"
@@ -260,8 +256,7 @@ class VerifyPINCall {
     String? pin = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "pin": "${pin}"
 }''';
@@ -300,8 +295,7 @@ class WrapDataKeyCall {
     String? dataKeyB64 = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "dataKeyB64": "${escapeStringForJson(dataKeyB64)}"
 }''';
@@ -335,8 +329,7 @@ class SendSupportTicketCall {
     String? subject = '',
     String? message = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "userEmail": "${escapeStringForJson(userEmail)}",
   "subject": "${escapeStringForJson(subject)}",
@@ -367,8 +360,7 @@ class CreateCheckoutSessionCall {
     int? trialEnd,
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(currentUserUid)}",
   "billing_interval": "${escapeStringForJson(billingInterval)}",
@@ -408,8 +400,7 @@ class CreateBTCPayInvoiceCall {
     String? billingInterval = 'monthly',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(currentUserUid)}",
   "billing_interval": "${escapeStringForJson(billingInterval)}"
@@ -446,8 +437,7 @@ class CreateBillingPortalSessionCall {
     String? returnUrl = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
 "customer_id": "${escapeStringForJson(customerId)}",
 "user_id": "${escapeStringForJson(userId)}",
@@ -483,8 +473,7 @@ class WrapDataKeyUnwrapCall {
     String? wrappedB64 = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "wrappedB64": "${escapeStringForJson(wrappedB64)}"
 }''';
@@ -514,8 +503,7 @@ class GetPhoneHashCall {
     String? cleanPhone = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "cleanPhone": "${escapeStringForJson(cleanPhone)}"
 }''';
@@ -550,8 +538,7 @@ class GetEmailHashCall {
     String? email = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "email": "${escapeStringForJson(email)}"
 }''';
@@ -590,8 +577,7 @@ class InsertAlertLogRestCall {
     String? locNonceB64 = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userId)}",
   "trigger_type": "PIN_DECOY",
@@ -659,8 +645,7 @@ class RegisterDecoyCall {
     String? decoyId = '',
     String? addr0 = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "id": "${escapeStringForJson(decoyId)}",
   "derivation_path": "m/84'/0'/0'",
@@ -696,18 +681,19 @@ class CommitDecoyCall {
     String? xpub = '',
     String? watchPublicKey = '',
     String? watchPublicKeyType = '',
+    String? sourceType = '',
   }) async {
     final addresses = _serializeList(addressesList);
 
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "decoyId": "${escapeStringForJson(decoyId)}",
   "derivation_path": "${escapeStringForJson(derivationPath)}",
   "addresses": ${addresses},
   "xpub": "${escapeStringForJson(xpub)}",
   "watch_public_key": "${escapeStringForJson(watchPublicKey)}",
-  "watch_public_key_type": "${escapeStringForJson(watchPublicKeyType)}"
+  "watch_public_key_type": "${escapeStringForJson(watchPublicKeyType)}",
+  "source_type": "${escapeStringForJson(sourceType)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'commitDecoy',
@@ -730,13 +716,54 @@ class CommitDecoyCall {
   }
 }
 
+class ManageDecoyMonitorsCall {
+  static Future<ApiCallResponse> call({
+    String? jwt = '',
+    String? action = 'list',
+    String? monitorId = '',
+    bool? active,
+  }) async {
+    final activeJson = active == null ? 'null' : active.toString();
+    final ffApiRequestBody = '''
+{
+  "action": "${escapeStringForJson(action)}",
+  "monitorId": "${escapeStringForJson(monitorId)}",
+  "active": ${activeJson}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'manageDecoyMonitors',
+      apiUrl: supabaseFunctionUrl('manage-decoy-monitors'),
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static List? monitors(dynamic response) =>
+      getJsonField(response, r'''$.monitors''', true) as List?;
+  static bool? masterArmed(dynamic response) =>
+      castToType<bool>(getJsonField(response, r'''$.masterArmed'''));
+  static dynamic error(dynamic response) =>
+      getJsonField(response, r'''$.error''');
+}
+
 class CheckPhoneTakenCall {
   static Future<ApiCallResponse> call({
     String? jwt = '',
     String? phoneHash = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
 "phoneHash": "${escapeStringForJson(phoneHash)}"
 }''';
@@ -770,8 +797,7 @@ class FinalizeStripeSwitchCall {
     String? sessionId = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
 "user_id": "${escapeStringForJson(userId)}",
 "session_id": "${escapeStringForJson(sessionId)}"
@@ -803,8 +829,7 @@ class ScheduleBtcpaySwitchCall {
     String? currentUserUid = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "p_user_id": "${escapeStringForJson(currentUserUid)}"
 }''';
@@ -838,8 +863,7 @@ class FinalizeBtcpaySwitchCall {
     String? userId = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userId)}"
 }''';
@@ -870,8 +894,7 @@ class RepairStripeEntitlementCall {
     String? userId = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userId)}"
 }''';
@@ -906,8 +929,7 @@ class CreateConsentRequestCall {
     String? phoneNumber = '',
     String? jwt = '',
   }) async {
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "userId": "${escapeStringForJson(userId)}",
   "contactSlot": ${contactSlot},
@@ -1010,8 +1032,7 @@ class SyncConsentSlotsCall {
     dynamic slotsJsonJson,
   }) async {
     final slotsJson = _serializeJson(slotsJsonJson, true);
-    final ffApiRequestBody =
-        '''
+    final ffApiRequestBody = '''
 {
   "slots": ${slotsJson}
 }''';
