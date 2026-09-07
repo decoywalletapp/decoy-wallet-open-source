@@ -85,6 +85,48 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
     safeSetState(() {});
   }
 
+  bool get _isWatchOnlySeedMonitor {
+    final monitorRow = _model.decoySeedMonitorRows?.elementAtOrNull(0);
+    if (monitorRow == null) {
+      return false;
+    }
+
+    final sourceType = monitorRow.getField<String>('source_type')?.trim() ?? '';
+    if (sourceType.isNotEmpty) {
+      return sourceType != 'generated-seed';
+    }
+
+    final watchPublicKeyType = monitorRow.watchPublicKeyType?.trim() ?? '';
+    final hasWatchPublicKey =
+        (monitorRow.watchPublicKey?.trim().isNotEmpty ?? false);
+    final generatedSeedXpub = monitorRow.xpub?.trim() ?? '';
+
+    return watchPublicKeyType == 'bitcoin-address-list' ||
+        (hasWatchPublicKey &&
+            watchPublicKeyType.isNotEmpty &&
+            generatedSeedXpub.isEmpty);
+  }
+
+  String get _seedMonitorSectionTitle =>
+      _isWatchOnlySeedMonitor ? 'Watch-Only Triggers' : 'Decoy Seed Triggers';
+
+  IconData get _seedMonitorIcon =>
+      _isWatchOnlySeedMonitor ? Icons.visibility_outlined : Icons.key;
+
+  String get _seedMonitorTileTitle => _isWatchOnlySeedMonitor
+      ? 'Wallet Activity Monitor'
+      : 'Seed Phrase Monitor';
+
+  String get _seedMonitorTileSubtitle => _isWatchOnlySeedMonitor
+      ? 'ARM TO ACTIVELY MONITOR OUTBOUND TRANSACTIONS'
+      : 'Armed = Trigger is active and monitoring outbound transactions';
+
+  String get _seedMonitorOnStatus =>
+      _isWatchOnlySeedMonitor ? 'ACTIVATED' : 'ARMED';
+
+  String get _seedMonitorOffStatus =>
+      _isWatchOnlySeedMonitor ? 'DEACTIVATED' : 'DISARMED';
+
   @override
   void initState() {
     super.initState();
@@ -109,6 +151,26 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       FFAppState().locationEnabled =
           _model.decoyWalletRow!.elementAtOrNull(0)!.useCurrentLocation!;
       safeSetState(() {});
+      final decoySeedDecoyId =
+          _model.decoyWalletRow?.elementAtOrNull(0)?.decoySeedDecoyId?.trim() ??
+              '';
+      if (decoySeedDecoyId.isNotEmpty) {
+        try {
+          final decoySeedMonitorRow = await SupaFlow.client
+              .from('decoys')
+              .select('id,xpub,watch_public_key,watch_public_key_type')
+              .eq('id', decoySeedDecoyId)
+              .eq('user_id', currentUserUid)
+              .limit(1)
+              .maybeSingle();
+          _model.decoySeedMonitorRows = [
+            if (decoySeedMonitorRow != null) DecoysRow(decoySeedMonitorRow),
+          ];
+          safeSetState(() {});
+        } catch (error) {
+          debugPrint('Control Center monitor label lookup failed: $error');
+        }
+      }
       _model.ctrlOutputEntitlements = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(
@@ -1019,7 +1081,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     Align(
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Text(
-                                        'Decoy Seed Triggers',
+                                        _seedMonitorSectionTitle,
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
@@ -1055,7 +1117,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               alignment: AlignmentDirectional(
                                                   0.0, 0.0),
                                               child: Icon(
-                                                Icons.key,
+                                                _seedMonitorIcon,
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .info,
@@ -1082,7 +1144,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     newValue);
                                               },
                                         title: Text(
-                                          'Seed Phrase Monitor',
+                                          _seedMonitorTileTitle,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -1093,7 +1155,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               ),
                                         ),
                                         subtitle: Text(
-                                          'Armed = Trigger is active and monitoring outbound transactions',
+                                          _seedMonitorTileSubtitle,
                                           style: FlutterFlowTheme.of(context)
                                               .bodySmall
                                               .override(
@@ -1286,7 +1348,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'ARMED',
+                                                          _seedMonitorOnStatus,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -1318,7 +1380,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'DISARMED',
+                                                          _seedMonitorOffStatus,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium

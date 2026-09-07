@@ -217,4 +217,18 @@ void main() {
     expect(source, contains('enabled test builds only'));
     expect(source, contains('prepareWatchOnlyDecoyDraft'));
   });
+
+  test('control center exposes the watch-only monitor using the seed arm state',
+      () {
+    final source = File(
+      'lib/settings_pages/control_center/control_center_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('_isWatchOnlySeedMonitor'));
+    expect(source, contains("'Watch-Only Triggers'"));
+    expect(source, contains("'Wallet Activity Monitor'"));
+    expect(source, contains('Icons.visibility_outlined'));
+    expect(source, contains("'decoy_seed_armed'"));
+    expect(source, contains('seedMonitorArmTileValue'));
+  });
 }
