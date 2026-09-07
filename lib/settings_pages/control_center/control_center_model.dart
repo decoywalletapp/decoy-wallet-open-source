@@ -21,8 +21,6 @@ class ControlCenterModel extends FlutterFlowModel<ControlCenterWidget> {
 
   // Stores action output result for [Backend Call - Query Rows] action in ControlCenter widget.
   List<DecoyWalletRow>? decoyWalletRow;
-  // Stores the active Decoy Seed/watch-only monitor record for Control Center labels.
-  List<DecoysRow>? decoySeedMonitorRows;
   // Stores action output result for [Backend Call - Query Rows] action in ControlCenter widget.
   List<UserEntitlementsRow>? ctrlOutputEntitlements;
   // Stores action output result for [Custom Action - getBiometricPermissionStatus] action in ControlCenter widget.

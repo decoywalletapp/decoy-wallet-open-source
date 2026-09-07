@@ -85,47 +85,18 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
     safeSetState(() {});
   }
 
-  bool get _isWatchOnlySeedMonitor {
-    final monitorRow = _model.decoySeedMonitorRows?.elementAtOrNull(0);
-    if (monitorRow == null) {
-      return false;
-    }
+  String get _seedMonitorSectionTitle => 'Decoy Keys Triggers';
 
-    final sourceType = monitorRow.getField<String>('source_type')?.trim() ?? '';
-    if (sourceType.isNotEmpty) {
-      return sourceType != 'generated-seed';
-    }
+  IconData get _seedMonitorIcon => Icons.key;
 
-    final watchPublicKeyType = monitorRow.watchPublicKeyType?.trim() ?? '';
-    final hasWatchPublicKey =
-        (monitorRow.watchPublicKey?.trim().isNotEmpty ?? false);
-    final generatedSeedXpub = monitorRow.xpub?.trim() ?? '';
+  String get _seedMonitorTileTitle => 'Wallet Activity Monitor';
 
-    return watchPublicKeyType == 'bitcoin-address-list' ||
-        (hasWatchPublicKey &&
-            watchPublicKeyType.isNotEmpty &&
-            generatedSeedXpub.isEmpty);
-  }
+  String get _seedMonitorTileSubtitle =>
+      'ARM TO ACTIVELY MONITOR OUTBOUND TRANSACTIONS';
 
-  String get _seedMonitorSectionTitle =>
-      _isWatchOnlySeedMonitor ? 'Watch-Only Triggers' : 'Decoy Seed Triggers';
+  String get _seedMonitorOnStatus => 'ACTIVATED';
 
-  IconData get _seedMonitorIcon =>
-      _isWatchOnlySeedMonitor ? Icons.visibility_outlined : Icons.key;
-
-  String get _seedMonitorTileTitle => _isWatchOnlySeedMonitor
-      ? 'Wallet Activity Monitor'
-      : 'Seed Phrase Monitor';
-
-  String get _seedMonitorTileSubtitle => _isWatchOnlySeedMonitor
-      ? 'ARM TO ACTIVELY MONITOR OUTBOUND TRANSACTIONS'
-      : 'Armed = Trigger is active and monitoring outbound transactions';
-
-  String get _seedMonitorOnStatus =>
-      _isWatchOnlySeedMonitor ? 'ACTIVATED' : 'ARMED';
-
-  String get _seedMonitorOffStatus =>
-      _isWatchOnlySeedMonitor ? 'DEACTIVATED' : 'DISARMED';
+  String get _seedMonitorOffStatus => 'DEACTIVATED';
 
   @override
   void initState() {
@@ -151,26 +122,6 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
       FFAppState().locationEnabled =
           _model.decoyWalletRow!.elementAtOrNull(0)!.useCurrentLocation!;
       safeSetState(() {});
-      final decoySeedDecoyId =
-          _model.decoyWalletRow?.elementAtOrNull(0)?.decoySeedDecoyId?.trim() ??
-              '';
-      if (decoySeedDecoyId.isNotEmpty) {
-        try {
-          final decoySeedMonitorRow = await SupaFlow.client
-              .from('decoys')
-              .select('id,xpub,watch_public_key,watch_public_key_type')
-              .eq('id', decoySeedDecoyId)
-              .eq('user_id', currentUserUid)
-              .limit(1)
-              .maybeSingle();
-          _model.decoySeedMonitorRows = [
-            if (decoySeedMonitorRow != null) DecoysRow(decoySeedMonitorRow),
-          ];
-          safeSetState(() {});
-        } catch (error) {
-          debugPrint('Control Center monitor label lookup failed: $error');
-        }
-      }
       _model.ctrlOutputEntitlements = await UserEntitlementsTable().queryRows(
         queryFn: (q) => q
             .eqOrNull(

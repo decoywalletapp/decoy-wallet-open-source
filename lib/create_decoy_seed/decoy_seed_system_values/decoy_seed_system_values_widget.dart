@@ -322,15 +322,9 @@ class _DecoySeedSystemValuesWidgetState
   Widget _buildStableSeedSettingsPage(BuildContext context) {
     _model.seedMonitorArmTileValue ??= FFAppState().decoySeedArmed;
     final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? false;
-    final sourceType = FFAppState().draftWatchSourceType.trim();
-    final isImportedWatchOnly =
-        sourceType.isNotEmpty && sourceType != 'generated-seed';
-    final readyTitle =
-        isImportedWatchOnly ? 'WATCH-ONLY READY' : 'DECOY SEED READY';
-    final triggerTitle =
-        isImportedWatchOnly ? 'Watch-Only Triggers' : 'Decoy Seed Triggers';
-    final monitorTitle =
-        isImportedWatchOnly ? 'Wallet Activity Monitor' : 'Seed Phrase Monitor';
+    const readyTitle = 'DECOY KEYS READY';
+    const triggerTitle = 'Decoy Keys Triggers';
+    const monitorTitle = 'Wallet Activity Monitor';
     final decoySeedSystemBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
@@ -904,7 +898,7 @@ class _DecoySeedSystemValuesWidgetState
                                             alignment:
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: Text(
-                                              'Decoy Seed Triggers',
+                                              'Decoy Keys Triggers',
                                               textAlign: TextAlign.start,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -936,7 +930,7 @@ class _DecoySeedSystemValuesWidgetState
                                                           newValue);
                                                     },
                                               title: Text(
-                                                'Seed Phrase Monitor',
+                                                'Wallet Activity Monitor',
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium

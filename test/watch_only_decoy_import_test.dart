@@ -218,17 +218,38 @@ void main() {
     expect(source, contains('prepareWatchOnlyDecoyDraft'));
   });
 
-  test('control center exposes the watch-only monitor using the seed arm state',
+  test('control center exposes one decoy keys monitor using the seed arm state',
       () {
     final source = File(
       'lib/settings_pages/control_center/control_center_widget.dart',
     ).readAsStringSync();
 
-    expect(source, contains('_isWatchOnlySeedMonitor'));
-    expect(source, contains("'Watch-Only Triggers'"));
+    expect(source, contains("'Decoy Keys Triggers'"));
     expect(source, contains("'Wallet Activity Monitor'"));
-    expect(source, contains('Icons.visibility_outlined'));
+    expect(source, contains('Icons.key'));
     expect(source, contains("'decoy_seed_armed'"));
     expect(source, contains('seedMonitorArmTileValue'));
+    expect(source, isNot(contains('_isWatchOnlySeedMonitor')));
+    expect(source, isNot(contains("'Watch-Only Triggers'")));
+    expect(source, isNot(contains("'Decoy Seed Triggers'")));
+    expect(source, isNot(contains('Icons.visibility_outlined')));
+  });
+
+  test('decoy keys setup completion uses the shared monitor toggle wording',
+      () {
+    final source = File(
+      'lib/create_decoy_seed/decoy_seed_system_values/'
+      'decoy_seed_system_values_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains("'DECOY KEYS READY'"));
+    expect(source, contains("'Decoy Keys Triggers'"));
+    expect(source, contains("'Wallet Activity Monitor'"));
+    expect(source, contains('seedMonitorArmTileValue'));
+    expect(source, isNot(contains("'WATCH-ONLY READY'")));
+    expect(source, isNot(contains("'DECOY SEED READY'")));
+    expect(source, isNot(contains("'Watch-Only Triggers'")));
+    expect(source, isNot(contains("'Decoy Seed Triggers'")));
+    expect(source, isNot(contains("'Seed Phrase Monitor'")));
   });
 }
