@@ -760,7 +760,13 @@ workflows:
             echo "Could not read app version from pubspec.yaml."
             exit 1
           fi
-          app_build_number="$(date -u +%s)"
+          app_build_number="${DECOY_ANDROID_BUILD_NUMBER_OVERRIDE:-$(date -u +%s)}"
+          case "$app_build_number" in
+            ""|*[!0-9]*)
+              echo "DECOY_ANDROID_BUILD_NUMBER_OVERRIDE must be numeric when set."
+              exit 1
+              ;;
+          esac
           source_ref="${CM_TAG:-${CM_BRANCH:-manual}}"
 
           echo "APP_VERSION=$app_version" >> "$CM_ENV"
@@ -1061,7 +1067,13 @@ workflows:
             echo "Could not read app version from pubspec.yaml."
             exit 1
           fi
-          app_build_number="$(date -u +%s)"
+          app_build_number="${DECOY_ANDROID_BUILD_NUMBER_OVERRIDE:-$(date -u +%s)}"
+          case "$app_build_number" in
+            ""|*[!0-9]*)
+              echo "DECOY_ANDROID_BUILD_NUMBER_OVERRIDE must be numeric when set."
+              exit 1
+              ;;
+          esac
           source_ref="${CM_TAG:-${CM_BRANCH:-manual}}"
 
           echo "APP_VERSION=$app_version" >> "$CM_ENV"
