@@ -2,15 +2,29 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const test = require('node:test');
 
-const migration = fs.readFileSync(
-  'supabase/migrations/20260907193000_allow_multiple_decoy_key_monitors.sql',
-  'utf8'
-);
+const migration = [
+  fs.readFileSync(
+    'supabase/migrations/20260907193000_allow_multiple_decoy_key_monitors.sql',
+    'utf8'
+  ),
+  fs.readFileSync(
+    'supabase/migrations/20260907215200_drop_legacy_single_active_decoy_constraint.sql',
+    'utf8'
+  ),
+].join('\n');
 
 test('migration removes the old single-active-decoy rule', () => {
   assert.match(
     migration,
+    /alter\s+table\s+public\.decoys\s+drop\s+constraint\s+if\s+exists\s+one_active_decoy_per_user/i
+  );
+  assert.match(
+    migration,
     /drop\s+index\s+if\s+exists\s+public\.one_active_decoy_per_user/i
+  );
+  assert.match(
+    migration,
+    /drop\s+index\s+if\s+exists\s+public\.decoys_one_active_per_user/i
   );
 });
 
