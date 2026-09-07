@@ -24,6 +24,11 @@ function asBoolean(value: unknown) {
   return value === true || cleanString(value).toLowerCase() === "true";
 }
 
+function cleanStringArray(value: unknown) {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.map((item) => cleanString(item)).filter(Boolean))];
+}
+
 function isMissingRelationError(error: any) {
   const message = cleanString(error?.message).toLowerCase();
   return error?.code === "42P01" || message.includes("relation") ||
@@ -184,6 +189,24 @@ async function listForUser(supabase: any, userId: string) {
   };
 }
 
+async function loadOwnedMonitorIds(
+  supabase: any,
+  userId: string,
+  monitorIds: string[],
+) {
+  if (!monitorIds.length) return new Set<string>();
+
+  const { data, error } = await supabase
+    .from("decoys")
+    .select("id")
+    .eq("user_id", userId)
+    .in("id", monitorIds)
+    .is("archived_at", null);
+
+  if (error) throw error;
+  return new Set((data || []).map((row: any) => cleanString(row?.id)));
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -224,6 +247,74 @@ serve(async (req) => {
     const action = cleanString(body.action || "list");
 
     if (action === "list") {
+      return json(await listForUser(supabase, user.id));
+    }
+
+    if (action === "bulkSave") {
+      const deleteMonitorIds = cleanStringArray(body.deleteMonitorIds);
+      const deleted = new Set(deleteMonitorIds);
+      const activeMonitorIds = cleanStringArray(body.activeMonitorIds)
+        .filter((id) => !deleted.has(id));
+      const inactiveMonitorIds = cleanStringArray(body.inactiveMonitorIds)
+        .filter((id) => !deleted.has(id));
+      const allMonitorIds = cleanStringArray([
+        ...deleteMonitorIds,
+        ...activeMonitorIds,
+        ...inactiveMonitorIds,
+      ]);
+
+      const ownedIds = await loadOwnedMonitorIds(supabase, user.id, allMonitorIds);
+      const missingIds = allMonitorIds.filter((id) => !ownedIds.has(id));
+      if (missingIds.length) {
+        return json({ ok: false, error: "Monitor not found" }, 404);
+      }
+
+      if (deleteMonitorIds.length) {
+        const { error: archiveError } = await supabase
+          .from("decoys")
+          .update({
+            active: false,
+            archived_at: new Date().toISOString(),
+          })
+          .eq("user_id", user.id)
+          .in("id", deleteMonitorIds)
+          .is("archived_at", null);
+
+        if (archiveError) {
+          return json({ ok: false, error: archiveError.message }, 500);
+        }
+
+        for (const monitorId of deleteMonitorIds) {
+          await bestEffortDeleteFingerprints(supabase, monitorId);
+        }
+      }
+
+      if (activeMonitorIds.length) {
+        const { error: activeError } = await supabase
+          .from("decoys")
+          .update({ active: true })
+          .eq("user_id", user.id)
+          .in("id", activeMonitorIds)
+          .is("archived_at", null);
+
+        if (activeError) {
+          return json({ ok: false, error: activeError.message }, 500);
+        }
+      }
+
+      if (inactiveMonitorIds.length) {
+        const { error: inactiveError } = await supabase
+          .from("decoys")
+          .update({ active: false })
+          .eq("user_id", user.id)
+          .in("id", inactiveMonitorIds)
+          .is("archived_at", null);
+
+        if (inactiveError) {
+          return json({ ok: false, error: inactiveError.message }, 500);
+        }
+      }
+
       return json(await listForUser(supabase, user.id));
     }
 

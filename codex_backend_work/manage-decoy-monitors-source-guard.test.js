@@ -23,6 +23,11 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
   assert.match(source, /action === "setActive"/);
   assert.match(source, /\.update\(\{ active: asBoolean\(body\.active\) \}\)/);
   assert.match(source, /action === "delete"/);
+  assert.match(source, /action === "bulkSave"/);
+  assert.match(source, /deleteMonitorIds/);
+  assert.match(source, /activeMonitorIds/);
+  assert.match(source, /inactiveMonitorIds/);
+  assert.match(source, /loadOwnedMonitorIds/);
   assert.match(source, /archived_at: new Date\(\)\.toISOString\(\)/);
   assert.doesNotMatch(source, /sms_queue/);
   assert.doesNotMatch(source, /alert_logs/);
