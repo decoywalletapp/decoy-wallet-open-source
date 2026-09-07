@@ -760,7 +760,21 @@ workflows:
             echo "Could not read app version from pubspec.yaml."
             exit 1
           fi
-          app_build_number="${DECOY_ANDROID_BUILD_NUMBER_OVERRIDE:-$(date -u +%s)}"
+          if [ -n "${DECOY_ANDROID_BUILD_NUMBER_OVERRIDE:-}" ]; then
+            app_build_number="$DECOY_ANDROID_BUILD_NUMBER_OVERRIDE"
+          else
+            timestamp_build_number="$(date -u +%s)"
+            min_debug_build_number=1789001701
+            build_index="${CM_BUILD_NUMBER:-1}"
+            case "$build_index" in
+              ""|*[!0-9]*) build_index=1 ;;
+            esac
+            if [ "$timestamp_build_number" -le "$min_debug_build_number" ]; then
+              app_build_number=$((min_debug_build_number + build_index))
+            else
+              app_build_number="$timestamp_build_number"
+            fi
+          fi
           case "$app_build_number" in
             ""|*[!0-9]*)
               echo "DECOY_ANDROID_BUILD_NUMBER_OVERRIDE must be numeric when set."
