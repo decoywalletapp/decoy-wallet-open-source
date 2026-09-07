@@ -197,6 +197,7 @@ serve(async (req) => {
     const zpub = cleanString(body.zpub);
     const watchPublicKey = cleanString(body.watch_public_key || zpub || xpub);
     const watchPublicKeyType = cleanString(body.watch_public_key_type);
+    const sourceType = cleanString(body.source_type);
     const addressListWatch = isAddressListWatchType(watchPublicKeyType);
 
     if (!decoyId || !derivationPath || addresses.length === 0) {
@@ -223,51 +224,6 @@ serve(async (req) => {
       return json({ ok: false, error: "Decoy belongs to another user" }, 403);
     }
 
-    const { data: previouslyActiveDecoys, error: activeError } = await supabase
-      .from("decoys")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("active", true)
-      .neq("id", decoyId);
-
-    if (activeError) {
-      return json({ ok: false, error: activeError.message }, 500);
-    }
-
-    const previouslyActiveIds = (previouslyActiveDecoys || [])
-      .map((row) => cleanString(row.id))
-      .filter(Boolean);
-
-    async function restorePreviouslyActiveDecoys() {
-      if (previouslyActiveIds.length === 0) return;
-
-      const { error: restoreError } = await supabase
-        .from("decoys")
-        .update({ active: true })
-        .eq("user_id", user.id)
-        .in("id", previouslyActiveIds);
-
-      if (restoreError) {
-        console.error(
-          "Failed to restore previous active decoy after commit failure:",
-          restoreError.message,
-        );
-      }
-    }
-
-    if (previouslyActiveIds.length > 0) {
-      const { error: deactivateError } = await supabase
-        .from("decoys")
-        .update({ active: false })
-        .eq("user_id", user.id)
-        .eq("active", true)
-        .neq("id", decoyId);
-
-      if (deactivateError) {
-        return json({ ok: false, error: deactivateError.message }, 500);
-      }
-    }
-
     const basePayload = {
       id: decoyId,
       user_id: user.id,
@@ -277,8 +233,14 @@ serve(async (req) => {
       active: true,
     };
 
-    const payloadWithWatchKey = {
+    const payloadWithMonitorMetadata = {
       ...basePayload,
+      source_type: sourceType || null,
+      archived_at: null,
+    };
+
+    const payloadWithWatchKey = {
+      ...payloadWithMonitorMetadata,
       xpub: isWatchPublicKey(xpub) ? xpub : null,
       zpub: isWatchPublicKey(zpub) ? zpub : null,
       watch_public_key: isWatchPublicKey(watchPublicKey)
@@ -294,6 +256,24 @@ serve(async (req) => {
       .single();
 
     if (error && isMissingColumnError(error)) {
+      const payloadWithoutMonitorMetadata = {
+        ...basePayload,
+        xpub: isWatchPublicKey(xpub) ? xpub : null,
+        zpub: isWatchPublicKey(zpub) ? zpub : null,
+        watch_public_key: isWatchPublicKey(watchPublicKey)
+            ? watchPublicKey
+            : null,
+        watch_public_key_type: watchPublicKeyType || null,
+      };
+
+      ({ data, error } = await supabase
+        .from("decoys")
+        .upsert(payloadWithoutMonitorMetadata, { onConflict: "id" })
+        .select()
+        .single());
+    }
+
+    if (error && isMissingColumnError(error)) {
       ({ data, error } = await supabase
         .from("decoys")
         .upsert(basePayload, { onConflict: "id" })
@@ -302,7 +282,6 @@ serve(async (req) => {
     }
 
     if (error) {
-      await restorePreviouslyActiveDecoys();
       return json({ ok: false, error: error.message }, 500);
     }
 
@@ -310,7 +289,8 @@ serve(async (req) => {
       supabase,
       decoyId,
       addresses,
-      watchPublicKeyType ||
+      sourceType ||
+        watchPublicKeyType ||
         (addressListWatch ? "bitcoin-address-list" : "decoy-seed"),
     );
 

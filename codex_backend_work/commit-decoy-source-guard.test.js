@@ -21,9 +21,12 @@ test('commit-decoy accepts address-list watches without changing xpub/zpub valid
   assert.doesNotMatch(source, /addresses\.join\("\\n"\)/);
 });
 
-test('commit-decoy still restores previously active decoys on commit failure', () => {
-  assert.match(source, /restorePreviouslyActiveDecoys/);
-  assert.match(source, /await restorePreviouslyActiveDecoys\(\)/);
+test('commit-decoy does not deactivate other Decoy Keys monitors', () => {
+  assert.doesNotMatch(source, /previouslyActiveDecoys/);
+  assert.doesNotMatch(source, /restorePreviouslyActiveDecoys/);
+  assert.doesNotMatch(source, /\.update\(\{ active: false \}\)/);
+  assert.match(source, /source_type: sourceType \|\| null/);
+  assert.match(source, /archived_at: null/);
 });
 
 test('commit-decoy writes watch address fingerprints as non-blocking shadow data', () => {
