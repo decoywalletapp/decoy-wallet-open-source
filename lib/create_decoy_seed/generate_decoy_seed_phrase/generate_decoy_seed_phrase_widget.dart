@@ -184,8 +184,6 @@ class _GenerateDecoySeedPhraseWidgetState
                                 r'''$.source_type''',
                               ).toString();
                               safeSetState(() {});
-                              FFAppState().decoySeedArmed = false;
-                              safeSetState(() {});
 
                               context.pushNamed(
                                 ShowDecoySeedPhraseWidget.routeName,

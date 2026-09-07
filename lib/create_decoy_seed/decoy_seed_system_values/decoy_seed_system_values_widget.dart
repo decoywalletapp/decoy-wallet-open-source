@@ -322,6 +322,7 @@ class _DecoySeedSystemValuesWidgetState
   Widget _buildStableSeedSettingsPage(BuildContext context) {
     _model.seedMonitorArmTileValue ??= FFAppState().decoySeedArmed;
     final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? false;
+    final savedSeedMonitorEnabled = FFAppState().decoySeedArmed;
     const readyTitle = 'DECOY KEYS READY';
     const triggerTitle = 'Decoy Keys Triggers';
     const monitorTitle = 'Wallet Activity Monitor';
@@ -533,10 +534,10 @@ class _DecoySeedSystemValuesWidgetState
                                     _statusLine(
                                       context,
                                       'System Status:',
-                                      seedMonitorEnabled
+                                      savedSeedMonitorEnabled
                                           ? 'ACTIVATED'
                                           : 'DEACTIVATED',
-                                      seedMonitorEnabled
+                                      savedSeedMonitorEnabled
                                           ? FlutterFlowTheme.of(context).success
                                           : FlutterFlowTheme.of(context).error,
                                     ),
@@ -1142,15 +1143,15 @@ class _DecoySeedSystemValuesWidgetState
                                                               0.0, 0.0),
                                                       child: Stack(
                                                         children: [
-                                                          if (_model
-                                                                  .seedMonitorArmTileValue ==
+                                                          if (FFAppState()
+                                                                  .decoySeedArmed ==
                                                               true)
                                                             Align(
                                                               alignment:
                                                                   AlignmentDirectional(
                                                                       0.0, 0.0),
                                                               child: Text(
-                                                                'ARMED',
+                                                                'ACTIVATED',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -1174,15 +1175,15 @@ class _DecoySeedSystemValuesWidgetState
                                                                     ),
                                                               ),
                                                             ),
-                                                          if (_model
-                                                                  .seedMonitorArmTileValue ==
+                                                          if (FFAppState()
+                                                                  .decoySeedArmed ==
                                                               false)
                                                             Align(
                                                               alignment:
                                                                   AlignmentDirectional(
                                                                       0.0, 0.0),
                                                               child: Text(
-                                                                'DISARMED',
+                                                                'DEACTIVATED',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium

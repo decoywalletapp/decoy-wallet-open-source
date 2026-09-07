@@ -252,4 +252,37 @@ void main() {
     expect(source, isNot(contains("'Decoy Seed Triggers'")));
     expect(source, isNot(contains("'Seed Phrase Monitor'")));
   });
+
+  test(
+      'decoy keys setup status separates unsaved switch preview from saved state',
+      () {
+    final source = File(
+      'lib/create_decoy_seed/decoy_seed_system_values/'
+      'decoy_seed_system_values_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('final seedMonitorEnabled'));
+    expect(source, contains('final savedSeedMonitorEnabled'));
+    expect(source, contains("seedMonitorEnabled ? 'ENABLE' : 'DISABLE'"));
+    expect(
+        source,
+        contains("savedSeedMonitorEnabled\n"
+            "                                          ? 'ACTIVATED'\n"
+            "                                          : 'DEACTIVATED'"));
+  });
+
+  test('watch-only and generated seed drafts preserve the saved arm state', () {
+    final sources = [
+      File(
+        'lib/create_decoy_seed/import_watch_only_wallet/'
+        'import_watch_only_wallet_widget.dart',
+      ).readAsStringSync(),
+      File(
+        'lib/create_decoy_seed/generate_decoy_seed_phrase/'
+        'generate_decoy_seed_phrase_widget.dart',
+      ).readAsStringSync(),
+    ].join('\n');
+
+    expect(sources, isNot(contains('FFAppState().decoySeedArmed = false')));
+  });
 }

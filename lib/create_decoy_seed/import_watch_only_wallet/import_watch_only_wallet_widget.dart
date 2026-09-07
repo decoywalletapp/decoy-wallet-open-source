@@ -108,7 +108,6 @@ class _ImportWatchOnlyWalletWidgetState
         _model.watchOnlyDraftOut,
         r'''$.source_type''',
       ).toString();
-      FFAppState().decoySeedArmed = false;
       safeSetState(() {});
 
       context.pushNamed(DecoySeedSystemValuesWidget.routeName);
