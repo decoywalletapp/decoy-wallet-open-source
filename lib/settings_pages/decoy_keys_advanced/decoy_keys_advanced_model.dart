@@ -16,10 +16,17 @@ class DecoyKeysAdvancedModel extends FlutterFlowModel<DecoyKeysAdvancedWidget> {
 
   List<dynamic> monitors = [];
 
+  List<dynamic> originalMonitors = [];
+
+  Set<String> changedMonitorIds = {};
+
+  Set<String> deletedMonitorIds = {};
+
   /// Stores action output result for [Backend Call - API] actions.
   ApiCallResponse? loadResp;
   ApiCallResponse? updateResp;
   ApiCallResponse? deleteResp;
+  ApiCallResponse? bulkSaveResp;
 
   @override
   void initState(BuildContext context) {}

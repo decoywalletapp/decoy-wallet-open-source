@@ -95,7 +95,10 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
             FFAppState().decoySeedArmed;
 
     safeSetState(() {
-      _model.monitors = List<dynamic>.from(monitors);
+      _model.monitors = _copyMonitorList(monitors);
+      _model.originalMonitors = _copyMonitorList(monitors);
+      _model.changedMonitorIds = {};
+      _model.deletedMonitorIds = {};
       _model.masterArmed = masterArmed;
       _model.isLoading = false;
       _model.isSaving = false;
@@ -103,75 +106,67 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
     });
   }
 
-  Future<void> _setMonitorActive(String monitorId, bool active) async {
-    final jwt = currentJwtToken.trim();
-    if (jwt.isEmpty || monitorId.isEmpty) {
-      _showSnack('Please sign in again to update this monitor.');
+  void _setMonitorActive(String monitorId, bool active) {
+    if (monitorId.isEmpty) {
+      _showSnack('Unable to update this monitor.');
       return;
     }
 
     safeSetState(() {
-      _model.isSaving = true;
-      _model.errorMessage = null;
+      _model.monitors = _model.monitors.map((monitor) {
+        final map = _monitorMap(monitor);
+        if (_text(map['id']) == monitorId) {
+          return {
+            ...map,
+            'active': active,
+          };
+        }
+        return map;
+      }).toList();
+      _markMonitorChanged(monitorId, active);
     });
-
-    try {
-      _model.updateResp = await ManageDecoyMonitorsCall.call(
-        jwt: jwt,
-        action: 'setActive',
-        monitorId: monitorId,
-        active: active,
-      );
-      _applyMonitorResponse(_model.updateResp);
-    } catch (_) {
-      safeSetState(() {
-        _model.isSaving = false;
-        _model.errorMessage = 'Unable to update this monitor.';
-      });
-    }
   }
 
-  Future<void> _deleteMonitor(Map<String, dynamic> monitor) async {
+  void _deleteMonitor(Map<String, dynamic> monitor) {
     final monitorId = _text(monitor['id']);
     if (monitorId.isEmpty) {
       _showSnack('Unable to delete this monitor.');
       return;
     }
 
-    final confirmed = await showDialog<bool>(
-          context: context,
-          builder: (dialogContext) {
-            return AlertDialog(
-              title: const Text('Delete monitor?'),
-              content: Text(
-                'This removes ${_monitorTitle(monitor)} from Decoy Keys monitoring.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, true),
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(
-                      color: FlutterFlowTheme.of(context).error,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
+    safeSetState(() {
+      _model.monitors = _model.monitors
+          .where((entry) => _text(_monitorMap(entry)['id']) != monitorId)
+          .toList();
+      _model.changedMonitorIds.remove(monitorId);
+      _model.deletedMonitorIds.add(monitorId);
+    });
+  }
 
-    if (!confirmed) return;
-
+  Future<void> _saveAndGoBack() async {
     final jwt = currentJwtToken.trim();
     if (jwt.isEmpty) {
-      _showSnack('Please sign in again to delete this monitor.');
+      _showSnack('Please sign in again to save monitor changes.');
       return;
+    }
+
+    if (!_hasPendingChanges) {
+      context.safePop();
+      return;
+    }
+
+    final activeMonitorIds = <String>[];
+    final inactiveMonitorIds = <String>[];
+
+    for (final monitorId in _model.changedMonitorIds) {
+      if (_model.deletedMonitorIds.contains(monitorId)) continue;
+      final monitor = _monitorById(monitorId);
+      if (monitor == null) continue;
+      if (monitor['active'] == true) {
+        activeMonitorIds.add(monitorId);
+      } else {
+        inactiveMonitorIds.add(monitorId);
+      }
     }
 
     safeSetState(() {
@@ -180,16 +175,32 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
     });
 
     try {
-      _model.deleteResp = await ManageDecoyMonitorsCall.call(
+      _model.bulkSaveResp = await ManageDecoyMonitorsCall.call(
         jwt: jwt,
-        action: 'delete',
-        monitorId: monitorId,
+        action: 'bulkSave',
+        activeMonitorIdsList: activeMonitorIds,
+        inactiveMonitorIdsList: inactiveMonitorIds,
+        deleteMonitorIdsList: _model.deletedMonitorIds.toList(),
       );
-      _applyMonitorResponse(_model.deleteResp);
+      if (_model.bulkSaveResp?.succeeded == true) {
+        _applyMonitorResponse(_model.bulkSaveResp);
+        if (mounted) context.safePop();
+        return;
+      }
+
+      final rawError =
+          ManageDecoyMonitorsCall.error(_model.bulkSaveResp?.jsonBody)
+              .toString();
+      safeSetState(() {
+        _model.isSaving = false;
+        _model.errorMessage = rawError.isNotEmpty
+            ? rawError
+            : 'Unable to save Decoy Keys monitor changes.';
+      });
     } catch (_) {
       safeSetState(() {
         _model.isSaving = false;
-        _model.errorMessage = 'Unable to delete this monitor.';
+        _model.errorMessage = 'Unable to save Decoy Keys monitor changes.';
       });
     }
   }
@@ -206,6 +217,43 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
     if (monitor is Map<String, dynamic>) return monitor;
     if (monitor is Map) return Map<String, dynamic>.from(monitor);
     return <String, dynamic>{};
+  }
+
+  List<dynamic> _copyMonitorList(List<dynamic> monitors) {
+    return monitors
+        .map((monitor) => Map<String, dynamic>.from(_monitorMap(monitor)))
+        .toList();
+  }
+
+  bool get _hasPendingChanges =>
+      _model.changedMonitorIds.isNotEmpty ||
+      _model.deletedMonitorIds.isNotEmpty;
+
+  Map<String, dynamic>? _monitorById(String monitorId) {
+    for (final monitor in _model.monitors) {
+      final map = _monitorMap(monitor);
+      if (_text(map['id']) == monitorId) return map;
+    }
+    return null;
+  }
+
+  bool? _originalMonitorActive(String monitorId) {
+    for (final monitor in _model.originalMonitors) {
+      final map = _monitorMap(monitor);
+      if (_text(map['id']) == monitorId) {
+        return map['active'] == true;
+      }
+    }
+    return null;
+  }
+
+  void _markMonitorChanged(String monitorId, bool active) {
+    final originalActive = _originalMonitorActive(monitorId);
+    if (originalActive == active) {
+      _model.changedMonitorIds.remove(monitorId);
+    } else {
+      _model.changedMonitorIds.add(monitorId);
+    }
   }
 
   String _text(dynamic value) => value?.toString().trim() ?? '';
@@ -462,8 +510,8 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                   value: active,
                   onChanged: _model.isSaving
                       ? null
-                      : (newValue) async {
-                          await _setMonitorActive(monitorId, newValue);
+                      : (newValue) {
+                          _setMonitorActive(monitorId, newValue);
                         },
                   activeThumbColor: FlutterFlowTheme.of(context).success,
                   activeTrackColor: FlutterFlowTheme.of(context).accent2,
@@ -516,8 +564,8 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
               child: TextButton.icon(
                 onPressed: _model.isSaving
                     ? null
-                    : () async {
-                        await _deleteMonitor(monitor);
+                    : () {
+                        _deleteMonitor(monitor);
                       },
                 icon: Icon(
                   Icons.delete_outline_rounded,
@@ -540,6 +588,33 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
             ),
           ].divide(SizedBox(height: 12.0)),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSaveButton(BuildContext context) {
+    return FFButtonWidget(
+      onPressed: _model.isSaving
+          ? null
+          : () async {
+              await _saveAndGoBack();
+            },
+      text: 'Save & Go Back',
+      options: FFButtonOptions(
+        width: double.infinity,
+        height: 60.0,
+        color: FlutterFlowTheme.of(context).primary,
+        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+              fontFamily: 'InterTight',
+              color: Colors.white,
+              fontSize: 20.0,
+              letterSpacing: 0.0,
+              fontWeight: FontWeight.w600,
+            ),
+        elevation: 3.0,
+        borderRadius: BorderRadius.circular(8.0),
+        disabledColor: FlutterFlowTheme.of(context).accent1,
+        disabledTextColor: FlutterFlowTheme.of(context).secondaryText,
       ),
     );
   }
@@ -593,8 +668,9 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
       );
     }
 
+    final monitorWidgets = <Widget>[];
     if (_model.monitors.isEmpty) {
-      return Material(
+      monitorWidgets.add(Material(
         color: Colors.transparent,
         elevation: 2.0,
         borderRadius: BorderRadius.circular(12.0),
@@ -623,6 +699,11 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                 ),
           ),
         ),
+      ));
+    } else {
+      monitorWidgets.addAll(
+        _model.monitors
+            .map((monitor) => _buildMonitorTile(context, _monitorMap(monitor))),
       );
     }
 
@@ -630,8 +711,8 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildMasterStatus(context),
-        for (final monitor in _model.monitors)
-          _buildMonitorTile(context, _monitorMap(monitor)),
+        ...monitorWidgets,
+        _buildSaveButton(context),
       ].divide(SizedBox(height: 18.0)),
     );
   }

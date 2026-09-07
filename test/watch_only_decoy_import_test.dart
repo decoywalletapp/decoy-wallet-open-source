@@ -247,9 +247,13 @@ void main() {
 
     expect(navSource, contains('DecoyKeysAdvancedWidget.routeName'));
     expect(source, contains('ManageDecoyMonitorsCall.call'));
-    expect(source, contains("'setActive'"));
-    expect(source, contains("'delete'"));
+    expect(source, contains("'bulkSave'"));
+    expect(source, contains('Save & Go Back'));
+    expect(source, contains('changedMonitorIds'));
+    expect(source, contains('deletedMonitorIds'));
     expect(source, contains('Most Recent Seed Generated'));
+    expect(source, isNot(contains('showDialog<bool>')));
+    expect(source, isNot(contains('Delete monitor?')));
     expect(source, isNot(contains('SendEmergencyAlertsCall')));
     expect(source, isNot(contains('decoyPin')));
   });

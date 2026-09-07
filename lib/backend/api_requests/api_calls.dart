@@ -722,13 +722,22 @@ class ManageDecoyMonitorsCall {
     String? action = 'list',
     String? monitorId = '',
     bool? active,
+    List<String>? activeMonitorIdsList,
+    List<String>? inactiveMonitorIdsList,
+    List<String>? deleteMonitorIdsList,
   }) async {
     final activeJson = active == null ? 'null' : active.toString();
+    final activeMonitorIds = _serializeList(activeMonitorIdsList);
+    final inactiveMonitorIds = _serializeList(inactiveMonitorIdsList);
+    final deleteMonitorIds = _serializeList(deleteMonitorIdsList);
     final ffApiRequestBody = '''
 {
   "action": "${escapeStringForJson(action)}",
   "monitorId": "${escapeStringForJson(monitorId)}",
-  "active": ${activeJson}
+  "active": ${activeJson},
+  "activeMonitorIds": ${activeMonitorIds},
+  "inactiveMonitorIds": ${inactiveMonitorIds},
+  "deleteMonitorIds": ${deleteMonitorIds}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'manageDecoyMonitors',
