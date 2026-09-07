@@ -251,6 +251,9 @@ void main() {
     expect(source, contains('Save & Go Back'));
     expect(source, contains('changedMonitorIds'));
     expect(source, contains('deletedMonitorIds'));
+    expect(source, contains('final savedActive'));
+    expect(source, contains("_originalMonitorActive(monitorId) ?? active"));
+    expect(source, contains("savedActive ? 'ACTIVATED' : 'DEACTIVATED'"));
     expect(source, contains('Most Recent Seed Generated'));
     expect(source, isNot(contains('showDialog<bool>')));
     expect(source, isNot(contains('Delete monitor?')));

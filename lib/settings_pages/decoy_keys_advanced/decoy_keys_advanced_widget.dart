@@ -429,6 +429,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
   Widget _buildMonitorTile(BuildContext context, Map<String, dynamic> monitor) {
     final active = monitor['active'] == true;
     final monitorId = _text(monitor['id']);
+    final savedActive = _originalMonitorActive(monitorId) ?? active;
 
     return Material(
       color: Colors.transparent,
@@ -541,12 +542,12 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                 ),
                 Expanded(
                   child: Text(
-                    active ? 'ACTIVATED' : 'DEACTIVATED',
+                    savedActive ? 'ACTIVATED' : 'DEACTIVATED',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily:
                               FlutterFlowTheme.of(context).bodyMediumFamily,
-                          color: active
+                          color: savedActive
                               ? FlutterFlowTheme.of(context).success
                               : FlutterFlowTheme.of(context).error,
                           fontSize: 16.0,
