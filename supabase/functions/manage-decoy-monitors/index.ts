@@ -96,6 +96,7 @@ function monitorDetail(row: any, type: string) {
   const addressLabel = count === 1 ? "address" : "addresses";
 
   if (type === "generated-seed") {
+    if (hasWatchPublicKey(row)) return "Account-level seed wallet monitoring";
     return `${count} derived receive ${addressLabel}`;
   }
 
@@ -111,6 +112,10 @@ function monitorDetail(row: any, type: string) {
   if (preview) return preview;
 
   return `${count} receive ${addressLabel}`;
+}
+
+function hasWatchPublicKey(row: any) {
+  return !!cleanString(row?.watch_public_key || row?.zpub || row?.xpub);
 }
 
 function formatMonitors(rows: any[]) {
@@ -136,6 +141,7 @@ function formatMonitors(rows: any[]) {
         detail: monitorDetail(row, type),
         active: row?.active === true,
         addressCount: cleanAddressList(row?.addresses).length,
+        hasWatchPublicKey: hasWatchPublicKey(row),
         createdAt: cleanString(row?.created_at),
         isMostRecentGeneratedSeed,
       };

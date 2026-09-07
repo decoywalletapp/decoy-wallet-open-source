@@ -39,3 +39,10 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
     assert.doesNotMatch(statement, /\.update/);
   }
 });
+
+test('manage-decoy-monitors labels watch-key seeds as account-level monitoring', () => {
+  assert.match(source, /function hasWatchPublicKey\(row: any\)/);
+  assert.match(source, /if \(type === "generated-seed"\)/);
+  assert.match(source, /if \(hasWatchPublicKey\(row\)\) return "Account-level seed wallet monitoring"/);
+  assert.match(source, /hasWatchPublicKey: hasWatchPublicKey\(row\)/);
+});
