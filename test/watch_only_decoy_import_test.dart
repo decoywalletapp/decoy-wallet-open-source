@@ -255,6 +255,8 @@ void main() {
     expect(source, contains("_originalMonitorActive(monitorId) ?? active"));
     expect(source, contains("savedActive ? 'ACTIVATED' : 'DEACTIVATED'"));
     expect(source, contains('Most Recent Seed Generated'));
+    expect(source, contains('hasWatchPublicKey'));
+    expect(source, contains('Account-level seed wallet monitoring'));
     expect(source, isNot(contains('showDialog<bool>')));
     expect(source, isNot(contains('Delete monitor?')));
     expect(source, isNot(contains('SendEmergencyAlertsCall')));

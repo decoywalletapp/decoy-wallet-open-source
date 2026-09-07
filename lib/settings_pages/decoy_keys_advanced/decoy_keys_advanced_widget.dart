@@ -281,6 +281,11 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
     if (detail.isNotEmpty) return detail;
 
     final addressCount = monitor['addressCount'];
+    if (_text(monitor['type']) == 'generated-seed' &&
+        monitor['hasWatchPublicKey'] == true) {
+      return 'Account-level seed wallet monitoring';
+    }
+
     if (addressCount is num && addressCount > 0) {
       final label = addressCount == 1 ? 'address' : 'addresses';
       return '${addressCount.toInt()} receive $label';
