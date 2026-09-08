@@ -232,6 +232,8 @@ void main() {
     expect(source, contains("'decoy_seed_armed'"));
     expect(source, contains('seedMonitorArmTileValue'));
     expect(source, contains('DecoyKeysAdvancedWidget.routeName'));
+    expect(source, contains('ManageDecoyMonitorsCall.call'));
+    expect(source, contains("action: 'deactivateAll'"));
     expect(source, isNot(contains('_isWatchOnlySeedMonitor')));
     expect(source, isNot(contains("'Watch-Only Triggers'")));
     expect(source, isNot(contains("'Decoy Seed Triggers'")));
@@ -253,10 +255,18 @@ void main() {
     expect(source, contains('deletedMonitorIds'));
     expect(source, contains('final savedActive'));
     expect(source, contains("_originalMonitorActive(monitorId) ?? active"));
+    expect(source, contains("_model.masterArmed && monitor['active'] == true"));
+    expect(
+      source,
+      contains('onChanged: _model.isSaving || !_model.masterArmed'),
+    );
     expect(source, contains("savedActive ? 'ACTIVATED' : 'DEACTIVATED'"));
     expect(source, contains('Most Recent Seed Generated'));
     expect(source, contains('hasWatchPublicKey'));
     expect(source, contains('Account-level seed wallet monitoring'));
+    expect(source, contains('_wrapLongMonitorText'));
+    expect(source, contains('softWrap: true'));
+    expect(source, isNot(contains('TextOverflow.ellipsis')));
     expect(source, isNot(contains('showDialog<bool>')));
     expect(source, isNot(contains('Delete monitor?')));
     expect(source, isNot(contains('SendEmergencyAlertsCall')));
@@ -274,6 +284,7 @@ void main() {
     expect(source, contains("'Decoy Keys Triggers'"));
     expect(source, contains("'Wallet Activity Monitor'"));
     expect(source, contains('seedMonitorArmTileValue'));
+    expect(source, contains("action: 'deactivateAll'"));
     expect(source, isNot(contains("'WATCH-ONLY READY'")));
     expect(source, isNot(contains("'DECOY SEED READY'")));
     expect(source, isNot(contains("'Watch-Only Triggers'")));

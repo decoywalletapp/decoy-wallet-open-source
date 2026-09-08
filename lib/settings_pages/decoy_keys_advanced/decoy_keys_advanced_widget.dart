@@ -258,6 +258,20 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
 
   String _text(dynamic value) => value?.toString().trim() ?? '';
 
+  String _wrapLongMonitorText(String value) {
+    final text = value.trim();
+    if (text.length <= 18) return text;
+
+    final buffer = StringBuffer();
+    for (var i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      if ((i + 1) % 18 == 0 && i + 1 < text.length) {
+        buffer.write('\u200B');
+      }
+    }
+    return buffer.toString();
+  }
+
   String _monitorTitle(Map<String, dynamic> monitor) {
     final title = _text(monitor['title']);
     if (title.isNotEmpty) return title;
@@ -432,9 +446,10 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
   }
 
   Widget _buildMonitorTile(BuildContext context, Map<String, dynamic> monitor) {
-    final active = monitor['active'] == true;
     final monitorId = _text(monitor['id']);
-    final savedActive = _originalMonitorActive(monitorId) ?? active;
+    final active = _model.masterArmed && monitor['active'] == true;
+    final savedActive =
+        _model.masterArmed && (_originalMonitorActive(monitorId) ?? active);
 
     return Material(
       color: Colors.transparent,
@@ -493,9 +508,8 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                               ),
                         ),
                         Text(
-                          _monitorDetail(monitor),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          _wrapLongMonitorText(_monitorDetail(monitor)),
+                          softWrap: true,
                           style: FlutterFlowTheme.of(context)
                               .bodySmall
                               .override(
@@ -514,7 +528,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                 ),
                 Switch(
                   value: active,
-                  onChanged: _model.isSaving
+                  onChanged: _model.isSaving || !_model.masterArmed
                       ? null
                       : (newValue) {
                           _setMonitorActive(monitorId, newValue);
