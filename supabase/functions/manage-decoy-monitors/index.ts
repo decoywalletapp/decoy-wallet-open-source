@@ -35,13 +35,6 @@ function isMissingRelationError(error: any) {
     message.includes("does not exist") || message.includes("schema cache");
 }
 
-function shorten(value: unknown) {
-  const text = cleanString(value);
-  if (!text) return "";
-  if (text.length <= 24) return text;
-  return `${text.slice(0, 12)}...${text.slice(-8)}`;
-}
-
 function cleanAddressList(value: unknown) {
   if (!Array.isArray(value)) return [];
   return value.map((item) => cleanString(item)).filter(Boolean);
@@ -97,19 +90,19 @@ function monitorDetail(row: any, type: string) {
 
   if (type === "generated-seed") {
     if (hasWatchPublicKey(row)) return "Account-level seed wallet monitoring";
-    return `${count} derived receive ${addressLabel}`;
+    return count
+      ? `Legacy seed address monitor (${count} listed receive ${addressLabel})`
+      : "Legacy seed address monitor";
   }
 
   if (type === "address-list") {
-    const preview = shorten(addresses[0]);
-    return preview
-      ? `${count} receive ${addressLabel} (${preview})`
-      : `${count} receive ${addressLabel}`;
+    if (addresses.length === 1) return addresses[0];
+    if (addresses.length > 1) return addresses.join("\n");
+    return `${count} receive ${addressLabel}`;
   }
 
   const watchKey = cleanString(row?.watch_public_key || row?.zpub || row?.xpub);
-  const preview = shorten(watchKey);
-  if (preview) return preview;
+  if (watchKey) return watchKey;
 
   return `${count} receive ${addressLabel}`;
 }
@@ -213,6 +206,16 @@ async function loadOwnedMonitorIds(
   return new Set((data || []).map((row: any) => cleanString(row?.id)));
 }
 
+async function deactivateAllForUser(supabase: any, userId: string) {
+  const { error } = await supabase
+    .from("decoys")
+    .update({ active: false })
+    .eq("user_id", userId)
+    .is("archived_at", null);
+
+  if (error) throw error;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -253,6 +256,11 @@ serve(async (req) => {
     const action = cleanString(body.action || "list");
 
     if (action === "list") {
+      return json(await listForUser(supabase, user.id));
+    }
+
+    if (action === "deactivateAll") {
+      await deactivateAllForUser(supabase, user.id);
       return json(await listForUser(supabase, user.id));
     }
 

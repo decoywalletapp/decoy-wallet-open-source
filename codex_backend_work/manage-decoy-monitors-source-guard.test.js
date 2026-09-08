@@ -24,6 +24,9 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
   assert.match(source, /\.update\(\{ active: asBoolean\(body\.active\) \}\)/);
   assert.match(source, /action === "delete"/);
   assert.match(source, /action === "bulkSave"/);
+  assert.match(source, /action === "deactivateAll"/);
+  assert.match(source, /function deactivateAllForUser/);
+  assert.match(source, /\.update\(\{ active: false \}\)/);
   assert.match(source, /deleteMonitorIds/);
   assert.match(source, /activeMonitorIds/);
   assert.match(source, /inactiveMonitorIds/);
@@ -44,5 +47,13 @@ test('manage-decoy-monitors labels watch-key seeds as account-level monitoring',
   assert.match(source, /function hasWatchPublicKey\(row: any\)/);
   assert.match(source, /if \(type === "generated-seed"\)/);
   assert.match(source, /if \(hasWatchPublicKey\(row\)\) return "Account-level seed wallet monitoring"/);
+  assert.match(source, /Legacy seed address monitor/);
   assert.match(source, /hasWatchPublicKey: hasWatchPublicKey\(row\)/);
+});
+
+test('manage-decoy-monitors returns full watch values for advanced controls', () => {
+  assert.match(source, /if \(addresses\.length === 1\) return addresses\[0\]/);
+  assert.match(source, /addresses\.join\("\\n"\)/);
+  assert.match(source, /if \(watchKey\) return watchKey/);
+  assert.doesNotMatch(source, /slice\(0,\s*12\)[\s\S]*slice\(-8\)/);
 });
