@@ -25,6 +25,16 @@ function cleanStringArray(v: unknown) {
   return v.map((item) => cleanString(item)).filter(Boolean);
 }
 
+function normalizeWatchValue(value: unknown) {
+  const clean = cleanString(value);
+  if (/^(bc1|tb1|bcrt1)/i.test(clean)) return clean.toLowerCase();
+  return clean;
+}
+
+function cleanWatchValueArray(value: unknown) {
+  return cleanStringArray(value).map(normalizeWatchValue).filter(Boolean);
+}
+
 function isWatchPublicKey(v: unknown) {
   return /^(xpub|ypub|zpub|tpub|upub|vpub)/i.test(cleanString(v));
 }
@@ -154,6 +164,54 @@ async function writeWatchAddressFingerprintShadow(
   return { enabled: true, stored: rows.length, addressCount: rows.length };
 }
 
+function rowWatchPublicKey(row: any) {
+  return cleanString(row?.watch_public_key || row?.zpub || row?.xpub);
+}
+
+function hasDuplicateWatchData(
+  rows: any[],
+  decoyId: string,
+  watchPublicKey: string,
+  addresses: string[],
+) {
+  const normalizedAddresses = cleanWatchValueArray(addresses);
+
+  for (const row of rows) {
+    const rowId = cleanString(row?.id);
+    if (rowId === decoyId) continue;
+
+    const existingWatchKey = rowWatchPublicKey(row);
+    if (watchPublicKey && existingWatchKey === watchPublicKey) {
+      return true;
+    }
+
+    const existingAddresses = new Set(cleanWatchValueArray(row?.addresses));
+    for (const address of normalizedAddresses) {
+      if (existingAddresses.has(address)) return true;
+    }
+  }
+
+  return false;
+}
+
+async function loadComparableMonitorRows(supabase: any, userId: string) {
+  let result = await supabase
+    .from("decoys")
+    .select("id, addresses, xpub, zpub, watch_public_key, archived_at")
+    .eq("user_id", userId)
+    .is("archived_at", null);
+
+  if (result.error && isMissingColumnError(result.error)) {
+    result = await supabase
+      .from("decoys")
+      .select("id, addresses, xpub, zpub, watch_public_key")
+      .eq("user_id", userId);
+  }
+
+  if (result.error) throw result.error;
+  return result.data || [];
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -222,6 +280,18 @@ serve(async (req) => {
 
     if (existing && existing.user_id !== user.id) {
       return json({ ok: false, error: "Decoy belongs to another user" }, 403);
+    }
+
+    const comparableRows = await loadComparableMonitorRows(supabase, user.id);
+    if (
+      hasDuplicateWatchData(
+        comparableRows,
+        decoyId,
+        watchPublicKey,
+        addresses,
+      )
+    ) {
+      return json({ ok: false, error: "Duplicate Decoy Keys monitor" }, 409);
     }
 
     const basePayload = {

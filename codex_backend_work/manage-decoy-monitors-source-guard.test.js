@@ -26,7 +26,9 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
   assert.match(source, /action === "bulkSave"/);
   assert.match(source, /action === "deactivateAll"/);
   assert.match(source, /function deactivateAllForUser/);
-  assert.match(source, /\.update\(\{ active: false \}\)/);
+  const deactivateAllFunction =
+    source.match(/async function deactivateAllForUser[\s\S]*?\n}/)?.[0] || '';
+  assert.doesNotMatch(deactivateAllFunction, /\.update/);
   assert.match(source, /deleteMonitorIds/);
   assert.match(source, /activeMonitorIds/);
   assert.match(source, /inactiveMonitorIds/);
@@ -46,6 +48,7 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
 test('manage-decoy-monitors labels watch-key seeds as account-level monitoring', () => {
   assert.match(source, /function hasWatchPublicKey\(row: any\)/);
   assert.match(source, /if \(type === "generated-seed"\)/);
+  assert.match(source, /Most Recent Decoy Seed Generated/);
   assert.match(source, /if \(hasWatchPublicKey\(row\)\) return "Account-level seed wallet monitoring"/);
   assert.match(source, /Legacy seed address monitor/);
   assert.match(source, /hasWatchPublicKey: hasWatchPublicKey\(row\)/);
@@ -56,4 +59,13 @@ test('manage-decoy-monitors returns full watch values for advanced controls', ()
   assert.match(source, /addresses\.join\("\\n"\)/);
   assert.match(source, /if \(watchKey\) return watchKey/);
   assert.doesNotMatch(source, /slice\(0,\s*12\)[\s\S]*slice\(-8\)/);
+});
+
+test('manage-decoy-monitors checks duplicates without exposing other users', () => {
+  assert.match(source, /action === "checkDuplicate"/);
+  assert.match(source, /function findDuplicateMonitor/);
+  assert.match(source, /loadComparableMonitorRows\(supabase, user\.id\)/);
+  assert.match(source, /duplicateType/);
+  assert.match(source, /\.eq\("user_id", user\.id\)/);
+  assert.match(source, /\.is\("archived_at", null\)/);
 });

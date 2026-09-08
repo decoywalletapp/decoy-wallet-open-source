@@ -29,6 +29,16 @@ test('commit-decoy does not deactivate other Decoy Keys monitors', () => {
   assert.match(source, /archived_at: null/);
 });
 
+test('commit-decoy rejects duplicate watch-only monitor values', () => {
+  assert.match(source, /function hasDuplicateWatchData/);
+  assert.match(source, /loadComparableMonitorRows\(supabase, user\.id\)/);
+  assert.match(source, /Duplicate Decoy Keys monitor/);
+  assert.match(source, /rowWatchPublicKey/);
+  assert.match(source, /cleanWatchValueArray/);
+  assert.match(source, /\.eq\("user_id", userId\)/);
+  assert.match(source, /\.is\("archived_at", null\)/);
+});
+
 test('commit-decoy writes watch address fingerprints as non-blocking shadow data', () => {
   assert.match(source, /decoy_watch_address_fingerprints/);
   assert.match(source, /Deno\.env\.get\("WATCH_ADDRESS_HMAC_KEY"\)/);

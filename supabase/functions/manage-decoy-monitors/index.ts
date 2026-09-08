@@ -40,6 +40,59 @@ function cleanAddressList(value: unknown) {
   return value.map((item) => cleanString(item)).filter(Boolean);
 }
 
+function normalizeWatchValue(value: unknown) {
+  const clean = cleanString(value);
+  if (/^(bc1|tb1|bcrt1)/i.test(clean)) return clean.toLowerCase();
+  return clean;
+}
+
+function cleanWatchValueArray(value: unknown) {
+  return cleanStringArray(value).map(normalizeWatchValue).filter(Boolean);
+}
+
+function rowWatchPublicKey(row: any) {
+  return cleanString(row?.watch_public_key || row?.zpub || row?.xpub);
+}
+
+function findDuplicateMonitor(rows: any[], body: any, excludeMonitorId = "") {
+  const requestedWatchKey = cleanString(
+    body?.watch_public_key || body?.zpub || body?.xpub,
+  );
+  const requestedAddresses = cleanWatchValueArray(body?.addresses);
+
+  if (!requestedWatchKey && requestedAddresses.length === 0) return null;
+
+  for (const row of rows) {
+    const rowId = cleanString(row?.id);
+    if (excludeMonitorId && rowId === excludeMonitorId) continue;
+
+    const existingWatchKey = rowWatchPublicKey(row);
+    if (requestedWatchKey && existingWatchKey === requestedWatchKey) {
+      return { id: rowId, duplicateType: "watch_public_key" };
+    }
+
+    const existingAddresses = new Set(cleanWatchValueArray(row?.addresses));
+    for (const address of requestedAddresses) {
+      if (existingAddresses.has(address)) {
+        return { id: rowId, duplicateType: "address" };
+      }
+    }
+  }
+
+  return null;
+}
+
+async function loadComparableMonitorRows(supabase: any, userId: string) {
+  const { data, error } = await supabase
+    .from("decoys")
+    .select("id, addresses, xpub, zpub, watch_public_key")
+    .eq("user_id", userId)
+    .is("archived_at", null);
+
+  if (error) throw error;
+  return data || [];
+}
+
 function detectType(row: any) {
   const sourceType = cleanString(row?.source_type).toLowerCase();
   if (["generated-seed", "address-list", "xpub", "zpub"].includes(sourceType)) {
@@ -67,7 +120,7 @@ function detectType(row: any) {
 }
 
 function monitorTitle(type: string, isMostRecentGeneratedSeed: boolean) {
-  if (isMostRecentGeneratedSeed) return "Most Recent Seed Generated";
+  if (isMostRecentGeneratedSeed) return "Most Recent Decoy Seed Generated";
 
   switch (type) {
     case "generated-seed":
@@ -206,14 +259,9 @@ async function loadOwnedMonitorIds(
   return new Set((data || []).map((row: any) => cleanString(row?.id)));
 }
 
-async function deactivateAllForUser(supabase: any, userId: string) {
-  const { error } = await supabase
-    .from("decoys")
-    .update({ active: false })
-    .eq("user_id", userId)
-    .is("archived_at", null);
-
-  if (error) throw error;
+async function deactivateAllForUser(_supabase: any, _userId: string) {
+  // Compatibility for app builds that called this action when saving the
+  // master Decoy Keys switch off. The master gate already pauses monitoring.
 }
 
 serve(async (req) => {
@@ -262,6 +310,16 @@ serve(async (req) => {
     if (action === "deactivateAll") {
       await deactivateAllForUser(supabase, user.id);
       return json(await listForUser(supabase, user.id));
+    }
+
+    if (action === "checkDuplicate") {
+      const comparableRows = await loadComparableMonitorRows(supabase, user.id);
+      const duplicate = findDuplicateMonitor(comparableRows, body);
+      return json({
+        ok: true,
+        duplicate: !!duplicate,
+        duplicateType: duplicate?.duplicateType || null,
+      });
     }
 
     if (action === "bulkSave") {
