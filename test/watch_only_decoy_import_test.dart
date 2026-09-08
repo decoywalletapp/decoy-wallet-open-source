@@ -232,8 +232,7 @@ void main() {
     expect(source, contains("'decoy_seed_armed'"));
     expect(source, contains('seedMonitorArmTileValue'));
     expect(source, contains('DecoyKeysAdvancedWidget.routeName'));
-    expect(source, contains('ManageDecoyMonitorsCall.call'));
-    expect(source, contains("action: 'deactivateAll'"));
+    expect(source, isNot(contains("action: 'deactivateAll'")));
     expect(source, isNot(contains('_isWatchOnlySeedMonitor')));
     expect(source, isNot(contains("'Watch-Only Triggers'")));
     expect(source, isNot(contains("'Decoy Seed Triggers'")));
@@ -261,7 +260,7 @@ void main() {
       contains('onChanged: _model.isSaving || !_model.masterArmed'),
     );
     expect(source, contains("savedActive ? 'ACTIVATED' : 'DEACTIVATED'"));
-    expect(source, contains('Most Recent Seed Generated'));
+    expect(source, contains('Most Recent Decoy Seed Generated'));
     expect(source, contains('hasWatchPublicKey'));
     expect(source, contains('Account-level seed wallet monitoring'));
     expect(source, contains('_wrapLongMonitorText'));
@@ -284,7 +283,7 @@ void main() {
     expect(source, contains("'Decoy Keys Triggers'"));
     expect(source, contains("'Wallet Activity Monitor'"));
     expect(source, contains('seedMonitorArmTileValue'));
-    expect(source, contains("action: 'deactivateAll'"));
+    expect(source, isNot(contains("action: 'deactivateAll'")));
     expect(source, isNot(contains("'WATCH-ONLY READY'")));
     expect(source, isNot(contains("'DECOY SEED READY'")));
     expect(source, isNot(contains("'Watch-Only Triggers'")));
@@ -323,5 +322,44 @@ void main() {
     ].join('\n');
 
     expect(sources, isNot(contains('FFAppState().decoySeedArmed = false')));
+  });
+
+  test('watch-only import checks duplicate monitors before continuing', () {
+    final source = File(
+      'lib/create_decoy_seed/import_watch_only_wallet/'
+      'import_watch_only_wallet_widget.dart',
+    ).readAsStringSync();
+
+    expect(source, contains("_draftAlreadyMonitored"));
+    expect(source, contains("action: 'checkDuplicate'"));
+    expect(source, contains("addressesList: addresses"));
+    expect(source, contains("watchPublicKey: getJsonField"));
+    expect(source, contains("already being monitored"));
+    expect(source, contains("Monitor Existing Wallet"));
+  });
+
+  test('master switch pauses instead of clearing individual monitors', () {
+    final controlCenterSource = File(
+      'lib/settings_pages/control_center/control_center_widget.dart',
+    ).readAsStringSync();
+    final setupSource = File(
+      'lib/create_decoy_seed/decoy_seed_system_values/'
+      'decoy_seed_system_values_widget.dart',
+    ).readAsStringSync();
+    final advancedSource = File(
+      'lib/settings_pages/decoy_keys_advanced/'
+      'decoy_keys_advanced_widget.dart',
+    ).readAsStringSync();
+
+    expect(controlCenterSource, isNot(contains("action: 'deactivateAll'")));
+    expect(setupSource, isNot(contains("action: 'deactivateAll'")));
+    expect(
+      advancedSource,
+      contains("_model.masterArmed && monitor['active'] == true"),
+    );
+    expect(
+      advancedSource,
+      contains("_model.masterArmed && (_originalMonitorActive"),
+    );
   });
 }

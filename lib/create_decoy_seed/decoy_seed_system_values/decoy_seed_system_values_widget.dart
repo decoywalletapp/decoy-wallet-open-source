@@ -239,27 +239,6 @@ class _DecoySeedSystemValuesWidgetState
       return;
     }
 
-    if (!seedMonitorEnabled) {
-      try {
-        final deactivateResp = await ManageDecoyMonitorsCall.call(
-          jwt: jwt,
-          action: 'deactivateAll',
-        );
-        if (deactivateResp.succeeded != true) {
-          _debugLog(
-            'decoy monitor deactivateAll failed: '
-            '${_commitResponseSummary(deactivateResp)}',
-          );
-          _showSeedSaveError('027');
-          return;
-        }
-      } catch (e) {
-        _debugLog('decoy monitor deactivateAll failed: $e');
-        _showSeedSaveError('027');
-        return;
-      }
-    }
-
     FFAppState().decoySeedArmed = seedMonitorEnabled;
     safeSetState(() {});
     await Future.delayed(

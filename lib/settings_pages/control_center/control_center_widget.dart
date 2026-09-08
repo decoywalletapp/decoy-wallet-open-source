@@ -1,5 +1,4 @@
 import '/auth/supabase_auth/auth_util.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -86,54 +85,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
     safeSetState(() {});
   }
 
-  String get _currentAccessToken {
-    final sessionToken =
-        SupaFlow.client.auth.currentSession?.accessToken.trim() ?? '';
-    return sessionToken.isNotEmpty ? sessionToken : currentJwtToken.trim();
-  }
-
-  void _showDecoyKeysSaveError() {
-    if (!mounted) {
-      return;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'ERROR #023 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
-          style: TextStyle(
-            color: FlutterFlowTheme.of(context).primaryText,
-          ),
-        ),
-        duration: Duration(milliseconds: 4000),
-        backgroundColor: FlutterFlowTheme.of(context).secondary,
-      ),
-    );
-  }
-
   Future<bool> _finishControlCenterSave() async {
-    if (!FFAppState().decoySeedArmed) {
-      final jwt = _currentAccessToken;
-      if (jwt.isEmpty) {
-        _showDecoyKeysSaveError();
-        return false;
-      }
-
-      try {
-        final deactivateResp = await ManageDecoyMonitorsCall.call(
-          jwt: jwt,
-          action: 'deactivateAll',
-        );
-        if (deactivateResp.succeeded != true) {
-          _showDecoyKeysSaveError();
-          return false;
-        }
-      } catch (_) {
-        _showDecoyKeysSaveError();
-        return false;
-      }
-    }
-
     await Future.delayed(
       Duration(
         milliseconds: 1000,

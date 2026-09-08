@@ -1,3 +1,6 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/supabase/supabase.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -60,6 +63,67 @@ class _ImportWatchOnlyWalletWidgetState
     );
   }
 
+  Future<String> _jwtForMonitorCheck() async {
+    final sessionToken =
+        SupaFlow.client.auth.currentSession?.accessToken.trim() ?? '';
+    if (sessionToken.isNotEmpty) {
+      return sessionToken;
+    }
+
+    final cached = currentJwtToken.trim();
+    if (cached.isNotEmpty) {
+      return cached;
+    }
+
+    try {
+      final refreshed = await SupaFlow.client.auth.refreshSession();
+      return refreshed.session?.accessToken.trim() ?? '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  Future<bool> _draftAlreadyMonitored(dynamic draft) async {
+    final jwt = await _jwtForMonitorCheck();
+    if (jwt.isEmpty) {
+      throw Exception('Missing monitor check token');
+    }
+
+    final addresses = ((getJsonField(
+              draft,
+              r'''$.addresses''',
+              true,
+            ) as List?) ??
+            const [])
+        .map<String>((address) => address.toString().trim())
+        .where((address) => address.isNotEmpty)
+        .toList();
+
+    final checkResp = await ManageDecoyMonitorsCall.call(
+      jwt: jwt,
+      action: 'checkDuplicate',
+      addressesList: addresses,
+      watchPublicKey: getJsonField(
+        draft,
+        r'''$.watch_public_key''',
+      ).toString(),
+      watchPublicKeyType: getJsonField(
+        draft,
+        r'''$.watch_public_key_type''',
+      ).toString(),
+      sourceType: getJsonField(
+        draft,
+        r'''$.source_type''',
+      ).toString(),
+    );
+
+    if (checkResp.succeeded != true) {
+      throw Exception('Duplicate monitor check failed');
+    }
+
+    return ManageDecoyMonitorsCall.duplicate(checkResp.jsonBody) == true;
+  }
+
   Future<void> _prepareImportedWallet() async {
     final input = _model.watchOnlyInputTextController.text.trim();
     if (input.isEmpty) {
@@ -76,6 +140,22 @@ class _ImportWatchOnlyWalletWidgetState
           r'''$.ok''',
         ) ==
         true) {
+      try {
+        if (await _draftAlreadyMonitored(_model.watchOnlyDraftOut)) {
+          _showImportError(
+            'This wallet or receive address is already being monitored.',
+          );
+          safeSetState(() {});
+          return;
+        }
+      } catch (_) {
+        _showImportError(
+          'Unable to check whether this wallet is already monitored. Please try again.',
+        );
+        safeSetState(() {});
+        return;
+      }
+
       FFAppState().decoyActiveId = getJsonField(
         _model.watchOnlyDraftOut,
         r'''$.decoyId''',

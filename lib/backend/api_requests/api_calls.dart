@@ -7,8 +7,6 @@ import 'package:ff_commons/api_requests/api_manager.dart';
 
 export 'package:ff_commons/api_requests/api_manager.dart' show ApiCallResponse;
 
-const _kPrivateApiFunctionName = 'ffPrivateApiCall';
-
 /// Start DecoyAlert Group Code
 
 class DecoyAlertGroup {
@@ -722,11 +720,16 @@ class ManageDecoyMonitorsCall {
     String? action = 'list',
     String? monitorId = '',
     bool? active,
+    String? watchPublicKey = '',
+    String? watchPublicKeyType = '',
+    String? sourceType = '',
+    List<String>? addressesList,
     List<String>? activeMonitorIdsList,
     List<String>? inactiveMonitorIdsList,
     List<String>? deleteMonitorIdsList,
   }) async {
     final activeJson = active == null ? 'null' : active.toString();
+    final addresses = _serializeList(addressesList);
     final activeMonitorIds = _serializeList(activeMonitorIdsList);
     final inactiveMonitorIds = _serializeList(inactiveMonitorIdsList);
     final deleteMonitorIds = _serializeList(deleteMonitorIdsList);
@@ -735,6 +738,10 @@ class ManageDecoyMonitorsCall {
   "action": "${escapeStringForJson(action)}",
   "monitorId": "${escapeStringForJson(monitorId)}",
   "active": ${activeJson},
+  "watch_public_key": "${escapeStringForJson(watchPublicKey)}",
+  "watch_public_key_type": "${escapeStringForJson(watchPublicKeyType)}",
+  "source_type": "${escapeStringForJson(sourceType)}",
+  "addresses": ${addresses},
   "activeMonitorIds": ${activeMonitorIds},
   "inactiveMonitorIds": ${inactiveMonitorIds},
   "deleteMonitorIds": ${deleteMonitorIds}
@@ -763,6 +770,8 @@ class ManageDecoyMonitorsCall {
       getJsonField(response, r'''$.monitors''', true) as List?;
   static bool? masterArmed(dynamic response) =>
       castToType<bool>(getJsonField(response, r'''$.masterArmed'''));
+  static bool? duplicate(dynamic response) =>
+      castToType<bool>(getJsonField(response, r'''$.duplicate'''));
   static dynamic error(dynamic response) =>
       getJsonField(response, r'''$.error''');
 }

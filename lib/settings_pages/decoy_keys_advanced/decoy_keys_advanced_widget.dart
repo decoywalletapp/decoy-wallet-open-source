@@ -278,7 +278,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
 
     switch (_text(monitor['type'])) {
       case 'generated-seed':
-        return 'Most Recent Seed Generated';
+        return 'Most Recent Decoy Seed Generated';
       case 'address-list':
         return 'Receive Address Monitor';
       case 'xpub':
