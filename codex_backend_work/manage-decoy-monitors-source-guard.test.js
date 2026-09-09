@@ -25,6 +25,7 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
   assert.match(source, /action === "delete"/);
   assert.match(source, /action === "bulkSave"/);
   assert.match(source, /action === "deactivateAll"/);
+  assert.match(source, /action === "archiveOlderGeneratedSeeds"/);
   assert.match(source, /function deactivateAllForUser/);
   const deactivateAllFunction =
     source.match(/async function deactivateAllForUser[\s\S]*?\n}/)?.[0] || '';
@@ -52,6 +53,15 @@ test('manage-decoy-monitors labels watch-key seeds as account-level monitoring',
   assert.match(source, /if \(hasWatchPublicKey\(row\)\) return "Account-level seed wallet monitoring"/);
   assert.match(source, /Legacy seed address monitor/);
   assert.match(source, /hasWatchPublicKey: hasWatchPublicKey\(row\)/);
+  assert.match(
+    source,
+    /derivationPath && derivationPath !== "imported-addresses"/
+  );
+  assert.ok(
+    source.indexOf('if (cleanString(row?.xpub)) return "generated-seed";') <
+      source.indexOf('if (/^zpub/i.test(watchPublicKey)) return "zpub";'),
+    'legacy generated seed rows with xpub must not be misclassified as ZPub imports'
+  );
 });
 
 test('manage-decoy-monitors returns full watch values for advanced controls', () => {
@@ -68,4 +78,15 @@ test('manage-decoy-monitors checks duplicates without exposing other users', () 
   assert.match(source, /duplicateType/);
   assert.match(source, /\.eq\("user_id", user\.id\)/);
   assert.match(source, /\.is\("archived_at", null\)/);
+});
+
+test('manage-decoy-monitors archives only older generated seed monitors', () => {
+  assert.match(source, /function archiveOlderGeneratedSeedMonitors/);
+  assert.match(source, /currentMonitorId/);
+  assert.match(source, /detectType\(row\) === "generated-seed"/);
+  assert.match(source, /cleanString\(row\?\.id\) !== currentMonitorId/);
+  assert.match(source, /\.eq\("user_id", userId\)/);
+  assert.match(source, /\.in\("id", olderGeneratedSeedIds\)/);
+  assert.match(source, /archivedGeneratedSeedMonitors/);
+  assert.match(source, /bestEffortDeleteFingerprints\(supabase, monitorId\)/);
 });

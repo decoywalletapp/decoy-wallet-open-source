@@ -111,10 +111,14 @@ function detectType(row: any) {
     return "address-list";
   }
 
-  if (/^zpub/i.test(watchPublicKey)) return "zpub";
-  if (/^xpub/i.test(watchPublicKey)) return "xpub";
   if (cleanString(row?.xpub)) return "generated-seed";
   if (cleanString(row?.zpub)) return "zpub";
+  if (derivationPath && derivationPath !== "imported-addresses") {
+    return "generated-seed";
+  }
+
+  if (/^zpub/i.test(watchPublicKey)) return "zpub";
+  if (/^xpub/i.test(watchPublicKey)) return "xpub";
 
   return "wallet";
 }
@@ -211,6 +215,65 @@ async function bestEffortDeleteFingerprints(supabase: any, monitorId: string) {
       error.message,
     );
   }
+}
+
+async function archiveOlderGeneratedSeedMonitors(
+  supabase: any,
+  userId: string,
+  currentMonitorId: string,
+) {
+  const { data: current, error: currentError } = await supabase
+    .from("decoys")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("id", currentMonitorId)
+    .is("archived_at", null)
+    .maybeSingle();
+
+  if (currentError) throw currentError;
+  if (!current) return { archivedGeneratedSeedMonitors: 0 };
+
+  const { data: rows, error: rowsError } = await supabase
+    .from("decoys")
+    .select(
+      "id, derivation_path, xpub, zpub, watch_public_key, watch_public_key_type, source_type",
+    )
+    .eq("user_id", userId)
+    .is("archived_at", null);
+
+  if (rowsError) throw rowsError;
+
+  const olderGeneratedSeedIds = (rows || [])
+    .filter((row: any) =>
+      cleanString(row?.id) !== currentMonitorId &&
+      detectType(row) === "generated-seed"
+    )
+    .map((row: any) => cleanString(row?.id))
+    .filter(Boolean);
+
+  if (!olderGeneratedSeedIds.length) {
+    return { archivedGeneratedSeedMonitors: 0 };
+  }
+
+  const { error: archiveError } = await supabase
+    .from("decoys")
+    .update({
+      active: false,
+      archived_at: new Date().toISOString(),
+    })
+    .eq("user_id", userId)
+    .in("id", olderGeneratedSeedIds)
+    .is("archived_at", null);
+
+  if (archiveError) throw archiveError;
+
+  for (const monitorId of olderGeneratedSeedIds) {
+    await bestEffortDeleteFingerprints(supabase, monitorId);
+  }
+
+  return {
+    archivedGeneratedSeedMonitors: olderGeneratedSeedIds.length,
+  };
 }
 
 async function listForUser(supabase: any, userId: string) {
@@ -310,6 +373,27 @@ serve(async (req) => {
     if (action === "deactivateAll") {
       await deactivateAllForUser(supabase, user.id);
       return json(await listForUser(supabase, user.id));
+    }
+
+    if (action === "archiveOlderGeneratedSeeds") {
+      const currentMonitorId = cleanString(
+        body.monitorId || body.decoyId || body.id,
+      );
+
+      if (!currentMonitorId) {
+        return json({ ok: false, error: "Missing monitor id" }, 400);
+      }
+
+      const archiveResult = await archiveOlderGeneratedSeedMonitors(
+        supabase,
+        user.id,
+        currentMonitorId,
+      );
+
+      return json({
+        ...(await listForUser(supabase, user.id)),
+        ...archiveResult,
+      });
     }
 
     if (action === "checkDuplicate") {
