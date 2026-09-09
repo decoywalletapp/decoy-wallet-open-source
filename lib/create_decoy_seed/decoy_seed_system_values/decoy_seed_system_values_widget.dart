@@ -239,6 +239,25 @@ class _DecoySeedSystemValuesWidgetState
       return;
     }
 
+    if (FFAppState().draftWatchSourceType.trim() == 'generated-seed') {
+      try {
+        final cleanupResp = await ManageDecoyMonitorsCall.call(
+          jwt: jwt,
+          action: 'archiveOlderGeneratedSeeds',
+          monitorId: decoyId,
+        );
+
+        if (cleanupResp.succeeded != true) {
+          _debugLog(
+            'archiveOlderGeneratedSeeds failed after save: '
+            '${cleanupResp.statusCode}',
+          );
+        }
+      } catch (e) {
+        _debugLog('archiveOlderGeneratedSeeds failed after save: $e');
+      }
+    }
+
     FFAppState().decoySeedArmed = seedMonitorEnabled;
     safeSetState(() {});
     await Future.delayed(

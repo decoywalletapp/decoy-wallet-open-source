@@ -185,6 +185,12 @@ void main() {
     expect(source, contains('watchPublicKeyType: watchPublicKeyType'));
     expect(source,
         contains('sourceType: FFAppState().draftWatchSourceType.trim()'));
+    expect(source, contains("action: 'archiveOlderGeneratedSeeds'"));
+    expect(source, contains("monitorId: decoyId"));
+    expect(
+      source.indexOf('await DecoyWalletTable().update'),
+      lessThan(source.indexOf("action: 'archiveOlderGeneratedSeeds'")),
+    );
   });
 
   test('commit JSON escaping preserves address-list watch keys', () async {
