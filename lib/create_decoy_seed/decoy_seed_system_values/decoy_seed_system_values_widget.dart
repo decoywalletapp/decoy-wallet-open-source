@@ -144,6 +144,92 @@ class _DecoySeedSystemValuesWidgetState
     }
   }
 
+  String _setupMonitorTitle() {
+    final sourceType = FFAppState().draftWatchSourceType.trim();
+    final watchPublicKeyType = FFAppState().draftWatchPublicKeyType.trim();
+
+    if (sourceType == 'generated-seed') {
+      return 'Most Recent Decoy Seed Generated';
+    }
+    if (sourceType == 'address-list' ||
+        watchPublicKeyType == 'bitcoin-address-list') {
+      return 'Receive Address Monitor';
+    }
+    if (sourceType == 'xpub') {
+      return 'XPub Monitor';
+    }
+    if (sourceType == 'zpub') {
+      return 'ZPub Monitor';
+    }
+    return 'Wallet Activity Monitor';
+  }
+
+  bool _savedSetupMonitorEnabled() {
+    return false;
+  }
+
+  Future<bool> _ensureMasterDecoyKeysArmed(String decoyId) async {
+    DecoyWalletRow? walletRow;
+    try {
+      final walletRows = await DecoyWalletTable().queryRows(
+        queryFn: (rows) => rows.eqOrNull(
+          'user_id',
+          currentUserUid,
+        ),
+      );
+      walletRow = walletRows.elementAtOrNull(0);
+    } catch (e) {
+      _debugLog('decoy seed wallet load failed before master arm: $e');
+      return false;
+    }
+
+    final masterAlreadyArmed = walletRow?.decoySeedArmed == true;
+
+    if (masterAlreadyArmed) {
+      try {
+        await DecoyWalletTable().update(
+          data: {
+            'decoy_seed_armed': true,
+            'decoy_seed_contacts_enabled': true,
+            'decoy_seed_decoy_id': decoyId,
+            'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          },
+          matchingRows: (rows) => rows.eqOrNull(
+            'user_id',
+            currentUserUid,
+          ),
+        );
+      } catch (e) {
+        _debugLog('decoy seed wallet metadata update failed: $e');
+        return false;
+      }
+      FFAppState().decoySeedArmed = true;
+      return true;
+    }
+
+    try {
+      await DecoyWalletTable().update(
+        data: {
+          'decoy_seed_armed': true,
+          'decoy_seed_contacts_enabled': true,
+          'decoy_seed_decoy_id': decoyId,
+          'decoy_seed_armed_at': supaSerialize<DateTime>(getCurrentTimestamp),
+          'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
+        },
+        matchingRows: (rows) => rows.eqOrNull(
+          'user_id',
+          currentUserUid,
+        ),
+      );
+    } catch (e) {
+      _debugLog('decoy seed wallet update failed: $e');
+      return false;
+    }
+
+    FFAppState().decoySeedArmed = true;
+    return true;
+  }
+
   Future<void> _commitAndSaveSeedSettings(bool seedMonitorEnabled) async {
     final decoyId = FFAppState().decoyActiveId.trim();
     final derivationPath = FFAppState().draftDerivationPath.trim();
@@ -186,6 +272,7 @@ class _DecoySeedSystemValuesWidgetState
         watchPublicKey: watchPublicKey,
         watchPublicKeyType: watchPublicKeyType,
         sourceType: FFAppState().draftWatchSourceType.trim(),
+        active: seedMonitorEnabled,
       );
     } catch (e) {
       _debugLog('commitDecoy failed: $e');
@@ -217,26 +304,12 @@ class _DecoySeedSystemValuesWidgetState
       return;
     }
 
-    try {
-      await DecoyWalletTable().update(
-        data: {
-          'decoy_seed_armed': seedMonitorEnabled,
-          'decoy_seed_contacts_enabled': seedMonitorEnabled,
-          'decoy_seed_decoy_id': decoyId,
-          'decoy_seed_armed_at': seedMonitorEnabled
-              ? supaSerialize<DateTime>(getCurrentTimestamp)
-              : null,
-          'updated_at': supaSerialize<DateTime>(getCurrentTimestamp),
-        },
-        matchingRows: (rows) => rows.eqOrNull(
-          'user_id',
-          currentUserUid,
-        ),
-      );
-    } catch (e) {
-      _debugLog('decoy seed wallet update failed: $e');
-      _showSeedSaveError('027');
-      return;
+    if (seedMonitorEnabled) {
+      final masterArmed = await _ensureMasterDecoyKeysArmed(decoyId);
+      if (!masterArmed) {
+        _showSeedSaveError('027');
+        return;
+      }
     }
 
     if (FFAppState().draftWatchSourceType.trim() == 'generated-seed') {
@@ -258,7 +331,6 @@ class _DecoySeedSystemValuesWidgetState
       }
     }
 
-    FFAppState().decoySeedArmed = seedMonitorEnabled;
     safeSetState(() {});
     await Future.delayed(
       Duration(
@@ -281,8 +353,7 @@ class _DecoySeedSystemValuesWidgetState
   }
 
   Future<void> _saveAndGoHome() async {
-    final seedMonitorEnabled =
-        _model.seedMonitorArmTileValue ?? FFAppState().decoySeedArmed;
+    final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? true;
 
     if ((FFAppState().hasActiveSubscription == true) &&
         (FFAppState().entitlementCheckCompleted == true)) {
@@ -352,12 +423,12 @@ class _DecoySeedSystemValuesWidgetState
   }
 
   Widget _buildStableSeedSettingsPage(BuildContext context) {
-    _model.seedMonitorArmTileValue ??= FFAppState().decoySeedArmed;
+    _model.seedMonitorArmTileValue ??= true;
     final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? false;
-    final savedSeedMonitorEnabled = FFAppState().decoySeedArmed;
+    final savedSeedMonitorEnabled = _savedSetupMonitorEnabled();
     const readyTitle = 'DECOY KEYS READY';
-    const triggerTitle = 'Decoy Keys Triggers';
-    const monitorTitle = 'Wallet Activity Monitor';
+    const triggerTitle = 'Decoy Keys Monitor';
+    final monitorTitle = _setupMonitorTitle();
     final decoySeedSystemBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(

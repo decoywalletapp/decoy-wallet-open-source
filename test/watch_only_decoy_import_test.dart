@@ -185,12 +185,13 @@ void main() {
     expect(source, contains('watchPublicKeyType: watchPublicKeyType'));
     expect(source,
         contains('sourceType: FFAppState().draftWatchSourceType.trim()'));
+    expect(source, contains('active: seedMonitorEnabled'));
+    expect(source, contains('_ensureMasterDecoyKeysArmed(decoyId)'));
     expect(source, contains("action: 'archiveOlderGeneratedSeeds'"));
     expect(source, contains("monitorId: decoyId"));
-    expect(
-      source.indexOf('await DecoyWalletTable().update'),
-      lessThan(source.indexOf("action: 'archiveOlderGeneratedSeeds'")),
-    );
+    expect(source, isNot(contains("'decoy_seed_armed': seedMonitorEnabled")));
+    expect(source,
+        isNot(contains('FFAppState().decoySeedArmed = seedMonitorEnabled')));
   });
 
   test('commit JSON escaping preserves address-list watch keys', () async {
@@ -278,7 +279,7 @@ void main() {
     expect(source, isNot(contains('decoyPin')));
   });
 
-  test('decoy keys setup completion uses the shared monitor toggle wording',
+  test('decoy keys setup completion uses individual monitor toggle wording',
       () {
     final source = File(
       'lib/create_decoy_seed/decoy_seed_system_values/'
@@ -286,8 +287,12 @@ void main() {
     ).readAsStringSync();
 
     expect(source, contains("'DECOY KEYS READY'"));
-    expect(source, contains("'Decoy Keys Triggers'"));
-    expect(source, contains("'Wallet Activity Monitor'"));
+    expect(source, contains("'Decoy Keys Monitor'"));
+    expect(source, contains('String _setupMonitorTitle()'));
+    expect(source, contains("'Most Recent Decoy Seed Generated'"));
+    expect(source, contains("'Receive Address Monitor'"));
+    expect(source, contains("'XPub Monitor'"));
+    expect(source, contains("'ZPub Monitor'"));
     expect(source, contains('seedMonitorArmTileValue'));
     expect(source, isNot(contains("action: 'deactivateAll'")));
     expect(source, isNot(contains("'WATCH-ONLY READY'")));
@@ -308,6 +313,10 @@ void main() {
     expect(source, contains('final seedMonitorEnabled'));
     expect(source, contains('final savedSeedMonitorEnabled'));
     expect(source, contains("seedMonitorEnabled ? 'ENABLE' : 'DISABLE'"));
+    expect(
+        source,
+        contains(
+            'final savedSeedMonitorEnabled = _savedSetupMonitorEnabled()'));
     expect(
         source,
         contains("savedSeedMonitorEnabled\n"

@@ -680,8 +680,10 @@ class CommitDecoyCall {
     String? watchPublicKey = '',
     String? watchPublicKeyType = '',
     String? sourceType = '',
+    bool? active,
   }) async {
     final addresses = _serializeList(addressesList);
+    final activeJson = active == null ? 'null' : active.toString();
 
     final ffApiRequestBody = '''
 {
@@ -691,7 +693,8 @@ class CommitDecoyCall {
   "xpub": "${escapeStringForJson(xpub)}",
   "watch_public_key": "${escapeStringForJson(watchPublicKey)}",
   "watch_public_key_type": "${escapeStringForJson(watchPublicKeyType)}",
-  "source_type": "${escapeStringForJson(sourceType)}"
+  "source_type": "${escapeStringForJson(sourceType)}",
+  "active": ${activeJson}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'commitDecoy',

@@ -42,18 +42,23 @@ void main() {
     expect(sources, isNot(contains('alert_logs')));
   });
 
-  test('generated seed arming still uses the existing decoy seed fields', () {
+  test('decoy keys setup can arm master without disarming existing monitors',
+      () {
     final source = File(
       'lib/create_decoy_seed/decoy_seed_system_values/'
       'decoy_seed_system_values_widget.dart',
     ).readAsStringSync();
 
-    expect(source, contains("'decoy_seed_armed': seedMonitorEnabled"));
-    expect(
-        source, contains("'decoy_seed_contacts_enabled': seedMonitorEnabled"));
+    expect(source, contains('_ensureMasterDecoyKeysArmed'));
+    expect(source, contains("'decoy_seed_armed': true"));
+    expect(source, contains("'decoy_seed_contacts_enabled': true"));
     expect(source, contains("'decoy_seed_decoy_id': decoyId"));
-    expect(source, contains("'decoy_seed_armed_at': seedMonitorEnabled"));
+    expect(source, contains("'decoy_seed_armed_at': supaSerialize"));
     expect(source, contains('CommitDecoyCall.call'));
+    expect(source, contains('active: seedMonitorEnabled'));
+    expect(source, isNot(contains("'decoy_seed_armed': seedMonitorEnabled")));
+    expect(source,
+        isNot(contains("'decoy_seed_contacts_enabled': seedMonitorEnabled")));
     expect(source, isNot(contains('SendEmergencyAlertsCall')));
   });
 
