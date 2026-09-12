@@ -25,6 +25,12 @@ function cleanStringArray(v: unknown) {
   return v.map((item) => cleanString(item)).filter(Boolean);
 }
 
+function asBoolean(v: unknown, fallback = false) {
+  const clean = cleanString(v).toLowerCase();
+  if (v === undefined || v === null || clean === "") return fallback;
+  return v === true || ["1", "true", "yes", "on"].includes(clean);
+}
+
 function normalizeWatchValue(value: unknown) {
   const clean = cleanString(value);
   if (/^(bc1|tb1|bcrt1)/i.test(clean)) return clean.toLowerCase();
@@ -212,6 +218,69 @@ async function loadComparableMonitorRows(supabase: any, userId: string) {
   return result.data || [];
 }
 
+async function bestEffortCloseOpenUtxoStates(
+  supabase: any,
+  monitorId: string,
+  source: string,
+) {
+  const nowIso = new Date().toISOString();
+  const { error } = await supabase
+    .from("decoy_seed_utxo_state")
+    .update({
+      spent_at: nowIso,
+      source,
+      updated_at: nowIso,
+    })
+    .eq("decoy_id", monitorId)
+    .is("spent_at", null);
+
+  if (error && !isMissingRelationError(error)) {
+    throw error;
+  }
+}
+
+async function queueMonitorActivationReset(
+  supabase: any,
+  userId: string,
+  monitorId: string,
+) {
+  const nowIso = new Date().toISOString();
+
+  const { error: baselineError } = await supabase
+    .from("decoy_seed_baselines")
+    .upsert(
+      { decoy_id: monitorId, baselined_at: nowIso },
+      { onConflict: "decoy_id" },
+    );
+
+  if (baselineError && !isMissingRelationError(baselineError)) {
+    throw baselineError;
+  }
+
+  await bestEffortCloseOpenUtxoStates(
+    supabase,
+    monitorId,
+    "monitor-activation-reset",
+  );
+
+  const { error: resetError } = await supabase
+    .from("decoy_monitor_activation_resets")
+    .upsert(
+      {
+        decoy_id: monitorId,
+        user_id: userId,
+        reset_at: nowIso,
+        processed_at: null,
+        updated_at: nowIso,
+      },
+      { onConflict: "decoy_id" },
+    );
+
+  if (resetError && !isMissingRelationError(resetError)) {
+    throw resetError;
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -257,6 +326,7 @@ serve(async (req) => {
     const watchPublicKeyType = cleanString(body.watch_public_key_type);
     const sourceType = cleanString(body.source_type);
     const addressListWatch = isAddressListWatchType(watchPublicKeyType);
+    const monitorActive = asBoolean(body.active, true);
 
     if (!decoyId || !derivationPath || addresses.length === 0) {
       return json({ ok: false, error: "Missing required decoy fields" }, 400);
@@ -270,7 +340,7 @@ serve(async (req) => {
 
     const { data: existing, error: existingError } = await supabase
       .from("decoys")
-      .select("id, user_id")
+      .select("id, user_id, active")
       .eq("id", decoyId)
       .maybeSingle();
 
@@ -294,13 +364,15 @@ serve(async (req) => {
       return json({ ok: false, error: "Duplicate Decoy Keys monitor" }, 409);
     }
 
+    const needsActivationReset = monitorActive && existing?.active !== true;
+
     const basePayload = {
       id: decoyId,
       user_id: user.id,
       addresses,
       derivation_path: derivationPath,
       network: "bitcoin",
-      active: true,
+      active: needsActivationReset ? false : monitorActive,
     };
 
     const payloadWithMonitorMetadata = {
@@ -353,6 +425,30 @@ serve(async (req) => {
 
     if (error) {
       return json({ ok: false, error: error.message }, 500);
+    }
+
+    if (needsActivationReset) {
+      try {
+        await queueMonitorActivationReset(supabase, user.id, decoyId);
+
+        const { error: activeError } = await supabase
+          .from("decoys")
+          .update({ active: true })
+          .eq("user_id", user.id)
+          .eq("id", decoyId);
+
+        if (activeError) {
+          return json({ ok: false, error: activeError.message }, 500);
+        }
+      } catch (activationError) {
+        return json({
+          ok: false,
+          error:
+            activationError instanceof Error
+              ? activationError.message
+              : String(activationError),
+        }, 500);
+      }
     }
 
     const fingerprintShadow = await writeWatchAddressFingerprintShadow(

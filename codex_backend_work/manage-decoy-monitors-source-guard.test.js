@@ -19,9 +19,10 @@ test('manage-decoy-monitors scopes every mutation to the signed-in user', () => 
   assert.match(source, /Monitor not found/);
 });
 
-test('manage-decoy-monitors only changes monitor participation rows', () => {
+test('manage-decoy-monitors only changes monitor participation and reset rows', () => {
   assert.match(source, /action === "setActive"/);
-  assert.match(source, /\.update\(\{ active: asBoolean\(body\.active\) \}\)/);
+  assert.match(source, /const nextActive = asBoolean\(body\.active\)/);
+  assert.match(source, /\.update\(\{ active: nextActive \}\)/);
   assert.match(source, /action === "delete"/);
   assert.match(source, /action === "bulkSave"/);
   assert.match(source, /action === "deactivateAll"/);
@@ -33,7 +34,11 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
   assert.match(source, /deleteMonitorIds/);
   assert.match(source, /activeMonitorIds/);
   assert.match(source, /inactiveMonitorIds/);
-  assert.match(source, /loadOwnedMonitorIds/);
+  assert.match(source, /loadOwnedMonitorRows/);
+  assert.match(source, /queueMonitorActivationReset/);
+  assert.match(source, /decoy_monitor_activation_resets/);
+  assert.match(source, /decoy_seed_baselines/);
+  assert.match(source, /bestEffortCloseOpenUtxoStates/);
   assert.match(source, /archived_at: new Date\(\)\.toISOString\(\)/);
   assert.doesNotMatch(source, /sms_queue/);
   assert.doesNotMatch(source, /alert_logs/);
@@ -44,6 +49,15 @@ test('manage-decoy-monitors only changes monitor participation rows', () => {
   for (const statement of decoyWalletStatements) {
     assert.doesNotMatch(statement, /\.update/);
   }
+});
+
+test('manage-decoy-monitors baselines only monitors that are turned back on', () => {
+  assert.match(source, /const monitorsTurningOn = activeMonitorIds\.filter/);
+  assert.match(source, /ownedRows\.get\(id\)\?\.active !== true/);
+  assert.match(source, /for \(const monitorId of monitorsTurningOn\)/);
+  assert.match(source, /nextActive && existing\.active !== true/);
+  assert.match(source, /await queueMonitorActivationReset\(supabase, user\.id, monitorId\)/);
+  assert.match(source, /"monitor-deactivated"/);
 });
 
 test('manage-decoy-monitors labels watch-key seeds as account-level monitoring', () => {

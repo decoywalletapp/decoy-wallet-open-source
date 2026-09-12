@@ -237,3 +237,17 @@ test('watch address fingerprint shadow path never records seed triggers directly
   assert.doesNotMatch(fingerprintBlock, /recordSeedTrigger/);
   assert.doesNotMatch(fingerprintBlock, /kickSmsWorkerIfConfigured/);
 });
+
+test('watcher suppresses retroactive alerts during individual monitor activation reset', () => {
+  assert.match(watcherSource, /decoy_monitor_activation_resets/);
+  assert.match(watcherSource, /function laterDate/);
+  assert.match(watcherSource, /activationResetAt/);
+  assert.match(watcherSource, /needsActivationReset/);
+  assert.match(watcherSource, /suppressTriggers: needsActivationReset/);
+  assert.match(watcherSource, /markActivationResetProcessed/);
+  assert.match(watcherSource, /await markSeenTx\(watch\.decoyId, txid\)/);
+  assert.match(
+    watcherSource,
+    /!suppressTriggers && shouldProcessOutboundTx\(tx, addr, armedAt, null\)/
+  );
+});

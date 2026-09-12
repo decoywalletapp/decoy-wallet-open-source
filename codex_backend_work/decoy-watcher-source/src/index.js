@@ -1381,6 +1381,57 @@ async function getBaselineMap(decoyIds) {
   return m;
 }
 
+async function getActivationResetMap(decoyIds) {
+  if (!decoyIds.length) return new Map();
+
+  const { data, error } = await supabase
+    .from('decoy_monitor_activation_resets')
+    .select('decoy_id, reset_at, processed_at')
+    .in('decoy_id', decoyIds)
+    .is('processed_at', null);
+
+  if (error) {
+    if (isMissingRelationError(error)) return new Map();
+    console.error('[decoy-watcher] error loading decoy_monitor_activation_resets', error);
+    return new Map();
+  }
+
+  const m = new Map();
+  for (const r of data || []) {
+    if (!r || !r.decoy_id) continue;
+    m.set(r.decoy_id, {
+      resetAt: r.reset_at || null,
+      processedAt: r.processed_at || null,
+    });
+  }
+  return m;
+}
+
+async function markActivationResetProcessed(decoyId) {
+  if (!decoyId) return false;
+
+  const nowIso = new Date().toISOString();
+  const { error } = await supabase
+    .from('decoy_monitor_activation_resets')
+    .update({ processed_at: nowIso, updated_at: nowIso })
+    .eq('decoy_id', decoyId)
+    .is('processed_at', null);
+
+  if (error) {
+    if (isMissingRelationError(error)) return false;
+    console.error('[decoy-watcher] error marking decoy_monitor_activation_resets processed', error);
+    return false;
+  }
+
+  return true;
+}
+
+function laterDate(a, b) {
+  const dates = [a, b].filter((value) => value instanceof Date && !Number.isNaN(value.getTime()));
+  if (!dates.length) return null;
+  return dates.reduce((latest, value) => (value.getTime() > latest.getTime() ? value : latest));
+}
+
 async function getScanStateMap(decoyIds) {
   if (!decoyIds.length) return new Map();
 
@@ -1826,6 +1877,7 @@ async function loadEligibleArmedSeedWatches() {
   const gateMap = await getSeedGateMap(userIds);
   const decoyIds = [...new Set(seeds.map((seed) => seed.decoy_id).filter(Boolean))];
   const baselineMap = await getBaselineMap(decoyIds);
+  const activationResetMap = await getActivationResetMap(decoyIds);
   const watches = [];
 
   for (const seed of seeds) {
@@ -1843,7 +1895,11 @@ async function loadEligibleArmedSeedWatches() {
       addresses,
       addressSet: new Set(addresses.filter(Boolean)),
       armedAt: toDateOrNull(gate.armedAt),
-      lastBaseline: toDateOrNull(baselineMap.get(decoy_id)),
+      lastBaseline: laterDate(
+        toDateOrNull(baselineMap.get(decoy_id)),
+        toDateOrNull(activationResetMap.get(decoy_id)?.resetAt)
+      ),
+      activationResetAt: toDateOrNull(activationResetMap.get(decoy_id)?.resetAt),
     });
   }
 
@@ -1960,6 +2016,11 @@ async function processChainEventRequest(req) {
         fingerprintShadowMatchedInputs += fingerprintWatches.length;
 
         for (const watch of fingerprintWatches) {
+          if (watch.activationResetAt) {
+            await markSeenTx(watch.decoyId, txid);
+            continue;
+          }
+
           if (!shouldProcessOutboundTx(tx, address, watch.armedAt, watch.lastBaseline)) continue;
 
           const pairKey = `${watch.decoyId}:${txid}`;
@@ -1986,6 +2047,11 @@ async function processChainEventRequest(req) {
       matchedInputs += addressWatches.length;
 
       for (const watch of addressWatches) {
+        if (watch.activationResetAt) {
+          await markSeenTx(watch.decoyId, txid);
+          continue;
+        }
+
         if (!shouldProcessOutboundTx(tx, address, watch.armedAt, watch.lastBaseline)) continue;
 
         const pairKey = `${watch.decoyId}:${txid}`;
@@ -2085,11 +2151,14 @@ async function processChainEventRequest(req) {
   };
 }
 
-async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
+async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt, options = {}) {
   const watch = normalizeSeedWatch(seedOrAddresses);
   const addresses = watch.addresses;
+  const suppressTriggers = options.suppressTriggers === true;
   let markedSeen = 0;
   let createdTriggers = 0;
+  let addressFallbackAttempts = 0;
+  let addressFallbackFailures = 0;
   const addressSet = new Set((Array.isArray(addresses) ? addresses : []).filter(Boolean));
 
   const batch = await fetchSeedBatchCandidateTxs(watch);
@@ -2103,7 +2172,7 @@ async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
       const addr = outboundWatchedAddress(tx, addressSet);
       if (!addr) continue;
 
-      if (shouldProcessOutboundTx(tx, addr, armedAt, null)) {
+      if (!suppressTriggers && shouldProcessOutboundTx(tx, addr, armedAt, null)) {
         const created = await recordSeedTrigger(
           decoyId,
           userId,
@@ -2137,7 +2206,9 @@ async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
   for (const addr of addresses) {
     if (!addr) continue;
 
-    const { txs } = await fetchAddressCandidateTxs(addr);
+    const { txs, ok } = await fetchAddressCandidateTxs(addr);
+    addressFallbackAttempts += 1;
+    if (!ok) addressFallbackFailures += 1;
     if (!txs.length) continue;
 
     for (const tx of txs) {
@@ -2146,7 +2217,7 @@ async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
 
       if (!isOutboundForAddress(tx, addr)) continue;
 
-      if (shouldProcessOutboundTx(tx, addr, armedAt, null)) {
+      if (!suppressTriggers && shouldProcessOutboundTx(tx, addr, armedAt, null)) {
         const created = await recordSeedTrigger(
           decoyId,
           userId,
@@ -2163,7 +2234,7 @@ async function baselineDecoyNow(decoyId, userId, seedOrAddresses, armedAt) {
   }
 
   return {
-    ok: false,
+    ok: addressFallbackAttempts > 0 && addressFallbackFailures === 0,
     markedSeen,
     createdTriggers,
     batchOk: false,
@@ -2234,6 +2305,7 @@ async function processRunInContext(options = {}, runContext) {
 
   const decoyIds = [...new Set(seeds.map((s) => s.decoy_id).filter(Boolean))];
   const baselineMap = await getBaselineMap(decoyIds);
+  const activationResetMap = await getActivationResetMap(decoyIds);
   const scanStateMap = await getScanStateMap(decoyIds);
 
   let newTriggers = 0;
@@ -2288,8 +2360,15 @@ async function processRunInContext(options = {}, runContext) {
 
     expectedAddresses += addresses.length;
 
-    const lastBaseline = toDateOrNull(baselineMap.get(decoy_id));
-    const needsBaseline = !!armedAt && (!lastBaseline || lastBaseline < armedAt);
+    const storedBaseline = toDateOrNull(baselineMap.get(decoy_id));
+    const activationResetAt = toDateOrNull(
+      activationResetMap.get(decoy_id)?.resetAt
+    );
+    const lastBaseline = laterDate(storedBaseline, activationResetAt);
+    const needsMasterBaseline =
+      !!armedAt && (!storedBaseline || storedBaseline < armedAt);
+    const needsActivationReset = !!activationResetAt;
+    const needsBaseline = needsMasterBaseline || needsActivationReset;
     const scanState = scanStateMap.get(decoy_id) || { lastIndex: -1, updatedAt: null };
     const lastScanAt = toDateOrNull(scanState.updatedAt);
 
@@ -2298,6 +2377,9 @@ async function processRunInContext(options = {}, runContext) {
       watch,
       armedAt,
       lastBaseline,
+      storedBaseline,
+      activationResetAt,
+      needsActivationReset,
       needsBaseline,
       scanState,
       lastScanAt,
@@ -2344,6 +2426,8 @@ async function processRunInContext(options = {}, runContext) {
     watcherShard.key,
     'baselinePending',
     eligibleSeeds.filter((s) => s.needsBaseline).length,
+    'activationResetPending',
+    eligibleSeeds.filter((s) => s.needsActivationReset).length,
     'watchKeyRecords',
     watchKeySeedDecoyIds.length,
     'watchKeyRecordsAllShards',
@@ -2351,7 +2435,15 @@ async function processRunInContext(options = {}, runContext) {
   );
 
   for (const item of eligibleSeeds) {
-    const { seed, watch, armedAt, lastBaseline, needsBaseline, scanState } = item;
+    const {
+      seed,
+      watch,
+      armedAt,
+      lastBaseline,
+      needsActivationReset,
+      needsBaseline,
+      scanState,
+    } = item;
     const { decoy_id, user_id } = seed;
     const addresses = watch.addresses;
 
@@ -2381,9 +2473,14 @@ async function processRunInContext(options = {}, runContext) {
 
         if (needsBaseline) {
           await upsertBaseline(decoy_id);
+          if (needsActivationReset) {
+            await markActivationResetProcessed(decoy_id);
+          }
           baselinedDecoys += 1;
           log(
-            'watch-key utxo baseline completed for decoy_ref',
+            needsActivationReset
+              ? 'watch-key utxo activation reset completed for decoy_ref'
+              : 'watch-key utxo baseline completed for decoy_ref',
             idLabel(decoy_id),
             'current_utxos',
             utxoScan.currentUtxos
@@ -2416,9 +2513,14 @@ async function processRunInContext(options = {}, runContext) {
     }
 
     if (needsBaseline) {
-      const baseline = await baselineDecoyNow(decoy_id, user_id, watch, armedAt);
+      const baseline = await baselineDecoyNow(decoy_id, user_id, watch, armedAt, {
+        suppressTriggers: needsActivationReset,
+      });
       recordBatchTelemetry(batchTelemetry, baseline);
       await upsertBaseline(decoy_id);
+      if (needsActivationReset && baseline.ok) {
+        await markActivationResetProcessed(decoy_id);
+      }
       successfullyScannedDecoyIds.add(decoy_id);
 
       baselinedDecoys += 1;
@@ -2426,7 +2528,9 @@ async function processRunInContext(options = {}, runContext) {
       totalAddressesChecked += addresses.length;
       if (!baseline.batchOk) baselineBatchFailures += 1;
       log(
-        'baseline completed for decoy_ref',
+        needsActivationReset
+          ? 'activation reset baseline completed for decoy_ref'
+          : 'baseline completed for decoy_ref',
         idLabel(decoy_id),
         'marked_seen',
         baseline.markedSeen,
@@ -2541,6 +2645,7 @@ async function processRunInContext(options = {}, runContext) {
     unshardedEligibleSeedRecords,
     unshardedWatchKeyRecords,
     eligibleSeedRecords: eligibleSeeds.length,
+    activationResetPending: eligibleSeeds.filter((s) => s.needsActivationReset).length,
     expectedAddresses,
     totalAddressesChecked,
     blockbookConfigured: BLOCKBOOK_BASE_URLS.length > 0,

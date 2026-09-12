@@ -11,6 +11,10 @@ const migration = [
     'supabase/migrations/20260907215200_drop_legacy_single_active_decoy_constraint.sql',
     'utf8'
   ),
+  fs.readFileSync(
+    'supabase/migrations/20260911190000_add_decoy_monitor_activation_resets.sql',
+    'utf8'
+  ),
 ].join('\n');
 
 test('migration removes the old single-active-decoy rule', () => {
@@ -53,5 +57,23 @@ test('armed_decoy_seeds remains service-backend only', () => {
   assert.match(
     migration,
     /revoke\s+all\s+privileges\s+on\s+table\s+public\.armed_decoy_seeds\s+from\s+anon,\s+authenticated/i
+  );
+});
+
+test('individual monitor reactivation reset table is backend-only', () => {
+  assert.match(
+    migration,
+    /create\s+table\s+if\s+not\s+exists\s+public\.decoy_monitor_activation_resets/i
+  );
+  assert.match(migration, /decoy_id\s+uuid\s+primary\s+key/i);
+  assert.match(migration, /reset_at\s+timestamptz\s+not\s+null\s+default\s+now\(\)/i);
+  assert.match(migration, /processed_at\s+timestamptz/i);
+  assert.match(
+    migration,
+    /alter\s+table\s+public\.decoy_monitor_activation_resets\s+enable\s+row\s+level\s+security/i
+  );
+  assert.match(
+    migration,
+    /revoke\s+all\s+on\s+table\s+public\.decoy_monitor_activation_resets\s+from\s+anon,\s+authenticated/i
   );
 });

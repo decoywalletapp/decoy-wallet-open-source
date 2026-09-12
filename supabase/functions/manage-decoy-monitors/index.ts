@@ -217,6 +217,69 @@ async function bestEffortDeleteFingerprints(supabase: any, monitorId: string) {
   }
 }
 
+async function bestEffortCloseOpenUtxoStates(
+  supabase: any,
+  monitorId: string,
+  source: string,
+) {
+  const nowIso = new Date().toISOString();
+  const { error } = await supabase
+    .from("decoy_seed_utxo_state")
+    .update({
+      spent_at: nowIso,
+      source,
+      updated_at: nowIso,
+    })
+    .eq("decoy_id", monitorId)
+    .is("spent_at", null);
+
+  if (error && !isMissingRelationError(error)) {
+    throw error;
+  }
+}
+
+async function queueMonitorActivationReset(
+  supabase: any,
+  userId: string,
+  monitorId: string,
+) {
+  const nowIso = new Date().toISOString();
+
+  const { error: baselineError } = await supabase
+    .from("decoy_seed_baselines")
+    .upsert(
+      { decoy_id: monitorId, baselined_at: nowIso },
+      { onConflict: "decoy_id" },
+    );
+
+  if (baselineError && !isMissingRelationError(baselineError)) {
+    throw baselineError;
+  }
+
+  await bestEffortCloseOpenUtxoStates(
+    supabase,
+    monitorId,
+    "monitor-activation-reset",
+  );
+
+  const { error: resetError } = await supabase
+    .from("decoy_monitor_activation_resets")
+    .upsert(
+      {
+        decoy_id: monitorId,
+        user_id: userId,
+        reset_at: nowIso,
+        processed_at: null,
+        updated_at: nowIso,
+      },
+      { onConflict: "decoy_id" },
+    );
+
+  if (resetError && !isMissingRelationError(resetError)) {
+    throw resetError;
+  }
+}
+
 async function archiveOlderGeneratedSeedMonitors(
   supabase: any,
   userId: string,
@@ -322,6 +385,26 @@ async function loadOwnedMonitorIds(
   return new Set((data || []).map((row: any) => cleanString(row?.id)));
 }
 
+async function loadOwnedMonitorRows(
+  supabase: any,
+  userId: string,
+  monitorIds: string[],
+) {
+  if (!monitorIds.length) return new Map<string, any>();
+
+  const { data, error } = await supabase
+    .from("decoys")
+    .select("id, active")
+    .eq("user_id", userId)
+    .in("id", monitorIds)
+    .is("archived_at", null);
+
+  if (error) throw error;
+  return new Map(
+    (data || []).map((row: any) => [cleanString(row?.id), row]),
+  );
+}
+
 async function deactivateAllForUser(_supabase: any, _userId: string) {
   // Compatibility for app builds that called this action when saving the
   // master Decoy Keys switch off. The master gate already pauses monitoring.
@@ -419,10 +502,22 @@ serve(async (req) => {
         ...inactiveMonitorIds,
       ]);
 
-      const ownedIds = await loadOwnedMonitorIds(supabase, user.id, allMonitorIds);
-      const missingIds = allMonitorIds.filter((id) => !ownedIds.has(id));
+      const ownedRows = await loadOwnedMonitorRows(
+        supabase,
+        user.id,
+        allMonitorIds,
+      );
+      const missingIds = allMonitorIds.filter((id) => !ownedRows.has(id));
       if (missingIds.length) {
         return json({ ok: false, error: "Monitor not found" }, 404);
+      }
+
+      const monitorsTurningOn = activeMonitorIds.filter((id) =>
+        ownedRows.get(id)?.active !== true
+      );
+
+      for (const monitorId of monitorsTurningOn) {
+        await queueMonitorActivationReset(supabase, user.id, monitorId);
       }
 
       if (deleteMonitorIds.length) {
@@ -469,6 +564,14 @@ serve(async (req) => {
         if (inactiveError) {
           return json({ ok: false, error: inactiveError.message }, 500);
         }
+
+        for (const monitorId of inactiveMonitorIds) {
+          await bestEffortCloseOpenUtxoStates(
+            supabase,
+            monitorId,
+            "monitor-deactivated",
+          );
+        }
       }
 
       return json(await listForUser(supabase, user.id));
@@ -481,7 +584,7 @@ serve(async (req) => {
 
     const { data: existing, error: existingError } = await supabase
       .from("decoys")
-      .select("id")
+      .select("id, active")
       .eq("user_id", user.id)
       .eq("id", monitorId)
       .is("archived_at", null)
@@ -496,15 +599,28 @@ serve(async (req) => {
     }
 
     if (action === "setActive") {
+      const nextActive = asBoolean(body.active);
+      if (nextActive && existing.active !== true) {
+        await queueMonitorActivationReset(supabase, user.id, monitorId);
+      }
+
       const { error: updateError } = await supabase
         .from("decoys")
-        .update({ active: asBoolean(body.active) })
+        .update({ active: nextActive })
         .eq("user_id", user.id)
         .eq("id", monitorId)
         .is("archived_at", null);
 
       if (updateError) {
         return json({ ok: false, error: updateError.message }, 500);
+      }
+
+      if (!nextActive) {
+        await bestEffortCloseOpenUtxoStates(
+          supabase,
+          monitorId,
+          "monitor-deactivated",
+        );
       }
 
       return json(await listForUser(supabase, user.id));

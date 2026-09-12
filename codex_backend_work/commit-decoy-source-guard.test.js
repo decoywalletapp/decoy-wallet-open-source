@@ -29,6 +29,17 @@ test('commit-decoy does not deactivate other Decoy Keys monitors', () => {
   assert.match(source, /archived_at: null/);
 });
 
+test('commit-decoy stages newly active monitors behind an activation reset', () => {
+  assert.match(source, /function asBoolean/);
+  assert.match(source, /const monitorActive = asBoolean\(body\.active, true\)/);
+  assert.match(source, /const needsActivationReset = monitorActive && existing\?\.active !== true/);
+  assert.match(source, /active: needsActivationReset \? false : monitorActive/);
+  assert.match(source, /queueMonitorActivationReset/);
+  assert.match(source, /decoy_monitor_activation_resets/);
+  assert.match(source, /decoy_seed_baselines/);
+  assert.match(source, /\.update\(\{ active: true \}\)/);
+});
+
 test('commit-decoy rejects duplicate watch-only monitor values', () => {
   assert.match(source, /function hasDuplicateWatchData/);
   assert.match(source, /loadComparableMonitorRows\(supabase, user\.id\)/);
