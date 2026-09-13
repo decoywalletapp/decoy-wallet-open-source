@@ -323,6 +323,29 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
   }
 
   Widget _buildOrangeTitleBlock(BuildContext context, String title) {
+    final titleStyle = FlutterFlowTheme.of(context).bodyMedium.override(
+          fontFamily: 'DECOY BEBAS',
+          color: FlutterFlowTheme.of(context).info,
+          fontSize: title.length > 12 ? 42.0 : 52.0,
+          letterSpacing: 0.0,
+          fontWeight: FontWeight.normal,
+          lineHeight: 1.05,
+        );
+
+    Widget titleLayer(AlignmentDirectional alignment) {
+      return Align(
+        alignment: alignment,
+        child: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 12.0),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: titleStyle,
+          ),
+        ),
+      );
+    }
+
     return Material(
       color: Colors.transparent,
       elevation: 3.0,
@@ -337,21 +360,13 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         alignment: AlignmentDirectional(0.0, 0.0),
-        padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 10.0),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: 'DECOY BEBAS',
-                  color: FlutterFlowTheme.of(context).info,
-                  fontSize: 52.0,
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.normal,
-                  lineHeight: 1.05,
-                ),
-          ),
+        child: Stack(
+          children: [
+            titleLayer(AlignmentDirectional(0.1, 0.0)),
+            titleLayer(AlignmentDirectional(-0.1, 0.0)),
+            titleLayer(AlignmentDirectional(0.0, 0.1)),
+            titleLayer(AlignmentDirectional(0.0, -0.1)),
+          ],
         ),
       ),
     );
