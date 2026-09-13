@@ -422,6 +422,41 @@ class _DecoySeedSystemValuesWidgetState
     );
   }
 
+  Widget _buildOrangeTitleBlock(BuildContext context, String title) {
+    return Material(
+      color: Colors.transparent,
+      elevation: 3.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Container(
+        width: 300.0,
+        height: 71.0,
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).primary,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        alignment: AlignmentDirectional(0.0, 0.0),
+        padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 10.0),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'DECOY BEBAS',
+                  color: Colors.white,
+                  fontSize: 52.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.normal,
+                  lineHeight: 1.05,
+                ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildStableSeedSettingsPage(BuildContext context) {
     _model.seedMonitorArmTileValue ??= true;
     final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? false;
@@ -501,35 +536,9 @@ class _DecoySeedSystemValuesWidgetState
                             ),
                             Align(
                               alignment: AlignmentDirectional.center,
-                              child: Container(
-                                constraints: BoxConstraints(maxWidth: 300.0),
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 8.0,
-                                      color: Color(0x33000000),
-                                      offset: Offset(0.0, 4.0),
-                                    )
-                                  ],
-                                ),
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 14.0, 16.0, 14.0),
-                                child: Text(
-                                  readyTitle,
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'DECOY BEBAS',
-                                        color: Colors.white,
-                                        fontSize: 38.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.normal,
-                                        lineHeight: 1.0,
-                                      ),
-                                ),
+                              child: _buildOrangeTitleBlock(
+                                context,
+                                readyTitle,
                               ),
                             ),
                             Material(

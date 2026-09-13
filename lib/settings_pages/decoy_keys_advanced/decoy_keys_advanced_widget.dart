@@ -322,6 +322,41 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
     }
   }
 
+  Widget _buildOrangeTitleBlock(BuildContext context, String title) {
+    return Material(
+      color: Colors.transparent,
+      elevation: 3.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Container(
+        width: 300.0,
+        height: 71.0,
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).primary,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        alignment: AlignmentDirectional(0.0, 0.0),
+        padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 10.0),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'DECOY BEBAS',
+                  color: FlutterFlowTheme.of(context).info,
+                  fontSize: 52.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.normal,
+                  lineHeight: 1.05,
+                ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -345,32 +380,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
             ),
           ),
         ),
-        Material(
-          color: Colors.transparent,
-          elevation: 3.0,
-          borderRadius: BorderRadius.circular(10.0),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 340.0),
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).primary,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            padding: EdgeInsetsDirectional.fromSTEB(18.0, 12.0, 18.0, 12.0),
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Text(
-              'DECOY KEYS',
-              textAlign: TextAlign.center,
-              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                    fontFamily: 'DECOY BEBAS',
-                    color: FlutterFlowTheme.of(context).info,
-                    fontSize: 52.0,
-                    letterSpacing: 0.3,
-                    fontWeight: FontWeight.normal,
-                    lineHeight: 1.05,
-                  ),
-            ),
-          ),
-        ),
+        _buildOrangeTitleBlock(context, 'DECOY KEYS'),
         Text(
           'Advanced Monitor Controls',
           textAlign: TextAlign.center,
