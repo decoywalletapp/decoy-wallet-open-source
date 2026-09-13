@@ -251,3 +251,17 @@ test('watcher suppresses retroactive alerts during individual monitor activation
     /!suppressTriggers && shouldProcessOutboundTx\(tx, addr, armedAt, null\)/
   );
 });
+
+test('watch-key UTXO trigger path preserves transaction output addresses when available', () => {
+  assert.match(watcherSource, /function inputPrevoutFields/);
+  assert.match(watcherSource, /function txSpendsOutpointHmac/);
+  assert.match(watcherSource, /destinationAddressesForWatchKeySpend/);
+  assert.match(
+    watcherSource,
+    /destination_addresses: cleanDestinationAddresses\.length \? cleanDestinationAddresses : null/
+  );
+  assert.match(
+    watcherSource,
+    /recordSeedUtxoTrigger\(decoyId, userId, outpointHmac, source, destinationAddresses\)/
+  );
+});

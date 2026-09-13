@@ -568,6 +568,51 @@ function firstAddress(value) {
   return null;
 }
 
+function firstNonNegativeInteger(values) {
+  for (const value of values) {
+    const number = Number(value);
+    if (Number.isInteger(number) && number >= 0) return number;
+  }
+  return null;
+}
+
+function inputPrevoutFields(input) {
+  if (!input || typeof input !== 'object') return {};
+
+  const txid = firstAddress([
+    input.txid,
+    input.txId,
+    input.tx_hash,
+    input.txHash,
+    input.transactionHash,
+    input.transaction_id,
+    input.prevout && input.prevout.txid,
+    input.prevout && input.prevout.txId,
+    input.prevout && input.prevout.hash,
+    input.prevout && input.prevout.transactionHash,
+    input.prev_out && input.prev_out.txid,
+    input.prev_out && input.prev_out.txId,
+    input.prev_out && input.prev_out.hash,
+    input.prev_out && input.prev_out.transactionHash,
+  ]);
+  const vout = firstNonNegativeInteger([
+    input.vout,
+    input.outputIndex,
+    input.output_index,
+    input.prevout && input.prevout.vout,
+    input.prevout && input.prevout.outputIndex,
+    input.prevout && input.prevout.output_index,
+    input.prev_out && input.prev_out.n,
+    input.prev_out && input.prev_out.vout,
+    input.prev_out && input.prev_out.outputIndex,
+    input.prev_out && input.prev_out.output_index,
+    input.prev_out && input.prev_out.tx_output_n,
+  ]);
+
+  if (!txid || vout === null) return {};
+  return { txid: String(txid), vout };
+}
+
 function blockbookInputAddress(input) {
   if (!input) return null;
 
@@ -608,6 +653,7 @@ function normalizeBlockbookTx(tx) {
       ? tx.vin.map((input) => ({
           prevout: {
             scriptpubkey_address: blockbookInputAddress(input),
+            ...inputPrevoutFields(input),
           },
         }))
       : [],
@@ -633,6 +679,7 @@ function normalizeBlockchainTx(tx) {
           prevout: {
             scriptpubkey_address:
               input && input.prev_out ? input.prev_out.addr || input.prev_out.address || null : null,
+            ...inputPrevoutFields(input),
           },
         }))
       : [],
@@ -697,6 +744,7 @@ function normalizeEventTx(tx) {
     vin: rawInputs.map((input) => ({
       prevout: {
         scriptpubkey_address: eventInputAddress(input),
+        ...inputPrevoutFields(input),
       },
     })),
     vout: txDestinations.normalizeTxOutputs(rawOutputs),
@@ -1612,13 +1660,17 @@ async function recordSeedTrigger(decoyId, userId, tx, source, watchedAddresses =
   return true;
 }
 
-async function recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source) {
+async function recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source, destinationAddresses = []) {
   if (!outpointHmac) return false;
 
   const seen = await markSeenHmac(decoyId, outpointHmac);
   if (!seen.isNew) return false;
 
-  const { error: insertTrigErr } = await supabase.from('decoy_triggers').insert({
+  const cleanDestinationAddresses = Array.isArray(destinationAddresses)
+    ? destinationAddresses.filter((address) => typeof address === 'string' && address.trim())
+    : [];
+
+  const insertResult = await insertSeedTriggerRow({
     decoy_id: decoyId,
     user_id: userId,
     trigger_type: 'SEED_DECOY',
@@ -1626,16 +1678,51 @@ async function recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source) {
     txid_hmac: outpointHmac,
     observed_at: new Date().toISOString(),
     raw_event: null,
+    destination_addresses: cleanDestinationAddresses.length ? cleanDestinationAddresses : null,
+    destination_address_count: cleanDestinationAddresses.length,
   });
 
-  if (insertTrigErr) {
-    if (insertTrigErr.code === '23505') return false;
-    console.error('[decoy-watcher] error inserting decoy_triggers for utxo spend:', insertTrigErr);
+  if (!insertResult.ok) {
+    if (insertResult.duplicate) return false;
+    console.error('[decoy-watcher] error inserting decoy_triggers for utxo spend:', insertResult.error);
     return false;
   }
 
   log('seed utxo trigger recorded', 'source=', source);
   return true;
+}
+
+function txSpendsOutpointHmac(tx, outpointHmac) {
+  if (!outpointHmac) return false;
+
+  const inputs = Array.isArray(tx && tx.vin) ? tx.vin : [];
+  for (const input of inputs) {
+    const prevout = input && input.prevout;
+    const txid = prevout && prevout.txid;
+    const vout = prevout && prevout.vout;
+    if (!txid || !Number.isInteger(vout) || vout < 0) continue;
+    if (hmacOutpoint(`${txid}:${vout}`) === outpointHmac) return true;
+  }
+
+  return false;
+}
+
+async function destinationAddressesForWatchKeySpend(watch, outpointHmac, historyLoader = null) {
+  const history = historyLoader
+    ? await historyLoader()
+    : await fetchBlockbookWatchKeyCandidateTxs(watch);
+  const txs = Array.isArray(history && history.txs) ? history.txs : [];
+
+  for (const tx of txs) {
+    if (!txSpendsOutpointHmac(tx, outpointHmac)) continue;
+    return txDestinations.destinationAddressCandidates(tx, watch.addresses);
+  }
+
+  if (!history.ok && history.error) {
+    log('watch-key spend destination lookup failed', errorMessage(history.error));
+  }
+
+  return [];
 }
 
 async function hasSeedTriggerSince(decoyId, sinceDate) {
@@ -1812,6 +1899,11 @@ async function processWatchKeyUtxosForDecoy(decoyId, userId, watch, needsBaselin
   let spentDetected = 0;
   let createdTriggers = 0;
   let pendingMissing = 0;
+  let spendHistoryPromise = null;
+  const loadSpendHistory = () => {
+    spendHistoryPromise ??= fetchBlockbookWatchKeyCandidateTxs(watch);
+    return spendHistoryPromise;
+  };
   const nowMs = Date.now();
   for (const row of priorRows) {
     const outpointHmac = row && row.outpoint_hmac;
@@ -1831,7 +1923,14 @@ async function processWatchKeyUtxosForDecoy(decoyId, userId, watch, needsBaselin
       continue;
     }
 
-    const created = await recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source);
+    let destinationAddresses = [];
+    try {
+      destinationAddresses = await destinationAddressesForWatchKeySpend(watch, outpointHmac, loadSpendHistory);
+    } catch (error) {
+      log('watch-key spend destination lookup failed', errorMessage(error));
+    }
+
+    const created = await recordSeedUtxoTrigger(decoyId, userId, outpointHmac, source, destinationAddresses);
     await markUtxoStateSpent(decoyId, outpointHmac, source);
     if (created) createdTriggers += 1;
   }
