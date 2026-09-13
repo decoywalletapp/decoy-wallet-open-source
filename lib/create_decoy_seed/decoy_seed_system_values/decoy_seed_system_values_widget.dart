@@ -462,10 +462,9 @@ class _DecoySeedSystemValuesWidgetState
         alignment: AlignmentDirectional(0.0, 0.0),
         child: Stack(
           children: [
-            titleLayer(AlignmentDirectional(0.1, 0.0)),
-            titleLayer(AlignmentDirectional(-0.1, 0.0)),
-            titleLayer(AlignmentDirectional(0.0, 0.1)),
-            titleLayer(AlignmentDirectional(0.0, -0.1)),
+            titleLayer(AlignmentDirectional(-0.01, 0.0)),
+            titleLayer(AlignmentDirectional(0.0, 0.0)),
+            titleLayer(AlignmentDirectional(0.01, 0.0)),
           ],
         ),
       ),
