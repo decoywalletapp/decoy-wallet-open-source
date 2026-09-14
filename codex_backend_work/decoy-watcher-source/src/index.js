@@ -2411,7 +2411,7 @@ async function processRunInContext(options = {}, runContext) {
   let baselinedDecoys = 0;
   let totalAddressesChecked = 0;
   let runBudgetExhausted = false;
-  let expectedAddresses = 0;
+  let unshardedExpectedAddresses = 0;
   let batchScanSuccesses = 0;
   let batchScanFailures = 0;
   let baselineBatchFailures = 0;
@@ -2457,7 +2457,7 @@ async function processRunInContext(options = {}, runContext) {
 
     if (!isArmed) continue;
 
-    expectedAddresses += addresses.length;
+    unshardedExpectedAddresses += addresses.length;
 
     const storedBaseline = toDateOrNull(baselineMap.get(decoy_id));
     const activationResetAt = toDateOrNull(
@@ -2489,6 +2489,10 @@ async function processRunInContext(options = {}, runContext) {
   const unshardedWatchKeyRecords = allEligibleSeeds.filter((item) => item.watch && item.watch.watchPublicKey).length;
   const eligibleSeeds = allEligibleSeeds.filter((item) =>
     belongsToWatcherShard(item && item.seed && item.seed.decoy_id, watcherShard)
+  );
+  const expectedAddresses = eligibleSeeds.reduce(
+    (total, item) => total + ((item.watch && item.watch.addresses && item.watch.addresses.length) || 0),
+    0
   );
 
   eligibleSeeds.sort((a, b) => {
@@ -2743,6 +2747,7 @@ async function processRunInContext(options = {}, runContext) {
     watcherShardKey: watcherShard.key,
     unshardedEligibleSeedRecords,
     unshardedWatchKeyRecords,
+    unshardedExpectedAddresses,
     eligibleSeedRecords: eligibleSeeds.length,
     activationResetPending: eligibleSeeds.filter((s) => s.needsActivationReset).length,
     expectedAddresses,
