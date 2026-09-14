@@ -434,10 +434,12 @@ class _DecoySeedSystemValuesWidgetState
           lineHeight: 1.05,
         );
 
+    const titleVisualYOffset = 3.0;
+
     Widget titleLayer(double horizontalOffset) {
       return Positioned.fill(
         child: Transform.translate(
-          offset: Offset(horizontalOffset, 0.0),
+          offset: Offset(horizontalOffset, titleVisualYOffset),
           child: Center(
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
