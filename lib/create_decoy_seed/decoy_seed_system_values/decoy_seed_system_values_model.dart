@@ -15,6 +15,8 @@ class DecoySeedSystemValuesModel
 
   bool? entDSactive;
 
+  bool? savedSetupMonitorEnabledPreview;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - Query Rows] action in DecoySeedSystemValues widget.

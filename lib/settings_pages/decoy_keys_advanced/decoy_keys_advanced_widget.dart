@@ -74,7 +74,10 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
     }
   }
 
-  void _applyMonitorResponse(ApiCallResponse? response) {
+  void _applyMonitorResponse(
+    ApiCallResponse? response, {
+    bool keepSaving = false,
+  }) {
     if (response?.succeeded != true) {
       final rawError = response == null
           ? ''
@@ -101,7 +104,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
       _model.deletedMonitorIds = {};
       _model.masterArmed = masterArmed;
       _model.isLoading = false;
-      _model.isSaving = false;
+      _model.isSaving = keepSaving ? _model.isSaving : false;
       _model.errorMessage = null;
     });
   }
@@ -183,7 +186,12 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
         deleteMonitorIdsList: _model.deletedMonitorIds.toList(),
       );
       if (_model.bulkSaveResp?.succeeded == true) {
-        _applyMonitorResponse(_model.bulkSaveResp);
+        _applyMonitorResponse(_model.bulkSaveResp, keepSaving: true);
+        await Future.delayed(
+          Duration(
+            milliseconds: 1000,
+          ),
+        );
         if (mounted) context.safePop();
         return;
       }
@@ -657,8 +665,8 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
             ),
         elevation: 3.0,
         borderRadius: BorderRadius.circular(8.0),
-        disabledColor: FlutterFlowTheme.of(context).accent1,
-        disabledTextColor: FlutterFlowTheme.of(context).secondaryText,
+        disabledColor: FlutterFlowTheme.of(context).primary,
+        disabledTextColor: Colors.white,
       ),
     );
   }
@@ -837,19 +845,6 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                       ),
                     ],
                   ),
-                  if (_model.isSaving)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        ignoring: true,
-                        child: Container(
-                          color: Colors.white.withValues(alpha: 0.25),
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

@@ -165,7 +165,7 @@ class _DecoySeedSystemValuesWidgetState
   }
 
   bool _savedSetupMonitorEnabled() {
-    return false;
+    return _model.savedSetupMonitorEnabledPreview ?? false;
   }
 
   Future<bool> _ensureMasterDecoyKeysArmed(String decoyId) async {
@@ -331,7 +331,9 @@ class _DecoySeedSystemValuesWidgetState
       }
     }
 
-    safeSetState(() {});
+    safeSetState(() {
+      _model.savedSetupMonitorEnabledPreview = seedMonitorEnabled;
+    });
     await Future.delayed(
       Duration(
         milliseconds: 1000,
