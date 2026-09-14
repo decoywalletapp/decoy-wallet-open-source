@@ -27,11 +27,11 @@ class DecoyBuildProvenance {
   );
   static const buildVersion = String.fromEnvironment(
     'DECOY_BUILD_VERSION',
-    defaultValue: '1.0.5',
+    defaultValue: '1.1.0',
   );
   static const buildNumber = String.fromEnvironment(
     'DECOY_BUILD_NUMBER',
-    defaultValue: '10005',
+    defaultValue: '11000',
   );
   static const watchOnlyImportEnabled = bool.fromEnvironment(
     'DECOY_ENABLE_WATCH_ONLY_IMPORT',
