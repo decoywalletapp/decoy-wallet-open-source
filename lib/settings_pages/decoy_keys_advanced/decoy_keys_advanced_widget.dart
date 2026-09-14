@@ -764,7 +764,6 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
       children: [
         _buildMasterStatus(context),
         ...monitorWidgets,
-        _buildSaveButton(context),
       ].divide(SizedBox(height: 18.0)),
     );
   }
@@ -773,7 +772,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    final bottomPadding = decoyBottomActionPadding(context);
+    final bottomPadding = decoyBottomActionPadding(context, extra: 20.0);
 
     return GestureDetector(
       onTap: () {
@@ -795,55 +794,70 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
             backgroundColor: Colors.white,
             body: SafeArea(
               top: true,
-              child: Stack(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional(-1.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              10.0, 0.0, 0.0, 0.0),
-                          child: FlutterFlowIconButton(
-                            borderRadius: 20.0,
-                            buttonSize: 40.0,
-                            icon: Icon(
-                              Icons.arrow_back_rounded,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              size: 24.0,
-                            ),
-                            onPressed: () async {
-                              context.safePop();
-                            },
-                          ),
+                  Align(
+                    alignment: AlignmentDirectional(-1.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                      child: FlutterFlowIconButton(
+                        borderRadius: 20.0,
+                        buttonSize: 40.0,
+                        icon: Icon(
+                          Icons.arrow_back_rounded,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          size: 24.0,
+                        ),
+                        onPressed: () async {
+                          context.safePop();
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 12.0),
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 440.0),
+                        child: _buildHeader(context),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      primary: false,
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: ClampingScrollPhysics(),
+                      ),
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                        24.0,
+                        0.0,
+                        24.0,
+                        18.0,
+                      ),
+                      child: Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 440.0),
+                          child: _buildBody(context),
                         ),
                       ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0,
-                            22.0,
-                            24.0,
-                            bottomPadding,
-                          ),
-                          child: Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: ConstrainedBox(
-                              constraints:
-                                  const BoxConstraints(maxWidth: 440.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  _buildHeader(context),
-                                  _buildBody(context),
-                                ].divide(SizedBox(height: 28.0)),
-                              ),
-                            ),
-                          ),
-                        ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                        24.0, 12.0, 24.0, bottomPadding),
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 440.0),
+                        child: _buildSaveButton(context),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
