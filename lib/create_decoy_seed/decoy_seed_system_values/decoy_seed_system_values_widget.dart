@@ -427,22 +427,31 @@ class _DecoySeedSystemValuesWidgetState
   Widget _buildOrangeTitleBlock(BuildContext context, String title) {
     final titleStyle = FlutterFlowTheme.of(context).bodyMedium.override(
           fontFamily: 'DECOY BEBAS',
-          color: Colors.white,
+          color: FlutterFlowTheme.of(context).info,
           fontSize: title.length > 12 ? 42.0 : 52.0,
           letterSpacing: 0.0,
           fontWeight: FontWeight.normal,
           lineHeight: 1.05,
         );
 
-    Widget titleLayer(AlignmentDirectional alignment) {
-      return Align(
-        alignment: alignment,
-        child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 12.0),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: titleStyle,
+    Widget titleLayer(double horizontalOffset) {
+      return Positioned.fill(
+        child: Transform.translate(
+          offset: Offset(horizontalOffset, 0.0),
+          child: Center(
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: titleStyle,
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -464,9 +473,9 @@ class _DecoySeedSystemValuesWidgetState
         alignment: AlignmentDirectional(0.0, 0.0),
         child: Stack(
           children: [
-            titleLayer(AlignmentDirectional(-0.01, 0.0)),
-            titleLayer(AlignmentDirectional(0.0, 0.0)),
-            titleLayer(AlignmentDirectional(0.01, 0.0)),
+            titleLayer(-0.35),
+            titleLayer(0.0),
+            titleLayer(0.35),
           ],
         ),
       ),
