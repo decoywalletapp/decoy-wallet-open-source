@@ -282,7 +282,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
 
   ios-app-store-release:
     name: iOS App Store Release
@@ -877,6 +877,7 @@ workflows:
       groups:
         - decoy_public_runtime
         - android_signing
+        - google_credentials
       vars:
         ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
         ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
@@ -932,7 +933,8 @@ workflows:
             CM_KEYSTORE \
             CM_KEYSTORE_PASSWORD \
             CM_KEY_PASSWORD \
-            CM_KEY_ALIAS
+            CM_KEY_ALIAS \
+            GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
           do
             eval "value=\${$var:-}"
             if [ -z "$value" ]; then
@@ -1156,6 +1158,7 @@ workflows:
             --dart-define=DECOY_BUILD_VERSION=$APP_VERSION
             --dart-define=DECOY_BUILD_NUMBER=$APP_BUILD_NUMBER
             --dart-define=DECOY_BUILD_VERIFICATION=$DECOY_BUILD_VERIFICATION
+            --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
           "
           flutter build apk $common_args
           flutter build appbundle $common_args
@@ -1180,3 +1183,7 @@ workflows:
       - build/app/outputs/bundle/release/app-release.aab
       - build/provenance/*.txt
       - flutter_drive.log
+    publishing:
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: production
