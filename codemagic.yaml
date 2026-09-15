@@ -211,7 +211,7 @@ workflows:
       - name: Set up iOS code signing
         script: |
           set -eu
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
       - name: Install Flutter packages
         script: |
           set -eu
