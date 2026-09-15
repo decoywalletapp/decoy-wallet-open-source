@@ -877,7 +877,6 @@ workflows:
       groups:
         - decoy_public_runtime
         - android_signing
-        - google_credentials
       vars:
         ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
         ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
