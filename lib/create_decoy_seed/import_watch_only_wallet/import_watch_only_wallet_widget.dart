@@ -450,7 +450,7 @@ class _ImportWatchOnlyWalletWidgetState
                                 .asValidator(context),
                           ),
                           Text(
-                            'For xpub imports, Decoy treats the key as a native SegWit account key. If you are unsure, use a zpub or paste specific receive addresses.',
+                            'Use xpub for legacy 1-address wallets, zpub for native SegWit bc1 wallets, or paste specific receive addresses.',
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodySmall

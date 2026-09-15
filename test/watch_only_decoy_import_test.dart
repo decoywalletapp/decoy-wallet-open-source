@@ -29,7 +29,7 @@ void main() {
     expect(importDraft['addresses'], generatedAddresses);
   });
 
-  test('xpub import normalizes to existing zpub watch-key format', () async {
+  test('xpub import prepares a legacy watch-only address set', () async {
     final generatedDraft = await generateDecoyDraft() as Map;
     final generatedAddresses =
         (generatedDraft['addresses'] as List).cast<String>();
@@ -40,12 +40,22 @@ void main() {
     );
 
     expect(importDraft['ok'], isTrue);
-    expect(importDraft['xpub'], isEmpty);
+    expect(importDraft['derivation_path'], "m/44'/0'/0'");
+    expect(importDraft['xpub'], generatedDraft['xpub']);
     expect(importDraft['zpub'], isEmpty);
-    expect(importDraft['watch_public_key'], generatedDraft['zpub']);
-    expect(importDraft['watch_public_key_type'], 'bip84-account-zpub');
+    expect(importDraft['watch_public_key'], generatedDraft['xpub']);
+    expect(importDraft['watch_public_key_type'], 'bip44-account-xpub');
     expect(importDraft['source_type'], 'xpub');
-    expect(importDraft['addresses'], generatedAddresses);
+    expect(
+      (importDraft['addresses'] as List).cast<String>(),
+      isNot(generatedAddresses),
+    );
+    expect(
+      (importDraft['addresses'] as List).cast<String>().every(
+            (address) => address.startsWith('1'),
+          ),
+      isTrue,
+    );
   });
 
   test('receive address import accepts address lists and bitcoin URIs',

@@ -201,16 +201,18 @@ Map<String, dynamic> _prepareExtendedPublicKeyDraft(
   final xpub = isZpub
       ? _convertExtendedPublicKeyVersion(watchKey, _xpubVersion)
       : watchKey;
-  final zpub = isZpub
-      ? watchKey
-      : _convertExtendedPublicKeyVersion(watchKey, _zpubVersion);
+  final zpub = isZpub ? watchKey : '';
   final account = bip32.BIP32.fromBase58(xpub);
   final externalChain = account.derive(0);
   final addresses = <String>[];
 
   for (var i = 0; i < _addressLookaheadCount; i++) {
     final pubkey = Uint8List.fromList(externalChain.derive(i).publicKey);
-    addresses.add(_p2wpkhAddressFromPubkey(pubkey));
+    addresses.add(
+      isZpub
+          ? _p2wpkhAddressFromPubkey(pubkey)
+          : _p2pkhAddressFromPubkey(pubkey),
+    );
   }
 
   final importId = decoyId ?? const Uuid().v4();
@@ -219,11 +221,12 @@ Map<String, dynamic> _prepareExtendedPublicKeyDraft(
     'decoyId': importId,
     'addresses': addresses,
     'addressesCount': addresses.length,
-    'derivation_path': "m/84'/0'/0'",
-    'xpub': '',
+    'derivation_path': isZpub ? "m/84'/0'/0'" : "m/44'/0'/0'",
+    'xpub': isXpub ? watchKey : '',
     'zpub': '',
-    'watch_public_key': zpub,
-    'watch_public_key_type': 'bip84-account-zpub',
+    'watch_public_key': isZpub ? zpub : watchKey,
+    'watch_public_key_type':
+        isZpub ? 'bip84-account-zpub' : 'bip44-account-xpub',
     'source_type': isZpub ? 'zpub' : 'xpub',
   };
 }
@@ -439,6 +442,14 @@ String _p2wpkhAddressFromPubkey(Uint8List compressedPubkey) {
     ..._convertBits(program.toList(), 8, 5, pad: true),
   ];
   return _bech32Encode('bc', payload);
+}
+
+String _p2pkhAddressFromPubkey(Uint8List compressedPubkey) {
+  final payload = Uint8List.fromList(<int>[
+    0x00,
+    ..._hash160(compressedPubkey),
+  ]);
+  return _base58CheckEncode(payload);
 }
 
 String _bech32Encode(String hrp, List<int> data) {
