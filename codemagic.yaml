@@ -932,8 +932,7 @@ workflows:
             CM_KEYSTORE \
             CM_KEYSTORE_PASSWORD \
             CM_KEY_PASSWORD \
-            CM_KEY_ALIAS \
-            GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+            CM_KEY_ALIAS
           do
             eval "value=\${$var:-}"
             if [ -z "$value" ]; then
@@ -1182,7 +1181,3 @@ workflows:
       - build/app/outputs/bundle/release/app-release.aab
       - build/provenance/*.txt
       - flutter_drive.log
-    publishing:
-      google_play:
-        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
-        track: production
