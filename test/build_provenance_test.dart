@@ -12,6 +12,6 @@ void main() {
     expect(DecoyBuildProvenance.hasSourceCommit, isFalse);
     expect(DecoyBuildProvenance.shortCommit, 'unknown');
     expect(DecoyBuildProvenance.commitUrl, isNull);
-    expect(DecoyBuildProvenance.versionLabel, '1.1.0+11000');
+    expect(DecoyBuildProvenance.versionLabel, '1.1.1+11100');
   });
 }
