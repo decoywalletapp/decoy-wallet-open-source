@@ -204,7 +204,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
         _model.verifiedViaEmail =
             _model.dwList.elementAtOrNull(0)!.emailVerified!;
-        _model.needPhone = !_model.dwList.elementAtOrNull(0)!.isPhoneVerified!;
+        final walletRow = _model.dwList.elementAtOrNull(0)!;
+        _model.needPhone = walletRow.isPhoneVerified != true &&
+            walletRow.phoneOnboardingSkippedAt == null;
         safeSetState(() {});
         if (_model.verifiedViaEmail == false) {
           context.goNamedAuth(
@@ -212,7 +214,12 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         } else {
           if (_model.needPhone == true) {
             context.goNamedAuth(
-                PhoneNumberInputWidget.routeName, context.mounted);
+              PhoneNumberInputWidget.routeName,
+              context.mounted,
+              queryParameters: {
+                'allowSkip': serializeParam(true, ParamType.bool),
+              }.withoutNulls,
+            );
           } else {
             if (FFAppState().biometricsEnabled == true) {
               final _localAuth = LocalAuthentication();

@@ -229,7 +229,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: PhoneNumberInputWidget.routeName,
         path: PhoneNumberInputWidget.routePath,
-        builder: (context, params) => PhoneNumberInputWidget(),
+        builder: (context, params) => PhoneNumberInputWidget(
+          allowSkip: params.getParam(
+                'allowSkip',
+                ParamType.bool,
+              ) ??
+              false,
+        ),
       ),
       FFRoute(
         name: ConfirmEmailPageWidget.routeName,

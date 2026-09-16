@@ -622,6 +622,8 @@ class _PhoneNumberVerificationWidgetState
                                                                               true,
                                                                           'verified_at':
                                                                               supaSerialize<DateTime>(getCurrentTimestamp),
+                                                                          'phone_onboarding_skipped_at':
+                                                                              null,
                                                                           'phone_e164_hash':
                                                                               GetPhoneHashCall.phoneHash(
                                                                             (_model.phoneHashResp?.jsonBody ??
@@ -705,6 +707,8 @@ class _PhoneNumberVerificationWidgetState
                                                                               true,
                                                                           'verified_at':
                                                                               supaSerialize<DateTime>(getCurrentTimestamp),
+                                                                          'phone_onboarding_skipped_at':
+                                                                              null,
                                                                           'user_id':
                                                                               currentUserUid,
                                                                           'phone_e164_hash':

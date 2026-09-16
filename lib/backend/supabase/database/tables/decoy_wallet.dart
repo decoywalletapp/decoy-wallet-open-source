@@ -188,6 +188,11 @@ class DecoyWalletRow extends SupabaseDataRow {
   set phoneE164Hash(String? value) =>
       setField<String>('phone_e164_hash', value);
 
+  DateTime? get phoneOnboardingSkippedAt =>
+      getField<DateTime>('phone_onboarding_skipped_at');
+  set phoneOnboardingSkippedAt(DateTime? value) =>
+      setField<DateTime>('phone_onboarding_skipped_at', value);
+
   String? get emailHash => getField<String>('email_hash');
   set emailHash(String? value) => setField<String>('email_hash', value);
 

@@ -19,7 +19,12 @@ export 'phone_number_input_model.dart';
 /// This page asks the user to enter their phone number which will save to
 /// their account profile in supabase
 class PhoneNumberInputWidget extends StatefulWidget {
-  const PhoneNumberInputWidget({super.key});
+  const PhoneNumberInputWidget({
+    super.key,
+    this.allowSkip = false,
+  });
+
+  final bool allowSkip;
 
   static String routeName = 'phoneNumberInput';
   static String routePath = '/phoneNumberInput';
@@ -896,6 +901,55 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                               borderRadius: BorderRadius.circular(14.0),
                             ),
                           ),
+                          if (widget.allowSkip)
+                            FFButtonWidget(
+                              onPressed: () async {
+                                await actions.dismissKeyboard(context);
+                                await DecoyWalletTable().update(
+                                  data: {
+                                    'phone_onboarding_skipped_at':
+                                        supaSerialize<DateTime>(
+                                            getCurrentTimestamp),
+                                  },
+                                  matchingRows: (rows) => rows.eqOrNull(
+                                    'user_id',
+                                    currentUserUid,
+                                  ),
+                                );
+                                if (!context.mounted) return;
+                                context.goNamedAuth(
+                                  BiometricVerificationWidget.routeName,
+                                  context.mounted,
+                                );
+                              },
+                              text: 'Skip for Now',
+                              options: FFButtonOptions(
+                                width: 400.0,
+                                height: 52.0,
+                                padding: EdgeInsets.all(0.0),
+                                iconPadding: EdgeInsets.zero,
+                                color: FlutterFlowTheme.of(context)
+                                    .primaryBackground,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleMedium
+                                    .override(
+                                      font: GoogleFonts.heebo(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                elevation: 3.0,
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(14.0),
+                              ),
+                            ),
                           if (_model.notificationInt.toString() == '3')
                             FFButtonWidget(
                               onPressed: () async {

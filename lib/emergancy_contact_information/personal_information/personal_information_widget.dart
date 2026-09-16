@@ -152,6 +152,9 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
   }) {
     final original = functions.sanitizePhoneNumber(originalPhone ?? '');
     final edited = functions.sanitizePhoneNumber(editedPhone ?? '');
+    if (edited.isEmpty) {
+      return '';
+    }
     if (edited.isNotEmpty && edited == original) {
       return edited;
     }
@@ -1376,11 +1379,33 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                           }.withoutNulls,
                                         );
                                       } else {
-                                        if (_model.origPhone !=
-                                            _model.changedPhone) {
+                                        if ((_model.changedPhone ?? '')
+                                                .isNotEmpty &&
+                                            _model.origPhone !=
+                                                _model.changedPhone) {
                                           context.pushNamed(
                                               PhoneNumberInputWidget.routeName);
                                         } else {
+                                          if ((_model.changedPhone ?? '')
+                                                  .isEmpty &&
+                                              (_model.origPhone ?? '')
+                                                  .isNotEmpty) {
+                                            await DecoyWalletTable().update(
+                                              data: {
+                                                'is_phone_verified': false,
+                                                'verified_at': null,
+                                                'phone_e164_hash': null,
+                                                'phone_onboarding_skipped_at':
+                                                    supaSerialize<DateTime>(
+                                                        getCurrentTimestamp),
+                                              },
+                                              matchingRows: (rows) =>
+                                                  rows.eqOrNull(
+                                                'user_id',
+                                                currentUserUid,
+                                              ),
+                                            );
+                                          }
                                           await Future.delayed(
                                             Duration(
                                               milliseconds: 250,
