@@ -3,6 +3,14 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('verified onboarding email link exposes the phone skip action', () {
+    final verifyAnyLink = File(
+      'lib/custom_code/widgets/verify_any_link.dart',
+    ).readAsStringSync();
+
+    expect(verifyAnyLink, contains("'allowSkip': serializeParam(true"));
+  });
+
   test('phone onboarding skip remains optional and distinct from verification',
       () {
     final authRouter = File(
