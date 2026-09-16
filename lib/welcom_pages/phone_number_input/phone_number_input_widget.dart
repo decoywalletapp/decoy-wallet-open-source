@@ -730,81 +730,55 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                           ),
                         ].divide(SizedBox(height: 32.0)),
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          FFButtonWidget(
-                            onPressed: () async {
-                              await actions.dismissKeyboard(
-                                context,
-                              );
-                              _model.pnDigits10 =
-                                  functions.normalizeToTenDigits(_model
-                                      .phoneNumberFieldTextController.text);
-                              _model.cleanPhone =
-                                  functions.normalizePhoneToE164(_model
-                                      .phoneNumberFieldTextController.text);
-                              safeSetState(() {});
-                              if (_model.cleanPhone == '') {
-                                _model.notificationInt = 1;
-                                safeSetState(() {});
-                                await Future.delayed(
-                                  Duration(
-                                    milliseconds: 3000,
-                                  ),
-                                );
-                                _model.notificationInt = 0;
-                                safeSetState(() {});
-                                return;
-                              }
-                              _model.phoneHashResp =
-                                  await GetPhoneHashCall.call(
-                                cleanPhone: _model.cleanPhone,
-                                jwt: currentJwtToken,
-                              );
-
-                              _model.phoneHash = GetPhoneHashCall.phoneHash(
-                                (_model.phoneHashResp?.jsonBody ?? ''),
-                              );
-                              safeSetState(() {});
-                              _model.phoneTakenResp =
-                                  await CheckPhoneTakenCall.call(
-                                jwt: currentJwtToken,
-                                phoneHash: _model.phoneHash,
-                              );
-
-                              if (CheckPhoneTakenCall.taken(
-                                    (_model.phoneTakenResp?.jsonBody ?? ''),
-                                  ) ==
-                                  true) {
+                      Transform.translate(
+                        offset: const Offset(0.0, -16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            FFButtonWidget(
+                              onPressed: () async {
                                 await actions.dismissKeyboard(
                                   context,
                                 );
-                                _model.notificationInt = 3;
+                                _model.pnDigits10 =
+                                    functions.normalizeToTenDigits(_model
+                                        .phoneNumberFieldTextController.text);
+                                _model.cleanPhone =
+                                    functions.normalizePhoneToE164(_model
+                                        .phoneNumberFieldTextController.text);
                                 safeSetState(() {});
-                                safeSetState(() {
-                                  _model.phoneNumberFieldTextController
-                                      ?.clear();
-                                });
-                                _model.cleanPhone = '';
-                                _model.pnDigits10 = '';
-                                _model.phoneHash = '';
-                                safeSetState(() {});
-                              } else {
-                                _model.phoneLookupRows =
-                                    await DecoyWalletTable().queryRows(
-                                  queryFn: (q) => q
-                                      .eqOrNull(
-                                        'phone_e164_hash',
-                                        _model.phoneHash,
-                                      )
-                                      .neqOrNull(
-                                        'user_id',
-                                        currentUserUid,
-                                      ),
+                                if (_model.cleanPhone == '') {
+                                  _model.notificationInt = 1;
+                                  safeSetState(() {});
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 3000,
+                                    ),
+                                  );
+                                  _model.notificationInt = 0;
+                                  safeSetState(() {});
+                                  return;
+                                }
+                                _model.phoneHashResp =
+                                    await GetPhoneHashCall.call(
+                                  cleanPhone: _model.cleanPhone,
+                                  jwt: currentJwtToken,
                                 );
-                                if (_model.phoneLookupRows != null &&
-                                    (_model.phoneLookupRows)!.isNotEmpty) {
+
+                                _model.phoneHash = GetPhoneHashCall.phoneHash(
+                                  (_model.phoneHashResp?.jsonBody ?? ''),
+                                );
+                                safeSetState(() {});
+                                _model.phoneTakenResp =
+                                    await CheckPhoneTakenCall.call(
+                                  jwt: currentJwtToken,
+                                  phoneHash: _model.phoneHash,
+                                );
+
+                                if (CheckPhoneTakenCall.taken(
+                                      (_model.phoneTakenResp?.jsonBody ?? ''),
+                                    ) ==
+                                    true) {
                                   await actions.dismissKeyboard(
                                     context,
                                   );
@@ -819,156 +793,93 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                   _model.phoneHash = '';
                                   safeSetState(() {});
                                 } else {
-                                  _model.sendRes =
-                                      await SendVerificationCodeCall.call(
-                                    cleanPhone: _model.cleanPhone,
-                                    jwt: currentJwtToken,
-                                  );
-
-                                  if ((_model.sendRes?.succeeded ?? true)) {
-                                    await UserConsentsTable().insert({
-                                      'user_id': currentUserUid,
-                                      'feature': 'sms_terms',
-                                      'consent_version':
-                                          'sms_terms_user_2026_05_09',
-                                      'checkboxes': {
-                                        'accepted_sms_terms': true,
-                                        'sms_terms_url':
-                                            legalDocumentUrl('/sms-terms'),
-                                        'privacy_policy_url':
-                                            legalDocumentUrl('/privacy-policy'),
-                                        'phone_e164_hash': _model.phoneHash,
-                                        'consent_text':
-                                            'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See SMS Terms and Privacy Policy.',
-                                      },
-                                      'created_at': supaSerialize<DateTime>(
-                                          getCurrentTimestamp),
-                                    });
-                                    context.pushNamed(
-                                      PhoneNumberVerificationWidget.routeName,
-                                      queryParameters: {
-                                        'cleanPhone': serializeParam(
-                                          _model.cleanPhone,
-                                          ParamType.String,
+                                  _model.phoneLookupRows =
+                                      await DecoyWalletTable().queryRows(
+                                    queryFn: (q) => q
+                                        .eqOrNull(
+                                          'phone_e164_hash',
+                                          _model.phoneHash,
+                                        )
+                                        .neqOrNull(
+                                          'user_id',
+                                          currentUserUid,
                                         ),
-                                      }.withoutNulls,
+                                  );
+                                  if (_model.phoneLookupRows != null &&
+                                      (_model.phoneLookupRows)!.isNotEmpty) {
+                                    await actions.dismissKeyboard(
+                                      context,
                                     );
+                                    _model.notificationInt = 3;
+                                    safeSetState(() {});
+                                    safeSetState(() {
+                                      _model.phoneNumberFieldTextController
+                                          ?.clear();
+                                    });
+                                    _model.cleanPhone = '';
+                                    _model.pnDigits10 = '';
+                                    _model.phoneHash = '';
+                                    safeSetState(() {});
                                   } else {
-                                    _model.notificationInt = 2;
-                                    safeSetState(() {});
-                                    await Future.delayed(
-                                      Duration(
-                                        milliseconds: 3000,
-                                      ),
+                                    _model.sendRes =
+                                        await SendVerificationCodeCall.call(
+                                      cleanPhone: _model.cleanPhone,
+                                      jwt: currentJwtToken,
                                     );
-                                    _model.notificationInt = 0;
-                                    safeSetState(() {});
+
+                                    if ((_model.sendRes?.succeeded ?? true)) {
+                                      await UserConsentsTable().insert({
+                                        'user_id': currentUserUid,
+                                        'feature': 'sms_terms',
+                                        'consent_version':
+                                            'sms_terms_user_2026_05_09',
+                                        'checkboxes': {
+                                          'accepted_sms_terms': true,
+                                          'sms_terms_url':
+                                              legalDocumentUrl('/sms-terms'),
+                                          'privacy_policy_url':
+                                              legalDocumentUrl(
+                                                  '/privacy-policy'),
+                                          'phone_e164_hash': _model.phoneHash,
+                                          'consent_text':
+                                              'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See SMS Terms and Privacy Policy.',
+                                        },
+                                        'created_at': supaSerialize<DateTime>(
+                                            getCurrentTimestamp),
+                                      });
+                                      context.pushNamed(
+                                        PhoneNumberVerificationWidget.routeName,
+                                        queryParameters: {
+                                          'cleanPhone': serializeParam(
+                                            _model.cleanPhone,
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    } else {
+                                      _model.notificationInt = 2;
+                                      safeSetState(() {});
+                                      await Future.delayed(
+                                        Duration(
+                                          milliseconds: 3000,
+                                        ),
+                                      );
+                                      _model.notificationInt = 0;
+                                      safeSetState(() {});
+                                    }
                                   }
                                 }
-                              }
 
-                              safeSetState(() {});
-                            },
-                            text: 'Save Phone Number',
-                            options: FFButtonOptions(
-                              width: 400.0,
-                              height: 52.0,
-                              padding: EdgeInsets.all(0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.heebo(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
-                              elevation: 3.0,
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                          ),
-                          if (widget.allowSkip)
-                            FFButtonWidget(
-                              onPressed: () async {
-                                await actions.dismissKeyboard(context);
-                                await DecoyWalletTable().update(
-                                  data: {
-                                    'phone_onboarding_skipped_at':
-                                        supaSerialize<DateTime>(
-                                            getCurrentTimestamp),
-                                  },
-                                  matchingRows: (rows) => rows.eqOrNull(
-                                    'user_id',
-                                    currentUserUid,
-                                  ),
-                                );
-                                if (!context.mounted) return;
-                                context.goNamedAuth(
-                                  BiometricVerificationWidget.routeName,
-                                  context.mounted,
-                                );
+                                safeSetState(() {});
                               },
-                              text: 'Skip for Now',
-                              options: FFButtonOptions(
-                                width: 400.0,
-                                height: 52.0,
-                                padding: EdgeInsets.all(0.0),
-                                iconPadding: EdgeInsets.zero,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      font: GoogleFonts.heebo(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(14.0),
-                              ),
-                            ),
-                          if (_model.notificationInt.toString() == '3')
-                            FFButtonWidget(
-                              onPressed: () async {
-                                GoRouter.of(context).prepareAuthEvent();
-                                await authManager.signOut();
-                                GoRouter.of(context).clearRedirectLocation();
-
-                                context.goNamedAuth(
-                                    LoginPageWidget.routeName, context.mounted);
-                              },
-                              text: 'Back to Login',
+                              text: 'Save Phone Number',
                               options: FFButtonOptions(
                                 width: 400.0,
                                 height: 52.0,
                                 padding: EdgeInsets.all(0.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
+                                color: FlutterFlowTheme.of(context).primary,
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
@@ -978,8 +889,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                             .titleMedium
                                             .fontStyle,
                                       ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
+                                      color: Colors.white,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -988,14 +898,109 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                     ),
                                 elevation: 3.0,
                                 borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
+                                  color: Colors.transparent,
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(14.0),
                               ),
                             ),
-                        ].divide(SizedBox(height: 16.0)),
+                            if (widget.allowSkip)
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  await actions.dismissKeyboard(context);
+                                  await DecoyWalletTable().update(
+                                    data: {
+                                      'phone_onboarding_skipped_at':
+                                          supaSerialize<DateTime>(
+                                              getCurrentTimestamp),
+                                    },
+                                    matchingRows: (rows) => rows.eqOrNull(
+                                      'user_id',
+                                      currentUserUid,
+                                    ),
+                                  );
+                                  if (!context.mounted) return;
+                                  context.goNamedAuth(
+                                    BiometricVerificationWidget.routeName,
+                                    context.mounted,
+                                  );
+                                },
+                                text: 'Skip for Now',
+                                options: FFButtonOptions(
+                                  width: 400.0,
+                                  height: 52.0,
+                                  padding: EdgeInsets.all(0.0),
+                                  iconPadding: EdgeInsets.zero,
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        font: GoogleFonts.heebo(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                  elevation: 3.0,
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(14.0),
+                                ),
+                              ),
+                            if (_model.notificationInt.toString() == '3')
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  GoRouter.of(context).prepareAuthEvent();
+                                  await authManager.signOut();
+                                  GoRouter.of(context).clearRedirectLocation();
+
+                                  context.goNamedAuth(LoginPageWidget.routeName,
+                                      context.mounted);
+                                },
+                                text: 'Back to Login',
+                                options: FFButtonOptions(
+                                  width: 400.0,
+                                  height: 52.0,
+                                  padding: EdgeInsets.all(0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        font: GoogleFonts.heebo(
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleMedium
+                                                  .fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .fontStyle,
+                                      ),
+                                  elevation: 3.0,
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(14.0),
+                                ),
+                              ),
+                          ].divide(SizedBox(height: 16.0)),
+                        ),
                       ),
                     ]
                         .divide(SizedBox(height: keyboardOpen ? 32.0 : 64.0))

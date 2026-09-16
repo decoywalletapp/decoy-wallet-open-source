@@ -11,6 +11,16 @@ void main() {
     expect(verifyAnyLink, contains("'allowSkip': serializeParam(true"));
   });
 
+  test('phone action buttons are nudged upward without changing behavior', () {
+    final phoneInput = File(
+      'lib/welcom_pages/phone_number_input/phone_number_input_widget.dart',
+    ).readAsStringSync();
+
+    expect(phoneInput, contains('offset: const Offset(0.0, -16.0)'));
+    expect(phoneInput, contains("text: 'Save Phone Number'"));
+    expect(phoneInput, contains("text: 'Skip for Now'"));
+  });
+
   test('phone onboarding skip remains optional and distinct from verification',
       () {
     final authRouter = File(
