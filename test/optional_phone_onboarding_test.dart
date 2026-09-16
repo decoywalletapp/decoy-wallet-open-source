@@ -92,4 +92,32 @@ void main() {
     expect(
         migration.toLowerCase(), isNot(contains('update public.decoy_wallet')));
   });
+
+  test('permission onboarding resumes at the exact unfinished screen', () {
+    final authRouter = File(
+      'lib/welcom_pages/auth_router/auth_router_widget.dart',
+    ).readAsStringSync();
+    final biometrics = File(
+      'lib/welcom_pages/biometric_verification/biometric_verification_widget.dart',
+    ).readAsStringSync();
+    final notifications = File(
+      'lib/welcom_pages/enable_notifications/enable_notifications_widget.dart',
+    ).readAsStringSync();
+    final location = File(
+      'lib/welcom_pages/location_authorization/location_authorization_widget.dart',
+    ).readAsStringSync();
+    final migration = File(
+      'supabase/migrations/20260916224000_add_permissions_onboarding_step.sql',
+    ).readAsStringSync();
+
+    expect(authRouter, contains("case 'notifications':"));
+    expect(authRouter, contains("case 'location':"));
+    expect(authRouter, contains("case 'biometrics':"));
+    expect(
+        biometrics, contains("'permissions_onboarding_step': 'notifications'"));
+    expect(
+        notifications, contains("'permissions_onboarding_step': 'location'"));
+    expect(location, contains("'permissions_onboarding_step': 'complete'"));
+    expect(migration, contains('permissions_onboarding_step text'));
+  });
 }

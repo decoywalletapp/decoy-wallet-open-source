@@ -913,6 +913,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                       'phone_onboarding_skipped_at':
                                           supaSerialize<DateTime>(
                                               getCurrentTimestamp),
+                                      'permissions_onboarding_step':
+                                          'biometrics',
                                     },
                                     matchingRows: (rows) => rows.eqOrNull(
                                       'user_id',

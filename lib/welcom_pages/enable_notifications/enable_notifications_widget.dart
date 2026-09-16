@@ -29,6 +29,15 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Future<void> _continueToLocation() async {
+    await DecoyWalletTable().update(
+      data: const {'permissions_onboarding_step': 'location'},
+      matchingRows: (rows) => rows.eqOrNull('user_id', currentUserUid),
+    );
+    if (!mounted) return;
+    context.goNamed(LocationAuthorizationWidget.routeName);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -375,8 +384,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                   'push_enabled': FFAppState().pushEnabled,
                                 });
 
-                                context.goNamed(
-                                    LocationAuthorizationWidget.routeName);
+                                await _continueToLocation();
                               } else {
                                 await UserSettingsTable().update(
                                   data: {
@@ -388,8 +396,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                   ),
                                 );
 
-                                context.goNamed(
-                                    LocationAuthorizationWidget.routeName);
+                                await _continueToLocation();
                               }
 
                               safeSetState(() {});
@@ -461,8 +468,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                 'push_enabled': false,
                               });
 
-                              context.goNamed(
-                                  LocationAuthorizationWidget.routeName);
+                              await _continueToLocation();
                             } else {
                               await UserSettingsTable().update(
                                 data: {
@@ -474,8 +480,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                 ),
                               );
 
-                              context.goNamed(
-                                  LocationAuthorizationWidget.routeName);
+                              await _continueToLocation();
                             }
 
                             safeSetState(() {});

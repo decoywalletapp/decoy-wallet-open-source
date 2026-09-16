@@ -31,6 +31,15 @@ class _BiometricVerificationWidgetState
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Future<void> _continueToNotifications() async {
+    await DecoyWalletTable().update(
+      data: const {'permissions_onboarding_step': 'notifications'},
+      matchingRows: (rows) => rows.eqOrNull('user_id', currentUserUid),
+    );
+    if (!mounted) return;
+    context.goNamed(EnableNotificationsWidget.routeName);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -381,8 +390,7 @@ class _BiometricVerificationWidgetState
                                       ),
                                     );
 
-                                    context.goNamed(
-                                        EnableNotificationsWidget.routeName);
+                                    await _continueToNotifications();
                                   } else {
                                     _model.bioInsertBE =
                                         await UserSettingsTable().insert({
@@ -391,8 +399,7 @@ class _BiometricVerificationWidgetState
                                           FFAppState().biometricsEnabled,
                                     });
 
-                                    context.goNamed(
-                                        EnableNotificationsWidget.routeName);
+                                    await _continueToNotifications();
                                   }
                                 } else {
                                   FFAppState().biometricsEnabled = false;
@@ -421,8 +428,7 @@ class _BiometricVerificationWidgetState
                                     ),
                                   );
 
-                                  context.goNamed(
-                                      EnableNotificationsWidget.routeName);
+                                  await _continueToNotifications();
                                 } else {
                                   _model.bioInsertBEFB =
                                       await UserSettingsTable().insert({
@@ -431,8 +437,7 @@ class _BiometricVerificationWidgetState
                                         FFAppState().biometricsEnabled,
                                   });
 
-                                  context.goNamed(
-                                      EnableNotificationsWidget.routeName);
+                                  await _continueToNotifications();
                                 }
                               }
 
@@ -508,8 +513,7 @@ class _BiometricVerificationWidgetState
                                 ),
                               );
 
-                              context
-                                  .goNamed(EnableNotificationsWidget.routeName);
+                              await _continueToNotifications();
                             } else {
                               _model.bioInsertBEFBSkipper =
                                   await UserSettingsTable().insert({
@@ -518,8 +522,7 @@ class _BiometricVerificationWidgetState
                                     FFAppState().biometricsEnabled,
                               });
 
-                              context
-                                  .goNamed(EnableNotificationsWidget.routeName);
+                              await _continueToNotifications();
                             }
 
                             safeSetState(() {});

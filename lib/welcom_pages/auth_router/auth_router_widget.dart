@@ -220,6 +220,23 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 'allowSkip': serializeParam(true, ParamType.bool),
               }.withoutNulls,
             );
+          } else if (_model.agreementsComplete != true &&
+              walletRow.permissionsOnboardingStep != null &&
+              walletRow.permissionsOnboardingStep != 'complete') {
+            switch (walletRow.permissionsOnboardingStep) {
+              case 'notifications':
+                context.goNamedAuth(
+                    EnableNotificationsWidget.routeName, context.mounted);
+                break;
+              case 'location':
+                context.goNamedAuth(
+                    LocationAuthorizationWidget.routeName, context.mounted);
+                break;
+              case 'biometrics':
+              default:
+                context.goNamedAuth(
+                    BiometricVerificationWidget.routeName, context.mounted);
+            }
           } else {
             if (FFAppState().biometricsEnabled == true) {
               final _localAuth = LocalAuthentication();

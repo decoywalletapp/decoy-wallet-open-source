@@ -30,6 +30,15 @@ class _LocationAuthorizationWidgetState
   final scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng? currentUserLocationValue;
 
+  Future<void> _continueToAgreements() async {
+    await DecoyWalletTable().update(
+      data: const {'permissions_onboarding_step': 'complete'},
+      matchingRows: (rows) => rows.eqOrNull('user_id', currentUserUid),
+    );
+    if (!mounted) return;
+    context.goNamed(AgreementsPageWidget.routeName);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -368,7 +377,7 @@ class _LocationAuthorizationWidgetState
                                   ),
                                 );
 
-                                context.goNamed(AgreementsPageWidget.routeName);
+                                await _continueToAgreements();
                               } else {
                                 FFAppState().locationEnabled = false;
                                 safeSetState(() {});
@@ -392,7 +401,7 @@ class _LocationAuthorizationWidgetState
                                   ),
                                 );
 
-                                context.goNamed(AgreementsPageWidget.routeName);
+                                await _continueToAgreements();
                               }
 
                               safeSetState(() {});
@@ -467,7 +476,7 @@ class _LocationAuthorizationWidgetState
                                 ),
                               );
 
-                              context.goNamed(CreatePinWidget.routeName);
+                              await _continueToAgreements();
                             } else {
                               _model.insertoFB =
                                   await UserSettingsTable().insert({
@@ -476,7 +485,7 @@ class _LocationAuthorizationWidgetState
                                 'user_id': currentUserUid,
                               });
 
-                              context.goNamed(CreatePinWidget.routeName);
+                              await _continueToAgreements();
                             }
 
                             safeSetState(() {});

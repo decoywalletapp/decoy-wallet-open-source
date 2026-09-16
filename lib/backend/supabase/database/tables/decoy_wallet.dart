@@ -193,6 +193,11 @@ class DecoyWalletRow extends SupabaseDataRow {
   set phoneOnboardingSkippedAt(DateTime? value) =>
       setField<DateTime>('phone_onboarding_skipped_at', value);
 
+  String? get permissionsOnboardingStep =>
+      getField<String>('permissions_onboarding_step');
+  set permissionsOnboardingStep(String? value) =>
+      setField<String>('permissions_onboarding_step', value);
+
   String? get emailHash => getField<String>('email_hash');
   set emailHash(String? value) => setField<String>('email_hash', value);
 

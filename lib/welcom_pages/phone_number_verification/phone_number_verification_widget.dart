@@ -624,6 +624,8 @@ class _PhoneNumberVerificationWidgetState
                                                                               supaSerialize<DateTime>(getCurrentTimestamp),
                                                                           'phone_onboarding_skipped_at':
                                                                               null,
+                                                                          'permissions_onboarding_step':
+                                                                              'biometrics',
                                                                           'phone_e164_hash':
                                                                               GetPhoneHashCall.phoneHash(
                                                                             (_model.phoneHashResp?.jsonBody ??
@@ -709,6 +711,8 @@ class _PhoneNumberVerificationWidgetState
                                                                               supaSerialize<DateTime>(getCurrentTimestamp),
                                                                           'phone_onboarding_skipped_at':
                                                                               null,
+                                                                          'permissions_onboarding_step':
+                                                                              'biometrics',
                                                                           'user_id':
                                                                               currentUserUid,
                                                                           'phone_e164_hash':
