@@ -167,11 +167,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             'cleanPhone',
             ParamType.String,
           ),
-          returnToPersonalInfo: params.getParam(
-                'returnToPersonalInfo',
-                ParamType.bool,
-              ) ??
-              false,
         ),
       ),
       FFRoute(

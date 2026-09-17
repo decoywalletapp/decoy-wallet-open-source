@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/backend/public_config.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -1051,23 +1050,6 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             .phoneTextControllerValidator
                                             .asValidator(context),
                                       ),
-                                      Text(
-                                        'By adding a phone number, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out or HELP for help. SMS Terms and Privacy Policy apply.',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodySmall
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmallFamily,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              letterSpacing: 0.0,
-                                              useGoogleFonts:
-                                                  !FlutterFlowTheme.of(context)
-                                                      .bodySmallIsCustom,
-                                            ),
-                                      ),
                                     ].divide(SizedBox(height: 8.0)),
                                   ),
                                   Column(
@@ -1401,136 +1383,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                 .isNotEmpty &&
                                             _model.origPhone !=
                                                 _model.changedPhone) {
-                                          _model.cleanPhone =
-                                              functions.normalizePhoneToE164(
-                                                  _model.phoneTextController
-                                                      .text);
-                                          if ((_model.cleanPhone ?? '')
-                                              .isEmpty) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'Please enter a valid phone number.'),
-                                              ),
-                                            );
-                                            return;
-                                          }
-
-                                          _model.phoneHashResp =
-                                              await GetPhoneHashCall.call(
-                                            cleanPhone: _model.cleanPhone,
-                                            jwt: await _jwtForApi(),
-                                          );
-                                          final pendingPhoneHash =
-                                              GetPhoneHashCall.phoneHash(
-                                            (_model.phoneHashResp?.jsonBody ??
-                                                ''),
-                                          );
-                                          if (pendingPhoneHash == null ||
-                                              pendingPhoneHash.isEmpty) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'Unable to verify this phone number right now.'),
-                                              ),
-                                            );
-                                            return;
-                                          }
-
-                                          _model.phoneTakenResp =
-                                              await CheckPhoneTakenCall.call(
-                                            jwt: await _jwtForApi(),
-                                            phoneHash: pendingPhoneHash,
-                                          );
-                                          _model.phoneLookupRows =
-                                              await DecoyWalletTable()
-                                                  .queryRows(
-                                            queryFn: (q) => q
-                                                .eqOrNull(
-                                                  'phone_e164_hash',
-                                                  pendingPhoneHash,
-                                                )
-                                                .neqOrNull(
-                                                  'user_id',
-                                                  currentUserUid,
-                                                ),
-                                          );
-                                          if (CheckPhoneTakenCall.taken(
-                                                    (_model.phoneTakenResp
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                  ) ==
-                                                  true ||
-                                              (_model.phoneLookupRows != null &&
-                                                  (_model.phoneLookupRows)!
-                                                      .isNotEmpty)) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'That phone number is already in use.'),
-                                              ),
-                                            );
-                                            return;
-                                          }
-
-                                          _model.sendVerificationResp =
-                                              await SendVerificationCodeCall
-                                                  .call(
-                                            cleanPhone: _model.cleanPhone,
-                                            jwt: await _jwtForApi(),
-                                          );
-                                          if (!(_model.sendVerificationResp
-                                                  ?.succeeded ??
-                                              false)) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'Unable to send the verification code. Please try again.'),
-                                              ),
-                                            );
-                                            return;
-                                          }
-
-                                          await UserConsentsTable().insert({
-                                            'user_id': currentUserUid,
-                                            'feature': 'sms_terms',
-                                            'consent_version':
-                                                'sms_terms_user_2026_05_09',
-                                            'checkboxes': {
-                                              'accepted_sms_terms': true,
-                                              'sms_terms_url': legalDocumentUrl(
-                                                  '/sms-terms'),
-                                              'privacy_policy_url':
-                                                  legalDocumentUrl(
-                                                      '/privacy-policy'),
-                                              'phone_e164_hash':
-                                                  pendingPhoneHash,
-                                              'consent_text':
-                                                  'By adding a phone number, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out or HELP for help. SMS Terms and Privacy Policy apply.',
-                                            },
-                                            'created_at':
-                                                supaSerialize<DateTime>(
-                                                    getCurrentTimestamp),
-                                          });
                                           context.pushNamed(
-                                            PhoneNumberVerificationWidget
-                                                .routeName,
-                                            queryParameters: {
-                                              'cleanPhone': serializeParam(
-                                                _model.cleanPhone,
-                                                ParamType.String,
-                                              ),
-                                              'returnToPersonalInfo':
-                                                  serializeParam(
-                                                true,
-                                                ParamType.bool,
-                                              ),
-                                            }.withoutNulls,
-                                          );
+                                              PhoneNumberInputWidget.routeName);
                                         } else {
                                           if ((_model.changedPhone ?? '')
                                                   .isEmpty &&
