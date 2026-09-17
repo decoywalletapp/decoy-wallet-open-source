@@ -22,9 +22,11 @@ class PhoneNumberInputWidget extends StatefulWidget {
   const PhoneNumberInputWidget({
     super.key,
     this.allowSkip = false,
+    this.initialPhone,
   });
 
   final bool allowSkip;
+  final String? initialPhone;
 
   static String routeName = 'phoneNumberInput';
   static String routePath = '/phoneNumberInput';
@@ -58,7 +60,8 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
       }
     });
 
-    _model.phoneNumberFieldTextController ??= TextEditingController();
+    _model.phoneNumberFieldTextController ??=
+        TextEditingController(text: widget.initialPhone ?? '');
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }

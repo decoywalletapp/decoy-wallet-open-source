@@ -1384,7 +1384,14 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                             _model.origPhone !=
                                                 _model.changedPhone) {
                                           context.pushNamed(
-                                              PhoneNumberInputWidget.routeName);
+                                            PhoneNumberInputWidget.routeName,
+                                            queryParameters: {
+                                              'initialPhone': serializeParam(
+                                                _model.phoneTextController.text,
+                                                ParamType.String,
+                                              ),
+                                            }.withoutNulls,
+                                          );
                                         } else {
                                           if ((_model.changedPhone ?? '')
                                                   .isEmpty &&

@@ -124,6 +124,8 @@ void main() {
     ]) {
       final page = File(path).readAsStringSync();
       expect(page, contains('SingleChildScrollView'));
+      expect(page, contains('AlwaysScrollableScrollPhysics'));
+      expect(page, contains('ClampingScrollPhysics'));
       expect(
         page,
         contains('BoxConstraints(minHeight: constraints.maxHeight)'),
@@ -142,6 +144,10 @@ void main() {
     ).readAsStringSync();
 
     expect(personalInfo, contains('PhoneNumberInputWidget.routeName'));
+    expect(personalInfo, contains("'initialPhone': serializeParam"));
+    expect(phoneInput, contains('final String? initialPhone'));
+    expect(phoneInput,
+        contains("TextEditingController(text: widget.initialPhone ?? '')"));
     expect(phoneInput, contains('PhoneNumberVerificationWidget.routeName'));
   });
 }

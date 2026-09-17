@@ -235,6 +235,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
                 ParamType.bool,
               ) ??
               false,
+          initialPhone: params.getParam(
+            'initialPhone',
+            ParamType.String,
+          ),
         ),
       ),
       FFRoute(
