@@ -205,23 +205,11 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         _model.verifiedViaEmail =
             _model.dwList.elementAtOrNull(0)!.emailVerified!;
         final walletRow = _model.dwList.elementAtOrNull(0)!;
-        _model.needPhone = walletRow.isPhoneVerified != true &&
-            walletRow.phoneOnboardingSkippedAt == null;
-        safeSetState(() {});
         if (_model.verifiedViaEmail == false) {
           context.goNamedAuth(
               ConfirmEmailPageWidget.routeName, context.mounted);
         } else {
-          if (_model.needPhone == true) {
-            context.goNamedAuth(
-              PhoneNumberInputWidget.routeName,
-              context.mounted,
-              queryParameters: {
-                'allowSkip': serializeParam(true, ParamType.bool),
-              }.withoutNulls,
-            );
-          } else if (_model.agreementsComplete != true &&
-              walletRow.permissionsOnboardingStep != null &&
+          if (_model.agreementsComplete != true &&
               walletRow.permissionsOnboardingStep != 'complete') {
             switch (walletRow.permissionsOnboardingStep) {
               case 'notifications':

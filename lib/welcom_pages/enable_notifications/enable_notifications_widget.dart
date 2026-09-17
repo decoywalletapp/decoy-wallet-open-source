@@ -69,12 +69,20 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
           backgroundColor: Colors.white,
           body: SafeArea(
             top: true,
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.viewPaddingOf(context).bottom,
+                ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                        24.0, 0.0, 24.0, 0.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                   Container(
                     width: 400.0,
                     height: 300.0,
@@ -529,10 +537,13 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                       ),
                     ].divide(SizedBox(height: 16.0)),
                   ),
-                ]
-                    .divide(SizedBox(height: 24.0))
-                    .addToStart(SizedBox(height: 24.0))
-                    .addToEnd(SizedBox(height: 32.0)),
+                      ]
+                          .divide(SizedBox(height: 24.0))
+                          .addToStart(SizedBox(height: 24.0))
+                          .addToEnd(SizedBox(height: 32.0)),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

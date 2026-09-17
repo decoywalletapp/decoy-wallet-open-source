@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('verified onboarding email link exposes the phone skip action', () {
+  test('verified onboarding email link starts permission onboarding', () {
     final verifyAnyLink = File(
       'lib/custom_code/widgets/verify_any_link.dart',
     ).readAsStringSync();
 
-    expect(verifyAnyLink, contains("'allowSkip': serializeParam(true"));
+    expect(verifyAnyLink, contains('BiometricVerificationWidget.routeName'));
+    expect(verifyAnyLink, isNot(contains('PhoneNumberInputWidget.routeName')));
   });
 
   test('phone action buttons are nudged upward without changing behavior', () {
@@ -21,29 +22,14 @@ void main() {
     expect(phoneInput, contains("text: 'Skip for Now'"));
   });
 
-  test('phone onboarding skip remains optional and distinct from verification',
-      () {
+  test('missing phone never blocks permission onboarding', () {
     final authRouter = File(
       'lib/welcom_pages/auth_router/auth_router_widget.dart',
     ).readAsStringSync();
-    final phoneInput = File(
-      'lib/welcom_pages/phone_number_input/phone_number_input_widget.dart',
-    ).readAsStringSync();
 
-    expect(authRouter, contains('walletRow.isPhoneVerified != true'));
-    expect(authRouter, contains('walletRow.phoneOnboardingSkippedAt == null'));
-    expect(phoneInput, contains("text: 'Skip for Now'"));
-    expect(phoneInput, contains("'phone_onboarding_skipped_at':"));
-    expect(
-      phoneInput,
-      contains('BiometricVerificationWidget.routeName'),
-    );
-
-    final skipStart = phoneInput.indexOf("text: 'Skip for Now'");
-    final skipActionStart = phoneInput.lastIndexOf('onPressed:', skipStart);
-    final skipBlock = phoneInput.substring(skipActionStart, skipStart);
-    expect(skipBlock, isNot(contains('UserConsentsTable().insert')));
-    expect(skipBlock, isNot(contains("'is_phone_verified': true")));
+    expect(authRouter, isNot(contains('walletRow.isPhoneVerified != true')));
+    expect(authRouter, isNot(contains('PhoneNumberInputWidget.routeName')));
+    expect(authRouter, contains('BiometricVerificationWidget.routeName'));
   });
 
   test('phone submission retains SMS consent and verification flow', () {
@@ -61,9 +47,9 @@ void main() {
       'phone_number_verification_widget.dart',
     ).readAsStringSync();
     expect(
-      RegExp("'phone_onboarding_skipped_at':\\s*null")
-          .allMatches(verification)
-          .length,
+      RegExp(
+        "'phone_onboarding_skipped_at':\\s*null",
+      ).allMatches(verification).length,
       greaterThanOrEqualTo(2),
     );
   });
@@ -90,7 +76,9 @@ void main() {
     expect(migration, contains('add column if not exists'));
     expect(migration, contains('phone_onboarding_skipped_at timestamptz'));
     expect(
-        migration.toLowerCase(), isNot(contains('update public.decoy_wallet')));
+      migration.toLowerCase(),
+      isNot(contains('update public.decoy_wallet')),
+    );
   });
 
   test('permission onboarding resumes at the exact unfinished screen', () {
@@ -114,10 +102,46 @@ void main() {
     expect(authRouter, contains("case 'location':"));
     expect(authRouter, contains("case 'biometrics':"));
     expect(
-        biometrics, contains("'permissions_onboarding_step': 'notifications'"));
+      biometrics,
+      contains("'permissions_onboarding_step': 'notifications'"),
+    );
     expect(
-        notifications, contains("'permissions_onboarding_step': 'location'"));
+      notifications,
+      contains("'permissions_onboarding_step': 'location'"),
+    );
     expect(location, contains("'permissions_onboarding_step': 'complete'"));
     expect(migration, contains('permissions_onboarding_step text'));
+  });
+
+  test('permission onboarding pages remain reachable on short screens', () {
+    for (final path in <String>[
+      'lib/welcom_pages/biometric_verification/'
+          'biometric_verification_widget.dart',
+      'lib/welcom_pages/enable_notifications/'
+          'enable_notifications_widget.dart',
+      'lib/welcom_pages/location_authorization/'
+          'location_authorization_widget.dart',
+    ]) {
+      final page = File(path).readAsStringSync();
+      expect(page, contains('SingleChildScrollView'));
+      expect(
+        page,
+        contains('BoxConstraints(minHeight: constraints.maxHeight)'),
+      );
+      expect(page, contains('MediaQuery.viewPaddingOf(context).bottom'));
+    }
+  });
+
+  test('personal contact phone changes retain phone verification route', () {
+    final personalInfo = File(
+      'lib/emergancy_contact_information/personal_information/'
+      'personal_information_widget.dart',
+    ).readAsStringSync();
+    final phoneInput = File(
+      'lib/welcom_pages/phone_number_input/phone_number_input_widget.dart',
+    ).readAsStringSync();
+
+    expect(personalInfo, contains('PhoneNumberInputWidget.routeName'));
+    expect(phoneInput, contains('PhoneNumberVerificationWidget.routeName'));
   });
 }

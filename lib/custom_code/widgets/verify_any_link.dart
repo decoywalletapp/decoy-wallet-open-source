@@ -173,14 +173,9 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       if (!_navigated && mounted) {
         _navigated = true;
         if (kDebugMode) {
-          _debugLog('[VerifyAnyLink] verified link; routing phoneNumberInput');
+          _debugLog('[VerifyAnyLink] verified link; routing biometrics');
         }
-        context.goNamed(
-          PhoneNumberInputWidget.routeName,
-          queryParameters: {
-            'allowSkip': serializeParam(true, ParamType.bool),
-          }.withoutNulls,
-        );
+        context.goNamed(BiometricVerificationWidget.routeName);
       }
     } on AuthApiException catch (e, st) {
       if (e.code == 'otp_expired' || e.statusCode == 403) {
