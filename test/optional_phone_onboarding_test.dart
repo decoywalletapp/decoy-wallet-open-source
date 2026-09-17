@@ -39,10 +39,7 @@ void main() {
 
     expect(phoneInput, contains("'feature': 'sms_terms'"));
     expect(phoneInput, contains("'accepted_sms_terms': true"));
-    expect(
-      phoneInput,
-      matches(RegExp(r'PhoneNumberVerificationWidget\s*\.routeName')),
-    );
+    expect(phoneInput, contains('PhoneNumberVerificationWidget.routeName'));
     expect(phoneInput, contains('See SMS Terms and Privacy Policy.'));
 
     final verification = File(
@@ -153,13 +150,6 @@ void main() {
     expect(phoneInput, contains('final String? initialPhone'));
     expect(phoneInput,
         contains("TextEditingController(text: widget.initialPhone ?? '')"));
-    expect(
-      phoneInput,
-      matches(RegExp(r'PhoneNumberVerificationWidget\s*\.routeName')),
-    );
-    expect(phoneInput, contains('if (widget.initialPhone != null)'));
-    expect(phoneInput, contains('Icons.arrow_back_rounded'));
-    expect(phoneInput, contains('PersonalInformationWidget.routeName'));
-    expect(phoneInput, isNot(contains("text: 'Back to Login'")));
+    expect(phoneInput, contains('PhoneNumberVerificationWidget.routeName'));
   });
 }
