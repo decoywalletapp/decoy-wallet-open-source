@@ -151,5 +151,9 @@ void main() {
     expect(phoneInput,
         contains("TextEditingController(text: widget.initialPhone ?? '')"));
     expect(phoneInput, contains('PhoneNumberVerificationWidget.routeName'));
+    expect(phoneInput, contains('appBar: widget.initialPhone != null'));
+    expect(phoneInput, contains('Icons.arrow_back_rounded'));
+    expect(phoneInput, contains('PersonalInformationWidget.routeName'));
+    expect(phoneInput, isNot(contains("text: 'Back to Login'")));
   });
 }

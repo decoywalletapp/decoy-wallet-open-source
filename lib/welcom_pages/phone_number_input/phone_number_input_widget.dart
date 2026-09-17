@@ -86,6 +86,23 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
+          appBar: widget.initialPhone != null
+              ? AppBar(
+                  backgroundColor: Colors.white,
+                  automaticallyImplyLeading: false,
+                  elevation: 0.0,
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      size: 32.0,
+                    ),
+                    onPressed: () {
+                      context.goNamed(PersonalInformationWidget.routeName);
+                    },
+                  ),
+                )
+              : null,
           backgroundColor: Colors.white,
           resizeToAvoidBottomInset: true,
           body: SafeArea(
@@ -948,52 +965,6 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                             .secondaryText,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
-                                      ),
-                                  elevation: 3.0,
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(14.0),
-                                ),
-                              ),
-                            if (_model.notificationInt.toString() == '3')
-                              FFButtonWidget(
-                                onPressed: () async {
-                                  GoRouter.of(context).prepareAuthEvent();
-                                  await authManager.signOut();
-                                  GoRouter.of(context).clearRedirectLocation();
-
-                                  context.goNamedAuth(LoginPageWidget.routeName,
-                                      context.mounted);
-                                },
-                                text: 'Back to Login',
-                                options: FFButtonOptions(
-                                  width: 400.0,
-                                  height: 52.0,
-                                  padding: EdgeInsets.all(0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        font: GoogleFonts.heebo(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleMedium
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .fontStyle,
                                       ),
                                   elevation: 3.0,
                                   borderSide: BorderSide(
