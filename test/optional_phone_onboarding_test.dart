@@ -126,11 +126,13 @@ void main() {
       expect(page, contains('SingleChildScrollView'));
       expect(page, contains('AlwaysScrollableScrollPhysics'));
       expect(page, contains('ClampingScrollPhysics'));
+      expect(page, contains('decoyBottomActionPadding(context)'));
+      expect(page, contains('24.0, 0.0, 24.0, 140.0'));
       expect(
         page,
         contains('BoxConstraints(minHeight: constraints.maxHeight)'),
       );
-      expect(page, contains('MediaQuery.viewPaddingOf(context).bottom'));
+      expect(page, contains('permissionPageBottomPadding'));
     }
   });
 

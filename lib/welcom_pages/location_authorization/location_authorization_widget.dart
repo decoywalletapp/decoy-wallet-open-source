@@ -3,6 +3,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
+import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,6 +58,7 @@ class _LocationAuthorizationWidgetState
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    final permissionPageBottomPadding = decoyBottomActionPadding(context);
 
     return GestureDetector(
       onTap: () {
@@ -76,14 +78,17 @@ class _LocationAuthorizationWidgetState
                 physics: const AlwaysScrollableScrollPhysics(
                   parent: ClampingScrollPhysics(),
                 ),
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.viewPaddingOf(context).bottom,
+                padding: EdgeInsetsDirectional.fromSTEB(
+                  0.0,
+                  0.0,
+                  0.0,
+                  permissionPageBottomPadding,
                 ),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(
-                        24.0, 0.0, 24.0, 0.0),
+                        24.0, 0.0, 24.0, 140.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
