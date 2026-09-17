@@ -90,6 +90,14 @@ class PersonalInformationModel
   DecoyWalletRow? supaNameInserts;
   // Stores action output result for [Backend Call - Query Rows] action in Button widget.
   List<DecoyWalletRow>? refreshedDecoyWallet2;
+  // Stores action output result for [Backend Call - API (getPhoneHash)] action in Button widget.
+  ApiCallResponse? phoneHashResp;
+  // Stores action output result for [Backend Call - API (checkPhoneTaken)] action in Button widget.
+  ApiCallResponse? phoneTakenResp;
+  // Stores action output result for [Backend Call - Query Rows] action in Button widget.
+  List<DecoyWalletRow>? phoneLookupRows;
+  // Stores action output result for [Backend Call - API (sendVerificationCode)] action in Button widget.
+  ApiCallResponse? sendVerificationResp;
 
   @override
   void initState(BuildContext context) {}

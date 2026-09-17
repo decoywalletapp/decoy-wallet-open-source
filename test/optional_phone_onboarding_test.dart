@@ -124,6 +124,8 @@ void main() {
     ]) {
       final page = File(path).readAsStringSync();
       expect(page, contains('SingleChildScrollView'));
+      expect(page, contains('AlwaysScrollableScrollPhysics'));
+      expect(page, contains('ClampingScrollPhysics'));
       expect(
         page,
         contains('BoxConstraints(minHeight: constraints.maxHeight)'),
@@ -132,16 +134,22 @@ void main() {
     }
   });
 
-  test('personal contact phone changes retain phone verification route', () {
+  test('personal contact phone changes send code and verify directly', () {
     final personalInfo = File(
       'lib/emergancy_contact_information/personal_information/'
       'personal_information_widget.dart',
     ).readAsStringSync();
-    final phoneInput = File(
-      'lib/welcom_pages/phone_number_input/phone_number_input_widget.dart',
+    final verification = File(
+      'lib/welcom_pages/phone_number_verification/'
+      'phone_number_verification_widget.dart',
     ).readAsStringSync();
 
-    expect(personalInfo, contains('PhoneNumberInputWidget.routeName'));
-    expect(phoneInput, contains('PhoneNumberVerificationWidget.routeName'));
+    expect(personalInfo, isNot(contains('PhoneNumberInputWidget.routeName')));
+    expect(personalInfo, contains('SendVerificationCodeCall'));
+    expect(personalInfo, contains('PhoneNumberVerificationWidget'));
+    expect(personalInfo, contains("'returnToPersonalInfo':"));
+    expect(personalInfo, contains("'accepted_sms_terms': true"));
+    expect(verification, contains('widget.returnToPersonalInfo'));
+    expect(verification, contains('PersonalInformationWidget.routeName'));
   });
 }

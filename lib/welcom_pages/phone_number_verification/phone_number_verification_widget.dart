@@ -36,9 +36,11 @@ class PhoneNumberVerificationWidget extends StatefulWidget {
   const PhoneNumberVerificationWidget({
     super.key,
     required this.cleanPhone,
+    this.returnToPersonalInfo = false,
   });
 
   final String? cleanPhone;
+  final bool returnToPersonalInfo;
 
   static String routeName = 'PhoneNumberVerification';
   static String routePath = '/phoneNumberVerification';
@@ -258,7 +260,12 @@ class _PhoneNumberVerificationWidgetState
                         size: 24.0,
                       ),
                       onPressed: () async {
-                        context.safePop();
+                        if (widget.returnToPersonalInfo) {
+                          context.goNamed(
+                              PersonalInformationWidget.routeName);
+                        } else {
+                          context.safePop();
+                        }
                       },
                     ),
                   ),
@@ -679,7 +686,10 @@ class _PhoneNumberVerificationWidgetState
                                                                         if (_model.dwSetupRows !=
                                                                                 null &&
                                                                             (_model.dwSetupRows)!.isNotEmpty) {
-                                                                          if (_model.dwSetupRows?.elementAtOrNull(0)?.setupComplete ==
+                                                                          if (widget.returnToPersonalInfo) {
+                                                                            context.goNamedAuth(PersonalInformationWidget.routeName,
+                                                                                context.mounted);
+                                                                          } else if (_model.dwSetupRows?.elementAtOrNull(0)?.setupComplete ==
                                                                               true) {
                                                                             context.goNamedAuth(HomePageWidget.routeName,
                                                                                 context.mounted);

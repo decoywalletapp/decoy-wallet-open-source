@@ -72,6 +72,10 @@ class _LocationAuthorizationWidgetState
             top: true,
             child: LayoutBuilder(
               builder: (context, constraints) => SingleChildScrollView(
+                primary: false,
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: ClampingScrollPhysics(),
+                ),
                 padding: EdgeInsets.only(
                   bottom: MediaQuery.viewPaddingOf(context).bottom,
                 ),
