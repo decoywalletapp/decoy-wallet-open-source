@@ -88,7 +88,7 @@ class _LocationAuthorizationWidgetState
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(
-                        24.0, 0.0, 24.0, 140.0),
+                        24.0, 0.0, 24.0, 0.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,

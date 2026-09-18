@@ -127,7 +127,7 @@ void main() {
       expect(page, contains('AlwaysScrollableScrollPhysics'));
       expect(page, contains('ClampingScrollPhysics'));
       expect(page, contains('decoyBottomActionPadding(context)'));
-      expect(page, contains('24.0, 0.0, 24.0, 140.0'));
+      expect(page, contains('24.0, 0.0, 24.0, 0.0'));
       expect(
         page,
         contains('BoxConstraints(minHeight: constraints.maxHeight)'),
