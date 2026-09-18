@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/components/redemption_option_card.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -205,12 +206,32 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
     _model.providerSubscriptionId = row?.providerSubscriptionId;
     _model.isActive = row?.isActive;
     _model.currentPeriodEnd = row?.currentPeriodEnd;
+    _model.promotionalAccessUntil = row?.promotionalAccessUntil;
     _model.pendingProvider = row?.pendingProvider;
     _model.pendingStartsAt = row?.pendingStartsAt;
     _model.pendingProviderCustomerId = row?.pendingProviderCustomerId;
     _model.pendingProviderSubscriptionId = row?.pendingProviderSubscriptionId;
     _model.pendingSwitchToStripe = _isConfirmedPendingStripeSwitch(row);
   }
+
+  DateTime? _effectiveAccessEnd(UserEntitlementsRow? row) {
+    final paid = row?.currentPeriodEnd;
+    final promotional = row?.promotionalAccessUntil;
+    if (paid == null) return promotional;
+    if (promotional == null) return paid;
+    return promotional.isAfter(paid) ? promotional : paid;
+  }
+
+  bool _hasEffectiveAccess(UserEntitlementsRow? row) =>
+      row != null &&
+      functions.isEntitlementUsableForProtection(
+        row.isActive,
+        row.currentPeriodEnd,
+        row.pendingProvider,
+        row.pendingStartsAt,
+        row.pendingProviderSubscriptionId,
+        row.promotionalAccessUntil,
+      );
 
   int? _stripeSwitchTrialEndSeconds() {
     final paidThrough = _model.currentPeriodEnd;
@@ -1281,6 +1302,31 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                         ),
                                       ),
                                     ),
+                                    RedemptionOptionCard(
+                                      onPressed: () async {
+                                        _model.redemptionSessionResp =
+                                            await CreateRedemptionSessionCall
+                                                .call(
+                                          returnTo: 'home',
+                                          jwt: currentJwtToken,
+                                        );
+                                        if ((_model.redemptionSessionResp
+                                                ?.succeeded ??
+                                            false)) {
+                                          await _openPaymentUrl(
+                                            CreateRedemptionSessionCall.url(
+                                              _model.redemptionSessionResp
+                                                      ?.jsonBody ??
+                                                  '',
+                                            ),
+                                            'ERROR #031',
+                                          );
+                                        } else {
+                                          _showPaymentError('ERROR #031');
+                                        }
+                                        safeSetState(() {});
+                                      },
+                                    ),
                                     Column(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -1316,15 +1362,14 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  if ((_model.manageQue
+                                                  if (_hasEffectiveAccess(
+                                                          _model.manageQue
                                                               ?.elementAtOrNull(
-                                                                  0)
-                                                              ?.isActive ==
-                                                          true) &&
-                                                      (_model.manageQue
+                                                                  0)) &&
+                                                      (_effectiveAccessEnd(_model
+                                                              .manageQue
                                                               ?.elementAtOrNull(
-                                                                  0)
-                                                              ?.currentPeriodEnd !=
+                                                                  0)) !=
                                                           null) &&
                                                       (_model.pendingSwitchToStripe ==
                                                           false))
@@ -1337,11 +1382,12 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                       child: Text(
                                                         functions
                                                             .daysLeftFromPeriodEnd(
-                                                              _model.manageQue
-                                                                  ?.elementAtOrNull(
-                                                                    0,
-                                                                  )
-                                                                  ?.currentPeriodEnd,
+                                                              _effectiveAccessEnd(
+                                                                _model.manageQue
+                                                                    ?.elementAtOrNull(
+                                                                      0,
+                                                                    ),
+                                                              ),
                                                             )
                                                             .toString(),
                                                         textAlign:
@@ -1375,15 +1421,14 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                                 ),
                                                       ),
                                                     ),
-                                                  if ((_model.manageQue
+                                                  if (_hasEffectiveAccess(
+                                                          _model.manageQue
                                                               ?.elementAtOrNull(
-                                                                  0)
-                                                              ?.isActive ==
-                                                          true) &&
-                                                      (_model.manageQue
+                                                                  0)) &&
+                                                      (_effectiveAccessEnd(_model
+                                                              .manageQue
                                                               ?.elementAtOrNull(
-                                                                  0)
-                                                              ?.currentPeriodEnd !=
+                                                                  0)) !=
                                                           null) &&
                                                       (_model.pendingSwitchToStripe ==
                                                           false))
@@ -1415,10 +1460,9 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                if (_model.manageQue
-                                                        ?.elementAtOrNull(0)
-                                                        ?.isActive ==
-                                                    false)
+                                                if (!_hasEffectiveAccess(_model
+                                                    .manageQue
+                                                    ?.elementAtOrNull(0)))
                                                   Align(
                                                     alignment:
                                                         AlignmentDirectional(

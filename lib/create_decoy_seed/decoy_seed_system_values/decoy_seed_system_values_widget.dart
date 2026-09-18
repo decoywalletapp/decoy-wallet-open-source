@@ -85,6 +85,9 @@ class _DecoySeedSystemValuesWidgetState
             _model.entitlementSeedVal
                 ?.elementAtOrNull(0)
                 ?.pendingProviderSubscriptionId,
+            _model.entitlementSeedVal
+                ?.elementAtOrNull(0)
+                ?.promotionalAccessUntil,
           )) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});

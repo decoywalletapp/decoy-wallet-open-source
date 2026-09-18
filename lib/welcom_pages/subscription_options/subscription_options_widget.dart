@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/components/redemption_option_card.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -1034,6 +1035,31 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                       ),
                                     ),
                                   ),
+                                ),
+                                RedemptionOptionCard(
+                                  height: 260.0,
+                                  onPressed: () async {
+                                    _model.redemptionSessionResp =
+                                        await CreateRedemptionSessionCall.call(
+                                      returnTo: 'home',
+                                      jwt: currentJwtToken,
+                                    );
+                                    if ((_model.redemptionSessionResp
+                                            ?.succeeded ??
+                                        false)) {
+                                      await _openPaymentUrl(
+                                        CreateRedemptionSessionCall.url(
+                                          _model.redemptionSessionResp
+                                                  ?.jsonBody ??
+                                              '',
+                                        ),
+                                        'ERROR #031',
+                                      );
+                                    } else {
+                                      _showPaymentError('ERROR #031');
+                                    }
+                                    safeSetState(() {});
+                                  },
                                 ),
                               ].divide(SizedBox(height: 16.0)),
                             ),

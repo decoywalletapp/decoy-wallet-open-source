@@ -87,4 +87,9 @@ class UserEntitlementsRow extends SupabaseDataRow {
       getField<DateTime>('teardown_grace_until');
   set teardownGraceUntil(DateTime? value) =>
       setField<DateTime>('teardown_grace_until', value);
+
+  DateTime? get promotionalAccessUntil =>
+      getField<DateTime>('promotional_access_until');
+  set promotionalAccessUntil(DateTime? value) =>
+      setField<DateTime>('promotional_access_until', value);
 }

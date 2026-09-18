@@ -72,6 +72,9 @@ class _DecoyPinSystemValuesWidgetState
             _model.entitlementRowDPINVal
                 ?.elementAtOrNull(0)
                 ?.pendingProviderSubscriptionId,
+            _model.entitlementRowDPINVal
+                ?.elementAtOrNull(0)
+                ?.promotionalAccessUntil,
           )) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});

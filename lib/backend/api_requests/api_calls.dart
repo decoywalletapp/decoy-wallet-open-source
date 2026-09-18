@@ -941,6 +941,40 @@ class RepairStripeEntitlementCall {
   }
 }
 
+class CreateRedemptionSessionCall {
+  static Future<ApiCallResponse> call({
+    String? returnTo = 'home',
+    String? jwt = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "return_to": "${escapeStringForJson(returnTo)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'createRedemptionSession',
+      apiUrl:
+          '${requiredPublicConfig('DECOY_PAYMENT_BASE_URL', kPaymentBaseUrl)}/create-redemption-session',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static String? url(dynamic response) =>
+      castToType<String>(getJsonField(response, r'''$.url'''));
+}
+
 class CreateConsentRequestCall {
   static Future<ApiCallResponse> call({
     String? userId = '',

@@ -167,6 +167,9 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
             _model.ctrlOutputEntitlements
                 ?.elementAtOrNull(0)
                 ?.pendingProviderSubscriptionId,
+            _model.ctrlOutputEntitlements
+                ?.elementAtOrNull(0)
+                ?.promotionalAccessUntil,
           )) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});

@@ -69,6 +69,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               entitlement.pendingProvider,
               entitlement.pendingStartsAt,
               entitlement.pendingProviderSubscriptionId,
+              entitlement.promotionalAccessUntil,
             )) {
           FFAppState().hasActiveSubscription = true;
           safeSetState(() {});

@@ -20,6 +20,8 @@ class ManageSubscriptionModel
 
   DateTime? currentPeriodEnd;
 
+  DateTime? promotionalAccessUntil;
+
   String? pendingProvider;
 
   DateTime? pendingStartsAt;
@@ -66,6 +68,7 @@ class ManageSubscriptionModel
   List<UserEntitlementsRow>? stripeCheckoutRefreshQuery;
   // Stores action output result for [Backend Call - API (CreateBillingPortalSession)] action in Button widget.
   ApiCallResponse? portalRespCancel;
+  ApiCallResponse? redemptionSessionResp;
 
   @override
   void initState(BuildContext context) {}

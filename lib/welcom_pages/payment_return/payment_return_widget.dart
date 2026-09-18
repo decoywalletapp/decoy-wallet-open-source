@@ -2,6 +2,7 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,17 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _showManualRefresh = false;
+
+  bool _hasUsableAccess(UserEntitlementsRow? entitlement) =>
+      entitlement != null &&
+      functions.isEntitlementUsableForProtection(
+        entitlement.isActive,
+        entitlement.currentPeriodEnd,
+        entitlement.pendingProvider,
+        entitlement.pendingStartsAt,
+        entitlement.pendingProviderSubscriptionId,
+        entitlement.promotionalAccessUntil,
+      );
 
   @override
   void initState() {
@@ -82,9 +94,8 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
       }
       FFAppState().entitlementCheckCompleted = true;
       safeSetState(() {});
-      if ((_model.entitlementsQuery != null &&
-              (_model.entitlementsQuery)!.isNotEmpty) &&
-          (_model.entitlementsQuery?.elementAtOrNull(0)?.isActive == true)) {
+      if (_hasUsableAccess(
+          _model.entitlementsQuery?.elementAtOrNull(0))) {
         FFAppState().hasActiveSubscription = true;
         safeSetState(() {});
 
@@ -180,15 +191,9 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
                                       FFAppState()
                                           .entitlementCheckCompleted = true;
                                       safeSetState(() {});
-                                      if ((_model.entitlementsQueryRefresh !=
-                                                  null &&
-                                              (_model
-                                                      .entitlementsQueryRefresh)!
-                                                  .isNotEmpty) &&
-                                          (_model.entitlementsQueryRefresh
-                                                  ?.elementAtOrNull(0)
-                                                  ?.isActive ==
-                                              true)) {
+                                      if (_hasUsableAccess(_model
+                                          .entitlementsQueryRefresh
+                                          ?.elementAtOrNull(0))) {
                                         FFAppState().hasActiveSubscription =
                                             true;
                                         safeSetState(() {});
@@ -249,15 +254,9 @@ class _PaymentReturnWidgetState extends State<PaymentReturnWidget> {
                                     FFAppState().entitlementCheckCompleted =
                                         true;
                                     safeSetState(() {});
-                                    if ((_model.entitlementsQueryRefreshButton !=
-                                                null &&
-                                            (_model
-                                                    .entitlementsQueryRefreshButton)!
-                                                .isNotEmpty) &&
-                                        (_model.entitlementsQueryRefreshButton
-                                                ?.elementAtOrNull(0)
-                                                ?.isActive ==
-                                            true)) {
+                                    if (_hasUsableAccess(_model
+                                        .entitlementsQueryRefreshButton
+                                        ?.elementAtOrNull(0))) {
                                       FFAppState().hasActiveSubscription = true;
                                       safeSetState(() {});
 

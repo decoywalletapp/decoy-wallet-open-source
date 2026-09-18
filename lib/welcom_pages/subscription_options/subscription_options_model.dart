@@ -12,6 +12,7 @@ class SubscriptionOptionsModel
   ApiCallResponse? apiResultk1h;
   // Stores action output result for [Backend Call - API (CreateCheckoutSession)] action in Button widget.
   ApiCallResponse? checkoutResp;
+  ApiCallResponse? redemptionSessionResp;
 
   @override
   void initState(BuildContext context) {}

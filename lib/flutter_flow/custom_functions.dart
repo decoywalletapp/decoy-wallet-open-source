@@ -796,12 +796,18 @@ bool isEntitlementUsableForProtection(
   String? pendingProvider,
   DateTime? pendingStartsAt,
   String? pendingProviderSubscriptionId,
+  [DateTime? promotionalAccessUntil]
 ) {
+  final now = DateTime.now().toUtc();
+  final promotionalEnd = promotionalAccessUntil?.toUtc();
+  if (promotionalEnd != null && promotionalEnd.isAfter(now)) {
+    return true;
+  }
+
   if (isActive != true) {
     return false;
   }
 
-  final now = DateTime.now().toUtc();
   final periodEnd = currentPeriodEnd?.toUtc();
   if (periodEnd == null || periodEnd.isAfter(now)) {
     return true;

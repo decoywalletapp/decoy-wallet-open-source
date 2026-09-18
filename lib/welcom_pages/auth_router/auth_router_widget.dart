@@ -297,6 +297,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                               _model.secondEntitlementQue
                                   ?.elementAtOrNull(0)
                                   ?.pendingProviderSubscriptionId,
+                              _model.secondEntitlementQue
+                                  ?.elementAtOrNull(0)
+                                  ?.promotionalAccessUntil,
                             );
                     safeSetState(() {});
                   }
@@ -320,6 +323,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                             _model.entitlementRow1
                                 ?.elementAtOrNull(0)
                                 ?.pendingProviderSubscriptionId,
+                            _model.entitlementRow1
+                                ?.elementAtOrNull(0)
+                                ?.promotionalAccessUntil,
                           );
                   safeSetState(() {});
                 }
@@ -433,6 +439,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                             _model.thirdEntitlementQue
                                 ?.elementAtOrNull(0)
                                 ?.pendingProviderSubscriptionId,
+                            _model.thirdEntitlementQue
+                                ?.elementAtOrNull(0)
+                                ?.promotionalAccessUntil,
                           );
                   safeSetState(() {});
                 }
@@ -454,6 +463,9 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           _model.entitlementRow2
                               ?.elementAtOrNull(0)
                               ?.pendingProviderSubscriptionId,
+                          _model.entitlementRow2
+                              ?.elementAtOrNull(0)
+                              ?.promotionalAccessUntil,
                         );
                 safeSetState(() {});
               }
