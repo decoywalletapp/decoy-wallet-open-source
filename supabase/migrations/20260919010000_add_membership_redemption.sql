@@ -204,9 +204,20 @@ as $$
         e.promotional_access_until > now()
         or (
           e.is_active = true
-          and e.current_period_end > now()
+          and (
+            e.current_period_end > now()
+            or e.teardown_grace_until > now()
+            or (
+              e.current_period_end is null
+              and e.promotional_access_until is null
+            )
+            or (
+              lower(coalesce(e.pending_provider, '')) in ('stripe', 'btcpay')
+              and e.pending_starts_at is not null
+              and coalesce(e.pending_provider_subscription_id, '') <> ''
+            )
+          )
         )
-        or e.teardown_grace_until > now()
       )
   );
 $$;

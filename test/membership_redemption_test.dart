@@ -54,6 +54,13 @@ void main() {
     expect(migration, contains('set consumed_at = now()'));
     expect(migration, contains('has_active_decoy_wallet_access'));
     expect(migration, contains('e.promotional_access_until > now()'));
+    expect(migration, contains('e.promotional_access_until is null'));
+    expect(
+      migration,
+      contains(
+        "lower(coalesce(e.pending_provider, '')) in ('stripe', 'btcpay')",
+      ),
+    );
     expect(migration, contains('greatest('));
     expect(
       migration,
@@ -63,6 +70,25 @@ void main() {
     expect(migration, contains("auth.role() <> 'service_role'"));
     expect(migration.toLowerCase(), isNot(contains('drop table')));
     expect(migration.toLowerCase(), isNot(contains('delete from')));
+  });
+
+  test('all alert triggers use the shared promotional access guard', () {
+    final migration = File(
+      'supabase/migrations/'
+      '20260919011000_promotional_alert_entitlement.sql',
+    ).readAsStringSync();
+
+    expect(migration, contains('create_alert_from_decoy_trigger'));
+    expect(migration, contains('fn_alert_logs_to_sms_queue'));
+    expect(
+      'public.has_active_decoy_wallet_access(NEW.user_id)'
+          .allMatches(migration),
+      hasLength(2),
+    );
+    expect(migration, contains("NEW.trigger_type = 'PIN_DECOY'"));
+    expect(migration, contains("NEW.trigger_type = 'SEED_DECOY'"));
+    expect(migration, contains('txid_hmac = v_txid_hmac'));
+    expect(migration, contains('on conflict (alert_id) do nothing'));
   });
 
   test('both subscription pages expose the same external redemption flow', () {
