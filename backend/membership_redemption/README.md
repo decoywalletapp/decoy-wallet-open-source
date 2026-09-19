@@ -22,3 +22,8 @@ Mission-critical alert services must use `has_active_decoy_wallet_access`
 instead of checking only `is_active/current_period_end`. That RPC recognizes
 both paid access and `promotional_access_until`, while retaining the existing
 teardown grace behavior.
+
+`setup_staging_assets.mjs` creates or reuses the staging-only internal Stripe
+coupon. `hash_code_batch.mjs` converts the private operator CSV into an import
+containing hashes only; its output should be applied to staging after the
+migration and never committed.

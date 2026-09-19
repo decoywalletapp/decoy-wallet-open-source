@@ -65,6 +65,11 @@ revoke all on public.promo_codes from anon, authenticated;
 revoke all on public.promo_redemptions from anon, authenticated;
 revoke all on public.promo_redemption_sessions from anon, authenticated;
 
+grant select, insert, update, delete on public.promo_campaigns to service_role;
+grant select, insert, update, delete on public.promo_codes to service_role;
+grant select, insert, update, delete on public.promo_redemptions to service_role;
+grant select, insert, update, delete on public.promo_redemption_sessions to service_role;
+
 create or replace function public.redeem_membership_code(
   p_session_hash text,
   p_code_hash text
@@ -80,6 +85,7 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+#variable_conflict use_column
 declare
   v_code public.promo_codes%rowtype;
   v_campaign public.promo_campaigns%rowtype;
