@@ -76,3 +76,42 @@ test('creates paid, free, then resumed phases for recurring Stripe', async () =>
   assert.equal(update.phases[2].discounts, undefined);
   assert.equal(update.end_behavior, 'release');
 });
+
+test('refuses to replace an existing Stripe subscription schedule', async () => {
+  let scheduleCreated = false;
+  const sync = createStripePromotionSync({
+    stripe: {
+      subscriptions: {
+        retrieve: async () => ({
+          id: 'sub_1',
+          cancel_at_period_end: false,
+          schedule: 'sub_sched_existing',
+        }),
+      },
+      subscriptionSchedules: {
+        create: async () => {
+          scheduleCreated = true;
+        },
+      },
+    },
+    supabaseAdmin: supabaseFor({
+      provider: 'stripe',
+      provider_subscription_id: 'sub_1',
+      cancel_at_period_end: false,
+    }),
+    hundredPercentCouponId: 'coupon_free_year',
+  });
+
+  await assert.rejects(
+    sync({
+      userId: 'user_1',
+      redemption: {
+        redemption_id: 'redemption_1',
+        access_started_at: '2026-11-01T00:00:00Z',
+        access_ends_at: '2027-11-01T00:00:00Z',
+      },
+    }),
+    /existing_subscription_schedule_requires_manual_review/,
+  );
+  assert.equal(scheduleCreated, false);
+});
