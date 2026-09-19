@@ -20,8 +20,17 @@ void main(List<String> args) {
     codes.add('MWBS-${_group(random)}-${_group(random)}-${_group(random)}');
   }
 
-  stdout.writeln('code');
+  final csv = StringBuffer('number,code\n');
+  var number = 1;
   for (final code in codes) {
-    stdout.writeln(code);
+    csv.writeln('$number,$code');
+    number += 1;
+  }
+
+  if (args.length > 1) {
+    File(args[1]).writeAsStringSync(csv.toString());
+    stdout.writeln('Generated $count codes at ${args[1]}');
+  } else {
+    stdout.write(csv.toString());
   }
 }
