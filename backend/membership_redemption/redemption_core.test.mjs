@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   buildStripePromotionPlan,
+  effectiveAccessBase,
   hashSecret,
   isMembershipCodeFormatValid,
   normalizeMembershipCode,
@@ -11,6 +12,27 @@ test('normalizes handwritten membership codes', () => {
   assert.equal(normalizeMembershipCode(' mwbs-7k9d-p4xm-q2vt '), 'MWBS-7K9D-P4XM-Q2VT');
   assert.equal(isMembershipCodeFormatValid('MWBS-7K9D-P4XM-Q2VT'), true);
   assert.equal(isMembershipCodeFormatValid('MWBS-OOOO-1111-IIII'), false);
+  assert.equal(normalizeMembershipCode('mwbs7k9dp4xmq2vt'), 'MWBS-7K9D-P4XM-Q2VT');
+  assert.equal(isMembershipCodeFormatValid('mwbs7k9dp4xmq2vt'), true);
+});
+
+test('paid purchases extend from the latest existing access without shortening anything', () => {
+  const base = effectiveAccessBase({
+    now: '2026-09-19T00:00:00Z',
+    currentPeriodEnd: '2026-10-19T00:00:00Z',
+    promotionalAccessUntil: '2027-09-19T00:00:00Z',
+    teardownGraceUntil: '2026-11-01T00:00:00Z',
+  });
+  assert.equal(base.toISOString(), '2027-09-19T00:00:00.000Z');
+});
+
+test('invalid dates cannot reduce the effective access base', () => {
+  const base = effectiveAccessBase({
+    now: '2026-09-19T00:00:00Z',
+    currentPeriodEnd: 'not-a-date',
+    promotionalAccessUntil: '2027-09-19T00:00:00Z',
+  });
+  assert.equal(base.toISOString(), '2027-09-19T00:00:00.000Z');
 });
 
 test('hashes codes without retaining plaintext', () => {

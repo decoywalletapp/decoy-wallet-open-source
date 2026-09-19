@@ -110,6 +110,44 @@ void main() {
     expect(migration, contains('v_destination_address_count,'));
   });
 
+  test('follow-up migration preserves legacy access and hardened alert execution', () {
+    final migration = File(
+      'supabase/migrations/20260919013000_preserve_alert_security_and_legacy_access.sql',
+    ).readAsStringSync();
+    expect(migration, contains('e.current_period_end is null'));
+    expect(
+      migration,
+      contains('alter function public.create_alert_from_decoy_trigger() security definer'),
+    );
+    expect(
+      migration,
+      contains('alter function public.fn_alert_logs_to_sms_queue() security definer'),
+    );
+    expect(migration, contains('set search_path = public'));
+  });
+
+  test('redemption reserves before external billing and finalizes atomically', () {
+    final migration = File(
+      'supabase/migrations/20260919014000_atomic_membership_redemption.sql',
+    ).readAsStringSync();
+    final routes = File(
+      'backend/membership_redemption/register_routes.mjs',
+    ).readAsStringSync();
+    expect(migration, contains('reserve_membership_code'));
+    expect(migration, contains('finalize_membership_code'));
+    expect(migration, contains('completed_membership_redemption'));
+    expect(migration, contains("v_code.status = 'reserved'"));
+    expect(migration, contains('billing_sync_incomplete'));
+    expect(migration, contains('promotional_access_until = greatest'));
+    expect(migration, contains('is distinct from v_session.user_id'));
+    final reserveCall = routes.indexOf("'reserve_membership_code'");
+    final stripeSync = routes.indexOf('await syncStripePromotion', reserveCall);
+    final finalizeCall = routes.indexOf("'finalize_membership_code'", stripeSync);
+    expect(reserveCall, greaterThanOrEqualTo(0));
+    expect(stripeSync, greaterThan(reserveCall));
+    expect(finalizeCall, greaterThan(stripeSync));
+  });
+
   test('both subscription pages expose the same external redemption flow', () {
     for (final path in <String>[
       'lib/welcom_pages/subscription_options/'
