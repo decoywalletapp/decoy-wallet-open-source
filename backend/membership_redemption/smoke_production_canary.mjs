@@ -170,6 +170,33 @@ try {
   );
 } finally {
   if (userId) {
+    const cleanupHeaders = {
+      apikey: serviceKey,
+      authorization: `Bearer ${serviceKey}`,
+      'content-type': 'application/json',
+    };
+    await fetch(
+      `${supabaseUrl}/rest/v1/promo_codes?redeemed_by=eq.${userId}`,
+      {
+        method: 'PATCH',
+        headers: cleanupHeaders,
+        body: JSON.stringify({
+          reservation_session_id: null,
+          reserved_by: null,
+          redeemed_by: null,
+        }),
+      },
+    );
+    for (const table of [
+      'promo_redemptions',
+      'promo_redemption_sessions',
+      'user_entitlements',
+    ]) {
+      await fetch(`${supabaseUrl}/rest/v1/${table}?user_id=eq.${userId}`, {
+        method: 'DELETE',
+        headers: cleanupHeaders,
+      });
+    }
     const cleanup = await fetch(`${supabaseUrl}/auth/v1/admin/users/${userId}`, {
       method: 'DELETE',
       headers: {
