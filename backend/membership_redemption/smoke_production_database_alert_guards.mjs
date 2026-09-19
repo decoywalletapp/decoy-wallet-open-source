@@ -4,16 +4,20 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 
 const paymentServicePath = process.env.PAYMENT_SERVICE_JSON;
-if (!paymentServicePath) throw new Error('Missing PAYMENT_SERVICE_JSON');
-
-const service = JSON.parse(fs.readFileSync(paymentServicePath, 'utf8'));
+const service = paymentServicePath
+  ? JSON.parse(fs.readFileSync(paymentServicePath, 'utf8'))
+  : null;
 const env = Object.fromEntries(
-  (service.spec?.template?.spec?.containers?.[0]?.env ?? [])
+  (service?.spec?.template?.spec?.containers?.[0]?.env ?? [])
     .filter((entry) => typeof entry.value === 'string')
     .map((entry) => [entry.name, entry.value]),
 );
-const supabaseUrl = String(env.SUPABASE_URL ?? '').replace(/\/+$/, '');
-const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = String(
+  process.env.AUDIT_SUPABASE_URL ?? env.SUPABASE_URL ?? '',
+).replace(/\/+$/, '');
+const serviceKey =
+  process.env.AUDIT_SUPABASE_SERVICE_ROLE_KEY ??
+  env.SUPABASE_SERVICE_ROLE_KEY;
 if (!supabaseUrl || !serviceKey) throw new Error('Missing Supabase configuration');
 
 const headers = {
@@ -46,6 +50,8 @@ async function runCase(kind) {
   const email = `decoy-db-alert-${kind}-${nonce}@example.invalid`;
   const password = `${crypto.randomBytes(24).toString('base64url')}Aa1!`;
   const txidHmac = crypto.randomBytes(32).toString('hex');
+  const destinationAddress =
+    'bc1qstagingdestinationhandoff000000000000000000000';
   let userId;
   let alertId;
 
@@ -100,18 +106,26 @@ async function runCase(kind) {
         user_id: userId,
         trigger_type: 'SEED_DECOY',
         txid_hmac: txidHmac,
+        destination_addresses: [destinationAddress],
+        destination_address_count: 1,
       }),
     });
     if (!trigger.response.ok) throw new Error(`${kind} trigger insert failed`);
 
     const alerts = await jsonFetch(
-      `${supabaseUrl}/rest/v1/alert_logs?user_id=eq.${userId}&txid_hmac=eq.${txidHmac}&select=id`,
+      `${supabaseUrl}/rest/v1/alert_logs?user_id=eq.${userId}&txid_hmac=eq.${txidHmac}&select=id,destination_addresses,destination_address_count`,
       { headers },
     );
     if (!alerts.response.ok || alerts.body?.length !== 1) {
       throw new Error(`${kind} alert count was not one`);
     }
     alertId = alerts.body[0].id;
+    if (
+      alerts.body[0].destination_address_count !== 1 ||
+      alerts.body[0].destination_addresses?.[0] !== destinationAddress
+    ) {
+      throw new Error(`${kind} destination handoff failed`);
+    }
 
     const queue = await jsonFetch(
       `${supabaseUrl}/rest/v1/sms_queue?alert_id=eq.${alertId}&select=alert_id`,
@@ -121,7 +135,12 @@ async function runCase(kind) {
       throw new Error(`${kind} queue count was not one`);
     }
 
-    return { kind, alertCreated: true, queuedExactlyOnce: true };
+    return {
+      kind,
+      alertCreated: true,
+      destinationCopied: true,
+      queuedExactlyOnce: true,
+    };
   } finally {
     if (alertId) {
       await deleteWhere('sms_queue', `alert_id=eq.${alertId}`);

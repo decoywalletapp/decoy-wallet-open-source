@@ -91,6 +91,25 @@ void main() {
     expect(migration, contains('on conflict (alert_id) do nothing'));
   });
 
+  test('promotional alert guard preserves recipient-address handoff', () {
+    final migration = File(
+      'supabase/migrations/'
+      '20260919012000_restore_seed_alert_destination_handoff.sql',
+    ).readAsStringSync();
+
+    expect(
+      migration,
+      contains('public.has_active_decoy_wallet_access(NEW.user_id)'),
+    );
+    expect(migration, contains('NEW.destination_addresses'));
+    expect(
+        migration, contains('jsonb_array_length(NEW.destination_addresses)'));
+    expect(migration, contains('destination_addresses,'));
+    expect(migration, contains('destination_address_count,'));
+    expect(migration, contains('v_destination_addresses,'));
+    expect(migration, contains('v_destination_address_count,'));
+  });
+
   test('both subscription pages expose the same external redemption flow', () {
     for (final path in <String>[
       'lib/welcom_pages/subscription_options/'
