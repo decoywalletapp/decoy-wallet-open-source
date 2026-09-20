@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math' as math;
 
 class ConfigureBitcoinBalanceWidget extends StatefulWidget {
   const ConfigureBitcoinBalanceWidget({super.key});
@@ -22,6 +23,7 @@ class _ConfigureBitcoinBalanceWidgetState
   late final FocusNode _focusNode;
 
   static const _maximumBitcoin = 21000000.0;
+  static const _sliderFloor = 0.00000001;
 
   @override
   void initState() {
@@ -70,11 +72,32 @@ class _ConfigureBitcoinBalanceWidgetState
         .replaceFirst(RegExp(r'\.$'), '');
   }
 
-  void _choosePreset(double amount) {
+  void _setAmount(double amount) {
     _controller.text = _formatEditableBtc(amount);
     _controller.selection = TextSelection.collapsed(
       offset: _controller.text.length,
     );
+  }
+
+  double get _sliderValue {
+    final amount = (_enteredBtc ?? 0.0).clamp(0.0, _maximumBitcoin);
+    if (amount <= 0.0) return 0.0;
+    final minimumLog = math.log(_sliderFloor);
+    final maximumLog = math.log(_maximumBitcoin);
+    return ((math.log(amount) - minimumLog) / (maximumLog - minimumLog))
+        .clamp(0.0, 1.0);
+  }
+
+  void _setFromSlider(double position) {
+    if (position <= 0.0) {
+      _setAmount(0.0);
+      return;
+    }
+    final minimumLog = math.log(_sliderFloor);
+    final maximumLog = math.log(_maximumBitcoin);
+    _setAmount(math.exp(
+      minimumLog + position * (maximumLog - minimumLog),
+    ));
   }
 
   String? _validate(String? rawValue) {
@@ -148,14 +171,16 @@ class _ConfigureBitcoinBalanceWidgetState
                     ),
                     const SizedBox(height: 12.0),
                     _buildTitle(context),
-                    const SizedBox(height: 30.0),
+                    const SizedBox(height: 24.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _buildPreview(context, preview),
-                          const SizedBox(height: 22.0),
+                          const SizedBox(height: 18.0),
+                          _buildSlider(context),
+                          const SizedBox(height: 20.0),
                           Form(
                             key: _formKey,
                             child: TextFormField(
@@ -179,9 +204,10 @@ class _ConfigureBitcoinBalanceWidgetState
                                 fontWeight: FontWeight.w700,
                               ),
                               decoration: InputDecoration(
-                                labelText: 'Bitcoin amount',
+                                labelText: 'Exact Bitcoin amount',
                                 prefixText: 'BTC  ',
-                                helperText: _usdPreview,
+                                helperText:
+                                    'Enter any value from 0 to 21,000,000 BTC',
                                 filled: true,
                                 fillColor: Colors.white,
                                 contentPadding: const EdgeInsets.symmetric(
@@ -205,30 +231,7 @@ class _ConfigureBitcoinBalanceWidgetState
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16.0),
-                          Wrap(
-                            spacing: 8.0,
-                            runSpacing: 8.0,
-                            children: [
-                              _PresetButton(
-                                label: '0.01 BTC',
-                                onTap: () => _choosePreset(0.01),
-                              ),
-                              _PresetButton(
-                                label: '0.1 BTC',
-                                onTap: () => _choosePreset(0.1),
-                              ),
-                              _PresetButton(
-                                label: '1 BTC',
-                                onTap: () => _choosePreset(1.0),
-                              ),
-                              _PresetButton(
-                                label: '10 BTC',
-                                onTap: () => _choosePreset(10.0),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 28.0),
+                          const SizedBox(height: 24.0),
                           SizedBox(
                             height: 54.0,
                             child: FilledButton(
@@ -259,6 +262,92 @@ class _ConfigureBitcoinBalanceWidgetState
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSlider(BuildContext context) {
+    final primary = FlutterFlowTheme.of(context).primary;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18.0, 17.0, 18.0, 14.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF7F2),
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: const Color(0xFFFFD7C2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 34.0,
+                height: 34.0,
+                decoration: BoxDecoration(
+                  color: primary,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.tune_rounded,
+                  color: Colors.white,
+                  size: 19.0,
+                ),
+              ),
+              const SizedBox(width: 11.0),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Adjust balance',
+                      style: TextStyle(
+                        color: Color(0xFF15161E),
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 2.0),
+                    Text(
+                      'Slide for a quick estimate, or enter an exact amount below.',
+                      style: TextStyle(
+                        color: Color(0xFF6D737C),
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 13.0),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: primary,
+              inactiveTrackColor: const Color(0xFFFFD7C2),
+              thumbColor: primary,
+              overlayColor: primary.withValues(alpha: 0.14),
+              trackHeight: 7.0,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 11.0),
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 22.0),
+            ),
+            child: Slider(
+              value: _sliderValue,
+              onChanged: _setFromSlider,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('0 BTC', style: _SliderLabelStyle.textStyle),
+                Text('21M BTC', style: _SliderLabelStyle.textStyle),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -356,26 +445,10 @@ class _ConfigureBitcoinBalanceWidgetState
   }
 }
 
-class _PresetButton extends StatelessWidget {
-  const _PresetButton({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ActionChip(
-      onPressed: onTap,
-      backgroundColor: const Color(0xFFFFF0E8),
-      side: BorderSide.none,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      label: Text(
-        label,
-        style: TextStyle(
-          color: FlutterFlowTheme.of(context).primary,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
+abstract final class _SliderLabelStyle {
+  static const textStyle = TextStyle(
+    color: Color(0xFF777D86),
+    fontSize: 11.0,
+    fontWeight: FontWeight.w700,
+  );
 }

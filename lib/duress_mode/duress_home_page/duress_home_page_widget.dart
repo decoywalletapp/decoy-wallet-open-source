@@ -420,7 +420,15 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             context,
             icon: Icons.menu_rounded,
             onPressed: () async {
-              context.pushNamed(DuressSettingsPageWidget.routeName);
+              context.pushNamed(
+                DuressSettingsPageWidget.routeName,
+                extra: {
+                  kTransitionInfoKey: const TransitionInfo(
+                    hasTransition: true,
+                    duration: Duration.zero,
+                  ),
+                },
+              );
             },
           ),
           Text(
@@ -1015,7 +1023,15 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             icon: Icons.star_rounded,
             label: 'Place a limit order',
             onTap: () {
-              context.pushNamed(DuressSettingsPageWidget.routeName);
+              context.pushNamed(
+                DuressSettingsPageWidget.routeName,
+                extra: {
+                  kTransitionInfoKey: const TransitionInfo(
+                    hasTransition: true,
+                    duration: Duration.zero,
+                  ),
+                },
+              );
             },
           ),
           _divider(),
@@ -1024,7 +1040,15 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             icon: Icons.account_balance_rounded,
             label: 'Get paid in Bitcoin',
             onTap: () {
-              context.pushNamed(DuressSettingsPageWidget.routeName);
+              context.pushNamed(
+                DuressSettingsPageWidget.routeName,
+                extra: {
+                  kTransitionInfoKey: const TransitionInfo(
+                    hasTransition: true,
+                    duration: Duration.zero,
+                  ),
+                },
+              );
             },
           ),
           _divider(),
@@ -1033,7 +1057,15 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             icon: Icons.send_rounded,
             label: 'Auto-withdraw bitcoin',
             onTap: () {
-              context.pushNamed(DuressSettingsPageWidget.routeName);
+              context.pushNamed(
+                DuressSettingsPageWidget.routeName,
+                extra: {
+                  kTransitionInfoKey: const TransitionInfo(
+                    hasTransition: true,
+                    duration: Duration.zero,
+                  ),
+                },
+              );
             },
           ),
         ],

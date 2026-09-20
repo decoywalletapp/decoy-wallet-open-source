@@ -1,7 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -21,373 +20,191 @@ class DuressSettingsPageWidget extends StatefulWidget {
 
 class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
   late DuressSettingsPageModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  static const _background = Color(0xFF080C0D);
+  static const _panel = Color(0xFF121819);
+  static const _border = Color(0xFF263032);
+  static const _muted = Color(0xFF929A9D);
+  static const _orange = Color(0xFFFF5A00);
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => DuressSettingsPageModel());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
+  }
+
+  Future<void> _logOut() async {
+    GoRouter.of(context).prepareAuthEvent();
+    await authManager.signOut();
+    GoRouter.of(context).clearRedirectLocation();
+    if (mounted) {
+      context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: PopScope(
-        canPop: false,
-        child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: Color(0x001D2428),
-          body: SafeArea(
-            top: true,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
+    return PopScope(
+      canPop: true,
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: _background,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 28.0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 430.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
                       child: FlutterFlowIconButton(
-                        borderColor: Colors.transparent,
-                        borderRadius: 30.0,
-                        buttonSize: 40.0,
-                        icon: Icon(
+                        borderColor: _border,
+                        borderRadius: 8.0,
+                        borderWidth: 1.0,
+                        buttonSize: 42.0,
+                        fillColor: _panel,
+                        icon: const Icon(
                           Icons.arrow_back_rounded,
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          size: 25.0,
+                          color: Colors.white,
+                          size: 23.0,
                         ),
-                        onPressed: () async {
-                          context.pop();
-                        },
+                        onPressed: () async => context.safePop(),
                       ),
                     ),
-                  ],
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 30.0),
-                    child: Text(
-                      'Settings Page',
-                      style: FlutterFlowTheme.of(context)
-                          .headlineSmall
-                          .override(
-                            fontFamily: 'hello',
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            fontSize: 24.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                ),
-                ListView(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                    const SizedBox(height: 34.0),
+                    Align(
                       child: Container(
-                        width: 400.0,
-                        decoration: BoxDecoration(),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'My Subscription',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      fontFamily: 'hello',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      fontSize: 22.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                              Icon(
-                                Icons.chevron_right_rounded,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                size: 24.0,
-                              ),
-                            ],
-                          ),
+                        width: 76.0,
+                        height: 76.0,
+                        decoration: BoxDecoration(
+                          color: _orange,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 18.0,
+                              color: Color(0x42000000),
+                              offset: Offset(0.0, 9.0),
+                            ),
+                          ],
+                        ),
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.settings_rounded,
+                          color: Colors.white,
+                          size: 38.0,
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                      child: Container(
-                        width: 400.0,
-                        decoration: BoxDecoration(),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Getting Started',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      fontFamily: 'hello',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      fontSize: 22.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                    const SizedBox(height: 22.0),
+                    Text(
+                      'Settings',
+                      textAlign: TextAlign.center,
+                      style:
+                          FlutterFlowTheme.of(context).headlineMedium.override(
+                                fontFamily: 'InterTight',
+                                color: Colors.white,
+                                fontSize: 31.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w800,
                               ),
-                              Icon(
-                                Icons.chevron_right_rounded,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                size: 24.0,
-                              ),
-                            ],
-                          ),
-                        ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    const Text(
+                      'Manage this wallet session.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: _muted,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                      child: Container(
-                        width: 400.0,
-                        decoration: BoxDecoration(),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'About Us',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      fontFamily: 'hello',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      fontSize: 22.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                              Icon(
-                                Icons.chevron_right_rounded,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                size: 24.0,
-                              ),
-                            ],
+                    const SizedBox(height: 38.0),
+                    Container(
+                      padding: const EdgeInsets.all(18.0),
+                      decoration: BoxDecoration(
+                        color: _panel,
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: _border),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 42.0,
+                            height: 42.0,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF202829),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.shield_outlined,
+                              color: _orange,
+                              size: 23.0,
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 13.0),
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Decoy wallet active',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                SizedBox(height: 3.0),
+                                Text(
+                                  'Your displayed wallet remains available until you log out.',
+                                  style: TextStyle(
+                                    color: _muted,
+                                    fontSize: 12.0,
+                                    height: 1.35,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                      child: Container(
-                        width: 400.0,
-                        decoration: BoxDecoration(),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Help',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      fontFamily: 'hello',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      fontSize: 22.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                              Icon(
-                                Icons.chevron_right_rounded,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                size: 24.0,
-                              ),
-                            ],
+                    const SizedBox(height: 22.0),
+                    SizedBox(
+                      height: 56.0,
+                      child: OutlinedButton.icon(
+                        onPressed: _logOut,
+                        icon: const Icon(Icons.logout_rounded, size: 21.0),
+                        label: const Text('Log Out'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: _orange, width: 1.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                      child: Container(
-                        width: 400.0,
-                        decoration: BoxDecoration(),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Privacy Policy',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      fontFamily: 'hello',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      fontSize: 22.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                              Icon(
-                                Icons.chevron_right_rounded,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                size: 24.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                      child: Container(
-                        width: 400.0,
-                        decoration: BoxDecoration(),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Terms & Conditions',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      fontFamily: 'hello',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      fontSize: 22.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                              Icon(
-                                Icons.chevron_right_rounded,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                size: 24.0,
-                              ),
-                            ],
+                          textStyle: const TextStyle(
+                            fontSize: 17.0,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Text(
-                    'App Versions',
-                    style: FlutterFlowTheme.of(context).titleLarge.override(
-                          fontFamily: 'hello',
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          fontSize: 22.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Text(
-                    'v4.9.0',
-                    style: FlutterFlowTheme.of(context).labelMedium.override(
-                          fontFamily: 'hello',
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                          fontSize: 14.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      GoRouter.of(context).prepareAuthEvent();
-                      await authManager.signOut();
-                      GoRouter.of(context).clearRedirectLocation();
-
-                      context.goNamedAuth(
-                          LoginPageWidget.routeName, context.mounted);
-                    },
-                    text: 'Log Out',
-                    options: FFButtonOptions(
-                      height: 40.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: Color(0x001D2428),
-                      textStyle: FlutterFlowTheme.of(context)
-                          .labelMedium
-                          .override(
-                            fontFamily: 'hello',
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            fontSize: 14.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                      elevation: 0.0,
-                      borderSide: BorderSide(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                  ),
-                ),
-              ].divide(SizedBox(height: 24.0)).addToEnd(SizedBox(height: 64.0)),
+              ),
             ),
           ),
         ),

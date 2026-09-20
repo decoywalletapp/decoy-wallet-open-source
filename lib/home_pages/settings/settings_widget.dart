@@ -109,7 +109,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                           _SettingsTile(
                             icon: Icons.language_rounded,
-                            label: 'Decoy Wallet Website',
+                            label: 'Website',
                             onTap: () async => launchURL(
                               'https://www.decoywalletapp.com',
                             ),
