@@ -76,6 +76,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             label: 'My Subscription',
                             onTap: _openSubscription,
                           ),
+                          _SettingsTile(
+                            icon: Icons.currency_bitcoin_rounded,
+                            label: 'Configure Bitcoin Balance',
+                            onTap: () async => context.pushNamed(
+                              ConfigureBitcoinBalanceWidget.routeName,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 18.0),
@@ -99,6 +106,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             label: 'Tutorials',
                             onTap: () async =>
                                 context.pushNamed(TutorialsWidget.routeName),
+                          ),
+                          _SettingsTile(
+                            icon: Icons.language_rounded,
+                            label: 'Decoy Wallet Website',
+                            onTap: () async => launchURL(
+                              'https://www.decoywalletapp.com',
+                            ),
                           ),
                         ],
                       ),
@@ -267,10 +281,50 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               onTap: () => launchURL(
                 'https://youtube.com/@decoywalletapp?si=p67QJDUJx2ArQbvL',
               ),
-              child: const FaIcon(
-                FontAwesomeIcons.youtube,
-                color: Color(0xFFFF0000),
-                size: 34.0,
+              child: Container(
+                width: 36.0,
+                height: 25.0,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF0000),
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 22.0,
+                  ),
+                ),
+              ),
+            ),
+            _SocialButton(
+              tooltip: 'Instagram',
+              onTap: () => launchURL(
+                'https://www.instagram.com/decoywalletapp/',
+              ),
+              child: Container(
+                width: 36.0,
+                height: 36.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(9.0),
+                  gradient: const LinearGradient(
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
+                    colors: [
+                      Color(0xFFFFD35A),
+                      Color(0xFFFF3D57),
+                      Color(0xFFC13584),
+                      Color(0xFF5851DB),
+                    ],
+                  ),
+                ),
+                child: const Center(
+                  child: FaIcon(
+                    FontAwesomeIcons.instagram,
+                    color: Colors.white,
+                    size: 25.0,
+                  ),
+                ),
               ),
             ),
             _SocialButton(

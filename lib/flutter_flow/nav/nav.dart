@@ -439,6 +439,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => TutorialsWidget(),
       ),
       FFRoute(
+        name: ConfigureBitcoinBalanceWidget.routeName,
+        path: ConfigureBitcoinBalanceWidget.routePath,
+        builder: (context, params) => const ConfigureBitcoinBalanceWidget(),
+      ),
+      FFRoute(
         name: LocationAuthorizationWidget.routeName,
         path: LocationAuthorizationWidget.routePath,
         builder: (context, params) => LocationAuthorizationWidget(),

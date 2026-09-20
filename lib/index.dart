@@ -80,6 +80,8 @@ export '/welcom_pages/payment_return/payment_return_widget.dart'
 export '/settings_pages/manage_subscription/manage_subscription_widget.dart'
     show ManageSubscriptionWidget;
 export '/settings_pages/tutorials/tutorials_widget.dart' show TutorialsWidget;
+export '/settings_pages/configure_bitcoin_balance/configure_bitcoin_balance_widget.dart'
+    show ConfigureBitcoinBalanceWidget;
 export '/welcom_pages/location_authorization/location_authorization_widget.dart'
     show LocationAuthorizationWidget;
 export '/welcom_pages/enable_notifications/enable_notifications_widget.dart'
