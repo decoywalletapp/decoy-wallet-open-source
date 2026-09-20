@@ -208,6 +208,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         builder: (context, params) => DuressSettingsPageWidget(),
       ),
       FFRoute(
+        name: WalletFeaturePreviewWidget.routeName,
+        path: WalletFeaturePreviewWidget.routePath,
+        builder: (context, params) => WalletFeaturePreviewWidget(
+          feature: params.getParam(
+            'feature',
+            ParamType.String,
+          ),
+        ),
+      ),
+      FFRoute(
         name: ShowDecoySeedPhraseWidget.routeName,
         path: ShowDecoySeedPhraseWidget.routePath,
         builder: (context, params) => ShowDecoySeedPhraseWidget(

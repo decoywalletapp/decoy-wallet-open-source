@@ -22,6 +22,8 @@ export '/duress_mode/duress_home_page/duress_home_page_widget.dart'
     show DuressHomePageWidget;
 export '/duress_mode/duress_settings_page/duress_settings_page_widget.dart'
     show DuressSettingsPageWidget;
+export '/duress_mode/wallet_feature_preview/wallet_feature_preview_widget.dart'
+    show WalletFeaturePreviewWidget;
 export '/create_decoy_seed/show_decoy_seed_phrase/show_decoy_seed_phrase_widget.dart'
     show ShowDecoySeedPhraseWidget;
 export '/create_decoy_seed/decoy_seed_acknowledgements/decoy_seed_acknowledgements_widget.dart'

@@ -121,7 +121,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                     ),
                     const SizedBox(height: 8.0),
                     const Text(
-                      'Manage this wallet session.',
+                      'Manage your wallet preferences and session.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: _muted,
@@ -129,59 +129,36 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 38.0),
-                    Container(
-                      padding: const EdgeInsets.all(18.0),
-                      decoration: BoxDecoration(
-                        color: _panel,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: _border),
+                    const SizedBox(height: 34.0),
+                    _sectionLabel('WALLET'),
+                    const SizedBox(height: 9.0),
+                    _settingsPanel([
+                      _settingsRow(
+                        icon: Icons.currency_bitcoin_rounded,
+                        title: 'Currency',
+                        value: 'Bitcoin',
                       ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 42.0,
-                            height: 42.0,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF202829),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            alignment: Alignment.center,
-                            child: const Icon(
-                              Icons.shield_outlined,
-                              color: _orange,
-                              size: 23.0,
-                            ),
-                          ),
-                          const SizedBox(width: 13.0),
-                          const Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Decoy wallet active',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                                SizedBox(height: 3.0),
-                                Text(
-                                  'Your displayed wallet remains available until you log out.',
-                                  style: TextStyle(
-                                    color: _muted,
-                                    fontSize: 12.0,
-                                    height: 1.35,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      _settingsRow(
+                        icon: Icons.hub_outlined,
+                        title: 'Network',
+                        value: 'Bitcoin Mainnet',
                       ),
-                    ),
+                    ]),
+                    const SizedBox(height: 24.0),
+                    _sectionLabel('SECURITY'),
+                    const SizedBox(height: 9.0),
+                    _settingsPanel([
+                      _settingsRow(
+                        icon: Icons.lock_outline_rounded,
+                        title: 'App lock',
+                        value: 'Active',
+                      ),
+                      _settingsRow(
+                        icon: Icons.smartphone_rounded,
+                        title: 'Signed-in device',
+                        value: 'This device',
+                      ),
+                    ]),
                     const SizedBox(height: 22.0),
                     SizedBox(
                       height: 56.0,
@@ -211,4 +188,65 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
       ),
     );
   }
+
+  Widget _sectionLabel(String label) => Text(
+        label,
+        style: const TextStyle(
+          color: _muted,
+          fontSize: 11.0,
+          letterSpacing: 1.5,
+          fontWeight: FontWeight.w800,
+        ),
+      );
+
+  Widget _settingsPanel(List<Widget> rows) => Container(
+        decoration: BoxDecoration(
+          color: _panel,
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(color: _border),
+        ),
+        child: Column(children: rows),
+      );
+
+  Widget _settingsRow({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+        child: Row(
+          children: [
+            Container(
+              width: 38.0,
+              height: 38.0,
+              decoration: BoxDecoration(
+                color: const Color(0xFF202829),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              alignment: Alignment.center,
+              child: Icon(icon, color: _orange, size: 21.0),
+            ),
+            const SizedBox(width: 13.0),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                color: _muted,
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      );
 }

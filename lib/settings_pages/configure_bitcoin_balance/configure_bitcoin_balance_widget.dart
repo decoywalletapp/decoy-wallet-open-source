@@ -24,7 +24,6 @@ class _ConfigureBitcoinBalanceWidgetState
 
   static const _maximumBitcoin = 21000000.0;
   static const _maximumSliderBitcoin = 10000.0;
-  static const _sliderFloor = 0.00000001;
 
   @override
   void initState() {
@@ -83,9 +82,11 @@ class _ConfigureBitcoinBalanceWidgetState
   double get _sliderValue {
     final amount = (_enteredBtc ?? 0.0).clamp(0.0, _maximumSliderBitcoin);
     if (amount <= 0.0) return 0.0;
-    final minimumLog = math.log(_sliderFloor);
-    final maximumLog = math.log(_maximumSliderBitcoin);
-    return ((math.log(amount) - minimumLog) / (maximumLog - minimumLog))
+    if (amount <= 25.0) return (amount / 25.0) * 0.5;
+    return (0.5 +
+            0.5 *
+                (math.log(amount / 25.0) /
+                    math.log(_maximumSliderBitcoin / 25.0)))
         .clamp(0.0, 1.0);
   }
 
@@ -94,11 +95,15 @@ class _ConfigureBitcoinBalanceWidgetState
       _setAmount(0.0);
       return;
     }
-    final minimumLog = math.log(_sliderFloor);
-    final maximumLog = math.log(_maximumSliderBitcoin);
-    _setAmount(math.exp(
-      minimumLog + position * (maximumLog - minimumLog),
-    ));
+    if (position <= 0.5) {
+      _setAmount((position / 0.5) * 25.0);
+      return;
+    }
+    final highRangePosition = (position - 0.5) / 0.5;
+    _setAmount(25.0 *
+        math.exp(
+          highRangePosition * math.log(_maximumSliderBitcoin / 25.0),
+        ));
   }
 
   String? _validate(String? rawValue) {
@@ -361,6 +366,27 @@ class _ConfigureBitcoinBalanceWidgetState
   }
 
   Widget _buildTitle(BuildContext context) {
+    final titleStyle = FlutterFlowTheme.of(context).bodyMedium.override(
+          fontFamily: 'DECOY BEBAS',
+          color: FlutterFlowTheme.of(context).info,
+          fontSize: 43.0,
+          letterSpacing: 0.0,
+          fontWeight: FontWeight.normal,
+          lineHeight: 1.05,
+        );
+
+    Widget titleLayer(AlignmentDirectional alignment) => Align(
+          alignment: alignment,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 12.0),
+            child: Text(
+              'Bitcoin Balance',
+              textAlign: TextAlign.center,
+              style: titleStyle,
+            ),
+          ),
+        );
+
     return Align(
       alignment: Alignment.center,
       child: Material(
@@ -375,15 +401,12 @@ class _ConfigureBitcoinBalanceWidgetState
             borderRadius: BorderRadius.circular(8.0),
           ),
           alignment: Alignment.center,
-          child: Text(
-            'Bitcoin Balance',
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: 'DECOY BEBAS',
-                  color: Colors.white,
-                  fontSize: 43.0,
-                  letterSpacing: 0.8,
-                  lineHeight: 1.0,
-                ),
+          child: Stack(
+            children: [
+              titleLayer(const AlignmentDirectional(-0.01, 0.0)),
+              titleLayer(const AlignmentDirectional(0.0, 0.0)),
+              titleLayer(const AlignmentDirectional(0.01, 0.0)),
+            ],
           ),
         ),
       ),

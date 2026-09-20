@@ -1015,61 +1015,44 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             context,
             icon: Icons.edit_calendar_rounded,
             label: 'Set a recurring buy',
-            onTap: () {},
+            onTap: () => _openFeature(context, 'recurring-buy'),
           ),
           _divider(),
           _discoverRow(
             context,
             icon: Icons.star_rounded,
             label: 'Place a limit order',
-            onTap: () {
-              context.pushNamed(
-                DuressSettingsPageWidget.routeName,
-                extra: {
-                  kTransitionInfoKey: const TransitionInfo(
-                    hasTransition: true,
-                    duration: Duration.zero,
-                  ),
-                },
-              );
-            },
+            onTap: () => _openFeature(context, 'limit-order'),
           ),
           _divider(),
           _discoverRow(
             context,
             icon: Icons.account_balance_rounded,
             label: 'Get paid in Bitcoin',
-            onTap: () {
-              context.pushNamed(
-                DuressSettingsPageWidget.routeName,
-                extra: {
-                  kTransitionInfoKey: const TransitionInfo(
-                    hasTransition: true,
-                    duration: Duration.zero,
-                  ),
-                },
-              );
-            },
+            onTap: () => _openFeature(context, 'bitcoin-pay'),
           ),
           _divider(),
           _discoverRow(
             context,
             icon: Icons.send_rounded,
             label: 'Auto-withdraw bitcoin',
-            onTap: () {
-              context.pushNamed(
-                DuressSettingsPageWidget.routeName,
-                extra: {
-                  kTransitionInfoKey: const TransitionInfo(
-                    hasTransition: true,
-                    duration: Duration.zero,
-                  ),
-                },
-              );
-            },
+            onTap: () => _openFeature(context, 'auto-withdraw'),
           ),
         ],
       ),
+    );
+  }
+
+  void _openFeature(BuildContext context, String feature) {
+    context.pushNamed(
+      WalletFeaturePreviewWidget.routeName,
+      queryParameters: {'feature': feature},
+      extra: {
+        kTransitionInfoKey: const TransitionInfo(
+          hasTransition: true,
+          duration: Duration.zero,
+        ),
+      },
     );
   }
 
