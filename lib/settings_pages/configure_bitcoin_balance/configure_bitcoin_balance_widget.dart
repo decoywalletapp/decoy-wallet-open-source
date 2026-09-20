@@ -23,6 +23,7 @@ class _ConfigureBitcoinBalanceWidgetState
   late final FocusNode _focusNode;
 
   static const _maximumBitcoin = 21000000.0;
+  static const _maximumSliderBitcoin = 10000.0;
   static const _sliderFloor = 0.00000001;
 
   @override
@@ -80,10 +81,10 @@ class _ConfigureBitcoinBalanceWidgetState
   }
 
   double get _sliderValue {
-    final amount = (_enteredBtc ?? 0.0).clamp(0.0, _maximumBitcoin);
+    final amount = (_enteredBtc ?? 0.0).clamp(0.0, _maximumSliderBitcoin);
     if (amount <= 0.0) return 0.0;
     final minimumLog = math.log(_sliderFloor);
-    final maximumLog = math.log(_maximumBitcoin);
+    final maximumLog = math.log(_maximumSliderBitcoin);
     return ((math.log(amount) - minimumLog) / (maximumLog - minimumLog))
         .clamp(0.0, 1.0);
   }
@@ -94,7 +95,7 @@ class _ConfigureBitcoinBalanceWidgetState
       return;
     }
     final minimumLog = math.log(_sliderFloor);
-    final maximumLog = math.log(_maximumBitcoin);
+    final maximumLog = math.log(_maximumSliderBitcoin);
     _setAmount(math.exp(
       minimumLog + position * (maximumLog - minimumLog),
     ));
@@ -343,7 +344,7 @@ class _ConfigureBitcoinBalanceWidgetState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('0 BTC', style: _SliderLabelStyle.textStyle),
-                Text('21M BTC', style: _SliderLabelStyle.textStyle),
+                Text('10K BTC', style: _SliderLabelStyle.textStyle),
               ],
             ),
           ),
