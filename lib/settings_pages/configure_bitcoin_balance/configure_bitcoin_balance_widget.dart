@@ -394,7 +394,7 @@ class _ConfigureBitcoinBalanceWidgetState
         elevation: 3.0,
         borderRadius: BorderRadius.circular(8.0),
         child: Container(
-          width: 286.0,
+          width: 340.0,
           height: 71.0,
           decoration: BoxDecoration(
             color: FlutterFlowTheme.of(context).primary,

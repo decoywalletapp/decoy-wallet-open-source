@@ -51,5 +51,6 @@ void main() {
     expect(source, contains('AlignmentDirectional(0.1, 0.0)'));
     expect(source, contains('AlignmentDirectional(0.0, -0.1)'));
     expect(source, contains('AlignmentDirectional(0.0, 0.1)'));
+    expect(source, contains('width: 340.0'));
   });
 }
