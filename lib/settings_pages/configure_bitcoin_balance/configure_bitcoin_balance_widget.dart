@@ -369,7 +369,7 @@ class _ConfigureBitcoinBalanceWidgetState
     final titleStyle = FlutterFlowTheme.of(context).bodyMedium.override(
           fontFamily: 'DECOY BEBAS',
           color: FlutterFlowTheme.of(context).info,
-          fontSize: 43.0,
+          fontSize: 52.0,
           letterSpacing: 0.0,
           fontWeight: FontWeight.normal,
           lineHeight: 1.05,
@@ -403,9 +403,10 @@ class _ConfigureBitcoinBalanceWidgetState
           alignment: Alignment.center,
           child: Stack(
             children: [
-              titleLayer(const AlignmentDirectional(-0.01, 0.0)),
-              titleLayer(const AlignmentDirectional(0.0, 0.0)),
-              titleLayer(const AlignmentDirectional(0.01, 0.0)),
+              titleLayer(const AlignmentDirectional(0.1, 0.0)),
+              titleLayer(const AlignmentDirectional(-0.1, 0.0)),
+              titleLayer(const AlignmentDirectional(0.0, 0.1)),
+              titleLayer(const AlignmentDirectional(0.0, -0.1)),
             ],
           ),
         ),
