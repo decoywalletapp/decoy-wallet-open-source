@@ -50,7 +50,7 @@ class RedemptionOptionCard extends StatelessWidget {
             const SizedBox(height: 10.0),
             FFButtonWidget(
               onPressed: onPressed,
-              text: 'Redeem Membership',
+              text: 'Redeem Code',
               options: FFButtonOptions(
                 width: 250.0,
                 height: 50.0,

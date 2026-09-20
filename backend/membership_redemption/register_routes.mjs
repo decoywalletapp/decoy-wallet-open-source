@@ -47,7 +47,7 @@ export function registerMembershipRedemptionRoutes({
     const sessionToken = String(req.body?.session ?? '');
     const code = normalizeMembershipCode(req.body?.code);
     if (!sessionToken || !isMembershipCodeFormatValid(code)) {
-      return res.status(400).json({ error: 'Invalid membership code.' });
+      return res.status(400).json({ error: 'Invalid subscription code.' });
     }
 
     const sessionHash = hashSecret(sessionToken, sessionPepper);
@@ -87,7 +87,7 @@ export function registerMembershipRedemptionRoutes({
         billingSyncComplete = true;
       } catch (error) {
         return res.status(503).json({
-          error: 'Your code is safely reserved, but billing protection could not be completed. No membership time was consumed. Please retry or contact Decoy support.',
+          error: 'Your code is safely reserved, but billing protection could not be completed. No subscription time was consumed. Please retry or contact Decoy support.',
         });
       }
     }
