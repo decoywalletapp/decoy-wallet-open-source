@@ -403,10 +403,9 @@ class _ConfigureBitcoinBalanceWidgetState
           alignment: Alignment.center,
           child: Stack(
             children: [
-              titleLayer(const AlignmentDirectional(0.1, 0.0)),
-              titleLayer(const AlignmentDirectional(-0.1, 0.0)),
-              titleLayer(const AlignmentDirectional(0.0, 0.1)),
-              titleLayer(const AlignmentDirectional(0.0, -0.1)),
+              titleLayer(const AlignmentDirectional(-0.01, 0.0)),
+              titleLayer(const AlignmentDirectional(0.0, 0.0)),
+              titleLayer(const AlignmentDirectional(0.01, 0.0)),
             ],
           ),
         ),

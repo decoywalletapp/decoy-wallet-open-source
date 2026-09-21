@@ -47,10 +47,11 @@ void main() {
     expect(source, contains('(amount / 25.0) * 0.5'));
     expect(source, contains('if (position <= 0.5)'));
     expect(source, contains('(position / 0.5) * 25.0'));
-    expect(source, contains('AlignmentDirectional(-0.1, 0.0)'));
-    expect(source, contains('AlignmentDirectional(0.1, 0.0)'));
-    expect(source, contains('AlignmentDirectional(0.0, -0.1)'));
-    expect(source, contains('AlignmentDirectional(0.0, 0.1)'));
+    expect(source, contains('AlignmentDirectional(-0.01, 0.0)'));
+    expect(source, contains('AlignmentDirectional(0.0, 0.0)'));
+    expect(source, contains('AlignmentDirectional(0.01, 0.0)'));
+    expect(source, isNot(contains('AlignmentDirectional(0.0, 0.1)')));
+    expect(source, isNot(contains('AlignmentDirectional(0.0, -0.1)')));
     expect(source, contains('width: 340.0'));
   });
 }
