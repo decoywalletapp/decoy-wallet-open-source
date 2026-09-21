@@ -4031,6 +4031,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         ),
                                                       ),
                                                       Stack(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
                                                         children: [
                                                           Material(
                                                             color: Colors
