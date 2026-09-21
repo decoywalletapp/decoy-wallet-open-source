@@ -223,7 +223,7 @@ workflows:
       - name: Run Flutter tests
         script: |
           set -eu
-          flutter test
+          flutter test --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
       - name: Build TestFlight IPA with source provenance
         script: |
           set -eu
@@ -283,6 +283,7 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+        submit_to_app_store: false
 
   ios-app-store-release:
     name: iOS App Store Release
@@ -508,7 +509,7 @@ workflows:
       - name: Run Flutter tests
         script: |
           set -eu
-          flutter test
+          flutter test --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
       - name: Build App Store IPA with source provenance
         script: |
           set -eu
@@ -543,7 +544,8 @@ workflows:
             --dart-define=DECOY_BUILD_PLATFORM="$DECOY_BUILD_PLATFORM" \
             --dart-define=DECOY_BUILD_VERSION="$APP_VERSION" \
             --dart-define=DECOY_BUILD_NUMBER="$APP_BUILD_NUMBER" \
-            --dart-define=DECOY_BUILD_VERIFICATION="$DECOY_BUILD_VERIFICATION"
+            --dart-define=DECOY_BUILD_VERIFICATION="$DECOY_BUILD_VERIFICATION" \
+            --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
       - name: Write public provenance summary
         script: |
           set -eu
@@ -566,7 +568,8 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
+        submit_to_app_store: false
 
   android-debug-rehearsal:
     name: Android Debug APK Rehearsal
