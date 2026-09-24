@@ -10,6 +10,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import '/utils/android_display_guard.dart';
+import '/utils/decoy_pin_payload.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -1645,22 +1646,27 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           _model.dataKeyB64;
                                                       safeSetState(() {});
                                                       _model.contactObj =
-                                                          await actions
-                                                              .aesGcmDecryptToMap(
-                                                        walletRow!
-                                                            .contactsCiphertext!,
-                                                        walletRow
-                                                            .contactsNonce!,
-                                                        _model.dataKeyB64!,
+                                                          await decryptOptionalPinPayload(
+                                                        ciphertext: walletRow
+                                                            ?.contactsCiphertext,
+                                                        nonce: walletRow
+                                                            ?.contactsNonce,
+                                                        dataKey: _model.dataKeyB64,
+                                                        emptyPayload: {
+                                                          'contacts': <dynamic>[],
+                                                        },
                                                       );
                                                       _model.personalObj =
-                                                          await actions
-                                                              .aesGcmDecryptToMap(
-                                                        walletRow
-                                                            .personalCiphertext!,
-                                                        walletRow
-                                                            .personalNonce!,
-                                                        _model.dataKeyB64!,
+                                                          await decryptOptionalPinPayload(
+                                                        ciphertext: walletRow
+                                                            ?.personalCiphertext,
+                                                        nonce: walletRow
+                                                            ?.personalNonce,
+                                                        dataKey: _model.dataKeyB64,
+                                                        emptyPayload: {
+                                                          'firstName': '',
+                                                          'lastName': '',
+                                                        },
                                                       );
                                                       var liveContactsComplete = _model
                                                               .walletRow
