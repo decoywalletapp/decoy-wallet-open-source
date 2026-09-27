@@ -160,6 +160,35 @@ void main() {
                         tester.element(find.byType(Scaffold).first))
                     .languageCode,
                 locale);
+            if (page.key == 'settings') {
+              final block = find.byKey(const ValueKey('settings-title-block'));
+              final bounds = tester.getRect(block);
+              expect(bounds.center.dx, closeTo(size.width / 2, 0.01));
+              expect(bounds.height, 71);
+              if (locale == 'en') expect(bounds.width, 190);
+              final labels =
+                  find.descendant(of: block, matching: find.byType(Text));
+              Rect? combinedBounds;
+              for (final element in labels.evaluate()) {
+                final paragraph = element.renderObject! as RenderParagraph;
+                expect(paragraph.didExceedMaxLines, isFalse);
+                final painted = MatrixUtils.transformRect(
+                    paragraph.getTransformTo(null),
+                    Offset.zero & paragraph.size);
+                expect(painted.left, greaterThanOrEqualTo(bounds.left));
+                expect(painted.right, lessThanOrEqualTo(bounds.right));
+                expect(painted.top, greaterThanOrEqualTo(bounds.top));
+                expect(painted.bottom, lessThanOrEqualTo(bounds.bottom));
+                combinedBounds =
+                    combinedBounds?.expandToInclude(painted) ?? painted;
+              }
+              expect(
+                  combinedBounds!.center.dx, closeTo(bounds.center.dx, 0.01));
+              if (locale != 'en') {
+                expect(
+                    combinedBounds.center.dy, closeTo(bounds.center.dy, 0.01));
+              }
+            }
             if (page.key == 'emergency-setup') {
               for (final key in [
                 'emergency-setup-title',

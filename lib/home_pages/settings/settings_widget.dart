@@ -1,5 +1,6 @@
 import '/l10n/app_localizations.dart';
 import '/l10n/language_picker.dart';
+import '/components/localized_banner_label.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/build_provenance.dart';
@@ -191,6 +192,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   }
 
   Widget _buildTitle(BuildContext context) {
+    final title = AppLocalizations.of(context)!.msgSettings;
+    final keepEnglishLayout =
+        Localizations.localeOf(context).languageCode == 'en';
     final titleStyle = FlutterFlowTheme.of(context).bodyMedium.override(
           fontFamily: 'DECOY BEBAS',
           color: FlutterFlowTheme.of(context).info,
@@ -200,42 +204,64 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           lineHeight: 1.05,
         );
 
-    return Align(
-      alignment: Alignment.center,
-      child: Material(
-        color: Colors.transparent,
-        elevation: 3.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Container(
-          width: 190.0,
-          height: 71.0,
-          decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).primary,
+    return LayoutBuilder(builder: (context, constraints) {
+      var blockWidth = 190.0;
+      if (!keepEnglishLayout) {
+        final measurement = TextPainter(
+          text: TextSpan(
+              text: title, style: titleStyle.copyWith(letterSpacing: 0)),
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+          maxLines: 1,
+        )..layout();
+        final maximumWidth =
+            (constraints.maxWidth - 40).clamp(0.0, double.infinity);
+        blockWidth = (measurement.width + 32)
+            .clamp(190.0.clamp(0.0, maximumWidth), maximumWidth);
+        measurement.dispose();
+      }
+      return Align(
+        alignment: Alignment.center,
+        child: Material(
+          color: Colors.transparent,
+          elevation: 3.0,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
-          child: Stack(
-            children: [
-              Align(
-                alignment: const Alignment(0.05, 0.0),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text(AppLocalizations.of(context)!.msgSettings, style: titleStyle),
-                ),
-              ),
-              Align(
-                alignment: const Alignment(-0.05, 0.0),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text(AppLocalizations.of(context)!.msgSettings, style: titleStyle),
-                ),
-              ),
-            ],
+          child: Container(
+            key: const ValueKey('settings-title-block'),
+            width: blockWidth,
+            height: 71.0,
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).primary,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: keepEnglishLayout
+                ? Stack(
+                    children: [
+                      Align(
+                        alignment: const Alignment(0.05, 0.0),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Text(AppLocalizations.of(context)!.msgSettings,
+                              style: titleStyle),
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(-0.05, 0.0),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Text(AppLocalizations.of(context)!.msgSettings,
+                              style: titleStyle),
+                        ),
+                      ),
+                    ],
+                  )
+                : LocalizedBannerLabel(title, fontSize: 52),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Future<void> _openSubscription() async {
