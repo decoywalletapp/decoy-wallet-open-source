@@ -52,6 +52,10 @@ Future<void> showLanguagePicker(BuildContext context) async {
                       ListTile(
                         key: ValueKey('language-${choice.key}'),
                         title: Text(choice.value,
+                            textAlign: Directionality.of(sheetContext) ==
+                                    TextDirection.rtl
+                                ? TextAlign.right
+                                : TextAlign.left,
                             textDirection: choice.key == 'system'
                                 ? Directionality.of(sheetContext)
                                 : {'ar', 'he'}.contains(choice.key)

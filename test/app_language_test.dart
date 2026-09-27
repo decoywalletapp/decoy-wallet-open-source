@@ -5,6 +5,7 @@ import 'package:decoy_wallet_app/l10n/app_language_controller.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/l10n/language_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -164,8 +165,8 @@ void main() {
       expect(tester.getCenter(button).dx, greaterThan(160));
       await tester.tap(button);
       await tester.pumpAndSettle();
-      final systemOption = tester.widget<ListTile>(
-          find.byKey(const ValueKey('language-system')));
+      final systemOption = tester
+          .widget<ListTile>(find.byKey(const ValueKey('language-system')));
       expect((systemOption.title! as Text).textDirection,
           Directionality.of(tester.element(button)));
       final choice = find.byKey(ValueKey('language-$code'));
@@ -173,6 +174,30 @@ void main() {
           scrollable: find.byType(Scrollable).last);
       await tester.ensureVisible(choice);
       await tester.pumpAndSettle();
+      final label = find.descendant(of: choice, matching: find.byType(Text));
+      final text = tester.widget<Text>(label);
+      final listDirection = Directionality.of(tester.element(choice));
+      expect(text.textDirection,
+          {'ar', 'he'}.contains(code) ? TextDirection.rtl : TextDirection.ltr);
+      expect(
+          text.textAlign,
+          listDirection == TextDirection.rtl
+              ? TextAlign.right
+              : TextAlign.left);
+      final paragraph = tester.renderObject<RenderParagraph>(label);
+      final boxes = paragraph.getBoxesForSelection(
+          TextSelection(baseOffset: 0, extentOffset: text.data!.length));
+      expect(boxes, isNotEmpty);
+      if (listDirection == TextDirection.ltr) {
+        final left =
+            boxes.map((box) => box.left).reduce((a, b) => a < b ? a : b);
+        expect(left, closeTo(0, 1), reason: '$code should align with the list');
+      } else {
+        final right =
+            boxes.map((box) => box.right).reduce((a, b) => a > b ? a : b);
+        expect(right, closeTo(paragraph.size.width, 1),
+            reason: '$code should align with the RTL list');
+      }
       await tester.tap(choice);
       await tester.pumpAndSettle();
       expect(language.languageCode, code);
