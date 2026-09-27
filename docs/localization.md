@@ -1,8 +1,21 @@
 # App Language Support
 
+## 18-Language Test Release
+
+The requested set is English, Spanish, French, German, Italian, Portuguese,
+Dutch, Polish, Turkish, Russian, Ukrainian, Arabic, Hebrew, Hindi, Indonesian,
+Japanese, Korean, and Simplified Chinese. All 18 catalogs are bundled and generated.
+Each has 479 messages plus locale/placeholder metadata. No runtime translation
+service or customer-data transfer is used.
+
+The login/signup headings are centered and their brand-to-title spacing matches.
+Numeric PIN grids are wrapped in left-to-right directionality so Arabic/Hebrew
+cannot reverse digit positions. Existing callbacks and backend payloads are
+unchanged. The isolated PIN suite passed all 144 checks across the 18 languages.
+
 ## Scope and Release Gate
 
-This is an unreleased English/Spanish localization feature, based on the verified
+This is an unreleased 18-language localization feature, based on the verified
 1.1.4 source commit `3b3082f574df83ff92cf3ae2762de9cce2fcb3da`. The test build is
 version 1.1.5. TestFlight and signed Android test artifacts do not deploy a backend
 or submit a public store release.
@@ -28,27 +41,36 @@ Still English or unchanged by design:
 - Bitcoin seed words, keys, addresses, protocol values, amounts, and user data.
 - Existing numeric input/format behavior. Do not translate values sent to APIs.
 
-Spanish copy needs review by a fluent speaker, particularly safety and consent
-wording, before public release. Native iPhone and Android tests remain a release
-gate. Automated tests are not a guarantee of live alert delivery.
+Translations received automated checks and AI review, including a separate review
+of high-risk safety/consent/PIN wording. This is not professional native-speaker
+certification. Fluent-speaker review and native iPhone/Android testing remain
+public-release gates. Automated tests are not a guarantee of live alert delivery.
 
 ## Implementation
 
-- `lib/l10n/app_en.arb` is the source catalog; `app_es.arb` is Spanish.
+- `lib/l10n/app_en.arb` is the source catalog; the other 17 ARB files are translations.
 - `flutter gen-l10n` generates the localization classes beside the catalogs.
 - `AppLanguageController` stores only `app_language` in SharedPreferences.
 - `LanguagePickerButton` and `showLanguagePicker` provide the shared selection UI.
 - `main.dart` provides the controller and locale to the existing app/router.
-- iOS advertises English and Spanish in `CFBundleLocalizations`.
+- iOS advertises all 18 languages in `CFBundleLocalizations` (`zh-Hans` for Chinese).
+- Noto fonts for Arabic, Hebrew, Devanagari, Japanese, Korean, and Simplified Chinese
+  are bundled with OFL licenses and source/checksum records. Full font files add
+  approximately 39 MB before compression; no language requires a font download.
+- English remains the first generated locale, preserving unsupported-device fallback.
 - Login/signup use the existing bundled Roboto font for labels/buttons instead
   of fetching those fonts at runtime. Narrow-screen text may wrap.
 - Signup no longer disposes focus nodes owned by its Autocomplete widgets; screen
-  teardown tests exposed that pre-existing ownership issue.
+  teardown tests exposed that pre-existing ownership issue. The same ownership
+  correction applies to Personal Information's last-name autocomplete.
 - Login and signup share the localized Bitcoin Wallet heading and allow the full
   page to scroll, with the language selector kept at the top right. The signup
   title is centered.
 - Emergency Setup uses content-sized title blocks with scale-down fitting and
   centered tile labels. Its content scrolls when needed on smaller screens.
+- Control Center and Emergency Contacts banners fit long translations. Contact
+  confirmation labels wrap to two lines when needed; their existing tap actions
+  and alert/consent payloads are unchanged.
 
 Backend clients/actions, alert payload construction, PIN checks, wallet derivation,
 payment actions, app-state persistence, and build workflows are unchanged. Only
@@ -67,7 +89,7 @@ flutter analyze --no-pub
 ```
 
 The dedicated PIN widget tests deliberately require test-only endpoints. They
-mock all requests and verify the actual PIN page in both languages without
+mock all requests and verify the actual PIN page in all 18 languages without
 sending messages or touching production:
 
 ```sh
@@ -84,10 +106,11 @@ The regular suite also covers preference persistence, form state across language
 changes, catalog completeness, xpub/zpub/address behavior, and existing billing
 and monitoring regression guards.
 
-`localized_screens_test.dart` checks six entry/settings/wallet pages in both
+`localized_screens_test.dart` checks eight entry/settings/wallet/acknowledgement pages in all 18
 languages at 320, 402, and 768 logical-pixel widths, including login/signup with
 keyboard insets and actual scroll gestures. Supplying the test-only Supabase URL
-adds Emergency Setup, for 42 layout combinations. All requests are mocked:
+adds Emergency Setup, Control Center, Personal Information, and Emergency Contacts,
+for 648 layout combinations. All requests and native permission channels are mocked:
 
 ```sh
 flutter test --no-pub test/localized_screens_test.dart \
@@ -101,19 +124,20 @@ device screenshots and do not replace device testing.
 
 ## Device Acceptance Before Release
 
-Local verification on 2026-09-27, including the follow-up UI polish: 120 regression
-tests passed, plus 16 isolated PIN tests. A separate run passed all 42 layout
-combinations (36 are also included in the ordinary regression suite). Static
+Local verification on 2026-09-27: 554 regression tests passed, with the isolated PIN
+suite deliberately skipped in the ordinary run. It passed all 144 checks in its
+separate test-endpoint run. A separate run passed all 648 layout combinations
+(432 are also included in the ordinary regression suite). Static
 analysis reported no errors and 73 existing warnings/informational diagnostics;
-this change does not attempt unrelated cleanup. The follow-up UI polish still
-requires a fresh native test build and device verification.
+this change does not attempt unrelated cleanup. The language expansion requires
+a fresh native test build and device verification before public release.
 
-1. Choose Spanish on Login, Create Account, and Settings. Switch back to English.
+1. Choose each language on Login, Create Account, and Settings. Switch back to English.
    Confirm typed form values remain and no page unexpectedly navigates.
 2. Force-close and reopen. Confirm the selected language persists. Check device
    language mode with English, Spanish, and an unsupported language.
-3. On dedicated test accounts, confirm ordinary PIN and decoy PIN routing in both
-   languages, with optional profile information absent and present.
+3. On dedicated test accounts, confirm ordinary PIN and decoy PIN routing in
+   English and representative RTL/CJK languages, with optional profile information absent and present.
 4. With a consenting test contact, verify an emergency alert arrives with the
    expected recipient/location. Confirm unconfirmed contacts are not alerted.
 5. Verify existing monitored keys/addresses and arm states remain unchanged.

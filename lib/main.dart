@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -130,6 +131,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: false,
+        fontFamilyFallback: decoyFontFallbacks(
+            language.locale ?? WidgetsBinding.instance.platformDispatcher.locale),
       ),
       themeMode: _themeMode,
       routerConfig: _router,

@@ -1,4 +1,5 @@
 import '/l10n/app_localizations.dart';
+import '/components/localized_banner_label.dart';
 import 'dart:convert';
 
 import '/auth/supabase_auth/auth_util.dart';
@@ -11,6 +12,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +81,38 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     return _showingConsentInviteSent(contactSlot)
         ? Icons.check_circle_rounded
         : Icons.send_rounded;
+  }
+
+  Widget _buildConsentInviteLabel(int slot, String status) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: AutoSizeText(
+              _consentInviteButtonLabel(slot, status),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              minFontSize: 12,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                    color: FlutterFlowTheme.of(context).info,
+                    fontSize: 18,
+                    letterSpacing: 0,
+                    fontWeight: FontWeight.w600,
+                    useGoogleFonts:
+                        !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                  ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Icon(_consentInviteButtonIcon(slot),
+              color: FlutterFlowTheme.of(context).info, size: 24),
+        ],
+      ),
+    );
   }
 
   void _showConsentInviteSent(int contactSlot) {
@@ -1762,101 +1796,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 12.0, 0.0, 0.0),
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(-0.01, 0.0),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.emergencyContactsHeadingFirstLine,
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'DECOY BEBAS',
-                                          color:
-                                              FlutterFlowTheme.of(context).info,
-                                          fontSize: 48.0,
-                                          letterSpacing: 0.5,
-                                          fontWeight: FontWeight.normal,
-                                          lineHeight: 1.0,
-                                        ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.01, 0.0),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.emergencyContactsHeadingFirstLine,
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'DECOY BEBAS',
-                                          color:
-                                              FlutterFlowTheme.of(context).info,
-                                          fontSize: 48.0,
-                                          letterSpacing: 0.5,
-                                          fontWeight: FontWeight.normal,
-                                          lineHeight: 1.0,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Stack(
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(0.01, 0.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.emergencyContactsHeadingSecondLine,
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DECOY BEBAS',
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            fontSize: 48.0,
-                                            letterSpacing: 0.5,
-                                            fontWeight: FontWeight.normal,
-                                            lineHeight: 1.0,
-                                          ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: AlignmentDirectional(-0.01, 0.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.emergencyContactsHeadingSecondLine,
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DECOY BEBAS',
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            fontSize: 48.0,
-                                            letterSpacing: 0.5,
-                                            fontWeight: FontWeight.normal,
-                                            lineHeight: 1.0,
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      child: LocalizedBannerLabel("${AppLocalizations.of(context)!.emergencyContactsHeadingFirstLine}\n${AppLocalizations.of(context)!.emergencyContactsHeadingSecondLine}"),
                     ),
                   ),
                 ),
@@ -2681,48 +2621,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       .circular(
                                                                           8.0),
                                                             ),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  _consentInviteButtonLabel(
-                                                                      1,
-                                                                      _model
-                                                                          .c1Status),
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .info,
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        useGoogleFonts:
-                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                      ),
-                                                                ),
-                                                                Icon(
-                                                                  _consentInviteButtonIcon(
-                                                                      1),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  size: 24.0,
-                                                                ),
-                                                              ].divide(SizedBox(
-                                                                  width: 12.0)),
-                                                            ),
+                                                            child: _buildConsentInviteLabel(1, _model.c1Status),
                                                           ),
                                                         ),
                                                         Opacity(
@@ -4060,49 +3959,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         .circular(
                                                                             8.0),
                                                               ),
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                    _consentInviteButtonLabel(
-                                                                        2,
-                                                                        _model
-                                                                            .c2Status),
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).info,
-                                                                          fontSize:
-                                                                              18.0,
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                          useGoogleFonts:
-                                                                              !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                        ),
-                                                                  ),
-                                                                  Icon(
-                                                                    _consentInviteButtonIcon(
-                                                                        2),
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .info,
-                                                                    size: 24.0,
-                                                                  ),
-                                                                ].divide(SizedBox(
-                                                                    width:
-                                                                        12.0)),
-                                                              ),
+                                                              child: _buildConsentInviteLabel(2, _model.c2Status),
                                                             ),
                                                           ),
                                                           Opacity(
@@ -5320,49 +5177,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         .circular(
                                                                             8.0),
                                                               ),
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                    _consentInviteButtonLabel(
-                                                                        3,
-                                                                        _model
-                                                                            .c3Status),
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).info,
-                                                                          fontSize:
-                                                                              18.0,
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                          useGoogleFonts:
-                                                                              !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                        ),
-                                                                  ),
-                                                                  Icon(
-                                                                    _consentInviteButtonIcon(
-                                                                        3),
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .info,
-                                                                    size: 24.0,
-                                                                  ),
-                                                                ].divide(SizedBox(
-                                                                    width:
-                                                                        12.0)),
-                                                              ),
+                                                              child: _buildConsentInviteLabel(3, _model.c3Status),
                                                             ),
                                                           ),
                                                           Opacity(
@@ -6642,48 +6457,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             alignment:
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  _consentInviteButtonLabel(
-                                                                      4,
-                                                                      _model
-                                                                          .c4Status),
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .info,
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        useGoogleFonts:
-                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                      ),
-                                                                ),
-                                                                Icon(
-                                                                  _consentInviteButtonIcon(
-                                                                      4),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  size: 24.0,
-                                                                ),
-                                                              ].divide(SizedBox(
-                                                                  width: 12.0)),
-                                                            ),
+                                                            child: _buildConsentInviteLabel(4, _model.c4Status),
                                                           ),
                                                         ),
                                                         Opacity(
@@ -8001,48 +7775,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       .circular(
                                                                           8.0),
                                                             ),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  _consentInviteButtonLabel(
-                                                                      5,
-                                                                      _model
-                                                                          .c5Status),
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .info,
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        useGoogleFonts:
-                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                      ),
-                                                                ),
-                                                                Icon(
-                                                                  _consentInviteButtonIcon(
-                                                                      5),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .info,
-                                                                  size: 24.0,
-                                                                ),
-                                                              ].divide(SizedBox(
-                                                                  width: 12.0)),
-                                                            ),
+                                                            child: _buildConsentInviteLabel(5, _model.c5Status),
                                                           ),
                                                         ),
                                                         Opacity(

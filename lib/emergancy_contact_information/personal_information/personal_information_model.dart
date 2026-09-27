@@ -99,7 +99,7 @@ class PersonalInformationModel
     firstNameFocusNode?.dispose();
     firstNameTextController?.dispose();
 
-    lastNameFocusNode?.dispose();
+    // Autocomplete owns and disposes the last-name focus node.
 
     phoneFocusNode?.dispose();
     phoneTextController?.dispose();

@@ -101,7 +101,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                     32.0,
-                                    24.0,
+                                    0.0,
                                     32.0,
                                     32.0,
                                   ),
@@ -111,11 +111,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Align(
-                                        alignment: AlignmentDirectional(
-                                          0.0,
-                                          0.0,
-                                        ),
+                                      SizedBox(
+                                        width: double.infinity,
                                         child: Text(
                                           AppLocalizations.of(context)!.msgCreateAnAccount,
                                           key: const ValueKey('create-account-heading'),
@@ -1150,6 +1147,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                     );
                                                   },
                                                   child: RichText(
+                                                    textAlign: TextAlign.center,
                                                     textScaler: MediaQuery.of(
                                                       context,
                                                     ).textScaler,

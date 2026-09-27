@@ -189,6 +189,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/fonts/
+    - assets/fonts/international/
     - assets/images/
     - assets/videos/
     - assets/audios/
@@ -198,6 +199,24 @@ flutter:
 
     - assets/environment_values/
   fonts:
+    - family: 'NotoSansArabic'
+      fonts:
+        - asset: assets/fonts/international/NotoSansArabic.ttf
+    - family: 'NotoSansHebrew'
+      fonts:
+        - asset: assets/fonts/international/NotoSansHebrew.ttf
+    - family: 'NotoSansDevanagari'
+      fonts:
+        - asset: assets/fonts/international/NotoSansDevanagari.ttf
+    - family: 'NotoSansJP'
+      fonts:
+        - asset: assets/fonts/international/NotoSansJP.ttf
+    - family: 'NotoSansKR'
+      fonts:
+        - asset: assets/fonts/international/NotoSansKR.ttf
+    - family: 'NotoSansSC'
+      fonts:
+        - asset: assets/fonts/international/NotoSansSC.ttf
     - family: 'DECOY BEBAS'
       fonts:
         - asset: assets/fonts/BebasNeue-Regular.ttf

@@ -8,14 +8,20 @@ import 'package:decoy_wallet_app/emergancy_contact_information/create_decoy_emer
 import 'package:decoy_wallet_app/duress_mode/duress_settings_page/duress_settings_page_widget.dart';
 import 'package:decoy_wallet_app/duress_mode/wallet_feature_preview/wallet_feature_preview_widget.dart';
 import 'package:decoy_wallet_app/home_pages/settings/settings_widget.dart';
+import 'package:decoy_wallet_app/settings_pages/control_center/control_center_widget.dart';
+import 'package:decoy_wallet_app/pin_pages/decoy_pin_acknowledgements/decoy_pin_acknowledgements_widget.dart';
+import 'package:decoy_wallet_app/create_decoy_seed/decoy_seed_acknowledgements/decoy_seed_acknowledgements_widget.dart';
+import 'package:decoy_wallet_app/emergancy_contact_information/personal_information/personal_information_widget.dart';
+import 'package:decoy_wallet_app/emergancy_contact_information/emergency_contacts/emergency_contacts_widget.dart';
 import 'package:decoy_wallet_app/l10n/app_language_controller.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/settings_pages/configure_bitcoin_balance/configure_bitcoin_balance_widget.dart';
 import 'package:decoy_wallet_app/welcom_pages/create_account/create_account_widget.dart';
 import 'package:decoy_wallet_app/welcom_pages/login_page/login_page_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,13 +30,14 @@ import 'package:http/testing.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'localization_fonts.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final client = MockClient((request) async {
     if (request.url.path.endsWith('/getConsentStatuses')) {
-      return http.Response('{"slot1Status":"confirmed"}', 200, request: request,
-          headers: {'content-type': 'application/json'});
+      return http.Response('{"slot1Status":"confirmed"}', 200,
+          request: request, headers: {'content-type': 'application/json'});
     }
     return http.Response(
         jsonEncode(request.url.path.endsWith('/decoy_wallet')
@@ -38,7 +45,11 @@ void main() {
                 {
                   'personal_complete': false,
                   'contacts_complete': true,
-                  'address_complete': false
+                  'address_complete': false,
+                  'decoy_seed_armed': false,
+                  'decoy_pin_911_enabled': false,
+                  'decoy_pin_contacts_enabled': false,
+                  'use_current_location': false,
                 }
               ]
             : []),
@@ -49,24 +60,7 @@ void main() {
 
   setUpAll(() async {
     GoogleFonts.config.allowRuntimeFetching = false;
-    final fonts = <String, List<String>>{
-      'DECOY BEBAS': ['BebasNeue-Regular.ttf'],
-      'InterTight': ['InterTight-Regular.ttf', 'InterTight-Bold.ttf'],
-      'hello': ['Inter_24pt-Regular.ttf', 'Inter_28pt-Bold.ttf'],
-      'Outterbox': ['Outfit-Regular.ttf', 'Outfit-Bold.ttf'],
-      'robot': ['Roboto-Regular.ttf', 'Roboto-Bold.ttf'],
-      'Roboto': ['Roboto-Regular.ttf', 'Roboto-Bold.ttf'],
-    };
-    for (final entry in fonts.entries) {
-      final loader = FontLoader(entry.key);
-      for (final asset in entry.value) {
-        loader.addFont(rootBundle.load('assets/fonts/$asset'));
-      }
-      await loader.load();
-    }
-    await (FontLoader('MaterialIcons')
-          ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf')))
-        .load();
+    await loadLocalizationFonts();
     SharedPreferences.setMockInitialValues({});
     await Supabase.initialize(
       url: 'https://test.invalid',
@@ -80,6 +74,27 @@ void main() {
       ),
     );
   });
+  setUp(() {
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/local_auth'), (call) async {
+      if (call.method == 'getAvailableBiometrics') return <String>[];
+      return false;
+    });
+    messenger.setMockMethodCallHandler(
+        const MethodChannel('flutter.baseflow.com/permissions/methods'),
+        (call) async => 0);
+    messenger.setMockMethodCallHandler(
+        const MethodChannel('flutter.baseflow.com/geolocator'),
+        (call) async => call.method == 'isLocationServiceEnabled' ? false : 0);
+    messenger.setMockMethodCallHandler(
+        const MethodChannel('com.llfbandit.app_links/messages'),
+        (call) async => null);
+    messenger.setMockMethodCallHandler(
+        const MethodChannel('com.llfbandit.app_links/events'),
+        (call) async => null);
+  });
   tearDownAll(() => Supabase.instance.dispose());
 
   final pages = <String, Widget>{
@@ -89,11 +104,17 @@ void main() {
     'balance': const ConfigureBitcoinBalanceWidget(),
     'wallet-settings': const DuressSettingsPageWidget(),
     'recurring-buy': const WalletFeaturePreviewWidget(feature: 'recurring-buy'),
+    'pin-acknowledgements': const DecoyPinAcknowledgementsWidget(),
+    'seed-acknowledgements': const DecoySeedAcknowledgementsWidget(),
     if (const String.fromEnvironment('DECOY_SUPABASE_URL') ==
-        'https://test.invalid')
+        'https://test.invalid') ...{
       'emergency-setup': const CreateDecoyEmergencyContactsSetupWidget(),
+      'control-center': const ControlCenterWidget(),
+      'personal-information': const PersonalInformationWidget(),
+      'emergency-contacts': const EmergencyContactsWidget(),
+    },
   };
-  for (final locale in ['en', 'es']) {
+  for (final locale in AppLanguageController.supportedLanguageCodes) {
     for (final size in [
       const Size(320, 640),
       const Size(402, 874),
@@ -123,7 +144,10 @@ void main() {
                 ChangeNotifierProvider.value(value: language),
               ],
               child: MaterialApp(
-                theme: ThemeData(useMaterial3: false, fontFamily: 'robot'),
+                theme: ThemeData(
+                    useMaterial3: false,
+                    fontFamily: 'robot',
+                    fontFamilyFallback: decoyFontFallbacks(Locale(locale))),
                 locale: Locale(locale),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
@@ -131,7 +155,11 @@ void main() {
               ),
             ));
             await tester.pumpAndSettle();
-            expect(tester.takeException(), isNull);
+            expect(
+                Localizations.localeOf(
+                        tester.element(find.byType(Scaffold).first))
+                    .languageCode,
+                locale);
             if (page.key == 'emergency-setup') {
               for (final key in [
                 'emergency-setup-title',
@@ -184,20 +212,31 @@ void main() {
                       .shouldAcceptUserOffset(scrollable.position),
                   isTrue);
               final heading = find.byKey(const ValueKey('auth-wallet-heading'));
+              if ({'ar', 'he'}.contains(locale)) {
+                expect(tester.widget<Text>(heading).data,
+                    contains('\u2066\u20bfitcoin\u2069'));
+              }
               final initialY = tester.getTopLeft(heading).dy;
               await tester.drag(scroll, const Offset(0, -100));
               expect(tester.getTopLeft(heading).dy, lessThan(initialY));
               await tester.pumpAndSettle();
               scrollable.position.jumpTo(0);
               await tester.pumpAndSettle();
-              if (page.key == 'create-account') {
-                final heading =
-                    find.byKey(const ValueKey('create-account-heading'));
-                expect(
-                    tester.widget<Text>(heading).textAlign, TextAlign.center);
-                expect(
-                    tester.getCenter(heading).dx, closeTo(size.width / 2, 1));
-              }
+              final pageTitle = find.byKey(ValueKey(page.key == 'login'
+                  ? 'login-welcome-heading'
+                  : 'create-account-heading'));
+              expect(
+                  tester.widget<Text>(pageTitle).textAlign, TextAlign.center);
+              expect(
+                  tester.getCenter(pageTitle).dx, closeTo(size.width / 2, 1));
+              expect(
+                  tester.getSize(pageTitle).width, closeTo(size.width - 64, 1));
+              final brandBlock =
+                  find.byKey(const ValueKey('auth-wallet-heading-block'));
+              expect(tester.getTopLeft(pageTitle).dy,
+                  closeTo(tester.getBottomLeft(brandBlock).dy, 1),
+                  reason:
+                      'Both pages use the same gap below the wallet heading');
               tester.view.viewInsets = const FakeViewPadding(bottom: 280);
               addTearDown(tester.view.resetViewInsets);
               await tester.tap(find.byType(EditableText).first);

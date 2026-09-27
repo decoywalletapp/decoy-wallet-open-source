@@ -1,0 +1,76 @@
+{
+  "source": "https://github.com/google/fonts",
+  "commit": "23e54b51ddffbc7713c583748e3bd86f62b1fa4a",
+  "fonts": [
+    {
+      "name": "NotoSansArabic.ttf",
+      "sourcePath": "ofl/notosansarabic/NotoSansArabic[wdth,wght].ttf",
+      "sha256": "63111b5b2e074dd48cc67692e0a2726d86ee94c1c37fe8598257b7b4e87e869e"
+    },
+    {
+      "name": "NotoSansArabic-OFL.txt",
+      "sourcePath": "ofl/notosansarabic/OFL.txt",
+      "sha256": "07fc70bfeb985cc1a87a8587d0a0c80bab11c86c9dc3fd95b6f0cb332f983e96"
+    },
+    {
+      "name": "NotoSansHebrew.ttf",
+      "sourcePath": "ofl/notosanshebrew/NotoSansHebrew[wdth,wght].ttf",
+      "sha256": "7ef36a2c3593758cdb622e1bdef4f84523e92fbc3ccc667438dd80ff54c2de88"
+    },
+    {
+      "name": "NotoSansHebrew-OFL.txt",
+      "sourcePath": "ofl/notosanshebrew/OFL.txt",
+      "sha256": "9b9fe028b5ba74d231659a1bbaf0ed09b11e759d1ca6a070999e16d151616b47"
+    },
+    {
+      "name": "NotoSansDevanagari.ttf",
+      "sourcePath": "ofl/notosansdevanagari/NotoSansDevanagari[wdth,wght].ttf",
+      "sha256": "14ec4af41f27482216d1c2229f417ff9b1425e1babb014e57d1d40d03229853e"
+    },
+    {
+      "name": "NotoSansDevanagari-OFL.txt",
+      "sourcePath": "ofl/notosansdevanagari/OFL.txt",
+      "sha256": "a216f6f8d85c7228093e0ee5e258d9d377e6671f68acb4db1930b29583d0f331"
+    },
+    {
+      "name": "NotoSansJP.ttf",
+      "sourcePath": "ofl/notosansjp/NotoSansJP[wght].ttf",
+      "sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f"
+    },
+    {
+      "name": "NotoSansJP-OFL.txt",
+      "sourcePath": "ofl/notosansjp/OFL.txt",
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "name": "NotoSansKR.ttf",
+      "sourcePath": "ofl/notosanskr/NotoSansKR[wght].ttf",
+      "sha256": "194018e6b2b293a7964f037b25c0249ce1418bc9ab3c971060a03aa57861e252"
+    },
+    {
+      "name": "NotoSansKR-OFL.txt",
+      "sourcePath": "ofl/notosanskr/OFL.txt",
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "name": "NotoSansSC.ttf",
+      "sourcePath": "ofl/notosanssc/NotoSansSC[wght].ttf",
+      "sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da"
+    },
+    {
+      "name": "NotoSansSC-OFL.txt",
+      "sourcePath": "ofl/notosanssc/OFL.txt",
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "name": "Heebo-SemiBold.ttf",
+      "sourceUrl": "https://fonts.gstatic.com/s/a/c8fff5431bdb3adfb647f18915813901e649168f35318fc78f28242e65b419e2.ttf",
+      "sha256": "c8fff5431bdb3adfb647f18915813901e649168f35318fc78f28242e65b419e2"
+    },
+    {
+      "name": "Heebo-OFL.txt",
+      "sourceUrl": "https://raw.githubusercontent.com/google/fonts/23e54b51ddffbc7713c583748e3bd86f62b1fa4a/ofl/heebo/OFL.txt",
+      "sha256": "866747cbccae229433e946b90fcfc457b81c33ac89e593855770851354f9e6c3"
+    }
+  ]
+}

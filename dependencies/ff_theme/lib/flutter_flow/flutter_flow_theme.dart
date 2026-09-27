@@ -3,6 +3,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+List<String> decoyFontFallbacks(Locale? locale) {
+  final preferred = {
+    'ar': 'NotoSansArabic',
+    'he': 'NotoSansHebrew',
+    'hi': 'NotoSansDevanagari',
+    'ja': 'NotoSansJP',
+    'ko': 'NotoSansKR',
+    'zh': 'NotoSansSC',
+  }[locale?.languageCode];
+  return [
+    if (preferred != null) preferred,
+    'InterTight',
+    'robot',
+    for (final family in const [
+      'NotoSansArabic',
+      'NotoSansHebrew',
+      'NotoSansDevanagari',
+      'NotoSansJP',
+      'NotoSansKR',
+      'NotoSansSC',
+    ])
+      if (family != preferred) family,
+  ];
+}
+
 enum DeviceSize {
   mobile,
   tablet,
@@ -14,8 +39,10 @@ abstract class FlutterFlowTheme {
 
   static FlutterFlowTheme of(BuildContext context) {
     deviceSize = getDeviceSize(context);
-    return LightModeTheme();
+    return LightModeTheme(locale: Localizations.maybeLocaleOf(context));
   }
+
+  List<String> get fontFamilyFallback;
 
   @Deprecated('Use primary instead')
   Color get primaryColor => primary;
@@ -74,49 +101,64 @@ abstract class FlutterFlowTheme {
 
   String get displayLargeFamily => typography.displayLargeFamily;
   bool get displayLargeIsCustom => typography.displayLargeIsCustom;
-  TextStyle get displayLarge => typography.displayLarge;
+  TextStyle get displayLarge =>
+      typography.displayLarge.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get displayMediumFamily => typography.displayMediumFamily;
   bool get displayMediumIsCustom => typography.displayMediumIsCustom;
-  TextStyle get displayMedium => typography.displayMedium;
+  TextStyle get displayMedium =>
+      typography.displayMedium.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get displaySmallFamily => typography.displaySmallFamily;
   bool get displaySmallIsCustom => typography.displaySmallIsCustom;
-  TextStyle get displaySmall => typography.displaySmall;
+  TextStyle get displaySmall =>
+      typography.displaySmall.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get headlineLargeFamily => typography.headlineLargeFamily;
   bool get headlineLargeIsCustom => typography.headlineLargeIsCustom;
-  TextStyle get headlineLarge => typography.headlineLarge;
+  TextStyle get headlineLarge =>
+      typography.headlineLarge.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get headlineMediumFamily => typography.headlineMediumFamily;
   bool get headlineMediumIsCustom => typography.headlineMediumIsCustom;
-  TextStyle get headlineMedium => typography.headlineMedium;
+  TextStyle get headlineMedium => typography.headlineMedium
+      .copyWith(fontFamilyFallback: fontFamilyFallback);
   String get headlineSmallFamily => typography.headlineSmallFamily;
   bool get headlineSmallIsCustom => typography.headlineSmallIsCustom;
-  TextStyle get headlineSmall => typography.headlineSmall;
+  TextStyle get headlineSmall =>
+      typography.headlineSmall.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get titleLargeFamily => typography.titleLargeFamily;
   bool get titleLargeIsCustom => typography.titleLargeIsCustom;
-  TextStyle get titleLarge => typography.titleLarge;
+  TextStyle get titleLarge =>
+      typography.titleLarge.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get titleMediumFamily => typography.titleMediumFamily;
   bool get titleMediumIsCustom => typography.titleMediumIsCustom;
-  TextStyle get titleMedium => typography.titleMedium;
+  TextStyle get titleMedium =>
+      typography.titleMedium.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get titleSmallFamily => typography.titleSmallFamily;
   bool get titleSmallIsCustom => typography.titleSmallIsCustom;
-  TextStyle get titleSmall => typography.titleSmall;
+  TextStyle get titleSmall =>
+      typography.titleSmall.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get labelLargeFamily => typography.labelLargeFamily;
   bool get labelLargeIsCustom => typography.labelLargeIsCustom;
-  TextStyle get labelLarge => typography.labelLarge;
+  TextStyle get labelLarge =>
+      typography.labelLarge.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get labelMediumFamily => typography.labelMediumFamily;
   bool get labelMediumIsCustom => typography.labelMediumIsCustom;
-  TextStyle get labelMedium => typography.labelMedium;
+  TextStyle get labelMedium =>
+      typography.labelMedium.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get labelSmallFamily => typography.labelSmallFamily;
   bool get labelSmallIsCustom => typography.labelSmallIsCustom;
-  TextStyle get labelSmall => typography.labelSmall;
+  TextStyle get labelSmall =>
+      typography.labelSmall.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get bodyLargeFamily => typography.bodyLargeFamily;
   bool get bodyLargeIsCustom => typography.bodyLargeIsCustom;
-  TextStyle get bodyLarge => typography.bodyLarge;
+  TextStyle get bodyLarge =>
+      typography.bodyLarge.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get bodyMediumFamily => typography.bodyMediumFamily;
   bool get bodyMediumIsCustom => typography.bodyMediumIsCustom;
-  TextStyle get bodyMedium => typography.bodyMedium;
+  TextStyle get bodyMedium =>
+      typography.bodyMedium.copyWith(fontFamilyFallback: fontFamilyFallback);
   String get bodySmallFamily => typography.bodySmallFamily;
   bool get bodySmallIsCustom => typography.bodySmallIsCustom;
-  TextStyle get bodySmall => typography.bodySmall;
+  TextStyle get bodySmall =>
+      typography.bodySmall.copyWith(fontFamilyFallback: fontFamilyFallback);
 
   Typography get typography => {
         DeviceSize.mobile: MobileTypography(this),
@@ -137,6 +179,12 @@ DeviceSize getDeviceSize(BuildContext context) {
 }
 
 class LightModeTheme extends FlutterFlowTheme {
+  LightModeTheme({Locale? locale})
+      : fontFamilyFallback = decoyFontFallbacks(locale);
+
+  @override
+  final List<String> fontFamilyFallback;
+
   @Deprecated('Use primary instead')
   Color get primaryColor => primary;
   @Deprecated('Use secondary instead')
@@ -664,6 +712,8 @@ extension TextStyleHelper on TextStyle {
 
     return font != null
         ? font.copyWith(
+            fontFamilyFallback:
+                this.fontFamilyFallback ?? font.fontFamilyFallback,
             color: color ?? this.color,
             fontSize: fontSize ?? this.fontSize,
             letterSpacing: letterSpacing ?? this.letterSpacing,

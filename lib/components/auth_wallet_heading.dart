@@ -8,7 +8,13 @@ class AuthWalletHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final heading = AppLocalizations.of(context)!.msgItcoinWallet;
+    // Keep the Latin brand and its currency sign together in RTL sentences.
+    final displayHeading = Directionality.of(context) == TextDirection.rtl
+        ? heading.replaceAll('\u20bfitcoin', '\u2066\u20bfitcoin\u2069')
+        : heading;
     return SizedBox(
+      key: const ValueKey('auth-wallet-heading-block'),
       width: double.infinity,
       height: 140,
       child: Padding(
@@ -17,7 +23,7 @@ class AuthWalletHeading extends StatelessWidget {
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              AppLocalizations.of(context)!.msgItcoinWallet,
+              displayHeading,
               key: const ValueKey('auth-wallet-heading'),
               textAlign: TextAlign.center,
               maxLines: 1,

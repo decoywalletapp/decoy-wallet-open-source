@@ -4,7 +4,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Language is a device preference, independent of accounts and alert settings.
 class AppLanguageController extends ChangeNotifier {
   static const preferenceKey = 'app_language';
-  static const supportedLanguageCodes = {'en', 'es'};
+  static const languageNames = <String, String>{
+    'en': 'English',
+    'es': 'Español',
+    'fr': 'Français',
+    'de': 'Deutsch',
+    'it': 'Italiano',
+    'pt': 'Português',
+    'nl': 'Nederlands',
+    'pl': 'Polski',
+    'tr': 'Türkçe',
+    'ru': 'Русский',
+    'uk': 'Українська',
+    'ar': 'العربية',
+    'he': 'עברית',
+    'hi': 'हिन्दी',
+    'id': 'Bahasa Indonesia',
+    'ja': '日本語',
+    'ko': '한국어',
+    'zh': '简体中文',
+  };
+  static final supportedLanguageCodes = languageNames.keys.toSet();
 
   String? _languageCode;
   SharedPreferences? _preferences;

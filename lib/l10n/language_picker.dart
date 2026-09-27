@@ -17,11 +17,13 @@ Future<void> showLanguagePicker(BuildContext context) async {
       final strings = AppLocalizations.of(sheetContext)!;
       final choices = <String, String>{
         'system': strings.msgUseDeviceLanguage,
-        'en': 'English',
-        'es': 'Español',
+        ...AppLanguageController.languageNames,
       };
       return SafeArea(
-        child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.8,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -42,16 +44,30 @@ Future<void> showLanguagePicker(BuildContext context) async {
                   ],
                 ),
               ),
-              for (final choice in choices.entries)
-                ListTile(
-                  key: ValueKey('language-${choice.key}'),
-                  title: Text(choice.value),
-                  selected: choice.key == (controller.languageCode ?? 'system'),
-                  trailing: choice.key == (controller.languageCode ?? 'system')
-                      ? const Icon(Icons.check, color: Color(0xFFFF6500))
-                      : null,
-                  onTap: () => Navigator.pop(sheetContext, choice.key),
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final choice in choices.entries)
+                      ListTile(
+                        key: ValueKey('language-${choice.key}'),
+                        title: Text(choice.value,
+                            textDirection: choice.key == 'system'
+                                ? Directionality.of(sheetContext)
+                                : {'ar', 'he'}.contains(choice.key)
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr),
+                        selected:
+                            choice.key == (controller.languageCode ?? 'system'),
+                        trailing: choice.key ==
+                                (controller.languageCode ?? 'system')
+                            ? const Icon(Icons.check, color: Color(0xFFFF6500))
+                            : null,
+                        onTap: () => Navigator.pop(sheetContext, choice.key),
+                      ),
+                  ],
                 ),
+              ),
               const SizedBox(height: 12),
             ],
           ),
@@ -79,7 +95,7 @@ class LanguagePickerButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Align(
-        alignment: AlignmentDirectional.centerEnd,
+        alignment: Alignment.centerRight,
         child: TextButton.icon(
           key: const ValueKey('language-picker'),
           onPressed: () => showLanguagePicker(context),

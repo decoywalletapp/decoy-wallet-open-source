@@ -356,7 +356,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       MainAxisSize
                                                                           .max,
                                                                   children: [
-                                                                    Text(
+                                                                    _fitTileLabel(Text(
                                                                       AppLocalizations.of(context)!.msgPersonalContact,
                                                                       textAlign: TextAlign.center,
                                                                       style: FlutterFlowTheme.of(
@@ -372,7 +372,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                             fontWeight:
                                                                                 FontWeight.w600,
                                                                           ),
-                                                                    ),
+                                                                    )),
                                                                   ],
                                                                 ),
                                                               ),
@@ -805,7 +805,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                       MainAxisSize
                                                                           .max,
                                                                   children: [
-                                                                    Text(
+                                                                    _fitTileLabel(Text(
                                                                       AppLocalizations.of(context)!.msgEmergencyContacts,
                                                                       key: const ValueKey('emergency-contacts-tile-label'),
                                                                       textAlign: TextAlign.center,
@@ -822,7 +822,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                             fontWeight:
                                                                                 FontWeight.w600,
                                                                           ),
-                                                                    ),
+                                                                    )),
                                                                   ],
                                                                 ),
                                                               ),
@@ -1264,6 +1264,18 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _fitTileLabel(Widget label) {
+    return SizedBox(
+      height: 76,
+      child: LayoutBuilder(
+        builder: (context, constraints) => FittedBox(
+          fit: BoxFit.scaleDown,
+          child: SizedBox(width: constraints.maxWidth, child: label),
         ),
       ),
     );

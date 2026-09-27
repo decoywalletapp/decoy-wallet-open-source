@@ -158,11 +158,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
+                                          SizedBox(
+                                            width: double.infinity,
                                             child: Text(
                                               AppLocalizations.of(context)!.msgWelcomeBack,
+                                              key: const ValueKey('login-welcome-heading'),
+                                              textAlign: TextAlign.center,
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .headlineLarge

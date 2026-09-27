@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:decoy_wallet_app/app_state.dart';
 import 'package:decoy_wallet_app/backend/public_config.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
+import 'package:decoy_wallet_app/l10n/app_language_controller.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
 import 'package:decoy_wallet_app/custom_code/actions/aes_gcm_encrypt_string.dart';
 import 'package:decoy_wallet_app/pin_pages/p_i_n_page/p_i_n_page_widget.dart';
@@ -12,11 +13,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'localization_fonts.dart';
 
 class NoLocation extends GeolocatorPlatform {
   @override
@@ -78,6 +81,7 @@ void main() {
   });
 
   setUpAll(() async {
+    await loadLocalizationFonts();
     SharedPreferences.setMockInitialValues({});
     GoogleFonts.config.allowRuntimeFetching = false;
     GeolocatorPlatform.instance = NoLocation();
@@ -152,22 +156,31 @@ void main() {
           value: FFAppState(),
           child: MaterialApp.router(
             routerConfig: router,
+            theme: ThemeData(
+                useMaterial3: false,
+                fontFamilyFallback: decoyFontFallbacks(Locale(languageCode))),
             locale: Locale(languageCode),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           )));
       await tester.pumpAndSettle();
+      expect(tester.getCenter(find.text('1')).dx,
+          lessThan(tester.getCenter(find.text('2')).dx));
+      expect(tester.getCenter(find.text('2')).dx,
+          lessThan(tester.getCenter(find.text('3')).dx));
       for (final digit in pin.split('')) {
         await tester.tap(find.text(digit));
         await tester.pumpAndSettle();
       }
-      await tester.tap(find.text(languageCode == 'es' ? 'Entrar' : 'Enter'));
+      final strings =
+          AppLocalizations.of(tester.element(find.byType(PINPageWidget)))!;
+      await tester.tap(find.text(strings.msgEnter));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     }, () => client);
   }
 
-  for (final code in ['en', 'es']) {
+  for (final code in AppLanguageController.supportedLanguageCodes) {
     group(code, () {
       setUp(() => languageCode = code);
       for (final personal in [false, true]) {

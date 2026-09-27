@@ -1,4 +1,5 @@
 import '/l10n/app_localizations.dart';
+import '/components/localized_banner_label.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -256,98 +257,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(0.1, 0.0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 12.0, 8.0, 12.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.msgControlCenter,
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DECOY BEBAS',
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            fontSize: 52.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            lineHeight: 1.05,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(-0.1, 0.0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 12.0, 8.0, 12.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.msgControlCenter,
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DECOY BEBAS',
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            fontSize: 52.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            lineHeight: 1.05,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.1),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 12.0, 8.0, 12.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.msgControlCenter,
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DECOY BEBAS',
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            fontSize: 52.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            lineHeight: 1.05,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, -0.1),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 12.0, 8.0, 12.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.msgControlCenter,
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DECOY BEBAS',
-                                            color: FlutterFlowTheme.of(context)
-                                                .info,
-                                            fontSize: 52.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            lineHeight: 1.05,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            child: LocalizedBannerLabel(AppLocalizations.of(context)!.msgControlCenter, fontSize: 52),
                           ),
                         ),
                       ),

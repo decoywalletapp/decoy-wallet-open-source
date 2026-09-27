@@ -476,7 +476,9 @@
   "msgWallet2": "CARTERA",
   "msgSecurity": "SEGURIDAD",
   "receiveAddressCount": "{count, plural, =1{1 direcci\u00f3n de recepci\u00f3n} other{{count} direcciones de recepci\u00f3n}}",
+  "@receiveAddressCount": {"placeholders": {"count": {"type": "int"}}},
   "minutesAgo": "hace {count} min",
+  "@minutesAgo": {"placeholders": {"count": {"type": "int"}}},
   "emergencyContactsHeadingFirstLine": "CONTACTOS DE",
   "emergencyContactsHeadingSecondLine": "EMERGENCIA"
 }

@@ -1,4 +1,5 @@
 import '/l10n/app_localizations.dart';
+import '/components/pin_keypad_grid.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -810,7 +811,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
                                                         6.0, 0.0, 6.0, 0.0),
-                                                child: GridView(
+                                                child: PinKeypadGrid(
                                                   padding: EdgeInsets.zero,
                                                   physics:
                                                       NeverScrollableScrollPhysics(),
@@ -2274,7 +2275,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
                                                         6.0, 0.0, 6.0, 0.0),
-                                                child: GridView(
+                                                child: PinKeypadGrid(
                                                   padding: EdgeInsets.zero,
                                                   physics:
                                                       NeverScrollableScrollPhysics(),
