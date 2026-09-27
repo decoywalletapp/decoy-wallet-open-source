@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -129,7 +130,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       size: 80.0,
                                                     ),
                                                     Text(
-                                                      'Create Your PIN to Access Your Dashboard',
+                                                      AppLocalizations.of(context)!.msgCreateYourPinToAccessYourDashboard,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: FlutterFlowTheme
@@ -710,7 +711,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'Enter a 4 - 8 digit PIN to secure your account',
+                                                                        AppLocalizations.of(context)!.msgEnterA48DigitPinToSecure,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -743,7 +744,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'PLEASE ENTER AT LEAST 4 DIGITS',
+                                                                        AppLocalizations.of(context)!.msgPleaseEnterAtLeast4Digits,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -776,7 +777,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'PINS DO NOT MATCH - PLEASE TRY AGAIN',
+                                                                        AppLocalizations.of(context)!.msgPinsDoNotMatchPleaseTryAgain,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -1515,7 +1516,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       safeSetState(() {});
                                                     }
                                                   },
-                                                  text: 'Continue',
+                                                  text: AppLocalizations.of(context)!.msgContinue,
                                                   options: FFButtonOptions(
                                                     width: double.infinity,
                                                     height: 50.0,
@@ -1616,7 +1617,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                       padding:
                                                           EdgeInsets.all(17.0),
                                                       child: Text(
-                                                        'Confirm PIN',
+                                                        AppLocalizations.of(context)!.msgConfirmPin,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style:
@@ -2207,7 +2208,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'Enter the same 4 - 8 digits to confirm your access PIN',
+                                                                        AppLocalizations.of(context)!.msgEnterTheSame48DigitsToConfirm2,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -2240,7 +2241,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'PIN MUST BE AT LEAST 4 DIGITS',
+                                                                        AppLocalizations.of(context)!.msgPinMustBeAtLeast4Digits,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -3050,7 +3051,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                               .showSnackBar(
                                                             SnackBar(
                                                               content: Text(
-                                                                'ERROR #005 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                AppLocalizations.of(context)!.msgError005PleaseScreenshotContactDecoySupport,
                                                                 style:
                                                                     TextStyle(
                                                                   color: FlutterFlowTheme.of(
@@ -3085,7 +3086,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                             .showSnackBar(
                                                           SnackBar(
                                                             content: Text(
-                                                              'ERROR #004 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                              AppLocalizations.of(context)!.msgError004PleaseScreenshotContactDecoySupport,
                                                               style: TextStyle(
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
@@ -3149,7 +3150,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
 
                                                   safeSetState(() {});
                                                 },
-                                                text: 'Confirm',
+                                                text: AppLocalizations.of(context)!.msgConfirm,
                                                 options: FFButtonOptions(
                                                   width: double.infinity,
                                                   height: 50.0,

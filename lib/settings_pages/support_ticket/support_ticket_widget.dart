@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/public_config.dart';
@@ -142,7 +143,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           8.0, 12.0, 8.0, 12.0),
                                       child: Text(
-                                        'SUPPORT TICKET',
+                                        AppLocalizations.of(context)!.msgSupportTicket,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
@@ -165,7 +166,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           8.0, 12.0, 8.0, 12.0),
                                       child: Text(
-                                        'SUPPORT TICKET',
+                                        AppLocalizations.of(context)!.msgSupportTicket,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
@@ -188,7 +189,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           8.0, 12.0, 8.0, 12.0),
                                       child: Text(
-                                        'SUPPORT TICKET',
+                                        AppLocalizations.of(context)!.msgSupportTicket,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
@@ -211,7 +212,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           8.0, 12.0, 8.0, 12.0),
                                       child: Text(
-                                        'SUPPORT TICKET',
+                                        AppLocalizations.of(context)!.msgSupportTicket,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
@@ -236,7 +237,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                         Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
                           child: Text(
-                            'We\'re here to help! Submit a support ticket and we\'ll get back to you as soon as possible.',
+                            AppLocalizations.of(context)!.msgWeReHereToHelpSubmitASupport,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -266,7 +267,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Subject ',
+                                      AppLocalizations.of(context)!.msgSubject,
                                       style: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .override(
@@ -295,7 +296,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             hintText:
-                                                'Title the problem you are experiencing',
+                                                AppLocalizations.of(context)!.msgTitleTheProblemYouAreExperiencing,
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -385,7 +386,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Message ',
+                                      AppLocalizations.of(context)!.msgMessage,
                                       style: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .override(
@@ -414,7 +415,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             hintText:
-                                                'Write a detailed description of the problem you are experiencing',
+                                                AppLocalizations.of(context)!.msgWriteADetailedDescriptionOfTheProblemYou,
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -517,7 +518,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'You may also reach out to ',
+                                      AppLocalizations.of(context)!.msgYouMayAlsoReachOutTo,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -572,7 +573,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                       ),
                                     ),
                                     Text(
-                                      'for further assistance',
+                                      AppLocalizations.of(context)!.msgForFurtherAssistance,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -611,7 +612,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                               Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Text(
-                                  'Support Ticket Sent to Decoy Team',
+                                  AppLocalizations.of(context)!.msgSupportTicketSentToDecoyTeam,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
@@ -652,7 +653,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'ERROR #020 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                      AppLocalizations.of(context)!.msgError020PleaseScreenshotContactDecoySupport,
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
@@ -667,7 +668,7 @@ class _SupportTicketWidgetState extends State<SupportTicketWidget> {
 
                               safeSetState(() {});
                             },
-                            text: 'Submit Ticket',
+                            text: AppLocalizations.of(context)!.msgSubmitTicket,
                             options: FFButtonOptions(
                               width: 400.0,
                               height: 50.0,

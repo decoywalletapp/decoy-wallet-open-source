@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/instant_timer.dart';
@@ -101,28 +102,28 @@ class _DuressProcessingTransactionWidgetState
 
   String get _statusTitle {
     if (_model.progress01 >= 1.0) {
-      return 'Transaction Confirmed';
+      return AppLocalizations.of(context)!.msgTransactionConfirmed;
     }
     if (_model.progress01 >= 0.5) {
-      return 'Awaiting Confirmation';
+      return AppLocalizations.of(context)!.msgAwaitingConfirmation;
     }
     if (_model.progress01 >= 0.05) {
-      return 'In Mempool';
+      return AppLocalizations.of(context)!.msgInMempool;
     }
-    return 'Broadcasting';
+    return AppLocalizations.of(context)!.msgBroadcasting;
   }
 
   String get _statusSubtitle {
     if (_model.progress01 >= 1.0) {
-      return 'Confirmed on the Bitcoin network';
+      return AppLocalizations.of(context)!.msgConfirmedOnTheBitcoinNetwork;
     }
     if (_model.progress01 >= 0.5) {
-      return 'Seen by peers and waiting for the next block';
+      return AppLocalizations.of(context)!.msgSeenByPeersAndWaitingForTheNext;
     }
     if (_model.progress01 >= 0.05) {
-      return 'Transaction relayed and pending inclusion';
+      return AppLocalizations.of(context)!.msgTransactionRelayedAndPendingInclusion;
     }
-    return 'Relaying transaction to Bitcoin peers';
+    return AppLocalizations.of(context)!.msgRelayingTransactionToBitcoinPeers;
   }
 
   @override
@@ -183,7 +184,7 @@ class _DuressProcessingTransactionWidgetState
                             onPressed: () async {
                               context.goNamed(DuressHomePageWidget.routeName);
                             },
-                            text: 'Return to Home',
+                            text: AppLocalizations.of(context)!.msgReturnToHome,
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 56.0,
@@ -302,8 +303,8 @@ class _DuressProcessingTransactionWidgetState
               Expanded(
                 child: _metricPill(
                   context,
-                  label: 'ETA',
-                  value: isComplete ? 'Complete' : '${_model.remainingMins}m',
+                  label: AppLocalizations.of(context)!.msgEta,
+                  value: isComplete ? AppLocalizations.of(context)!.msgComplete2 : '${_model.remainingMins}m',
                   color: isComplete ? _success : orange,
                 ),
               ),
@@ -311,7 +312,7 @@ class _DuressProcessingTransactionWidgetState
               Expanded(
                 child: _metricPill(
                   context,
-                  label: 'Confirmations',
+                  label: AppLocalizations.of(context)!.msgConfirmations,
                   value: isComplete ? '1 / 1' : '0 / 1',
                   color: isComplete ? _success : orange,
                 ),
@@ -354,7 +355,7 @@ class _DuressProcessingTransactionWidgetState
           _divider(),
           _detailRow(
             context,
-            'Tx ID',
+            AppLocalizations.of(context)!.msgTxId,
             'b38f6a2d...e91c0b77',
             accent: orange,
           ),
@@ -383,7 +384,7 @@ class _DuressProcessingTransactionWidgetState
             children: [
               Expanded(
                 child: Text(
-                  'Network Progress',
+                  AppLocalizations.of(context)!.msgNetworkProgress,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'InterTight',
                         color: FlutterFlowTheme.of(context).info,
@@ -423,9 +424,9 @@ class _DuressProcessingTransactionWidgetState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _smallLabel(context, 'Broadcast'),
-              _smallLabel(context, 'Mempool'),
-              _smallLabel(context, 'Block'),
+              _smallLabel(context, AppLocalizations.of(context)!.msgBroadcast),
+              _smallLabel(context, AppLocalizations.of(context)!.msgMempool),
+              _smallLabel(context, AppLocalizations.of(context)!.msgBlock),
             ],
           ),
         ],
@@ -446,28 +447,28 @@ class _DuressProcessingTransactionWidgetState
         children: [
           _timelineRow(
             context,
-            label: 'Transaction initiated',
+            label: AppLocalizations.of(context)!.msgTransactionInitiated,
             active: progress >= 0.0,
             color: orange,
           ),
           _timelineConnector(progress >= 0.05 ? orange : _track),
           _timelineRow(
             context,
-            label: 'Broadcasted to network',
+            label: AppLocalizations.of(context)!.msgBroadcastedToNetwork,
             active: progress >= 0.05,
             color: orange,
           ),
           _timelineConnector(progress >= 0.5 ? orange : _track),
           _timelineRow(
             context,
-            label: 'Awaiting confirmations',
+            label: AppLocalizations.of(context)!.msgAwaitingConfirmations,
             active: progress >= 0.5,
             color: orange,
           ),
           _timelineConnector(progress >= 1.0 ? _success : _track),
           _timelineRow(
             context,
-            label: 'Transaction complete',
+            label: AppLocalizations.of(context)!.msgTransactionComplete,
             active: progress >= 1.0,
             color: _success,
           ),

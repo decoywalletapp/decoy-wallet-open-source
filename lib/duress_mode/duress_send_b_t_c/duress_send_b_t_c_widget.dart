@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -171,7 +172,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
     return Column(
       children: [
         Text(
-          'Send Amount',
+          AppLocalizations.of(context)!.msgSendAmount,
           textAlign: TextAlign.center,
           style: FlutterFlowTheme.of(context).headlineMedium.override(
                 fontFamily: 'InterTight',
@@ -183,7 +184,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
         ),
         const SizedBox(height: 5.0),
         Text(
-          'Enter the amount you want to send',
+          AppLocalizations.of(context)!.msgEnterTheAmountYouWantToSend,
           textAlign: TextAlign.center,
           style: FlutterFlowTheme.of(context).bodyMedium.override(
                 fontFamily: 'InterTight',
@@ -217,7 +218,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
       child: Column(
         children: [
           Text(
-            'Amount',
+            AppLocalizations.of(context)!.msgAmount,
             textAlign: TextAlign.center,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'InterTight',
@@ -245,7 +246,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
           ),
           const SizedBox(height: 2.0),
           Text(
-            'BTC',
+            AppLocalizations.of(context)!.msgBtc,
             textAlign: TextAlign.center,
             style: FlutterFlowTheme.of(context).bodyLarge.override(
                   fontFamily: 'InterTight',
@@ -272,7 +273,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
             child: Row(
               children: [
                 Text(
-                  'Send Max',
+                  AppLocalizations.of(context)!.msgSendMax,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'InterTight',
                         color: amountExceedsAvailable
@@ -320,7 +321,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
       duration: 180.0.ms,
       child: Text(
         showError
-            ? 'AMOUNT EXCEEDS AVAILABLE BALANCE'
+            ? AppLocalizations.of(context)!.msgAmountExceedsAvailableBalance
             : 'Max available: $fakeBtcAvailableText',
         key: ValueKey(showError),
         textAlign: TextAlign.center,
@@ -475,7 +476,7 @@ class _DuressSendBTCWidgetState extends State<DuressSendBTCWidget> {
             safeSetState(() {});
           }
         },
-        text: 'Next',
+        text: AppLocalizations.of(context)!.msgNext,
         options: FFButtonOptions(
           width: double.infinity,
           height: 58.0,

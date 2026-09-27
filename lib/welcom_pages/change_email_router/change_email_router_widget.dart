@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -59,7 +60,7 @@ class _ChangeEmailRouterWidgetState extends State<ChangeEmailRouterWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'ERROR #001 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+              AppLocalizations.of(context)!.msgError001PleaseScreenshotContactDecoySupport,
               style: TextStyle(
                 color: FlutterFlowTheme.of(context).primaryText,
               ),

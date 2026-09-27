@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -130,7 +131,7 @@ class _LocationAuthorizationWidgetState
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Enable Location\nServices',
+                              AppLocalizations.of(context)!.msgEnableLocationServices,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
@@ -140,7 +141,7 @@ class _LocationAuthorizationWidgetState
                                   ),
                             ),
                             Text(
-                              'Allow your location to be included automatically during an emergency so trusted contacts and responders can act faster. Location is never tracked in the background and is only accessed if an emergency is triggered.',
+                              AppLocalizations.of(context)!.msgAllowYourLocationToBeIncludedAutomaticallyDuring,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -204,7 +205,7 @@ class _LocationAuthorizationWidgetState
                                       }
                                     },
                                     title: Text(
-                                      'Enable Location Services',
+                                      AppLocalizations.of(context)!.msgEnableLocationServices2,
                                       style: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .override(
@@ -248,7 +249,7 @@ class _LocationAuthorizationWidgetState
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Change these settings anytime in the ',
+                                  AppLocalizations.of(context)!.msgChangeTheseSettingsAnytimeInThe,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -262,7 +263,7 @@ class _LocationAuthorizationWidgetState
                                       ),
                                 ),
                                 Text(
-                                  'Control',
+                                  AppLocalizations.of(context)!.msgControl2,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -284,7 +285,7 @@ class _LocationAuthorizationWidgetState
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Center',
+                                  AppLocalizations.of(context)!.msgCenter,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -306,7 +307,7 @@ class _LocationAuthorizationWidgetState
                                       ),
                                 ),
                                 Text(
-                                  'by navigating to ',
+                                  AppLocalizations.of(context)!.msgByNavigatingTo2,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -329,7 +330,7 @@ class _LocationAuthorizationWidgetState
                                       ),
                                 ),
                                 Text(
-                                  'Settings > Control Center',
+                                  AppLocalizations.of(context)!.msgSettingsControlCenter2,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -423,7 +424,7 @@ class _LocationAuthorizationWidgetState
 
                               safeSetState(() {});
                             },
-                            text: 'Continue',
+                            text: AppLocalizations.of(context)!.msgContinue,
                             options: FFButtonOptions(
                               width: 400.0,
                               height: 50.0,
@@ -507,7 +508,7 @@ class _LocationAuthorizationWidgetState
 
                             safeSetState(() {});
                           },
-                          text: 'Skip for Now',
+                          text: AppLocalizations.of(context)!.msgSkipForNow,
                           options: FFButtonOptions(
                             width: 400.0,
                             height: 50.0,

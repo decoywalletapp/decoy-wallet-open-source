@@ -33,8 +33,8 @@ void main() {
     ).readAsStringSync();
 
     expect(settingsSource.toLowerCase(), isNot(contains('decoy wallet')));
-    expect(settingsSource, contains("title: 'Currency'"));
-    expect(settingsSource, contains("value: 'Bitcoin Mainnet'"));
+    expect(settingsSource, contains('msgCurrency'));
+    expect(settingsSource, contains('msgBitcoinMainnet'));
   });
 
   test('balance slider reserves its first half for zero through 25 BTC', () {

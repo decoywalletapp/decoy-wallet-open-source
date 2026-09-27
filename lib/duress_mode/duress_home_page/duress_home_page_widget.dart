@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -303,14 +304,14 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
   String _lastUpdatedLabel() {
     final lastUpdatedAt = _model.lastUpdatedAt;
     if (lastUpdatedAt == null) {
-      return 'Syncing';
+      return AppLocalizations.of(context)!.msgSyncing;
     }
     final age = DateTime.now().difference(lastUpdatedAt);
     if (age.inSeconds < 75) {
-      return 'Live';
+      return AppLocalizations.of(context)!.msgLive2;
     }
     if (age.inMinutes < 60) {
-      return '${age.inMinutes}m ago';
+      return AppLocalizations.of(context)!.minutesAgo(age.inMinutes);
     }
     return DateFormat('h:mm a').format(lastUpdatedAt);
   }
@@ -381,7 +382,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       _centered(_buildDiscoverList(context)),
                       const SizedBox(height: 28.0),
                       Text(
-                        'Fix the money, fix the world.',
+                        AppLocalizations.of(context)!.msgFixTheMoneyFixTheWorld,
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'InterTight',
@@ -432,7 +433,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
             },
           ),
           Text(
-            'Wallet',
+            AppLocalizations.of(context)!.msgWallet,
             style: FlutterFlowTheme.of(context).titleMedium.override(
                   fontFamily: 'InterTight',
                   color: FlutterFlowTheme.of(context).info,
@@ -499,7 +500,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Bitcoin Balance',
+              AppLocalizations.of(context)!.msgBitcoinBalance,
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'InterTight',
                     color: _mutedText,
@@ -597,7 +598,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Bitcoin',
+                        AppLocalizations.of(context)!.msgBitcoin,
                         style:
                             FlutterFlowTheme.of(context).titleMedium.override(
                                   fontFamily: 'InterTight',
@@ -609,7 +610,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                       ),
                       const SizedBox(height: 2.0),
                       Text(
-                        'BTC/USD',
+                        AppLocalizations.of(context)!.msgBtcUsd,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'InterTight',
                               color: _mutedText,
@@ -623,7 +624,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                 ),
                 _statusPill(
                   context,
-                  label: 'LIVE',
+                  label: AppLocalizations.of(context)!.msgLive,
                   color: lineColor,
                   filled: true,
                 ),
@@ -769,7 +770,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                     ),
                     const SizedBox(width: 6.0),
                     Text(
-                      'Sync market',
+                      AppLocalizations.of(context)!.msgSyncMarket,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'InterTight',
                             color: FlutterFlowTheme.of(context).info,
@@ -855,7 +856,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           child: _actionTile(
             context,
             icon: Icons.south_west_rounded,
-            label: 'Receive',
+            label: AppLocalizations.of(context)!.msgReceive,
             onTap: () {},
           ),
         ),
@@ -864,7 +865,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           child: _actionTile(
             context,
             icon: Icons.qr_code_2_rounded,
-            label: 'Send',
+            label: AppLocalizations.of(context)!.msgSend,
             onTap: () async {
               context.pushNamed(DuressScanQRWidget.routeName);
             },
@@ -950,7 +951,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '\$0 traded this month',
+                      AppLocalizations.of(context)!.msg0TradedThisMonth,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'InterTight',
                             color: FlutterFlowTheme.of(context).info,
@@ -961,7 +962,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
                     ),
                     const SizedBox(height: 3.0),
                     Text(
-                      '\$1,000 to next level',
+                      AppLocalizations.of(context)!.msg1000ToNextLevel,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'InterTight',
                             color: _mutedText,
@@ -1014,28 +1015,28 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
           _discoverRow(
             context,
             icon: Icons.edit_calendar_rounded,
-            label: 'Set a recurring buy',
+            label: AppLocalizations.of(context)!.msgSetARecurringBuy,
             onTap: () => _openFeature(context, 'recurring-buy'),
           ),
           _divider(),
           _discoverRow(
             context,
             icon: Icons.star_rounded,
-            label: 'Place a limit order',
+            label: AppLocalizations.of(context)!.msgPlaceALimitOrder,
             onTap: () => _openFeature(context, 'limit-order'),
           ),
           _divider(),
           _discoverRow(
             context,
             icon: Icons.account_balance_rounded,
-            label: 'Get paid in Bitcoin',
+            label: AppLocalizations.of(context)!.msgGetPaidInBitcoin,
             onTap: () => _openFeature(context, 'bitcoin-pay'),
           ),
           _divider(),
           _discoverRow(
             context,
             icon: Icons.send_rounded,
-            label: 'Auto-withdraw bitcoin',
+            label: AppLocalizations.of(context)!.msgAutoWithdrawBitcoin,
             onTap: () => _openFeature(context, 'auto-withdraw'),
           ),
         ],

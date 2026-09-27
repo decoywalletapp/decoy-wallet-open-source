@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import 'dart:convert';
 
 import '/auth/supabase_auth/auth_util.dart';
@@ -66,12 +67,12 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
   String _consentInviteButtonLabel(int contactSlot, String status) {
     if (_showingConsentInviteSent(contactSlot)) {
-      return 'Confirmation Link Sent';
+      return AppLocalizations.of(context)!.msgConfirmationLinkSent;
     }
 
     return status == 'Not sent'
-        ? 'Send Confirmation Link'
-        : 'Resend Confirmation Link';
+        ? AppLocalizations.of(context)!.msgSendConfirmationLink
+        : AppLocalizations.of(context)!.msgResendConfirmationLink;
   }
 
   IconData _consentInviteButtonIcon(int contactSlot) {
@@ -395,7 +396,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Could not open contacts. Enter contact manually.',
+              AppLocalizations.of(context)!.msgCouldNotOpenContactsEnterContactManually,
               style: TextStyle(
                 color: FlutterFlowTheme.of(context).primaryText,
               ),
@@ -456,7 +457,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
         children: [
           buildChoiceButton(
             icon: Icons.person_add_alt_1_rounded,
-            label: 'Choose From Contacts',
+            label: AppLocalizations.of(context)!.msgChooseFromContacts,
             onPressed: () {
               _pickDeviceContactForSlot(slot);
             },
@@ -469,7 +470,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
           ),
           buildChoiceButton(
             icon: Icons.arrow_forward_rounded,
-            label: 'Enter Manually',
+            label: AppLocalizations.of(context)!.msgEnterManually,
             onPressed: () {
               _showManualContactEntry(slot);
             },
@@ -1164,7 +1165,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  'ERROR #008 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                  AppLocalizations.of(context)!.msgError008PleaseScreenshotContactDecoySupport,
                   style: TextStyle(
                     color: FlutterFlowTheme.of(context).primaryText,
                   ),
@@ -1773,7 +1774,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 Align(
                                   alignment: AlignmentDirectional(-0.01, 0.0),
                                   child: Text(
-                                    'EMERGENCY',
+                                    AppLocalizations.of(context)!.emergencyContactsHeadingFirstLine,
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
@@ -1791,7 +1792,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 Align(
                                   alignment: AlignmentDirectional(0.01, 0.0),
                                   child: Text(
-                                    'EMERGENCY',
+                                    AppLocalizations.of(context)!.emergencyContactsHeadingFirstLine,
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
@@ -1817,7 +1818,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                   Align(
                                     alignment: AlignmentDirectional(0.01, 0.0),
                                     child: Text(
-                                      'CONTACTS',
+                                      AppLocalizations.of(context)!.emergencyContactsHeadingSecondLine,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -1835,7 +1836,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                   Align(
                                     alignment: AlignmentDirectional(-0.01, 0.0),
                                     child: Text(
-                                      'CONTACTS',
+                                      AppLocalizations.of(context)!.emergencyContactsHeadingSecondLine,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -1955,7 +1956,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        'Contact 1',
+                                                        AppLocalizations.of(context)!.msgContact1,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2013,7 +2014,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'First Name',
+                                                        hintText: AppLocalizations.of(context)!.msgFirstName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2183,7 +2184,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'Last Name',
+                                                        hintText: AppLocalizations.of(context)!.msgLastName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2395,7 +2396,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone number (+country code)',
+                                                            AppLocalizations.of(context)!.msgPhoneNumberCountryCode,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2567,7 +2568,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           0.0,
                                                                           0.0),
                                                                   child: Text(
-                                                                    'Status: ',
+                                                                    AppLocalizations.of(context)!.msgStatus2,
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyMedium
@@ -2588,25 +2589,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     if (_model
                                                                             .c1Status ==
                                                                         'Not sent') {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     } else if (_model
                                                                             .c1Status ==
                                                                         'Pending') {
-                                                                      return 'Pending';
+                                                                      return AppLocalizations.of(context)!.msgPending;
                                                                     } else if (_model
                                                                             .c1Status ==
                                                                         'Confirmed') {
-                                                                      return 'Confirmed';
+                                                                      return AppLocalizations.of(context)!.msgConfirmed;
                                                                     } else if (_model
                                                                             .c1Status ==
                                                                         'Denied') {
-                                                                      return 'Denied';
+                                                                      return AppLocalizations.of(context)!.msgDenied;
                                                                     } else if (_model
                                                                             .c1Status ==
                                                                         'Opted out') {
-                                                                      return 'Opted out';
+                                                                      return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     }
                                                                   }(),
                                                                   style: FlutterFlowTheme.of(
@@ -3159,7 +3160,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     SnackBar(
                                                                       content:
                                                                           Text(
-                                                                        'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                        AppLocalizations.of(context)!.msgError009PleaseScreenshotContactDecoySupport,
                                                                         style:
                                                                             TextStyle(
                                                                           color:
@@ -3186,8 +3187,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             },
                                                             text: _model.c1Status ==
                                                                     'Not sent'
-                                                                ? 'Send Confirmation Link'
-                                                                : 'Resend Confirmation Link',
+                                                                ? AppLocalizations.of(context)!.msgSendConfirmationLink
+                                                                : AppLocalizations.of(context)!.msgResendConfirmationLink,
                                                             options:
                                                                 FFButtonOptions(
                                                               width: 300.0,
@@ -3324,7 +3325,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          'Contact 2',
+                                                          AppLocalizations.of(context)!.msgContact2,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .titleMedium
@@ -3386,7 +3387,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         decoration:
                                                             InputDecoration(
                                                           hintText:
-                                                              'First Name',
+                                                              AppLocalizations.of(context)!.msgFirstName,
                                                           hintStyle:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -3559,7 +3560,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         obscureText: false,
                                                         decoration:
                                                             InputDecoration(
-                                                          hintText: 'Last Name',
+                                                          hintText: AppLocalizations.of(context)!.msgLastName,
                                                           hintStyle:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -3775,7 +3776,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                         decoration:
                                                             InputDecoration(
                                                           hintText:
-                                                              'Phone number (+country code)',
+                                                              AppLocalizations.of(context)!.msgPhoneNumberCountryCode,
                                                           hintStyle:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -3949,7 +3950,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                             0.0,
                                                                             0.0),
                                                                     child: Text(
-                                                                      'Status: ',
+                                                                      AppLocalizations.of(context)!.msgStatus2,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyMedium
@@ -3970,25 +3971,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       if (_model
                                                                               .c2Status ==
                                                                           'Not sent') {
-                                                                        return 'Not sent';
+                                                                        return AppLocalizations.of(context)!.msgNotSent;
                                                                       } else if (_model
                                                                               .c2Status ==
                                                                           'Pending') {
-                                                                        return 'Pending';
+                                                                        return AppLocalizations.of(context)!.msgPending;
                                                                       } else if (_model
                                                                               .c2Status ==
                                                                           'Confirmed') {
-                                                                        return 'Confirmed';
+                                                                        return AppLocalizations.of(context)!.msgConfirmed;
                                                                       } else if (_model
                                                                               .c2Status ==
                                                                           'Denied') {
-                                                                        return 'Denied';
+                                                                        return AppLocalizations.of(context)!.msgDenied;
                                                                       } else if (_model
                                                                               .c2Status ==
                                                                           'Opted out') {
-                                                                        return 'Opted out';
+                                                                        return AppLocalizations.of(context)!.msgOptedOut;
                                                                       } else {
-                                                                        return 'Not sent';
+                                                                        return AppLocalizations.of(context)!.msgNotSent;
                                                                       }
                                                                     }(),
                                                                     style: FlutterFlowTheme.of(
@@ -4440,7 +4441,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         SnackBar(
                                                                           content:
                                                                               Text(
-                                                                            'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                            AppLocalizations.of(context)!.msgError009PleaseScreenshotContactDecoySupport,
                                                                             style:
                                                                                 TextStyle(
                                                                               color: FlutterFlowTheme.of(context).primaryText,
@@ -4464,8 +4465,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 },
                                                                 text: _model.c2Status ==
                                                                         'Not sent'
-                                                                    ? 'Send Confirmation Link'
-                                                                    : 'Resend Confirmation Link',
+                                                                    ? AppLocalizations.of(context)!.msgSendConfirmationLink
+                                                                    : AppLocalizations.of(context)!.msgResendConfirmationLink,
                                                                 options:
                                                                     FFButtonOptions(
                                                                   width: 300.0,
@@ -4592,7 +4593,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        'Contact 3',
+                                                        AppLocalizations.of(context)!.msgContact3,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -4650,7 +4651,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'First Name',
+                                                        hintText: AppLocalizations.of(context)!.msgFirstName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -4820,7 +4821,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'Last Name',
+                                                        hintText: AppLocalizations.of(context)!.msgLastName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -5031,7 +5032,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone number (+country code)',
+                                                            AppLocalizations.of(context)!.msgPhoneNumberCountryCode,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -5203,7 +5204,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           0.0,
                                                                           0.0),
                                                                   child: Text(
-                                                                    'Status: ',
+                                                                    AppLocalizations.of(context)!.msgStatus2,
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyMedium
@@ -5224,25 +5225,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     if (_model
                                                                             .c3Status ==
                                                                         'Not sent') {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     } else if (_model
                                                                             .c3Status ==
                                                                         'Pending') {
-                                                                      return 'Pending';
+                                                                      return AppLocalizations.of(context)!.msgPending;
                                                                     } else if (_model
                                                                             .c3Status ==
                                                                         'Confirmed') {
-                                                                      return 'Confirmed';
+                                                                      return AppLocalizations.of(context)!.msgConfirmed;
                                                                     } else if (_model
                                                                             .c3Status ==
                                                                         'Denied') {
-                                                                      return 'Denied';
+                                                                      return AppLocalizations.of(context)!.msgDenied;
                                                                     } else if (_model
                                                                             .c3Status ==
                                                                         'Opted out') {
-                                                                      return 'Opted out';
+                                                                      return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     }
                                                                   }(),
                                                                   style: FlutterFlowTheme.of(
@@ -5758,7 +5759,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       SnackBar(
                                                                         content:
                                                                             Text(
-                                                                          'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                          AppLocalizations.of(context)!.msgError009PleaseScreenshotContactDecoySupport,
                                                                           style:
                                                                               TextStyle(
                                                                             color:
@@ -5783,8 +5784,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               },
                                                               text: _model.c3Status ==
                                                                       'Not sent'
-                                                                  ? 'Send Confirmation Link'
-                                                                  : 'Resend Confirmation Link',
+                                                                  ? AppLocalizations.of(context)!.msgSendConfirmationLink
+                                                                  : AppLocalizations.of(context)!.msgResendConfirmationLink,
                                                               options:
                                                                   FFButtonOptions(
                                                                 width: double
@@ -5914,7 +5915,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        'Contact 4',
+                                                        AppLocalizations.of(context)!.msgContact4,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -5972,7 +5973,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'First Name',
+                                                        hintText: AppLocalizations.of(context)!.msgFirstName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -6142,7 +6143,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'Last Name',
+                                                        hintText: AppLocalizations.of(context)!.msgLastName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -6353,7 +6354,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone number (+country code)',
+                                                            AppLocalizations.of(context)!.msgPhoneNumberCountryCode,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -6525,7 +6526,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           0.0,
                                                                           0.0),
                                                                   child: Text(
-                                                                    'Status: ',
+                                                                    AppLocalizations.of(context)!.msgStatus2,
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyMedium
@@ -6546,25 +6547,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     if (_model
                                                                             .c4Status ==
                                                                         'Not sent') {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     } else if (_model
                                                                             .c4Status ==
                                                                         'Pending') {
-                                                                      return 'Pending';
+                                                                      return AppLocalizations.of(context)!.msgPending;
                                                                     } else if (_model
                                                                             .c4Status ==
                                                                         'Confirmed') {
-                                                                      return 'Confirmed';
+                                                                      return AppLocalizations.of(context)!.msgConfirmed;
                                                                     } else if (_model
                                                                             .c4Status ==
                                                                         'Denied') {
-                                                                      return 'Denied';
+                                                                      return AppLocalizations.of(context)!.msgDenied;
                                                                     } else if (_model
                                                                             .c4Status ==
                                                                         'Opted out') {
-                                                                      return 'Opted out';
+                                                                      return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     }
                                                                   }(),
                                                                   style: FlutterFlowTheme.of(
@@ -7120,7 +7121,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     SnackBar(
                                                                       content:
                                                                           Text(
-                                                                        'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                        AppLocalizations.of(context)!.msgError009PleaseScreenshotContactDecoySupport,
                                                                         style:
                                                                             TextStyle(
                                                                           color:
@@ -7147,8 +7148,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             },
                                                             text: _model.c4Status ==
                                                                     'Not sent'
-                                                                ? 'Send Confirmation Link'
-                                                                : 'Resend Confirmation Link',
+                                                                ? AppLocalizations.of(context)!.msgSendConfirmationLink
+                                                                : AppLocalizations.of(context)!.msgResendConfirmationLink,
                                                             options:
                                                                 FFButtonOptions(
                                                               width: 300.0,
@@ -7276,7 +7277,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        'Contact 5',
+                                                        AppLocalizations.of(context)!.msgContact5,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -7334,7 +7335,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'First Name',
+                                                        hintText: AppLocalizations.of(context)!.msgFirstName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -7504,7 +7505,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: 'Last Name',
+                                                        hintText: AppLocalizations.of(context)!.msgLastName,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -7715,7 +7716,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       decoration:
                                                           InputDecoration(
                                                         hintText:
-                                                            'Phone number (+country code)',
+                                                            AppLocalizations.of(context)!.msgPhoneNumberCountryCode,
                                                         hintStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -7887,7 +7888,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           0.0,
                                                                           0.0),
                                                                   child: Text(
-                                                                    'Status: ',
+                                                                    AppLocalizations.of(context)!.msgStatus2,
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyMedium
@@ -7908,25 +7909,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     if (_model
                                                                             .c5Status ==
                                                                         'Not sent') {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     } else if (_model
                                                                             .c5Status ==
                                                                         'Pending') {
-                                                                      return 'Pending';
+                                                                      return AppLocalizations.of(context)!.msgPending;
                                                                     } else if (_model
                                                                             .c5Status ==
                                                                         'Confirmed') {
-                                                                      return 'Confirmed';
+                                                                      return AppLocalizations.of(context)!.msgConfirmed;
                                                                     } else if (_model
                                                                             .c5Status ==
                                                                         'Denied') {
-                                                                      return 'Denied';
+                                                                      return AppLocalizations.of(context)!.msgDenied;
                                                                     } else if (_model
                                                                             .c5Status ==
                                                                         'Opted out') {
-                                                                      return 'Opted out';
+                                                                      return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
-                                                                      return 'Not sent';
+                                                                      return AppLocalizations.of(context)!.msgNotSent;
                                                                     }
                                                                   }(),
                                                                   style: FlutterFlowTheme.of(
@@ -8479,7 +8480,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     SnackBar(
                                                                       content:
                                                                           Text(
-                                                                        'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                        AppLocalizations.of(context)!.msgError009PleaseScreenshotContactDecoySupport,
                                                                         style:
                                                                             TextStyle(
                                                                           color:
@@ -8506,8 +8507,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             },
                                                             text: _model.c5Status ==
                                                                     'Not sent'
-                                                                ? 'Send Confirmation Link'
-                                                                : 'Resend Confirmation Link',
+                                                                ? AppLocalizations.of(context)!.msgSendConfirmationLink
+                                                                : AppLocalizations.of(context)!.msgResendConfirmationLink,
                                                             options:
                                                                 FFButtonOptions(
                                                               width: 300.0,
@@ -8815,7 +8816,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      'ERROR #030 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                      AppLocalizations.of(context)!.msgError030PleaseScreenshotContactDecoySupport,
                                                       style: TextStyle(
                                                         color:
                                                             FlutterFlowTheme.of(
@@ -8837,7 +8838,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'ERROR #009 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                    AppLocalizations.of(context)!.msgError009PleaseScreenshotContactDecoySupport,
                                                     style: TextStyle(
                                                       color:
                                                           FlutterFlowTheme.of(
@@ -8861,7 +8862,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                           safeSetState(() {});
                                         },
-                                        text: 'Save & Exit',
+                                        text: AppLocalizations.of(context)!.msgSaveExit,
                                         options: FFButtonOptions(
                                           width: 200.0,
                                           height: 56.0,

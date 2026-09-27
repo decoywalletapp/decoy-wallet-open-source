@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -152,19 +153,19 @@ class _DecoySeedSystemValuesWidgetState
     final watchPublicKeyType = FFAppState().draftWatchPublicKeyType.trim();
 
     if (sourceType == 'generated-seed') {
-      return 'Most Recent Decoy Seed Generated';
+      return AppLocalizations.of(context)!.msgMostRecentDecoySeedGenerated;
     }
     if (sourceType == 'address-list' ||
         watchPublicKeyType == 'bitcoin-address-list') {
-      return 'Receive Address Monitor';
+      return AppLocalizations.of(context)!.msgReceiveAddressMonitor;
     }
     if (sourceType == 'xpub') {
-      return 'XPub Monitor';
+      return AppLocalizations.of(context)!.msgXpubMonitor;
     }
     if (sourceType == 'zpub') {
-      return 'ZPub Monitor';
+      return AppLocalizations.of(context)!.msgZpubMonitor;
     }
-    return 'Wallet Activity Monitor';
+    return AppLocalizations.of(context)!.msgWalletActivityMonitor;
   }
 
   bool _savedSetupMonitorEnabled() {
@@ -491,8 +492,8 @@ class _DecoySeedSystemValuesWidgetState
     _model.seedMonitorArmTileValue ??= true;
     final seedMonitorEnabled = _model.seedMonitorArmTileValue ?? false;
     final savedSeedMonitorEnabled = _savedSetupMonitorEnabled();
-    const readyTitle = 'DECOY KEYS READY';
-    const triggerTitle = 'Decoy Keys Monitor';
+    final readyTitle = AppLocalizations.of(context)!.msgDecoyKeysReady;
+    final triggerTitle = AppLocalizations.of(context)!.msgDecoyKeysMonitor;
     final monitorTitle = _setupMonitorTitle();
     final decoySeedSystemBottomPadding = decoyBottomActionPadding(context);
 
@@ -636,7 +637,7 @@ class _DecoySeedSystemValuesWidgetState
                                             ),
                                       ),
                                       subtitle: Text(
-                                        'ARM TO ACTIVELY MONITOR OUTBOUND TRANSACTIONS',
+                                        AppLocalizations.of(context)!.msgArmToActivelyMonitorOutboundTransactions,
                                         style: FlutterFlowTheme.of(context)
                                             .bodySmall
                                             .override(
@@ -670,15 +671,17 @@ class _DecoySeedSystemValuesWidgetState
                                     _statusLine(
                                       context,
                                       'Switch Value:',
-                                      seedMonitorEnabled ? 'ENABLE' : 'DISABLE',
+                                      seedMonitorEnabled
+                                          ? AppLocalizations.of(context)!.msgEnable
+                                          : AppLocalizations.of(context)!.msgDisable,
                                       FlutterFlowTheme.of(context).primary,
                                     ),
                                     _statusLine(
                                       context,
                                       'System Status:',
                                       savedSeedMonitorEnabled
-                                          ? 'ACTIVATED'
-                                          : 'DEACTIVATED',
+                                          ? AppLocalizations.of(context)!.msgActivated
+                                          : AppLocalizations.of(context)!.msgDeactivated,
                                       savedSeedMonitorEnabled
                                           ? FlutterFlowTheme.of(context).success
                                           : FlutterFlowTheme.of(context).error,
@@ -692,17 +695,17 @@ class _DecoySeedSystemValuesWidgetState
                                 children: [
                                   TextSpan(
                                       text:
-                                          'Change these settings anytime in the '),
+                                          AppLocalizations.of(context)!.msgChangeTheseSettingsAnytimeInThe),
                                   TextSpan(
-                                    text: 'Control Center',
+                                    text: AppLocalizations.of(context)!.msgControlCenter,
                                     style: TextStyle(
                                       color:
                                           FlutterFlowTheme.of(context).primary,
                                     ),
                                   ),
-                                  TextSpan(text: ' by navigating to '),
+                                  TextSpan(text: AppLocalizations.of(context)!.msgByNavigatingTo),
                                   TextSpan(
-                                    text: 'Settings > Control Center',
+                                    text: AppLocalizations.of(context)!.msgSettingsControlCenter2,
                                     style: TextStyle(
                                       color:
                                           FlutterFlowTheme.of(context).primary,
@@ -728,7 +731,7 @@ class _DecoySeedSystemValuesWidgetState
                             ),
                             FFButtonWidget(
                               onPressed: _saveAndGoHome,
-                              text: 'Save & Go Home',
+                              text: AppLocalizations.of(context)!.msgSaveGoHome,
                               options: FFButtonOptions(
                                 width: double.infinity,
                                 height: 50.0,
@@ -878,7 +881,7 @@ class _DecoySeedSystemValuesWidgetState
                                                           AlignmentDirectional(
                                                               -0.01, 0.0),
                                                       child: Text(
-                                                        'DECOY SEED',
+                                                        AppLocalizations.of(context)!.msgDecoySeed,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: FlutterFlowTheme
@@ -905,7 +908,7 @@ class _DecoySeedSystemValuesWidgetState
                                                           AlignmentDirectional(
                                                               0.01, 0.0),
                                                       child: Text(
-                                                        'DECOY SEED',
+                                                        AppLocalizations.of(context)!.msgDecoySeed,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: FlutterFlowTheme
@@ -940,7 +943,7 @@ class _DecoySeedSystemValuesWidgetState
                                                             AlignmentDirectional(
                                                                 0.01, 0.0),
                                                         child: Text(
-                                                          'GENERATED',
+                                                          AppLocalizations.of(context)!.msgGenerated,
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: FlutterFlowTheme
@@ -967,7 +970,7 @@ class _DecoySeedSystemValuesWidgetState
                                                             AlignmentDirectional(
                                                                 -0.01, 0.0),
                                                         child: Text(
-                                                          'GENERATED',
+                                                          AppLocalizations.of(context)!.msgGenerated,
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: FlutterFlowTheme
@@ -1041,7 +1044,7 @@ class _DecoySeedSystemValuesWidgetState
                                             alignment:
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: Text(
-                                              'Decoy Keys Triggers',
+                                              AppLocalizations.of(context)!.msgDecoyKeysTriggers,
                                               textAlign: TextAlign.start,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -1073,7 +1076,7 @@ class _DecoySeedSystemValuesWidgetState
                                                           newValue);
                                                     },
                                               title: Text(
-                                                'Wallet Activity Monitor',
+                                                AppLocalizations.of(context)!.msgWalletActivityMonitor,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -1093,7 +1096,7 @@ class _DecoySeedSystemValuesWidgetState
                                                         ),
                                               ),
                                               subtitle: Text(
-                                                'ARM TO ACTIVELY MONITOR OUTBOUND TRANSACTIONS',
+                                                AppLocalizations.of(context)!.msgArmToActivelyMonitorOutboundTransactions,
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodySmall
@@ -1143,7 +1146,7 @@ class _DecoySeedSystemValuesWidgetState
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Switch Value:',
+                                                      AppLocalizations.of(context)!.msgSwitchValue,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -1179,7 +1182,7 @@ class _DecoySeedSystemValuesWidgetState
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
                                                             child: Text(
-                                                              'ENABLE',
+                                                              AppLocalizations.of(context)!.msgEnable,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyMedium
@@ -1211,7 +1214,7 @@ class _DecoySeedSystemValuesWidgetState
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
                                                             child: Text(
-                                                              'DISABLE',
+                                                              AppLocalizations.of(context)!.msgDisable,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyMedium
@@ -1255,7 +1258,7 @@ class _DecoySeedSystemValuesWidgetState
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'System Status:',
+                                                        AppLocalizations.of(context)!.msgSystemStatus,
                                                         style: FlutterFlowTheme
                                                                 .of(context)
                                                             .bodyMedium
@@ -1293,7 +1296,7 @@ class _DecoySeedSystemValuesWidgetState
                                                                   AlignmentDirectional(
                                                                       0.0, 0.0),
                                                               child: Text(
-                                                                'ACTIVATED',
+                                                                AppLocalizations.of(context)!.msgActivated,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -1325,7 +1328,7 @@ class _DecoySeedSystemValuesWidgetState
                                                                   AlignmentDirectional(
                                                                       0.0, 0.0),
                                                               child: Text(
-                                                                'DEACTIVATED',
+                                                                AppLocalizations.of(context)!.msgDeactivated,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -1381,7 +1384,7 @@ class _DecoySeedSystemValuesWidgetState
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Change these settings anytime in the ',
+                                        AppLocalizations.of(context)!.msgChangeTheseSettingsAnytimeInThe,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
@@ -1401,7 +1404,7 @@ class _DecoySeedSystemValuesWidgetState
                                             ),
                                       ),
                                       Text(
-                                        'Control',
+                                        AppLocalizations.of(context)!.msgControl2,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -1429,7 +1432,7 @@ class _DecoySeedSystemValuesWidgetState
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Center',
+                                        AppLocalizations.of(context)!.msgCenter,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -1448,7 +1451,7 @@ class _DecoySeedSystemValuesWidgetState
                                             ),
                                       ),
                                       Text(
-                                        'by navigating to ',
+                                        AppLocalizations.of(context)!.msgByNavigatingTo2,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
@@ -1468,7 +1471,7 @@ class _DecoySeedSystemValuesWidgetState
                                             ),
                                       ),
                                       Text(
-                                        'Settings > Control Center',
+                                        AppLocalizations.of(context)!.msgSettingsControlCenter2,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -1495,7 +1498,7 @@ class _DecoySeedSystemValuesWidgetState
                         ),
                         FFButtonWidget(
                           onPressed: _saveAndGoHome,
-                          text: 'Save & Go Home',
+                          text: AppLocalizations.of(context)!.msgSaveGoHome,
                           options: FFButtonOptions(
                             width: double.infinity,
                             height: 50.0,

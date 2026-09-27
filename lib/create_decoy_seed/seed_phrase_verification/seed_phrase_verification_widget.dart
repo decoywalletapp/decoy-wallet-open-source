@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
@@ -204,7 +205,7 @@ class _SeedPhraseVerificationWidgetState
                                                                       8.0,
                                                                       12.0),
                                                           child: Text(
-                                                            'QUIZ TIME!',
+                                                            AppLocalizations.of(context)!.msgQuizTime,
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: FlutterFlowTheme
@@ -242,7 +243,7 @@ class _SeedPhraseVerificationWidgetState
                                                                       8.0,
                                                                       12.0),
                                                           child: Text(
-                                                            'QUIZ TIME!',
+                                                            AppLocalizations.of(context)!.msgQuizTime,
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: FlutterFlowTheme
@@ -348,7 +349,7 @@ class _SeedPhraseVerificationWidgetState
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        'Choose word ',
+                                                        AppLocalizations.of(context)!.msgChooseWord,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style:
@@ -1206,7 +1207,7 @@ class _SeedPhraseVerificationWidgetState
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 16.0, 0.0, 0.0),
                                         child: Text(
-                                          'NOT QUITE - TRY AGAIN',
+                                          AppLocalizations.of(context)!.msgNotQuiteTryAgain,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(

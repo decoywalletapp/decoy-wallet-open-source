@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import 'dart:convert';
 
 import '/auth/supabase_auth/auth_util.dart';
@@ -316,7 +317,7 @@ class _PhoneNumberVerificationWidgetState
                                         ],
                                       ),
                                       Text(
-                                        'Enter Verification Code',
+                                        AppLocalizations.of(context)!.msgEnterVerificationCode,
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .headlineMedium
@@ -334,7 +335,7 @@ class _PhoneNumberVerificationWidgetState
                                           children: [
                                             TextSpan(
                                               text:
-                                                  'We sent a 6-digit code to ',
+                                                  AppLocalizations.of(context)!.msgWeSentA6DigitCodeTo,
                                               style: TextStyle(),
                                             ),
                                             TextSpan(
@@ -352,7 +353,7 @@ class _PhoneNumberVerificationWidgetState
                                             ),
                                             TextSpan(
                                               text:
-                                                  '. Enter it below to verify your phone number.',
+                                                  AppLocalizations.of(context)!.msgEnterItBelowToVerifyYourPhoneNumber,
                                               style: TextStyle(),
                                             )
                                           ],
@@ -692,7 +693,7 @@ class _PhoneNumberVerificationWidgetState
                                                                               .showSnackBar(
                                                                             SnackBar(
                                                                               content: Text(
-                                                                                'ERROR #025 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                                AppLocalizations.of(context)!.msgError025PleaseScreenshotContactDecoySupport,
                                                                                 style: TextStyle(
                                                                                   color: FlutterFlowTheme.of(context).primaryText,
                                                                                 ),
@@ -970,7 +971,7 @@ class _PhoneNumberVerificationWidgetState
                                                     size: 20.0,
                                                   ),
                                                   Text(
-                                                    'Invalid code. Please try again.',
+                                                    AppLocalizations.of(context)!.msgInvalidCodePleaseTryAgain,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -1034,7 +1035,7 @@ class _PhoneNumberVerificationWidgetState
                                                               .center,
                                                       children: [
                                                         Text(
-                                                          'Verifying... Please Wait!',
+                                                          AppLocalizations.of(context)!.msgVerifyingPleaseWait,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -1076,7 +1077,7 @@ class _PhoneNumberVerificationWidgetState
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Didn\'t receive the code?',
+                                          AppLocalizations.of(context)!.msgDidnTReceiveTheCode,
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1199,7 +1200,7 @@ class _PhoneNumberVerificationWidgetState
                                                 safeSetState(() {});
                                               },
                                               child: Text(
-                                                'Resend Code',
+                                                AppLocalizations.of(context)!.msgResendCode,
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -1236,7 +1237,7 @@ class _PhoneNumberVerificationWidgetState
                                             children: [
                                               TextSpan(
                                                 text:
-                                                    'You can request a new code in ',
+                                                    AppLocalizations.of(context)!.msgYouCanRequestANewCodeIn,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -1277,7 +1278,7 @@ class _PhoneNumberVerificationWidgetState
                                                     ),
                                               ),
                                               TextSpan(
-                                                text: ' seconds',
+                                                text: AppLocalizations.of(context)!.msgSeconds,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium

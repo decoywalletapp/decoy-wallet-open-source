@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -273,7 +274,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                       AlignmentDirectional(
                                                           0.0, 0.0),
                                                   child: Text(
-                                                    'ENTER PIN',
+                                                    AppLocalizations.of(context)!.msgEnterPin,
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                             context)
@@ -836,7 +837,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                         0.0,
                                                                         20.0),
                                                             child: Text(
-                                                              'PLEASE ENTER AT LEAST FOUR DIGITS',
+                                                              AppLocalizations.of(context)!.msgPleaseEnterAtLeastFourDigits,
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -879,7 +880,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                         0.0,
                                                                         20.0),
                                                             child: Text(
-                                                              'INVALID PIN - TRY AGAIN',
+                                                              AppLocalizations.of(context)!.msgInvalidPinTryAgain,
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -1756,7 +1757,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                             .showSnackBar(
                                                           SnackBar(
                                                             content: Text(
-                                                              'Bitcoin payment confirming. Full protection activates after confirmation.',
+                                                              AppLocalizations.of(context)!.msgBitcoinPaymentConfirmingFullProtectionActivatesAfterConfirmation,
                                                               style: TextStyle(
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
@@ -1870,7 +1871,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                 .showSnackBar(
                                                               SnackBar(
                                                                 content: Text(
-                                                                  'Bitcoin payment confirming. Full protection activates after confirmation.',
+                                                                  AppLocalizations.of(context)!.msgBitcoinPaymentConfirmingFullProtectionActivatesAfterConfirmation,
                                                                   style:
                                                                       TextStyle(
                                                                     color: FlutterFlowTheme.of(
@@ -1971,7 +1972,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         .showSnackBar(
                                                       SnackBar(
                                                         content: Text(
-                                                          'ERROR #006 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                          AppLocalizations.of(context)!.msgError006PleaseScreenshotContactDecoySupport,
                                                           style: TextStyle(
                                                             color: FlutterFlowTheme
                                                                     .of(context)
@@ -2009,7 +2010,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
                                                 safeSetState(() {});
                                               },
-                                              text: 'Enter',
+                                              text: AppLocalizations.of(context)!.msgEnter,
                                               options: FFButtonOptions(
                                                 width: 400.0,
                                                 height: 50.0,

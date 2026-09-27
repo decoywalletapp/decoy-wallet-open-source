@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -61,7 +62,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
     if (isiOS || isAndroid) {
       _model.scannedQR = await FlutterBarcodeScanner.scanBarcode(
         '#C62828', // scanning line color
-        'Cancel', // cancel button text
+        AppLocalizations.of(context)!.msgCancel, // cancel button text
         true, // whether to show the torch (camera LED) toggle icon
         ScanMode.QR,
       );
@@ -152,7 +153,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
     return Column(
       children: [
         Text(
-          'Send Bitcoin',
+          AppLocalizations.of(context)!.msgSendBitcoin,
           textAlign: TextAlign.center,
           style: FlutterFlowTheme.of(context).headlineMedium.override(
                 fontFamily: 'InterTight',
@@ -164,7 +165,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
         ),
         const SizedBox(height: 7.0),
         Text(
-          'Scan or paste a recipient address',
+          AppLocalizations.of(context)!.msgScanOrPasteARecipientAddress,
           textAlign: TextAlign.center,
           style: FlutterFlowTheme.of(context).bodyMedium.override(
                 fontFamily: 'InterTight',
@@ -200,12 +201,12 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
                 _sectionLabel(
                   context,
                   icon: Icons.center_focus_strong_rounded,
-                  label: 'Recipient QR',
+                  label: AppLocalizations.of(context)!.msgRecipientQr,
                 ),
                 const Spacer(),
                 _statusPill(
                   context,
-                  label: 'Scan',
+                  label: AppLocalizations.of(context)!.msgScan,
                   orange: orange,
                 ),
               ],
@@ -276,7 +277,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
             ),
             const SizedBox(height: 12.0),
             Text(
-              'Tap to open QR scanner',
+              AppLocalizations.of(context)!.msgTapToOpenQrScanner,
               textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).bodyLarge.override(
                     fontFamily: 'InterTight',
@@ -288,7 +289,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
             ),
             const SizedBox(height: 4.0),
             Text(
-              'Bitcoin address or payment URI',
+              AppLocalizations.of(context)!.msgBitcoinAddressOrPaymentUri,
               textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'InterTight',
@@ -324,12 +325,12 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
               _sectionLabel(
                 context,
                 icon: Icons.edit_note_rounded,
-                label: 'Manual address',
+                label: AppLocalizations.of(context)!.msgManualAddress,
               ),
               const Spacer(),
               _statusPill(
                 context,
-                label: hasAddress ? 'Ready' : 'Paste',
+                label: hasAddress ? AppLocalizations.of(context)!.msgReady : AppLocalizations.of(context)!.msgPaste,
                 orange: hasAddress ? orange : _mutedText,
               ),
             ],
@@ -343,7 +344,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
             obscureText: false,
             onChanged: (_) => safeSetState(() {}),
             decoration: InputDecoration(
-              hintText: 'Paste or enter wallet address',
+              hintText: AppLocalizations.of(context)!.msgPasteOrEnterWalletAddress,
               hintStyle: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'InterTight',
                     color: _mutedText,
@@ -419,7 +420,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
 
         context.pushNamed(DuressSendBTCWidget.routeName);
       },
-      text: 'Send Funds',
+      text: AppLocalizations.of(context)!.msgSendFunds,
       options: FFButtonOptions(
         width: double.infinity,
         height: 58.0,

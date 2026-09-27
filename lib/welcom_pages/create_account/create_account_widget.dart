@@ -1,3 +1,5 @@
+import '/l10n/app_localizations.dart';
+import '/l10n/language_picker.dart';
 import '/backend/public_config.dart';
 import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -8,7 +10,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'create_account_model.dart';
 export 'create_account_model.dart';
 
@@ -87,6 +88,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const LanguagePickerButton(),
                               Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Container(
@@ -136,7 +138,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                           0.0,
                                         ),
                                         child: Text(
-                                          'Create an account',
+                                          AppLocalizations.of(context)!.msgCreateAnAccount,
                                           style: FlutterFlowTheme.of(context)
                                               .headlineMedium
                                               .override(
@@ -157,7 +159,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                 0.0,
                                               ),
                                               child: Text(
-                                                'Let\'s get started by filling out the form below.',
+                                                AppLocalizations.of(context)!.msgLetSGetStartedByFillingOutThe,
                                                 style:
                                                     FlutterFlowTheme.of(
                                                       context,
@@ -180,7 +182,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                 0.0,
                                               ),
                                               child: Text(
-                                                'PASSWORDS DO NOT MATCH',
+                                                AppLocalizations.of(context)!.msgPasswordsDoNotMatch,
                                                 style:
                                                     FlutterFlowTheme.of(
                                                       context,
@@ -303,7 +305,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                       TextInputAction.next,
                                                   obscureText: false,
                                                   decoration: InputDecoration(
-                                                    labelText: 'Email',
+                                                    labelText: AppLocalizations.of(context)!.msgEmail,
                                                     labelStyle:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -522,21 +524,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                   obscureText: !_model
                                                       .passwordCreateAccountVisibility,
                                                   decoration: InputDecoration(
-                                                    labelText: 'Password',
+                                                    labelText: AppLocalizations.of(context)!.msgPassword,
                                                     labelStyle:
                                                         FlutterFlowTheme.of(
                                                           context,
                                                         ).labelMedium.override(
-                                                          font: GoogleFonts.plusJakartaSans(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                      context,
-                                                                    )
-                                                                    .labelMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                          fontFamily: 'robot',
+                                                          useGoogleFonts: false,
                                                           color:
                                                               FlutterFlowTheme.of(
                                                                 context,
@@ -761,21 +755,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                       .passwordConfirmVisibility,
                                                   decoration: InputDecoration(
                                                     labelText:
-                                                        'Confirm Password',
+                                                        AppLocalizations.of(context)!.msgConfirmPassword,
                                                     labelStyle:
                                                         FlutterFlowTheme.of(
                                                           context,
                                                         ).labelMedium.override(
-                                                          font: GoogleFonts.plusJakartaSans(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                      context,
-                                                                    )
-                                                                    .labelMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                          fontFamily: 'robot',
+                                                          useGoogleFonts: false,
                                                           color:
                                                               FlutterFlowTheme.of(
                                                                 context,
@@ -938,7 +924,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                                 0.0,
                                                               ),
                                                           child: Text(
-                                                            'Password Must Be At Least 10 Characters',
+                                                            AppLocalizations.of(context)!.msgPasswordMustBeAtLeast10Characters,
                                                             style:
                                                                 FlutterFlowTheme.of(
                                                                   context,
@@ -974,7 +960,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                                 0.0,
                                                               ),
                                                           child: Text(
-                                                            'INVALID PASSWORD - MUST BE AT LEAST 10 CHARACTERS',
+                                                            AppLocalizations.of(context)!.msgInvalidPasswordMustBeAtLeast10Characters,
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style:
@@ -1011,7 +997,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                                 0.0,
                                                               ),
                                                           child: Text(
-                                                            'PASSWORDS DO NOT MATCH - TRY AGAIN',
+                                                            AppLocalizations.of(context)!.msgPasswordsDoNotMatchTryAgain,
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style:
@@ -1104,7 +1090,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
 
                                           safeSetState(() {});
                                         },
-                                        text: 'Create Account',
+                                        text: AppLocalizations.of(context)!.msgCreateAccount,
                                         options: FFButtonOptions(
                                           width: 370.0,
                                           height: 50.0,
@@ -1127,13 +1113,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               FlutterFlowTheme.of(
                                                 context,
                                               ).titleSmall.override(
-                                                font: GoogleFonts.heebo(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                        context,
-                                                      ).titleSmall.fontStyle,
-                                                ),
+                                                fontFamily: 'robot',
+                                                useGoogleFonts: false,
                                                 color: Colors.white,
                                                 fontSize: 18.0,
                                                 letterSpacing: 0.0,
@@ -1195,25 +1176,16 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                       children: [
                                                         TextSpan(
                                                           text:
-                                                              'Already have an account? ',
+                                                              AppLocalizations.of(context)!.msgAlreadyHaveAnAccount,
                                                           style: TextStyle(
                                                             color: Colors.black,
                                                           ),
                                                         ),
                                                         TextSpan(
-                                                          text: 'Sign In here',
+                                                          text: AppLocalizations.of(context)!.msgSignInHere,
                                                           style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                            font: GoogleFonts.plusJakartaSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                        context,
-                                                                      )
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
+                                                            fontFamily: 'robot',
+                                                            useGoogleFonts: false,
                                                             color: Color(
                                                               0xFFFA5E00,
                                                             ),

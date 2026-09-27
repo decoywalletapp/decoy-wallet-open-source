@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -128,7 +129,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Enable Push\nNotifications',
+                              AppLocalizations.of(context)!.msgEnablePushNotifications,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
@@ -140,7 +141,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Text(
-                                'Decoy Wallet uses notifications for subscription alerts directly to your device',
+                                AppLocalizations.of(context)!.msgDecoyWalletUsesNotificationsForSubscriptionAlertsDirectly,
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
@@ -205,7 +206,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                       }
                                     },
                                     title: Text(
-                                      'Enable Push Notifications',
+                                      AppLocalizations.of(context)!.msgEnablePushNotifications2,
                                       style: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .override(
@@ -249,7 +250,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Change these settings anytime in the ',
+                                  AppLocalizations.of(context)!.msgChangeTheseSettingsAnytimeInThe,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -267,7 +268,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                       ),
                                 ),
                                 Text(
-                                  'Control',
+                                  AppLocalizations.of(context)!.msgControl2,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -293,7 +294,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Center',
+                                  AppLocalizations.of(context)!.msgCenter,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -310,7 +311,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                       ),
                                 ),
                                 Text(
-                                  'by navigating to ',
+                                  AppLocalizations.of(context)!.msgByNavigatingTo2,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -328,7 +329,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
                                       ),
                                 ),
                                 Text(
-                                  'Settings > Control Center',
+                                  AppLocalizations.of(context)!.msgSettingsControlCenter2,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -418,7 +419,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
 
                               safeSetState(() {});
                             },
-                            text: 'Continue',
+                            text: AppLocalizations.of(context)!.msgContinue,
                             options: FFButtonOptions(
                               width: 400.0,
                               height: 50.0,
@@ -502,7 +503,7 @@ class _EnableNotificationsWidgetState extends State<EnableNotificationsWidget> {
 
                             safeSetState(() {});
                           },
-                          text: 'Skip for Now',
+                          text: AppLocalizations.of(context)!.msgSkipForNow,
                           options: FFButtonOptions(
                             width: 400.0,
                             height: 50.0,

@@ -43,10 +43,6 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
 
   @override
   void dispose() {
-    emailAddressFocusNode?.dispose();
-
-    passwordCreateAccountFocusNode?.dispose();
-
-    passwordConfirmFocusNode?.dispose();
+    // Autocomplete owns the focus nodes supplied by fieldViewBuilder.
   }
 }

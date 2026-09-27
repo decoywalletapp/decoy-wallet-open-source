@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -97,18 +98,18 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
     return true;
   }
 
-  String get _seedMonitorSectionTitle => 'Decoy Keys Triggers';
+  String get _seedMonitorSectionTitle => AppLocalizations.of(context)!.msgDecoyKeysTriggers;
 
   IconData get _seedMonitorIcon => Icons.key;
 
-  String get _seedMonitorTileTitle => 'Wallet Activity Monitor';
+  String get _seedMonitorTileTitle => AppLocalizations.of(context)!.msgWalletActivityMonitor;
 
   String get _seedMonitorTileSubtitle =>
-      'ARM TO ACTIVELY MONITOR OUTBOUND TRANSACTIONS';
+      AppLocalizations.of(context)!.msgArmToActivelyMonitorOutboundTransactions;
 
-  String get _seedMonitorOnStatus => 'ACTIVATED';
+  String get _seedMonitorOnStatus => AppLocalizations.of(context)!.msgActivated;
 
-  String get _seedMonitorOffStatus => 'DEACTIVATED';
+  String get _seedMonitorOffStatus => AppLocalizations.of(context)!.msgDeactivated;
 
   @override
   void initState() {
@@ -263,7 +264,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 12.0, 8.0, 12.0),
                                     child: Text(
-                                      'Control Center',
+                                      AppLocalizations.of(context)!.msgControlCenter,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -285,7 +286,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 12.0, 8.0, 12.0),
                                     child: Text(
-                                      'Control Center',
+                                      AppLocalizations.of(context)!.msgControlCenter,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -307,7 +308,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 12.0, 8.0, 12.0),
                                     child: Text(
-                                      'Control Center',
+                                      AppLocalizations.of(context)!.msgControlCenter,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -329,7 +330,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 12.0, 8.0, 12.0),
                                     child: Text(
-                                      'Control Center',
+                                      AppLocalizations.of(context)!.msgControlCenter,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -394,7 +395,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
                                         child: Text(
-                                          'Decoy PIN Triggers',
+                                          AppLocalizations.of(context)!.msgDecoyPinTriggers,
                                           style: FlutterFlowTheme.of(context)
                                               .titleMedium
                                               .override(
@@ -450,7 +451,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               false,
                                           onChanged: null,
                                           title: Text(
-                                            '911 Trigger',
+                                            AppLocalizations.of(context)!.msg911Trigger,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -461,7 +462,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 ),
                                           ),
                                           subtitle: Text(
-                                            'COMING SOON !!!',
+                                            AppLocalizations.of(context)!.msgComingSoon,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
@@ -506,7 +507,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
-                                                  'Switch Value:',
+                                                  AppLocalizations.of(context)!.msgSwitchValue,
                                                   style:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -542,7 +543,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'ENABLE',
+                                                          AppLocalizations.of(context)!.msgEnable,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -574,7 +575,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'DISABLE',
+                                                          AppLocalizations.of(context)!.msgDisable,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -619,7 +620,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                       AlignmentDirectional(
                                                           0.0, 0.0),
                                                   child: Text(
-                                                    'Trigger Status:',
+                                                    AppLocalizations.of(context)!.msgTriggerStatus,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -655,7 +656,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'ACTIVATED',
+                                                            AppLocalizations.of(context)!.msgActivated,
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium
@@ -688,7 +689,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'DEACTIVATED',
+                                                            AppLocalizations.of(context)!.msgDeactivated,
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium
@@ -745,7 +746,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                       newValue);
                                                 },
                                           title: Text(
-                                            'Emergency Contacts Trigger',
+                                            AppLocalizations.of(context)!.msgEmergencyContactsTrigger,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -756,7 +757,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 ),
                                           ),
                                           subtitle: Text(
-                                            'Toggle ON to enable DECOY PIN to contact emergency contacts',
+                                            AppLocalizations.of(context)!.msgToggleOnToEnableDecoyPinToContact,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodySmall
                                                 .override(
@@ -800,7 +801,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
-                                                  'Switch Value:',
+                                                  AppLocalizations.of(context)!.msgSwitchValue,
                                                   style:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -836,7 +837,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'ENABLE',
+                                                          AppLocalizations.of(context)!.msgEnable,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -868,7 +869,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'DISABLE',
+                                                          AppLocalizations.of(context)!.msgDisable,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -913,7 +914,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                       AlignmentDirectional(
                                                           0.0, 0.0),
                                                   child: Text(
-                                                    'System Status:',
+                                                    AppLocalizations.of(context)!.msgSystemStatus,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -949,7 +950,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'ACTIVATED',
+                                                            AppLocalizations.of(context)!.msgActivated,
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium
@@ -982,7 +983,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'DEACTIVATED',
+                                                            AppLocalizations.of(context)!.msgDeactivated,
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium
@@ -1163,7 +1164,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               alignment: AlignmentDirectional(
                                                   0.0, 0.0),
                                               child: Text(
-                                                'Switch Value:',
+                                                AppLocalizations.of(context)!.msgSwitchValue,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -1198,7 +1199,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'ENABLE',
+                                                        AppLocalizations.of(context)!.msgEnable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -1232,7 +1233,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'DISABLE',
+                                                        AppLocalizations.of(context)!.msgDisable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -1278,7 +1279,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
-                                                  'System Status:',
+                                                  AppLocalizations.of(context)!.msgSystemStatus,
                                                   style:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -1386,7 +1387,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                             DecoyKeysAdvancedWidget.routeName,
                                           );
                                         },
-                                        text: 'Advanced',
+                                        text: AppLocalizations.of(context)!.msgAdvanced,
                                         options: FFButtonOptions(
                                           width: 180.0,
                                           height: 42.0,
@@ -1451,7 +1452,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     Align(
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Text(
-                                        'Biometric Verification',
+                                        AppLocalizations.of(context)!.msgBiometricVerification,
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
@@ -1513,7 +1514,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         newValue);
                                               },
                                         title: Text(
-                                          'Biometric Authentication',
+                                          AppLocalizations.of(context)!.msgBiometricAuthentication,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -1524,7 +1525,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               ),
                                         ),
                                         subtitle: Text(
-                                          'Use fingerprint or face recognition for secure access',
+                                          AppLocalizations.of(context)!.msgUseFingerprintOrFaceRecognitionForSecureAccess,
                                           style: FlutterFlowTheme.of(context)
                                               .bodySmall
                                               .override(
@@ -1566,7 +1567,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               alignment: AlignmentDirectional(
                                                   0.0, 0.0),
                                               child: Text(
-                                                'Switch Value:',
+                                                AppLocalizations.of(context)!.msgSwitchValue,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -1601,7 +1602,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'ENABLE',
+                                                        AppLocalizations.of(context)!.msgEnable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -1635,7 +1636,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'DISABLE',
+                                                        AppLocalizations.of(context)!.msgDisable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -1681,7 +1682,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
-                                                  'System Status:',
+                                                  AppLocalizations.of(context)!.msgSystemStatus,
                                                   style:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -1717,7 +1718,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'ACTIVATED',
+                                                          AppLocalizations.of(context)!.msgActivated,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -1749,7 +1750,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'DEACTIVATED',
+                                                          AppLocalizations.of(context)!.msgDeactivated,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -1811,7 +1812,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Currently Disabled in Device Settings !!!',
+                                                      AppLocalizations.of(context)!.msgCurrentlyDisabledInDeviceSettings,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -1851,7 +1852,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     await actions
                                                         .openAppSettings();
                                                   },
-                                                  text: 'Open Device Settings',
+                                                  text: AppLocalizations.of(context)!.msgOpenDeviceSettings,
                                                   options: FFButtonOptions(
                                                     height: 40.0,
                                                     padding:
@@ -1937,7 +1938,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     Align(
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Text(
-                                        'Push Notifications',
+                                        AppLocalizations.of(context)!.msgPushNotifications,
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
@@ -1999,7 +2000,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         newValue);
                                               },
                                         title: Text(
-                                          'Enable Push Notifications',
+                                          AppLocalizations.of(context)!.msgEnablePushNotifications2,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -2010,7 +2011,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               ),
                                         ),
                                         subtitle: Text(
-                                          'Allow subscription alerts directly to your device',
+                                          AppLocalizations.of(context)!.msgAllowSubscriptionAlertsDirectlyToYourDevice,
                                           style: FlutterFlowTheme.of(context)
                                               .bodySmall
                                               .override(
@@ -2052,7 +2053,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               alignment: AlignmentDirectional(
                                                   0.0, 0.0),
                                               child: Text(
-                                                'Switch Value:',
+                                                AppLocalizations.of(context)!.msgSwitchValue,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -2087,7 +2088,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'ENABLE',
+                                                        AppLocalizations.of(context)!.msgEnable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2121,7 +2122,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'DISABLE',
+                                                        AppLocalizations.of(context)!.msgDisable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2167,7 +2168,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
-                                                  'System Status:',
+                                                  AppLocalizations.of(context)!.msgSystemStatus,
                                                   style:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -2203,7 +2204,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'ACTIVATED',
+                                                          AppLocalizations.of(context)!.msgActivated,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -2235,7 +2236,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'DEACTIVATED',
+                                                          AppLocalizations.of(context)!.msgDeactivated,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -2297,7 +2298,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Currently Disabled in Device Settings !!!',
+                                                      AppLocalizations.of(context)!.msgCurrentlyDisabledInDeviceSettings,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -2338,7 +2339,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     await actions
                                                         .openAppSettings();
                                                   },
-                                                  text: 'Open Device Settings',
+                                                  text: AppLocalizations.of(context)!.msgOpenDeviceSettings,
                                                   options: FFButtonOptions(
                                                     height: 40.0,
                                                     padding:
@@ -2424,7 +2425,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     Align(
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Text(
-                                        'Location Services',
+                                        AppLocalizations.of(context)!.msgLocationServices,
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
@@ -2491,7 +2492,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     newValue);
                                               },
                                         title: Text(
-                                          'Enable Current Location',
+                                          AppLocalizations.of(context)!.msgEnableCurrentLocation,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -2508,7 +2509,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               ),
                                         ),
                                         subtitle: Text(
-                                          'Use your location to support emergency alerts',
+                                          AppLocalizations.of(context)!.msgUseYourLocationToSupportEmergencyAlerts,
                                           style: FlutterFlowTheme.of(context)
                                               .bodySmall
                                               .override(
@@ -2550,7 +2551,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                               alignment: AlignmentDirectional(
                                                   0.0, 0.0),
                                               child: Text(
-                                                'Switch Value:',
+                                                AppLocalizations.of(context)!.msgSwitchValue,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -2585,7 +2586,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'ENABLE',
+                                                        AppLocalizations.of(context)!.msgEnable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2619,7 +2620,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'DISABLE',
+                                                        AppLocalizations.of(context)!.msgDisable,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -2665,7 +2666,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
-                                                  'System Status:',
+                                                  AppLocalizations.of(context)!.msgSystemStatus,
                                                   style:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -2701,7 +2702,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'ACTIVATED',
+                                                          AppLocalizations.of(context)!.msgActivated,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -2733,7 +2734,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'DEACTIVATED',
+                                                          AppLocalizations.of(context)!.msgDeactivated,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -2795,7 +2796,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Currently Disabled in Device Settings !!!',
+                                                      AppLocalizations.of(context)!.msgCurrentlyDisabledInDeviceSettings,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -2834,7 +2835,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                     await actions
                                                         .openAppSettings();
                                                   },
-                                                  text: 'Open Device Settings',
+                                                  text: AppLocalizations.of(context)!.msgOpenDeviceSettings,
                                                   options: FFButtonOptions(
                                                     height: 40.0,
                                                     padding:
@@ -3023,7 +3024,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                           await _localAuth
                                                               .authenticate(
                                                                   localizedReason:
-                                                                      'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                                                      AppLocalizations.of(context)!.msgPleaseAuthenticateToEnableBiometricUnlockForDecoy);
                                                     } on PlatformException {
                                                       _model.settingsBioResult =
                                                           false;
@@ -3116,7 +3117,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                                         .showSnackBar(
                                                       SnackBar(
                                                         content: Text(
-                                                          'ERROR #021 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                          AppLocalizations.of(context)!.msgError021PleaseScreenshotContactDecoySupport,
                                                           style: TextStyle(
                                                             color: FlutterFlowTheme
                                                                     .of(context)
@@ -3289,7 +3290,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
 
                                             safeSetState(() {});
                                           },
-                                    text: 'Save & Exit',
+                                    text: AppLocalizations.of(context)!.msgSaveExit,
                                     options: FFButtonOptions(
                                       width: 400.0,
                                       height: 50.0,
@@ -3342,7 +3343,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                           SubscriptionOptionsWidget.routeName);
                                     },
                                     text:
-                                        'Subscription Required to Change Values',
+                                        AppLocalizations.of(context)!.msgSubscriptionRequiredToChangeValues,
                                     options: FFButtonOptions(
                                       width: double.infinity,
                                       height: 50.0,

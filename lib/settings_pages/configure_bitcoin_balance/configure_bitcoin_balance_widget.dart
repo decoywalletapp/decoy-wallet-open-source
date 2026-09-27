@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -59,7 +60,7 @@ class _ConfigureBitcoinBalanceWidgetState
   String get _usdPreview {
     final amount = _enteredBtc;
     if (amount == null || _currentPrice <= 0.0)
-      return 'USD estimate unavailable';
+      return AppLocalizations.of(context)!.msgUsdEstimateUnavailable;
     return NumberFormat.currency(symbol: r'$', decimalDigits: 2)
         .format(amount * _currentPrice);
   }
@@ -108,9 +109,9 @@ class _ConfigureBitcoinBalanceWidgetState
 
   String? _validate(String? rawValue) {
     final value = double.tryParse((rawValue ?? '').trim().replaceAll(',', ''));
-    if (value == null || !value.isFinite) return 'Enter a valid BTC amount.';
-    if (value < 0.0) return 'Balance cannot be negative.';
-    if (value > _maximumBitcoin) return 'Enter 21,000,000 BTC or less.';
+    if (value == null || !value.isFinite) return AppLocalizations.of(context)!.msgEnterAValidBtcAmount;
+    if (value < 0.0) return AppLocalizations.of(context)!.msgBalanceCannotBeNegative;
+    if (value > _maximumBitcoin) return AppLocalizations.of(context)!.msgEnter21000000BtcOrLess;
     return null;
   }
 
@@ -130,8 +131,8 @@ class _ConfigureBitcoinBalanceWidgetState
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
-          content: Text('Bitcoin balance updated.'),
+         SnackBar(
+          content: Text(AppLocalizations.of(context)!.msgBitcoinBalanceUpdated),
           duration: Duration(seconds: 2),
         ),
       );
@@ -210,10 +211,10 @@ class _ConfigureBitcoinBalanceWidgetState
                                 fontWeight: FontWeight.w700,
                               ),
                               decoration: InputDecoration(
-                                labelText: 'Exact Bitcoin amount',
+                                labelText: AppLocalizations.of(context)!.msgExactBitcoinAmount,
                                 prefixText: 'BTC  ',
                                 helperText:
-                                    'Enter any value from 0 to 21,000,000 BTC',
+                                    AppLocalizations.of(context)!.msgEnterAnyValueFrom0To21000,
                                 filled: true,
                                 fillColor: Colors.white,
                                 contentPadding: const EdgeInsets.symmetric(
@@ -249,8 +250,8 @@ class _ConfigureBitcoinBalanceWidgetState
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                               ),
-                              child: const Text(
-                                'Set',
+                              child:  Text(
+                                AppLocalizations.of(context)!.msgSet,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 19.0,
@@ -301,12 +302,12 @@ class _ConfigureBitcoinBalanceWidgetState
                 ),
               ),
               const SizedBox(width: 11.0),
-              const Expanded(
+               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Adjust balance',
+                      AppLocalizations.of(context)!.msgAdjustBalance,
                       style: TextStyle(
                         color: Color(0xFF15161E),
                         fontSize: 16.0,
@@ -315,7 +316,7 @@ class _ConfigureBitcoinBalanceWidgetState
                     ),
                     SizedBox(height: 2.0),
                     Text(
-                      'Slide for a quick estimate, or enter an exact amount below.',
+                      AppLocalizations.of(context)!.msgSlideForAQuickEstimateOrEnterAn,
                       style: TextStyle(
                         color: Color(0xFF6D737C),
                         fontSize: 12.0,
@@ -343,13 +344,13 @@ class _ConfigureBitcoinBalanceWidgetState
               onChanged: _setFromSlider,
             ),
           ),
-          const Padding(
+           Padding(
             padding: EdgeInsets.symmetric(horizontal: 3.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('0 BTC', style: _SliderLabelStyle.textStyle),
-                Text('10K BTC', style: _SliderLabelStyle.textStyle),
+                Text(AppLocalizations.of(context)!.msg0Btc, style: _SliderLabelStyle.textStyle),
+                Text(AppLocalizations.of(context)!.msg10kBtc, style: _SliderLabelStyle.textStyle),
               ],
             ),
           ),
@@ -380,7 +381,7 @@ class _ConfigureBitcoinBalanceWidgetState
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 12.0),
             child: Text(
-              'Bitcoin Balance',
+              AppLocalizations.of(context)!.msgBitcoinBalance,
               textAlign: TextAlign.center,
               style: titleStyle,
             ),
@@ -430,8 +431,8 @@ class _ConfigureBitcoinBalanceWidgetState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'DECOY WALLET BALANCE',
+           Text(
+            AppLocalizations.of(context)!.msgDecoyWalletBalance,
             style: TextStyle(
               color: Color(0xFF9BA1AA),
               fontSize: 11.0,

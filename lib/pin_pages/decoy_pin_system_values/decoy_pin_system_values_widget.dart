@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -221,7 +222,7 @@ class _DecoyPinSystemValuesWidgetState
                                                           AlignmentDirectional(
                                                               0.0, 0.0),
                                                       child: Text(
-                                                        'Decoy PIN Triggers',
+                                                        AppLocalizations.of(context)!.msgDecoyPinTriggers,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -251,7 +252,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                 .decoyPin911Enabled,
                                                         onChanged: null,
                                                         title: Text(
-                                                          '911 Trigger',
+                                                          AppLocalizations.of(context)!.msg911Trigger,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -272,7 +273,7 @@ class _DecoyPinSystemValuesWidgetState
                                                               ),
                                                         ),
                                                         subtitle: Text(
-                                                          'COMING SOON !!!',
+                                                          AppLocalizations.of(context)!.msgComingSoon,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodySmall
@@ -354,7 +355,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                             0.0),
                                                                         child:
                                                                             Text(
-                                                                          'Switch Value:',
+                                                                          AppLocalizations.of(context)!.msgSwitchValue,
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
@@ -381,7 +382,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                               Align(
                                                                                 alignment: AlignmentDirectional(0.0, 0.0),
                                                                                 child: Text(
-                                                                                  'ENABLE',
+                                                                                  AppLocalizations.of(context)!.msgEnable,
                                                                                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                         fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                         color: FlutterFlowTheme.of(context).primary,
@@ -397,7 +398,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                               Align(
                                                                                 alignment: AlignmentDirectional(0.0, 0.0),
                                                                                 child: Text(
-                                                                                  'DISABLE',
+                                                                                  AppLocalizations.of(context)!.msgDisable,
                                                                                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                         fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                         color: FlutterFlowTheme.of(context).primary,
@@ -434,7 +435,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                               0.0),
                                                                           child:
                                                                               Text(
-                                                                            'System Status:',
+                                                                            AppLocalizations.of(context)!.msgSystemStatus,
                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                   fontSize: 16.0,
@@ -458,7 +459,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                                 Align(
                                                                                   alignment: AlignmentDirectional(0.0, 0.0),
                                                                                   child: Text(
-                                                                                    'ACTIVATED',
+                                                                                    AppLocalizations.of(context)!.msgActivated,
                                                                                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                           fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                           color: FlutterFlowTheme.of(context).success,
@@ -473,7 +474,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                                 Align(
                                                                                   alignment: AlignmentDirectional(0.0, 0.0),
                                                                                   child: Text(
-                                                                                    'DEACTIVATED',
+                                                                                    AppLocalizations.of(context)!.msgDeactivated,
                                                                                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                           fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                           color: FlutterFlowTheme.of(context).error,
@@ -524,7 +525,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                         newValue);
                                                               },
                                                         title: Text(
-                                                          'Emergency Contacts Trigger',
+                                                          AppLocalizations.of(context)!.msgEmergencyContactsTrigger,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -545,7 +546,7 @@ class _DecoyPinSystemValuesWidgetState
                                                               ),
                                                         ),
                                                         subtitle: Text(
-                                                          'Toggle ON to enable DECOY PIN to contact emergency contacts',
+                                                          AppLocalizations.of(context)!.msgToggleOnToEnableDecoyPinToContact,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodySmall
@@ -600,7 +601,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                   AlignmentDirectional(
                                                                       0.0, 0.0),
                                                               child: Text(
-                                                                'Switch Value:',
+                                                                AppLocalizations.of(context)!.msgSwitchValue,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -639,7 +640,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                               0.0),
                                                                       child:
                                                                           Text(
-                                                                        'ENABLE',
+                                                                        AppLocalizations.of(context)!.msgEnable,
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyMedium
                                                                             .override(
@@ -662,7 +663,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                               0.0),
                                                                       child:
                                                                           Text(
-                                                                        'DISABLE',
+                                                                        AppLocalizations.of(context)!.msgDisable,
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyMedium
                                                                             .override(
@@ -698,7 +699,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                         0.0,
                                                                         0.0),
                                                                 child: Text(
-                                                                  'System Status:',
+                                                                  AppLocalizations.of(context)!.msgSystemStatus,
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyMedium
@@ -734,7 +735,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                             0.0),
                                                                         child:
                                                                             Text(
-                                                                          'ACTIVATED',
+                                                                          AppLocalizations.of(context)!.msgActivated,
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
@@ -756,7 +757,7 @@ class _DecoyPinSystemValuesWidgetState
                                                                             0.0),
                                                                         child:
                                                                             Text(
-                                                                          'DEACTIVATED',
+                                                                          AppLocalizations.of(context)!.msgDeactivated,
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
@@ -799,7 +800,7 @@ class _DecoyPinSystemValuesWidgetState
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Change these settings anytime in the ',
+                                            AppLocalizations.of(context)!.msgChangeTheseSettingsAnytimeInThe,
                                             textAlign: TextAlign.center,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
@@ -821,7 +822,7 @@ class _DecoyPinSystemValuesWidgetState
                                                 ),
                                           ),
                                           Text(
-                                            ' Control',
+                                            AppLocalizations.of(context)!.msgControl,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -852,7 +853,7 @@ class _DecoyPinSystemValuesWidgetState
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Center ',
+                                            AppLocalizations.of(context)!.msgCenter2,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -873,7 +874,7 @@ class _DecoyPinSystemValuesWidgetState
                                                 ),
                                           ),
                                           Text(
-                                            ' by navigating to ',
+                                            AppLocalizations.of(context)!.msgByNavigatingTo,
                                             textAlign: TextAlign.center,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
@@ -895,7 +896,7 @@ class _DecoyPinSystemValuesWidgetState
                                                 ),
                                           ),
                                           Text(
-                                            ' Settings > Control Center',
+                                            AppLocalizations.of(context)!.msgSettingsControlCenter,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -970,7 +971,7 @@ class _DecoyPinSystemValuesWidgetState
 
                                     safeSetState(() {});
                                   },
-                                  text: 'Save & Go Home',
+                                  text: AppLocalizations.of(context)!.msgSaveGoHome,
                                   options: FFButtonOptions(
                                     width: double.infinity,
                                     height: 50.0,

@@ -1,3 +1,5 @@
+import '/l10n/app_localizations.dart';
+import '/l10n/language_picker.dart';
 import '/auth/base_auth_user_provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -8,7 +10,6 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'login_page_model.dart';
@@ -64,7 +65,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         if (_isBiometricSupported) {
           try {
             _model.loginBioResult = await _localAuth.authenticate(
-                localizedReason: 'Please authenticate to unlock your wallet');
+                localizedReason: AppLocalizations.of(context)!.msgPleaseAuthenticateToUnlockYourWallet);
           } on PlatformException {
             _model.loginBioResult = false;
           }
@@ -139,9 +140,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  const LanguagePickerButton(),
                                   Container(
                                     width: double.infinity,
-                                    height: 140.0,
+                                    constraints: const BoxConstraints(minHeight: 140.0),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.only(
@@ -161,7 +163,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0.0, 36.0, 0.0, 0.0),
                                             child: Text(
-                                              '₿itcoin Wallet',
+                                              AppLocalizations.of(context)!.msgItcoinWallet,
                                               textAlign: TextAlign.start,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -193,7 +195,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             alignment:
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: Text(
-                                              'Welcome Back',
+                                              AppLocalizations.of(context)!.msgWelcomeBack,
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .headlineLarge
@@ -209,7 +211,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             alignment:
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: Text(
-                                              'Let\'s get started by filling out the form below.',
+                                              AppLocalizations.of(context)!.msgLetSGetStartedByFillingOutThe,
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .labelMedium
@@ -239,7 +241,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                   TextInputAction.next,
                                               obscureText: false,
                                               decoration: InputDecoration(
-                                                labelText: 'Email',
+                                                labelText: AppLocalizations.of(context)!.msgEmail,
                                                 labelStyle:
                                                     FlutterFlowTheme.of(context)
                                                         .labelMedium
@@ -331,7 +333,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                               obscureText: !_model
                                                   .passwordLoginVisibility,
                                               decoration: InputDecoration(
-                                                labelText: 'Password',
+                                                labelText: AppLocalizations.of(context)!.msgPassword,
                                                 labelStyle:
                                                     FlutterFlowTheme.of(context)
                                                         .labelMedium
@@ -483,7 +485,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
                                               safeSetState(() {});
                                             },
-                                            text: 'Log in',
+                                            text: AppLocalizations.of(context)!.msgLogIn,
                                             options: FFButtonOptions(
                                               width: 370.0,
                                               height: 44.0,
@@ -498,15 +500,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .titleSmall
                                                       .override(
-                                                        font: GoogleFonts.heebo(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleSmall
-                                                                  .fontStyle,
-                                                        ),
+                                                        fontFamily: 'robot',
+                                                        useGoogleFonts: false,
                                                         color: Colors.white,
                                                         fontSize: 18.0,
                                                         letterSpacing: 0.0,
@@ -547,7 +542,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                       AlignmentDirectional(
                                                           0.0, 0.0),
                                                   child: Text(
-                                                    'INVALID LOGIN',
+                                                    AppLocalizations.of(context)!.msgInvalidLogin,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -596,28 +591,19 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                   children: [
                                                     TextSpan(
                                                       text:
-                                                          'Don\'t have an account? ',
+                                                          AppLocalizations.of(context)!.msgDonTHaveAnAccount,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: ' Sign Up here',
+                                                      text: AppLocalizations.of(context)!.msgSignUpHere,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
                                                           .override(
-                                                            font: GoogleFonts
-                                                                .plusJakartaSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
+                                                            fontFamily: 'robot',
+                                                            useGoogleFonts: false,
                                                             color: Color(
                                                                 0xFFFA5E00),
                                                             fontSize: 14.0,
@@ -675,22 +661,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                       style: TextStyle(),
                                                     ),
                                                     TextSpan(
-                                                      text: 'Forgot Password?',
+                                                      text: AppLocalizations.of(context)!.msgForgotPassword2,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
                                                           .override(
-                                                            font: GoogleFonts
-                                                                .plusJakartaSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
+                                                            fontFamily: 'robot',
+                                                            useGoogleFonts: false,
                                                             color: Color(
                                                                 0xFFFA5E00),
                                                             fontSize: 14.0,

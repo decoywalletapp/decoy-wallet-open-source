@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -291,7 +292,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                       -0.01,
                                                                       0.0),
                                                               child: Text(
-                                                                'Decoy Keys',
+                                                                AppLocalizations.of(context)!.msgDecoyKeys,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .titleMedium
@@ -325,7 +326,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             0.0,
                                                                             0.0),
                                                                 child: Text(
-                                                                  'Decoy Keys',
+                                                                  AppLocalizations.of(context)!.msgDecoyKeys,
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .titleMedium
@@ -528,7 +529,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                       -0.01,
                                                                       0.0),
                                                               child: Text(
-                                                                'Decoy PIN',
+                                                                AppLocalizations.of(context)!.msgDecoyPin,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center,
@@ -565,7 +566,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             0.0,
                                                                             0.0),
                                                                 child: Text(
-                                                                  'Decoy PIN',
+                                                                  AppLocalizations.of(context)!.msgDecoyPin,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -774,7 +775,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                         0.05,
                                                                         0.0),
                                                                 child: Text(
-                                                                  'Decoy Contacts',
+                                                                  AppLocalizations.of(context)!.msgDecoyContacts,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -801,7 +802,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                         -0.05,
                                                                         0.0),
                                                                 child: Text(
-                                                                  'Decoy Contacts',
+                                                                  AppLocalizations.of(context)!.msgDecoyContacts,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -922,7 +923,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 50.0, 0.0, 0.0),
                                         child: Text(
-                                          'TIME TO GET ACCESS!',
+                                          AppLocalizations.of(context)!.msgTimeToGetAccess,
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -945,7 +946,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 50.0, 0.0, 0.0),
                                         child: Text(
-                                          'TIME TO GET ACCESS!',
+                                          AppLocalizations.of(context)!.msgTimeToGetAccess,
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -991,7 +992,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               },
                                             );
                                           },
-                                          text: 'Unlock Decoy Wallet',
+                                          text: AppLocalizations.of(context)!.msgUnlockDecoyWallet,
                                           options: FFButtonOptions(
                                             width: 250.0,
                                             height: 50.0,

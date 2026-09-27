@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/legal/legal_document_view.dart';
@@ -65,7 +66,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               },
             ),
             title: Text(
-              'Privacy Policy',
+              AppLocalizations.of(context)!.msgPrivacyPolicy,
               style: FlutterFlowTheme.of(context).titleLarge.override(
                     fontFamily: 'InterTight',
                     fontSize: 24.0,

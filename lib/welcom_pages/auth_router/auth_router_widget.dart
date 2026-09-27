@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -82,7 +83,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'ERROR #024 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                AppLocalizations.of(context)!.msgError024PleaseScreenshotContactDecoySupport,
                 style: TextStyle(
                   color: FlutterFlowTheme.of(context).primaryText,
                 ),
@@ -234,7 +235,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 try {
                   _model.authRouterBioResult = await _localAuth.authenticate(
                       localizedReason:
-                          'Please authenticate to unlock your wallet');
+                          AppLocalizations.of(context)!.msgPleaseAuthenticateToUnlockYourWallet);
                 } on PlatformException {
                   _model.authRouterBioResult = false;
                 }
@@ -570,7 +571,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           child: Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Text(
-                              '₿itcoin Wallet',
+                              AppLocalizations.of(context)!.msgItcoinWallet,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .displayMedium

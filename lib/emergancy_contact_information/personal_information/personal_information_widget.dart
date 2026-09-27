@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import 'dart:convert';
 
 import '/auth/supabase_auth/auth_util.dart';
@@ -598,7 +599,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'First Name',
+                                        AppLocalizations.of(context)!.msgFirstName,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -626,7 +627,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         textInputAction: TextInputAction.next,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          hintText: 'Enter first name',
+                                          hintText: AppLocalizations.of(context)!.msgEnterFirstName,
                                           hintStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -733,7 +734,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Last Name',
+                                        AppLocalizations.of(context)!.msgLastName,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -828,7 +829,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                                 TextInputAction.next,
                                             obscureText: false,
                                             decoration: InputDecoration(
-                                              hintText: 'Enter last name',
+                                              hintText: AppLocalizations.of(context)!.msgEnterLastName,
                                               hintStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -942,7 +943,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Phone Number',
+                                        AppLocalizations.of(context)!.msgPhoneNumber,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -964,7 +965,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           hintText:
-                                              '+1 555 123 4567 or +33 6 12 34 56 78',
+                                              AppLocalizations.of(context)!.msg15551234567Or33612,
                                           hintStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -1058,7 +1059,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Email',
+                                        AppLocalizations.of(context)!.msgEmail,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -1078,7 +1079,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                         autofocus: false,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          hintText: 'Enter email',
+                                          hintText: AppLocalizations.of(context)!.msgEnterEmail,
                                           hintStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -1330,7 +1331,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                               .showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                'Email required!',
+                                                AppLocalizations.of(context)!.msgEmailRequired,
                                               ),
                                             ),
                                           );
@@ -1468,7 +1469,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'ERROR #011 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                          AppLocalizations.of(context)!.msgError011PleaseScreenshotContactDecoySupport,
                                           style: TextStyle(
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
@@ -1487,7 +1488,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
 
                                 safeSetState(() {});
                               },
-                              text: 'Save & Exit',
+                              text: AppLocalizations.of(context)!.msgSaveExit,
                               options: FFButtonOptions(
                                 width: 250.0,
                                 height: 56.0,

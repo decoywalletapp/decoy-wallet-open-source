@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/public_config.dart';
@@ -163,7 +164,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                 ],
                               ),
                               Text(
-                                'Add Your Phone Number',
+                                AppLocalizations.of(context)!.msgAddYourPhoneNumber,
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .headlineMedium
@@ -339,9 +340,9 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                       TextInputAction.done,
                                                   obscureText: false,
                                                   decoration: InputDecoration(
-                                                    labelText: 'Phone Number',
+                                                    labelText: AppLocalizations.of(context)!.msgPhoneNumber,
                                                     hintText:
-                                                        '(555) 123-4567 or +44 7700 900123',
+                                                        AppLocalizations.of(context)!.msg5551234567Or447700900123,
                                                     hintStyle:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -466,7 +467,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                           runSpacing: 2.0,
                                           children: [
                                             Text(
-                                              'By continuing, you agree to receive automated text messages from Decoy Wallet about your account, safety alerts, emergency contact status, subscription reminders, and wallet alerts.\nMessage frequency varies. Msg & data rates may apply.\nReply STOP to opt out. Reply HELP for help.',
+                                              AppLocalizations.of(context)!.msgByContinuingYouAgreeToReceiveAutomatedText,
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -489,7 +490,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                   ),
                                             ),
                                             Text(
-                                              'See ',
+                                              AppLocalizations.of(context)!.msgSee,
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -524,7 +525,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                 );
                                               },
                                               child: Text(
-                                                'SMS Terms',
+                                                AppLocalizations.of(context)!.msgSmsTerms,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -551,7 +552,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                               ),
                                             ),
                                             Text(
-                                              ' and ',
+                                              AppLocalizations.of(context)!.msgAnd,
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -586,7 +587,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                 );
                                               },
                                               child: Text(
-                                                'Privacy Policy',
+                                                AppLocalizations.of(context)!.msgPrivacyPolicy,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -659,7 +660,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'INVALID PHONE NUMBER',
+                                                      AppLocalizations.of(context)!.msgInvalidPhoneNumber,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -687,7 +688,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'ENTER VALID PHONE NUMBER',
+                                                      AppLocalizations.of(context)!.msgEnterValidPhoneNumber,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -715,7 +716,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'PHONE NUMBER ALREADY IN USE',
+                                                      AppLocalizations.of(context)!.msgPhoneNumberAlreadyInUse,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -892,7 +893,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
 
                                 safeSetState(() {});
                               },
-                              text: 'Save Phone Number',
+                              text: AppLocalizations.of(context)!.msgSavePhoneNumber,
                               options: FFButtonOptions(
                                 width: 400.0,
                                 height: 52.0,
@@ -947,7 +948,7 @@ class _PhoneNumberInputWidgetState extends State<PhoneNumberInputWidget> {
                                     context.mounted,
                                   );
                                 },
-                                text: 'Skip for Now',
+                                text: AppLocalizations.of(context)!.msgSkipForNow,
                                 options: FFButtonOptions(
                                   width: 400.0,
                                   height: 52.0,

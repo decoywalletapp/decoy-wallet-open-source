@@ -233,7 +233,7 @@ void main() {
     ).readAsStringSync();
 
     expect(source, contains('DecoyBuildProvenance.watchOnlyImportEnabled'));
-    expect(source, contains('enabled test builds only'));
+    expect(source, contains('msgWatchOnlyWalletImportIsAvailableInEnabled'));
     expect(source, contains('prepareWatchOnlyDecoyDraft'));
   });
 
@@ -243,8 +243,8 @@ void main() {
       'lib/settings_pages/control_center/control_center_widget.dart',
     ).readAsStringSync();
 
-    expect(source, contains("'Decoy Keys Triggers'"));
-    expect(source, contains("'Wallet Activity Monitor'"));
+    expect(source, contains('msgDecoyKeysTriggers'));
+    expect(source, contains('msgWalletActivityMonitor'));
     expect(source, contains('Icons.key'));
     expect(source, contains("'decoy_seed_armed'"));
     expect(source, contains('seedMonitorArmTileValue'));
@@ -266,7 +266,7 @@ void main() {
     expect(navSource, contains('DecoyKeysAdvancedWidget.routeName'));
     expect(source, contains('ManageDecoyMonitorsCall.call'));
     expect(source, contains("'bulkSave'"));
-    expect(source, contains('Save & Go Back'));
+    expect(source, contains('msgSaveGoBack'));
     expect(source, contains('changedMonitorIds'));
     expect(source, contains('deletedMonitorIds'));
     expect(source, contains('final savedActive'));
@@ -276,10 +276,13 @@ void main() {
       source,
       contains('onChanged: _model.isSaving || !_model.masterArmed'),
     );
-    expect(source, contains("savedActive ? 'ACTIVATED' : 'DEACTIVATED'"));
-    expect(source, contains('Most Recent Decoy Seed Generated'));
+    expect(source, matches(RegExp(
+      r'savedActive\s*\? AppLocalizations\.of\(context\)!\.msgActivated\s*'
+      r': AppLocalizations\.of\(context\)!\.msgDeactivated',
+    )));
+    expect(source, contains('msgMostRecentDecoySeedGenerated'));
     expect(source, contains('hasWatchPublicKey'));
-    expect(source, contains('Account-level seed wallet monitoring'));
+    expect(source, contains('msgAccountLevelSeedWalletMonitoring'));
     expect(source, contains('_wrapLongMonitorText'));
     expect(source, contains('softWrap: true'));
     expect(source, isNot(contains('TextOverflow.ellipsis')));
@@ -296,13 +299,13 @@ void main() {
       'decoy_seed_system_values_widget.dart',
     ).readAsStringSync();
 
-    expect(source, contains("'DECOY KEYS READY'"));
-    expect(source, contains("'Decoy Keys Monitor'"));
+    expect(source, contains('msgDecoyKeysReady'));
+    expect(source, contains('msgDecoyKeysMonitor'));
     expect(source, contains('String _setupMonitorTitle()'));
-    expect(source, contains("'Most Recent Decoy Seed Generated'"));
-    expect(source, contains("'Receive Address Monitor'"));
-    expect(source, contains("'XPub Monitor'"));
-    expect(source, contains("'ZPub Monitor'"));
+    expect(source, contains('msgMostRecentDecoySeedGenerated'));
+    expect(source, contains('msgReceiveAddressMonitor'));
+    expect(source, contains('msgXpubMonitor'));
+    expect(source, contains('msgZpubMonitor'));
     expect(source, contains('seedMonitorArmTileValue'));
     expect(source, isNot(contains("action: 'deactivateAll'")));
     expect(source, isNot(contains("'WATCH-ONLY READY'")));
@@ -322,16 +325,18 @@ void main() {
 
     expect(source, contains('final seedMonitorEnabled'));
     expect(source, contains('final savedSeedMonitorEnabled'));
-    expect(source, contains("seedMonitorEnabled ? 'ENABLE' : 'DISABLE'"));
+    expect(source, matches(RegExp(
+      r'seedMonitorEnabled\s*\? AppLocalizations\.of\(context\)!\.msgEnable\s*'
+      r': AppLocalizations\.of\(context\)!\.msgDisable',
+    )));
     expect(
         source,
         contains(
             'final savedSeedMonitorEnabled = _savedSetupMonitorEnabled()'));
-    expect(
-        source,
-        contains("savedSeedMonitorEnabled\n"
-            "                                          ? 'ACTIVATED'\n"
-            "                                          : 'DEACTIVATED'"));
+    expect(source, matches(RegExp(
+      r'savedSeedMonitorEnabled\s*\? AppLocalizations\.of\(context\)!\.msgActivated\s*'
+      r': AppLocalizations\.of\(context\)!\.msgDeactivated',
+    )));
   });
 
   test('watch-only and generated seed drafts preserve the saved arm state', () {
@@ -359,8 +364,8 @@ void main() {
     expect(source, contains("action: 'checkDuplicate'"));
     expect(source, contains("addressesList: addresses"));
     expect(source, contains("watchPublicKey: getJsonField"));
-    expect(source, contains("already being monitored"));
-    expect(source, contains("Monitor Existing Wallet"));
+    expect(source, contains('msgThisWalletOrReceiveAddressIsAlreadyBeing'));
+    expect(source, contains('msgMonitorExistingWallet'));
   });
 
   test('master switch pauses instead of clearing individual monitors', () {

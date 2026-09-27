@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -193,7 +194,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                                         0.0,
                                                                         12.0),
                                                                 child: Text(
-                                                                  'Acknowledgements',
+                                                                  AppLocalizations.of(context)!.msgAcknowledgements,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -230,7 +231,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                                         0.0,
                                                                         12.0),
                                                                 child: Text(
-                                                                  'Acknowledgements',
+                                                                  AppLocalizations.of(context)!.msgAcknowledgements,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -311,7 +312,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                     padding:
                                                         EdgeInsets.all(8.0),
                                                     child: Text(
-                                                      'Using a Decoy PIN will trigger emergency behavior inside Decoy Wallet, including notifying contacts or emergency services.\n\nThis feature is designed for real duress situations only.',
+                                                      AppLocalizations.of(context)!.msgUsingADecoyPinWillTriggerEmergencyBehavior,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style:
@@ -355,7 +356,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                                   0.0,
                                                                   10.0),
                                                       child: Text(
-                                                        'Important: To enable the Decoy PIN feature, you must confirm all of the acknowledgements below.\nIf you do not agree with every statement, do not continue.',
+                                                        AppLocalizations.of(context)!.msgImportantToEnableTheDecoyPinFeatureYou,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style:
@@ -439,7 +440,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    'I understand that entering my Decoy PIN will activate an emergency trigger and may notify my emergency contacts, third party services, or public safety agencies.',
+                                                    AppLocalizations.of(context)!.msgIUnderstandThatEnteringMyDecoyPinWill,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -522,7 +523,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    'I understand this feature is only for real emergency situations, and I am responsible for any false alerts, fees, or consequences caused by misuse.',
+                                                    AppLocalizations.of(context)!.msgIUnderstandThisFeatureIsOnlyForReal,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -605,7 +606,7 @@ class _DecoyPinAcknowledgementsWidgetState
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    'I understand Decoy PIN alerts rely on my device permissions, network connection, and saved alert settings, and I am responsible for keeping those settings ready and current.',
+                                                    AppLocalizations.of(context)!.msgIUnderstandDecoyPinAlertsRelyOnMy,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -684,7 +685,7 @@ class _DecoyPinAcknowledgementsWidgetState
 
                                                     safeSetState(() {});
                                                   },
-                                                  text: 'Continue',
+                                                  text: AppLocalizations.of(context)!.msgContinue,
                                                   options: FFButtonOptions(
                                                     width: 400.0,
                                                     height: 52.0,

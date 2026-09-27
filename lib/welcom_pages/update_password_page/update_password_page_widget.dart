@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -133,7 +134,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       16.0, 0.0, 0.0, 0.0),
                                   child: Text(
-                                    'Update Password',
+                                    AppLocalizations.of(context)!.msgUpdatePassword,
                                     style: FlutterFlowTheme.of(context)
                                         .headlineMedium
                                         .override(
@@ -172,7 +173,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                   ?.requestFocus();
                                             },
                                             decoration: InputDecoration(
-                                              labelText: 'Password',
+                                              labelText: AppLocalizations.of(context)!.msgPassword,
                                               labelStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .labelMedium
@@ -185,7 +186,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                     letterSpacing: 0.25,
                                                     fontWeight: FontWeight.w500,
                                                   ),
-                                              hintText: 'Enter new password',
+                                              hintText: AppLocalizations.of(context)!.msgEnterNewPassword,
                                               hintStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .labelMedium
@@ -301,7 +302,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                             obscureText: !_model
                                                 .confirmUpdatedPasswordVisibility,
                                             decoration: InputDecoration(
-                                              labelText: 'Confirm',
+                                              labelText: AppLocalizations.of(context)!.msgConfirm,
                                               labelStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .labelMedium
@@ -314,7 +315,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                     letterSpacing: 0.25,
                                                     fontWeight: FontWeight.w500,
                                                   ),
-                                              hintText: 'Confirm new password',
+                                              hintText: AppLocalizations.of(context)!.msgConfirmNewPassword,
                                               hintStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .labelMedium
@@ -471,7 +472,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
 
                                         safeSetState(() {});
                                       },
-                                      text: 'Update Password',
+                                      text: AppLocalizations.of(context)!.msgUpdatePassword,
                                       options: FFButtonOptions(
                                         width: double.infinity,
                                         height: 50.0,
@@ -550,7 +551,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'PASSWORDS DO NOT MATCH',
+                                                            AppLocalizations.of(context)!.msgPasswordsDoNotMatch,
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: FlutterFlowTheme
@@ -585,7 +586,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'INVALID PASSWORD - MUST BE AT LEAST 10 CHARACTERS',
+                                                            AppLocalizations.of(context)!.msgInvalidPasswordMustBeAtLeast10Characters,
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: FlutterFlowTheme
@@ -620,7 +621,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
                                                               AlignmentDirectional(
                                                                   0.0, 0.0),
                                                           child: Text(
-                                                            'PASSWORD UPDATE FAILED - TRY A DIFFERENT PASSWORD',
+                                                            AppLocalizations.of(context)!.msgPasswordUpdateFailedTryADifferentPassword,
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: FlutterFlowTheme

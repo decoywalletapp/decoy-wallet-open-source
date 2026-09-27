@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -128,7 +129,7 @@ class _ImportWatchOnlyWalletWidgetState
     final input = _model.watchOnlyInputTextController.text.trim();
     if (input.isEmpty) {
       _showImportError(
-        'Paste a zpub, xpub, or one or more Bitcoin receive addresses.',
+        AppLocalizations.of(context)!.msgPasteAZpubXpubOrOneOrMore,
       );
       return;
     }
@@ -143,14 +144,14 @@ class _ImportWatchOnlyWalletWidgetState
       try {
         if (await _draftAlreadyMonitored(_model.watchOnlyDraftOut)) {
           _showImportError(
-            'This wallet or receive address is already being monitored.',
+            AppLocalizations.of(context)!.msgThisWalletOrReceiveAddressIsAlreadyBeing,
           );
           safeSetState(() {});
           return;
         }
       } catch (_) {
         _showImportError(
-          'Unable to check whether this wallet is already monitored. Please try again.',
+          AppLocalizations.of(context)!.msgUnableToCheckWhetherThisWalletIsAlready,
         );
         safeSetState(() {});
         return;
@@ -201,7 +202,7 @@ class _ImportWatchOnlyWalletWidgetState
     _showImportError(
       error.isNotEmpty
           ? error
-          : 'Unable to validate this watch-only wallet data.',
+          : AppLocalizations.of(context)!.msgUnableToValidateThisWatchOnlyWalletData,
     );
     safeSetState(() {});
   }
@@ -226,7 +227,7 @@ class _ImportWatchOnlyWalletWidgetState
                     24.0 + bottomPadding,
                   ),
                   child: Text(
-                    'Watch-only wallet import is available in enabled test builds only.',
+                    AppLocalizations.of(context)!.msgWatchOnlyWalletImportIsAvailableInEnabled,
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyLarge.override(
                           fontFamily:
@@ -309,7 +310,7 @@ class _ImportWatchOnlyWalletWidgetState
                             ],
                           ),
                           Text(
-                            'Monitor Existing Wallet',
+                            AppLocalizations.of(context)!.msgMonitorExistingWallet,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium
@@ -319,7 +320,7 @@ class _ImportWatchOnlyWalletWidgetState
                                 ),
                           ),
                           Text(
-                            'Add a watch-only wallet key or specific receive addresses to monitor for outbound activity.',
+                            AppLocalizations.of(context)!.msgAddAWatchOnlyWalletKeyOrSpecific,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -346,7 +347,7 @@ class _ImportWatchOnlyWalletWidgetState
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 14.0, 16.0, 14.0),
                             child: Text(
-                              'Paste only watch-only public data. Never paste a seed phrase, private key, xprv, or zprv.',
+                              AppLocalizations.of(context)!.msgPasteOnlyWatchOnlyPublicDataNeverPaste,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -375,7 +376,7 @@ class _ImportWatchOnlyWalletWidgetState
                             minLines: 5,
                             maxLines: 8,
                             decoration: InputDecoration(
-                              labelText: 'zpub, xpub, or receive addresses',
+                              labelText: AppLocalizations.of(context)!.msgZpubXpubOrReceiveAddresses,
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -389,7 +390,7 @@ class _ImportWatchOnlyWalletWidgetState
                                             .labelMediumIsCustom,
                                   ),
                               alignLabelWithHint: true,
-                              hintText: 'zpub...\n\nor\nbc1q...\nbc1p...\n1...',
+                              hintText: AppLocalizations.of(context)!.msgZpubOrBc1qBc1p1,
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -450,7 +451,7 @@ class _ImportWatchOnlyWalletWidgetState
                                 .asValidator(context),
                           ),
                           Text(
-                            'Use xpub for legacy 1-address wallets, zpub for native SegWit bc1 wallets, or paste specific receive addresses.',
+                            AppLocalizations.of(context)!.msgUseXpubForLegacy1AddressWalletsZpub,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodySmall
@@ -466,7 +467,7 @@ class _ImportWatchOnlyWalletWidgetState
                           ),
                           FFButtonWidget(
                             onPressed: _prepareImportedWallet,
-                            text: 'Continue',
+                            text: AppLocalizations.of(context)!.msgContinue,
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 56.0,

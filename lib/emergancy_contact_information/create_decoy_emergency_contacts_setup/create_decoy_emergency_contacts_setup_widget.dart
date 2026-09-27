@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -257,7 +258,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                               alignment: AlignmentDirectional(
                                                   0.02, 0.0),
                                               child: Text(
-                                                'DECOY EMERGENCY',
+                                                AppLocalizations.of(context)!.msgDecoyEmergency,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -280,7 +281,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                               alignment: AlignmentDirectional(
                                                   -0.02, 0.0),
                                               child: Text(
-                                                'DECOY EMERGENCY',
+                                                AppLocalizations.of(context)!.msgDecoyEmergency,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -335,7 +336,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             alignment:
                                                 AlignmentDirectional(0.01, 0.0),
                                             child: Text(
-                                              'SETUP',
+                                              AppLocalizations.of(context)!.msgSetup,
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -357,7 +358,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                             alignment:
                                                 AlignmentDirectional(0.0, 0.0),
                                             child: Text(
-                                              'SETUP',
+                                              AppLocalizations.of(context)!.msgSetup,
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -514,7 +515,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           .max,
                                                                   children: [
                                                                     Text(
-                                                                      'Personal Contact',
+                                                                      AppLocalizations.of(context)!.msgPersonalContact,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .titleLarge
@@ -742,7 +743,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                             0.0),
                                                                         child:
                                                                             Text(
-                                                                          'Home Address',
+                                                                          AppLocalizations.of(context)!.msgHomeAddress,
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .titleLarge
                                                                               .override(
@@ -962,7 +963,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                           .max,
                                                                   children: [
                                                                     Text(
-                                                                      'Emergency Contacts',
+                                                                      AppLocalizations.of(context)!.msgEmergencyContacts,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .titleLarge
@@ -1097,7 +1098,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'PROGRESS',
+                                                          AppLocalizations.of(context)!.msgProgress,
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: FlutterFlowTheme
@@ -1285,7 +1286,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          ' % Complete',
+                                                          AppLocalizations.of(context)!.msgComplete,
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: FlutterFlowTheme

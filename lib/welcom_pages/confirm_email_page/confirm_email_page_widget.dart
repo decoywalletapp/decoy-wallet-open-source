@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -141,7 +142,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 32.0, 0.0, 0.0),
                               child: Text(
-                                'Check your email',
+                                AppLocalizations.of(context)!.msgCheckYourEmail,
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .headlineMedium
@@ -155,7 +156,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 16.0, 0.0, 0.0),
                               child: Text(
-                                'We\'ve sent a confirmation link to:',
+                                AppLocalizations.of(context)!.msgWeVeSentAConfirmationLinkTo,
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
@@ -220,7 +221,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 20.0, 0.0, 0.0),
                                 child: Text(
-                                  'Click the link in the email to confirm your account. If you don\'t see the email, check your spam folder.',
+                                  AppLocalizations.of(context)!.msgClickTheLinkInTheEmailToConfirm,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium

@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -158,7 +159,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       padding:
                                                           EdgeInsets.all(17.0),
                                                       child: Text(
-                                                        'Confirm new PIN',
+                                                        AppLocalizations.of(context)!.msgConfirmNewPin,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style:
@@ -749,7 +750,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'Enter the same 4 - 8 digits to confirm your access PIN',
+                                                                        AppLocalizations.of(context)!.msgEnterTheSame48DigitsToConfirm2,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -782,7 +783,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'MUST BE AT LEAST 4 DIGITS',
+                                                                        AppLocalizations.of(context)!.msgMustBeAtLeast4Digits,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -1564,7 +1565,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                               .showSnackBar(
                                                             SnackBar(
                                                               content: Text(
-                                                                'ERROR #015 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                AppLocalizations.of(context)!.msgError015PleaseScreenshotContactDecoySupport,
                                                                 style:
                                                                     TextStyle(
                                                                   color: FlutterFlowTheme.of(
@@ -1599,7 +1600,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                             .showSnackBar(
                                                           SnackBar(
                                                             content: Text(
-                                                              'ERROR #014 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                              AppLocalizations.of(context)!.msgError014PleaseScreenshotContactDecoySupport,
                                                               style: TextStyle(
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
@@ -1671,7 +1672,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
 
                                                   safeSetState(() {});
                                                 },
-                                                text: 'Confirm',
+                                                text: AppLocalizations.of(context)!.msgConfirm,
                                                 options: FFButtonOptions(
                                                   width: double.infinity,
                                                   height: 50.0,
@@ -1766,7 +1767,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       size: 80.0,
                                                     ),
                                                     Text(
-                                                      'Enter a new PIN to access your account',
+                                                      AppLocalizations.of(context)!.msgEnterANewPinToAccessYourAccount,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: FlutterFlowTheme
@@ -2354,7 +2355,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'Enter a 4 - 8 digit PIN to secure your account',
+                                                                        AppLocalizations.of(context)!.msgEnterA48DigitPinToSecure,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -2386,7 +2387,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'PLEASE ENTER AT LEAST 4 DIGITS',
+                                                                        AppLocalizations.of(context)!.msgPleaseEnterAtLeast4Digits,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -2418,7 +2419,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'CANNOT BE THE SAME AS DECOY PIN',
+                                                                        AppLocalizations.of(context)!.msgCannotBeTheSameAsDecoyPin,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -2450,7 +2451,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'PINS DID NOT MATCH - TRY AGAIN',
+                                                                        AppLocalizations.of(context)!.msgPinsDidNotMatchTryAgain,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -3218,7 +3219,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                             .showSnackBar(
                                                           SnackBar(
                                                             content: Text(
-                                                              'ERROR #013 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                              AppLocalizations.of(context)!.msgError013PleaseScreenshotContactDecoySupport,
                                                               style: TextStyle(
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
@@ -3256,7 +3257,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
 
                                                     safeSetState(() {});
                                                   },
-                                                  text: 'Continue',
+                                                  text: AppLocalizations.of(context)!.msgContinue,
                                                   options: FFButtonOptions(
                                                     width: double.infinity,
                                                     height: 50.0,
@@ -3339,7 +3340,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                       size: 80.0,
                                                     ),
                                                     Text(
-                                                      'Enter Current Account Entry PIN',
+                                                      AppLocalizations.of(context)!.msgEnterCurrentAccountEntryPin,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: FlutterFlowTheme
@@ -3928,7 +3929,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'PIN MUST BE AT LEAST 4 DIGITS',
+                                                                        AppLocalizations.of(context)!.msgPinMustBeAtLeast4Digits,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -3961,7 +3962,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'Enter the current PIN you use to access your account',
+                                                                        AppLocalizations.of(context)!.msgEnterTheCurrentPinYouUseToAccess,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -3994,7 +3995,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                                           20.0),
                                                                       child:
                                                                           Text(
-                                                                        'INCORRECT PIN',
+                                                                        AppLocalizations.of(context)!.msgIncorrectPin,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: FlutterFlowTheme.of(context)
@@ -4775,7 +4776,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
                                                             .showSnackBar(
                                                           SnackBar(
                                                             content: Text(
-                                                              'ERROR #012 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                              AppLocalizations.of(context)!.msgError012PleaseScreenshotContactDecoySupport,
                                                               style: TextStyle(
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
@@ -4816,7 +4817,7 @@ class _ChangePinWidgetState extends State<ChangePinWidget> {
 
                                                     safeSetState(() {});
                                                   },
-                                                  text: 'Confirm',
+                                                  text: AppLocalizations.of(context)!.msgConfirm,
                                                   options: FFButtonOptions(
                                                     width: double.infinity,
                                                     height: 50.0,

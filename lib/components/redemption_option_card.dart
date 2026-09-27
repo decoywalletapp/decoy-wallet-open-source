@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class RedemptionOptionCard extends StatelessWidget {
             const SizedBox(height: 10.0),
             FFButtonWidget(
               onPressed: onPressed,
-              text: 'Redeem Code',
+              text: AppLocalizations.of(context)!.msgRedeemCode,
               options: FFButtonOptions(
                 width: 250.0,
                 height: 50.0,
@@ -72,7 +73,7 @@ class RedemptionOptionCard extends StatelessWidget {
             ),
             const SizedBox(height: 10.0),
             Text(
-              'Enter your event code in your browser',
+              AppLocalizations.of(context)!.msgEnterYourEventCodeInYourBrowser,
               textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).bodySmall.override(
                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,

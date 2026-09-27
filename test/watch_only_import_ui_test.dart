@@ -1,4 +1,5 @@
 import 'package:decoy_wallet_app/build_provenance.dart';
+import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/create_decoy_seed/generate_decoy_seed_phrase/generate_decoy_seed_phrase_widget.dart';
 import 'package:decoy_wallet_app/create_decoy_seed/import_watch_only_wallet/import_watch_only_wallet_widget.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,11 @@ void main() {
         ),
       ]);
       addTearDown(router.dispose);
-      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpWidget(MaterialApp.router(
+        routerConfig: router,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+      ));
       await tester.pumpAndSettle();
       expect(find.text('Generate Seed Phrase'), findsOneWidget);
 

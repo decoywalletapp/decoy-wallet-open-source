@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -257,7 +258,7 @@ class _DuressConfirmTransactionSendWidgetState
         ),
         const SizedBox(height: 18.0),
         Text(
-          'Confirm Transaction',
+          AppLocalizations.of(context)!.msgConfirmTransaction,
           textAlign: TextAlign.center,
           style: FlutterFlowTheme.of(context).headlineMedium.override(
                 fontFamily: 'InterTight',
@@ -269,7 +270,7 @@ class _DuressConfirmTransactionSendWidgetState
         ),
         const SizedBox(height: 7.0),
         Text(
-          'Review details before broadcast',
+          AppLocalizations.of(context)!.msgReviewDetailsBeforeBroadcast,
           textAlign: TextAlign.center,
           style: FlutterFlowTheme.of(context).bodyMedium.override(
                 fontFamily: 'InterTight',
@@ -299,7 +300,7 @@ class _DuressConfirmTransactionSendWidgetState
       child: Column(
         children: [
           Text(
-            'Amount',
+            AppLocalizations.of(context)!.msgAmount,
             textAlign: TextAlign.center,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'InterTight',
@@ -345,7 +346,7 @@ class _DuressConfirmTransactionSendWidgetState
               Expanded(
                 child: _metricPill(
                   context,
-                  label: 'Network',
+                  label: AppLocalizations.of(context)!.msgNetwork,
                   value: 'Bitcoin',
                 ),
               ),
@@ -353,7 +354,7 @@ class _DuressConfirmTransactionSendWidgetState
               Expanded(
                 child: _metricPill(
                   context,
-                  label: 'Status',
+                  label: AppLocalizations.of(context)!.msgStatus,
                   value: 'Ready',
                   accent: orange,
                 ),
@@ -381,18 +382,18 @@ class _DuressConfirmTransactionSendWidgetState
       ),
       child: Column(
         children: [
-          _detailRow(context, label: 'Network Fee', value: '$feeText BTC'),
+          _detailRow(context, label: AppLocalizations.of(context)!.msgNetworkFee, value: '$feeText BTC'),
           _divider(),
           _detailRow(
             context,
-            label: 'Total Amount',
+            label: AppLocalizations.of(context)!.msgTotalAmount,
             value: '$totalText BTC',
             strong: true,
           ),
           _divider(),
           _detailRow(
             context,
-            label: 'To Address',
+            label: AppLocalizations.of(context)!.msgToAddress,
             value: functions.maskAddress(FFAppState().scannedAddress, 8, 8),
             accent: orange,
           ),
@@ -438,7 +439,7 @@ class _DuressConfirmTransactionSendWidgetState
             ),
           ),
           Text(
-            'Slide to Sign and Send',
+            AppLocalizations.of(context)!.msgSlideToSignAndSend,
             textAlign: TextAlign.center,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'InterTight',

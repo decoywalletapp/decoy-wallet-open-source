@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/public_config.dart';
 import '/backend/supabase/supabase.dart';
@@ -137,7 +138,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                                   .fromSTEB(
                                                       0.0, 12.0, 0.0, 12.0),
                                               child: Text(
-                                                'Agreements',
+                                                AppLocalizations.of(context)!.msgAgreements,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -165,7 +166,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                                   .fromSTEB(
                                                       0.0, 12.0, 0.0, 12.0),
                                               child: Text(
-                                                'Agreements',
+                                                AppLocalizations.of(context)!.msgAgreements,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -250,7 +251,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                           _model.agreementPageIndex = 0;
                                           safeSetState(() {});
                                         },
-                                        text: 'Terms',
+                                        text: AppLocalizations.of(context)!.msgTerms,
                                         options: FFButtonOptions(
                                           width: 140.0,
                                           height: 40.0,
@@ -314,7 +315,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                           _model.agreementPageIndex = 1;
                                           safeSetState(() {});
                                         },
-                                        text: 'Privacy',
+                                        text: AppLocalizations.of(context)!.msgPrivacy,
                                         options: FFButtonOptions(
                                           width: 140.0,
                                           height: 40.0,
@@ -392,7 +393,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Terms of Service',
+                                                    AppLocalizations.of(context)!.msgTermsOfService,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -432,7 +433,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Privacy Policy',
+                                                    AppLocalizations.of(context)!.msgPrivacyPolicy,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -546,10 +547,10 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                       ),
                                   children: [
                                     TextSpan(
-                                      text: 'I agree to the ',
+                                      text: AppLocalizations.of(context)!.msgIAgreeToThe,
                                     ),
                                     TextSpan(
-                                      text: 'Terms of Service',
+                                      text: AppLocalizations.of(context)!.msgTermsOfService,
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
@@ -558,7 +559,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                       recognizer: _termsLinkRecognizer,
                                     ),
                                     TextSpan(
-                                      text: ' outlined by DECOY WALLET LLC',
+                                      text: AppLocalizations.of(context)!.msgOutlinedByDecoyWalletLlc,
                                     ),
                                   ],
                                 ),
@@ -621,10 +622,10 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                       ),
                                   children: [
                                     TextSpan(
-                                      text: 'I agree to the ',
+                                      text: AppLocalizations.of(context)!.msgIAgreeToThe,
                                     ),
                                     TextSpan(
-                                      text: 'Privacy Policy',
+                                      text: AppLocalizations.of(context)!.msgPrivacyPolicy,
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
@@ -633,7 +634,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                       recognizer: _privacyLinkRecognizer,
                                     ),
                                     TextSpan(
-                                      text: ' outlined by DECOY WALLET LLC',
+                                      text: AppLocalizations.of(context)!.msgOutlinedByDecoyWalletLlc,
                                     ),
                                   ],
                                 ),
@@ -684,7 +685,7 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
 
                                   safeSetState(() {});
                                 },
-                                text: 'Continue',
+                                text: AppLocalizations.of(context)!.msgContinue,
                                 options: FFButtonOptions(
                                   width: 400.0,
                                   height: 52.0,

@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -182,7 +183,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                                           0.0,
                                                                           12.0),
                                                               child: Text(
-                                                                'Acknowledgements',
+                                                                AppLocalizations.of(context)!.msgAcknowledgements,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center,
@@ -221,7 +222,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                                           0.0,
                                                                           12.0),
                                                               child: Text(
-                                                                'Acknowledgements',
+                                                                AppLocalizations.of(context)!.msgAcknowledgements,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center,
@@ -306,7 +307,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                     padding:
                                                         EdgeInsets.all(8.0),
                                                     child: Text(
-                                                      'By creating a Decoy Wallet, you authorize Decoy Wallet to send one time, user initiated emergency alerts to your selected contacts if you trigger an emergency event.',
+                                                      AppLocalizations.of(context)!.msgByCreatingADecoyWalletYouAuthorizeDecoy,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style:
@@ -350,7 +351,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                                   0.0,
                                                                   16.0),
                                                       child: Text(
-                                                        'Emergency contacts receive alerts only because you voluntarily provide their phone number.\n\nInformation may be shared with emergency service providers or third parties as described in the Privacy Policy.',
+                                                        AppLocalizations.of(context)!.msgEmergencyContactsReceiveAlertsOnlyBecauseYouVoluntarily,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: FlutterFlowTheme
@@ -435,7 +436,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    'I understand that using my Decoy Wallet may trigger emergency alerts to my contacts, third party services, or public safety agencies.',
+                                                    AppLocalizations.of(context)!.msgIUnderstandThatUsingMyDecoyWalletMay,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -518,7 +519,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    'I understand that Decoy Wallet does not hold or protect my funds, cannot prevent loss, and I am fully responsible for any outcomes resulting from use or misuse of this feature.',
+                                                    AppLocalizations.of(context)!.msgIUnderstandThatDecoyWalletDoesNotHold,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -601,7 +602,7 @@ class _DecoySeedAcknowledgementsWidgetState
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    'I understand Decoy Seed alerts are designed for on-chain activity from my armed Decoy Seed wallet, and I am responsible for keeping my seed alert settings ready and current.',
+                                                    AppLocalizations.of(context)!.msgIUnderstandDecoySeedAlertsAreDesignedFor,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -685,7 +686,7 @@ class _DecoySeedAcknowledgementsWidgetState
 
                                                   safeSetState(() {});
                                                 },
-                                                text: 'Continue',
+                                                text: AppLocalizations.of(context)!.msgContinue,
                                                 options: FFButtonOptions(
                                                   width: 400.0,
                                                   height: 52.0,

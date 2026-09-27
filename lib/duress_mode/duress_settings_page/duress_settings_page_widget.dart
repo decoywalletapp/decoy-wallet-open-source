@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -108,7 +109,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                     ),
                     const SizedBox(height: 22.0),
                     Text(
-                      'Settings',
+                      AppLocalizations.of(context)!.msgSettings,
                       textAlign: TextAlign.center,
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
@@ -120,8 +121,8 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                               ),
                     ),
                     const SizedBox(height: 8.0),
-                    const Text(
-                      'Manage your wallet preferences and session.',
+                     Text(
+                      AppLocalizations.of(context)!.msgManageYourWalletPreferencesAndSession,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: _muted,
@@ -130,33 +131,33 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                       ),
                     ),
                     const SizedBox(height: 34.0),
-                    _sectionLabel('WALLET'),
+                    _sectionLabel(AppLocalizations.of(context)!.msgWallet2),
                     const SizedBox(height: 9.0),
                     _settingsPanel([
                       _settingsRow(
                         icon: Icons.currency_bitcoin_rounded,
-                        title: 'Currency',
+                        title: AppLocalizations.of(context)!.msgCurrency,
                         value: 'Bitcoin',
                       ),
                       _settingsRow(
                         icon: Icons.hub_outlined,
-                        title: 'Network',
-                        value: 'Bitcoin Mainnet',
+                        title: AppLocalizations.of(context)!.msgNetwork,
+                        value: AppLocalizations.of(context)!.msgBitcoinMainnet,
                       ),
                     ]),
                     const SizedBox(height: 24.0),
-                    _sectionLabel('SECURITY'),
+                    _sectionLabel(AppLocalizations.of(context)!.msgSecurity),
                     const SizedBox(height: 9.0),
                     _settingsPanel([
                       _settingsRow(
                         icon: Icons.lock_outline_rounded,
-                        title: 'App lock',
-                        value: 'Active',
+                        title: AppLocalizations.of(context)!.msgAppLock,
+                        value: AppLocalizations.of(context)!.msgActive,
                       ),
                       _settingsRow(
                         icon: Icons.smartphone_rounded,
-                        title: 'Signed-in device',
-                        value: 'This device',
+                        title: AppLocalizations.of(context)!.msgSignedInDevice,
+                        value: AppLocalizations.of(context)!.msgThisDevice,
                       ),
                     ]),
                     const SizedBox(height: 22.0),
@@ -165,7 +166,7 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                       child: OutlinedButton.icon(
                         onPressed: _logOut,
                         icon: const Icon(Icons.logout_rounded, size: 21.0),
-                        label: const Text('Log Out'),
+                        label:  Text(AppLocalizations.of(context)!.msgLogOut),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white,
                           side: const BorderSide(color: _orange, width: 1.5),
@@ -238,12 +239,16 @@ class _DuressSettingsPageWidgetState extends State<DuressSettingsPageWidget> {
                 ),
               ),
             ),
-            Text(
-              value,
-              style: const TextStyle(
-                color: _muted,
-                fontSize: 13.0,
-                fontWeight: FontWeight.w600,
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                value,
+                textAlign: TextAlign.end,
+                style: const TextStyle(
+                  color: _muted,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],

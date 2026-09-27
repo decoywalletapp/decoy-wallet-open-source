@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -45,9 +46,9 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
   bool get _isYearly => _billingInterval == 'yearly';
 
   String get _bitcoinPriceLabel =>
-      _isYearly ? '\$39.42 / year' : '\$3.94 / month';
+      _isYearly ? AppLocalizations.of(context)!.msg3942Year : AppLocalizations.of(context)!.msg394Month;
 
-  String get _cardPriceLabel => _isYearly ? '\$49.90 / year' : '\$4.99 / month';
+  String get _cardPriceLabel => _isYearly ? AppLocalizations.of(context)!.msg4990Year : AppLocalizations.of(context)!.msg499Month;
 
   bool _hasText(String? value) => value != null && value.isNotEmpty;
 
@@ -357,7 +358,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       0.0,
                                                     ),
                                                     child: Text(
-                                                      'CHOOSE ACCESS',
+                                                      AppLocalizations.of(context)!.msgChooseAccess,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style:
@@ -388,7 +389,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                       0.0,
                                                     ),
                                                     child: Text(
-                                                      'CHOOSE ACCESS',
+                                                      AppLocalizations.of(context)!.msgChooseAccess,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style:
@@ -462,7 +463,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     0.0,
                                                   ),
                                                   child: Text(
-                                                    'METHOD',
+                                                    AppLocalizations.of(context)!.msgMethod,
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                       context,
@@ -489,7 +490,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     0.0,
                                                   ),
                                                   child: Text(
-                                                    'METHOD',
+                                                    AppLocalizations.of(context)!.msgMethod,
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                       context,
@@ -557,14 +558,14 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                       _buildPlanChoice(
                                         context: context,
                                         interval: 'monthly',
-                                        title: 'Monthly',
-                                        subtitle: 'Flexible access',
+                                        title: AppLocalizations.of(context)!.msgMonthly,
+                                        subtitle: AppLocalizations.of(context)!.msgFlexibleAccess,
                                       ),
                                       _buildPlanChoice(
                                         context: context,
                                         interval: 'yearly',
-                                        title: 'Yearly',
-                                        subtitle: '2 months free',
+                                        title: AppLocalizations.of(context)!.msgYearly,
+                                        subtitle: AppLocalizations.of(context)!.msg2MonthsFree,
                                       ),
                                     ].divide(SizedBox(width: 6.0)),
                                   ),
@@ -580,7 +581,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                               0.0,
                             ),
                             child: Text(
-                              'Emergency alerts, wallet monitoring, and emergency-contact notifications require an active paid subscription.',
+                              AppLocalizations.of(context)!.msgEmergencyAlertsWalletMonitoringAndEmergencyContactNotifications,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .bodySmall
@@ -689,7 +690,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     priceLabel:
                                                         _bitcoinPriceLabel,
                                                     yearlyCompareLabel:
-                                                        '\$47.28 / year',
+                                                        AppLocalizations.of(context)!.msg4728Year,
                                                   ),
                                                   FFButtonWidget(
                                                     onPressed: () async {
@@ -722,7 +723,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
 
                                                       safeSetState(() {});
                                                     },
-                                                    text: 'Pay with Bitcoin',
+                                                    text: AppLocalizations.of(context)!.msgPayWithBitcoin,
                                                     options: FFButtonOptions(
                                                       width: 250.0,
                                                       height: 50.0,
@@ -789,7 +790,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    'BTCPay invoice in your browser',
+                                                    AppLocalizations.of(context)!.msgBtcpayInvoiceInYourBrowser,
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                             context)
@@ -903,7 +904,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     context: context,
                                                     priceLabel: _cardPriceLabel,
                                                     yearlyCompareLabel:
-                                                        '\$59.88 / year',
+                                                        AppLocalizations.of(context)!.msg5988Year,
                                                   ),
                                                   FFButtonWidget(
                                                     onPressed: () async {
@@ -936,7 +937,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
 
                                                       safeSetState(() {});
                                                     },
-                                                    text: 'Pay with Card',
+                                                    text: AppLocalizations.of(context)!.msgPayWithCard,
                                                     options: FFButtonOptions(
                                                       width: 250.0,
                                                       height: 50.0,
@@ -1003,7 +1004,7 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    'Stripe checkout in your browser',
+                                                    AppLocalizations.of(context)!.msgStripeCheckoutInYourBrowser,
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                             context)

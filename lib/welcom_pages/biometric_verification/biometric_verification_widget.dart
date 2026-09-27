@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -130,7 +131,7 @@ class _BiometricVerificationWidgetState
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Enable Biometric Authentication',
+                              AppLocalizations.of(context)!.msgEnableBiometricAuthentication,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
@@ -142,7 +143,7 @@ class _BiometricVerificationWidgetState
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Text(
-                                'Use your fingerprint or Face ID to quickly and securely access your account',
+                                AppLocalizations.of(context)!.msgUseYourFingerprintOrFaceIdToQuickly,
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
@@ -207,7 +208,7 @@ class _BiometricVerificationWidgetState
                                       }
                                     },
                                     title: Text(
-                                      'Enable Biometric Authentication',
+                                      AppLocalizations.of(context)!.msgEnableBiometricAuthentication,
                                       style: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .override(
@@ -251,7 +252,7 @@ class _BiometricVerificationWidgetState
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Change these settings anytime in the ',
+                                  AppLocalizations.of(context)!.msgChangeTheseSettingsAnytimeInThe,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -269,7 +270,7 @@ class _BiometricVerificationWidgetState
                                       ),
                                 ),
                                 Text(
-                                  'Control',
+                                  AppLocalizations.of(context)!.msgControl2,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -295,7 +296,7 @@ class _BiometricVerificationWidgetState
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Center',
+                                  AppLocalizations.of(context)!.msgCenter,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -312,7 +313,7 @@ class _BiometricVerificationWidgetState
                                       ),
                                 ),
                                 Text(
-                                  'by navigating to ',
+                                  AppLocalizations.of(context)!.msgByNavigatingTo2,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
@@ -330,7 +331,7 @@ class _BiometricVerificationWidgetState
                                       ),
                                 ),
                                 Text(
-                                  'Settings > Control Center',
+                                  AppLocalizations.of(context)!.msgSettingsControlCenter2,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -377,7 +378,7 @@ class _BiometricVerificationWidgetState
                                     _model.enableBioResult =
                                         await _localAuth.authenticate(
                                             localizedReason:
-                                                'Please authenticate to enable biometric unlock for Decoy Wallet');
+                                                AppLocalizations.of(context)!.msgPleaseAuthenticateToEnableBiometricUnlockForDecoy);
                                   } on PlatformException {
                                     _model.enableBioResult = false;
                                   }
@@ -460,7 +461,7 @@ class _BiometricVerificationWidgetState
 
                               safeSetState(() {});
                             },
-                            text: 'Continue',
+                            text: AppLocalizations.of(context)!.msgContinue,
                             options: FFButtonOptions(
                               width: 400.0,
                               height: 50.0,
@@ -544,7 +545,7 @@ class _BiometricVerificationWidgetState
 
                             safeSetState(() {});
                           },
-                          text: 'Skip for Now',
+                          text: AppLocalizations.of(context)!.msgSkipForNow,
                           options: FFButtonOptions(
                             width: 400.0,
                             height: 50.0,

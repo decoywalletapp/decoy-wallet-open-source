@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -174,7 +175,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
                                                             child: Text(
-                                                              'Create a DECOY PIN for Emergency Services',
+                                                              AppLocalizations.of(context)!.msgCreateADecoyPinForEmergencyServices,
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -771,7 +772,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                                 20.0),
                                                                             child:
                                                                                 Text(
-                                                                              'Enter a 4 - 8 digit DECOY PIN ',
+                                                                              AppLocalizations.of(context)!.msgEnterA48DigitDecoyPin,
                                                                               textAlign: TextAlign.center,
                                                                               style: FlutterFlowTheme.of(context).bodySmall.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
@@ -800,7 +801,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                                 20.0),
                                                                             child:
                                                                                 Text(
-                                                                              'DECOY PIN CANNOT BE THE SAME AS ACCOUNT ENTRY PIN',
+                                                                              AppLocalizations.of(context)!.msgDecoyPinCannotBeTheSameAsAccount,
                                                                               textAlign: TextAlign.center,
                                                                               style: FlutterFlowTheme.of(context).bodySmall.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
@@ -829,7 +830,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                                 20.0),
                                                                             child:
                                                                                 Text(
-                                                                              'PLEASE ENTER AT LEAST 4 DIGITS TO CONTINUE',
+                                                                              AppLocalizations.of(context)!.msgPleaseEnterAtLeast4DigitsToContinue,
                                                                               textAlign: TextAlign.center,
                                                                               style: FlutterFlowTheme.of(context).bodySmall.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
@@ -857,7 +858,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                                 20.0),
                                                                             child:
                                                                                 Text(
-                                                                              'PINS DO NOT MATCH - PLEASE TRY AGAIN',
+                                                                              AppLocalizations.of(context)!.msgPinsDoNotMatchPleaseTryAgain,
                                                                               textAlign: TextAlign.center,
                                                                               style: FlutterFlowTheme.of(context).bodySmall.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
@@ -1682,7 +1683,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
 
                                                           safeSetState(() {});
                                                         },
-                                                        text: 'Continue',
+                                                        text: AppLocalizations.of(context)!.msgContinue,
                                                         options:
                                                             FFButtonOptions(
                                                           width:
@@ -1823,7 +1824,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                 EdgeInsets.all(
                                                                     17.0),
                                                             child: Text(
-                                                              'Confirm DECOY PIN',
+                                                              AppLocalizations.of(context)!.msgConfirmDecoyPin,
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -2420,7 +2421,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                                 20.0),
                                                                             child:
                                                                                 Text(
-                                                                              'Enter the same 4 - 8 digits to confirm your DECOY PIN',
+                                                                              AppLocalizations.of(context)!.msgEnterTheSame48DigitsToConfirm,
                                                                               textAlign: TextAlign.center,
                                                                               style: FlutterFlowTheme.of(context).bodySmall.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
@@ -2449,7 +2450,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                                 20.0),
                                                                             child:
                                                                                 Text(
-                                                                              'PIN MUST BE AT LEAST 4 DIGITS',
+                                                                              AppLocalizations.of(context)!.msgPinMustBeAtLeast4Digits,
                                                                               textAlign: TextAlign.center,
                                                                               style: FlutterFlowTheme.of(context).bodySmall.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
@@ -3277,7 +3278,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                   SnackBar(
                                                                     content:
                                                                         Text(
-                                                                      'ERROR #003 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                      AppLocalizations.of(context)!.msgError003PleaseScreenshotContactDecoySupport,
                                                                       style:
                                                                           TextStyle(
                                                                         color: FlutterFlowTheme.of(context)
@@ -3314,7 +3315,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
                                                                   .showSnackBar(
                                                                 SnackBar(
                                                                   content: Text(
-                                                                    'ERROR #002 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                    AppLocalizations.of(context)!.msgError002PleaseScreenshotContactDecoySupport,
                                                                     style:
                                                                         TextStyle(
                                                                       color: FlutterFlowTheme.of(
@@ -3387,7 +3388,7 @@ class _CreateDecoyPinWidgetState extends State<CreateDecoyPinWidget> {
 
                                                         safeSetState(() {});
                                                       },
-                                                      text: 'Confirm',
+                                                      text: AppLocalizations.of(context)!.msgConfirm,
                                                       options: FFButtonOptions(
                                                         width: 400.0,
                                                         height: 50.0,

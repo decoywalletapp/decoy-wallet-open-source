@@ -170,7 +170,7 @@ void main() {
     final card = File(
       'lib/components/redemption_option_card.dart',
     ).readAsStringSync();
-    expect(card, contains("text: 'Redeem Code'"));
+    expect(card, contains('msgRedeemCode'));
     expect(card, contains('Icons.card_giftcard_rounded'));
   });
 

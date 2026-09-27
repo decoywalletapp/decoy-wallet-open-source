@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -99,7 +100,7 @@ class _GenerateDecoySeedPhraseWidgetState
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Set Up Decoy Keys',
+                              AppLocalizations.of(context)!.msgSetUpDecoyKeys,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
@@ -112,8 +113,8 @@ class _GenerateDecoySeedPhraseWidgetState
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Text(
                                 DecoyBuildProvenance.watchOnlyImportEnabled
-                                    ? 'Generate a new Decoy Seed phrase or monitor watch-only wallet data you already control.'
-                                    : 'Generate a new Decoy Seed phrase to monitor for outbound wallet activity.',
+                                    ? AppLocalizations.of(context)!.msgGenerateANewDecoySeedPhraseOrMonitor
+                                    : AppLocalizations.of(context)!.msgGenerateANewDecoySeedPhraseToMonitor,
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
@@ -202,7 +203,7 @@ class _GenerateDecoySeedPhraseWidgetState
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'ERROR #001 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                    AppLocalizations.of(context)!.msgError001PleaseScreenshotContactDecoySupport,
                                     style: TextStyle(
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
@@ -217,7 +218,7 @@ class _GenerateDecoySeedPhraseWidgetState
 
                             safeSetState(() {});
                           },
-                          text: 'Generate Seed Phrase',
+                          text: AppLocalizations.of(context)!.msgGenerateSeedPhrase,
                           options: FFButtonOptions(
                             width: 400.0,
                             height: 56.0,
@@ -254,7 +255,7 @@ class _GenerateDecoySeedPhraseWidgetState
                               context.pushNamed(
                                   ImportWatchOnlyWalletWidget.routeName);
                             },
-                            text: 'Monitor Existing Wallet',
+                            text: AppLocalizations.of(context)!.msgMonitorExistingWallet,
                             options: FFButtonOptions(
                               width: 400.0,
                               height: 56.0,

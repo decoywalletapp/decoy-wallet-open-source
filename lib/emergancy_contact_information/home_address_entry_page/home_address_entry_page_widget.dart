@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import 'dart:convert';
 
 import '/auth/supabase_auth/auth_util.dart';
@@ -300,7 +301,7 @@ class _HomeAddressEntryPageWidgetState
     _model.zipTextController ??= TextEditingController();
     _model.zipFocusNode ??= FocusNode();
 
-    _model.countryTextController ??= TextEditingController(text: 'USA');
+    _model.countryTextController ??= TextEditingController(text: AppLocalizations.of(context)!.msgUsa);
     _model.countryFocusNode ??= FocusNode();
 
     _model.apartmentTextController ??= TextEditingController();
@@ -494,7 +495,7 @@ class _HomeAddressEntryPageWidgetState
                                                 TextInputAction.next,
                                             obscureText: false,
                                             decoration: InputDecoration(
-                                              labelText: 'Street Address',
+                                              labelText: AppLocalizations.of(context)!.msgStreetAddress,
                                               labelStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -512,7 +513,7 @@ class _HomeAddressEntryPageWidgetState
                                                                 context)
                                                             .bodyMediumIsCustom,
                                                   ),
-                                              hintText: '123 Ocean Dr.',
+                                              hintText: AppLocalizations.of(context)!.msg123OceanDr,
                                               hintStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -627,7 +628,7 @@ class _HomeAddressEntryPageWidgetState
                                                   TextInputAction.next,
                                               obscureText: false,
                                               decoration: InputDecoration(
-                                                labelText: 'City',
+                                                labelText: AppLocalizations.of(context)!.msgCity,
                                                 labelStyle: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -646,7 +647,7 @@ class _HomeAddressEntryPageWidgetState
                                                                   context)
                                                               .bodyMediumIsCustom,
                                                     ),
-                                                hintText: 'Miami Beach',
+                                                hintText: AppLocalizations.of(context)!.msgMiamiBeach,
                                                 hintStyle: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -765,7 +766,7 @@ class _HomeAddressEntryPageWidgetState
                                                   TextInputAction.next,
                                               obscureText: false,
                                               decoration: InputDecoration(
-                                                labelText: 'State',
+                                                labelText: AppLocalizations.of(context)!.msgState,
                                                 labelStyle: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -784,7 +785,7 @@ class _HomeAddressEntryPageWidgetState
                                                                   context)
                                                               .bodyMediumIsCustom,
                                                     ),
-                                                hintText: 'FL',
+                                                hintText: AppLocalizations.of(context)!.msgFl,
                                                 hintStyle: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -929,7 +930,7 @@ class _HomeAddressEntryPageWidgetState
                                                   TextInputAction.next,
                                               obscureText: false,
                                               decoration: InputDecoration(
-                                                labelText: 'ZIP Code',
+                                                labelText: AppLocalizations.of(context)!.msgZipCode,
                                                 labelStyle: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -1066,7 +1067,7 @@ class _HomeAddressEntryPageWidgetState
                                               readOnly: true,
                                               obscureText: false,
                                               decoration: InputDecoration(
-                                                labelText: 'Country',
+                                                labelText: AppLocalizations.of(context)!.msgCountry,
                                                 labelStyle: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -1202,7 +1203,7 @@ class _HomeAddressEntryPageWidgetState
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           labelText:
-                                              'Apartment/Unit (Optional)',
+                                              AppLocalizations.of(context)!.msgApartmentUnitOptional,
                                           labelStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -1219,7 +1220,7 @@ class _HomeAddressEntryPageWidgetState
                                                             context)
                                                         .bodyMediumIsCustom,
                                               ),
-                                          hintText: 'Apt 4B',
+                                          hintText: AppLocalizations.of(context)!.msgApt4b,
                                           hintStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -1471,7 +1472,7 @@ class _HomeAddressEntryPageWidgetState
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              'ERROR #010 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                              AppLocalizations.of(context)!.msgError010PleaseScreenshotContactDecoySupport,
                                               style: TextStyle(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -1493,7 +1494,7 @@ class _HomeAddressEntryPageWidgetState
 
                                     safeSetState(() {});
                                   },
-                                  text: 'Save & Exit',
+                                  text: AppLocalizations.of(context)!.msgSaveExit,
                                   options: FFButtonOptions(
                                     width: 250.0,
                                     height: 56.0,

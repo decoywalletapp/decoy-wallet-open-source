@@ -18,8 +18,8 @@ void main() {
     ).readAsStringSync();
 
     expect(phoneInput, contains('offset: const Offset(0.0, -16.0)'));
-    expect(phoneInput, contains("text: 'Save Phone Number'"));
-    expect(phoneInput, contains("text: 'Skip for Now'"));
+    expect(phoneInput, contains('msgSavePhoneNumber'));
+    expect(phoneInput, contains('msgSkipForNow'));
   });
 
   test('missing phone never blocks permission onboarding', () {

@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
@@ -152,8 +153,8 @@ class _DuressOrderProcessedWidgetState
                           const SizedBox(height: 26.0),
                           Text(
                             progress > 0.82
-                                ? 'Transaction Broadcast'
-                                : 'Broadcasting Transaction',
+                                ? AppLocalizations.of(context)!.msgTransactionBroadcast
+                                : AppLocalizations.of(context)!.msgBroadcastingTransaction,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium
@@ -168,8 +169,8 @@ class _DuressOrderProcessedWidgetState
                           const SizedBox(height: 8.0),
                           Text(
                             progress > 0.82
-                                ? 'Waiting for network confirmations'
-                                : 'Signing and relaying to Bitcoin peers',
+                                ? AppLocalizations.of(context)!.msgWaitingForNetworkConfirmations
+                                : AppLocalizations.of(context)!.msgSigningAndRelayingToBitcoinPeers,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -194,14 +195,14 @@ class _DuressOrderProcessedWidgetState
                               children: [
                                 _statusRow(
                                   context,
-                                  label: 'Amount',
+                                  label: AppLocalizations.of(context)!.msgAmount,
                                   value:
                                       '${functions.formatBtcTrim(widget.amountBtc ?? '0')} BTC',
                                 ),
                                 _divider(),
                                 _statusRow(
                                   context,
-                                  label: 'To',
+                                  label: AppLocalizations.of(context)!.msgTo,
                                   value: functions.maskAddress(
                                     widget.toAddress ?? '',
                                     6,
@@ -212,10 +213,10 @@ class _DuressOrderProcessedWidgetState
                                 _divider(),
                                 _statusRow(
                                   context,
-                                  label: 'Status',
+                                  label: AppLocalizations.of(context)!.msgStatus,
                                   value: progress > 0.82
-                                      ? 'Broadcasted'
-                                      : 'Signing',
+                                      ? AppLocalizations.of(context)!.msgBroadcasted
+                                      : AppLocalizations.of(context)!.msgSigning,
                                 ),
                               ],
                             ),

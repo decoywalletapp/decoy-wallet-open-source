@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -110,7 +111,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                 size: 64.0,
                                               ),
                                               Text(
-                                                'This action is permanent',
+                                                AppLocalizations.of(context)!.msgThisActionIsPermanent,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -124,7 +125,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                     ),
                                               ),
                                               Text(
-                                                'Deleting your Decoy Wallet account will permanently remove your account, emergency contacts, alert routing settings, and all app configurations. Any active Stripe subscription connected to this account will be canceled first. This action cannot be undone.',
+                                                AppLocalizations.of(context)!.msgDeletingYourDecoyWalletAccountWillPermanentlyRemove,
                                                 textAlign: TextAlign.center,
                                                 style: FlutterFlowTheme.of(
                                                         context)
@@ -156,7 +157,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    'What will be deleted',
+                                                    AppLocalizations.of(context)!.msgWhatWillBeDeleted,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .titleMedium
@@ -202,7 +203,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              'Your Decoy Wallet account and profile',
+                                                              AppLocalizations.of(context)!.msgYourDecoyWalletAccountAndProfile,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodySmall
@@ -248,7 +249,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              'Emergency contacts and alert settings',
+                                                              AppLocalizations.of(context)!.msgEmergencyContactsAndAlertSettings,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodySmall
@@ -294,7 +295,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              'App preferences and configurations',
+                                                              AppLocalizations.of(context)!.msgAppPreferencesAndConfigurations,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodySmall
@@ -340,7 +341,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              'Account subscription access and active Stripe billing',
+                                                              AppLocalizations.of(context)!.msgAccountSubscriptionAccessAndActiveStripeBilling,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodySmall
@@ -372,7 +373,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    'What will not be deleted',
+                                                    AppLocalizations.of(context)!.msgWhatWillNotBeDeleted,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .titleMedium
@@ -424,7 +425,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              'Your Bitcoin funds remain safe in your external wallet',
+                                                              AppLocalizations.of(context)!.msgYourBitcoinFundsRemainSafeInYourExternal,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodySmall
@@ -470,7 +471,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              'Wallet seed phrases and private keys',
+                                                              AppLocalizations.of(context)!.msgWalletSeedPhrasesAndPrivateKeys,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodySmall
@@ -562,7 +563,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                   ),
                                                   Expanded(
                                                     child: Text(
-                                                      'I understand this action is permanent and cannot be undone',
+                                                      AppLocalizations.of(context)!.msgIUnderstandThisActionIsPermanentAndCannot,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -677,7 +678,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                                     SnackBar(
                                                                       content:
                                                                           Text(
-                                                                        'ERROR #016 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                        AppLocalizations.of(context)!.msgError016PleaseScreenshotContactDecoySupport,
                                                                         style:
                                                                             TextStyle(
                                                                           color:
@@ -698,7 +699,7 @@ class _DeleteUserAccountWidgetState extends State<DeleteUserAccountWidget> {
                                                               safeSetState(
                                                                   () {});
                                                             },
-                                                  text: 'Delete my account',
+                                                  text: AppLocalizations.of(context)!.msgDeleteMyAccount,
                                                   options: FFButtonOptions(
                                                     width: double.infinity,
                                                     height: 48.0,

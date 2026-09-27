@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -87,7 +88,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
         _model.isSaving = false;
         _model.errorMessage = rawError.isNotEmpty
             ? rawError
-            : 'Unable to update Decoy Keys monitors.';
+            : AppLocalizations.of(context)!.msgUnableToUpdateDecoyKeysMonitors;
       });
       return;
     }
@@ -111,7 +112,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
 
   void _setMonitorActive(String monitorId, bool active) {
     if (monitorId.isEmpty) {
-      _showSnack('Unable to update this monitor.');
+      _showSnack(AppLocalizations.of(context)!.msgUnableToUpdateThisMonitor);
       return;
     }
 
@@ -133,7 +134,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
   void _deleteMonitor(Map<String, dynamic> monitor) {
     final monitorId = _text(monitor['id']);
     if (monitorId.isEmpty) {
-      _showSnack('Unable to delete this monitor.');
+      _showSnack(AppLocalizations.of(context)!.msgUnableToDeleteThisMonitor);
       return;
     }
 
@@ -149,7 +150,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
   Future<void> _saveAndGoBack() async {
     final jwt = currentJwtToken.trim();
     if (jwt.isEmpty) {
-      _showSnack('Please sign in again to save monitor changes.');
+      _showSnack(AppLocalizations.of(context)!.msgPleaseSignInAgainToSaveMonitorChanges);
       return;
     }
 
@@ -203,7 +204,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
         _model.isSaving = false;
         _model.errorMessage = rawError.isNotEmpty
             ? rawError
-            : 'Unable to save Decoy Keys monitor changes.';
+            : AppLocalizations.of(context)!.msgUnableToSaveDecoyKeysMonitorChanges;
       });
     } catch (_) {
       safeSetState(() {
@@ -286,15 +287,15 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
 
     switch (_text(monitor['type'])) {
       case 'generated-seed':
-        return 'Most Recent Decoy Seed Generated';
+        return AppLocalizations.of(context)!.msgMostRecentDecoySeedGenerated;
       case 'address-list':
-        return 'Receive Address Monitor';
+        return AppLocalizations.of(context)!.msgReceiveAddressMonitor;
       case 'xpub':
-        return 'XPub Monitor';
+        return AppLocalizations.of(context)!.msgXpubMonitor;
       case 'zpub':
-        return 'ZPub Monitor';
+        return AppLocalizations.of(context)!.msgZpubMonitor;
       default:
-        return 'Wallet Activity Monitor';
+        return AppLocalizations.of(context)!.msgWalletActivityMonitor;
     }
   }
 
@@ -305,15 +306,14 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
     final addressCount = monitor['addressCount'];
     if (_text(monitor['type']) == 'generated-seed' &&
         monitor['hasWatchPublicKey'] == true) {
-      return 'Account-level seed wallet monitoring';
+      return AppLocalizations.of(context)!.msgAccountLevelSeedWalletMonitoring;
     }
 
     if (addressCount is num && addressCount > 0) {
-      final label = addressCount == 1 ? 'address' : 'addresses';
-      return '${addressCount.toInt()} receive $label';
+      return AppLocalizations.of(context)!.receiveAddressCount(addressCount.toInt());
     }
 
-    return 'Wallet activity monitor';
+    return AppLocalizations.of(context)!.msgWalletActivityMonitor2;
   }
 
   IconData _monitorIcon(Map<String, dynamic> monitor) {
@@ -402,9 +402,9 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
             ),
           ),
         ),
-        _buildOrangeTitleBlock(context, 'DECOY KEYS'),
+        _buildOrangeTitleBlock(context, AppLocalizations.of(context)!.msgDecoyKeys2),
         Text(
-          'Advanced Monitor Controls',
+          AppLocalizations.of(context)!.msgAdvancedMonitorControls,
           textAlign: TextAlign.center,
           style: FlutterFlowTheme.of(context).titleMedium.override(
                 fontFamily: 'InterTight',
@@ -419,7 +419,9 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
   }
 
   Widget _buildMasterStatus(BuildContext context) {
-    final statusText = _model.masterArmed ? 'ACTIVATED' : 'DEACTIVATED';
+    final statusText = _model.masterArmed
+        ? AppLocalizations.of(context)!.msgActivated
+        : AppLocalizations.of(context)!.msgDeactivated;
     final statusColor = _model.masterArmed
         ? FlutterFlowTheme.of(context).success
         : FlutterFlowTheme.of(context).error;
@@ -444,7 +446,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
           children: [
             Expanded(
               child: Text(
-                'Master Status:',
+                AppLocalizations.of(context)!.msgMasterStatus,
                 textAlign: TextAlign.center,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -578,7 +580,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
               children: [
                 Expanded(
                   child: Text(
-                    'Monitor Status:',
+                    AppLocalizations.of(context)!.msgMonitorStatus,
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily:
@@ -593,7 +595,9 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                 ),
                 Expanded(
                   child: Text(
-                    savedActive ? 'ACTIVATED' : 'DEACTIVATED',
+                    savedActive
+                        ? AppLocalizations.of(context)!.msgActivated
+                        : AppLocalizations.of(context)!.msgDeactivated,
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily:
@@ -625,7 +629,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
                   size: 20.0,
                 ),
                 label: Text(
-                  'Delete',
+                  AppLocalizations.of(context)!.msgDelete,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -651,7 +655,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
           : () async {
               await _saveAndGoBack();
             },
-      text: 'Save & Go Back',
+      text: AppLocalizations.of(context)!.msgSaveGoBack,
       options: FFButtonOptions(
         width: double.infinity,
         height: 60.0,
@@ -702,7 +706,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
             onPressed: () async {
               await _loadMonitors();
             },
-            text: 'Retry',
+            text: AppLocalizations.of(context)!.msgRetry,
             options: FFButtonOptions(
               width: 160.0,
               height: 44.0,
@@ -739,7 +743,7 @@ class _DecoyKeysAdvancedWidgetState extends State<DecoyKeysAdvancedWidget> {
           ),
           padding: EdgeInsets.all(22.0),
           child: Text(
-            'No Decoy Keys monitors found yet.',
+            AppLocalizations.of(context)!.msgNoDecoyKeysMonitorsFoundYet,
             textAlign: TextAlign.center,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,

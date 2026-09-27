@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -19,55 +20,55 @@ class WalletFeaturePreviewWidget extends StatelessWidget {
   static const _muted = Color(0xFF929A9D);
   static const _orange = Color(0xFFF7931A);
 
-  _FeatureContent get _content {
+  _FeatureContent _content(BuildContext context) {
     switch (feature) {
       case 'limit-order':
-        return const _FeatureContent(
-          title: 'Limit Order',
-          subtitle: 'Choose a target price for your next Bitcoin purchase.',
+        return  _FeatureContent(
+          title: AppLocalizations.of(context)!.msgLimitOrder,
+          subtitle: AppLocalizations.of(context)!.msgChooseATargetPriceForYourNextBitcoin,
           icon: Icons.stars_rounded,
-          sectionTitle: 'Order details',
+          sectionTitle: AppLocalizations.of(context)!.msgOrderDetails,
           rows: [
-            ('Order type', 'Buy'),
-            ('Asset', 'Bitcoin'),
-            ('Settlement', 'USD balance'),
+            (AppLocalizations.of(context)!.msgOrderType, AppLocalizations.of(context)!.msgBuy),
+            (AppLocalizations.of(context)!.msgAsset, 'Bitcoin'),
+            (AppLocalizations.of(context)!.msgSettlement, AppLocalizations.of(context)!.msgUsdBalance),
           ],
         );
       case 'bitcoin-pay':
-        return const _FeatureContent(
-          title: 'Bitcoin Pay',
-          subtitle: 'Receive part of your paycheck directly in Bitcoin.',
+        return  _FeatureContent(
+          title: AppLocalizations.of(context)!.msgBitcoinPay,
+          subtitle: AppLocalizations.of(context)!.msgReceivePartOfYourPaycheckDirectlyInBitcoin,
           icon: Icons.account_balance_rounded,
-          sectionTitle: 'Payment setup',
+          sectionTitle: AppLocalizations.of(context)!.msgPaymentSetup,
           rows: [
-            ('Deposit asset', 'Bitcoin'),
-            ('Frequency', 'Every payday'),
-            ('Status', 'Not configured'),
+            (AppLocalizations.of(context)!.msgDepositAsset, 'Bitcoin'),
+            (AppLocalizations.of(context)!.msgFrequency, AppLocalizations.of(context)!.msgEveryPayday),
+            ('Status', AppLocalizations.of(context)!.msgNotConfigured),
           ],
         );
       case 'auto-withdraw':
-        return const _FeatureContent(
-          title: 'Auto Withdraw',
-          subtitle: 'Automatically send purchased Bitcoin to your wallet.',
+        return  _FeatureContent(
+          title: AppLocalizations.of(context)!.msgAutoWithdraw,
+          subtitle: AppLocalizations.of(context)!.msgAutomaticallySendPurchasedBitcoinToYourWallet,
           icon: Icons.send_rounded,
-          sectionTitle: 'Withdrawal settings',
+          sectionTitle: AppLocalizations.of(context)!.msgWithdrawalSettings,
           rows: [
-            ('Asset', 'Bitcoin'),
-            ('Network', 'Bitcoin Mainnet'),
-            ('Status', 'Not configured'),
+            (AppLocalizations.of(context)!.msgAsset, 'Bitcoin'),
+            ('Network', AppLocalizations.of(context)!.msgBitcoinMainnet),
+            ('Status', AppLocalizations.of(context)!.msgNotConfigured),
           ],
         );
       case 'recurring-buy':
       default:
-        return const _FeatureContent(
-          title: 'Recurring Buy',
-          subtitle: 'Set a schedule for automatic Bitcoin purchases.',
+        return  _FeatureContent(
+          title: AppLocalizations.of(context)!.msgRecurringBuy,
+          subtitle: AppLocalizations.of(context)!.msgSetAScheduleForAutomaticBitcoinPurchases,
           icon: Icons.edit_calendar_rounded,
-          sectionTitle: 'Purchase schedule',
+          sectionTitle: AppLocalizations.of(context)!.msgPurchaseSchedule,
           rows: [
-            ('Asset', 'Bitcoin'),
-            ('Frequency', 'Not selected'),
-            ('Payment method', 'Not selected'),
+            (AppLocalizations.of(context)!.msgAsset, 'Bitcoin'),
+            (AppLocalizations.of(context)!.msgFrequency, AppLocalizations.of(context)!.msgNotSelected),
+            (AppLocalizations.of(context)!.msgPaymentMethod, AppLocalizations.of(context)!.msgNotSelected),
           ],
         );
     }
@@ -75,7 +76,7 @@ class WalletFeaturePreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = _content;
+    final content = _content(context);
     return Scaffold(
       backgroundColor: _background,
       body: SafeArea(
@@ -210,14 +211,14 @@ class WalletFeaturePreviewWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                       border: Border.all(color: _border),
                     ),
-                    child: const Row(
+                    child:  Row(
                       children: [
                         Icon(Icons.info_outline_rounded,
                             color: _orange, size: 21.0),
                         SizedBox(width: 11.0),
                         Expanded(
                           child: Text(
-                            'Complete the required details to continue.',
+                            AppLocalizations.of(context)!.msgCompleteTheRequiredDetailsToContinue,
                             style: TextStyle(
                               color: _muted,
                               fontSize: 13.0,

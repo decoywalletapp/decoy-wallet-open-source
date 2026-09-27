@@ -14,6 +14,8 @@ import '/backend/supabase/supabase.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'utils/android_display_guard.dart';
+import 'l10n/app_language_controller.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,8 +40,12 @@ void main() async {
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
+  final language = AppLanguageController();
+  await language.initialize();
+
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider.value(value: language),
       ChangeNotifierProvider(
         create: (context) => appState,
       ),
@@ -108,16 +114,19 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final language = context.watch<AppLanguageController>();
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'My Bitcoin Wallet',
       scrollBehavior: MyAppScrollBehavior(),
       localizationsDelegates: [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en', '')],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: language.locale,
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: false,

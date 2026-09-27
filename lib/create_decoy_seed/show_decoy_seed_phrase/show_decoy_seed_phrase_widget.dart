@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -153,7 +154,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                               EdgeInsetsDirectional.fromSTEB(
                                                   8.0, 12.0, 8.0, 12.0),
                                           child: Text(
-                                            'YOUR DECOY SEED',
+                                            AppLocalizations.of(context)!.msgYourDecoySeed,
                                             textAlign: TextAlign.center,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
@@ -178,7 +179,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                               EdgeInsetsDirectional.fromSTEB(
                                                   0.0, 12.0, 0.0, 12.0),
                                           child: Text(
-                                            'YOUR DECOY SEED',
+                                            AppLocalizations.of(context)!.msgYourDecoySeed,
                                             textAlign: TextAlign.center,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
@@ -1045,7 +1046,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    'This seed phrase will not be stored on this device. Write it down and keep it secure.',
+                                    AppLocalizations.of(context)!.msgThisSeedPhraseWillNotBeStoredOn,
                                     textAlign: TextAlign.start,
                                     style: FlutterFlowTheme.of(context)
                                         .bodySmall
@@ -1101,7 +1102,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                               }.withoutNulls,
                             );
                           },
-                          text: 'Accept Decoy Seed Phrase',
+                          text: AppLocalizations.of(context)!.msgAcceptDecoySeedPhrase,
                           icon: Icon(
                             Icons.security,
                             size: 20.0,

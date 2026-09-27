@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/backend/public_config.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -125,7 +126,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       0.0,
                                     ),
                                     child: Text(
-                                      'Tutorials',
+                                      AppLocalizations.of(context)!.msgTutorials,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -151,7 +152,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                       0.0,
                                     ),
                                     child: Text(
-                                      'Tutorials',
+                                      AppLocalizations.of(context)!.msgTutorials,
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -259,7 +260,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'Setting Up Your Decoy PIN',
+                                                    AppLocalizations.of(context)!.msgSettingUpYourDecoyPin,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -416,7 +417,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'Setting Up Your Decoy Keys',
+                                                    AppLocalizations.of(context)!.msgSettingUpYourDecoyKeys,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -573,7 +574,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'Trigger Decoy PIN Alerts',
+                                                    AppLocalizations.of(context)!.msgTriggerDecoyPinAlerts,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -730,7 +731,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'Trigger Decoy Keys Alerts',
+                                                    AppLocalizations.of(context)!.msgTriggerDecoyKeysAlerts,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -887,7 +888,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Enter Contact Information',
+                                                    AppLocalizations.of(context)!.msgHowToEnterContactInformation,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -1044,7 +1045,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'Create Emergency Contacts',
+                                                    AppLocalizations.of(context)!.msgCreateEmergencyContacts,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -1201,7 +1202,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Change Decoy PIN',
+                                                    AppLocalizations.of(context)!.msgHowToChangeDecoyPin,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -1358,7 +1359,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Change Account Entry PIN',
+                                                    AppLocalizations.of(context)!.msgHowToChangeAccountEntryPin,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -1515,7 +1516,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Change Decoy Keys',
+                                                    AppLocalizations.of(context)!.msgHowToChangeDecoyKeys,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -1672,7 +1673,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Manage Control Center',
+                                                    AppLocalizations.of(context)!.msgHowToManageControlCenter,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -1829,7 +1830,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Change Your Email',
+                                                    AppLocalizations.of(context)!.msgHowToChangeYourEmail,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -1986,7 +1987,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Change Phone Number',
+                                                    AppLocalizations.of(context)!.msgHowToChangePhoneNumber,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -2143,7 +2144,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'Pay for Decoy with Bitcoin',
+                                                    AppLocalizations.of(context)!.msgPayForDecoyWithBitcoin,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -2300,7 +2301,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'Pay for Decoy with Credit Card',
+                                                    AppLocalizations.of(context)!.msgPayForDecoyWithCreditCard,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,
@@ -2457,7 +2458,7 @@ class _TutorialsWidgetState extends State<TutorialsWidget> {
                                                         0.0,
                                                       ),
                                                   child: Text(
-                                                    'How to Delete User Account',
+                                                    AppLocalizations.of(context)!.msgHowToDeleteUserAccount,
                                                     style:
                                                         FlutterFlowTheme.of(
                                                           context,

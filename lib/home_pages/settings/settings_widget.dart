@@ -1,3 +1,5 @@
+import '/l10n/app_localizations.dart';
+import '/l10n/language_picker.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/build_provenance.dart';
@@ -63,22 +65,27 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       _buildTitle(context),
                       SizedBox(height: compact ? 22.0 : 30.0),
                       _SettingsSection(
-                        label: 'ACCOUNT',
+                        label: AppLocalizations.of(context)!.msgAccount,
                         children: [
                           _SettingsTile(
+                            icon: Icons.language_rounded,
+                            label: AppLocalizations.of(context)!.msgLanguage,
+                            onTap: () => showLanguagePicker(context),
+                          ),
+                          _SettingsTile(
                             icon: Icons.pin_rounded,
-                            label: 'Change Account Entry PIN',
+                            label: AppLocalizations.of(context)!.msgChangeAccountEntryPin,
                             onTap: () async =>
                                 context.pushNamed(ChangePinWidget.routeName),
                           ),
                           _SettingsTile(
                             icon: Icons.workspace_premium_rounded,
-                            label: 'My Subscription',
+                            label: AppLocalizations.of(context)!.msgMySubscription,
                             onTap: _openSubscription,
                           ),
                           _SettingsTile(
                             icon: Icons.currency_bitcoin_rounded,
-                            label: 'Configure Bitcoin Balance',
+                            label: AppLocalizations.of(context)!.msgConfigureBitcoinBalance,
                             onTap: () async => context.pushNamed(
                               ConfigureBitcoinBalanceWidget.routeName,
                             ),
@@ -87,29 +94,29 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       ),
                       const SizedBox(height: 18.0),
                       _SettingsSection(
-                        label: 'SAFETY & SUPPORT',
+                        label: AppLocalizations.of(context)!.msgSafetySupport,
                         children: [
                           _SettingsTile(
                             icon: Icons.tune_rounded,
-                            label: 'Control Center',
+                            label: AppLocalizations.of(context)!.msgControlCenter,
                             onTap: () async => context
                                 .pushNamed(ControlCenterWidget.routeName),
                           ),
                           _SettingsTile(
                             icon: Icons.support_agent_rounded,
-                            label: 'Contact Us',
+                            label: AppLocalizations.of(context)!.msgContactUs,
                             onTap: () async => context
                                 .pushNamed(SupportTicketWidget.routeName),
                           ),
                           _SettingsTile(
                             icon: Icons.play_circle_outline_rounded,
-                            label: 'Tutorials',
+                            label: AppLocalizations.of(context)!.msgTutorials,
                             onTap: () async =>
                                 context.pushNamed(TutorialsWidget.routeName),
                           ),
                           _SettingsTile(
                             icon: Icons.language_rounded,
-                            label: 'Website',
+                            label: AppLocalizations.of(context)!.msgWebsite,
                             onTap: () async => launchURL(
                               'https://www.decoywalletapp.com',
                             ),
@@ -118,17 +125,17 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       ),
                       const SizedBox(height: 18.0),
                       _SettingsSection(
-                        label: 'LEGAL',
+                        label: AppLocalizations.of(context)!.msgLegal,
                         children: [
                           _SettingsTile(
                             icon: Icons.privacy_tip_outlined,
-                            label: 'Privacy Policy',
+                            label: AppLocalizations.of(context)!.msgPrivacyPolicy,
                             onTap: () async => context
                                 .pushNamed(PrivacyPolicyWidget.routeName),
                           ),
                           _SettingsTile(
                             icon: Icons.description_outlined,
-                            label: 'Terms & Conditions',
+                            label: AppLocalizations.of(context)!.msgTermsConditions,
                             onTap: () async =>
                                 context.pushNamed(TermsofUseWidget.routeName),
                           ),
@@ -139,7 +146,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: _SettingsTile(
                           icon: Icons.delete_outline_rounded,
-                          label: 'Delete User Account',
+                          label: AppLocalizations.of(context)!.msgDeleteUserAccount,
                           isDestructive: true,
                           standalone: true,
                           onTap: () async => context
@@ -214,14 +221,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 alignment: const Alignment(0.05, 0.0),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text('Settings', style: titleStyle),
+                  child: Text(AppLocalizations.of(context)!.msgSettings, style: titleStyle),
                 ),
               ),
               Align(
                 alignment: const Alignment(-0.05, 0.0),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text('Settings', style: titleStyle),
+                  child: Text(AppLocalizations.of(context)!.msgSettings, style: titleStyle),
                 ),
               ),
             ],
@@ -251,8 +258,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   Widget _buildSocialLinks(BuildContext context) {
     return Column(
       children: [
-        const Text(
-          'FOLLOW DECOY WALLET',
+         Text(
+          AppLocalizations.of(context)!.msgFollowDecoyWallet,
           style: TextStyle(
             color: Color(0xFF69717D),
             fontSize: 11.0,
@@ -265,19 +272,19 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _SocialButton(
-              tooltip: 'Primal',
+              tooltip: AppLocalizations.of(context)!.msgPrimal,
               onTap: () => launchURL(
                 'http://primal.net/p/nprofile1qqsywp6yr7r4aemlalupwmluj953tr6dh8tujw77w6dt9k4p2gn9m2cte4kqn',
               ),
               child: Image.asset('assets/images/primallogo.png'),
             ),
             _SocialButton(
-              tooltip: 'Rumble',
+              tooltip: AppLocalizations.of(context)!.msgRumble,
               onTap: () => launchURL('https://rumble.com/user/DecoyWalletApp'),
               child: Image.asset('assets/images/rumble.jpg'),
             ),
             _SocialButton(
-              tooltip: 'YouTube',
+              tooltip: AppLocalizations.of(context)!.msgYoutube,
               onTap: () => launchURL(
                 'https://youtube.com/@decoywalletapp?si=p67QJDUJx2ArQbvL',
               ),
@@ -298,7 +305,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ),
             ),
             _SocialButton(
-              tooltip: 'Instagram',
+              tooltip: AppLocalizations.of(context)!.msgInstagram,
               onTap: () => launchURL(
                 'https://www.instagram.com/decoywalletapp/',
               ),
@@ -357,7 +364,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             color: FlutterFlowTheme.of(context).primary,
           ),
           label: Text(
-            'Log Out',
+            AppLocalizations.of(context)!.msgLogOut,
             style: TextStyle(
               color: FlutterFlowTheme.of(context).primary,
               fontSize: 16.0,

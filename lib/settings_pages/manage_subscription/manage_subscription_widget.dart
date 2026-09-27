@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/public_config.dart';
@@ -48,9 +49,9 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
   bool get _isYearly => _billingInterval == 'yearly';
 
   String get _bitcoinPriceLabel =>
-      _isYearly ? '\$39.42 / year' : '\$3.94 / month';
+      _isYearly ? AppLocalizations.of(context)!.msg3942Year : AppLocalizations.of(context)!.msg394Month;
 
-  String get _cardPriceLabel => _isYearly ? '\$49.90 / year' : '\$4.99 / month';
+  String get _cardPriceLabel => _isYearly ? AppLocalizations.of(context)!.msg4990Year : AppLocalizations.of(context)!.msg499Month;
 
   bool _hasText(String? value) => value != null && value.isNotEmpty;
 
@@ -464,7 +465,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                     0.0,
                                                   ),
                                                   child: Text(
-                                                    'MANAGE ACCESS',
+                                                    AppLocalizations.of(context)!.msgManageAccess,
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                       context,
@@ -491,7 +492,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                     0.0,
                                                   ),
                                                   child: Text(
-                                                    'MANAGE ACCESS',
+                                                    AppLocalizations.of(context)!.msgManageAccess,
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                       context,
@@ -552,7 +553,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                   0.0,
                                                 ),
                                                 child: Text(
-                                                  'METHOD',
+                                                  AppLocalizations.of(context)!.msgMethod,
                                                   textAlign: TextAlign.center,
                                                   style: FlutterFlowTheme.of(
                                                     context,
@@ -577,7 +578,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                   0.0,
                                                 ),
                                                 child: Text(
-                                                  'METHOD',
+                                                  AppLocalizations.of(context)!.msgMethod,
                                                   textAlign: TextAlign.center,
                                                   style: FlutterFlowTheme.of(
                                                     context,
@@ -637,14 +638,14 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                           _buildPlanChoice(
                                             context: context,
                                             interval: 'monthly',
-                                            title: 'Monthly',
-                                            subtitle: 'Flexible access',
+                                            title: AppLocalizations.of(context)!.msgMonthly,
+                                            subtitle: AppLocalizations.of(context)!.msgFlexibleAccess,
                                           ),
                                           _buildPlanChoice(
                                             context: context,
                                             interval: 'yearly',
-                                            title: 'Yearly',
-                                            subtitle: '2 months free',
+                                            title: AppLocalizations.of(context)!.msgYearly,
+                                            subtitle: AppLocalizations.of(context)!.msg2MonthsFree,
                                           ),
                                         ].divide(SizedBox(width: 6.0)),
                                       ),
@@ -660,7 +661,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                   0.0,
                                 ),
                                 child: Text(
-                                  'Emergency alerts, wallet monitoring, and emergency-contact notifications require an active paid subscription.',
+                                  AppLocalizations.of(context)!.msgEmergencyAlertsWalletMonitoringAndEmergencyContactNotifications,
                                   textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(
                                     context,
@@ -774,7 +775,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                         priceLabel:
                                                             _bitcoinPriceLabel,
                                                         yearlyCompareLabel:
-                                                            '\$47.28 / year',
+                                                            AppLocalizations.of(context)!.msg4728Year,
                                                       ),
                                                       Align(
                                                         alignment:
@@ -889,13 +890,13 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                             if (_model
                                                                     .provider ==
                                                                 'btcpay') {
-                                                              return 'Renew Bitcoin Payments';
+                                                              return AppLocalizations.of(context)!.msgRenewBitcoinPayments;
                                                             } else if (_model
                                                                     .pendingProvider ==
                                                                 'btcpay') {
-                                                              return 'Stack More Days';
+                                                              return AppLocalizations.of(context)!.msgStackMoreDays;
                                                             } else {
-                                                              return 'Switch to Bitcoin Payments';
+                                                              return AppLocalizations.of(context)!.msgSwitchToBitcoinPayments;
                                                             }
                                                           }(),
                                                           options:
@@ -1046,7 +1047,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                     context: context,
                                                     priceLabel: _cardPriceLabel,
                                                     yearlyCompareLabel:
-                                                        '\$59.88 / year',
+                                                        AppLocalizations.of(context)!.msg5988Year,
                                                   ),
                                                   FFButtonWidget(
                                                     onPressed: () async {
@@ -1192,7 +1193,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                           ).showSnackBar(
                                                             SnackBar(
                                                               content: Text(
-                                                                'ERROR #029 - PLEASE SCREENSHOT & CONTACT DECOY SUPPORT',
+                                                                AppLocalizations.of(context)!.msgError029PleaseScreenshotContactDecoySupport,
                                                                 style:
                                                                     TextStyle(
                                                                   color:
@@ -1222,13 +1223,13 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                     text: () {
                                                       if (_model.provider ==
                                                           'stripe') {
-                                                        return 'Manage Card Payments';
+                                                        return AppLocalizations.of(context)!.msgManageCardPayments;
                                                       } else if (_model
                                                               .pendingProvider ==
                                                           'stripe') {
-                                                        return 'Card Payments Scheduled';
+                                                        return AppLocalizations.of(context)!.msgCardPaymentsScheduled;
                                                       } else {
-                                                        return 'Switch to Card Payments';
+                                                        return AppLocalizations.of(context)!.msgSwitchToCardPayments;
                                                       }
                                                     }(),
                                                     options: FFButtonOptions(
@@ -1333,7 +1334,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Account Subscription Status:  ',
+                                          AppLocalizations.of(context)!.msgAccountSubscriptionStatus,
                                           textAlign: TextAlign.start,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -1433,7 +1434,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                       (_model.pendingSwitchToStripe ==
                                                           false))
                                                     Text(
-                                                      ' DAYS LEFT',
+                                                      AppLocalizations.of(context)!.msgDaysLeft,
                                                       style:
                                                           FlutterFlowTheme.of(
                                                         context,
@@ -1470,7 +1471,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                       0.0,
                                                     ),
                                                     child: Text(
-                                                      'INACTIVE',
+                                                      AppLocalizations.of(context)!.msgInactive,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style:
@@ -1518,7 +1519,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                       0.0,
                                                     ),
                                                     child: Text(
-                                                      'Stripe will take over on  ',
+                                                      AppLocalizations.of(context)!.msgStripeWillTakeOverOn,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style:
@@ -1639,7 +1640,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
 
                                                     safeSetState(() {});
                                                   },
-                                                  text: 'Cancel Subscription',
+                                                  text: AppLocalizations.of(context)!.msgCancelSubscription,
                                                   options: FFButtonOptions(
                                                     width: 250.0,
                                                     height: 50.0,

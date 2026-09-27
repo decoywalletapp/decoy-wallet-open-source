@@ -1,3 +1,4 @@
+import '/l10n/app_localizations.dart';
 import '/backend/public_config.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -105,7 +106,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                       Align(
                         alignment: AlignmentDirectional(0.0, 0.0),
                         child: Text(
-                          'Forgot Password',
+                          AppLocalizations.of(context)!.msgForgotPassword,
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context).headlineMedium
                               .override(
@@ -127,7 +128,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                             16.0,
                           ),
                           child: Text(
-                            'We will send you an email with a link to reset your password, please enter the email associated with your account below.',
+                            AppLocalizations.of(context)!.msgWeWillSendYouAnEmailWithA,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context).labelMedium
                                 .override(
@@ -159,7 +160,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             decoration: InputDecoration(
-                              labelText: 'Your email address...',
+                              labelText: AppLocalizations.of(context)!.msgYourEmailAddress,
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -171,7 +172,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w500,
                                   ),
-                              hintText: 'Enter your email...',
+                              hintText: AppLocalizations.of(context)!.msgEnterYourEmail,
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -264,7 +265,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
 
                               safeSetState(() {});
                             },
-                            text: 'Send Link',
+                            text: AppLocalizations.of(context)!.msgSendLink,
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 50.0,
@@ -318,7 +319,7 @@ class _ForgotPasswordPageWidgetState extends State<ForgotPasswordPageWidget> {
                           child: Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Text(
-                              'RESET PASSWORD EMAIL SENT',
+                              AppLocalizations.of(context)!.msgResetPasswordEmailSent,
                               style: FlutterFlowTheme.of(context).bodyMedium
                                   .override(
                                     fontFamily: FlutterFlowTheme.of(
