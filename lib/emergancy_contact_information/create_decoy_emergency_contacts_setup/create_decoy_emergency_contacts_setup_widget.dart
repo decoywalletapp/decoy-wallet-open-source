@@ -192,7 +192,12 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
               backgroundColor: Colors.white,
               body: SafeArea(
                 top: true,
-                child: Column(
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    key: const ValueKey('emergency-setup-scroll'),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                      child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -221,170 +226,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 20.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Material(
-                                color: Colors.transparent,
-                                elevation: 5.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Container(
-                                  width: 325.0,
-                                  height: 72.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    border: Border.all(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                    ),
-                                  ),
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 12.0, 0.0, 0.0),
-                                        child: Stack(
-                                          children: [
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.02, 0.0),
-                                              child: Text(
-                                                AppLocalizations.of(context)!.msgDecoyEmergency,
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.5,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.0,
-                                                    ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -0.02, 0.0),
-                                              child: Text(
-                                                AppLocalizations.of(context)!.msgDecoyEmergency,
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'DECOY BEBAS',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 48.0,
-                                                      letterSpacing: 0.5,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      lineHeight: 1.0,
-                                                    ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                elevation: 5.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(10.0),
-                                    bottomRight: Radius.circular(10.0),
-                                  ),
-                                ),
-                                child: Container(
-                                  width: 150.0,
-                                  height: 60.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.01, 0.0),
-                                            child: Text(
-                                              AppLocalizations.of(context)!.msgSetup,
-                                              textAlign: TextAlign.center,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'DECOY BEBAS',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .info,
-                                                    fontSize: 48.0,
-                                                    letterSpacing: 0.5,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    lineHeight: 1.0,
-                                                  ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Text(
-                                              AppLocalizations.of(context)!.msgSetup,
-                                              textAlign: TextAlign.center,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'DECOY BEBAS',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .info,
-                                                    fontSize: 48.0,
-                                                    letterSpacing: 0.5,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    lineHeight: 1.0,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        _buildSetupTitle(context),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               24.0, 0.0, 24.0, 0.0),
@@ -516,6 +358,7 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                   children: [
                                                                     Text(
                                                                       AppLocalizations.of(context)!.msgPersonalContact,
+                                                                      textAlign: TextAlign.center,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .titleLarge
@@ -964,6 +807,8 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                   children: [
                                                                     Text(
                                                                       AppLocalizations.of(context)!.msgEmergencyContacts,
+                                                                      key: const ValueKey('emergency-contacts-tile-label'),
+                                                                      textAlign: TextAlign.center,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .titleLarge
@@ -1153,8 +998,6 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                                         personalComplete,
                                                                         addressComplete,
                                                                         contactsComplete),
-                                                                    width:
-                                                                        325.0,
                                                                     lineHeight:
                                                                         25.0,
                                                                     animation:
@@ -1344,12 +1187,85 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                   ]
                       .divide(SizedBox(height: 18.0))
                       .addToEnd(SizedBox(height: 48.0)),
-                ),
+                      ),
+                    ),
+                  );
+                }),
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSetupTitle(BuildContext context) {
+    final strings = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _titleBlock(context, strings.msgDecoyEmergency,
+                minimumWidth: 325, blockKey: 'emergency-setup-title'),
+            _titleBlock(context, strings.msgSetup,
+                minimumWidth: 150,
+                blockKey: 'emergency-setup-subtitle',
+                lower: true),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _titleBlock(BuildContext context, String title,
+      {required double minimumWidth,
+      required String blockKey,
+      bool lower = false}) {
+    final radius = lower
+        ? const BorderRadius.vertical(bottom: Radius.circular(10))
+        : BorderRadius.circular(10);
+    final style = FlutterFlowTheme.of(context).bodyMedium.override(
+          fontFamily: 'DECOY BEBAS',
+          color: FlutterFlowTheme.of(context).info,
+          fontSize: 48,
+          letterSpacing: 0,
+          fontWeight: FontWeight.normal,
+          lineHeight: 1,
+        );
+    Widget label() => Text(title,
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        softWrap: false,
+        style: style);
+
+    return IntrinsicWidth(
+      child: Material(
+        key: ValueKey(blockKey),
+        elevation: 5,
+        color: FlutterFlowTheme.of(context).primary,
+        borderRadius: radius,
+        child: Container(
+          constraints: BoxConstraints(minWidth: minimumWidth),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                label(),
+                for (final dx in [-0.35, 0.35])
+                  ExcludeSemantics(
+                    child: Transform.translate(
+                        offset: Offset(dx, 0), child: label()),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

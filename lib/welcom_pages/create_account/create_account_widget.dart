@@ -1,5 +1,6 @@
 import '/l10n/app_localizations.dart';
 import '/l10n/language_picker.dart';
+import '/components/auth_wallet_heading.dart';
 import '/backend/public_config.dart';
 import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -83,40 +84,18 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                         decoration: BoxDecoration(color: Colors.white),
                         alignment: AlignmentDirectional(0.0, 0.0),
                         child: SingleChildScrollView(
+                          key: const ValueKey('auth-page-scroll'),
+                          physics: const BouncingScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics(),
+                          ),
+                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const LanguagePickerButton(),
-                              Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Container(
-                                  width: 400.0,
-                                  height: 150.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context).info,
-                                    borderRadius: BorderRadius.circular(0.0),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                      6.0,
-                                      0.0,
-                                      0.0,
-                                      0.0,
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(0.0),
-                                      child: Image.asset(
-                                        'assets/images/DecoyLogo1-WOHiRes.jpg',
-                                        width: 200.0,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              const AuthWalletHeading(),
                               Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Padding(
@@ -139,6 +118,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         ),
                                         child: Text(
                                           AppLocalizations.of(context)!.msgCreateAnAccount,
+                                          key: const ValueKey('create-account-heading'),
+                                          textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .headlineMedium
                                               .override(

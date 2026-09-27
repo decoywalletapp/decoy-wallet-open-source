@@ -1,5 +1,6 @@
 import '/l10n/app_localizations.dart';
 import '/l10n/language_picker.dart';
+import '/components/auth_wallet_heading.dart';
 import '/auth/base_auth_user_provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -132,6 +133,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           return SingleChildScrollView(
+                            key: const ValueKey('auth-page-scroll'),
+                            physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics(),
+                            ),
+                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 minHeight: constraints.maxHeight,
@@ -141,46 +147,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const LanguagePickerButton(),
-                                  Container(
-                                    width: double.infinity,
-                                    constraints: const BoxConstraints(minHeight: 140.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(16.0),
-                                        bottomRight: Radius.circular(16.0),
-                                      ),
-                                    ),
-                                    alignment: AlignmentDirectional(-1.0, 0.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 36.0, 0.0, 0.0),
-                                            child: Text(
-                                              AppLocalizations.of(context)!.msgItcoinWallet,
-                                              textAlign: TextAlign.start,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .displayMedium
-                                                  .override(
-                                                    fontFamily: 'InterTight',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    letterSpacing: 0.0,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  const AuthWalletHeading(),
                                   Align(
                                     alignment: AlignmentDirectional(0.0, 0.0),
                                     child: Padding(

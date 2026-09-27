@@ -44,6 +44,11 @@ gate. Automated tests are not a guarantee of live alert delivery.
   of fetching those fonts at runtime. Narrow-screen text may wrap.
 - Signup no longer disposes focus nodes owned by its Autocomplete widgets; screen
   teardown tests exposed that pre-existing ownership issue.
+- Login and signup share the localized Bitcoin Wallet heading and allow the full
+  page to scroll, with the language selector kept at the top right. The signup
+  title is centered.
+- Emergency Setup uses content-sized title blocks with scale-down fitting and
+  centered tile labels. Its content scrolls when needed on smaller screens.
 
 Backend clients/actions, alert payload construction, PIN checks, wallet derivation,
 payment actions, app-state persistence, and build workflows are unchanged. Only
@@ -81,16 +86,27 @@ and monitoring regression guards.
 
 `localized_screens_test.dart` checks six entry/settings/wallet pages in both
 languages at 320, 402, and 768 logical-pixel widths, including login/signup with
-keyboard insets. For optional local screenshot capture, add
+keyboard insets and actual scroll gestures. Supplying the test-only Supabase URL
+adds Emergency Setup, for 42 layout combinations. All requests are mocked:
+
+```sh
+flutter test --no-pub test/localized_screens_test.dart \
+  --dart-define=DECOY_SUPABASE_URL=https://test.invalid
+```
+
+The checks also verify title text stays inside the orange blocks and translated
+labels are centered. For optional local screenshot capture, add
 `--dart-define=DECOY_CAPTURE_LOCALIZATION=true`. Widget screenshots are not native
 device screenshots and do not replace device testing.
 
 ## Device Acceptance Before Release
 
-Local verification on 2026-09-27: 120 regression tests passed, plus 16 isolated
-PIN tests. The 36 layout combinations are included in those 120 tests. Static
+Local verification on 2026-09-27, including the follow-up UI polish: 120 regression
+tests passed, plus 16 isolated PIN tests. A separate run passed all 42 layout
+combinations (36 are also included in the ordinary regression suite). Static
 analysis reported no errors and 73 existing warnings/informational diagnostics;
-this change does not attempt unrelated cleanup. No native build was distributed.
+this change does not attempt unrelated cleanup. The follow-up UI polish still
+requires a fresh native test build and device verification.
 
 1. Choose Spanish on Login, Create Account, and Settings. Switch back to English.
    Confirm typed form values remain and no page unexpectedly navigates.

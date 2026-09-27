@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:decoy_wallet_app/app_state.dart';
+import 'package:decoy_wallet_app/components/auth_wallet_heading.dart';
+import 'package:decoy_wallet_app/emergancy_contact_information/create_decoy_emergency_contacts_setup/create_decoy_emergency_contacts_setup_widget.dart';
 import 'package:decoy_wallet_app/duress_mode/duress_settings_page/duress_settings_page_widget.dart';
 import 'package:decoy_wallet_app/duress_mode/wallet_feature_preview/wallet_feature_preview_widget.dart';
 import 'package:decoy_wallet_app/home_pages/settings/settings_widget.dart';
@@ -24,6 +27,25 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  final client = MockClient((request) async {
+    if (request.url.path.endsWith('/getConsentStatuses')) {
+      return http.Response('{"slot1Status":"confirmed"}', 200, request: request,
+          headers: {'content-type': 'application/json'});
+    }
+    return http.Response(
+        jsonEncode(request.url.path.endsWith('/decoy_wallet')
+            ? [
+                {
+                  'personal_complete': false,
+                  'contacts_complete': true,
+                  'address_complete': false
+                }
+              ]
+            : []),
+        200,
+        request: request,
+        headers: {'content-type': 'application/json'});
+  });
 
   setUpAll(() async {
     GoogleFonts.config.allowRuntimeFetching = false;
@@ -50,7 +72,7 @@ void main() {
       url: 'https://test.invalid',
       anonKey: 'test-key',
       debug: false,
-      httpClient: MockClient((request) async => http.Response('[]', 200)),
+      httpClient: client,
       authOptions: const FlutterAuthClientOptions(
         autoRefreshToken: false,
         detectSessionInUri: false,
@@ -67,6 +89,9 @@ void main() {
     'balance': const ConfigureBitcoinBalanceWidget(),
     'wallet-settings': const DuressSettingsPageWidget(),
     'recurring-buy': const WalletFeaturePreviewWidget(feature: 'recurring-buy'),
+    if (const String.fromEnvironment('DECOY_SUPABASE_URL') ==
+        'https://test.invalid')
+      'emergency-setup': const CreateDecoyEmergencyContactsSetupWidget(),
   };
   for (final locale in ['en', 'es']) {
     for (final size in [
@@ -77,58 +102,109 @@ void main() {
       for (final page in pages.entries) {
         testWidgets('${page.key} $locale at $size has no overflow',
             (tester) async {
-          tester.view.physicalSize = size;
-          tester.view.devicePixelRatio = 1;
-          addTearDown(tester.view.resetPhysicalSize);
-          addTearDown(tester.view.resetDevicePixelRatio);
-          SharedPreferences.setMockInitialValues({});
-          FlutterSecureStorage.setMockInitialValues({});
-          FFAppState.reset();
-          await FFAppState().initializePersistedState();
-          FFAppState().fakeBtcBalance = 0.12;
-          FFAppState().currentBtcPrice = 80000;
-          final language = AppLanguageController();
-          await language.initialize();
-          await language.setLanguage(locale);
-          final boundaryKey = GlobalKey();
-          await tester.pumpWidget(MultiProvider(
-            providers: [
-              ChangeNotifierProvider.value(value: FFAppState()),
-              ChangeNotifierProvider.value(value: language),
-            ],
-            child: MaterialApp(
-              theme: ThemeData(useMaterial3: false, fontFamily: 'robot'),
-              locale: Locale(locale),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: RepaintBoundary(key: boundaryKey, child: page.value),
-            ),
-          ));
-          await tester.pumpAndSettle();
-          expect(tester.takeException(), isNull);
-          if (const bool.fromEnvironment('DECOY_CAPTURE_LOCALIZATION')) {
-            final boundary = boundaryKey.currentContext!.findRenderObject()!
-                as RenderRepaintBoundary;
-            await tester.runAsync(() async {
-              final image = await boundary.toImage();
-              final bytes =
-                  await image.toByteData(format: ui.ImageByteFormat.png);
-              final directory =
-                  Directory('/private/tmp/decoy-localization-screens');
-              await directory.create(recursive: true);
-              await File(
-                      '${directory.path}/${page.key}-$locale-${size.width.toInt()}.png')
-                  .writeAsBytes(bytes!.buffer.asUint8List());
-              image.dispose();
-            });
-          }
-          if (page.key == 'login' || page.key == 'create-account') {
-            tester.view.viewInsets = const FakeViewPadding(bottom: 280);
-            addTearDown(tester.view.resetViewInsets);
-            await tester.tap(find.byType(EditableText).first);
+          await http.runWithClient(() async {
+            tester.view.physicalSize = size;
+            tester.view.devicePixelRatio = 1;
+            addTearDown(tester.view.resetPhysicalSize);
+            addTearDown(tester.view.resetDevicePixelRatio);
+            SharedPreferences.setMockInitialValues({});
+            FlutterSecureStorage.setMockInitialValues({});
+            FFAppState.reset();
+            await FFAppState().initializePersistedState();
+            FFAppState().fakeBtcBalance = 0.12;
+            FFAppState().currentBtcPrice = 80000;
+            final language = AppLanguageController();
+            await language.initialize();
+            await language.setLanguage(locale);
+            final boundaryKey = GlobalKey();
+            await tester.pumpWidget(MultiProvider(
+              providers: [
+                ChangeNotifierProvider.value(value: FFAppState()),
+                ChangeNotifierProvider.value(value: language),
+              ],
+              child: MaterialApp(
+                theme: ThemeData(useMaterial3: false, fontFamily: 'robot'),
+                locale: Locale(locale),
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
+                home: RepaintBoundary(key: boundaryKey, child: page.value),
+              ),
+            ));
             await tester.pumpAndSettle();
             expect(tester.takeException(), isNull);
-          }
+            if (page.key == 'emergency-setup') {
+              for (final key in [
+                'emergency-setup-title',
+                'emergency-setup-subtitle'
+              ]) {
+                final block = find.byKey(ValueKey(key));
+                final bounds = tester.getRect(block);
+                final labels =
+                    find.descendant(of: block, matching: find.byType(Text));
+                for (final element in labels.evaluate()) {
+                  final box = element.renderObject! as RenderBox;
+                  final painted = MatrixUtils.transformRect(
+                      box.getTransformTo(null), Offset.zero & box.size);
+                  expect(painted.left, greaterThanOrEqualTo(bounds.left));
+                  expect(painted.right, lessThanOrEqualTo(bounds.right));
+                  expect(painted.top, greaterThanOrEqualTo(bounds.top));
+                  expect(painted.bottom, lessThanOrEqualTo(bounds.bottom));
+                }
+              }
+              final label = tester.widget<Text>(
+                  find.byKey(const ValueKey('emergency-contacts-tile-label')));
+              expect(label.textAlign, TextAlign.center);
+            }
+            if (const bool.fromEnvironment('DECOY_CAPTURE_LOCALIZATION')) {
+              final boundary = boundaryKey.currentContext!.findRenderObject()!
+                  as RenderRepaintBoundary;
+              await tester.runAsync(() async {
+                final image = await boundary.toImage();
+                final bytes =
+                    await image.toByteData(format: ui.ImageByteFormat.png);
+                final directory =
+                    Directory('/private/tmp/decoy-localization-screens');
+                await directory.create(recursive: true);
+                await File(
+                        '${directory.path}/${page.key}-$locale-${size.width.toInt()}.png')
+                    .writeAsBytes(bytes!.buffer.asUint8List());
+                image.dispose();
+              });
+            }
+            if (page.key == 'login' || page.key == 'create-account') {
+              expect(find.byType(AuthWalletHeading), findsOneWidget);
+              expect(find.byKey(const ValueKey('language-picker')),
+                  findsOneWidget);
+              final scroll = find.byKey(const ValueKey('auth-page-scroll'));
+              final scrollable = tester.state<ScrollableState>(find
+                  .descendant(of: scroll, matching: find.byType(Scrollable))
+                  .first);
+              expect(
+                  scrollable.position.physics
+                      .shouldAcceptUserOffset(scrollable.position),
+                  isTrue);
+              final heading = find.byKey(const ValueKey('auth-wallet-heading'));
+              final initialY = tester.getTopLeft(heading).dy;
+              await tester.drag(scroll, const Offset(0, -100));
+              expect(tester.getTopLeft(heading).dy, lessThan(initialY));
+              await tester.pumpAndSettle();
+              scrollable.position.jumpTo(0);
+              await tester.pumpAndSettle();
+              if (page.key == 'create-account') {
+                final heading =
+                    find.byKey(const ValueKey('create-account-heading'));
+                expect(
+                    tester.widget<Text>(heading).textAlign, TextAlign.center);
+                expect(
+                    tester.getCenter(heading).dx, closeTo(size.width / 2, 1));
+              }
+              tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+              addTearDown(tester.view.resetViewInsets);
+              await tester.tap(find.byType(EditableText).first);
+              await tester.pumpAndSettle();
+              expect(tester.takeException(), isNull);
+            }
+          }, () => client);
         });
       }
     }
