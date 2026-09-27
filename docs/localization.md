@@ -3,8 +3,9 @@
 ## Scope and Release Gate
 
 This is an unreleased English/Spanish localization feature, based on the verified
-1.1.4 source commit `3b3082f574df83ff92cf3ae2762de9cce2fcb3da`. It does not change
-the app version, deploy a backend, or publish a store build.
+1.1.4 source commit `3b3082f574df83ff92cf3ae2762de9cce2fcb3da`. The test build is
+version 1.1.5. TestFlight and signed Android test artifacts do not deploy a backend
+or submit a public store release.
 
 Language selection is available on Login, Create Account, and Settings. It updates
 the interface immediately and is saved on the device, independent of account,
