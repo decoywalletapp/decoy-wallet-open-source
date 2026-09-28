@@ -10,8 +10,11 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'import_watch_only_wallet_model.dart';
 export 'import_watch_only_wallet_model.dart';
 
@@ -29,6 +32,7 @@ class ImportWatchOnlyWalletWidget extends StatefulWidget {
 class _ImportWatchOnlyWalletWidgetState
     extends State<ImportWatchOnlyWalletWidget> {
   late ImportWatchOnlyWalletModel _model;
+  bool _isScanning = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -49,7 +53,7 @@ class _ImportWatchOnlyWalletWidgetState
     super.dispose();
   }
 
-  void _showImportError(String message) {
+  void _showImportError(String message, {SnackBarAction? action}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -60,8 +64,59 @@ class _ImportWatchOnlyWalletWidgetState
         ),
         duration: Duration(milliseconds: 5000),
         backgroundColor: FlutterFlowTheme.of(context).secondary,
+        action: action,
       ),
     );
+  }
+
+  Future<void> _scanWatchOnlyInput() async {
+    if (_isScanning) return;
+    final l10n = AppLocalizations.of(context)!;
+    final platform = Theme.of(context).platform;
+    if (kIsWeb ||
+        (platform != TargetPlatform.iOS &&
+            platform != TargetPlatform.android)) {
+      _showImportError(l10n.msgCouldNotOpenQrScanner);
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+    setState(() => _isScanning = true);
+    try {
+      // Check first: the native scanner does not complete on iOS denial.
+      final permission = await Permission.camera.request();
+      if (!mounted) return;
+      if (!permission.isGranted) {
+        _showImportError(
+          l10n.msgCameraAccessRequiredForQrScan,
+          action: SnackBarAction(
+            label: l10n.msgOpenDeviceSettings,
+            onPressed: () async {
+              await openAppSettings();
+            },
+          ),
+        );
+        return;
+      }
+
+      final scanned = await FlutterBarcodeScanner.scanBarcode(
+        '#FF6500',
+        l10n.msgCancel,
+        true,
+        ScanMode.QR,
+      );
+      if (!mounted || scanned == '-1' || scanned.trim().isEmpty) return;
+
+      // Scanning only fills the field; Continue retains all import validation.
+      _model.watchOnlyInputTextController!.value = TextEditingValue(
+        text: scanned,
+        selection: TextSelection.collapsed(offset: scanned.length),
+      );
+    } catch (_) {
+      if (mounted) _showImportError(l10n.msgCouldNotOpenQrScanner);
+    } finally {
+      if (mounted) setState(() => _isScanning = false);
+    }
   }
 
   Future<String> _jwtForMonitorCheck() async {
@@ -144,14 +199,16 @@ class _ImportWatchOnlyWalletWidgetState
       try {
         if (await _draftAlreadyMonitored(_model.watchOnlyDraftOut)) {
           _showImportError(
-            AppLocalizations.of(context)!.msgThisWalletOrReceiveAddressIsAlreadyBeing,
+            AppLocalizations.of(context)!
+                .msgThisWalletOrReceiveAddressIsAlreadyBeing,
           );
           safeSetState(() {});
           return;
         }
       } catch (_) {
         _showImportError(
-          AppLocalizations.of(context)!.msgUnableToCheckWhetherThisWalletIsAlready,
+          AppLocalizations.of(context)!
+              .msgUnableToCheckWhetherThisWalletIsAlready,
         );
         safeSetState(() {});
         return;
@@ -202,7 +259,8 @@ class _ImportWatchOnlyWalletWidgetState
     _showImportError(
       error.isNotEmpty
           ? error
-          : AppLocalizations.of(context)!.msgUnableToValidateThisWatchOnlyWalletData,
+          : AppLocalizations.of(context)!
+              .msgUnableToValidateThisWatchOnlyWalletData,
     );
     safeSetState(() {});
   }
@@ -227,7 +285,8 @@ class _ImportWatchOnlyWalletWidgetState
                     24.0 + bottomPadding,
                   ),
                   child: Text(
-                    AppLocalizations.of(context)!.msgWatchOnlyWalletImportIsAvailableInEnabled,
+                    AppLocalizations.of(context)!
+                        .msgWatchOnlyWalletImportIsAvailableInEnabled,
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyLarge.override(
                           fontFamily:
@@ -279,6 +338,7 @@ class _ImportWatchOnlyWalletWidgetState
               children: [
                 DecoyBottomSafeScroll(
                   bottomPadding: bottomPadding,
+                  useIntrinsicHeight: false,
                   child: Padding(
                     padding:
                         EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 24.0, 0.0),
@@ -310,7 +370,8 @@ class _ImportWatchOnlyWalletWidgetState
                             ],
                           ),
                           Text(
-                            AppLocalizations.of(context)!.msgMonitorExistingWallet,
+                            AppLocalizations.of(context)!
+                                .msgMonitorExistingWallet,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium
@@ -320,7 +381,8 @@ class _ImportWatchOnlyWalletWidgetState
                                 ),
                           ),
                           Text(
-                            AppLocalizations.of(context)!.msgAddAWatchOnlyWalletKeyOrSpecific,
+                            AppLocalizations.of(context)!
+                                .msgAddAWatchOnlyWalletKeyOrSpecific,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -347,7 +409,8 @@ class _ImportWatchOnlyWalletWidgetState
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 14.0, 16.0, 14.0),
                             child: Text(
-                              AppLocalizations.of(context)!.msgPasteOnlyWatchOnlyPublicDataNeverPaste,
+                              AppLocalizations.of(context)!
+                                  .msgPasteOnlyWatchOnlyPublicDataNeverPaste,
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -365,93 +428,120 @@ class _ImportWatchOnlyWalletWidgetState
                                   ),
                             ),
                           ),
-                          TextFormField(
-                            controller: _model.watchOnlyInputTextController,
-                            focusNode: _model.watchOnlyInputFocusNode,
-                            autofocus: false,
-                            obscureText: false,
-                            autocorrect: false,
-                            enableSuggestions: false,
-                            keyboardType: TextInputType.multiline,
-                            minLines: 5,
-                            maxLines: 8,
-                            decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)!.msgZpubXpubOrReceiveAddresses,
-                              labelStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .labelMediumFamily,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    letterSpacing: 0.0,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .labelMediumIsCustom,
+                          Stack(
+                            children: [
+                              TextFormField(
+                                controller: _model.watchOnlyInputTextController,
+                                focusNode: _model.watchOnlyInputFocusNode,
+                                autofocus: false,
+                                obscureText: false,
+                                autocorrect: false,
+                                enableSuggestions: false,
+                                readOnly: _isScanning,
+                                keyboardType: TextInputType.multiline,
+                                minLines: 5,
+                                maxLines: 8,
+                                decoration: InputDecoration(
+                                  labelText: AppLocalizations.of(context)!
+                                      .msgZpubXpubOrReceiveAddresses,
+                                  labelStyle: FlutterFlowTheme.of(context)
+                                      .labelMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .labelMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        letterSpacing: 0.0,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .labelMediumIsCustom,
+                                      ),
+                                  alignLabelWithHint: true,
+                                  hintText: AppLocalizations.of(context)!
+                                      .msgZpubOrBc1qBc1p1,
+                                  hintStyle: FlutterFlowTheme.of(context)
+                                      .labelMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .labelMediumFamily,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        letterSpacing: 0.0,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .labelMediumIsCustom,
+                                      ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
-                              alignLabelWithHint: true,
-                              hintText: AppLocalizations.of(context)!.msgZpubOrBc1qBc1p1,
-                              hintStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .labelMediumFamily,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    letterSpacing: 0.0,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .labelMediumIsCustom,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  width: 2.0,
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context).error,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context).error,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding:
+                                      EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 16.0, 60.0, 16.0),
                                 ),
-                                borderRadius: BorderRadius.circular(12.0),
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .bodyMediumFamily,
+                                      fontSize: 15.0,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .bodyMediumIsCustom,
+                                    ),
+                                validator: _model
+                                    .watchOnlyInputTextControllerValidator
+                                    .asValidator(context),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  width: 2.0,
+                              PositionedDirectional(
+                                top: 4,
+                                end: 4,
+                                child: IconButton(
+                                  key: const ValueKey('watch-only-qr-scan'),
+                                  tooltip: AppLocalizations.of(context)!
+                                      .msgTapToOpenQrScanner,
+                                  onPressed:
+                                      _isScanning ? null : _scanWatchOnlyInput,
+                                  icon: Icon(
+                                    Icons.qr_code_scanner_rounded,
+                                    color: FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.circular(12.0),
                               ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 16.0, 16.0, 16.0),
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .bodyMediumFamily,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .bodyMediumIsCustom,
-                                ),
-                            validator: _model
-                                .watchOnlyInputTextControllerValidator
-                                .asValidator(context),
+                            ],
                           ),
                           Text(
-                            AppLocalizations.of(context)!.msgUseXpubForLegacy1AddressWalletsZpub,
+                            AppLocalizations.of(context)!
+                                .msgUseXpubForLegacy1AddressWalletsZpub,
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .bodySmall
@@ -466,7 +556,8 @@ class _ImportWatchOnlyWalletWidgetState
                                 ),
                           ),
                           FFButtonWidget(
-                            onPressed: _prepareImportedWallet,
+                            onPressed:
+                                _isScanning ? null : _prepareImportedWallet,
                             text: AppLocalizations.of(context)!.msgContinue,
                             options: FFButtonOptions(
                               width: double.infinity,

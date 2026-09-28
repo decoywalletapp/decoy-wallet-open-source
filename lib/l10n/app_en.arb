@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "msgCameraAccessRequiredForQrScan": "Camera access is required to scan QR codes. You can enable it in device settings.",
+  "msgCouldNotOpenQrScanner": "Could not open the QR scanner. Please try again or paste the text.",
   "msgComplete": " % Complete",
   "msgControl": " Control",
   "msgDaysLeft": " DAYS LEFT",

@@ -9,6 +9,14 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'يلزم السماح بالوصول إلى الكاميرا لمسح رموز QR. يمكنك تفعيله في إعدادات الجهاز.';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'تعذر فتح ماسح رموز QR. حاول مرة أخرى أو الصق النص.';
+
+  @override
   String get msgComplete => ' % مكتمل';
 
   @override

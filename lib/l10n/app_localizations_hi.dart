@@ -9,6 +9,14 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'QR कोड स्कैन करने के लिए कैमरे की अनुमति ज़रूरी है। आप इसे डिवाइस की सेटिंग में दे सकते हैं।';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'QR स्कैनर नहीं खुल सका। कृपया फिर से कोशिश करें या टेक्स्ट पेस्ट करें।';
+
+  @override
   String get msgComplete => ' % पूरा';
 
   @override

@@ -1,5 +1,7 @@
 {
   "@@locale": "he",
+  "msgCameraAccessRequiredForQrScan": "נדרשת גישה למצלמה כדי לסרוק קודי QR. ניתן לאפשר אותה בהגדרות המכשיר.",
+  "msgCouldNotOpenQrScanner": "לא ניתן לפתוח את סורק ה-QR. נסו שוב או הדביקו את הטקסט.",
   "msgComplete": " % הושלמו",
   "msgControl": " בקרה",
   "msgDaysLeft": " ימים נותרו",

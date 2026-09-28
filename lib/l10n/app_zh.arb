@@ -1,5 +1,7 @@
 {
   "@@locale": "zh",
+  "msgCameraAccessRequiredForQrScan": "扫描二维码需要相机访问权限。您可以在设备设置中开启。",
+  "msgCouldNotOpenQrScanner": "无法打开二维码扫描器。请重试或粘贴文本。",
   "msgComplete": " % 已完成",
   "msgControl": " 控制",
   "msgDaysLeft": " 天剩余",

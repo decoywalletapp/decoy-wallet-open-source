@@ -9,6 +9,12 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan => '扫描二维码需要相机访问权限。您可以在设备设置中开启。';
+
+  @override
+  String get msgCouldNotOpenQrScanner => '无法打开二维码扫描器。请重试或粘贴文本。';
+
+  @override
   String get msgComplete => ' % 已完成';
 
   @override

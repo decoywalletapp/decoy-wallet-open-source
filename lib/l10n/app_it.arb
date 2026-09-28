@@ -1,5 +1,7 @@
 {
   "@@locale": "it",
+  "msgCameraAccessRequiredForQrScan": "Per scansionare i codici QR è necessario l'accesso alla fotocamera. Puoi consentirlo nelle impostazioni del dispositivo.",
+  "msgCouldNotOpenQrScanner": "Impossibile aprire lo scanner QR. Riprova oppure incolla il testo.",
   "msgComplete": " % completato",
   "msgControl": " Centro di",
   "msgDaysLeft": " GIORNI RIMANENTI",

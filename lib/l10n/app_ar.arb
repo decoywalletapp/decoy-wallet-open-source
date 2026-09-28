@@ -1,5 +1,7 @@
 {
   "@@locale": "ar",
+  "msgCameraAccessRequiredForQrScan": "يلزم السماح بالوصول إلى الكاميرا لمسح رموز QR. يمكنك تفعيله في إعدادات الجهاز.",
+  "msgCouldNotOpenQrScanner": "تعذر فتح ماسح رموز QR. حاول مرة أخرى أو الصق النص.",
   "msgComplete": " % مكتمل",
   "msgControl": " التحكم",
   "msgDaysLeft": " أيام متبقية",

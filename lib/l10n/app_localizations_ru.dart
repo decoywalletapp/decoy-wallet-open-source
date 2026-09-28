@@ -9,6 +9,14 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'Для сканирования QR-кодов нужен доступ к камере. Его можно разрешить в настройках устройства.';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'Не удалось открыть QR-сканер. Попробуйте ещё раз или вставьте текст.';
+
+  @override
   String get msgComplete => ' % выполнено';
 
   @override

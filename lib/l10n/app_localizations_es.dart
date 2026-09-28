@@ -9,6 +9,14 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'Se necesita acceso a la cámara para escanear códigos QR. Puedes activarlo en los ajustes del dispositivo.';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'No se pudo abrir el escáner QR. Inténtalo de nuevo o pega el texto.';
+
+  @override
   String get msgComplete => ' % completado';
 
   @override

@@ -71,11 +71,14 @@ class DecoyBottomSafeScroll extends StatelessWidget {
     required this.child,
     this.bottomPadding,
     this.extraBottomPadding = 32.0,
+    this.useIntrinsicHeight = true,
   });
 
   final Widget child;
   final double? bottomPadding;
   final double extraBottomPadding;
+  // Multiline text fields can need natural height as their contents change.
+  final bool useIntrinsicHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +108,7 @@ class DecoyBottomSafeScroll extends StatelessWidget {
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: minimumHeight),
-            child: IntrinsicHeight(child: child),
+            child: useIntrinsicHeight ? IntrinsicHeight(child: child) : child,
           ),
         );
       },

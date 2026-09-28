@@ -130,6 +130,18 @@ abstract class AppLocalizations {
     Locale('zh')
   ];
 
+  /// No description provided for @msgCameraAccessRequiredForQrScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access is required to scan QR codes. You can enable it in device settings.'**
+  String get msgCameraAccessRequiredForQrScan;
+
+  /// No description provided for @msgCouldNotOpenQrScanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the QR scanner. Please try again or paste the text.'**
+  String get msgCouldNotOpenQrScanner;
+
   /// No description provided for @msgComplete.
   ///
   /// In en, this message translates to:

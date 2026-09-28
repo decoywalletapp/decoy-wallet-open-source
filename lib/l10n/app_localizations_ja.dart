@@ -9,6 +9,14 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'QRコードをスキャンするにはカメラへのアクセス許可が必要です。端末の設定で許可できます。';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'QRスキャナーを開けませんでした。もう一度お試しいただくか、テキストを貼り付けてください。';
+
+  @override
   String get msgComplete => ' % 完了';
 
   @override

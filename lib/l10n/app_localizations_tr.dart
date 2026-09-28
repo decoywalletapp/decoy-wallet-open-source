@@ -9,6 +9,14 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'QR kodlarını taramak için kamera erişimi gereklidir. Cihaz ayarlarından izin verebilirsiniz.';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'QR tarayıcı açılamadı. Lütfen tekrar deneyin veya metni yapıştırın.';
+
+  @override
   String get msgComplete => ' % tamamlandı';
 
   @override

@@ -1,5 +1,7 @@
 {
   "@@locale": "uk",
+  "msgCameraAccessRequiredForQrScan": "Для сканування QR-кодів потрібен доступ до камери. Його можна дозволити в налаштуваннях пристрою.",
+  "msgCouldNotOpenQrScanner": "Не вдалося відкрити QR-сканер. Спробуйте ще раз або вставте текст.",
   "msgComplete": " % виконано",
   "msgControl": " Центр",
   "msgDaysLeft": " ДНІВ ЗАЛИШИЛОСЯ",

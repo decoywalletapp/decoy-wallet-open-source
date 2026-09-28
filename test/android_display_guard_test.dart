@@ -3,6 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  for (final useIntrinsicHeight in [true, false]) {
+    testWidgets(
+        'safe scroll preserves height and scrolls ($useIntrinsicHeight)',
+        (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: DecoyBottomSafeScroll(
+            useIntrinsicHeight: useIntrinsicHeight,
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [SizedBox(height: 1200), Text('Bottom content')],
+            ),
+          ),
+        ),
+      ));
+      final scroll = find.byType(DecoyBottomSafeScroll);
+      expect(
+          find.descendant(of: scroll, matching: find.byType(IntrinsicHeight)),
+          useIntrinsicHeight ? findsOneWidget : findsNothing);
+      await tester.ensureVisible(find.text('Bottom content'));
+      await tester.pumpAndSettle();
+      expect(find.text('Bottom content').hitTestable(), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  test('safe scroll keeps intrinsic height enabled by default', () {
+    expect(const DecoyBottomSafeScroll(child: SizedBox()).useIntrinsicHeight,
+        isTrue);
+  });
+
   test('adds Android bottom clearance when the OS reports no nav inset', () {
     const mediaQuery = MediaQueryData(
       padding: EdgeInsets.only(top: 24.0),

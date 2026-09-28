@@ -9,6 +9,14 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'Cameratoegang is nodig om QR-codes te scannen. Je kunt dit toestaan in de apparaatinstellingen.';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'De QR-scanner kon niet worden geopend. Probeer het opnieuw of plak de tekst.';
+
+  @override
   String get msgComplete => ' % voltooid';
 
   @override

@@ -9,6 +9,14 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get msgCameraAccessRequiredForQrScan =>
+      'QR 코드를 스캔하려면 카메라 접근 권한이 필요합니다. 기기 설정에서 허용할 수 있습니다.';
+
+  @override
+  String get msgCouldNotOpenQrScanner =>
+      'QR 스캐너를 열 수 없습니다. 다시 시도하거나 텍스트를 붙여넣으세요.';
+
+  @override
   String get msgComplete => ' % 완료';
 
   @override
