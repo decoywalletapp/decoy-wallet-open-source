@@ -12,6 +12,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_page_model.dart';
+import 'localized_home_tile_label.dart';
 export 'home_page_model.dart';
 
 /// Access settings, generate decoy seed, create duress PIN
@@ -120,6 +121,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    final keepEnglishLayout =
+        Localizations.localeOf(context).languageCode == 'en';
 
     return GestureDetector(
       onTap: () {
@@ -264,7 +267,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               ),
                                             ),
                                             Expanded(
-                                              child: Align(
+                                              child: !keepEnglishLayout
+                                                  ? LocalizedHomeTileLabel(
+                                                      AppLocalizations.of(context)!.msgDecoyKeys,
+                                                      key: const ValueKey('home-keys-label'),
+                                                    )
+                                                  : Align(
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Column(
@@ -497,7 +505,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               ),
                                             ),
                                             Expanded(
-                                              child: Column(
+                                              child: !keepEnglishLayout
+                                                  ? LocalizedHomeTileLabel(
+                                                      AppLocalizations.of(context)!.msgDecoyPin,
+                                                      key: const ValueKey('home-pin-label'),
+                                                    )
+                                                  : Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -741,7 +754,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               ),
                                             ),
                                             Expanded(
-                                              child: Align(
+                                              child: !keepEnglishLayout
+                                                  ? LocalizedHomeTileLabel(
+                                                      AppLocalizations.of(context)!.msgDecoyContacts,
+                                                      key: const ValueKey('home-contacts-label'),
+                                                    )
+                                                  : Align(
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Column(

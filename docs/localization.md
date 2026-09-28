@@ -122,6 +122,17 @@ labels are centered. For optional local screenshot capture, add
 `--dart-define=DECOY_CAPTURE_LOCALIZATION=true`. Widget screenshots are not native
 device screenshots and do not replace device testing.
 
+`localized_home_page_test.dart` checks the three main home tiles across all 18
+languages at 320, 402, and 768 logical-pixel widths. Translated labels fit within
+the existing tiles, use centered lines, and remain fully visible. English keeps
+its original widget layout and is compared pixel-for-pixel with golden images
+captured from commit `2787252`, before the translated home-label fix. These tests
+use a mocked subscription response and never access production services.
+
+```sh
+flutter test --no-pub test/localized_home_page_test.dart
+```
+
 ## Device Acceptance Before Release
 
 Local verification on 2026-09-27: 554 regression tests passed, with the isolated PIN
