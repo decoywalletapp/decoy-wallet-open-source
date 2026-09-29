@@ -1,5 +1,6 @@
 {
   "@@locale": "id",
+  "msgAlreadyConfirmedYourEmail": "Sudah mengonfirmasi email Anda?",
   "msgCameraAccessRequiredForQrScan": "Akses kamera diperlukan untuk memindai kode QR. Anda dapat mengaktifkannya di pengaturan perangkat.",
   "msgCouldNotOpenQrScanner": "Pemindai QR tidak dapat dibuka. Coba lagi atau tempel teksnya.",
   "msgComplete": " % Selesai",

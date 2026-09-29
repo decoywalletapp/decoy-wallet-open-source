@@ -130,6 +130,12 @@ abstract class AppLocalizations {
     Locale('zh')
   ];
 
+  /// No description provided for @msgAlreadyConfirmedYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Already confirmed your email?'**
+  String get msgAlreadyConfirmedYourEmail;
+
   /// No description provided for @msgCameraAccessRequiredForQrScan.
   ///
   /// In en, this message translates to:

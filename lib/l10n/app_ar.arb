@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "msgAlreadyConfirmedYourEmail": "هل أكدت بريدك الإلكتروني بالفعل؟",
   "msgCameraAccessRequiredForQrScan": "يلزم السماح بالوصول إلى الكاميرا لمسح رموز QR. يمكنك تفعيله في إعدادات الجهاز.",
   "msgCouldNotOpenQrScanner": "تعذر فتح ماسح رموز QR. حاول مرة أخرى أو الصق النص.",
   "msgComplete": " % مكتمل",

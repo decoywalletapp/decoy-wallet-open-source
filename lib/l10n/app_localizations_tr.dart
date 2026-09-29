@@ -9,6 +9,10 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail =>
+      'E-posta adresinizi zaten doğruladınız mı?';
+
+  @override
   String get msgCameraAccessRequiredForQrScan =>
       'QR kodlarını taramak için kamera erişimi gereklidir. Cihaz ayarlarından izin verebilirsiniz.';
 

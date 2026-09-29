@@ -9,6 +9,9 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail => '이미 이메일을 확인하셨나요?';
+
+  @override
   String get msgCameraAccessRequiredForQrScan =>
       'QR 코드를 스캔하려면 카메라 접근 권한이 필요합니다. 기기 설정에서 허용할 수 있습니다.';
 

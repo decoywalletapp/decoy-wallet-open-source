@@ -9,6 +9,9 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail => 'Sudah mengonfirmasi email Anda?';
+
+  @override
   String get msgCameraAccessRequiredForQrScan =>
       'Akses kamera diperlukan untuk memindai kode QR. Anda dapat mengaktifkannya di pengaturan perangkat.';
 

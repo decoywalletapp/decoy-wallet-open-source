@@ -9,6 +9,10 @@ class AppLocalizationsPl extends AppLocalizations {
   AppLocalizationsPl([String locale = 'pl']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail =>
+      'Adres e-mail został już potwierdzony?';
+
+  @override
   String get msgCameraAccessRequiredForQrScan =>
       'Do skanowania kodów QR wymagany jest dostęp do aparatu. Możesz go włączyć w ustawieniach urządzenia.';
 

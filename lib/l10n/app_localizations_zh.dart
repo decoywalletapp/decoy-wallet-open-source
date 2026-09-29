@@ -9,6 +9,9 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail => '已经确认您的电子邮箱了吗？';
+
+  @override
   String get msgCameraAccessRequiredForQrScan => '扫描二维码需要相机访问权限。您可以在设备设置中开启。';
 
   @override

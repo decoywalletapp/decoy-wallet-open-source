@@ -9,6 +9,9 @@ class AppLocalizationsHe extends AppLocalizations {
   AppLocalizationsHe([String locale = 'he']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail => 'כבר אימתת את כתובת האימייל שלך?';
+
+  @override
   String get msgCameraAccessRequiredForQrScan =>
       'נדרשת גישה למצלמה כדי לסרוק קודי QR. ניתן לאפשר אותה בהגדרות המכשיר.';
 

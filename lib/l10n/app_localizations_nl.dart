@@ -9,6 +9,9 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail => 'Je e-mailadres al bevestigd?';
+
+  @override
   String get msgCameraAccessRequiredForQrScan =>
       'Cameratoegang is nodig om QR-codes te scannen. Je kunt dit toestaan in de apparaatinstellingen.';
 

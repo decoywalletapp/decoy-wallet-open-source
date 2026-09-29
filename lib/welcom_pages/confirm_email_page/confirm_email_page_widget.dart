@@ -3,6 +3,8 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/welcom_pages/login_page/login_page_widget.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -213,7 +215,7 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                             ),
                             Container(
                               width: 400.0,
-                              height: 75.0,
+                              constraints: const BoxConstraints(minHeight: 75.0),
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).info,
                               ),
@@ -237,6 +239,48 @@ class _ConfirmEmailPageWidgetState extends State<ConfirmEmailPageWidget> {
                                                 .bodyMediumIsCustom,
                                       ),
                                 ),
+                              ),
+                            ),
+                            const SizedBox(height: 24.0),
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .msgAlreadyConfirmedYourEmail,
+                              textAlign: TextAlign.center,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: FlutterFlowTheme.of(context)
+                                        .bodyMediumFamily,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    letterSpacing: 0.0,
+                                    useGoogleFonts:
+                                        !FlutterFlowTheme.of(context)
+                                            .bodyMediumIsCustom,
+                                  ),
+                            ),
+                            const SizedBox(height: 12.0),
+                            FFButtonWidget(
+                              key: const ValueKey('confirmed-email-login'),
+                              onPressed: () =>
+                                  context.goNamed(LoginPageWidget.routeName),
+                              text: AppLocalizations.of(context)!.msgLogIn,
+                              options: FFButtonOptions(
+                                width: 400.0,
+                                height: 48.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: 'robot',
+                                      useGoogleFonts: false,
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                elevation: 3.0,
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                           ]

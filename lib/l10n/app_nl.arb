@@ -1,5 +1,6 @@
 {
   "@@locale": "nl",
+  "msgAlreadyConfirmedYourEmail": "Je e-mailadres al bevestigd?",
   "msgCameraAccessRequiredForQrScan": "Cameratoegang is nodig om QR-codes te scannen. Je kunt dit toestaan in de apparaatinstellingen.",
   "msgCouldNotOpenQrScanner": "De QR-scanner kon niet worden geopend. Probeer het opnieuw of plak de tekst.",
   "msgComplete": " % voltooid",

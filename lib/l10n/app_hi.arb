@@ -1,5 +1,6 @@
 {
   "@@locale": "hi",
+  "msgAlreadyConfirmedYourEmail": "क्या आपने अपना ईमेल पहले ही सत्यापित कर लिया है?",
   "msgCameraAccessRequiredForQrScan": "QR कोड स्कैन करने के लिए कैमरे की अनुमति ज़रूरी है। आप इसे डिवाइस की सेटिंग में दे सकते हैं।",
   "msgCouldNotOpenQrScanner": "QR स्कैनर नहीं खुल सका। कृपया फिर से कोशिश करें या टेक्स्ट पेस्ट करें।",
   "msgComplete": " % पूरा",

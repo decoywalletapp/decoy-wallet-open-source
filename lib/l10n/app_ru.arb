@@ -1,5 +1,6 @@
 {
   "@@locale": "ru",
+  "msgAlreadyConfirmedYourEmail": "Уже подтвердили адрес электронной почты?",
   "msgCameraAccessRequiredForQrScan": "Для сканирования QR-кодов нужен доступ к камере. Его можно разрешить в настройках устройства.",
   "msgCouldNotOpenQrScanner": "Не удалось открыть QR-сканер. Попробуйте ещё раз или вставьте текст.",
   "msgComplete": " % выполнено",

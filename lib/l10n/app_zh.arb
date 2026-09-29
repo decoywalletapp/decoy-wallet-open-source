@@ -1,5 +1,6 @@
 {
   "@@locale": "zh",
+  "msgAlreadyConfirmedYourEmail": "已经确认您的电子邮箱了吗？",
   "msgCameraAccessRequiredForQrScan": "扫描二维码需要相机访问权限。您可以在设备设置中开启。",
   "msgCouldNotOpenQrScanner": "无法打开二维码扫描器。请重试或粘贴文本。",
   "msgComplete": " % 已完成",

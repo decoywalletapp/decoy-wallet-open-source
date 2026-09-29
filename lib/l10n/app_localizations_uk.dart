@@ -9,6 +9,10 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
+  String get msgAlreadyConfirmedYourEmail =>
+      'Уже підтвердили адресу електронної пошти?';
+
+  @override
   String get msgCameraAccessRequiredForQrScan =>
       'Для сканування QR-кодів потрібен доступ до камери. Його можна дозволити в налаштуваннях пристрою.';
 

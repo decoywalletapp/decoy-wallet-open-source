@@ -1,5 +1,6 @@
 {
   "@@locale": "pt",
+  "msgAlreadyConfirmedYourEmail": "Já confirmou seu e-mail?",
   "msgCameraAccessRequiredForQrScan": "É necessário permitir o acesso à câmara para ler códigos QR. Pode fazê-lo nas definições do dispositivo.",
   "msgCouldNotOpenQrScanner": "Não foi possível abrir o leitor QR. Tente novamente ou cole o texto.",
   "msgComplete": " % concluído",

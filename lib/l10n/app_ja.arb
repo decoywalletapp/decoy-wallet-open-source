@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "msgAlreadyConfirmedYourEmail": "メールアドレスの確認はお済みですか？",
   "msgCameraAccessRequiredForQrScan": "QRコードをスキャンするにはカメラへのアクセス許可が必要です。端末の設定で許可できます。",
   "msgCouldNotOpenQrScanner": "QRスキャナーを開けませんでした。もう一度お試しいただくか、テキストを貼り付けてください。",
   "msgComplete": " % 完了",
