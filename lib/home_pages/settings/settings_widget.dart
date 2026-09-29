@@ -294,8 +294,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           ),
         ),
         const SizedBox(height: 12.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          alignment: WrapAlignment.center,
+          runSpacing: 14.0,
           children: [
             _SocialButton(
               tooltip: AppLocalizations.of(context)!.msgPrimal,
@@ -364,6 +365,17 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               tooltip: 'X',
               onTap: () => launchURL('https://x.com/decoywalletapp?s=21'),
               child: Image.asset('assets/images/xlogo.png'),
+            ),
+            _SocialButton(
+              tooltip: 'GitHub',
+              onTap: () => launchURL(
+                'https://github.com/decoywalletapp/decoy-wallet-open-source',
+              ),
+              child: const FaIcon(
+                FontAwesomeIcons.github,
+                color: Color(0xFF161B22),
+                size: 34.0,
+              ),
             ),
           ],
         ),
