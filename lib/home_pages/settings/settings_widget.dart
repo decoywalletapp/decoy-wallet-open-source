@@ -299,11 +299,16 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           runSpacing: 14.0,
           children: [
             _SocialButton(
-              tooltip: AppLocalizations.of(context)!.msgPrimal,
+              tooltip: 'Nostr',
               onTap: () => launchURL(
-                'http://primal.net/p/nprofile1qqsywp6yr7r4aemlalupwmluj953tr6dh8tujw77w6dt9k4p2gn9m2cte4kqn',
+                'https://primal.net/p/nprofile1qqsywp6yr7r4aemlalupwmluj953tr6dh8tujw77w6dt9k4p2gn9m2cte4kqn',
               ),
-              child: Image.asset('assets/images/primallogo.png'),
+              child: Image.asset(
+                'assets/images/nostr-logo.png',
+                width: 36.0,
+                height: 36.0,
+                fit: BoxFit.cover,
+              ),
             ),
             _SocialButton(
               tooltip: AppLocalizations.of(context)!.msgRumble,

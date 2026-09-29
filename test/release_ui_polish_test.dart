@@ -147,7 +147,7 @@ void main() {
 
   for (final width in [320.0, 402.0, 768.0]) {
     testWidgets(
-        'GitHub tile matches social buttons and opens public repo at $width',
+        'Nostr and GitHub tiles match social buttons and open correct links at $width',
         (tester) async {
       final previous = UrlLauncherPlatform.instance;
       final launcher = _RecordingLauncher();
@@ -164,7 +164,7 @@ void main() {
           ),
           Size(width, 874));
       await tester.runAsync(() async {
-        for (final asset in ['primallogo.png', 'rumble.jpg', 'xlogo.png']) {
+        for (final asset in ['nostr-logo.png', 'rumble.jpg', 'xlogo.png']) {
           await precacheImage(AssetImage('assets/images/$asset'),
               tester.element(find.byType(SettingsWidget)));
         }
@@ -176,7 +176,7 @@ void main() {
       final wrap = find.ancestor(of: github, matching: find.byType(Wrap));
       expect(wrap, findsOneWidget);
       expect(tester.widget<Wrap>(wrap).children, hasLength(6));
-      for (final tooltip in ['GitHub', 'X']) {
+      for (final tooltip in ['Nostr', 'GitHub', 'X']) {
         final tile = find.descendant(
             of: find.byTooltip(tooltip), matching: find.byType(InkWell));
         expect(tester.getSize(tile), const Size(48, 48));
@@ -184,10 +184,19 @@ void main() {
         expect(bounds.left, greaterThanOrEqualTo(0));
         expect(bounds.right, lessThanOrEqualTo(width));
       }
+      final nostr = find.byTooltip('Nostr');
+      expect(find.byTooltip('Primal'), findsNothing);
+      final nostrImage = tester.widget<Image>(
+          find.descendant(of: nostr, matching: find.byType(Image)));
+      expect((nostrImage.image as AssetImage).assetName,
+          'assets/images/nostr-logo.png');
       await _capture(tester, boundary, 'settings-${width.toInt()}');
+      await tester.tap(nostr);
+      await tester.pump();
       await tester.tap(github);
       await tester.pump();
       expect(launcher.urls, [
+        'https://primal.net/p/nprofile1qqsywp6yr7r4aemlalupwmluj953tr6dh8tujw77w6dt9k4p2gn9m2cte4kqn',
         'https://github.com/decoywalletapp/decoy-wallet-open-source',
       ]);
       expect(tester.takeException(), isNull);
@@ -270,7 +279,8 @@ void main() {
           final scaffold = tester.widget<Scaffold>(find.descendant(
               of: find.byType(AuthRouterWidget),
               matching: find.byType(Scaffold)));
-          expect(scaffold.backgroundColor, Colors.white);
+          expect(scaffold.backgroundColor, Colors.black,
+              reason: 'Preserve the existing dark auth-router appearance');
         }
         if (frame == 3 || frame == 10) {
           await _capture(

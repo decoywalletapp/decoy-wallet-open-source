@@ -73,3 +73,12 @@ by their respective operators. They are not granted under Decoy Wallet's MIT
 source-code license. The local `assets/images/rumble.jpg` metadata identifies
 Icons8 as the image source and copyright holder; confirm its license and
 attribution requirements before public launch.
+
+## Nostr Community Logo
+
+- File: `assets/images/nostr-logo.png`
+- Original design: SovrynMatt; small-size variant improved by @designsats.
+- Upstream: https://github.com/SovrynMatt/Nostr-Website-Button-Design
+- Asset source: https://user-images.githubusercontent.com/99301796/223592277-34058d0e-af30-411d-8dfe-87c42dacdcf2.png
+- Permission: The upstream README explicitly allows copying, saving, sharing,
+  and using its images on websites. No separate named license is specified.

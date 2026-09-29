@@ -544,7 +544,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
           body: SafeArea(
             top: true,
             child: AnimatedOpacity(
