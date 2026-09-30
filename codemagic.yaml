@@ -1163,6 +1163,11 @@ workflows:
           "
           flutter build apk $common_args
           flutter build appbundle $common_args
+      - name: Verify Android release permissions
+        script: |
+          set -eu
+          python3 -m unittest discover -s tool -p 'test_android_permissions.py'
+          python3 tool/verify_android_permissions.py build/app/intermediates/merged_manifests/release
       - name: Write public provenance summary
         script: |
           set -eu
