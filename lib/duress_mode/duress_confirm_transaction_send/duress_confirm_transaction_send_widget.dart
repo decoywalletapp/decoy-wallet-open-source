@@ -69,24 +69,6 @@ class _DuressConfirmTransactionSendWidgetState
     super.dispose();
   }
 
-  void _applyDuressSendBalance(String grossAmountText) {
-    final nextBalance = functions.fakeBtcBalanceAfterSend(
-      FFAppState().fakeBtcBalance,
-      grossAmountText,
-      _model.feeBtc,
-    );
-    FFAppState().update(() {
-      FFAppState().fakeBtcBalance = nextBalance;
-      FFAppState().fakeUsdValue = valueOrDefault<double>(
-        functions.usdFromBtc(
-          nextBalance,
-          FFAppState().currentPriceMultiple,
-        ),
-        0.0,
-      );
-    });
-  }
-
   void _resetSlider() {
     _model.slideValue = 0.0;
     _model.sliderValue = 0.0;
@@ -108,7 +90,16 @@ class _DuressConfirmTransactionSendWidgetState
 
     _model.orderProcessed = 1;
     FFAppState().sendAmountBtc = totalAfterFee;
-    _applyDuressSendBalance(sendAmountBtcForFlow);
+    final saved = await FFAppState().spendSimulatedBalance(
+        sendAmountBtcForFlow, _model.feeBtc);
+    if (!mounted) return;
+    if (!saved) {
+      _model.orderProcessed = 0;
+      _resetSlider();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)!.msgNotQuiteTryAgain)));
+      return;
+    }
     FFAppState().txStartAt = getCurrentTimestamp;
     FFAppState().txTotalMins = 60;
     FFAppState().txStatus = 'awaiting';

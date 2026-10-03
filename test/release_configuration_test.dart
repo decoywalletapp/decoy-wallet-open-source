@@ -38,6 +38,44 @@ void main() {
         dartDefines(buildScript('ios-testflight-rehearsal')));
   });
 
+  for (final id in [
+    'ios-testflight-rehearsal',
+    'android-signed-release-rehearsal'
+  ]) {
+    test('$id is restricted to the private balance pilot branch', () {
+      expect(
+          workflows[id]['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'],
+          'true');
+      expect(dartDefines(buildScript(id)),
+          contains('DECOY_ACCOUNT_BALANCE_PILOT'));
+      final guard = (workflows[id]['scripts'] as YamlList).first['script'];
+      for (final branch in ['main', 'codex/wallet-terminology-20261002', '']) {
+        expect(
+            Process.runSync('/bin/sh', ['-c', guard],
+                environment: {'CM_BRANCH': branch}).exitCode,
+            isNot(0));
+      }
+      expect(
+          Process.runSync('/bin/sh', [
+            '-c',
+            guard
+          ], environment: {
+            'CM_BRANCH': 'codex/account-balance-pilot-20261003'
+          }).exitCode,
+          0);
+    });
+  }
+
+  test('public release workflow does not enable the balance pilot', () {
+    expect(
+        workflows['ios-app-store-release']['environment']['vars']
+            ['DECOY_ACCOUNT_BALANCE_PILOT'],
+        'false');
+    expect(workflows['android-signed-release-rehearsal']['publishing'], isNull);
+    expect(dartDefines(buildScript('android-debug-rehearsal')),
+        isNot(contains('DECOY_ACCOUNT_BALANCE_PILOT')));
+  });
+
   for (final id in ['ios-testflight-rehearsal', 'ios-app-store-release']) {
     group('$id Apple upload target', () {
       late Directory temporary;

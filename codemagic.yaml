@@ -1,6 +1,6 @@
 workflows:
   ios-testflight-rehearsal:
-    name: iOS TestFlight Rehearsal
+    name: iOS Account Balance Pilot
     instance_type: mac_mini_m2
     max_build_duration: 120
     integrations:
@@ -17,7 +17,8 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
-        DECOY_BUILD_VERIFICATION: "testflight-rehearsal"
+        DECOY_BUILD_VERIFICATION: "account-balance-pilot"
+        DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
       xcode: latest
       cocoapods: default
@@ -26,6 +27,10 @@ workflows:
         - ~/.pub-cache
         - ~/Library/Caches/CocoaPods
     scripts:
+      - name: Restrict account balance pilot branch
+        script: |
+          set -eu
+          test "${CM_BRANCH:-}" = "codex/account-balance-pilot-20261003"
       - name: Confirm public source checkout
         script: |
           set -eu
@@ -234,6 +239,15 @@ workflows:
         script: |
           set -eu
           flutter test --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
+      - name: Test account balance pilot PIN routes
+        script: |
+          set -eu
+          flutter test test/localized_pin_navigation_test.dart \
+            --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
+            --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
+            --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid \
+            --dart-define=DECOY_ALERT_BASE_URL=https://test.invalid \
+            --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap
       - name: Build TestFlight IPA with source provenance
         script: |
           set -eu
@@ -241,6 +255,7 @@ workflows:
             --build-name="$APP_VERSION" \
             --build-number="$APP_BUILD_NUMBER" \
             --export-options-plist=/Users/builder/export_options.plist \
+            --dart-define=DECOY_ACCOUNT_BALANCE_PILOT="$DECOY_ACCOUNT_BALANCE_PILOT" \
             --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
             --dart-define=DECOY_SUPABASE_ANON_KEY="$DECOY_SUPABASE_ANON_KEY" \
             --dart-define=DECOY_FIREBASE_CONFIGURED=true \
@@ -314,6 +329,7 @@ workflows:
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
         DECOY_BUILD_VERIFICATION: "store-release"
+        DECOY_ACCOUNT_BALANCE_PILOT: "false"
       flutter: "3.41.6"
       xcode: latest
       cocoapods: default
@@ -537,6 +553,7 @@ workflows:
             --build-name="$APP_VERSION" \
             --build-number="$APP_BUILD_NUMBER" \
             --export-options-plist=/Users/builder/export_options.plist \
+            --dart-define=DECOY_ACCOUNT_BALANCE_PILOT="$DECOY_ACCOUNT_BALANCE_PILOT" \
             --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
             --dart-define=DECOY_SUPABASE_ANON_KEY="$DECOY_SUPABASE_ANON_KEY" \
             --dart-define=DECOY_FIREBASE_CONFIGURED=true \
@@ -893,7 +910,7 @@ workflows:
       - flutter_drive.log
 
   android-signed-release-rehearsal:
-    name: Android Google Play Release
+    name: Android Account Balance Pilot APK
     instance_type: mac_mini_m2
     max_build_duration: 120
     environment:
@@ -906,7 +923,8 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
-        DECOY_BUILD_VERIFICATION: "store-release"
+        DECOY_BUILD_VERIFICATION: "account-balance-pilot"
+        DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
     cache:
       cache_paths:
@@ -914,6 +932,10 @@ workflows:
         - ~/.gradle/caches
         - ~/.gradle/wrapper
     scripts:
+      - name: Restrict account balance pilot branch
+        script: |
+          set -eu
+          test "${CM_BRANCH:-}" = "codex/account-balance-pilot-20261003"
       - name: Confirm public source checkout
         script: |
           set -eu
@@ -1151,6 +1173,7 @@ workflows:
             --release
             --build-name=$APP_VERSION
             --build-number=$APP_BUILD_NUMBER
+            --dart-define=DECOY_ACCOUNT_BALANCE_PILOT=$DECOY_ACCOUNT_BALANCE_PILOT
             --dart-define=DECOY_SUPABASE_URL=$DECOY_SUPABASE_URL
             --dart-define=DECOY_SUPABASE_ANON_KEY=$DECOY_SUPABASE_ANON_KEY
             --dart-define=DECOY_FIREBASE_CONFIGURED=true

@@ -34,6 +34,15 @@ class _ConfigureBitcoinBalanceWidgetState
     );
     _focusNode = FocusNode();
     _controller.addListener(_refreshPreview);
+    _loadAccountBalance();
+  }
+
+  Future<void> _loadAccountBalance() async {
+    final initialText = _controller.text;
+    await FFAppState().refreshAccountBalance();
+    if (mounted && _controller.text == initialText) {
+      _controller.text = _formatEditableBtc(FFAppState().fakeBtcBalance);
+    }
   }
 
   @override
@@ -115,24 +124,20 @@ class _ConfigureBitcoinBalanceWidgetState
     return null;
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final value = _enteredBtc!;
-    final usdValue = _currentPrice > 0.0 ? value * _currentPrice : 0.0;
-
-    FFAppState().update(() {
-      FFAppState().fakeBtcBalance = value;
-      FFAppState().fakeUsdValue = usdValue;
-      FFAppState().fakeBtcSeededAt = DateTime.now().toUtc();
-      FFAppState().fakeSeeded = true;
-    });
+    final saved = await FFAppState().configureSimulatedBalance(value);
+    if (!mounted) return;
 
     FocusScope.of(context).unfocus();
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
          SnackBar(
-          content: Text(AppLocalizations.of(context)!.msgBitcoinBalanceUpdated),
+          content: Text(saved
+              ? AppLocalizations.of(context)!.msgBitcoinBalanceUpdated
+              : AppLocalizations.of(context)!.msgNotQuiteTryAgain),
           duration: Duration(seconds: 2),
         ),
       );

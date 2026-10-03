@@ -4,6 +4,8 @@ import 'package:csv/csv.dart';
 import 'package:synchronized/synchronized.dart';
 import 'backend/public_config.dart';
 import 'flutter_flow/flutter_flow_util.dart';
+import 'flutter_flow/custom_functions.dart' as functions;
+import 'services/account_balance.dart';
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -179,6 +181,68 @@ class FFAppState extends ChangeNotifier {
 
   late FlutterSecureStorage secureStorage;
 
+  AccountBalance? _accountBalance;
+  bool get _usesAccountBalance =>
+      _accountBalance != null && _accountBalance!.eligible != false;
+
+  void attachAccountBalance(AccountBalance balance) {
+    _accountBalance?.removeListener(notifyListeners);
+    _accountBalance = balance;
+    balance.addListener(notifyListeners);
+  }
+
+  Future<void> selectBalanceUser(String? userId) async {
+    final balance = _accountBalance;
+    if (balance == null) return;
+    if (balance.userId != userId) {
+      // Do not carry an unfinished simulated send into another account.
+      _sendAmountBtc = '';
+      _scannedAddress = '';
+    }
+    await balance.selectUser(userId);
+  }
+
+  Future<void> refreshAccountBalance() async => _accountBalance?.refresh();
+
+  Future<void> ensureSimulatedBalance() async {
+    if (_usesAccountBalance) {
+      await _accountBalance!.ensureSeeded();
+      return;
+    }
+    if (!fakeSeeded || fakeBtcBalance <= 0.0) {
+      fakeBtcBalance = functions.randomBtc(1.0, 5.0, 8);
+      fakeSeeded = true;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> configureSimulatedBalance(double btc) async {
+    if (_usesAccountBalance) return _accountBalance!.configure(btc);
+    final price = currentPriceMultiple > 0
+        ? currentPriceMultiple : currentBtcPrice;
+    update(() {
+      fakeBtcBalance = btc;
+      fakeUsdValue = price > 0 ? btc * price : 0.0;
+      fakeBtcSeededAt = DateTime.now().toUtc();
+      fakeSeeded = true;
+    });
+    return true;
+  }
+
+  Future<bool> spendSimulatedBalance(String grossAmountText, double feeBtc) async {
+    if (_usesAccountBalance) {
+      return _accountBalance!.spend(
+          functions.amountToDouble(grossAmountText), feeBtc);
+    }
+    final next = functions.fakeBtcBalanceAfterSend(
+        fakeBtcBalance, grossAmountText, feeBtc);
+    update(() {
+      fakeBtcBalance = next;
+      fakeUsdValue = functions.usdFromBtc(next, currentPriceMultiple);
+    });
+    return true;
+  }
+
   bool get _fakeBtcSeedExpired {
     final seededAt = _fakeBtcSeededAt;
     if (!_fakeSeeded) {
@@ -188,6 +252,9 @@ class FFAppState extends ChangeNotifier {
   }
 
   bool get shouldSeedFakeBtcBalance {
+    if (_usesAccountBalance) {
+      return _accountBalance!.value.expired(_accountBalance!.now());
+    }
     final seededAt = _fakeBtcSeededAt;
     if (!_fakeSeeded) {
       return true;
@@ -216,8 +283,10 @@ class FFAppState extends ChangeNotifier {
   }
 
   bool _fakeSeeded = false;
-  bool get fakeSeeded => _fakeSeeded && !_fakeBtcSeedExpired;
+  bool get fakeSeeded => _usesAccountBalance
+      ? !shouldSeedFakeBtcBalance : _fakeSeeded && !_fakeBtcSeedExpired;
   set fakeSeeded(bool value) {
+    if (_usesAccountBalance) return;
     _fakeSeeded = value;
     secureStorage.setBool('ff_fakeSeeded', value);
     if (value && _fakeBtcSeededAt == null) {
@@ -243,6 +312,10 @@ class FFAppState extends ChangeNotifier {
 
   double _fakeBtcBalance = 0.0;
   double get fakeBtcBalance {
+    if (_usesAccountBalance) {
+      final value = _accountBalance!.value.sats / 100000000;
+      return fakeSeeded && value <= 0 ? 0.000000000001 : value;
+    }
     if (_fakeSeeded && _fakeBtcBalance <= 0.0 && !_fakeBtcSeedExpired) {
       return 0.000000000001;
     }
@@ -250,6 +323,7 @@ class FFAppState extends ChangeNotifier {
   }
 
   set fakeBtcBalance(double value) {
+    if (_usesAccountBalance) return;
     _fakeBtcBalance = value;
     secureStorage.setDouble('ff_fakeBtcBalance', value);
     if (value > 0.0 &&
@@ -263,8 +337,12 @@ class FFAppState extends ChangeNotifier {
   }
 
   double _fakeUsdValue = 0.0;
-  double get fakeUsdValue => _fakeUsdValue;
+  double get fakeUsdValue => _usesAccountBalance
+      ? functions.usdFromBtc(_accountBalance!.value.sats / 100000000,
+          currentPriceMultiple > 0 ? currentPriceMultiple : currentBtcPrice)
+      : _fakeUsdValue;
   set fakeUsdValue(double value) {
+    if (_usesAccountBalance) return;
     _fakeUsdValue = value;
     secureStorage.setDouble('ff_fakeUsdValue', value);
   }
@@ -274,8 +352,10 @@ class FFAppState extends ChangeNotifier {
   }
 
   DateTime? _fakeBtcSeededAt;
-  DateTime? get fakeBtcSeededAt => _fakeBtcSeededAt;
+  DateTime? get fakeBtcSeededAt => _usesAccountBalance
+      ? _accountBalance!.value.seededAt : _fakeBtcSeededAt;
   set fakeBtcSeededAt(DateTime? value) {
+    if (_usesAccountBalance) return;
     _fakeBtcSeededAt = value;
     if (value == null) {
       secureStorage.delete(key: 'ff_fakeBtcSeededAt');

@@ -1774,24 +1774,10 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                     .secondary,
                                                           ),
                                                         );
-                                                        if ((FFAppState()
-                                                                    .fakeSeeded ==
-                                                                false) ||
-                                                            (FFAppState()
-                                                                    .fakeBtcBalance <=
-                                                                0.0)) {
-                                                          FFAppState()
-                                                                  .fakeBtcBalance =
-                                                              functions
-                                                                  .randomBtc(
-                                                                      1.0,
-                                                                      5.0,
-                                                                      8);
-                                                          FFAppState()
-                                                                  .fakeSeeded =
-                                                              true;
-                                                          safeSetState(() {});
-                                                        }
+                                                        await FFAppState()
+                                                            .ensureSimulatedBalance();
+                                                        if (!mounted) return;
+                                                        safeSetState(() {});
 
                                                         context.goNamed(
                                                           DuressHomePageWidget
@@ -1891,24 +1877,10 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                             );
                                                           }
                                                         }
-                                                        if ((FFAppState()
-                                                                    .fakeSeeded ==
-                                                                false) ||
-                                                            (FFAppState()
-                                                                    .fakeBtcBalance <=
-                                                                0.0)) {
-                                                          FFAppState()
-                                                                  .fakeBtcBalance =
-                                                              functions
-                                                                  .randomBtc(
-                                                                      1.0,
-                                                                      5.0,
-                                                                      8);
-                                                          FFAppState()
-                                                                  .fakeSeeded =
-                                                              true;
-                                                          safeSetState(() {});
-                                                        }
+                                                        await FFAppState()
+                                                            .ensureSimulatedBalance();
+                                                        if (!mounted) return;
+                                                        safeSetState(() {});
 
                                                         context.goNamed(
                                                           DuressHomePageWidget

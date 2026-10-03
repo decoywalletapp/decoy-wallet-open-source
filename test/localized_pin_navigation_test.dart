@@ -20,6 +20,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'localization_fonts.dart';
+import 'support/account_balance_fakes.dart';
+import 'package:decoy_wallet_app/services/account_balance.dart';
 
 class NoLocation extends GeolocatorPlatform {
   @override
@@ -134,6 +136,17 @@ void main() {
   });
 
   Future<void> enter(WidgetTester tester, String pin) async {
+    if (const bool.fromEnvironment('DECOY_TEST_ACCOUNT_BALANCE')) {
+      // Create async balance state in the widget test's fake-async zone.
+      final remote = MemoryRemote()..users.add(user.id);
+      final balance = AccountBalance(remote: remote, cache: MemoryCache());
+      addTearDown(balance.dispose);
+      FFAppState().attachAccountBalance(balance);
+      await FFAppState().selectBalanceUser(user.id);
+      await balance.configure(1);
+      await balance.refresh();
+      remote.offline = true;
+    }
     tester.view.physicalSize = const Size(402, 874);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);

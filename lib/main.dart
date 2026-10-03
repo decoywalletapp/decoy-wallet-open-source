@@ -17,6 +17,9 @@ import 'flutter_flow/flutter_flow_util.dart';
 import 'utils/android_display_guard.dart';
 import 'l10n/app_language_controller.dart';
 import 'l10n/app_localizations.dart';
+import 'dart:async';
+import 'services/account_balance.dart';
+import 'services/account_balance_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +43,13 @@ void main() async {
 
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
+  if (accountBalancePilotEnabled) {
+    appState.attachAccountBalance(AccountBalance(
+      remote: SupabaseBalanceRemote(SupaFlow.client),
+      cache: SecureBalanceCache(appState.secureStorage),
+    ));
+    await appState.selectBalanceUser(SupaFlow.client.auth.currentUser?.id);
+  }
 
   final language = AppLanguageController();
   await language.initialize();
@@ -72,7 +82,7 @@ class MyAppScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   ThemeMode _themeMode = ThemeMode.light;
 
   late AppStateNotifier _appStateNotifier;
@@ -95,11 +105,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
     userStream = decoyWalletAppSupabaseUserStream()
       ..listen((user) {
+        unawaited(FFAppState().selectBalanceUser(user.uid));
         _appStateNotifier.update(user);
       });
     jwtTokenStream.listen((_) {});
@@ -107,6 +119,19 @@ class _MyAppState extends State<MyApp> {
       Duration(milliseconds: 1000),
       () => _appStateNotifier.stopShowingSplashImage(),
     );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(FFAppState().refreshAccountBalance());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   void setThemeMode(ThemeMode mode) => safeSetState(() {

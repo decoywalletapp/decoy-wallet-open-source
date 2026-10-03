@@ -51,6 +51,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
     _model = createModel(context, () => DuressHomePageModel());
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      unawaited(FFAppState().refreshAccountBalance());
       _startMarketLoop();
     });
   }
@@ -257,6 +258,7 @@ class _DuressHomePageWidgetState extends State<DuressHomePageWidget> {
       return;
     }
     await Future.wait([
+      FFAppState().refreshAccountBalance(),
       _refreshCurrentPrice(),
       _loadChart(),
     ]);
