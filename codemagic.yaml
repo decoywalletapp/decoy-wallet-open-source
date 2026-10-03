@@ -307,7 +307,8 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        # Upload for internal testing without requesting external beta review.
+        submit_to_testflight: false
         submit_to_app_store: false
 
   ios-app-store-release:
