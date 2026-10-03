@@ -84,6 +84,14 @@ IOS_FIREBASE_APP_ID
 
 The iOS bundle id is `com.decoywalletapp.app`.
 
+`APP_STORE_APPLE_ID` must be the numeric ID from App Store Connect's App
+Information page, not the Apple account email. Both iOS workflows check access
+to that app before building and pass its ID directly to Apple's upload tool.
+This avoids the implicit bundle ID lookup that can fail with "Cannot determine
+the Apple ID from Bundle ID" even after a signed IPA has been built.
+The existing API key still authenticates the upload; no signing or release
+permissions are changed.
+
 ## Running The Rehearsal
 
 1. Open the public-repo app in CodeMagic.

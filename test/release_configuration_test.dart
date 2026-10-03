@@ -39,6 +39,64 @@ void main() {
   });
 
   for (final id in ['ios-testflight-rehearsal', 'ios-app-store-release']) {
+    group('$id Apple upload target', () {
+      late Directory temporary;
+      late File environment;
+      late File calls;
+      final script = (workflows[id]['scripts'] as YamlList)
+              .cast<YamlMap>()
+              .singleWhere((step) =>
+                  step['name'] == 'Validate App Store upload target')['script']
+          as String;
+
+      setUp(() {
+        temporary = Directory.systemTemp.createTempSync('decoy-upload-test-');
+        environment = File('${temporary.path}/environment');
+        calls = File('${temporary.path}/calls');
+        final stub = File('${temporary.path}/app-store-connect');
+        stub.writeAsStringSync('''#!/bin/sh
+printf '%s\\n' "\$@" > "\$TEST_CALLS"
+exit "\$TEST_API_EXIT"
+''');
+        expect(Process.runSync('chmod', ['+x', stub.path]).exitCode, 0);
+      });
+
+      tearDown(() => temporary.deleteSync(recursive: true));
+
+      ProcessResult run(String appId, {int apiExit = 0}) =>
+          Process.runSync('/bin/sh', [
+            '-c',
+            script
+          ], environment: {
+            'PATH': '${temporary.path}:${Platform.environment['PATH']}',
+            'APP_STORE_APPLE_ID': appId,
+            'CM_ENV': environment.path,
+            'TEST_CALLS': calls.path,
+            'TEST_API_EXIT': '$apiExit',
+          });
+
+      test('validates access and passes the app ID directly to altool', () {
+        final result = run('1234567890');
+        expect(result.exitCode, 0, reason: '${result.stderr}');
+        expect(calls.readAsLinesSync(), ['apps', 'get', '1234567890']);
+        expect(environment.readAsStringSync(),
+            'APP_STORE_CONNECT_ALTOOL_ADDITIONAL_ARGUMENTS=--apple-id 1234567890\n');
+      });
+
+      test('rejects invalid app IDs before accessing Apple', () {
+        for (final appId in ['', 'name@example.com', '123 --other-argument']) {
+          expect(run(appId).exitCode, isNot(0));
+          expect(calls.existsSync(), isFalse);
+          expect(environment.existsSync(), isFalse);
+        }
+      });
+
+      test('stops when Apple rejects app access', () {
+        expect(run('1234567890', apiExit: 23).exitCode, 23);
+        expect(environment.existsSync(), isFalse);
+      });
+    });
+
     test('$id tests the enabled import UI before building', () {
       final scripts = (workflows[id]['scripts'] as YamlList)
           .cast<YamlMap>()

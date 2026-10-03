@@ -146,6 +146,18 @@ workflows:
             echo "Invalid CodeMagic environment variables:$invalid"
             exit 1
           fi
+      - name: Validate App Store upload target
+        script: |
+          set -eu
+          case "$APP_STORE_APPLE_ID" in
+            ""|*[!0-9]*)
+              echo "APP_STORE_APPLE_ID must be the numeric App Store Connect app ID."
+              exit 1
+              ;;
+          esac
+          app-store-connect apps get "$APP_STORE_APPLE_ID"
+          # Avoid altool's implicit bundle-ID-to-app-ID lookup during upload.
+          echo "APP_STORE_CONNECT_ALTOOL_ADDITIONAL_ARGUMENTS=--apple-id $APP_STORE_APPLE_ID" >> "$CM_ENV"
       - name: Create iOS Firebase plist
         script: |
           set -eu
@@ -432,6 +444,18 @@ workflows:
             echo "Invalid CodeMagic environment variables:$invalid"
             exit 1
           fi
+      - name: Validate App Store upload target
+        script: |
+          set -eu
+          case "$APP_STORE_APPLE_ID" in
+            ""|*[!0-9]*)
+              echo "APP_STORE_APPLE_ID must be the numeric App Store Connect app ID."
+              exit 1
+              ;;
+          esac
+          app-store-connect apps get "$APP_STORE_APPLE_ID"
+          # Avoid altool's implicit bundle-ID-to-app-ID lookup during upload.
+          echo "APP_STORE_CONNECT_ALTOOL_ADDITIONAL_ARGUMENTS=--apple-id $APP_STORE_APPLE_ID" >> "$CM_ENV"
       - name: Create iOS Firebase plist
         script: |
           set -eu
