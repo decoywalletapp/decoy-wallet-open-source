@@ -86,11 +86,12 @@ The iOS bundle id is `com.decoywalletapp.app`.
 
 `APP_STORE_APPLE_ID` must be the numeric ID from App Store Connect's App
 Information page, not the Apple account email. Both iOS workflows check access
-to that app before building and pass its ID directly to Apple's upload tool.
-This avoids the implicit bundle ID lookup that can fail with "Cannot determine
-the Apple ID from Bundle ID" even after a signed IPA has been built.
-The existing API key still authenticates the upload; no signing or release
-permissions are changed.
+to that app before building, exposing account issues before spending time on
+compilation. A required Apple agreement can otherwise appear as "Cannot
+determine the Apple ID from Bundle ID" during the final upload. If the check
+reports a missing agreement, the Account Holder must review it in the Apple
+Developer account. Upload authentication, signing, and release permissions are
+unchanged.
 
 ## Running The Rehearsal
 
