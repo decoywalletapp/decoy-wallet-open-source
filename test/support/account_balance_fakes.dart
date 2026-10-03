@@ -18,6 +18,8 @@ class MemoryCache implements BalanceCache {
 }
 
 class MemoryRemote implements BalanceRemote {
+  MemoryRemote({this.now});
+  final DateTime Function()? now;
   final values = <String, BalanceSnapshot>{};
   final applied = <String>{};
   final users = {'a', 'b', 'c', 'd'};
@@ -38,8 +40,12 @@ class MemoryRemote implements BalanceRemote {
   Future<BalanceReply> apply(String userId, BalanceOperation operation) async {
     if (offline) throw StateError('offline');
     if (applied.add('$userId:${operation.id}')) {
+      final received = BalanceOperation.fromJson({
+        ...operation.toJson(),
+        'at': (now?.call() ?? operation.at).toUtc().toIso8601String(),
+      });
       values[userId] =
-          operation.apply(values[userId] ?? const BalanceSnapshot());
+          received.apply(values[userId] ?? const BalanceSnapshot());
     }
     if (loseNextReply) {
       loseNextReply = false;

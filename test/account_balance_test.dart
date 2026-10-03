@@ -15,7 +15,7 @@ void main() {
   late DateTime now;
 
   setUp(() {
-    remote = MemoryRemote();
+    remote = MemoryRemote(now: () => now);
     cache = MemoryCache();
     now = DateTime.utc(2026, 10, 3, 12);
     balance = AccountBalance(
@@ -64,33 +64,324 @@ void main() {
     expect(balance.value.epoch, epoch);
   });
 
-  test('spend persists, zero stays zero, timer does not restart on spend',
+  test('200 BTC minus 5 stays 195 indefinitely and retains the custom target',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(200);
+    await settle();
+    now = now.add(const Duration(days: 30));
+    await balance.ensureSeeded();
+    expect(balance.value.sats, 20000000000);
+    await balance.spend(5, 0.00001);
+    await settle();
+    now = now.add(const Duration(days: 30));
+    await balance.ensureSeeded();
+    await settle();
+    expect(balance.value.sats, 19500000000);
+    expect(balance.value.configuredSats, 20000000000);
+    expect(balance.value.drainedAt, isNull);
+  });
+
+  test('custom refill waits 24 hours from drain, not from configuration',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(200);
+    await settle();
+    now = now.add(const Duration(days: 30));
+    await balance.spend(200, 0.00001);
+    await settle();
+    final drainedAt = now;
+    expect(balance.value.drainedAt, drainedAt);
+    now = now.add(const Duration(hours: 24) - const Duration(microseconds: 1));
+    await balance.ensureSeeded();
+    expect(balance.value.sats, 0);
+    now = drainedAt.add(const Duration(hours: 24));
+    await balance.ensureSeeded();
+    await settle();
+    expect(balance.value.sats, 20000000000);
+    expect(balance.value.configuredSats, 20000000000);
+    expect(balance.value.drainedAt, isNull);
+    now = now.add(const Duration(days: 30));
+    await balance.ensureSeeded();
+    expect(balance.value.sats, 20000000000);
+  });
+
+  test('default balances persist partially spent and use random refill',
+      () async {
+    var nextRandom = 400000000;
+    final randomBalance = AccountBalance(
+        remote: remote,
+        cache: cache,
+        now: () => now,
+        randomSats: () => nextRandom);
+    addTearDown(randomBalance.dispose);
+    await randomBalance.selectUser('a');
+    await randomBalance.ensureSeeded();
+    await randomBalance.refresh();
+    await randomBalance.spend(1, 0);
+    await randomBalance.refresh();
+    now = now.add(const Duration(days: 30));
+    await randomBalance.ensureSeeded();
+    expect(randomBalance.value.sats, 300000000);
+    expect(randomBalance.value.configuredSats, isNull);
+    await randomBalance.spend(3, 0);
+    await randomBalance.refresh();
+    now = now.add(const Duration(hours: 24));
+    nextRandom = 250000000;
+    await randomBalance.ensureSeeded();
+    await randomBalance.refresh();
+    expect(randomBalance.value.sats, 250000000);
+    expect(randomBalance.value.configuredSats, isNull);
+  });
+
+  test('duplicate and additional sends at zero do not extend the cooldown',
       () async {
     await balance.selectUser('a');
     await balance.configure(2);
     await settle();
-    final seededAt = balance.value.seededAt;
+    await balance.spend(2, 0);
+    await settle();
+    final drainedAt = balance.value.drainedAt;
     now = now.add(const Duration(hours: 12));
-    await balance.spend(0.5, 0.00001);
+    await balance.spend(1, 0);
     await settle();
-    expect(balance.value.sats, 150000000);
-    expect(balance.value.seededAt, seededAt);
-    await balance.spend(1.5, 0.00001);
-    await settle();
+    expect(balance.value.drainedAt, drainedAt);
     await balance.ensureSeeded();
     expect(balance.value.sats, 0);
-    now = seededAt!.add(const Duration(hours: 24));
+    now = drainedAt!.add(const Duration(hours: 24));
     await balance.ensureSeeded();
-    expect(balance.value.sats, 300000000);
+    await settle();
+    expect(balance.value.sats, 200000000);
+    now = now.add(const Duration(hours: 2));
+    await balance.spend(2, 0);
+    await settle();
+    expect(balance.value.drainedAt, now);
+    expect(balance.value.drainedAt, isNot(drainedAt));
   });
 
-  test('manual zero is retained until the same 24 hour expiration', () async {
+  test('manual zero is retained indefinitely, even after attempted spending',
+      () async {
     await balance.selectUser('a');
     await balance.configure(0);
     await settle();
+    now = now.add(const Duration(days: 90));
+    await balance.spend(1, 0);
+    await balance.ensureSeeded();
+    await settle();
+    expect(balance.value.sats, 0);
+    expect(balance.value.configuredSats, 0);
+    expect(balance.value.drainedAt, isNull);
+    expect(balance.value.needsSeed(now), isFalse);
+  });
+
+  test('reconfiguration cancels a drain and replaces the refill target',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(200);
+    await settle();
+    await balance.spend(200, 0);
+    await settle();
+    await balance.configure(7);
+    await settle();
+    now = now.add(const Duration(days: 7));
+    await balance.ensureSeeded();
+    expect(balance.value.sats, 700000000);
+    expect(balance.value.configuredSats, 700000000);
+    expect(balance.value.drainedAt, isNull);
+    await balance.spend(7, 0);
+    await settle();
+    await balance.configure(0);
+    await settle();
+    now = now.add(const Duration(days: 7));
     await balance.ensureSeeded();
     expect(balance.value.sats, 0);
-    expect(balance.value.expired(now), isFalse);
+    expect(balance.value.drainedAt, isNull);
+  });
+
+  test('fee-sized remainder counts as drained but zero sends do not', () async {
+    await balance.selectUser('a');
+    await balance.configure(0.00002002);
+    await settle();
+    await balance.spend(0, 0.001);
+    await settle();
+    expect(balance.value.sats, 2002);
+    expect(balance.value.drainedAt, isNull);
+    await balance.spend(0.00001, 0.00001);
+    await settle();
+    expect(balance.value.sats, 1002);
+    expect(balance.value.drainedAt, isNull);
+    await balance.spend(0.00000001, 0.00001);
+    await settle();
+    expect(balance.value.sats, 0);
+    expect(balance.value.drainedAt, now);
+    expect(balance.value.configuredSats, 2002);
+  });
+
+  test('older cache keeps its remaining balance and never guesses a drain', () {
+    for (final sats in [0, 75000000]) {
+      final snapshot = BalanceSnapshot.fromJson({
+        'sats': sats,
+        'seeded_at': now.toIso8601String(),
+        'epoch': 'old',
+      });
+      expect(snapshot.sats, sats);
+      expect(snapshot.configuredSats, sats);
+      expect(snapshot.drainedAt, isNull);
+      expect(snapshot.needsSeed(now.add(const Duration(days: 90))), isFalse);
+    }
+    expect(BalanceSnapshot.fromJson({'sats': 0}).needsSeed(now), isTrue);
+  });
+
+  test('confirmed drain and target survive offline restart and refill once',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(200);
+    await settle();
+    await balance.spend(200, 0);
+    await settle();
+    final drainedAt = now;
+    remote.offline = true;
+    now = now.add(const Duration(hours: 24));
+    final restarted =
+        AccountBalance(remote: remote, cache: cache, now: () => now);
+    addTearDown(restarted.dispose);
+    await restarted.selectUser('a');
+    expect(restarted.value.drainedAt, drainedAt);
+    expect(restarted.value.configuredSats, 20000000000);
+    await restarted.ensureSeeded();
+    expect(restarted.value.sats, 20000000000);
+    await restarted.spend(5, 0);
+    expect(restarted.value.sats, 19500000000);
+    remote.offline = false;
+    await restarted.refresh();
+    expect(remote.values['a']!.sats, 19500000000);
+    expect(remote.values['a']!.configuredSats, 20000000000);
+    expect(restarted.hasPendingChanges, isFalse);
+  });
+
+  test('offline drain waits for server acknowledgement before refill',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(2);
+    await settle();
+    remote.offline = true;
+    await balance.spend(2, 0);
+    await settle();
+    now = now.add(const Duration(hours: 25));
+    await balance.ensureSeeded();
+    expect(balance.value.sats, 0);
+    remote.offline = false;
+    await settle();
+    expect(balance.value.drainedAt, now);
+    await balance.ensureSeeded();
+    expect(balance.value.sats, 0);
+    now = now.add(const Duration(hours: 24));
+    await balance.ensureSeeded();
+    await settle();
+    expect(balance.value.sats, 200000000);
+  });
+
+  test('another device receives the custom target and the same drain clock',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(200);
+    await settle();
+    await balance.spend(200, 0);
+    await settle();
+    final phone =
+        AccountBalance(remote: remote, cache: MemoryCache(), now: () => now);
+    addTearDown(phone.dispose);
+    await phone.selectUser('a');
+    expect(phone.value.sats, 0);
+    expect(phone.value.configuredSats, 20000000000);
+    expect(phone.value.drainedAt, now);
+    now = now.add(const Duration(hours: 24));
+    await phone.ensureSeeded();
+    await phone.refresh();
+    await balance.refresh();
+    expect(balance.value.sats, 20000000000);
+    expect(balance.value.epoch, phone.value.epoch);
+    expect(balance.value.drainedAt, isNull);
+  });
+
+  test('two offline refills of one cycle retain both phones subsequent sends',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(200);
+    await settle();
+    await balance.spend(200, 0);
+    await settle();
+    final phone =
+        AccountBalance(remote: remote, cache: MemoryCache(), now: () => now);
+    addTearDown(phone.dispose);
+    await phone.selectUser('a');
+    remote.offline = true;
+    now = now.add(const Duration(hours: 24));
+    await balance.ensureSeeded();
+    await phone.ensureSeeded();
+    await balance.spend(5, 0);
+    await phone.spend(7, 0);
+    await settle();
+    await phone.refresh();
+    remote.offline = false;
+    await balance.refresh();
+    await phone.refresh();
+    await balance.refresh();
+    expect(balance.value.sats, 18800000000);
+    expect(phone.value.sats, 18800000000);
+    expect(balance.value.configuredSats, 20000000000);
+    expect(balance.hasPendingChanges, isFalse);
+    expect(phone.hasPendingChanges, isFalse);
+  });
+
+  test('a manual configuration is never mistaken for a competing refill',
+      () async {
+    await balance.selectUser('a');
+    await balance.configure(200);
+    await settle();
+    await balance.spend(200, 0);
+    await settle();
+    final phone =
+        AccountBalance(remote: remote, cache: MemoryCache(), now: () => now);
+    addTearDown(phone.dispose);
+    await phone.selectUser('a');
+    remote.offline = true;
+    now = now.add(const Duration(hours: 24));
+    await balance.ensureSeeded();
+    await balance.spend(5, 0);
+    await settle();
+    remote.offline = false;
+    await phone.configure(200);
+    await phone.refresh();
+    await balance.refresh();
+    expect(balance.value.sats, 20000000000);
+    expect(balance.value.epoch, phone.value.epoch);
+  });
+
+  test('two initial offline seeds rebase sends without refilling twice',
+      () async {
+    await balance.selectUser('a');
+    final phone = AccountBalance(
+        remote: remote,
+        cache: MemoryCache(),
+        now: () => now,
+        randomSats: () => 500000000);
+    addTearDown(phone.dispose);
+    await phone.selectUser('a');
+    remote.offline = true;
+    await balance.ensureSeeded();
+    await phone.ensureSeeded();
+    await balance.spend(1, 0);
+    await phone.spend(1, 0);
+    await settle();
+    await phone.refresh();
+    remote.offline = false;
+    await balance.refresh();
+    await phone.refresh();
+    await balance.refresh();
+    expect(balance.value.sats, 100000000);
+    expect(phone.value.sats, 100000000);
+    expect(balance.value.configuredSats, isNull);
   });
 
   test('configured balance and spending follow account onto another device',

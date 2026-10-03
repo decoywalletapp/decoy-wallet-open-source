@@ -10,19 +10,34 @@ const accountBalancePilotEnabled =
     bool.fromEnvironment('DECOY_ACCOUNT_BALANCE_PILOT', defaultValue: false);
 
 class BalanceSnapshot {
-  const BalanceSnapshot({this.sats = 0, this.seededAt, this.epoch});
+  const BalanceSnapshot(
+      {this.sats = 0,
+      this.seededAt,
+      this.epoch,
+      this.configuredSats,
+      this.drainedAt,
+      this.refilledFromEpoch});
   final int sats;
   final DateTime? seededAt;
   final String? epoch;
+  final int? configuredSats;
+  final DateTime? drainedAt;
+  final String? refilledFromEpoch;
 
-  bool expired(DateTime now) =>
+  bool needsSeed(DateTime now) =>
       seededAt == null ||
-      now.toUtc().difference(seededAt!) >= const Duration(hours: 24);
+      (sats == 0 &&
+          configuredSats != 0 &&
+          drainedAt != null &&
+          now.toUtc().difference(drainedAt!) >= const Duration(hours: 24));
 
   Map<String, dynamic> toJson() => {
         'sats': sats,
         'seeded_at': seededAt?.toUtc().toIso8601String(),
         'epoch': epoch,
+        'configured_sats': configuredSats,
+        'drained_at': drainedAt?.toUtc().toIso8601String(),
+        'refilled_from_epoch': refilledFromEpoch,
       };
 
   factory BalanceSnapshot.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +45,15 @@ class BalanceSnapshot {
         sats: (json['sats'] as num).toInt(),
         seededAt: DateTime.tryParse(json['seeded_at'] as String? ?? ''),
         epoch: json['epoch'] as String?,
+        // Older pilot records cannot identify the original custom amount.
+        // Preserve their remaining balance until the user configures it again.
+        configuredSats: json.containsKey('configured_sats')
+            ? (json['configured_sats'] as num?)?.toInt()
+            : json['seeded_at'] != null
+                ? (json['sats'] as num).toInt()
+                : null,
+        drainedAt: DateTime.tryParse(json['drained_at'] as String? ?? ''),
+        refilledFromEpoch: json['refilled_from_epoch'] as String?,
       );
 }
 
@@ -49,17 +73,33 @@ class BalanceOperation {
   final String? expectedEpoch;
 
   BalanceSnapshot apply(BalanceSnapshot before) {
-    if (kind == 'seed' && !before.expired(at)) return before;
+    if (kind == 'seed' &&
+        (!before.needsSeed(at) ||
+            (before.epoch != null && before.epoch != expectedEpoch))) {
+      return before;
+    }
     if (kind == 'spend') {
       // An old offline spend must not drain a newly configured/reset balance.
-      if (before.epoch != expectedEpoch) return before;
+      if (before.epoch == null ||
+          before.epoch != expectedEpoch ||
+          sats == 0 ||
+          before.sats == 0) return before;
       final remaining = before.sats - sats;
+      final drained = remaining <= feeSats + 1;
       return BalanceSnapshot(
-          sats: remaining <= feeSats + 1 ? 0 : remaining,
+          sats: drained ? 0 : remaining,
           seededAt: before.seededAt,
-          epoch: before.epoch);
+          epoch: before.epoch,
+          configuredSats: before.configuredSats,
+          drainedAt: drained ? at : null,
+          refilledFromEpoch: before.refilledFromEpoch);
     }
-    return BalanceSnapshot(sats: sats, seededAt: at, epoch: id);
+    return BalanceSnapshot(
+        sats: kind == 'seed' ? before.configuredSats ?? sats : sats,
+        seededAt: at,
+        epoch: id,
+        configuredSats: kind == 'configure' ? sats : before.configuredSats,
+        refilledFromEpoch: kind == 'seed' ? before.epoch : null);
   }
 
   Map<String, dynamic> toJson() => {
@@ -216,7 +256,7 @@ class AccountBalance extends ChangeNotifier {
         final operation = session.pending.first;
         final result = await remote.apply(session.userId, operation);
         if (!_current(session)) return;
-        await _accept(session, result, acknowledgedId: operation.id);
+        await _accept(session, result, acknowledged: operation);
       }
     } catch (_) {
       // The durable per-account queue is retried on entry, resume, or next edit.
@@ -224,11 +264,32 @@ class AccountBalance extends ChangeNotifier {
   }
 
   Future<void> _accept(_BalanceSession session, BalanceReply reply,
-          {String? acknowledgedId}) =>
+          {BalanceOperation? acknowledged}) =>
       session.lock.synchronized(() async {
         if (!_current(session)) return;
-        final pending =
-            session.pending.where((op) => op.id != acknowledgedId).toList();
+        final snapshot = reply.snapshot;
+        final sameRefill = acknowledged?.kind == 'seed' &&
+            snapshot.epoch != null &&
+            snapshot.epoch != acknowledged!.id &&
+            snapshot.refilledFromEpoch == acknowledged.expectedEpoch &&
+            (acknowledged.expectedEpoch != null ||
+                snapshot.configuredSats == null);
+        // Two phones can refill the same drained cycle. Rebase only sends from
+        // that same refill, never sends predating a manual configuration.
+        final pending = session.pending
+            .where((op) => op.id != acknowledged?.id)
+            .map((op) => sameRefill &&
+                    op.kind == 'spend' &&
+                    op.expectedEpoch == acknowledged.id
+                ? BalanceOperation(
+                    id: op.id,
+                    kind: op.kind,
+                    sats: op.sats,
+                    feeSats: op.feeSats,
+                    at: op.at,
+                    expectedEpoch: snapshot.epoch)
+                : op)
+            .toList();
         await cache.write(
             session.userId,
             session.encode(
@@ -262,7 +323,14 @@ class AccountBalance extends ChangeNotifier {
     try {
       final saved = await session.lock.synchronized(() async {
         if (!_current(session)) return false;
-        if (kind == 'seed' && !session.value.expired(now())) return true;
+        if (kind == 'seed') {
+          if (!session.value.needsSeed(now())) return true;
+          // The server starts the cooldown when it accepts a drain. Do not
+          // refill an unacknowledged offline drain ahead of that clock.
+          if (session.value.seededAt != null && session.pending.isNotEmpty) {
+            return true;
+          }
+        }
         final operation = BalanceOperation(
             id: const Uuid().v4(),
             kind: kind,

@@ -253,7 +253,7 @@ class FFAppState extends ChangeNotifier {
 
   bool get shouldSeedFakeBtcBalance {
     if (_usesAccountBalance) {
-      return _accountBalance!.value.expired(_accountBalance!.now());
+      return _accountBalance!.value.needsSeed(_accountBalance!.now());
     }
     final seededAt = _fakeBtcSeededAt;
     if (!_fakeSeeded) {
