@@ -109,7 +109,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgAddAWatchOnlyWalletKeyOrSpecific =>
-      'Füge einen öffentlichen Schlüssel einer Geldbörse mit reinem Lesezugriff oder bestimmte Empfangsadressen hinzu, um ausgehende Aktivitäten zu überwachen.';
+      'Füge einen öffentlichen Schlüssel einer Wallet mit reinem Lesezugriff oder bestimmte Empfangsadressen hinzu, um ausgehende Aktivitäten zu überwachen.';
 
   @override
   String get msgAdjustBalance => 'Guthaben anpassen';
@@ -159,7 +159,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgAutomaticallySendPurchasedBitcoinToYourWallet =>
-      'Gekaufte Bitcoin automatisch an deine Geldbörse senden.';
+      'Gekaufte Bitcoin automatisch an deine Wallet senden.';
 
   @override
   String get msgAwaitingConfirmations => 'Warten auf Bestätigungen';
@@ -205,7 +205,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgByContinuingYouAgreeToReceiveAutomatedText =>
-      'Wenn du fortfährst, stimmst du dem Empfang automatisierter SMS von Decoy Wallet zu deinem Konto, Sicherheitswarnungen, dem Status deiner Notfallkontakte, Abonnementerinnerungen und Geldbörsenwarnungen zu.\nDie Nachrichtenhäufigkeit variiert. Es können SMS- und Datengebühren anfallen.\nAntworte mit STOP, um dich abzumelden. Antworte mit HELP, um Hilfe zu erhalten.';
+      'Wenn du fortfährst, stimmst du dem Empfang automatisierter SMS von Decoy Wallet zu deinem Konto, Sicherheitswarnungen, dem Status deiner Notfallkontakte, Abonnementerinnerungen und Wallet-Warnungen zu.\nDie Nachrichtenhäufigkeit variiert. Es können SMS- und Datengebühren anfallen.\nAntworte mit STOP, um dich abzumelden. Antworte mit HELP, um Hilfe zu erhalten.';
 
   @override
   String get msgByCreatingADecoyWalletYouAuthorizeDecoy =>
@@ -363,7 +363,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get msgDecoySeed => 'TARN-WIEDERHERSTELLUNGSPHRASE';
 
   @override
-  String get msgDecoyWalletBalance => 'GUTHABEN DER TARN-GELDBÖRSE';
+  String get msgDecoyWalletBalance => 'GUTHABEN DER TARN-WALLET';
 
   @override
   String get msgDisable => 'DEAKTIVIEREN';
@@ -519,7 +519,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgEmergencyAlertsWalletMonitoringAndEmergencyContactNotifications =>
-      'Notfallwarnungen, die Überwachung von Geldbörsen und Benachrichtigungen an Notfallkontakte erfordern ein aktives kostenpflichtiges Abonnement.';
+      'Notfallwarnungen, die Überwachung von Wallets und Benachrichtigungen an Notfallkontakte erfordern ein aktives kostenpflichtiges Abonnement.';
 
   @override
   String get msgEmergencyContactsAndAlertSettings =>
@@ -686,7 +686,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgIUnderstandDecoySeedAlertsAreDesignedFor =>
-      'Ich verstehe, dass Warnungen zur Tarn-Wiederherstellungsphrase für Blockchain-Aktivitäten meiner scharfgeschalteten Tarn-Geldbörse vorgesehen sind und dass ich dafür verantwortlich bin, die zugehörigen Warnungseinstellungen einsatzbereit und aktuell zu halten.';
+      'Ich verstehe, dass Warnungen zur Tarn-Wiederherstellungsphrase für Blockchain-Aktivitäten meiner scharfgeschalteten Tarn-Wallet vorgesehen sind und dass ich dafür verantwortlich bin, die zugehörigen Warnungseinstellungen einsatzbereit und aktuell zu halten.';
 
   @override
   String get msgIUnderstandThatDecoyWalletDoesNotHold =>
@@ -774,7 +774,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgManageYourWalletPreferencesAndSession =>
-      'Verwalte die Einstellungen deiner Geldbörse und deine Sitzung.';
+      'Verwalte die Einstellungen deiner Wallet und deine Sitzung.';
 
   @override
   String get msgManualAddress => 'Manuelle Adresse';
@@ -789,7 +789,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get msgMiamiBeach => 'Miami Beach';
 
   @override
-  String get msgMonitorExistingWallet => 'Bestehende Geldbörse überwachen';
+  String get msgMonitorExistingWallet => 'Bestehende Wallet überwachen';
 
   @override
   String get msgMonitorStatus => 'Überwachungsstatus:';
@@ -879,7 +879,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgPasteOrEnterWalletAddress =>
-      'Adresse der Geldbörse einfügen oder eingeben';
+      'Wallet-Adresse einfügen oder eingeben';
 
   @override
   String get msgPayForDecoyWithBitcoin => 'Decoy mit Bitcoin bezahlen';
@@ -914,7 +914,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgPleaseAuthenticateToUnlockYourWallet =>
-      'Bitte authentifiziere dich, um deine Geldbörse zu entsperren';
+      'Bitte authentifiziere dich, um deine Wallet zu entsperren';
 
   @override
   String get msgPrimal => 'Primal';
@@ -1183,7 +1183,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgUseXpubForLegacy1AddressWalletsZpub =>
-      'Verwende xpub für Geldbörsen mit älteren Adressen, die mit 1 beginnen, zpub für native SegWit-Geldbörsen mit bc1-Adressen oder füge bestimmte Empfangsadressen ein.';
+      'Verwende xpub für Wallets mit älteren Adressen, die mit 1 beginnen, zpub für native SegWit-Wallets mit bc1-Adressen oder füge bestimmte Empfangsadressen ein.';
 
   @override
   String get msgUseYourFingerprintOrFaceIdToQuickly =>
@@ -1201,18 +1201,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get msgVerifyingPleaseWait => 'Wird überprüft... Bitte warten!';
 
   @override
-  String get msgWallet => 'Geldbörse';
+  String get msgWallet => 'Wallet';
 
   @override
-  String get msgWalletActivityMonitor => 'Überwachung der Geldbörsenaktivität';
+  String get msgWalletActivityMonitor => 'Überwachung der Wallet-Aktivität';
 
   @override
   String get msgWalletSeedPhrasesAndPrivateKeys =>
-      'Wiederherstellungsphrasen und private Schlüssel der Geldbörsen';
+      'Wiederherstellungsphrasen und private Schlüssel der Wallets';
 
   @override
   String get msgWatchOnlyWalletImportIsAvailableInEnabled =>
-      'Der Import von Geldbörsen mit reinem Lesezugriff ist nur in dafür freigeschalteten Testversionen verfügbar.';
+      'Der Import von Wallets mit reinem Lesezugriff ist nur in dafür freigeschalteten Testversionen verfügbar.';
 
   @override
   String get msgWeSentA6DigitCodeTo =>
@@ -1267,7 +1267,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgYourBitcoinFundsRemainSafeInYourExternal =>
-      'Dein Bitcoin-Guthaben bleibt in deiner externen Geldbörse sicher';
+      'Dein Bitcoin-Guthaben bleibt in deiner externen Wallet sicher';
 
   @override
   String get msgYourDecoyWalletAccountAndProfile =>
@@ -1293,7 +1293,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get msgZpubOrBc1qBc1p1 => 'zpub...\n\noder\nbc1q...\nbc1p...\n1...';
 
   @override
-  String get msgItcoinWallet => '₿itcoin-Geldbörse';
+  String get msgItcoinWallet => '₿itcoin-Wallet';
 
   @override
   String get msgLanguage => 'Sprache';
@@ -1332,7 +1332,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgAccountLevelSeedWalletMonitoring =>
-      'Kontoweite Überwachung der aus der Wiederherstellungsphrase erstellten Geldbörse';
+      'Kontoweite Überwachung der aus der Wiederherstellungsphrase erstellten Wallet';
 
   @override
   String get msgActive => 'Aktiv';
@@ -1416,11 +1416,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgGenerateANewDecoySeedPhraseOrMonitor =>
-      'Erstelle eine neue Tarn-Wiederherstellungsphrase oder überwache öffentliche Daten einer Geldbörse, die du bereits kontrollierst, mit reinem Lesezugriff.';
+      'Erstelle eine neue Tarn-Wiederherstellungsphrase oder überwache öffentliche Daten einer Wallet, die du bereits kontrollierst, mit reinem Lesezugriff.';
 
   @override
   String get msgGenerateANewDecoySeedPhraseToMonitor =>
-      'Erstelle eine neue Tarn-Wiederherstellungsphrase, um ausgehende Aktivitäten der Geldbörse zu überwachen.';
+      'Erstelle eine neue Tarn-Wiederherstellungsphrase, um ausgehende Aktivitäten der Wallet zu überwachen.';
 
   @override
   String get msgInMempool => 'Im Mempool';
@@ -1524,7 +1524,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgThisWalletOrReceiveAddressIsAlreadyBeing =>
-      'Diese Geldbörse oder Empfangsadresse wird bereits überwacht.';
+      'Diese Wallet oder Empfangsadresse wird bereits überwacht.';
 
   @override
   String get msgTransactionBroadcast => 'Transaktion übermittelt';
@@ -1547,7 +1547,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgUnableToCheckWhetherThisWalletIsAlready =>
-      'Es konnte nicht geprüft werden, ob diese Geldbörse bereits überwacht wird. Bitte versuche es erneut.';
+      'Es konnte nicht geprüft werden, ob diese Wallet bereits überwacht wird. Bitte versuche es erneut.';
 
   @override
   String get msgUnableToDeleteThisMonitor =>
@@ -1571,14 +1571,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get msgUnableToValidateThisWatchOnlyWalletData =>
-      'Diese Geldbörsendaten mit reinem Lesezugriff konnten nicht validiert werden.';
+      'Diese Wallet-Daten mit reinem Lesezugriff konnten nicht validiert werden.';
 
   @override
   String get msgWaitingForNetworkConfirmations =>
       'Warten auf Netzwerkbestätigungen';
 
   @override
-  String get msgWalletActivityMonitor2 => 'Überwachung der Geldbörsenaktivität';
+  String get msgWalletActivityMonitor2 => 'Überwachung der Wallet-Aktivität';
 
   @override
   String get msgXpubMonitor => 'xpub-Überwachung';
@@ -1587,7 +1587,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get msgZpubMonitor => 'zpub-Überwachung';
 
   @override
-  String get msgWallet2 => 'GELDBÖRSE';
+  String get msgWallet2 => 'WALLET';
 
   @override
   String get msgSecurity => 'SICHERHEIT';

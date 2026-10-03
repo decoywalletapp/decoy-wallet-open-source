@@ -1,5 +1,8 @@
 # App Language Support
 
+For the subsequent German/Dutch wallet wording correction and the 18-language
+terminology review, see [Wallet Terminology Review](wallet-terminology.md).
+
 ## 18-Language Test Release
 
 The requested set is English, Spanish, French, German, Italian, Portuguese,

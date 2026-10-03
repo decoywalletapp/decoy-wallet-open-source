@@ -6,51 +6,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'localization_fonts.dart';
 
 void main() {
+  setUpAll(loadLocalizationFonts);
   setUp(() => GoogleFonts.config.allowRuntimeFetching = false);
 
-  for (final size in [const Size(402, 874), const Size(768, 1024)]) {
-    testWidgets('watch-only import entry and route at $size', (tester) async {
-      tester.view.physicalSize = size;
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+  for (final code in ['en', 'de', 'nl']) {
+    for (final size in [
+      const Size(320, 640),
+      const Size(402, 874),
+      const Size(768, 1024)
+    ]) {
+      testWidgets('watch-only import entry and route in $code at $size',
+          (tester) async {
+        final strings = await AppLocalizations.delegate.load(Locale(code));
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
 
-      final router = GoRouter(routes: [
-        GoRoute(
-          path: '/',
-          builder: (_, __) => const GenerateDecoySeedPhraseWidget(),
-        ),
-        GoRoute(
-          name: ImportWatchOnlyWalletWidget.routeName,
-          path: ImportWatchOnlyWalletWidget.routePath,
-          builder: (_, __) => const ImportWatchOnlyWalletWidget(),
-        ),
-      ]);
-      addTearDown(router.dispose);
-      await tester.pumpWidget(MaterialApp.router(
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-      ));
-      await tester.pumpAndSettle();
-      expect(find.text('Generate Seed Phrase'), findsOneWidget);
-
-      final importButton = find.text('Monitor Existing Wallet');
-      if (DecoyBuildProvenance.watchOnlyImportEnabled) {
-        expect(importButton, findsOneWidget);
-        await tester.ensureVisible(importButton);
-        await tester.tap(importButton);
+        final router = GoRouter(routes: [
+          GoRoute(
+            path: '/',
+            builder: (_, __) => const GenerateDecoySeedPhraseWidget(),
+          ),
+          GoRoute(
+            name: ImportWatchOnlyWalletWidget.routeName,
+            path: ImportWatchOnlyWalletWidget.routePath,
+            builder: (_, __) => const ImportWatchOnlyWalletWidget(),
+          ),
+        ]);
+        addTearDown(router.dispose);
+        await tester.pumpWidget(MaterialApp.router(
+          routerConfig: router,
+          locale: Locale(code),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ));
         await tester.pumpAndSettle();
-        expect(find.byType(ImportWatchOnlyWalletWidget), findsOneWidget);
-        expect(find.byType(TextFormField), findsOneWidget);
-        expect(find.text('zpub, xpub, or receive addresses'), findsOneWidget);
-        expect(find.textContaining('enabled test builds only'), findsNothing);
-      } else {
-        expect(importButton, findsNothing);
-      }
-      expect(tester.takeException(), isNull);
-    });
+        expect(find.text(strings.msgGenerateSeedPhrase), findsOneWidget);
+
+        final importButton = find.text(strings.msgMonitorExistingWallet);
+        if (DecoyBuildProvenance.watchOnlyImportEnabled) {
+          expect(importButton, findsOneWidget);
+          await tester.ensureVisible(importButton);
+          await tester.tap(importButton);
+          await tester.pumpAndSettle();
+          expect(find.byType(ImportWatchOnlyWalletWidget), findsOneWidget);
+          expect(find.byType(TextFormField), findsOneWidget);
+          expect(
+              find.text(strings.msgZpubXpubOrReceiveAddresses), findsOneWidget);
+          expect(
+              find.text(strings.msgWatchOnlyWalletImportIsAvailableInEnabled),
+              findsNothing);
+        } else {
+          expect(importButton, findsNothing);
+        }
+        expect(tester.takeException(), isNull);
+      });
+    }
   }
 }

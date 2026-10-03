@@ -106,7 +106,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgAddAWatchOnlyWalletKeyOrSpecific =>
-      'Voeg een openbare sleutel van een alleen-lezenportemonnee of specifieke ontvangstadressen toe om uitgaande activiteit te bewaken.';
+      'Voeg een openbare sleutel van een wallet met alleen leestoegang of specifieke ontvangstadressen toe om uitgaande activiteit te bewaken.';
 
   @override
   String get msgAdjustBalance => 'Saldo aanpassen';
@@ -155,7 +155,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgAutomaticallySendPurchasedBitcoinToYourWallet =>
-      'Stuur gekochte Bitcoin automatisch naar je portemonnee.';
+      'Stuur gekochte Bitcoin automatisch naar je wallet.';
 
   @override
   String get msgAwaitingConfirmations => 'Wachten op bevestigingen';
@@ -199,7 +199,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgByContinuingYouAgreeToReceiveAutomatedText =>
-      'Door verder te gaan, ga je akkoord met het ontvangen van geautomatiseerde sms-berichten van Decoy Wallet over je account, veiligheidswaarschuwingen, de status van noodcontacten, abonnementsherinneringen en portemonneewaarschuwingen.\nDe berichtfrequentie varieert. Er kunnen kosten voor berichten en dataverkeer in rekening worden gebracht.\nAntwoord STOP om je af te melden. Antwoord HELP voor hulp.';
+      'Door verder te gaan, ga je akkoord met het ontvangen van geautomatiseerde sms-berichten van Decoy Wallet over je account, veiligheidswaarschuwingen, de status van noodcontacten, abonnementsherinneringen en walletwaarschuwingen.\nDe berichtfrequentie varieert. Er kunnen kosten voor berichten en dataverkeer in rekening worden gebracht.\nAntwoord STOP om je af te melden. Antwoord HELP voor hulp.';
 
   @override
   String get msgByCreatingADecoyWalletYouAuthorizeDecoy =>
@@ -358,7 +358,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get msgDecoySeed => 'MISLEIDINGSHERSTELZIN';
 
   @override
-  String get msgDecoyWalletBalance => 'SALDO VAN MISLEIDINGSPORTEMONNEE';
+  String get msgDecoyWalletBalance => 'SALDO VAN DE MISLEIDINGSWALLET';
 
   @override
   String get msgDisable => 'UITSCHAKELEN';
@@ -514,7 +514,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgEmergencyAlertsWalletMonitoringAndEmergencyContactNotifications =>
-      'Noodmeldingen, portemonneebewaking en meldingen aan noodcontacten vereisen een actief betaald abonnement.';
+      'Noodmeldingen, walletbewaking en meldingen aan noodcontacten vereisen een actief betaald abonnement.';
 
   @override
   String get msgEmergencyContactsAndAlertSettings =>
@@ -678,7 +678,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgIUnderstandDecoySeedAlertsAreDesignedFor =>
-      'Ik begrijp dat waarschuwingen via mijn misleidingsherstelzin bedoeld zijn voor activiteit op de blockchain vanuit mijn misleidingsportemonnee waarvan de bewaking is ingeschakeld, en dat ik ervoor verantwoordelijk ben om de bijbehorende waarschuwingsinstellingen gebruiksklaar en actueel te houden.';
+      'Ik begrijp dat waarschuwingen via mijn misleidingsherstelzin bedoeld zijn voor activiteit op de blockchain vanuit mijn misleidingswallet waarvan de bewaking is ingeschakeld, en dat ik ervoor verantwoordelijk ben om de bijbehorende waarschuwingsinstellingen gebruiksklaar en actueel te houden.';
 
   @override
   String get msgIUnderstandThatDecoyWalletDoesNotHold =>
@@ -766,7 +766,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgManageYourWalletPreferencesAndSession =>
-      'Beheer je portemonneevoorkeuren en sessie.';
+      'Beheer je walletvoorkeuren en sessie.';
 
   @override
   String get msgManualAddress => 'Handmatig adres';
@@ -781,7 +781,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get msgMiamiBeach => 'Miami Beach';
 
   @override
-  String get msgMonitorExistingWallet => 'Bestaande portemonnee bewaken';
+  String get msgMonitorExistingWallet => 'Bestaande wallet bewaken';
 
   @override
   String get msgMonitorStatus => 'Bewakingsstatus:';
@@ -868,8 +868,7 @@ class AppLocalizationsNl extends AppLocalizations {
       'Plak alleen openbare gegevens voor alleen-lezengebruik. Plak nooit een herstelzin, privésleutel, xprv of zprv.';
 
   @override
-  String get msgPasteOrEnterWalletAddress =>
-      'Plak of voer een portemonneeadres in';
+  String get msgPasteOrEnterWalletAddress => 'Plak of voer een walletadres in';
 
   @override
   String get msgPayForDecoyWithBitcoin => 'Decoy betalen met Bitcoin';
@@ -904,7 +903,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgPleaseAuthenticateToUnlockYourWallet =>
-      'Verifieer je identiteit om je portemonnee te ontgrendelen';
+      'Verifieer je identiteit om je wallet te ontgrendelen';
 
   @override
   String get msgPrimal => 'Primal';
@@ -1174,7 +1173,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgUseXpubForLegacy1AddressWalletsZpub =>
-      'Gebruik xpub voor portemonnees met oudere adressen die met 1 beginnen, zpub voor portemonnees met native SegWit-bc1-adressen, of plak specifieke ontvangstadressen.';
+      'Gebruik xpub voor wallets met oudere adressen die met 1 beginnen, zpub voor wallets met native SegWit-bc1-adressen, of plak specifieke ontvangstadressen.';
 
   @override
   String get msgUseYourFingerprintOrFaceIdToQuickly =>
@@ -1192,18 +1191,18 @@ class AppLocalizationsNl extends AppLocalizations {
   String get msgVerifyingPleaseWait => 'Bezig met verifiëren... Even geduld!';
 
   @override
-  String get msgWallet => 'Portemonnee';
+  String get msgWallet => 'Wallet';
 
   @override
-  String get msgWalletActivityMonitor => 'Bewaking van portemonneeactiviteit';
+  String get msgWalletActivityMonitor => 'Bewaking van walletactiviteit';
 
   @override
   String get msgWalletSeedPhrasesAndPrivateKeys =>
-      'Herstelzinnen en privésleutels van portemonnees';
+      'Herstelzinnen en privésleutels van wallets';
 
   @override
   String get msgWatchOnlyWalletImportIsAvailableInEnabled =>
-      'Het importeren van alleen-lezenportemonnees is alleen beschikbaar in testversies waarin dit is ingeschakeld.';
+      'Het importeren van wallets met alleen leestoegang is alleen beschikbaar in testversies waarin dit is ingeschakeld.';
 
   @override
   String get msgWeSentA6DigitCodeTo =>
@@ -1258,7 +1257,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgYourBitcoinFundsRemainSafeInYourExternal =>
-      'Je Bitcoin-tegoed blijft veilig in je externe portemonnee';
+      'Je Bitcoin-tegoed blijft veilig in je externe wallet';
 
   @override
   String get msgYourDecoyWalletAccountAndProfile =>
@@ -1283,7 +1282,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get msgZpubOrBc1qBc1p1 => 'zpub...\n\nof\nbc1q...\nbc1p...\n1...';
 
   @override
-  String get msgItcoinWallet => '₿itcoin-portemonnee';
+  String get msgItcoinWallet => '₿itcoin-wallet';
 
   @override
   String get msgLanguage => 'Taal';
@@ -1322,7 +1321,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgAccountLevelSeedWalletMonitoring =>
-      'Bewaking op accountniveau van de portemonnee op basis van de herstelzin';
+      'Bewaking op accountniveau van de wallet op basis van de herstelzin';
 
   @override
   String get msgActive => 'Actief';
@@ -1405,11 +1404,11 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgGenerateANewDecoySeedPhraseOrMonitor =>
-      'Genereer een nieuwe misleidingsherstelzin of bewaak alleen-lezengegevens van een portemonnee die je al beheert.';
+      'Genereer een nieuwe misleidingsherstelzin of bewaak alleen-lezengegevens van een wallet die je al beheert.';
 
   @override
   String get msgGenerateANewDecoySeedPhraseToMonitor =>
-      'Genereer een nieuwe misleidingsherstelzin om uitgaande portemonneeactiviteit te bewaken.';
+      'Genereer een nieuwe misleidingsherstelzin om uitgaande walletactiviteit te bewaken.';
 
   @override
   String get msgInMempool => 'In de mempool';
@@ -1513,7 +1512,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgThisWalletOrReceiveAddressIsAlreadyBeing =>
-      'Deze portemonnee of dit ontvangstadres wordt al bewaakt.';
+      'Deze wallet of dit ontvangstadres wordt al bewaakt.';
 
   @override
   String get msgTransactionBroadcast => 'Transactie verspreid';
@@ -1536,7 +1535,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgUnableToCheckWhetherThisWalletIsAlready =>
-      'Kan niet controleren of deze portemonnee al wordt bewaakt. Probeer het opnieuw.';
+      'Kan niet controleren of deze wallet al wordt bewaakt. Probeer het opnieuw.';
 
   @override
   String get msgUnableToDeleteThisMonitor =>
@@ -1560,14 +1559,14 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get msgUnableToValidateThisWatchOnlyWalletData =>
-      'Kan deze alleen-lezengegevens van de portemonnee niet valideren.';
+      'Kan deze alleen-lezengegevens van de wallet niet valideren.';
 
   @override
   String get msgWaitingForNetworkConfirmations =>
       'Wachten op netwerkbevestigingen';
 
   @override
-  String get msgWalletActivityMonitor2 => 'Bewaking van portemonneeactiviteit';
+  String get msgWalletActivityMonitor2 => 'Bewaking van walletactiviteit';
 
   @override
   String get msgXpubMonitor => 'xpub-bewaking';
@@ -1576,7 +1575,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get msgZpubMonitor => 'zpub-bewaking';
 
   @override
-  String get msgWallet2 => 'PORTEMONNEE';
+  String get msgWallet2 => 'WALLET';
 
   @override
   String get msgSecurity => 'BEVEILIGING';
