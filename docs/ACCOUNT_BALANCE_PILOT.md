@@ -8,7 +8,9 @@ opt-in pilot, not a public release. The source baseline is
 
 ## Balance Behavior
 
-- New balances start at a random amount between 1 and 5 BTC.
+- New balances start at a random amount between 1 and 5 BTC as soon as the
+  account's first successful balance load confirms no saved balance exists.
+  The same persisted amount is shown in settings and on the decoy PIN route.
 - Configuration sets the simulated balance, including an explicit zero.
 - Simulated sends deduct the gross amount using the existing fee/dust floor.
 - Partial balances do not expire, even after 24 hours or many days.
@@ -215,3 +217,40 @@ Local verification of the drain-only update on October 3, 2026:
   `app_state.dart`; no new warnings or errors. `git diff --check` passed.
 - The stable `v1.1.6-public-source-20261003` tag still resolves to
   `1fc1d7aa3735816858d99c9efe2780eb6aab1ae6`.
+
+## Initial Balance Before PIN Entry
+
+The next pilot client initializes an empty enrolled account after its first
+successful server read, using the existing durable, idempotent seed operation.
+It does not wait for the first decoy PIN entry. Existing amounts, configured
+zero, partially spent balances, and drained balances are left alone. Settings
+and refresh do not trigger a drain refill; that still happens on PIN entry
+after the existing cooldown. Concurrent first loads converge on the amount
+accepted by the server, rather than replacing another device's balance.
+
+Configure Bitcoin Balance waits for the first balance instead of presenting
+an editable placeholder zero. If the initial load fails, it offers the existing
+localized Retry control. Already initialized cached balances remain usable
+offline, and refresh does not overwrite unsaved input in the amount field.
+
+This is client code only. No migrations, production data changes, account
+resets, authentication changes, builds, or deployments were performed for this
+follow-up. The private build flag and server enrollment gates are unchanged.
+The installed pilot builds do not include this follow-up yet.
+
+Local verification on October 3, 2026:
+
+- 62 focused balance and settings tests passed, including all 18 languages for
+  the new retry state on a small phone.
+- 759 general Flutter tests passed. The two environment-gated groups were run
+  separately: 144 pilot PIN cases and 222 legacy PIN/QR cases passed.
+- All 28 in-memory PostgreSQL checks passed, without production connections.
+- Static analysis found no new warnings or errors. The existing unused
+  `_safeInit` warning in `app_state.dart` remains. `git diff --check` passed.
+- The stable public release tag remains unchanged.
+
+Before release, verify the next private build with a newly enrolled test
+account that has no saved balance: open Configure Bitcoin Balance before any
+decoy PIN entry, note its random 1-5 BTC, then confirm the decoy route and a
+second device show the same amount. Preserve existing test accounts and their
+saved settings; do not clear account data to simulate a new account.

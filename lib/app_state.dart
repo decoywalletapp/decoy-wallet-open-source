@@ -204,6 +204,9 @@ class FFAppState extends ChangeNotifier {
 
   Future<void> refreshAccountBalance() async => _accountBalance?.refresh();
 
+  bool get isSimulatedBalanceReady =>
+      !_usesAccountBalance || _accountBalance!.hasInitializedBalance;
+
   Future<void> ensureSimulatedBalance() async {
     if (_usesAccountBalance) {
       await _accountBalance!.ensureSeeded();

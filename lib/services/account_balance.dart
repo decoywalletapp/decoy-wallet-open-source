@@ -182,6 +182,8 @@ class AccountBalance extends ChangeNotifier {
   String? get userId => _session?.userId;
   bool? get eligible => _session?.eligible;
   BalanceSnapshot get value => _session?.value ?? const BalanceSnapshot();
+  bool get hasInitializedBalance =>
+      eligible == true && value.seededAt != null && value.epoch != null;
   bool get hasPendingChanges => _session?.pending.isNotEmpty ?? false;
 
   Future<void> selectUser(String? userId) {
@@ -249,6 +251,7 @@ class AccountBalance extends ChangeNotifier {
         final reply = await remote.read(session.userId);
         if (!_current(session)) return;
         await _accept(session, reply);
+        await _initializeNewBalance(session);
       }
       while (_current(session) &&
           session.eligible == true &&
@@ -262,6 +265,30 @@ class AccountBalance extends ChangeNotifier {
       // The durable per-account queue is retried on entry, resume, or next edit.
     }
   }
+
+  Future<void> _initializeNewBalance(_BalanceSession session) =>
+      session.lock.synchronized(() async {
+        if (!_current(session) || session.eligible != true) return;
+        final current = session.value;
+        // Only a confirmed, never-initialized account gets an early default.
+        // Refilling a drained balance remains exclusive to the PIN entry flow.
+        if (current.sats != 0 ||
+            current.epoch != null ||
+            current.seededAt != null ||
+            current.configuredSats != null ||
+            current.drainedAt != null ||
+            session.pending.isNotEmpty) return;
+        final operation = BalanceOperation(
+            id: const Uuid().v4(),
+            kind: 'seed',
+            sats: randomSats(),
+            at: now().toUtc());
+        final pending = [operation];
+        await cache.write(session.userId, session.encode(pending: pending));
+        if (!_current(session)) return;
+        session.pending = pending;
+        _notify();
+      });
 
   Future<void> _accept(_BalanceSession session, BalanceReply reply,
           {BalanceOperation? acknowledged}) =>

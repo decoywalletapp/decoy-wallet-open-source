@@ -22,6 +22,8 @@ class _ConfigureBitcoinBalanceWidgetState
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
+  bool _loadingBalance = false;
+  bool _balanceUnavailable = false;
 
   static const _maximumBitcoin = 21000000.0;
   static const _maximumSliderBitcoin = 10000.0;
@@ -29,8 +31,11 @@ class _ConfigureBitcoinBalanceWidgetState
   @override
   void initState() {
     super.initState();
+    _loadingBalance = !FFAppState().isSimulatedBalanceReady;
     _controller = TextEditingController(
-      text: _formatEditableBtc(FFAppState().fakeBtcBalance),
+      text: _loadingBalance
+          ? ''
+          : _formatEditableBtc(FFAppState().fakeBtcBalance),
     );
     _focusNode = FocusNode();
     _controller.addListener(_refreshPreview);
@@ -39,10 +44,20 @@ class _ConfigureBitcoinBalanceWidgetState
 
   Future<void> _loadAccountBalance() async {
     final initialText = _controller.text;
+    setState(() {
+      _loadingBalance = !FFAppState().isSimulatedBalanceReady;
+      _balanceUnavailable = false;
+    });
     await FFAppState().refreshAccountBalance();
-    if (mounted && _controller.text == initialText) {
+    if (!mounted) return;
+    final ready = FFAppState().isSimulatedBalanceReady;
+    if (ready && _controller.text == initialText) {
       _controller.text = _formatEditableBtc(FFAppState().fakeBtcBalance);
     }
+    setState(() {
+      _loadingBalance = false;
+      _balanceUnavailable = !ready;
+    });
   }
 
   @override
@@ -125,6 +140,7 @@ class _ConfigureBitcoinBalanceWidgetState
   }
 
   Future<void> _save() async {
+    if (_loadingBalance || _balanceUnavailable) return;
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final value = _enteredBtc!;
     final saved = await FFAppState().configureSimulatedBalance(value);
@@ -184,90 +200,105 @@ class _ConfigureBitcoinBalanceWidgetState
                     const SizedBox(height: 12.0),
                     _buildTitle(context),
                     const SizedBox(height: 24.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _buildPreview(context, preview),
-                          const SizedBox(height: 18.0),
-                          _buildSlider(context),
-                          const SizedBox(height: 20.0),
-                          Form(
-                            key: _formKey,
-                            child: TextFormField(
-                              controller: _controller,
-                              focusNode: _focusNode,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9.,]'),
+                    if (_loadingBalance || _balanceUnavailable)
+                      SizedBox(
+                        height: 360.0,
+                        child: Center(
+                          child: _loadingBalance
+                              ? const CircularProgressIndicator()
+                              : OutlinedButton.icon(
+                                  onPressed: _loadAccountBalance,
+                                  icon: const Icon(Icons.refresh_rounded),
+                                  label: Text(
+                                      AppLocalizations.of(context)!.msgRetry),
                                 ),
-                              ],
-                              validator: _validate,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              style: const TextStyle(
-                                color: Color(0xFF15161E),
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!.msgExactBitcoinAmount,
-                                prefixText: 'BTC  ',
-                                helperText:
-                                    AppLocalizations.of(context)!.msgEnterAnyValueFrom0To21000,
-                                filled: true,
-                                fillColor: Colors.white,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 18.0,
-                                  vertical: 20.0,
+                        ),
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildPreview(context, preview),
+                            const SizedBox(height: 18.0),
+                            _buildSlider(context),
+                            const SizedBox(height: 20.0),
+                            Form(
+                              key: _formKey,
+                              child: TextFormField(
+                                controller: _controller,
+                                focusNode: _focusNode,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                  decimal: true,
                                 ),
-                                enabledBorder: _inputBorder(
-                                  const Color(0xFFE3E6EA),
-                                ),
-                                focusedBorder: _inputBorder(
-                                  FlutterFlowTheme.of(context).primary,
-                                  width: 2.0,
-                                ),
-                                errorBorder: _inputBorder(
-                                  const Color(0xFFD90429),
-                                ),
-                                focusedErrorBorder: _inputBorder(
-                                  const Color(0xFFD90429),
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 24.0),
-                          SizedBox(
-                            height: 54.0,
-                            child: FilledButton(
-                              onPressed: _save,
-                              style: FilledButton.styleFrom(
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                              child:  Text(
-                                AppLocalizations.of(context)!.msgSet,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 19.0,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9.,]'),
+                                  ),
+                                ],
+                                validator: _validate,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                style: const TextStyle(
+                                  color: Color(0xFF15161E),
+                                  fontSize: 24.0,
                                   fontWeight: FontWeight.w700,
                                 ),
+                                decoration: InputDecoration(
+                                  labelText: AppLocalizations.of(context)!.msgExactBitcoinAmount,
+                                  prefixText: 'BTC  ',
+                                  helperText:
+                                      AppLocalizations.of(context)!.msgEnterAnyValueFrom0To21000,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 18.0,
+                                    vertical: 20.0,
+                                  ),
+                                  enabledBorder: _inputBorder(
+                                    const Color(0xFFE3E6EA),
+                                  ),
+                                  focusedBorder: _inputBorder(
+                                    FlutterFlowTheme.of(context).primary,
+                                    width: 2.0,
+                                  ),
+                                  errorBorder: _inputBorder(
+                                    const Color(0xFFD90429),
+                                  ),
+                                  focusedErrorBorder: _inputBorder(
+                                    const Color(0xFFD90429),
+                                    width: 2.0,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 24.0),
+                            SizedBox(
+                              height: 54.0,
+                              child: FilledButton(
+                                onPressed: _save,
+                                style: FilledButton.styleFrom(
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                                child:  Text(
+                                  AppLocalizations.of(context)!.msgSet,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 19.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

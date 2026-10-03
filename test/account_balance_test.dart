@@ -53,15 +53,176 @@ void main() {
     expect(balance.value.sats, 0);
   });
 
-  test('new account starts with 1 to 5 BTC; reentry does not regenerate',
+  test(
+      'account load seeds once before PIN entry and reentry does not regenerate',
       () async {
     await balance.selectUser('a');
-    await balance.ensureSeeded();
-    await settle();
     final epoch = balance.value.epoch;
     expect(balance.value.sats, 300000000);
+    expect(balance.hasInitializedBalance, isTrue);
+    expect(remote.values['a']!.sats, 300000000);
+    expect(balance.value.configuredSats, isNull);
+    expect(remote.applied.length, 1);
+    await balance.selectUser(null);
+    await balance.selectUser('a');
+    await settle();
     await balance.ensureSeeded();
     expect(balance.value.epoch, epoch);
+    expect(remote.applied.length, 1);
+  });
+
+  test('initial load waits for server and preserves an existing custom zero',
+      () async {
+    remote.delayedUser = 'a';
+    remote.delayedRead = Completer<BalanceReply>();
+    final loading = balance.selectUser('a');
+    await Future<void>.delayed(Duration.zero);
+    expect(balance.hasInitializedBalance, isFalse);
+    expect(remote.applied, isEmpty);
+    final saved = BalanceSnapshot(
+        sats: 0, configuredSats: 0, seededAt: now, epoch: 'manual-zero');
+    remote.delayedRead!.complete(BalanceReply(true, saved));
+    await loading;
+    expect(balance.hasInitializedBalance, isTrue);
+    expect(balance.value.toJson(), saved.toJson());
+    expect(remote.applied, isEmpty);
+  });
+
+  test('initial load preserves custom and partially spent balances', () async {
+    final saved = BalanceSnapshot(
+        sats: 19500000000,
+        configuredSats: 20000000000,
+        seededAt: now.subtract(const Duration(days: 90)),
+        epoch: 'partial');
+    remote.values['a'] = saved;
+    await balance.selectUser('a');
+    await balance.refresh();
+    expect(balance.value.toJson(), saved.toJson());
+    expect(remote.applied, isEmpty);
+  });
+
+  test('loading and refreshing do not refill an expired drain before PIN entry',
+      () async {
+    final saved = BalanceSnapshot(
+        sats: 0,
+        configuredSats: 200000000,
+        seededAt: now.subtract(const Duration(days: 5)),
+        drainedAt: now.subtract(const Duration(days: 2)),
+        epoch: 'drained');
+    remote.values['a'] = saved;
+    await balance.selectUser('a');
+    await balance.refresh();
+    expect(balance.value.toJson(), saved.toJson());
+    expect(balance.hasInitializedBalance, isTrue);
+    expect(remote.applied, isEmpty);
+    await balance.ensureSeeded();
+    await settle();
+    expect(balance.value.sats, 200000000);
+  });
+
+  test('an offline first load retries initialization when connectivity returns',
+      () async {
+    remote.offline = true;
+    await balance.selectUser('a');
+    expect(balance.hasInitializedBalance, isFalse);
+    expect(remote.applied, isEmpty);
+    expect(cache.values, isEmpty);
+    remote.offline = false;
+    await balance.refresh();
+    expect(balance.value.sats, 300000000);
+    expect(balance.hasInitializedBalance, isTrue);
+    expect(remote.applied.length, 1);
+  });
+
+  test('simultaneous first loads converge on one server balance', () async {
+    remote.delayedUser = 'a';
+    remote.delayedRead = Completer<BalanceReply>();
+    final phone = AccountBalance(
+        remote: remote,
+        cache: MemoryCache(),
+        now: () => now,
+        randomSats: () => 500000000);
+    addTearDown(phone.dispose);
+    final first = balance.selectUser('a');
+    final second = phone.selectUser('a');
+    await Future<void>.delayed(Duration.zero);
+    remote.delayedRead!.complete(const BalanceReply(true, BalanceSnapshot()));
+    await Future.wait([first, second]);
+    expect(balance.value.sats, phone.value.sats);
+    expect(balance.value.epoch, phone.value.epoch);
+    expect(balance.value.sats, remote.values['a']!.sats);
+    expect(balance.hasPendingChanges, isFalse);
+    expect(phone.hasPendingChanges, isFalse);
+  });
+
+  test(
+      'lost initial seed reply is durable and does not generate another amount',
+      () async {
+    remote.loseNextReply = true;
+    await balance.selectUser('a');
+    final epoch = remote.values['a']!.epoch;
+    expect(balance.hasPendingChanges, isTrue);
+    final restarted = AccountBalance(
+        remote: remote,
+        cache: cache,
+        now: () => now,
+        randomSats: () => 500000000);
+    addTearDown(restarted.dispose);
+    await restarted.selectUser('a');
+    await restarted.refresh();
+    expect(restarted.value.sats, 300000000);
+    expect(restarted.value.epoch, epoch);
+    expect(restarted.hasPendingChanges, isFalse);
+    expect(remote.applied.length, 1);
+  });
+
+  test('failed seed persistence cannot write a remote default', () async {
+    cache.fail = true;
+    await balance.selectUser('a');
+    expect(balance.hasInitializedBalance, isFalse);
+    expect(remote.applied, isEmpty);
+    cache.fail = false;
+    await balance.refresh();
+    expect(balance.hasInitializedBalance, isTrue);
+    expect(remote.applied.length, 1);
+  });
+
+  test('cached empty account waits for a successful read before early seeding',
+      () async {
+    cache.values['a'] = jsonEncode({
+      'eligible': true,
+      'base': const BalanceSnapshot().toJson(),
+      'pending': [],
+    });
+    remote.offline = true;
+    await balance.selectUser('a');
+    await balance.refresh();
+    expect(balance.hasInitializedBalance, isFalse);
+    expect(balance.hasPendingChanges, isFalse);
+    remote.offline = false;
+    await balance.refresh();
+    expect(balance.value.sats, 300000000);
+    expect(remote.applied.length, 1);
+  });
+
+  test('an in-flight empty read cannot seed over a queued manual zero',
+      () async {
+    cache.values['a'] = jsonEncode({
+      'eligible': true,
+      'base': const BalanceSnapshot().toJson(),
+      'pending': [],
+    });
+    remote.delayedUser = 'a';
+    remote.delayedRead = Completer<BalanceReply>();
+    await balance.selectUser('a');
+    await balance.configure(0);
+    remote.delayedUser = null;
+    remote.delayedRead!.complete(const BalanceReply(true, BalanceSnapshot()));
+    await balance.refresh();
+    expect(balance.value.sats, 0);
+    expect(balance.value.configuredSats, 0);
+    expect(remote.values['a']!.configuredSats, 0);
+    expect(remote.applied.length, 1);
   });
 
   test('200 BTC minus 5 stays 195 indefinitely and retains the custom target',
@@ -360,10 +521,18 @@ void main() {
 
   test('two initial offline seeds rebase sends without refilling twice',
       () async {
+    final emptyCache = jsonEncode({
+      'eligible': true,
+      'base': const BalanceSnapshot().toJson(),
+      'pending': [],
+    });
+    cache.values['a'] = emptyCache;
+    final phoneCache = MemoryCache()..values['a'] = emptyCache;
+    remote.offline = true;
     await balance.selectUser('a');
     final phone = AccountBalance(
         remote: remote,
-        cache: MemoryCache(),
+        cache: phoneCache,
         now: () => now,
         randomSats: () => 500000000);
     addTearDown(phone.dispose);
@@ -470,6 +639,8 @@ void main() {
       () async {
     await balance.selectUser('outsider');
     expect(balance.eligible, isFalse);
+    expect(balance.hasInitializedBalance, isFalse);
+    expect(remote.applied, isEmpty);
     expect(await balance.configure(9), isFalse);
     remote.offline = true;
     await balance.selectUser('a');
@@ -481,7 +652,7 @@ void main() {
     await balance.selectUser('a');
     cache.fail = true;
     expect(await balance.configure(2), isFalse);
-    expect(balance.value.sats, 0);
+    expect(balance.value.sats, 300000000);
   });
 
   test('edit waiting for account A initialization cannot mutate account B',
@@ -494,8 +665,9 @@ void main() {
     remote.delayedRead!.complete(const BalanceReply(true, BalanceSnapshot()));
     await loading;
     expect(await save, isFalse);
-    expect(balance.value.sats, 0);
-    expect(remote.values['b'], isNull);
+    expect(balance.value.sats, 300000000);
+    expect(remote.values['b']!.configuredSats, isNull);
+    expect(remote.values['a'], isNull);
   });
 
   test('quick A to B to A switch serializes cache writes for the same owner',
@@ -513,7 +685,8 @@ void main() {
     expect(balance.value.sats, 200000000);
     await settle();
     expect(remote.values['a']!.sats, 200000000);
-    expect(remote.values['b'], isNull);
+    expect(remote.values['b']!.sats, 300000000);
+    expect(remote.values['b']!.configuredSats, isNull);
   });
 
   test('cached PIN entry does not wait for a slow network refresh', () async {
@@ -558,7 +731,8 @@ void main() {
     await app.initializePersistedState();
     app.attachAccountBalance(balance);
     await app.selectBalanceUser('a');
-    expect(app.fakeBtcBalance, 0);
+    expect(app.fakeBtcBalance, 3);
+    expect(app.isSimulatedBalanceReady, isTrue);
     await app.configureSimulatedBalance(2);
     app.currentPriceMultiple = 100000;
     expect(app.fakeBtcBalance, 2);
