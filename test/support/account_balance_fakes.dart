@@ -23,11 +23,16 @@ class MemoryRemote implements BalanceRemote {
   final values = <String, BalanceSnapshot>{};
   final applied = <String>{};
   final users = {'a', 'b', 'c', 'd'};
+  final newAccountUsers = <String>{};
   bool offline = false;
   bool loseNextReply = false;
   Completer<BalanceReply>? delayedRead;
   String? delayedUser;
   Completer<void>? blockAdoption;
+
+  @override
+  bool startsWithAccountBalance(String userId) =>
+      newAccountUsers.contains(userId);
 
   @override
   Future<BalanceReply> adopt(
@@ -54,6 +59,7 @@ class MemoryRemote implements BalanceRemote {
   Future<BalanceReply> read(String userId) async {
     if (offline) throw StateError('offline');
     if (userId == delayedUser) return delayedRead!.future;
+    if (newAccountUsers.contains(userId)) users.add(userId);
     return BalanceReply(
         users.contains(userId), values[userId] ?? const BalanceSnapshot());
   }

@@ -1,10 +1,15 @@
 # Account Balance Pilot
 
 This change makes the simulated Bitcoin balance belong to a signed-in account,
-with Supabase persistence and an account-specific secure local cache. It is an
-opt-in pilot, not a public release. The source baseline is
+with Supabase persistence and an account-specific secure local cache. It is a
+private pilot, not a public release. The source baseline is
 `v1.1.6-public-source-20261003` at
 `1fc1d7aa3735816858d99c9efe2780eb6aab1ae6`.
+
+The tested account-balance reference is TestFlight `20261003231757` (1757),
+commit `65729d6d0550b6754941937a3e11132545188b6f`. The separate adoption button
+introduced in `20261004012717` (2717) is superseded by the single-Set flow below.
+Do not roll back the tested account spending, synchronization, or refill rules.
 
 ## Balance Behavior
 
@@ -24,35 +29,56 @@ opt-in pilot, not a public release. The source baseline is
 - No actual Bitcoin transactions or monitoring balances are changed.
 
 The legacy device-wide value is never imported automatically: it has no reliable
-account owner. The optional adoption flow below lets a user explicitly choose
+account owner. The ordinary Set action below lets an existing user choose
 an amount for their signed-in account without discarding the old local value.
 
 ## Isolation and Sync
 
 The feature requires both `DECOY_ACCOUNT_BALANCE_PILOT=true` in a private build
 and a server enrollment row for the authenticated user ID. Migrations enroll
-nobody. Existing pilot enrollments stay active; otherwise the user must confirm
-adoption. Tester email addresses are deliberately not embedded in public source.
+nobody. Existing pilot enrollments stay active. A new signup from an enabled
+client carries a balance preference that allows its first authenticated balance
+read to enroll it. Existing accounts remain local until they use Set.
+Tester email addresses are deliberately not embedded in public source.
 
-## Optional Adoption
+## Single Set Transition
 
-- Updating alone leaves an unenrolled account on the existing device behavior.
-  Even a first offline upgrade retains a locally seeded legacy balance while
-  account status is unknown. No old value is uploaded during reads or login.
-- The existing Set action continues to save locally until adoption. A separate
-  Save this balance to my account action confirms the exact entered amount.
-- Adoption requires an online server response. The new RPC checks auth.uid(),
+- Updating alone preserves the exact stored local amount, including zero and
+  old timestamps. Reads and login do not assign it to an account or reseed it.
+  Until Set, PIN entry keeps the original 1.1.6 rule: 24 hours from the last
+  seed/configuration permits a new random 1-5 BTC amount, including for partial
+  balances and zero. It is not a timer starting at drain. Opening settings alone
+  does not reseed. No drain history or refill target is guessed or backfilled.
+  Unmigrated accounts retain the shared device value until Set; historical
+  per-account ownership cannot be recovered from the 1.1.6 storage format.
+- The earlier unreleased draft's freeze of the legacy timer is removed. Balance
+  preservation on upgrade does not mean disabling the existing daily reset.
+- The page has one amount and the existing Set button, with no extra button or
+  dialog. The first normal Set saves the entered amount to the signed-in account
+  and enables account storage. The amount may be left unchanged or edited.
+- That first save requires an online server response. The RPC checks auth.uid(),
   validates the amount, and locks the account's balance row. It atomically saves
   the amount and enables account storage only when no initialized balance exists.
 - A saved account balance always wins over an adoption attempt from another
   device, including partial balances, explicit zero, and active drain timers.
-  Retries cannot replace that value. Normal later configuration remains explicit.
+  Retries cannot replace that value. A stale save reports failure and reloads the
+  account amount instead of falsely claiming the requested amount was saved.
+  Normal later configuration remains explicit through the same Set button.
 - The local legacy value is not deleted or overwritten by adoption. Other
   unenrolled accounts keep the old shared-device behavior until they also opt in.
 - Already enrolled pilot accounts retain their balances and reset rules. A
   legacy editor cannot overwrite a newly discovered account balance after sync.
-- No account creation, login, PIN, entitlement, monitoring, or alert decisions
-  are changed. The confirmation is translated in all 18 existing languages.
+- All signup paths add only `decoy_balance_storage: account_v1` metadata when the
+  private balance flag is enabled. Email/password validation, redirect URLs,
+  confirmation requirements, auth sessions, PIN routing, entitlements, monitoring
+  and alerts are unchanged. No existing user's metadata is updated by this patch.
+- `account_simulated_balance_v3` recognizes the new-signup preference, enrolls
+  that authenticated account and delegates to the unchanged v2 balance rules.
+  The normal initial seed remains random 1-5 BTC with no custom refill target.
+  The marker is a balance preference, not an authorization or entitlement flag;
+  owners can already enable their own balance through the explicit save RPC.
+- A new account never displays another account's shared legacy value while its
+  first load is pending or offline. It waits for a successful account load.
 - A previously offline second device discovers adoption when it next connects;
   it cannot discover a remote mode change while offline for the first time.
 - New RPC: adopt_account_simulated_balance(uuid, bigint, uuid), authenticated
@@ -60,18 +86,73 @@ adoption. Tester email addresses are deliberately not embedded in public source.
   blocks the old RPC until the user explicitly adopts again; it is not an
   account suspension or authorization mechanism.
 
-Migration: `20261004010000_account_balance_opt_in.sql`. Test the deployed RPC in
-staging with `test/backend/account_balance_opt_in_hosted_test.sql`; its synthetic
-account and all changes are rolled back. Do not run fixtures on customer accounts.
+Migrations: `20261004010000_account_balance_opt_in.sql` (deployed for 2717)
+and `20261004030000_account_balance_new_signups.sql` (deployed on October 4
+after hosted staging verification). Test only on synthetic staging fixtures
+and roll back their changes.
+Do not run fixtures on customer accounts.
 Private builds remain version 1.1.7 and public production workflows stay disabled
 for the feature until a separately approved rollout.
 
-Optional adoption verification (October 4, 2026 UTC): 98 focused app checks,
+Historical 2717 verification (October 4, 2026 UTC): 98 focused app checks,
 795 general Flutter checks, 144 pilot PIN cases, 222 legacy PIN/QR cases, and
 36 in-memory PostgreSQL checks passed. The two default-suite environment gates
 were run separately. Staging authenticated fixture checks passed and rolled
 back. The application migration asserted unchanged balances, enrollments and
 operation receipts. Existing timed device tests remain pending and unmodified.
+
+### Current Compatibility Checkpoint (October 4, 2026)
+
+The single-Set revision and its backend prerequisite are verified. Private
+builds are the next step; device verification remains required. No customer or
+existing tester data was changed. The stable 1.1.6 tag and tested 1757 reference
+remain unchanged.
+
+The new function was deployed first to hosted staging. Transactional synthetic
+fixtures verified legacy rejection, explicit Set adoption, new-signup enrollment,
+initial seed, partial spending, ownership rejection and access restrictions.
+Fixtures were rolled back and their absence was checked. The same function was
+then deployed to the application project inside a guarded transaction. Before
+and after digests matched for all existing auth users, balances, enrollments
+and operation receipts. The four existing balance/enrollment rows remain, and
+the separately prepared 1.1.6 upgrade account remains unenrolled with unchanged
+signup metadata. Anonymous function execution remains denied. No existing
+account was used as a mutation fixture.
+
+- 152 focused balance, signup and settings checks passed, including 32 new
+  legacy compatibility cases. These cover both sides of the 24 hour boundary,
+  zero, one satoshi, 4.52380952 BTC, 195 BTC, restart, offline operation, partial
+  and full spending, and transition to the account rules through ordinary Set.
+- 849 general Flutter checks passed. The two environment-gated suites were
+  run separately: 144 account-mode PIN cases and 222 legacy PIN/QR cases passed.
+- All 44 in-memory PostgreSQL checks passed, including unchanged existing rows
+  on migration and the authenticated new-signup wrapper. No hosted database
+  connection was used for these checks.
+- All six signup checks also passed with the private feature flag enabled.
+- The 50 settings checks passed again with screenshot capture. Small-screen
+  layout checks cover all 18 languages; English, German and Arabic screenshots
+  were inspected. There is one Set button and no adoption dialog or extra button.
+- Static analysis found no errors. The 15 warnings are pre-existing unused
+  declarations/imports and a duplicate generated import. Diff whitespace checks
+  passed. No unrelated warning cleanup was included.
+- Direct source comparison verified unchanged 1757 snapshot/spending/refill
+  and account mutation logic, and an unchanged 1.1.6 legacy expiration rule.
+  The PIN pages, translations, existing balance migrations, browser email/reset
+  code, auth router and billing code were not changed from their references.
+
+Build readiness: local regression gates pass, but do not start CodeMagic until
+`20261004030000_account_balance_new_signups.sql` has passed isolated hosted
+staging verification and been applied to the private build's backend. The client
+now calls v3, which must exist before the build is distributed. The prepared
+staging fixture is `test/backend/account_balance_new_signup_hosted_test.sql`;
+it uses synthetic accounts and rolls back. Do not use real customer accounts.
+
+After that prerequisite, make only a private build and verify a real in-place
+upgrade from 1.1.6 without uninstalling or clearing app data. Check the saved
+amount before its original expiration, then ordinary Set and account sync, and
+a new signup before first PIN entry. Automated time-boundary coverage does not
+replace the pending physical-device upgrade and elapsed-time tests. Existing
+tester balances, settings and drain timestamps must remain intact.
 
 The database has new, separate tables. It does not alter existing auth, billing,
 monitor, or emergency alert tables. Clients have no direct table privileges.

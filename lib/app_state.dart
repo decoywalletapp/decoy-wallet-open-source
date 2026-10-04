@@ -26,8 +26,11 @@ class FFAppState extends ChangeNotifier {
       _fakeSeeded = await secureStorage.getBool('ff_fakeSeeded') ?? _fakeSeeded;
     });
     await _safeInitAsync(() async {
-      _fakeBtcBalance =
-          await secureStorage.getDouble('ff_fakeBtcBalance') ?? _fakeBtcBalance;
+      final stored = await secureStorage.getDouble('ff_fakeBtcBalance');
+      if (stored != null && stored.isFinite && stored >= 0 && stored <= 21000000) {
+        _fakeBtcBalance = stored;
+        _hasLegacyBalance = true;
+      }
     });
     await _safeInitAsync(() async {
       _fakeUsdValue =
@@ -182,11 +185,14 @@ class FFAppState extends ChangeNotifier {
   late FlutterSecureStorage secureStorage;
 
   AccountBalance? _accountBalance;
-  // A first offline upgrade must retain the existing device balance. A known
-  // adopted account always uses its own cache, never the shared legacy value.
+  bool _hasLegacyBalance = false;
+  // Fall back to the original local balance and timer until account storage is
+  // confirmed. New signups never inherit another account's shared device value.
   bool get _usesAccountBalance =>
-      _accountBalance != null && _accountBalance!.eligible != false &&
-      !(_accountBalance!.eligible == null && _fakeSeeded);
+      _accountBalance != null &&
+      (_accountBalance!.startsWithAccountBalance ||
+          (_accountBalance!.eligible != false &&
+              !(_accountBalance!.eligible == null && _hasLegacyBalance)));
 
   void attachAccountBalance(AccountBalance balance) {
     _accountBalance?.removeListener(notifyListeners);
@@ -209,11 +215,6 @@ class FFAppState extends ChangeNotifier {
 
   String? get balanceUserId => _accountBalance?.userId;
   bool get usesSavedAccountBalance => _accountBalance?.eligible == true;
-  bool get canAdoptSimulatedBalance =>
-      balanceUserId != null && _accountBalance?.eligible == false;
-  Future<bool> adoptSimulatedBalance(double btc,
-          {required String expectedUserId}) async =>
-      await _accountBalance?.adopt(btc, expectedUserId: expectedUserId) ?? false;
 
   bool get isSimulatedBalanceReady =>
       !_usesAccountBalance || _accountBalance!.hasInitializedBalance;
@@ -235,7 +236,13 @@ class FFAppState extends ChangeNotifier {
     if ((expectedUserId != null && expectedUserId != balanceUserId) ||
         (expectedAccountMode != null &&
             expectedAccountMode != usesSavedAccountBalance)) return false;
-    if (_usesAccountBalance) return _accountBalance!.configure(btc);
+    final balance = _accountBalance;
+    if (balance != null) {
+      final owner = balance.userId;
+      if (owner == null) return false;
+      if (balance.eligible == true) return balance.configure(btc);
+      return balance.adopt(btc, expectedUserId: owner);
+    }
     final price = currentPriceMultiple > 0
         ? currentPriceMultiple : currentBtcPrice;
     update(() {
@@ -302,7 +309,8 @@ class FFAppState extends ChangeNotifier {
 
   bool _fakeSeeded = false;
   bool get fakeSeeded => _usesAccountBalance
-      ? !shouldSeedFakeBtcBalance : _fakeSeeded && !_fakeBtcSeedExpired;
+      ? !shouldSeedFakeBtcBalance
+      : _fakeSeeded && !_fakeBtcSeedExpired;
   set fakeSeeded(bool value) {
     if (_usesAccountBalance) return;
     _fakeSeeded = value;
@@ -343,6 +351,7 @@ class FFAppState extends ChangeNotifier {
   set fakeBtcBalance(double value) {
     if (_usesAccountBalance) return;
     _fakeBtcBalance = value;
+    _hasLegacyBalance = true;
     secureStorage.setDouble('ff_fakeBtcBalance', value);
     if (value > 0.0 &&
         (!_fakeSeeded || _fakeBtcSeededAt == null || _fakeBtcSeedExpired)) {

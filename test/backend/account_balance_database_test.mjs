@@ -30,7 +30,7 @@ try {
     create role authenticated;
     create role service_role;
     create schema auth;
-    create table auth.users(id uuid primary key);
+    create table auth.users(id uuid primary key, raw_user_meta_data jsonb default '{}'::jsonb);
     create function auth.uid() returns uuid language sql stable as $$
       select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
     $$;
@@ -43,7 +43,7 @@ try {
   });
   const legacyUsers = Array.from({ length: 3 }, () => randomUUID());
   for (const [index, id] of legacyUsers.entries()) {
-    await db.query('insert into auth.users values ($1)', [id]);
+    await db.query('insert into auth.users(id) values ($1)', [id]);
     await db.query(`insert into public.account_simulated_balances(user_id, sats, seeded_at, epoch)
       values ($1, $2, $3, $4)`, [id, index === 0 ? 19500000000 : 0,
       index === 2 ? null : '2026-01-01T00:00:00Z', index === 2 ? null : randomUUID()]);
@@ -63,7 +63,7 @@ try {
       assert.equal(after.refilled_from_epoch, null);
     }
   });
-  for (const id of users) await db.query('insert into auth.users values ($1)', [id]);
+  for (const id of users) await db.query('insert into auth.users(id) values ($1)', [id]);
 
   await test('migration enrolls nobody automatically', async () => {
     assert.equal((await call(users[0])).eligible, false);
@@ -295,7 +295,7 @@ try {
       [expected, sats, op])).rows[0].value);
   const freshUser = async () => {
     const id = randomUUID();
-    await db.query('insert into auth.users values ($1)', [id]);
+    await db.query('insert into auth.users(id) values ($1)', [id]);
     return id;
   };
   await test('only the authenticated owner can adopt and anonymous execution is denied', async () => {
@@ -358,6 +358,78 @@ try {
     assert.equal(retry.sats, 0);
     assert.equal(retry.configured_sats, 0);
     assert.equal(retry.drained_at, null);
+  });
+  const beforeNewSignupMigration = await snapshot();
+  await db.exec(await readFile(new URL(
+    '../../supabase/migrations/20261004030000_account_balance_new_signups.sql',
+    import.meta.url), 'utf8'));
+  const callV3 = (id, op = null, expected = id) => owner(id, async () =>
+    (await db.query('select public.account_simulated_balance_v3($1, $2::jsonb) as value',
+      [expected, op == null ? null : JSON.stringify(op)])).rows[0].value);
+  await test('new-signup migration leaves all existing account balances and enrollment unchanged', async () => {
+    assert.deepEqual(await snapshot(), beforeNewSignupMigration);
+  });
+  await test('old accounts without the signup preference are not enrolled by reads or PIN seeding', async () => {
+    const id = await freshUser();
+    assert.equal((await callV3(id)).eligible, false);
+    assert.equal((await callV3(id, operation('seed', 300000000))).eligible, false);
+    assert.equal((await db.query('select count(*)::int as n from public.account_simulated_balances where user_id = $1', [id])).rows[0].n, 0);
+    assert.equal((await adopt(id, 19500000000)).balance.sats, 19500000000);
+    assert.equal((await callV3(id)).balance.sats, 19500000000);
+  });
+  await test('new endpoint rejects anonymous and forged ownership before enrollment', async () => {
+    await assert.rejects(() => callV3(null, null, users[1]), /balance_owner_mismatch/);
+    await assert.rejects(() => callV3(users[1], null, users[3]), /balance_owner_mismatch/);
+    await db.exec('set role anon');
+    try {
+      await assert.rejects(() => db.query('select public.account_simulated_balance_v3($1)', [users[1]]), /permission denied/);
+    } finally { await db.exec('reset role'); }
+  });
+  const newSignup = await freshUser();
+  await db.query('update auth.users set raw_user_meta_data = $2::jsonb where id = $1',
+    [newSignup, JSON.stringify({decoy_balance_storage: 'account_v1'})]);
+  await test('a marked new signup starts with account storage and a random default, not a custom target', async () => {
+    assert.equal((await callV3(newSignup)).eligible, true);
+    const seeded = (await callV3(newSignup, operation('seed', 314159265))).balance;
+    assert.equal(seeded.sats, 314159265);
+    assert.equal(seeded.configured_sats, null);
+    assert.equal(seeded.drained_at, null);
+    assert.equal((await callV3(newSignup, operation('seed', 400000000))).balance.sats, 314159265);
+  });
+  await test('new accounts still keep partial balances and refill only after a drained cooldown', async () => {
+    const before = (await callV3(newSignup)).balance;
+    const partial = (await callV3(newSignup, operation('spend', 100000000, before.epoch))).balance;
+    await db.query("update public.account_simulated_balances set seeded_at = now() - interval '90 days' where user_id = $1", [newSignup]);
+    assert.equal((await callV3(newSignup, operation('seed', 500000000, before.epoch))).balance.sats, partial.sats);
+    await callV3(newSignup, operation('spend', partial.sats, before.epoch));
+    assert.equal((await callV3(newSignup, operation('seed', 300000000, before.epoch))).balance.sats, 0);
+    await db.query("update public.account_simulated_balances set drained_at = now() - interval '24 hours' where user_id = $1", [newSignup]);
+    const refilled = (await callV3(newSignup, operation('seed', 300000000, before.epoch))).balance;
+    assert.equal(refilled.sats, 300000000);
+    assert.equal(refilled.configured_sats, null);
+  });
+  await test('new signup preference never replaces an already initialized partial balance or timer', async () => {
+    const configured = (await callV3(newSignup, operation('configure', 20000000000))).balance;
+    const partial = (await callV3(newSignup, operation('spend', 500000000, configured.epoch))).balance;
+    assert.deepEqual((await callV3(newSignup)).balance, partial);
+    const drained = (await callV3(newSignup, operation('spend', partial.sats, partial.epoch))).balance;
+    assert.deepEqual((await callV3(newSignup)).balance, drained);
+    assert.deepEqual((await adopt(newSignup, 500000000)).balance, drained);
+  });
+  await test('manual zero and saved custom refill target remain unchanged through new endpoint', async () => {
+    const zero = (await callV3(newSignup, operation('configure', 0))).balance;
+    assert.equal((await callV3(newSignup, operation('seed', 300000000, zero.epoch))).balance.sats, 0);
+    const custom = (await callV3(newSignup, operation('configure', 20000000000))).balance;
+    await callV3(newSignup, operation('spend', custom.sats, custom.epoch));
+    await db.query("update public.account_simulated_balances set drained_at = now() - interval '24 hours' where user_id = $1", [newSignup]);
+    assert.equal((await callV3(newSignup, operation('seed', 400000000, custom.epoch))).balance.sats, 20000000000);
+  });
+  await test('unknown signup preference does not enroll or seed existing accounts', async () => {
+    const id = await freshUser();
+    await db.query('update auth.users set raw_user_meta_data = $2::jsonb where id = $1',
+      [id, JSON.stringify({decoy_balance_storage: 'unknown'})]);
+    assert.equal((await callV3(id)).eligible, false);
+    assert.equal((await db.query('select count(*)::int as n from public.simulated_balance_pilot_users where user_id = $1', [id])).rows[0].n, 0);
   });
   console.log(`${checks} database checks passed.`);
 } finally {

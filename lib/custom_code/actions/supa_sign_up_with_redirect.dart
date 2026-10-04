@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '/services/account_balance.dart';
 
 Future<void> supaSignUpWithRedirect(String email, String password) async {
   final client = Supabase.instance.client;
@@ -24,6 +25,7 @@ Future<void> supaSignUpWithRedirect(String email, String password) async {
     email: email,
     password: password,
     emailRedirectTo: redirect,
+    data: accountBalanceSignupData,
   );
 }
 

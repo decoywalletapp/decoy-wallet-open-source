@@ -158,43 +158,9 @@ class _ConfigureBitcoinBalanceWidgetState
         expectedAccountMode: _editingAccountMode);
     if (!mounted) return;
     setState(() => _saving = false);
-    if (!saved) await _loadAccountBalance();
-    if (mounted) _showSaveResult(saved);
-  }
-
-  Future<void> _adoptBalance() async {
-    if (_loadingBalance || _balanceUnavailable || _saving) return;
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-    final owner = _editingUserId;
-    if (owner == null || owner != FFAppState().balanceUserId) return;
-    final value = _enteredBtc!;
-    final strings = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text(strings.msgSaveBalanceToAccount),
-        content: Text(strings.msgSaveBalanceToAccountPrompt(
-            _formatEditableBtc(value))),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false),
-              style: TextButton.styleFrom(foregroundColor: FlutterFlowTheme.of(context).primary),
-              child: Text(strings.msgCancel)),
-          TextButton(onPressed: () => Navigator.pop(context, true),
-              style: TextButton.styleFrom(foregroundColor: FlutterFlowTheme.of(context).primary),
-              child: Text(strings.msgContinue)),
-        ],
-      ),
-    );
-    if (!mounted || confirmed != true) return;
-    setState(() => _saving = true);
-    final saved = await FFAppState().adoptSimulatedBalance(value,
-        expectedUserId: owner);
-    if (!mounted) return;
-    setState(() => _saving = false);
-    await _loadAccountBalance();
+    if (!saved || _editingAccountMode != FFAppState().usesSavedAccountBalance) {
+      await _loadAccountBalance();
+    }
     if (mounted) _showSaveResult(saved);
   }
 
@@ -350,25 +316,6 @@ class _ConfigureBitcoinBalanceWidgetState
                                 ),
                               ),
                             ),
-                            if (FFAppState().canAdoptSimulatedBalance) ...[
-                              const SizedBox(height: 16),
-                              OutlinedButton.icon(
-                                onPressed: _saving ? null : _adoptBalance,
-                                icon: const Icon(Icons.cloud_upload_outlined),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: FlutterFlowTheme.of(context).primary,
-                                  side: BorderSide(color: FlutterFlowTheme.of(context).primary),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                  minimumSize: const Size(0, 52),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
-                                ),
-                                label: Text(
-                                    AppLocalizations.of(context)!
-                                        .msgSaveBalanceToAccount,
-                                    textAlign: TextAlign.center),
-                              ),
-                            ],
                           ],
                         ),
                       ),

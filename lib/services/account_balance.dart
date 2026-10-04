@@ -8,6 +8,8 @@ import 'package:uuid/uuid.dart';
 
 const accountBalancePilotEnabled =
     bool.fromEnvironment('DECOY_ACCOUNT_BALANCE_PILOT', defaultValue: false);
+const Map<String, dynamic>? accountBalanceSignupData =
+    accountBalancePilotEnabled ? {'decoy_balance_storage': 'account_v1'} : null;
 
 class BalanceSnapshot {
   const BalanceSnapshot(
@@ -129,6 +131,7 @@ class BalanceReply {
 }
 
 abstract class BalanceRemote {
+  bool startsWithAccountBalance(String userId) => false;
   Future<BalanceReply> read(String userId);
   Future<BalanceReply> apply(String userId, BalanceOperation operation);
   Future<BalanceReply> adopt(String userId, int sats, String operationId);
@@ -183,6 +186,8 @@ class AccountBalance extends ChangeNotifier {
 
   String? get userId => _session?.userId;
   bool? get eligible => _session?.eligible;
+  bool get startsWithAccountBalance =>
+      userId != null && remote.startsWithAccountBalance(userId!);
   BalanceSnapshot get value => _session?.value ?? const BalanceSnapshot();
   bool get hasInitializedBalance =>
       eligible == true && value.seededAt != null && value.epoch != null;
@@ -344,26 +349,34 @@ class AccountBalance extends ChangeNotifier {
     if (!_current(session)) return false;
     if (session.eligible == true) {
       await _sync(session);
-      return _current(session) && hasInitializedBalance;
+      return _current(session) && _matchesConfiguration(session, sats);
     }
     if (session.pending.isNotEmpty) return false;
     try {
       return await session.remoteLock.synchronized(() async {
         if (!_current(session)) return false;
-        // Adoption is online and never queues a configure operation. Even a
-        // lost response is safe to retry: the server keeps its existing value.
+        // The first ordinary Set is online and never queues a legacy amount.
+        // A stale device or retry cannot replace an existing account balance.
         final reply =
             await remote.adopt(session.userId, sats, const Uuid().v4());
         if (!_current(session) ||
             !reply.eligible ||
             reply.snapshot.epoch == null) return false;
         await _accept(session, reply);
-        return _current(session) && hasInitializedBalance;
+        return _current(session) && _matchesConfiguration(session, sats);
       });
     } catch (_) {
       return false;
     }
   }
+
+  bool _matchesConfiguration(_BalanceSession session, int sats) =>
+      session.eligible == true &&
+      session.value.epoch != null &&
+      session.value.seededAt != null &&
+      session.value.sats == sats &&
+      session.value.configuredSats == sats &&
+      session.value.drainedAt == null;
 
   Future<bool> configure(double btc) => _edit('configure', _sats(btc));
   Future<bool> spend(double grossBtc, double feeBtc) =>

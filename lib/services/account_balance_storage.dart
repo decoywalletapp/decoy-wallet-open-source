@@ -21,12 +21,18 @@ class SupabaseBalanceRemote implements BalanceRemote {
   SupabaseBalanceRemote(this.client);
   final SupabaseClient client;
 
+  @override
+  bool startsWithAccountBalance(String userId) =>
+      client.auth.currentUser?.id == userId &&
+      client.auth.currentUser?.userMetadata?['decoy_balance_storage'] ==
+          'account_v1';
+
   Future<BalanceReply> _request(String userId,
       {BalanceOperation? operation}) async {
     if (client.auth.currentUser?.id != userId) {
       throw StateError('Balance owner is no longer signed in');
     }
-    final response = await client.rpc('account_simulated_balance_v2', params: {
+    final response = await client.rpc('account_simulated_balance_v3', params: {
       // Also checked against auth.uid() on the server to guard auth-switch races.
       'p_expected_user_id': userId,
       'p_operation': operation?.toJson(),

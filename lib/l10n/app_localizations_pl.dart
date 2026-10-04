@@ -9,14 +9,6 @@ class AppLocalizationsPl extends AppLocalizations {
   AppLocalizationsPl([String locale = 'pl']) : super(locale);
 
   @override
-  String get msgSaveBalanceToAccount => 'Zapisz to saldo na moim koncie';
-
-  @override
-  String msgSaveBalanceToAccountPrompt(String amount) {
-    return 'Zapisać $amount BTC na tym koncie i synchronizować saldo między urządzeniami? Jeśli konto ma już zapisane saldo, zostanie ono zachowane.';
-  }
-
-  @override
   String get msgAlreadyConfirmedYourEmail =>
       'Adres e-mail został już potwierdzony?';
 

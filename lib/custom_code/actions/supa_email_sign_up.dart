@@ -13,6 +13,7 @@ import '/custom_code/actions/index.dart'; // other actions
 
 // You also need the Supabase Flutter singleton
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '/services/account_balance.dart';
 
 Future<String> supaEmailSignUp(
   String email,
@@ -37,6 +38,7 @@ Future<String> supaEmailSignUp(
       email: e,
       password: p,
       emailRedirectTo: redirectUrl,
+      data: accountBalanceSignupData,
     );
 
     if (res.user != null) return 'ok';

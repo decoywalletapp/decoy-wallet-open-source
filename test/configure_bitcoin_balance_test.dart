@@ -44,6 +44,20 @@ void main() {
     balance.dispose();
   });
 
+  Future<void> loadLegacy(double amount,
+      {Duration age = const Duration(hours: 1)}) async {
+    FlutterSecureStorage.setMockInitialValues({
+      'ff_fakeBtcBalance': '$amount',
+      'ff_fakeSeeded': 'true',
+      'ff_fakeBtcSeededAt':
+          DateTime.now().toUtc().subtract(age).toIso8601String(),
+    });
+    FFAppState.reset();
+    await FFAppState().initializePersistedState();
+    FFAppState().attachAccountBalance(balance);
+    await FFAppState().selectBalanceUser('legacy');
+  }
+
   Future<void> showPage(WidgetTester tester,
       {Locale locale = const Locale('en')}) {
     tester.view.physicalSize = const Size(402, 874);
@@ -72,7 +86,7 @@ void main() {
     await tester.runAsync(() async {
       final image = await boundary.toImage();
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-      final directory = Directory('/private/tmp/decoy-balance-opt-in-screens');
+      final directory = Directory('/private/tmp/decoy-balance-set-screens');
       await directory.create(recursive: true);
       await File('${directory.path}/$name.png')
           .writeAsBytes(bytes!.buffer.asUint8List());
@@ -185,30 +199,28 @@ void main() {
 
   for (final locale in AppLocalizations.supportedLocales) {
     testWidgets(
-        'optional adoption fits ${locale.languageCode} and cancellation preserves legacy balance',
+        'single Set fits ${locale.languageCode} and saves the exact legacy amount without a prompt',
         (tester) async {
-      await balance.selectUser('legacy');
-      await FFAppState().configureSimulatedBalance(12.34567891);
+      await loadLegacy(12.34567891);
       await showPage(tester, locale: locale);
       tester.view.physicalSize = const Size(320, 640);
       await tester.pumpAndSettle();
       expect(amount(tester), '12.34567891');
       final strings =
           AppLocalizations.of(tester.element(find.byType(TextFormField)))!;
-      final button =
-          find.widgetWithText(OutlinedButton, strings.msgSaveBalanceToAccount);
+      final button = find.widgetWithText(FilledButton, strings.msgSet);
       await tester.ensureVisible(button);
       await tester.pumpAndSettle();
       await capture(tester, 'balance-${locale.languageCode}');
-      await tester.tap(button);
-      await tester.pumpAndSettle();
-      expect(find.byType(AlertDialog), findsOneWidget);
-      await capture(tester, 'confirmation-${locale.languageCode}');
-      expect(tester.takeException(), isNull);
-      await tester.tap(find.text(strings.msgCancel));
-      await tester.pumpAndSettle();
+      expect(find.byType(OutlinedButton), findsNothing);
       expect(remote.values, isEmpty);
       expect(balance.eligible, false);
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(tester.takeException(), isNull);
+      expect(remote.values['legacy']!.sats, 1234567891);
+      expect(balance.eligible, true);
       expect(FFAppState().fakeBtcBalance, 12.34567891);
     });
 
@@ -225,10 +237,10 @@ void main() {
     });
   }
 
-  testWidgets('ordinary Set still uses legacy storage without enrolling',
+  testWidgets(
+      'ordinary Set saves to the account and later edits use the same button',
       (tester) async {
-    await balance.selectUser('legacy');
-    await FFAppState().configureSimulatedBalance(7);
+    await loadLegacy(7);
     await showPage(tester);
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField), '9');
@@ -236,85 +248,148 @@ void main() {
     await tester.tap(find.byType(FilledButton));
     await tester.pumpAndSettle();
     expect(FFAppState().fakeBtcBalance, 9);
-    expect(balance.eligible, false);
-    expect(remote.values, isEmpty);
+    expect(balance.eligible, true);
+    expect(remote.values['legacy']!.sats, 900000000);
+    expect(
+        await FFAppState().secureStorage.read(key: 'ff_fakeBtcBalance'), '7.0');
+    await tester.enterText(find.byType(TextFormField), '10');
+    await tester.tap(find.byType(FilledButton));
+    await tester.pumpAndSettle();
+    expect(FFAppState().fakeBtcBalance, 10);
+    expect(remote.values['legacy']!.sats, 1000000000);
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.byType(OutlinedButton), findsNothing);
   });
 
-  Future<void> openAdoption(WidgetTester tester) async {
-    final button =
-        find.widgetWithText(OutlinedButton, 'Save this balance to my account');
+  Future<void> pressSet(WidgetTester tester) async {
+    final button = find.byType(FilledButton);
     await tester.ensureVisible(button);
     await tester.tap(button);
     await tester.pumpAndSettle();
   }
 
   testWidgets(
-      'confirmation adopts the displayed amount without changing legacy storage',
+      'opening and closing settings preserves the old amount without migrating',
       (tester) async {
-    await balance.selectUser('legacy');
-    await FFAppState().configureSimulatedBalance(12.34567891);
+    await loadLegacy(12.34567891);
     await showPage(tester);
     await tester.pumpAndSettle();
-    await openAdoption(tester);
     expect(remote.values, isEmpty);
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
-    expect(balance.eligible, true);
     expect(amount(tester), '12.34567891');
-    expect(remote.values['legacy']!.sats, 1234567891);
+    await tester.pumpWidget(const SizedBox());
+    await FFAppState().ensureSimulatedBalance();
+    await showPage(tester);
+    await tester.pumpAndSettle();
+    expect(balance.eligible, false);
+    expect(amount(tester), '12.34567891');
+    expect(remote.values, isEmpty);
     expect(await FFAppState().secureStorage.read(key: 'ff_fakeBtcBalance'),
         '12.34567891');
     expect(find.byIcon(Icons.cloud_upload_outlined), findsNothing);
   });
 
-  testWidgets('second device confirmation keeps the existing account balance',
+  testWidgets('settings preserves an aged local balance; PIN still resets it',
       (tester) async {
-    await balance.selectUser('legacy');
-    await FFAppState().configureSimulatedBalance(12);
+    await loadLegacy(195, age: const Duration(days: 30));
     await showPage(tester);
     await tester.pumpAndSettle();
-    await openAdoption(tester);
+    expect(amount(tester), '195');
+    expect(remote.values, isEmpty);
+    await tester.pumpWidget(const SizedBox());
+    await FFAppState().ensureSimulatedBalance();
+    await showPage(tester);
+    await tester.pumpAndSettle();
+    final displayed = double.parse(amount(tester));
+    expect(displayed, inInclusiveRange(1, 5));
+    expect(displayed, FFAppState().fakeBtcBalance);
+    expect(balance.eligible, false);
+    expect(remote.values, isEmpty);
+  });
+
+  testWidgets(
+      'stale second device Set preserves the account balance without a false success',
+      (tester) async {
+    await loadLegacy(12);
+    await showPage(tester);
+    await tester.pumpAndSettle();
     remote.values['legacy'] = BalanceSnapshot(
         sats: 150000000,
         configuredSats: 200000000,
         epoch: 'existing',
         seededAt: now);
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
+    await pressSet(tester);
     expect(amount(tester), '1.5');
     expect(balance.value.configuredSats, 200000000);
     expect(remote.applied, isEmpty);
-  });
-
-  testWidgets('failed adoption keeps the device balance and allows retry',
-      (tester) async {
-    await balance.selectUser('legacy');
-    await FFAppState().configureSimulatedBalance(7);
-    await showPage(tester);
-    await tester.pumpAndSettle();
-    await openAdoption(tester);
-    remote.offline = true;
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
-    expect(amount(tester), '7');
-    expect(remote.values, isEmpty);
-    expect(find.byIcon(Icons.cloud_upload_outlined), findsOneWidget);
-    expect(balance.eligible, false);
+    final strings =
+        AppLocalizations.of(tester.element(find.byType(TextFormField)))!;
+    expect(find.text(strings.msgBitcoinBalanceUpdated), findsNothing);
+    expect(find.text(strings.msgNotQuiteTryAgain), findsOneWidget);
   });
 
   testWidgets(
-      'changing accounts while confirmation is open does not copy a balance',
+      'offline first Set keeps the device balance and can be retried online',
       (tester) async {
-    await balance.selectUser('legacy');
-    await FFAppState().configureSimulatedBalance(7);
+    await loadLegacy(7);
     await showPage(tester);
     await tester.pumpAndSettle();
-    await openAdoption(tester);
-    await balance.selectUser('other');
-    await tester.tap(find.text('Continue'));
+    remote.offline = true;
+    await tester.enterText(find.byType(TextFormField), '9');
+    await pressSet(tester);
+    expect(amount(tester), '7');
+    expect(remote.values, isEmpty);
+    expect(find.byIcon(Icons.cloud_upload_outlined), findsNothing);
+    expect(balance.eligible, false);
+    expect(FFAppState().fakeBtcBalance, 7);
+    expect(
+        await FFAppState().secureStorage.read(key: 'ff_fakeBtcBalance'), '7.0');
+    remote.offline = false;
+    await pressSet(tester);
+    expect(balance.eligible, true);
+    expect(remote.values['legacy']!.sats, 700000000);
+  });
+
+  testWidgets(
+      'changing accounts while settings is open does not copy a balance',
+      (tester) async {
+    await loadLegacy(7);
+    await showPage(tester);
     await tester.pumpAndSettle();
+    await balance.selectUser('other');
+    await pressSet(tester);
     expect(remote.values, isEmpty);
     expect(balance.userId, 'other');
     expect(balance.eligible, false);
+  });
+
+  testWidgets('Set preserves a legacy zero without creating a drain timer',
+      (tester) async {
+    await loadLegacy(0);
+    await showPage(tester);
+    await tester.pumpAndSettle();
+    expect(amount(tester), '0');
+    await FFAppState().ensureSimulatedBalance();
+    await pressSet(tester);
+    expect(amount(tester), '0');
+    expect(balance.value.configuredSats, 0);
+    expect(balance.value.drainedAt, isNull);
+  });
+
+  testWidgets('Set is disabled during first save and only one adoption is made',
+      (tester) async {
+    await loadLegacy(7);
+    await showPage(tester);
+    await tester.pumpAndSettle();
+    remote.blockAdoption = Completer<void>();
+    await tester.ensureVisible(find.byType(FilledButton));
+    await tester.tap(find.byType(FilledButton));
+    await tester.pump();
+    expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNull);
+    remote.blockAdoption!.complete();
+    await tester.pumpAndSettle();
+    expect(remote.applied.length, 1);
+    expect(balance.value.sats, 700000000);
+    expect(tester.takeException(), isNull);
   });
 }
