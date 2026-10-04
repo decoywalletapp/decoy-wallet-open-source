@@ -131,6 +131,7 @@ class BalanceReply {
 abstract class BalanceRemote {
   Future<BalanceReply> read(String userId);
   Future<BalanceReply> apply(String userId, BalanceOperation operation);
+  Future<BalanceReply> adopt(String userId, int sats, String operationId);
 }
 
 abstract class BalanceCache {
@@ -142,6 +143,7 @@ class _BalanceSession {
   _BalanceSession(this.userId, this.lock);
   final String userId;
   final Lock lock;
+  final remoteLock = Lock();
   bool? eligible;
   BalanceSnapshot base = const BalanceSnapshot();
   List<BalanceOperation> pending = [];
@@ -237,7 +239,9 @@ class AccountBalance extends ChangeNotifier {
 
   Future<void> _sync(_BalanceSession session) {
     if (session.syncing != null) return session.syncing!;
-    return session.syncing = _runSync(session).whenComplete(() {
+    return session.syncing = session.remoteLock
+        .synchronized(() => _runSync(session))
+        .whenComplete(() {
       session.syncing = null;
     });
   }
@@ -331,6 +335,36 @@ class AccountBalance extends ChangeNotifier {
       });
 
   Future<bool> ensureSeeded() => _edit('seed', randomSats());
+
+  Future<bool> adopt(double btc, {required String expectedUserId}) async {
+    final sats = _sats(btc);
+    final session = _session;
+    if (session == null || session.userId != expectedUserId) return false;
+    await session.ready;
+    if (!_current(session)) return false;
+    if (session.eligible == true) {
+      await _sync(session);
+      return _current(session) && hasInitializedBalance;
+    }
+    if (session.pending.isNotEmpty) return false;
+    try {
+      return await session.remoteLock.synchronized(() async {
+        if (!_current(session)) return false;
+        // Adoption is online and never queues a configure operation. Even a
+        // lost response is safe to retry: the server keeps its existing value.
+        final reply =
+            await remote.adopt(session.userId, sats, const Uuid().v4());
+        if (!_current(session) ||
+            !reply.eligible ||
+            reply.snapshot.epoch == null) return false;
+        await _accept(session, reply);
+        return _current(session) && hasInitializedBalance;
+      });
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<bool> configure(double btc) => _edit('configure', _sats(btc));
   Future<bool> spend(double grossBtc, double feeBtc) =>
       _edit('spend', _sats(grossBtc), feeSats: _sats(feeBtc));

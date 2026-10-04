@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "将此余额保存到我的账户",
+  "msgSaveBalanceToAccountPrompt": "将 {amount} BTC 保存到此账户并在设备之间同步余额？如果此账户已有保存的余额，将保留该余额。",
   "@@locale": "zh",
   "msgAlreadyConfirmedYourEmail": "已经确认您的电子邮箱了吗？",
   "msgCameraAccessRequiredForQrScan": "扫描二维码需要相机访问权限。您可以在设备设置中开启。",

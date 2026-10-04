@@ -9,6 +9,15 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount =>
+      'Зберегти цей баланс у моєму обліковому записі';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'Зберегти $amount BTC у цьому обліковому записі та синхронізувати баланс між пристроями? Якщо в обліковому записі вже збережено баланс, його буде збережено без змін.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail =>
       'Уже підтвердили адресу електронної пошти?';
 

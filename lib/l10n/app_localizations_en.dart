@@ -9,6 +9,14 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'Save this balance to my account';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'Save $amount BTC to this account and sync its balance across devices? If this account already has a saved balance, that balance will be kept.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => 'Already confirmed your email?';
 
   @override

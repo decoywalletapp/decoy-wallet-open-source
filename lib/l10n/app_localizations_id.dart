@@ -9,6 +9,14 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'Simpan saldo ini ke akun saya';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'Simpan $amount BTC ke akun ini dan sinkronkan saldonya antarperangkat? Jika akun ini sudah memiliki saldo tersimpan, saldo tersebut akan dipertahankan.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => 'Sudah mengonfirmasi email Anda?';
 
   @override

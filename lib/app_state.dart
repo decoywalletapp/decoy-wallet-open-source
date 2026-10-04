@@ -182,8 +182,11 @@ class FFAppState extends ChangeNotifier {
   late FlutterSecureStorage secureStorage;
 
   AccountBalance? _accountBalance;
+  // A first offline upgrade must retain the existing device balance. A known
+  // adopted account always uses its own cache, never the shared legacy value.
   bool get _usesAccountBalance =>
-      _accountBalance != null && _accountBalance!.eligible != false;
+      _accountBalance != null && _accountBalance!.eligible != false &&
+      !(_accountBalance!.eligible == null && _fakeSeeded);
 
   void attachAccountBalance(AccountBalance balance) {
     _accountBalance?.removeListener(notifyListeners);
@@ -204,6 +207,14 @@ class FFAppState extends ChangeNotifier {
 
   Future<void> refreshAccountBalance() async => _accountBalance?.refresh();
 
+  String? get balanceUserId => _accountBalance?.userId;
+  bool get usesSavedAccountBalance => _accountBalance?.eligible == true;
+  bool get canAdoptSimulatedBalance =>
+      balanceUserId != null && _accountBalance?.eligible == false;
+  Future<bool> adoptSimulatedBalance(double btc,
+          {required String expectedUserId}) async =>
+      await _accountBalance?.adopt(btc, expectedUserId: expectedUserId) ?? false;
+
   bool get isSimulatedBalanceReady =>
       !_usesAccountBalance || _accountBalance!.hasInitializedBalance;
 
@@ -219,7 +230,11 @@ class FFAppState extends ChangeNotifier {
     }
   }
 
-  Future<bool> configureSimulatedBalance(double btc) async {
+  Future<bool> configureSimulatedBalance(double btc,
+      {String? expectedUserId, bool? expectedAccountMode}) async {
+    if ((expectedUserId != null && expectedUserId != balanceUserId) ||
+        (expectedAccountMode != null &&
+            expectedAccountMode != usesSavedAccountBalance)) return false;
     if (_usesAccountBalance) return _accountBalance!.configure(btc);
     final price = currentPriceMultiple > 0
         ? currentPriceMultiple : currentBtcPrice;

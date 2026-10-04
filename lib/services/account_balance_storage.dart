@@ -46,4 +46,21 @@ class SupabaseBalanceRemote implements BalanceRemote {
   @override
   Future<BalanceReply> apply(String userId, BalanceOperation operation) =>
       _request(userId, operation: operation);
+
+  @override
+  Future<BalanceReply> adopt(
+      String userId, int sats, String operationId) async {
+    if (client.auth.currentUser?.id != userId) {
+      throw StateError('Balance owner is no longer signed in');
+    }
+    final response =
+        await client.rpc('adopt_account_simulated_balance', params: {
+      'p_expected_user_id': userId,
+      'p_sats': sats,
+      'p_operation_id': operationId,
+    }).timeout(const Duration(seconds: 8));
+    final json = Map<String, dynamic>.from(response as Map);
+    return BalanceReply(json['eligible'] == true,
+        BalanceSnapshot.fromJson(Map<String, dynamic>.from(json['balance'])));
+  }
 }

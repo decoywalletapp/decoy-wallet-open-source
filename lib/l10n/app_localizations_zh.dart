@@ -9,6 +9,14 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => '将此余额保存到我的账户';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return '将 $amount BTC 保存到此账户并在设备之间同步余额？如果此账户已有保存的余额，将保留该余额。';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => '已经确认您的电子邮箱了吗？';
 
   @override

@@ -9,6 +9,14 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'यह बैलेंस मेरे खाते में सहेजें';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'इस खाते में $amount BTC सहेजें और सभी डिवाइस पर इसका बैलेंस सिंक करें? यदि इस खाते में पहले से कोई बैलेंस सहेजा गया है, तो वही रखा जाएगा।';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail =>
       'क्या आपने अपना ईमेल पहले ही सत्यापित कर लिया है?';
 

@@ -9,6 +9,14 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'この残高をアカウントに保存';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return '$amount BTCをこのアカウントに保存し、デバイス間で残高を同期しますか？このアカウントに保存済みの残高がある場合は、その残高が維持されます。';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => 'メールアドレスの確認はお済みですか？';
 
   @override

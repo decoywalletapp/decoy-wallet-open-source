@@ -9,6 +9,14 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'Dit saldo opslaan in mijn account';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return '$amount BTC opslaan in dit account en het saldo tussen apparaten synchroniseren? Als dit account al een opgeslagen saldo heeft, blijft dat saldo behouden.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => 'Je e-mailadres al bevestigd?';
 
   @override

@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "Enregistrer ce solde dans mon compte",
+  "msgSaveBalanceToAccountPrompt": "Enregistrer {amount} BTC dans ce compte et synchroniser son solde entre les appareils ? Si ce compte possède déjà un solde enregistré, celui-ci sera conservé.",
   "@@locale": "fr",
   "msgAlreadyConfirmedYourEmail": "Vous avez déjà confirmé votre adresse e-mail ?",
   "msgCameraAccessRequiredForQrScan": "L'accès à la caméra est nécessaire pour scanner les codes QR. Vous pouvez l'autoriser dans les réglages de l'appareil.",

@@ -9,6 +9,14 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => '이 잔액을 내 계정에 저장';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return '이 계정에 $amount BTC를 저장하고 기기 간에 잔액을 동기화할까요? 이 계정에 이미 저장된 잔액이 있다면 기존 잔액이 유지됩니다.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => '이미 이메일을 확인하셨나요?';
 
   @override

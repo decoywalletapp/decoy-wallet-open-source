@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "Dit saldo opslaan in mijn account",
+  "msgSaveBalanceToAccountPrompt": "{amount} BTC opslaan in dit account en het saldo tussen apparaten synchroniseren? Als dit account al een opgeslagen saldo heeft, blijft dat saldo behouden.",
   "@@locale": "nl",
   "msgAlreadyConfirmedYourEmail": "Je e-mailadres al bevestigd?",
   "msgCameraAccessRequiredForQrScan": "Cameratoegang is nodig om QR-codes te scannen. Je kunt dit toestaan in de apparaatinstellingen.",

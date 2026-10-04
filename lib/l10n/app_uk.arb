@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "Зберегти цей баланс у моєму обліковому записі",
+  "msgSaveBalanceToAccountPrompt": "Зберегти {amount} BTC у цьому обліковому записі та синхронізувати баланс між пристроями? Якщо в обліковому записі вже збережено баланс, його буде збережено без змін.",
   "@@locale": "uk",
   "msgAlreadyConfirmedYourEmail": "Уже підтвердили адресу електронної пошти?",
   "msgCameraAccessRequiredForQrScan": "Для сканування QR-кодів потрібен доступ до камери. Його можна дозволити в налаштуваннях пристрою.",

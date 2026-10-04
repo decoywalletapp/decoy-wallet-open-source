@@ -9,6 +9,14 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'Enregistrer ce solde dans mon compte';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'Enregistrer $amount BTC dans ce compte et synchroniser son solde entre les appareils ? Si ce compte possède déjà un solde enregistré, celui-ci sera conservé.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail =>
       'Vous avez déjà confirmé votre adresse e-mail ?';
 

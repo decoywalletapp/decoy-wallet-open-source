@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "Simpan saldo ini ke akun saya",
+  "msgSaveBalanceToAccountPrompt": "Simpan {amount} BTC ke akun ini dan sinkronkan saldonya antarperangkat? Jika akun ini sudah memiliki saldo tersimpan, saldo tersebut akan dipertahankan.",
   "@@locale": "id",
   "msgAlreadyConfirmedYourEmail": "Sudah mengonfirmasi email Anda?",
   "msgCameraAccessRequiredForQrScan": "Akses kamera diperlukan untuk memindai kode QR. Anda dapat mengaktifkannya di pengaturan perangkat.",

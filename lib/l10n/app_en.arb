@@ -1,4 +1,7 @@
 {
+  "msgSaveBalanceToAccount": "Save this balance to my account",
+  "msgSaveBalanceToAccountPrompt": "Save {amount} BTC to this account and sync its balance across devices? If this account already has a saved balance, that balance will be kept.",
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
   "@@locale": "en",
   "msgAlreadyConfirmedYourEmail": "Already confirmed your email?",
   "msgCameraAccessRequiredForQrScan": "Camera access is required to scan QR codes. You can enable it in device settings.",

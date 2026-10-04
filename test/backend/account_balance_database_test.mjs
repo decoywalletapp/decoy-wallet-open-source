@@ -278,6 +278,87 @@ try {
     assert.equal((await db.query('select count(*)::int as n from public.simulated_balance_operations where user_id = $1', [users[0]])).rows[0].n, 0);
     assert.equal((await call(users[3])).balance.sats, 400000000);
   });
+  const snapshot = async () => ({
+    balances: (await db.query('select * from public.account_simulated_balances order by user_id')).rows,
+    enrollments: (await db.query('select * from public.simulated_balance_pilot_users order by user_id')).rows,
+    operations: (await db.query('select * from public.simulated_balance_operations order by user_id, operation_id')).rows,
+  });
+  const beforeAdoptionMigration = await snapshot();
+  await db.exec(await readFile(new URL(
+    '../../supabase/migrations/20261004010000_account_balance_opt_in.sql',
+    import.meta.url), 'utf8'));
+  await test('optional adoption migration changes no balances, enrollments, or operations', async () => {
+    assert.deepEqual(await snapshot(), beforeAdoptionMigration);
+  });
+  const adopt = (id, sats, op = randomUUID(), expected = id) => owner(id, async () =>
+    (await db.query('select public.adopt_account_simulated_balance($1, $2, $3) as value',
+      [expected, sats, op])).rows[0].value);
+  const freshUser = async () => {
+    const id = randomUUID();
+    await db.query('insert into auth.users values ($1)', [id]);
+    return id;
+  };
+  await test('only the authenticated owner can adopt and anonymous execution is denied', async () => {
+    await assert.rejects(() => adopt(null, 1, randomUUID(), users[1]), /balance_owner_mismatch/);
+    await assert.rejects(() => adopt(users[1], 1, randomUUID(), users[3]), /balance_owner_mismatch/);
+    await db.exec('set role anon');
+    try {
+      await assert.rejects(() => db.query('select public.adopt_account_simulated_balance($1, $2, $3)',
+        [users[1], 1, randomUUID()]), /permission denied/);
+    } finally { await db.exec('reset role'); }
+  });
+  await test('invalid adoption never creates enrollment or balance data', async () => {
+    const id = await freshUser();
+    for (const amount of [null, -1, 2100000000000001]) {
+      await assert.rejects(() => adopt(id, amount), /invalid_balance_adoption/);
+    }
+    await assert.rejects(() => adopt(id, 1, null), /invalid_balance_adoption/);
+    assert.equal((await call(id)).eligible, false);
+    assert.equal((await db.query('select count(*)::int as n from public.account_simulated_balances where user_id = $1', [id])).rows[0].n, 0);
+  });
+  const adopted = await freshUser();
+  const adoptionId = randomUUID();
+  await test('explicit adoption atomically saves the exact chosen amount and enables account storage', async () => {
+    assert.equal((await call(adopted)).eligible, false);
+    const result = await adopt(adopted, 1234567891, adoptionId);
+    assert.equal(result.eligible, true);
+    assert.equal(result.balance.sats, 1234567891);
+    assert.equal(result.balance.configured_sats, 1234567891);
+    assert.equal(result.balance.drained_at, null);
+    assert.equal(result.balance.epoch, adoptionId);
+    assert.deepEqual((await call(adopted)).balance, result.balance);
+  });
+  await test('retry and another device adoption cannot overwrite the first saved amount', async () => {
+    const before = (await call(adopted)).balance;
+    assert.deepEqual((await adopt(adopted, 9900000000, adoptionId)).balance, before);
+    assert.deepEqual((await adopt(adopted, 8800000000)).balance, before);
+    assert.equal((await db.query('select count(*)::int as n from public.simulated_balance_operations where user_id = $1', [adopted])).rows[0].n, 1);
+  });
+  await test('adoption cannot restore a partial or drained account balance from another device', async () => {
+    const before = (await call(adopted)).balance;
+    const partial = (await call(adopted, operation('spend', 100000000, before.epoch))).balance;
+    assert.deepEqual((await adopt(adopted, 5000000000)).balance, partial);
+    const drained = (await call(adopted, operation('spend', partial.sats, before.epoch))).balance;
+    assert.deepEqual((await adopt(adopted, 5000000000)).balance, drained);
+  });
+  await test('adopted balance uses the existing full-drain reset rules', async () => {
+    const before = (await call(adopted)).balance;
+    assert.equal((await call(adopted, operation('seed', 300000000, before.epoch))).balance.sats, 0);
+    await db.query("update public.account_simulated_balances set drained_at = now() - interval '24 hours' where user_id = $1", [adopted]);
+    const reset = (await call(adopted, operation('seed', 300000000, before.epoch))).balance;
+    assert.equal(reset.sats, 1234567891);
+    assert.equal(reset.configured_sats, 1234567891);
+  });
+  await test('adoption preserves explicit zero even after time passes and another device retries', async () => {
+    const id = await freshUser();
+    const zero = (await adopt(id, 0)).balance;
+    await db.query("update public.account_simulated_balances set seeded_at = now() - interval '90 days' where user_id = $1", [id]);
+    assert.equal((await call(id, operation('seed', 300000000, zero.epoch))).balance.sats, 0);
+    const retry = (await adopt(id, 900000000)).balance;
+    assert.equal(retry.sats, 0);
+    assert.equal(retry.configured_sats, 0);
+    assert.equal(retry.drained_at, null);
+  });
   console.log(`${checks} database checks passed.`);
 } finally {
   await db.close();

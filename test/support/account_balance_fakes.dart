@@ -27,6 +27,28 @@ class MemoryRemote implements BalanceRemote {
   bool loseNextReply = false;
   Completer<BalanceReply>? delayedRead;
   String? delayedUser;
+  Completer<void>? blockAdoption;
+
+  @override
+  Future<BalanceReply> adopt(
+      String userId, int sats, String operationId) async {
+    if (offline) throw StateError('offline');
+    await blockAdoption?.future;
+    if (values[userId]?.epoch == null) {
+      values[userId] = BalanceSnapshot(
+          sats: sats,
+          configuredSats: sats,
+          epoch: operationId,
+          seededAt: now?.call() ?? DateTime.now());
+      applied.add('$userId:$operationId');
+    }
+    users.add(userId);
+    if (loseNextReply) {
+      loseNextReply = false;
+      throw StateError('response lost after commit');
+    }
+    return BalanceReply(true, values[userId]!);
+  }
 
   @override
   Future<BalanceReply> read(String userId) async {

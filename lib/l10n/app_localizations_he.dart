@@ -9,6 +9,14 @@ class AppLocalizationsHe extends AppLocalizations {
   AppLocalizationsHe([String locale = 'he']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'שמירת היתרה הזו בחשבון שלי';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'לשמור $amount BTC בחשבון הזה ולסנכרן את היתרה בין מכשירים? אם כבר קיימת יתרה שמורה בחשבון, היא תישמר.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => 'כבר אימתת את כתובת האימייל שלך?';
 
   @override

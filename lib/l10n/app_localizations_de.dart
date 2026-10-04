@@ -9,6 +9,15 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount =>
+      'Dieses Guthaben in meinem Konto speichern';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return '$amount BTC in diesem Konto speichern und das Guthaben zwischen Geräten synchronisieren? Ein bereits gespeichertes Kontoguthaben bleibt erhalten.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail =>
       'E-Mail-Adresse bereits bestätigt?';
 

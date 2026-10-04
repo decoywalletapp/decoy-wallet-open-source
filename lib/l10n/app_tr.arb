@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "Bu bakiyeyi hesabıma kaydet",
+  "msgSaveBalanceToAccountPrompt": "Bu hesaba {amount} BTC kaydedilsin ve bakiye cihazlar arasında eşitlensin mi? Bu hesapta zaten kayıtlı bir bakiye varsa o bakiye korunur.",
   "@@locale": "tr",
   "msgAlreadyConfirmedYourEmail": "E-posta adresinizi zaten doğruladınız mı?",
   "msgCameraAccessRequiredForQrScan": "QR kodlarını taramak için kamera erişimi gereklidir. Cihaz ayarlarından izin verebilirsiniz.",

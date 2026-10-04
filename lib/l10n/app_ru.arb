@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "Сохранить этот баланс в моём аккаунте",
+  "msgSaveBalanceToAccountPrompt": "Сохранить {amount} BTC в этом аккаунте и синхронизировать баланс между устройствами? Если в аккаунте уже сохранён баланс, он останется без изменений.",
   "@@locale": "ru",
   "msgAlreadyConfirmedYourEmail": "Уже подтвердили адрес электронной почты?",
   "msgCameraAccessRequiredForQrScan": "Для сканирования QR-кодов нужен доступ к камере. Его можно разрешить в настройках устройства.",

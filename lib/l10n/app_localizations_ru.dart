@@ -9,6 +9,14 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'Сохранить этот баланс в моём аккаунте';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'Сохранить $amount BTC в этом аккаунте и синхронизировать баланс между устройствами? Если в аккаунте уже сохранён баланс, он останется без изменений.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail =>
       'Уже подтвердили адрес электронной почты?';
 

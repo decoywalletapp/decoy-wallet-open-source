@@ -9,6 +9,14 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'حفظ هذا الرصيد في حسابي';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'هل تريد حفظ $amount BTC في هذا الحساب ومزامنة رصيده بين الأجهزة؟ إذا كان لهذا الحساب رصيد محفوظ بالفعل، فسيتم الاحتفاظ به.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail => 'هل أكدت بريدك الإلكتروني بالفعل؟';
 
   @override

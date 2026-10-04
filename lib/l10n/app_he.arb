@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "שמירת היתרה הזו בחשבון שלי",
+  "msgSaveBalanceToAccountPrompt": "לשמור {amount} BTC בחשבון הזה ולסנכרן את היתרה בין מכשירים? אם כבר קיימת יתרה שמורה בחשבון, היא תישמר.",
   "@@locale": "he",
   "msgAlreadyConfirmedYourEmail": "כבר אימתת את כתובת האימייל שלך?",
   "msgCameraAccessRequiredForQrScan": "נדרשת גישה למצלמה כדי לסרוק קודי QR. ניתן לאפשר אותה בהגדרות המכשיר.",

@@ -130,6 +130,18 @@ abstract class AppLocalizations {
     Locale('zh')
   ];
 
+  /// No description provided for @msgSaveBalanceToAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this balance to my account'**
+  String get msgSaveBalanceToAccount;
+
+  /// No description provided for @msgSaveBalanceToAccountPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Save {amount} BTC to this account and sync its balance across devices? If this account already has a saved balance, that balance will be kept.'**
+  String msgSaveBalanceToAccountPrompt(String amount);
+
   /// No description provided for @msgAlreadyConfirmedYourEmail.
   ///
   /// In en, this message translates to:

@@ -1,4 +1,7 @@
 {
+  "@msgSaveBalanceToAccountPrompt": {"placeholders": {"amount": {"type": "String"}}},
+  "msgSaveBalanceToAccount": "यह बैलेंस मेरे खाते में सहेजें",
+  "msgSaveBalanceToAccountPrompt": "इस खाते में {amount} BTC सहेजें और सभी डिवाइस पर इसका बैलेंस सिंक करें? यदि इस खाते में पहले से कोई बैलेंस सहेजा गया है, तो वही रखा जाएगा।",
   "@@locale": "hi",
   "msgAlreadyConfirmedYourEmail": "क्या आपने अपना ईमेल पहले ही सत्यापित कर लिया है?",
   "msgCameraAccessRequiredForQrScan": "QR कोड स्कैन करने के लिए कैमरे की अनुमति ज़रूरी है। आप इसे डिवाइस की सेटिंग में दे सकते हैं।",

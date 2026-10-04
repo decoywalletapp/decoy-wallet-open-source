@@ -23,13 +23,55 @@ opt-in pilot, not a public release. The source baseline is
 - Market price updates affect the USD estimate, not the BTC balance or timer.
 - No actual Bitcoin transactions or monitoring balances are changed.
 
-The legacy device-wide value is not imported: it has no reliable account owner.
+The legacy device-wide value is never imported automatically: it has no reliable
+account owner. The optional adoption flow below lets a user explicitly choose
+an amount for their signed-in account without discarding the old local value.
 
 ## Isolation and Sync
 
 The feature requires both `DECOY_ACCOUNT_BALANCE_PILOT=true` in a private build
-and a server enrollment row for the authenticated user ID. The migration enrolls
-nobody. Tester email addresses are deliberately not embedded in public source.
+and a server enrollment row for the authenticated user ID. Migrations enroll
+nobody. Existing pilot enrollments stay active; otherwise the user must confirm
+adoption. Tester email addresses are deliberately not embedded in public source.
+
+## Optional Adoption
+
+- Updating alone leaves an unenrolled account on the existing device behavior.
+  Even a first offline upgrade retains a locally seeded legacy balance while
+  account status is unknown. No old value is uploaded during reads or login.
+- The existing Set action continues to save locally until adoption. A separate
+  Save this balance to my account action confirms the exact entered amount.
+- Adoption requires an online server response. The new RPC checks auth.uid(),
+  validates the amount, and locks the account's balance row. It atomically saves
+  the amount and enables account storage only when no initialized balance exists.
+- A saved account balance always wins over an adoption attempt from another
+  device, including partial balances, explicit zero, and active drain timers.
+  Retries cannot replace that value. Normal later configuration remains explicit.
+- The local legacy value is not deleted or overwritten by adoption. Other
+  unenrolled accounts keep the old shared-device behavior until they also opt in.
+- Already enrolled pilot accounts retain their balances and reset rules. A
+  legacy editor cannot overwrite a newly discovered account balance after sync.
+- No account creation, login, PIN, entitlement, monitoring, or alert decisions
+  are changed. The confirmation is translated in all 18 existing languages.
+- A previously offline second device discovers adoption when it next connects;
+  it cannot discover a remote mode change while offline for the first time.
+- New RPC: adopt_account_simulated_balance(uuid, bigint, uuid), authenticated
+  self-service only. Direct table access remains denied. Removing enrollment
+  blocks the old RPC until the user explicitly adopts again; it is not an
+  account suspension or authorization mechanism.
+
+Migration: `20261004010000_account_balance_opt_in.sql`. Test the deployed RPC in
+staging with `test/backend/account_balance_opt_in_hosted_test.sql`; its synthetic
+account and all changes are rolled back. Do not run fixtures on customer accounts.
+Private builds remain version 1.1.7 and public production workflows stay disabled
+for the feature until a separately approved rollout.
+
+Optional adoption verification (October 4, 2026 UTC): 98 focused app checks,
+795 general Flutter checks, 144 pilot PIN cases, 222 legacy PIN/QR cases, and
+36 in-memory PostgreSQL checks passed. The two default-suite environment gates
+were run separately. Staging authenticated fixture checks passed and rolled
+back. The application migration asserted unchanged balances, enrollments and
+operation receipts. Existing timed device tests remain pending and unmodified.
 
 The database has new, separate tables. It does not alter existing auth, billing,
 monitor, or emergency alert tables. Clients have no direct table privileges.

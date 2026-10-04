@@ -9,6 +9,14 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get msgSaveBalanceToAccount => 'Bu bakiyeyi hesabıma kaydet';
+
+  @override
+  String msgSaveBalanceToAccountPrompt(String amount) {
+    return 'Bu hesaba $amount BTC kaydedilsin ve bakiye cihazlar arasında eşitlensin mi? Bu hesapta zaten kayıtlı bir bakiye varsa o bakiye korunur.';
+  }
+
+  @override
   String get msgAlreadyConfirmedYourEmail =>
       'E-posta adresinizi zaten doğruladınız mı?';
 
