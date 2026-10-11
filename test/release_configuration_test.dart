@@ -49,7 +49,12 @@ void main() {
       expect(dartDefines(buildScript(id)),
           contains('DECOY_ACCOUNT_BALANCE_PILOT'));
       final guard = (workflows[id]['scripts'] as YamlList).first['script'];
-      for (final branch in ['main', 'codex/wallet-terminology-20261002', '']) {
+      for (final branch in [
+        'main',
+        'codex/wallet-terminology-20261002',
+        'codex/account-balance-pilot-20261003',
+        ''
+      ]) {
         expect(
             Process.runSync('/bin/sh', ['-c', guard],
                 environment: {'CM_BRANCH': branch}).exitCode,
@@ -60,9 +65,7 @@ void main() {
             '-c',
             guard
           ], environment: {
-            'CM_BRANCH': id == 'ios-testflight-rehearsal'
-                ? 'codex/qr-send-address-fix-20261011'
-                : 'codex/account-balance-pilot-20261003'
+            'CM_BRANCH': 'codex/qr-send-address-fix-20261011'
           }).exitCode,
           0);
     });

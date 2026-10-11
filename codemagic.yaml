@@ -911,7 +911,7 @@ workflows:
       - flutter_drive.log
 
   android-signed-release-rehearsal:
-    name: Android Account Balance Pilot APK
+    name: Android QR Fix Signed Release
     instance_type: mac_mini_m2
     max_build_duration: 120
     environment:
@@ -924,19 +924,20 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
-        DECOY_BUILD_VERIFICATION: "account-balance-pilot"
+        DECOY_BUILD_VERIFICATION: "qr-scanner-release"
         DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
+      xcode: "26.5"
     cache:
       cache_paths:
         - ~/.pub-cache
         - ~/.gradle/caches
         - ~/.gradle/wrapper
     scripts:
-      - name: Restrict account balance pilot branch
+      - name: Restrict QR release branch
         script: |
           set -eu
-          test "${CM_BRANCH:-}" = "codex/account-balance-pilot-20261003"
+          test "${CM_BRANCH:-}" = "codex/qr-send-address-fix-20261011"
       - name: Confirm public source checkout
         script: |
           set -eu
