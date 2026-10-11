@@ -42,7 +42,7 @@ void main() {
     'ios-testflight-rehearsal',
     'android-signed-release-rehearsal'
   ]) {
-    test('$id is restricted to the private balance pilot branch', () {
+    test('$id preserves enabled balances and restricts its test branch', () {
       expect(
           workflows[id]['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'],
           'true');
@@ -60,7 +60,9 @@ void main() {
             '-c',
             guard
           ], environment: {
-            'CM_BRANCH': 'codex/account-balance-pilot-20261003'
+            'CM_BRANCH': id == 'ios-testflight-rehearsal'
+                ? 'codex/qr-send-address-fix-20261011'
+                : 'codex/account-balance-pilot-20261003'
           }).exitCode,
           0);
     });
@@ -77,7 +79,9 @@ void main() {
   });
 
   test('QR test upload stays internal and restricted to the fix branch', () {
-    final workflow = workflows['ios-app-store-release'];
+    final workflow = workflows['ios-testflight-rehearsal'];
+    expect(workflow['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'],
+        'true');
     final publishing = workflow['publishing']['app_store_connect'];
     expect(publishing['submit_to_testflight'], isFalse);
     expect(publishing['submit_to_app_store'], isFalse);
