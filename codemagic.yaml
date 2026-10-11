@@ -20,7 +20,7 @@ workflows:
         DECOY_BUILD_VERIFICATION: "qr-scanner-private-test"
         DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
-      xcode: latest
+      xcode: "26.5"
       cocoapods: default
     cache:
       cache_paths:
