@@ -51,6 +51,19 @@ Future<dynamic> prepareWatchOnlyDecoyDraft(String watchOnlyInput) async {
   }
 }
 
+String normalizeWatchOnlyQrInput(String input) {
+  final tokens = _watchOnlyTokens(input);
+  if (tokens.isEmpty) return input;
+  final addresses = tokens
+      .map((token) => extractBitcoinAddress(token) ?? '')
+      .toList();
+
+  // Leave keys and invalid/mixed input intact for the existing Continue checks.
+  // Never silently drop an invalid token from a scanned address list.
+  if (addresses.any((address) => address.isEmpty)) return input;
+  return addresses.join('\n');
+}
+
 Map<String, dynamic> prepareWatchOnlyDecoyDraftPayload(
   String watchOnlyInput, {
   String? decoyId,
@@ -90,7 +103,7 @@ Map<String, dynamic> prepareWatchOnlyDecoyDraftPayload(
   final addresses = <String>[];
   for (final token in tokens) {
     final candidate = _extractBitcoinAddress(token);
-    if (!_isValidMainnetBitcoinAddress(candidate)) {
+    if (!isValidMainnetBitcoinAddress(candidate)) {
       throw _WatchOnlyImportException(
         'This does not look like a valid mainnet Bitcoin receive address: $token',
       );
@@ -274,7 +287,7 @@ String _normalizeBitcoinAddress(String address) {
       : address;
 }
 
-bool _isValidMainnetBitcoinAddress(String address) {
+bool isValidMainnetBitcoinAddress(String address) {
   return _isValidBase58MainnetAddress(address) ||
       _isValidBech32MainnetAddress(address);
 }

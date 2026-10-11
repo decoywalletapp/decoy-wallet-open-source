@@ -76,6 +76,25 @@ void main() {
         isNot(contains('DECOY_ACCOUNT_BALANCE_PILOT')));
   });
 
+  test('QR test upload stays internal and restricted to the fix branch', () {
+    final workflow = workflows['ios-app-store-release'];
+    final publishing = workflow['publishing']['app_store_connect'];
+    expect(publishing['submit_to_testflight'], isFalse);
+    expect(publishing['submit_to_app_store'], isFalse);
+    final guard = (workflow['scripts'] as YamlList).first['script'] as String;
+    for (final branch in ['main', 'codex/account-balance-pilot-20261003', '']) {
+      expect(
+          Process.runSync('/bin/sh', ['-c', guard],
+              environment: {'CM_BRANCH': branch}).exitCode,
+          isNot(0));
+    }
+    expect(
+        Process.runSync('/bin/sh', ['-c', guard], environment: {
+          'CM_BRANCH': 'codex/qr-send-address-fix-20261011'
+        }).exitCode,
+        0);
+  });
+
   for (final id in ['ios-testflight-rehearsal', 'ios-app-store-release']) {
     group('$id Apple upload target', () {
       late Directory temporary;

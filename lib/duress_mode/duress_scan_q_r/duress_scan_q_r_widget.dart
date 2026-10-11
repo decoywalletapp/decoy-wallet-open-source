@@ -7,7 +7,9 @@ import '/index.dart';
 import '/utils/android_display_guard.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'duress_scan_q_r_model.dart';
 export 'duress_scan_q_r_model.dart';
 
@@ -37,6 +39,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
   static const _track = Color(0xFF101516);
 
   late DuressScanQRModel _model;
+  bool _isScanning = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -59,21 +62,63 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
   }
 
   Future<void> _scanQrCode() async {
-    if (isiOS || isAndroid) {
-      _model.scannedQR = await FlutterBarcodeScanner.scanBarcode(
+    if (_isScanning) return;
+    final l10n = AppLocalizations.of(context)!;
+    final platform = Theme.of(context).platform;
+    if (kIsWeb ||
+        (platform != TargetPlatform.iOS &&
+            platform != TargetPlatform.android)) {
+      _showScanError(l10n.msgCouldNotOpenQrScanner);
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+    setState(() => _isScanning = true);
+    try {
+      // Match the watch-only scanner: iOS denial otherwise leaves a pending scan.
+      final permission = await Permission.camera.request();
+      if (!mounted) return;
+      if (!permission.isGranted) {
+        _showScanError(
+          l10n.msgCameraAccessRequiredForQrScan,
+          action: SnackBarAction(
+            label: l10n.msgOpenDeviceSettings,
+            onPressed: () async => openAppSettings(),
+          ),
+        );
+        return;
+      }
+
+      final scanned = await FlutterBarcodeScanner.scanBarcode(
         '#C62828', // scanning line color
-        AppLocalizations.of(context)!.msgCancel, // cancel button text
+        l10n.msgCancel, // cancel button text
         true, // whether to show the torch (camera LED) toggle icon
         ScanMode.QR,
       );
+      if (!mounted || scanned == '-1' || scanned.trim().isEmpty) return;
 
-      safeSetState(() {
-        _model.walletAddressTextController?.text =
-            functions.extractBitcoinAddress(_model.scannedQR)!;
-      });
+      final address = functions.extractBitcoinAddress(scanned) ?? '';
+      if (address.isEmpty) {
+        _showScanError(l10n.msgNotQuiteTryAgain);
+        return;
+      }
+
+      _model.scannedQR = scanned;
+      _model.walletAddressTextController!.value = TextEditingValue(
+        text: address,
+        selection: TextSelection.collapsed(offset: address.length),
+      );
+    } catch (_) {
+      if (mounted) _showScanError(l10n.msgCouldNotOpenQrScanner);
+    } finally {
+      if (mounted) setState(() => _isScanning = false);
     }
+  }
 
-    safeSetState(() {});
+  void _showScanError(String message, {SnackBarAction? action}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), action: action),
+    );
   }
 
   @override
@@ -184,6 +229,7 @@ class _DuressScanQRWidgetState extends State<DuressScanQRWidget> {
         (MediaQuery.sizeOf(context).height * 0.29).clamp(212.0, 260.0);
 
     return GestureDetector(
+      key: const ValueKey('duress-qr-scan'),
       behavior: HitTestBehavior.opaque,
       onTap: _scanQrCode,
       child: Container(

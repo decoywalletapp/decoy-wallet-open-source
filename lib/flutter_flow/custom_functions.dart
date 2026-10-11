@@ -12,6 +12,8 @@ import '/backend/backend.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/backend/supabase/supabase.dart';
 import '/auth/supabase_auth/auth_util.dart';
+import '/custom_code/actions/prepare_watch_only_decoy_draft.dart'
+    show isValidMainnetBitcoinAddress;
 
 String newCustomFunction(List<String> pinList) {
   return pinList.join('');
@@ -117,27 +119,22 @@ double usdFromBtc(
 }
 
 String? extractBitcoinAddress(String? input) {
-  if (input == null) return '';
+  var address = input?.trim() ?? '';
+  if (address.isEmpty || address == '-1') return '';
+  if (RegExp(r'\s').hasMatch(address)) return '';
 
-  String s = input.trim();
-
-  // Strip BIP21 scheme and query if present
-  if (s.toLowerCase().startsWith('bitcoin:')) {
-    s = s.substring(8); // remove 'bitcoin:'
-    final qIndex = s.indexOf('?');
-    if (qIndex >= 0) s = s.substring(0, qIndex);
+  if (address.toLowerCase().startsWith('bitcoin:')) {
+    final uri = Uri.tryParse(address);
+    if (uri == null || uri.hasAuthority || uri.hasFragment) return '';
+    address = uri.path;
   }
 
-  // Valid address patterns
-  final bech32 = RegExp(r'^(bc1[0-9a-z]{11,71})$');
-  final base58 = RegExp(r'^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$');
-
-  if (bech32.hasMatch(s) || base58.hasMatch(s)) return s;
-
-  // Fallback: search inside free text
-  final scan = RegExp(r'(bc1[0-9a-z]{11,71}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})');
-  final m = scan.firstMatch(input);
-  return m?.group(0) ?? '';
+  // Validate the entire address before normalizing case. Never mine a failed
+  // BC1 address (or another QR payload) for a Base58-looking substring.
+  if (!isValidMainnetBitcoinAddress(address)) return '';
+  return address.toLowerCase().startsWith('bc1')
+      ? address.toLowerCase()
+      : address;
 }
 
 String digitsOnly(String input) {

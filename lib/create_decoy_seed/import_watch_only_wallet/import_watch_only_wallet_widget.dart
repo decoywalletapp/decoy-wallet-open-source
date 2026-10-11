@@ -3,6 +3,8 @@ import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/custom_code/actions/prepare_watch_only_decoy_draft.dart'
+    show normalizeWatchOnlyQrInput;
 import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -107,10 +109,11 @@ class _ImportWatchOnlyWalletWidgetState
       );
       if (!mounted || scanned == '-1' || scanned.trim().isEmpty) return;
 
-      // Scanning only fills the field; Continue retains all import validation.
+      // Normalize receive-address display only; Continue still validates/imports.
+      final displayValue = normalizeWatchOnlyQrInput(scanned);
       _model.watchOnlyInputTextController!.value = TextEditingValue(
-        text: scanned,
-        selection: TextSelection.collapsed(offset: scanned.length),
+        text: displayValue,
+        selection: TextSelection.collapsed(offset: displayValue.length),
       );
     } catch (_) {
       if (mounted) _showImportError(l10n.msgCouldNotOpenQrScanner);

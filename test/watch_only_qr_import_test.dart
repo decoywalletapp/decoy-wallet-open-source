@@ -197,19 +197,44 @@ void main() {
         'bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0',
     'Bitcoin URI': () =>
         'bitcoin:${draft['addresses'][0]}?amount=0.01&label=Test',
+    'uppercase SegWit address': () =>
+        (draft['addresses'][0] as String).toUpperCase(),
+    'uppercase SegWit URI': () =>
+        'BITCOIN:${(draft['addresses'][0] as String).toUpperCase()}?amount=0.1',
+    'uppercase Taproot URI': () =>
+        'bitcoin:BC1P0XLXVLHEMJA6C4DQV22UAPCTQUPFHLXM9H8Z3K2E72Q4K9HCZ7VQZK5JJ0',
+    'legacy address URI': () =>
+        'bitcoin:1BoatSLRHtKNngkdXEeobR76b53LETtpyT?label=Test',
     'address list': () => '${draft['addresses'][0]}\n${draft['addresses'][1]}',
+    'mixed address list with URI': () =>
+        'bitcoin:${(draft['addresses'][0] as String).toUpperCase()}?amount=0.1\n'
+        '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy, '
+        '${(draft['addresses'][1] as String).toUpperCase()}',
+  };
+  final normalizedInputs = <String, String Function()>{
+    'Bitcoin URI': () => draft['addresses'][0] as String,
+    'uppercase SegWit address': () => draft['addresses'][0] as String,
+    'uppercase SegWit URI': () => draft['addresses'][0] as String,
+    'uppercase Taproot URI': () =>
+        'bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0',
+    'legacy address URI': () => '1BoatSLRHtKNngkdXEeobR76b53LETtpyT',
+    'mixed address list with URI': () =>
+        '${draft['addresses'][0]}\n'
+        '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy\n'
+        '${draft['addresses'][1]}',
   };
   for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
     for (final entry in inputs.entries) {
       testWidgets(
-          '${platform.name} QR fills ${entry.key} exactly without importing',
+          '${platform.name} QR displays normalized ${entry.key} without importing',
           (tester) async {
         await openPage(tester, platform: platform);
         final value = entry.value();
+        final expected = normalizedInputs[entry.key]?.call() ?? value;
         scan = () async => value;
         await tapScan(tester);
-        expect(controller(tester).text, value);
-        expect(controller(tester).selection.baseOffset, value.length);
+        expect(controller(tester).text, expected);
+        expect(controller(tester).selection.baseOffset, expected.length);
         expect(find.text('REVIEW IMPORT'), findsNothing);
         expect(requests, isEmpty);
         expect(FFAppState().draftWatchPublicKey, 'unchanged-draft');
@@ -318,36 +343,61 @@ void main() {
         find.textContaining('Could not open the QR scanner'), findsOneWidget);
   });
 
-  for (final entry in inputs.entries) {
-    testWidgets('Continue preserves pasted ${entry.key} validation and draft',
-        (tester) async {
-      await http.runWithClient(() async {
-        await openPage(tester);
-        final input = entry.value();
-        scan = () async => input;
-        await tapScan(tester);
-        expect(requests, isEmpty);
-        final expected = prepareWatchOnlyDecoyDraftPayload(input);
-        await tester.ensureVisible(find.text('Continue'));
-        await tester.tap(find.text('Continue'));
-        await tester.pumpAndSettle();
-        expect(find.text('REVIEW IMPORT'), findsOneWidget);
-        expect(requests, hasLength(1));
-        expect(
-            requests.single['watch_public_key'], expected['watch_public_key']);
-        expect(requests.single['watch_public_key_type'],
-            expected['watch_public_key_type']);
-        expect(requests.single['source_type'], expected['source_type']);
-        expect(requests.single['addresses'], expected['addresses']);
-        expect(FFAppState().draftWatchPublicKey, expected['watch_public_key']);
-        expect(FFAppState().draftWatchPublicKeyType,
-            expected['watch_public_key_type']);
-        expect(FFAppState().draftAddresses, expected['addresses']);
-        expect(FFAppState().draftDerivationPath, expected['derivation_path']);
-        expect(FFAppState().decoySeedArmed, isTrue);
-      }, () => client);
-    }, skip: kSupabaseUrl != 'https://test.invalid');
+  for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
+    for (final entry in inputs.entries) {
+      testWidgets(
+          '${platform.name} Continue preserves scanned ${entry.key} validation and draft',
+          (tester) async {
+        await http.runWithClient(() async {
+          await openPage(tester, platform: platform);
+          final input = entry.value();
+          scan = () async => input;
+          await tapScan(tester);
+          expect(requests, isEmpty);
+          final expected = prepareWatchOnlyDecoyDraftPayload(input);
+          await tester.ensureVisible(find.text('Continue'));
+          await tester.tap(find.text('Continue'));
+          await tester.pumpAndSettle();
+          expect(find.text('REVIEW IMPORT'), findsOneWidget);
+          expect(requests, hasLength(1));
+          expect(requests.single['watch_public_key'],
+              expected['watch_public_key']);
+          expect(requests.single['watch_public_key_type'],
+              expected['watch_public_key_type']);
+          expect(requests.single['source_type'], expected['source_type']);
+          expect(requests.single['addresses'], expected['addresses']);
+          expect(FFAppState().draftWatchPublicKey, expected['watch_public_key']);
+          expect(FFAppState().draftWatchPublicKeyType,
+              expected['watch_public_key_type']);
+          expect(FFAppState().draftAddresses, expected['addresses']);
+          expect(FFAppState().draftDerivationPath, expected['derivation_path']);
+          expect(FFAppState().decoySeedArmed, isTrue);
+        }, () => client);
+      }, skip: kSupabaseUrl != 'https://test.invalid');
+    }
   }
+
+  testWidgets('iPad displays a clean receive address from an uppercase URI',
+      (tester) async {
+    const address = 'bc1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9e75rs';
+    await openPage(tester, size: const Size(820, 1180));
+    scan = () async => 'bitcoin:${address.toUpperCase()}';
+    await tapScan(tester);
+    expect(controller(tester).text, address);
+    expect(requests, isEmpty);
+    expect(tester.takeException(), isNull);
+    if (const bool.fromEnvironment('DECOY_CAPTURE_QR_NORMALIZATION')) {
+      await tester.runAsync(() async {
+        final boundary = boundaryKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
+        final image = await boundary.toImage(pixelRatio: 1);
+        final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+        await File('/private/tmp/decoy-monitor-normalized-ipad.png')
+            .writeAsBytes(bytes!.buffer.asUint8List());
+        image.dispose();
+      });
+    }
+  });
 
   final invalidInputs = <String, String Function()>{
     'private extended key': () => 'xprv123',
@@ -355,6 +405,12 @@ void main() {
     'unsupported key type': () => 'ypub123',
     'mixed key and address': () => '${draft['xpub']}\n${draft['addresses'][0]}',
     'malformed address': () => 'not-an-address',
+    'mixed-case Bech32': () =>
+        (draft['addresses'][0] as String).replaceFirst('bc1', 'bC1'),
+    'invalid URI with valid address in label': () =>
+        'bitcoin:invalid?label=${draft['addresses'][0]}',
+    'valid and invalid address list': () =>
+        '${draft['addresses'][0]}\nnot-an-address',
   };
   for (final entry in invalidInputs.entries) {
     testWidgets('scanned ${entry.key} still rejected locally on Continue',
@@ -362,6 +418,7 @@ void main() {
       await openPage(tester);
       scan = () async => entry.value();
       await tapScan(tester);
+      expect(controller(tester).text, entry.value());
       await tester.ensureVisible(find.text('Continue'));
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
