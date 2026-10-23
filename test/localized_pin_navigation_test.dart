@@ -5,6 +5,7 @@ import 'package:decoy_wallet_app/backend/public_config.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/l10n/app_language_controller.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
+import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart' show AppStateNotifier;
 import 'package:decoy_wallet_app/custom_code/actions/aes_gcm_encrypt_string.dart';
 import 'package:decoy_wallet_app/pin_pages/p_i_n_page/p_i_n_page_widget.dart';
 import 'package:flutter/material.dart';
@@ -127,6 +128,11 @@ void main() {
     FFAppState().decoyPinContactsEnabled = true;
     FFAppState().fakeSeeded = true;
     FFAppState().fakeBtcBalance = 1;
+    final app = AppStateNotifier.instance;
+    app.update(currentUser!);
+    app.unlock.lock();
+    app.clearRedirectLocation();
+    app.unlock.preparePin(app.unlock.attempt, paidDecoyAllowed: true);
     row = {
       'user_id': user.id,
       'use_current_location': false,
@@ -158,7 +164,7 @@ void main() {
           path: '/duressHomePage',
           builder: (_, __) => const Scaffold(body: Text('DECOY DESTINATION'))),
       GoRoute(
-          name: 'HomePage',
+          name: 'AuthRouter',
           path: '/homePage',
           builder: (_, __) =>
               const Scaffold(body: Text('ACCOUNT DESTINATION'))),

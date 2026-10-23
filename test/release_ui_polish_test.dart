@@ -128,7 +128,10 @@ void main() {
     FlutterSecureStorage.setMockInitialValues({});
     FFAppState.reset();
     await FFAppState().initializePersistedState();
-    AppStateNotifier.instance.user = DecoyWalletAppSupabaseUser(user);
+    AppStateNotifier.instance.update(DecoyWalletAppSupabaseUser(user));
+    AppStateNotifier.instance.unlock.lock();
+    AppStateNotifier.instance.unlock
+        .allowRecovery(AppStateNotifier.instance.unlock.attempt);
     AppStateNotifier.instance.showSplashImage = false;
     AppStateNotifier.instance.clearRedirectLocation();
   });

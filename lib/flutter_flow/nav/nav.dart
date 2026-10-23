@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '/auth/base_auth_user_provider.dart';
+import '/auth/app_unlock_state.dart';
+export '/auth/app_unlock_state.dart';
 
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -20,7 +22,11 @@ const kTransitionInfoKey = '__transition_info__';
 GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppStateNotifier extends ChangeNotifier {
-  AppStateNotifier._();
+  AppStateNotifier._() {
+    unlock.addListener(notifyListeners);
+  }
+
+  final AppUnlockState unlock = AppUnlockState();
 
   static AppStateNotifier? _instance;
   static AppStateNotifier get instance => _instance ??= AppStateNotifier._();
@@ -40,7 +46,8 @@ class AppStateNotifier extends ChangeNotifier {
   bool get loading => user == null || showSplashImage;
   bool get loggedIn => user?.loggedIn ?? false;
   bool get initiallyLoggedIn => initialUser?.loggedIn ?? false;
-  bool get shouldRedirect => loggedIn && _redirectLocation != null;
+  bool get shouldRedirect => loggedIn && unlock.ownerUnlocked &&
+      _redirectLocation != null;
 
   String getRedirectLocation() => _redirectLocation!;
   bool hasRedirect() => _redirectLocation != null;
@@ -52,10 +59,14 @@ class AppStateNotifier extends ChangeNotifier {
   void updateNotifyOnAuthChange(bool notify) => notifyOnAuthChange = notify;
 
   void update(BaseAuthUser newUser) {
+    if (user?.uid != null && user?.uid != newUser.uid) {
+      clearRedirectLocation();
+    }
     final shouldUpdate =
         user?.uid == null || newUser.uid == null || user?.uid != newUser.uid;
     initialUser ??= newUser;
     user = newUser;
+    unlock.bindUser(newUser.loggedIn ? newUser.uid : null);
     // Refresh the app on auth change unless explicitly marked otherwise.
     // No need to update unless the user has changed.
     if (notifyOnAuthChange && shouldUpdate) {
@@ -83,8 +94,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
     debugLogDiagnostics: false,
     refreshListenable: appStateNotifier,
     navigatorKey: appNavigatorKey,
-    errorBuilder: (context, state) =>
-        appStateNotifier.loggedIn ? AuthRouterWidget() : LoginPageWidget(),
+    errorBuilder: (context, state) => _UnlockFallback(appStateNotifier),
     routes: [
       FFRoute(
         name: '_initialize',
@@ -545,7 +555,7 @@ extension GoRouterExtensions on GoRouter {
           ? null
           : appState.updateNotifyOnAuthChange(false);
   bool shouldRedirect(bool ignoreRedirect) =>
-      !ignoreRedirect && appState.hasRedirect();
+      !ignoreRedirect && appState.shouldRedirect;
   void clearRedirectLocation() => appState.clearRedirectLocation();
   void setRedirectLocationIfUnset(String location) =>
       appState.updateNotifyOnAuthChange(false);
@@ -647,10 +657,44 @@ class FFRoute {
   final Widget Function(BuildContext, FFParameters) builder;
   final List<GoRoute> routes;
 
+  AppRouteAccess get access {
+    // Route identity comes from the matched route, never a query parameter.
+    if (const {'_initialize', 'LoginPage', 'CreateAccount', 'confirmEmailPage',
+      'ForgotPasswordPage', 'AuthRouter'}.contains(name)) {
+      return AppRouteAccess.entry;
+    }
+    if (const {'TermsofUse', 'PrivacyPolicy'}.contains(name)) {
+      return AppRouteAccess.legal;
+    }
+    if (name == 'PINPage') return AppRouteAccess.pin;
+    if (name == 'CreatePin') return AppRouteAccess.firstPin;
+    if (name == 'UpdatePasswordPage') return AppRouteAccess.recovery;
+    if (const {'phoneNumberInput',
+      'PhoneNumberVerification', 'BiometricVerification', 'EnableNotifications',
+      'LocationAuthorization', 'AgreementsPage'}.contains(name)) {
+      return AppRouteAccess.setup;
+    }
+    if (const {'DuressHomePage', 'DuressSettingsPage', 'DuressScanQR', 'WalletFeaturePreview',
+      'DuressSendBTC', 'DuressConfirmTransactionSend',
+      'DuressProcessingTransaction', 'DuressOrderProcessed',
+      'cartesian_chart_library_syxakz.HomePage'}.contains(name)) {
+      return AppRouteAccess.decoy;
+    }
+    return AppRouteAccess.owner;
+  }
+
   GoRoute toRoute(AppStateNotifier appStateNotifier) => GoRoute(
         name: name,
         path: path,
         redirect: (context, state) {
+          final unlock = appStateNotifier.unlock;
+          if (unlock.inDecoy) appStateNotifier.clearRedirectLocation();
+          if (!unlock.allows(access)) {
+            if (access == AppRouteAccess.owner && !unlock.inDecoy) {
+              appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
+            }
+            return unlock.safeLocation;
+          }
           if (appStateNotifier.shouldRedirect) {
             final redirectLocation = appStateNotifier.getRedirectLocation();
             appStateNotifier.clearRedirectLocation();
@@ -666,19 +710,29 @@ class FFRoute {
         pageBuilder: (context, state) {
           fixStatusBarOniOS16AndBelow(context);
           final ffParams = FFParameters(state, asyncParams);
-          final page = ffParams.hasFutures
-              ? FutureBuilder(
-                  future: ffParams.completeFutures(),
-                  builder: (context, _) => builder(context, ffParams),
-                )
-              : builder(context, ffParams);
-          final child = appStateNotifier.loading
-              ? Center(
-                  child: LinearProgressIndicator(
-                    color: FlutterFlowTheme.of(context).primary,
-                  ),
-                )
-              : page;
+          // Recheck retained pages as well as redirects, before construction.
+          final child = ListenableBuilder(
+            listenable: appStateNotifier,
+            builder: (context, _) {
+              if (!appStateNotifier.unlock.allows(access)) {
+                return const SizedBox.shrink();
+              }
+              if (appStateNotifier.loading) {
+                return Center(child: LinearProgressIndicator(
+                  color: FlutterFlowTheme.of(context).primary,
+                ));
+              }
+              return ffParams.hasFutures
+                  ? FutureBuilder(
+                      future: ffParams.completeFutures(),
+                      builder: (context, _) =>
+                          appStateNotifier.unlock.allows(access)
+                              ? builder(context, ffParams)
+                              : const SizedBox.shrink(),
+                    )
+                  : builder(context, ffParams);
+            },
+          );
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition
@@ -707,6 +761,19 @@ class FFRoute {
         },
         routes: routes,
       );
+}
+
+class _UnlockFallback extends StatelessWidget {
+  const _UnlockFallback(this.state);
+  final AppStateNotifier state;
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) context.go(state.unlock.safeLocation);
+    });
+    return const SizedBox.shrink();
+  }
 }
 
 class TransitionInfo {

@@ -680,7 +680,8 @@ class _AgreementsPageWidgetState extends State<AgreementsPageWidget> {
                                       ),
                                     );
 
-                                    context.goNamed(CreatePinWidget.routeName);
+                                    context.goNamed(AppStateNotifier.instance.unlock.ownerUnlocked
+                                        ? HomePageWidget.routeName : CreatePinWidget.routeName);
                                   }
 
                                   safeSetState(() {});

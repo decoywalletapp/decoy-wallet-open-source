@@ -15,6 +15,8 @@ class SupabaseAuthManager extends AuthManager
     with EmailSignInManager, AppleSignInManager {
   @override
   Future signOut() {
+    AppStateNotifier.instance.unlock.lock();
+    AppStateNotifier.instance.clearRedirectLocation();
     return SupaFlow.client.auth.signOut();
   }
 

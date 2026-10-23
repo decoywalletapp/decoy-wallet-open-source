@@ -1,6 +1,6 @@
 workflows:
   ios-testflight-rehearsal:
-    name: iOS QR Scanner Internal TestFlight
+    name: iOS PIN Security Internal TestFlight
     instance_type: mac_mini_m2
     max_build_duration: 120
     integrations:
@@ -17,7 +17,7 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
-        DECOY_BUILD_VERIFICATION: "qr-scanner-private-test"
+        DECOY_BUILD_VERIFICATION: "pin-security-private-test"
         DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
       xcode: "26.5"
@@ -27,10 +27,10 @@ workflows:
         - ~/.pub-cache
         - ~/Library/Caches/CocoaPods
     scripts:
-      - name: Restrict QR test branch
+      - name: Restrict PIN security test branch
         script: |
           set -eu
-          test "${CM_BRANCH:-}" = "codex/qr-send-address-fix-20261011"
+          test "${CM_BRANCH:-}" = "codex/pin-unlock-security-20261023"
       - name: Confirm public source checkout
         script: |
           set -eu

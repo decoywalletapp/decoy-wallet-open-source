@@ -1,5 +1,6 @@
 import '/l10n/app_localizations.dart';
 import '/auth/supabase_auth/auth_util.dart';
+import '/auth/supabase_auth/supabase_user_provider.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -39,16 +40,42 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _hideContentForPinHandoff = false;
+  UnlockAttempt? _unlockAttempt;
+  bool _paidDecoyAllowed = false;
+
+  bool get _currentUnlock => mounted &&
+      AppStateNotifier.instance.unlock.isCurrent(_unlockAttempt) &&
+      !AppStateNotifier.instance.unlock.inDecoy;
+
+  Future<void> _routeAfterAuthentication() async {
+    if (!_currentUnlock) return;
+    final unlock = AppStateNotifier.instance.unlock;
+    FFAppState().hasActiveSubscription = _paidDecoyAllowed;
+    if (unlock.ownerUnlocked || unlock.setupAllowed) {
+      if (_model.agreementsComplete != true) {
+        context.goNamed(AgreementsPageWidget.routeName);
+      } else {
+        context.goNamed(unlock.ownerUnlocked
+            ? HomePageWidget.routeName : CreatePinWidget.routeName);
+      }
+      return;
+    }
+    await _goToPinPageAfterCleanHandoff();
+  }
 
   static const _pinHandoffFadeOutDuration = Duration(milliseconds: 180);
   static const _pinRouteFadeDuration = Duration(milliseconds: 220);
 
   Future<void> _goToPinPageAfterCleanHandoff() async {
+    if (!_currentUnlock || !AppStateNotifier.instance.unlock.preparePin(
+      _unlockAttempt,
+      paidDecoyAllowed: _paidDecoyAllowed,
+    )) return;
     safeSetState(() {
       _hideContentForPinHandoff = true;
     });
     await Future.delayed(_pinHandoffFadeOutDuration);
-    if (!mounted) {
+    if (!_currentUnlock) {
       return;
     }
     context.goNamedAuth(
@@ -71,12 +98,18 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (AppStateNotifier.instance.unlock.inDecoy) return;
       if (widget.type == 'recovery') {
         _model.refreshingOuuu = await actions.refreshSupabaseSession2(
-          widget.accessToken!,
-          widget.refreshToken!,
+          widget.accessToken ?? '',
+          widget.refreshToken ?? '',
         );
-        if (_model.refreshingOuuu == true) {
+        if (_model.refreshingOuuu == true && mounted &&
+            !AppStateNotifier.instance.unlock.inDecoy) {
+          AppStateNotifier.instance.update(
+            DecoyWalletAppSupabaseUser(SupaFlow.client.auth.currentUser));
+          final unlock = AppStateNotifier.instance.unlock;
+          if (!unlock.allowRecovery(unlock.attempt)) return;
           context.goNamedAuth(
               UpdatePasswordPageWidget.routeName, context.mounted);
         } else {
@@ -94,6 +127,11 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           );
         }
       } else {
+        if (!loggedIn) {
+          context.goNamed(LoginPageWidget.routeName);
+          return;
+        }
+        _unlockAttempt = AppStateNotifier.instance.unlock.attempt;
         _model.pushRoute = await actions.initPushTapListener(
           context,
         );
@@ -103,6 +141,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           safeSetState(() {});
         }
         _model.refreshOut = await actions.refreshSupabaseSession();
+        if (!_currentUnlock) return;
         _model.authUserResp = await GetAuthUserCall.call(
           jwt: currentJwtToken,
         );
@@ -121,19 +160,21 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           queryFn: (q) => q
               .eqOrNull(
                 'user_id',
-                currentUserUid,
+                _unlockAttempt!.userId,
               )
               .order('created_at'),
         );
         _model.dwList = _model.query1!.toList().cast<DecoyWalletRow>();
+        if (!_currentUnlock) return;
         _model.hasRow = _model.query1 != null && (_model.query1)!.isNotEmpty;
         _model.authEmail = currentUserEmail;
         _model.pendingEmail = _model.query1?.elementAtOrNull(0)?.pendingEmail;
         safeSetState(() {});
         if (_model.hasRow == false) {
           _model.firstInsert = await DecoyWalletTable().insert({
-            'user_id': currentUserUid,
+            'user_id': _unlockAttempt!.userId,
             'email_verified': false,
+            'setup_complete': false,
             'email_verified_at': supaSerialize<DateTime>(null),
             'is_phone_verified': false,
             'created_at': supaSerialize<DateTime>(getCurrentTimestamp),
@@ -145,7 +186,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           _model.query2 = await DecoyWalletTable().queryRows(
             queryFn: (q) => q.eqOrNull(
               'user_id',
-              currentUserUid,
+              _unlockAttempt!.userId,
             ),
           );
           _model.dwList = _model.query2!.toList().cast<DecoyWalletRow>();
@@ -168,13 +209,13 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
             },
             matchingRows: (rows) => rows.eqOrNull(
               'user_id',
-              currentUserUid,
+              _unlockAttempt!.userId,
             ),
           );
           _model.query3 = await DecoyWalletTable().queryRows(
             queryFn: (q) => q.eqOrNull(
               'user_id',
-              currentUserUid,
+              _unlockAttempt!.userId,
             ),
           );
           _model.dwList = _model.query3!.toList().cast<DecoyWalletRow>();
@@ -186,10 +227,19 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
           safeSetState(() {});
         }
 
+        if (!_currentUnlock) return;
+        final profile = _model.dwList.elementAtOrNull(0);
+        if (profile == null) return;
+        AppStateNotifier.instance.unlock.allowSetup(
+          _unlockAttempt,
+          setupComplete: profile.setupComplete,
+          hasAccountPin: (profile.accountPinHash?.isNotEmpty ?? false) ||
+              (profile.encryptedPin?.isNotEmpty ?? false),
+        );
         _model.pushSettingsRows = await UserSettingsTable().queryRows(
           queryFn: (q) => q.eqOrNull(
             'user_id',
-            currentUserUid,
+            _unlockAttempt!.userId,
           ),
         );
         FFAppState().pushEnabled =
@@ -205,12 +255,15 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
         _model.verifiedViaEmail =
             _model.dwList.elementAtOrNull(0)!.emailVerified!;
+        if (!_currentUnlock) return;
+        final canFinishSetup = AppStateNotifier.instance.unlock.setupAllowed ||
+            AppStateNotifier.instance.unlock.ownerUnlocked;
         final walletRow = _model.dwList.elementAtOrNull(0)!;
-        if (_model.verifiedViaEmail == false) {
+        if (_model.verifiedViaEmail == false && canFinishSetup) {
           context.goNamedAuth(
               ConfirmEmailPageWidget.routeName, context.mounted);
         } else {
-          if (_model.agreementsComplete != true &&
+          if (canFinishSetup && _model.agreementsComplete != true &&
               walletRow.permissionsOnboardingStep != 'complete') {
             switch (walletRow.permissionsOnboardingStep) {
               case 'notifications':
@@ -227,7 +280,8 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     BiometricVerificationWidget.routeName, context.mounted);
             }
           } else {
-            if (FFAppState().biometricsEnabled == true) {
+            if (FFAppState().biometricsEnabled == true &&
+                !AppStateNotifier.instance.unlock.ownerUnlocked) {
               final _localAuth = LocalAuthentication();
               bool _isBiometricSupported = await _localAuth.isDeviceSupported();
 
@@ -242,15 +296,15 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 safeSetState(() {});
               }
 
+              if (!_currentUnlock) return;
               if (_model.authRouterBioResult == true) {
-                FFAppState().isLocked = false;
                 safeSetState(() {});
                 _model.entitlementRow1 =
                     await UserEntitlementsTable().queryRows(
                   queryFn: (q) => q
                       .eqOrNull(
                         'user_id',
-                        currentUserUid,
+                        _unlockAttempt!.userId,
                       )
                       .eqOrNull(
                         'entitlement',
@@ -262,7 +316,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
                         false)) {
                   _model.apiResultRSE = await RepairStripeEntitlementCall.call(
-                    userId: currentUserUid,
+                    userId: _unlockAttempt!.userId,
                     jwt: currentJwtToken,
                   );
 
@@ -272,14 +326,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       queryFn: (q) => q
                           .eqOrNull(
                             'user_id',
-                            currentUserUid,
+                            _unlockAttempt!.userId,
                           )
                           .eqOrNull(
                             'entitlement',
                             'decoy_wallet',
                           ),
                     );
-                    FFAppState().hasActiveSubscription =
+                    _paidDecoyAllowed =
                         (_model.secondEntitlementQue != null &&
                                 (_model.secondEntitlementQue)!.isNotEmpty) &&
                             functions.isEntitlementUsableForProtection(
@@ -305,7 +359,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     safeSetState(() {});
                   }
                 } else {
-                  FFAppState().hasActiveSubscription =
+                  _paidDecoyAllowed =
                       (_model.entitlementRow1 != null &&
                               (_model.entitlementRow1)!.isNotEmpty) &&
                           functions.isEntitlementUsableForProtection(
@@ -331,50 +385,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   safeSetState(() {});
                 }
 
-                if (FFAppState().hasActiveSubscription == true) {
-                  if (_model.agreementsComplete != true) {
-                    context.goNamedAuth(
-                        AgreementsPageWidget.routeName, context.mounted);
-                  } else {
-                    if (_model.setupComplete != true) {
-                      context.goNamedAuth(
-                          CreatePinWidget.routeName, context.mounted);
-                    } else {
-                      if (((_model.query2 != null &&
-                                  (_model.query2)!.isNotEmpty) &&
-                              (_model.setupComplete == true)) ||
-                          ((_model.query3 != null &&
-                                  (_model.query3)!.isNotEmpty) &&
-                              (_model.setupComplete == true))) {
-                        await _goToPinPageAfterCleanHandoff();
-                      } else {
-                        context.goNamedAuth(
-                          CreatePinWidget.routeName,
-                          context.mounted,
-                          extra: <String, dynamic>{
-                            '__transition_info__': TransitionInfo(
-                              hasTransition: true,
-                              transitionType: PageTransitionType.fade,
-                            ),
-                          },
-                        );
-                      }
-                    }
-                  }
-                } else {
-                  if (_model.agreementsComplete != true) {
-                    context.goNamedAuth(
-                        AgreementsPageWidget.routeName, context.mounted);
-                  } else {
-                    if (_model.setupComplete != true) {
-                      context.goNamedAuth(
-                          CreatePinWidget.routeName, context.mounted);
-                    } else {
-                      context.goNamedAuth(
-                          HomePageWidget.routeName, context.mounted);
-                    }
-                  }
-                }
+                await _routeAfterAuthentication();
               } else {
                 GoRouter.of(context).prepareAuthEvent();
                 await authManager.signOut();
@@ -386,13 +397,12 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 context.goNamedAuth(LoginPageWidget.routeName, context.mounted);
               }
             } else {
-              FFAppState().isLocked = false;
               safeSetState(() {});
               _model.entitlementRow2 = await UserEntitlementsTable().queryRows(
                 queryFn: (q) => q
                     .eqOrNull(
                       'user_id',
-                      currentUserUid,
+                      _unlockAttempt!.userId,
                     )
                     .eqOrNull(
                       'entitlement',
@@ -404,7 +414,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
                       false)) {
                 _model.api2Result2RSE = await RepairStripeEntitlementCall.call(
-                  userId: currentUserUid,
+                  userId: _unlockAttempt!.userId,
                   jwt: currentJwtToken,
                 );
 
@@ -414,14 +424,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     queryFn: (q) => q
                         .eqOrNull(
                           'user_id',
-                          currentUserUid,
+                          _unlockAttempt!.userId,
                         )
                         .eqOrNull(
                           'entitlement',
                           'decoy_wallet',
                         ),
                   );
-                  FFAppState().hasActiveSubscription =
+                  _paidDecoyAllowed =
                       (_model.thirdEntitlementQue != null &&
                               (_model.thirdEntitlementQue)!.isNotEmpty) &&
                           functions.isEntitlementUsableForProtection(
@@ -447,7 +457,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   safeSetState(() {});
                 }
               } else {
-                FFAppState().hasActiveSubscription =
+                _paidDecoyAllowed =
                     (_model.entitlementRow2 != null &&
                             (_model.entitlementRow2)!.isNotEmpty) &&
                         functions.isEntitlementUsableForProtection(
@@ -471,50 +481,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                 safeSetState(() {});
               }
 
-              if (FFAppState().hasActiveSubscription == true) {
-                if (_model.agreementsComplete != true) {
-                  context.goNamedAuth(
-                      AgreementsPageWidget.routeName, context.mounted);
-                } else {
-                  if (_model.setupComplete != true) {
-                    context.goNamedAuth(
-                        CreatePinWidget.routeName, context.mounted);
-                  } else {
-                    if (((_model.query2 != null &&
-                                (_model.query2)!.isNotEmpty) &&
-                            (_model.setupComplete == true)) ||
-                        ((_model.query3 != null &&
-                                (_model.query3)!.isNotEmpty) &&
-                            (_model.setupComplete == true))) {
-                      await _goToPinPageAfterCleanHandoff();
-                    } else {
-                      context.goNamedAuth(
-                        CreatePinWidget.routeName,
-                        context.mounted,
-                        extra: <String, dynamic>{
-                          '__transition_info__': TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                          ),
-                        },
-                      );
-                    }
-                  }
-                }
-              } else {
-                if (_model.agreementsComplete != true) {
-                  context.goNamedAuth(
-                      AgreementsPageWidget.routeName, context.mounted);
-                } else {
-                  if (_model.setupComplete != true) {
-                    context.goNamedAuth(
-                        CreatePinWidget.routeName, context.mounted);
-                  } else {
-                    context.goNamedAuth(
-                        HomePageWidget.routeName, context.mounted);
-                  }
-                }
-              }
+              await _routeAfterAuthentication();
             }
           }
         }

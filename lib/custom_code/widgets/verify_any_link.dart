@@ -18,11 +18,33 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
+import '/auth/supabase_auth/supabase_user_provider.dart';
 
 class VerifyAnyLink extends StatefulWidget {
   final double? width;
   final double? height;
-  const VerifyAnyLink({Key? key, this.width, this.height}) : super(key: key);
+  final void Function(bool hasAuthPayload)? onInitialLinkChecked;
+  const VerifyAnyLink({Key? key, this.width, this.height,
+    this.onInitialLinkChecked}) : super(key: key);
+
+  static Map<String, String> authParameters(Uri uri) {
+    final params = <String, String>{...uri.queryParameters};
+    try {
+      final fragment = uri.fragment.startsWith('?')
+          ? uri.fragment.substring(1) : uri.fragment;
+      params.addAll(Uri.splitQueryString(fragment));
+    } on FormatException {
+      // Non-query fragments are not authentication evidence.
+    }
+    return params;
+  }
+
+  static bool hasAuthPayload(Uri uri) {
+    final params = authParameters(uri);
+    return const ['token_hash', 'tokenHash', 'token', 'refresh_token',
+      'refreshToken', 'access_token', 'accessToken']
+        .any((key) => params[key]?.isNotEmpty ?? false);
+  }
 
   @override
   State<VerifyAnyLink> createState() => _VerifyAnyLinkState();
@@ -32,6 +54,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   AppLinks? _appLinks;
   StreamSubscription<Uri>? _sub;
   bool _navigated = false;
+  int _authLinksPending = 0;
   static final Set<String> _linksInFlight = <String>{};
   static final Set<String> _linksCompleted = <String>{};
 
@@ -49,30 +72,39 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
 
   Future<void> _init() async {
     _appLinks = AppLinks();
+    _sub = _appLinks!.uriLinkStream.listen(
+      (uri) => _handleUri(uri),
+      onError: (e) {
+        if (kDebugMode) _debugLog('[VerifyAnyLink] stream error: $e');
+      },
+    );
 
     // Cold start
+    var hasAuthPayload = false;
     try {
-      final uri = await _appLinks!.getInitialLink();
+      final initial = await _appLinks!.getInitialLink();
+      if (!mounted) return;
+      final routed = GoRouterState.of(context).uri;
+      final uri = VerifyAnyLink.hasAuthPayload(routed) ? routed : initial;
       if (kDebugMode) _debugLog('[VerifyAnyLink] initial link: $uri');
-      if (uri != null) _handleUri(uri);
+      if (uri != null) {
+        hasAuthPayload = VerifyAnyLink.hasAuthPayload(uri);
+        await _handleUri(uri);
+      }
     } catch (e, st) {
       if (kDebugMode)
         _debugLog('[VerifyAnyLink] getInitialLink error: $e\n$st');
     }
 
-    // Warm
-    _sub = _appLinks!.uriLinkStream.listen(
-      (uri) {
-        if (kDebugMode) _debugLog('[VerifyAnyLink] stream link: $uri');
-        _handleUri(uri);
-      },
-      onError: (e) {
-        if (kDebugMode) _debugLog('[VerifyAnyLink] stream error: $e');
-      },
-    );
+    if (!mounted) return;
+    if (!_navigated) {
+      widget.onInitialLinkChecked?.call(hasAuthPayload || _authLinksPending > 0);
+    }
   }
 
   Future<void> _handleUri(Uri uri) async {
+    if (AppStateNotifier.instance.unlock.inDecoy ||
+        !VerifyAnyLink.hasAuthPayload(uri)) return;
     final linkKey = uri.toString();
     if (_linksCompleted.contains(linkKey) || !_linksInFlight.add(linkKey)) {
       if (kDebugMode) _debugLog('[VerifyAnyLink] duplicate link skipped: $uri');
@@ -80,7 +112,8 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     }
 
     var completed = false;
-    final p = _allParams(uri);
+    _authLinksPending++;
+    final p = VerifyAnyLink.authParameters(uri);
     final tokenHash = p['token_hash'] ?? p['tokenHash'] ?? p['token'];
     final refreshToken = p['refresh_token'] ?? p['refreshToken'];
     final accessToken = p['access_token'] ?? p['accessToken'];
@@ -120,10 +153,14 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       await Future.delayed(const Duration(milliseconds: 300));
       final session = client.auth.currentSession ?? res?.session;
       final ok = session != null || res?.user != null;
-      if (!ok || !mounted) return;
+      if (!ok || !mounted || AppStateNotifier.instance.unlock.inDecoy) return;
+      AppStateNotifier.instance.update(
+          DecoyWalletAppSupabaseUser(client.auth.currentUser));
       completed = true;
 
       if (isRecoveryLink) {
+        final unlock = AppStateNotifier.instance.unlock;
+        if (!unlock.allowRecovery(unlock.attempt)) return;
         if (!_navigated && mounted) {
           _navigated = true;
           if (kDebugMode) {
@@ -173,9 +210,9 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       if (!_navigated && mounted) {
         _navigated = true;
         if (kDebugMode) {
-          _debugLog('[VerifyAnyLink] verified link; routing biometrics');
+          _debugLog('[VerifyAnyLink] verified link; routing authentication');
         }
-        context.goNamed(BiometricVerificationWidget.routeName);
+        context.goNamed(AuthRouterWidget.routeName);
       }
     } on AuthApiException catch (e, st) {
       if (e.code == 'otp_expired' || e.statusCode == 403) {
@@ -194,30 +231,12 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         SnackBar(content: Text('Error: $e')),
       );
     } finally {
+      _authLinksPending--;
       _linksInFlight.remove(linkKey);
       if (completed) {
         _linksCompleted.add(linkKey);
       }
     }
-  }
-
-  Map<String, String> _allParams(Uri uri) {
-    final params = <String, String>{...uri.queryParameters};
-    final fragment = uri.fragment;
-    if (fragment.isEmpty) {
-      return params;
-    }
-
-    final cleanFragment =
-        fragment.startsWith('?') ? fragment.substring(1) : fragment;
-    try {
-      params.addAll(Uri.splitQueryString(cleanFragment));
-    } catch (_) {
-      if (kDebugMode) {
-        _debugLog('[VerifyAnyLink] ignored non-query fragment: $fragment');
-      }
-    }
-    return params;
   }
 
   @override

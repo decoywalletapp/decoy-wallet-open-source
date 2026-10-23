@@ -24,6 +24,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -138,12 +139,20 @@ void main() {
             await language.initialize();
             await language.setLanguage(locale);
             final boundaryKey = GlobalKey();
+            final router = GoRouter(routes: [
+              GoRoute(
+                path: '/',
+                builder: (_, __) =>
+                    RepaintBoundary(key: boundaryKey, child: page.value),
+              ),
+            ]);
+            addTearDown(router.dispose);
             await tester.pumpWidget(MultiProvider(
               providers: [
                 ChangeNotifierProvider.value(value: FFAppState()),
                 ChangeNotifierProvider.value(value: language),
               ],
-              child: MaterialApp(
+              child: MaterialApp.router(
                 theme: ThemeData(
                     useMaterial3: false,
                     fontFamily: 'robot',
@@ -151,7 +160,7 @@ void main() {
                 locale: Locale(locale),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
-                home: RepaintBoundary(key: boundaryKey, child: page.value),
+                routerConfig: router,
               ),
             ));
             await tester.pumpAndSettle();

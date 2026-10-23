@@ -26,11 +26,12 @@ String? _routeFromMessage(RemoteMessage message) {
 void _handleRenewalPushTap(BuildContext context) {
   FFAppState().openRenewalFromPush = true;
 
-  if (FFAppState().isLocked == true) {
+  if (!AppStateNotifier.instance.unlock.ownerUnlocked) {
     return;
   }
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!AppStateNotifier.instance.unlock.ownerUnlocked) return;
     final navContext = appNavigatorKey.currentContext;
     final targetContext = navContext ?? (context.mounted ? context : null);
     if (targetContext == null || !targetContext.mounted) {

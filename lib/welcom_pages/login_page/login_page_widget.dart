@@ -10,8 +10,6 @@ import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'login_page_model.dart';
 export 'login_page_model.dart';
@@ -52,34 +50,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.notificationValue = 0;
       safeSetState(() {});
-      if (widget.type == 'recovery') {
-        context.goNamed(UpdatePasswordPageWidget.routeName);
-      }
       FFAppState().isLocked = true;
       safeSetState(() {});
-      if ((FFAppState().biometricsEnabled == true) &&
-          (FFAppState().isLocked == true) &&
-          (loggedIn == true)) {
-        final _localAuth = LocalAuthentication();
-        bool _isBiometricSupported = await _localAuth.isDeviceSupported();
-
-        if (_isBiometricSupported) {
-          try {
-            _model.loginBioResult = await _localAuth.authenticate(
-                localizedReason: AppLocalizations.of(context)!.msgPleaseAuthenticateToUnlockYourWallet);
-          } on PlatformException {
-            _model.loginBioResult = false;
-          }
-          safeSetState(() {});
-        }
-
-        if (_model.loginBioResult == true) {
-          FFAppState().isLocked = false;
-          safeSetState(() {});
-
-          context.pushNamed(PINPageWidget.routeName);
-        }
-      }
     });
 
     _model.emailAddressLoginTextController ??= TextEditingController();
@@ -678,6 +650,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                     .VerifyAnyLink(
                                                   width: 1.0,
                                                   height: 1.0,
+                                                  onInitialLinkChecked: (hasAuthPayload) {
+                                                    if (!mounted || hasAuthPayload ||
+                                                        custom_widgets.VerifyAnyLink.hasAuthPayload(
+                                                          GoRouterState.of(context).uri)) return;
+                                                    if (loggedIn &&
+                                                        !AppStateNotifier.instance.unlock.inDecoy) {
+                                                      context.goNamed(AuthRouterWidget.routeName);
+                                                    }
+                                                  },
                                                 ),
                                               ),
                                             ),

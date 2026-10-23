@@ -161,9 +161,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (FFAppState().hasActiveSubscription == false) {
-        context.pushNamed(HomePageWidget.routeName);
-      } else {
+      if (AppStateNotifier.instance.unlock.pinReady) {
         _model.currentStep = 1;
         _model.pinInput = [].toList().cast<String>();
         _model.joinedPin = "";
@@ -1580,10 +1578,15 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
                                             return FFButtonWidget(
                                               onPressed: () async {
+                                                final unlock = AppStateNotifier.instance.unlock;
+                                                final attempt = unlock.attempt;
+                                                if (!unlock.pinReady || attempt == null) return;
                                                 currentUserLocationValue =
                                                     await getCurrentUserLocation(
                                                         defaultLocation:
                                                             LatLng(0.0, 0.0));
+                                                if (!mounted || !unlock.isCurrent(attempt) ||
+                                                    !unlock.pinReady) return;
                                                 if (_model.pinInput.length >=
                                                     4) {
                                                   _model.joinedPin = functions
@@ -1591,12 +1594,17 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           .pinInput
                                                           .toList());
                                                   safeSetState(() {});
+                                                  final jwt = await _jwtForApi();
+                                                  if (!mounted || !unlock.isCurrent(attempt) ||
+                                                      !unlock.pinReady) return;
                                                   _model.verifyResp =
                                                       await VerifyPINCall.call(
                                                     pin: _model.joinedPin,
-                                                    jwt: await _jwtForApi(),
+                                                    jwt: jwt,
                                                   );
 
+                                                  if (!mounted || !unlock.isCurrent(attempt) ||
+                                                      !unlock.pinReady) return;
                                                   if (VerifyPINCall.ok(
                                                         (_model.verifyResp
                                                                 ?.jsonBody ??
@@ -1609,6 +1617,14 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                               ''),
                                                         ) ==
                                                         true) {
+                                                      if (!unlock.beginDecoy(attempt)) {
+                                                        _model.pinInput = [];
+                                                        _model.joinedPin = '';
+                                                        _model.ppNotificationValue = 2;
+                                                        safeSetState(() {});
+                                                        return;
+                                                      }
+                                                      await unlock.runDecoyPreparation(attempt, () async {
                                                       if (buttonDecoyWalletRow
                                                               ?.useCurrentLocation ==
                                                           true) {
@@ -1637,6 +1653,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                       final walletRow = _model
                                                           .walletRow
                                                           ?.elementAtOrNull(0);
+                                                      if (!unlock.isCurrent(attempt)) return;
                                                       _model.dataKeyB64 =
                                                           await _dataKeyForWrappedRow(
                                                                 walletRow
@@ -1681,6 +1698,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                               .call(
                                                         jwt: await _jwtForApi(),
                                                       );
+                                                      if (!unlock.isCurrent(attempt)) return;
                                                       if (liveConsentStatusesResp
                                                           .succeeded) {
                                                         final slot1Status =
@@ -1779,6 +1797,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         if (!mounted) return;
                                                         safeSetState(() {});
 
+                                                        if (!unlock.finishDecoy(attempt)) return;
                                                         context.goNamed(
                                                           DuressHomePageWidget
                                                               .routeName,
@@ -1882,6 +1901,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         if (!mounted) return;
                                                         safeSetState(() {});
 
+                                                        if (!unlock.finishDecoy(attempt)) return;
                                                         context.goNamed(
                                                           DuressHomePageWidget
                                                               .routeName,
@@ -1901,6 +1921,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           },
                                                         );
                                                       }
+                                                      });
                                                     } else {
                                                       if (VerifyPINCall
                                                               .isAccount(
@@ -1909,6 +1930,8 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                 ''),
                                                           ) ==
                                                           true) {
+                                                        if (!unlock.unlockOwner(attempt)) return;
+                                                        FFAppState().isLocked = false;
                                                         _model.joinedPin = "";
                                                         safeSetState(() {});
                                                         _model.pinInput = []
@@ -1917,7 +1940,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         safeSetState(() {});
 
                                                         context.goNamed(
-                                                            HomePageWidget
+                                                            AuthRouterWidget
                                                                 .routeName);
                                                       } else {
                                                         _model.joinedPin = "";

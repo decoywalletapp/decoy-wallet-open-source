@@ -2986,6 +2986,9 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                     if (_model.joinedPin ==
                                                         _model
                                                             .joinedPinConfirm) {
+                                                      final unlock = AppStateNotifier.instance.unlock;
+                                                      final attempt = unlock.attempt;
+                                                      if (!unlock.setupAllowed || attempt == null) return;
                                                       _model.setPinResp =
                                                           await SetPINCall.call(
                                                         type: 'account',
@@ -2993,6 +2996,8 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                         jwt: currentJwtToken,
                                                       );
 
+                                                      if (!mounted || !unlock.isCurrent(attempt) ||
+                                                          !unlock.setupAllowed) return;
                                                       if (SetPINCall.ok(
                                                             (_model.setPinResp
                                                                     ?.jsonBody ??
@@ -3006,6 +3011,8 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                           jwt: currentJwtToken,
                                                         );
 
+                                                        if (!mounted || !unlock.isCurrent(attempt) ||
+                                                            !unlock.setupAllowed) return;
                                                         if (VerifyPINCall
                                                                 .isAccount(
                                                               (_model.verifyResp
@@ -3013,6 +3020,7 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                                   ''),
                                                             ) ==
                                                             true) {
+                                                          if (VerifyPINCall.ok(_model.verifyResp?.jsonBody) != true) return;
                                                           await DecoyWalletTable()
                                                               .update(
                                                             data: {
@@ -3031,6 +3039,8 @@ class _CreatePinWidgetState extends State<CreatePinWidget> {
                                                             ),
                                                           );
 
+                                                          if (!mounted || !unlock.unlockOwner(attempt, firstPin: true)) return;
+                                                          FFAppState().isLocked = false;
                                                           context.goNamed(
                                                             HomePageWidget
                                                                 .routeName,

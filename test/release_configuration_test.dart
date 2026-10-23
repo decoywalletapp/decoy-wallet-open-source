@@ -65,7 +65,9 @@ void main() {
             '-c',
             guard
           ], environment: {
-            'CM_BRANCH': 'codex/qr-send-address-fix-20261011'
+            'CM_BRANCH': id == 'ios-testflight-rehearsal'
+                ? 'codex/pin-unlock-security-20261023'
+                : 'codex/qr-send-address-fix-20261011'
           }).exitCode,
           0);
     });
@@ -81,7 +83,7 @@ void main() {
         isNot(contains('DECOY_ACCOUNT_BALANCE_PILOT')));
   });
 
-  test('QR test upload stays internal and restricted to the fix branch', () {
+  test('PIN security test upload stays internal and restricted to the fix branch', () {
     final workflow = workflows['ios-testflight-rehearsal'];
     expect(workflow['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'],
         'true');
@@ -97,7 +99,7 @@ void main() {
     }
     expect(
         Process.runSync('/bin/sh', ['-c', guard], environment: {
-          'CM_BRANCH': 'codex/qr-send-address-fix-20261011'
+          'CM_BRANCH': 'codex/pin-unlock-security-20261023'
         }).exitCode,
         0);
   });

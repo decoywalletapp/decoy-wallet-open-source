@@ -47,6 +47,7 @@ class _UpdatePasswordPageWidgetState extends State<UpdatePasswordPageWidget> {
     if (!mounted) {
       return;
     }
+    AppStateNotifier.instance.unlock.lock();
     context.goNamed(
       AuthRouterWidget.routeName,
       extra: <String, dynamic>{

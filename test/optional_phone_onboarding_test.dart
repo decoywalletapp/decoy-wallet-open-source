@@ -8,7 +8,12 @@ void main() {
       'lib/custom_code/widgets/verify_any_link.dart',
     ).readAsStringSync();
 
-    expect(verifyAnyLink, contains('BiometricVerificationWidget.routeName'));
+    expect(verifyAnyLink, contains('AuthRouterWidget.routeName'));
+    final authRouter = File(
+      'lib/welcom_pages/auth_router/auth_router_widget.dart',
+    ).readAsStringSync();
+    expect(authRouter, contains('canFinishSetup'));
+    expect(authRouter, contains('BiometricVerificationWidget.routeName'));
     expect(verifyAnyLink, isNot(contains('PhoneNumberInputWidget.routeName')));
   });
 
