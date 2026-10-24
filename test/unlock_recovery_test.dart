@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:decoy_wallet_app/app_state.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
+import 'package:decoy_wallet_app/auth/supabase_auth/auth_util.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
 import 'package:decoy_wallet_app/custom_code/widgets/verify_any_link.dart';
 import 'package:decoy_wallet_app/welcom_pages/login_page/login_page_widget.dart';
@@ -150,5 +151,69 @@ void main() {
     responseGate = null;
     await tester.pumpWidget(const SizedBox());
     router.dispose();
+  });
+
+  testWidgets('logout discards a platform launch lookup already in progress',
+      (tester) async {
+    final initialLink = Completer<String?>();
+    var initialReads = 0;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+            const MethodChannel('com.llfbandit.app_links/messages'),
+            (call) async {
+      if (call.method == 'getInitialLink') {
+        initialReads++;
+        return initialLink.future;
+      }
+      return null;
+    });
+    app.unlock.lock();
+    app.clearRedirectLocation();
+    app.update(DecoyWalletAppSupabaseUser(
+        Supabase.instance.client.auth.currentUser));
+    app.stopShowingSplashImage();
+    final router = GoRouter(
+      initialLocation: '/loginPage',
+      refreshListenable: app,
+      routes: [
+        FFRoute(name: 'LoginPage', path: '/loginPage',
+            builder: (_, __) => const LoginPageWidget()).toRoute(app),
+        FFRoute(name: 'AuthRouter', path: '/authRouter',
+            builder: (_, __) => const Text('unexpected-auth-router')).toRoute(app),
+        FFRoute(name: 'UpdatePasswordPage', path: '/updatePasswordPage',
+            builder: (_, __) => const Text('unexpected-recovery')).toRoute(app),
+      ],
+    );
+    addTearDown(router.dispose);
+    await tester.pumpWidget(ChangeNotifierProvider.value(
+      value: FFAppState(),
+      child: MaterialApp.router(
+        routerConfig: router,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
+    ));
+    await tester.pumpAndSettle();
+    expect(initialReads, 1);
+    final loginState = tester.state(find.byType(LoginPageWidget));
+    await tester.runAsync(() async => authManager.signOut());
+    currentUser = DecoyWalletAppSupabaseUser(null);
+    app.update(currentUser!);
+    requests = 0;
+    initialLink.complete(
+        'decoywallet://loginPage?type=recovery&refresh_token=synthetic-stale-late');
+    for (var tick = 0; tick < 20; tick++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    await tester.pumpAndSettle();
+    expect(tester.state(find.byType(LoginPageWidget)), same(loginState));
+    expect(requests, 0);
+    expect(Supabase.instance.client.auth.currentSession, isNull);
+    expect(app.unlock.recoveryAllowed, isFalse);
+    expect(app.unlock.ownerUnlocked, isFalse);
+    expect(find.byType(SnackBar), findsNothing);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
   });
 }

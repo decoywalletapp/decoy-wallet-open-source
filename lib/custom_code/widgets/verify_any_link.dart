@@ -18,6 +18,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
+import '/auth/supabase_auth/auth_util.dart';
 import '/auth/supabase_auth/supabase_user_provider.dart';
 
 class VerifyAnyLink extends StatefulWidget {
@@ -82,10 +83,16 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     // Cold start
     var hasAuthPayload = false;
     try {
-      final initial = await _appLinks!.getInitialLink();
+      final initial = await (authManager.mayUseLaunchAuthLink
+          ? _appLinks!.getInitialLink()
+          : Future<Uri?>.value(null));
       if (!mounted) return;
       final routed = GoRouterState.of(context).uri;
-      final uri = VerifyAnyLink.hasAuthPayload(routed) ? routed : initial;
+      // Logout can happen while the platform lookup is pending. Current route
+      // payloads and newly received stream events remain eligible independently.
+      final uri = VerifyAnyLink.hasAuthPayload(routed)
+          ? routed
+          : authManager.mayUseLaunchAuthLink ? initial : null;
       if (kDebugMode) _debugLog('[VerifyAnyLink] initial link: $uri');
       if (uri != null) {
         hasAuthPayload = VerifyAnyLink.hasAuthPayload(uri);

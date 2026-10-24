@@ -13,8 +13,13 @@ export '/auth/base_auth_user_provider.dart';
 
 class SupabaseAuthManager extends AuthManager
     with EmailSignInManager, AppleSignInManager {
+  bool _mayUseLaunchAuthLink = true;
+  bool get mayUseLaunchAuthLink => _mayUseLaunchAuthLink;
+
   @override
   Future signOut() {
+    // The platform retains its launch link after logout; it is not a new login.
+    _mayUseLaunchAuthLink = false;
     AppStateNotifier.instance.unlock.lock();
     AppStateNotifier.instance.clearRedirectLocation();
     return SupaFlow.client.auth.signOut();
