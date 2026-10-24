@@ -1,6 +1,6 @@
 workflows:
   ios-testflight-rehearsal:
-    name: iOS PIN Diagnostics Internal TestFlight
+    name: iOS PIN Security Internal TestFlight
     instance_type: mac_mini_m2
     max_build_duration: 120
     integrations:
@@ -17,7 +17,7 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
-        DECOY_BUILD_VERIFICATION: "pin-diagnostics-private-test"
+        DECOY_BUILD_VERIFICATION: "pin-security-private-test"
         DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
       xcode: "26.5"
@@ -270,7 +270,6 @@ workflows:
             --build-name="$APP_VERSION" \
             --build-number="$APP_BUILD_NUMBER" \
             --export-options-plist=/Users/builder/export_options.plist \
-            --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true \
             --dart-define=DECOY_ACCOUNT_BALANCE_PILOT="$DECOY_ACCOUNT_BALANCE_PILOT" \
             --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
             --dart-define=DECOY_SUPABASE_ANON_KEY="$DECOY_SUPABASE_ANON_KEY" \

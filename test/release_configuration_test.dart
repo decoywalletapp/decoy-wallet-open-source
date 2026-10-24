@@ -33,18 +33,36 @@ void main() {
     });
   }
 
-  test('iOS builds differ only by the temporary internal recorder', () {
-    final internal = dartDefines(buildScript('ios-testflight-rehearsal'));
-    expect(internal.remove('DECOY_UNLOCK_DIAGNOSTICS'), 'true');
-    expect(dartDefines(buildScript('ios-app-store-release')), internal);
+  test('iOS packages use the same configuration inputs without diagnostics', () {
+    expect(dartDefines(buildScript('ios-app-store-release')),
+        dartDefines(buildScript('ios-testflight-rehearsal')));
   });
 
-  test('no other workflow enables the temporary PIN recorder', () {
+  test('no package enables the temporary PIN recorder', () {
     for (final id in workflows.keys.cast<String>()) {
-      if (id == 'ios-testflight-rehearsal') continue;
       expect(dartDefines(buildScript(id)),
           isNot(contains('DECOY_UNLOCK_DIAGNOSTICS')));
     }
+  });
+
+  test('iOS package values retain only the intended internal differences', () {
+    Map<String, String> resolvedDefines(String id) {
+      final variables = workflows[id]['environment']['vars'] as YamlMap;
+      return dartDefines(buildScript(id)).map((key, value) => MapEntry(
+          key,
+          value.replaceAllMapped(RegExp(r'\$([A-Z_][A-Z_0-9]*)'), (match) {
+            return variables[match.group(1)]?.toString() ?? match.group(0)!;
+          })));
+    }
+
+    final internal = resolvedDefines('ios-testflight-rehearsal');
+    final release = resolvedDefines('ios-app-store-release');
+    expect(internal.remove('DECOY_ACCOUNT_BALANCE_PILOT'), '"true"');
+    expect(release.remove('DECOY_ACCOUNT_BALANCE_PILOT'), '"false"');
+    expect(internal.remove('DECOY_BUILD_VERIFICATION'),
+        '"pin-security-private-test"');
+    expect(release.remove('DECOY_BUILD_VERIFICATION'), '"store-release"');
+    expect(internal, release);
   });
 
   for (final id in [
