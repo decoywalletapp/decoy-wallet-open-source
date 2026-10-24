@@ -743,7 +743,14 @@ class FFRoute {
                   hasTransition: true,
                   duration: Duration(milliseconds: 220),
                 )
-              : state.transitionInfo;
+              : name == DuressHomePageWidget.routeName
+                  ? TransitionInfo(
+                      hasTransition: true,
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 160),
+                    )
+                  : state.transitionInfo;
           return transitionInfo.hasTransition
               ? CustomTransitionPage(
                   key: state.pageKey,

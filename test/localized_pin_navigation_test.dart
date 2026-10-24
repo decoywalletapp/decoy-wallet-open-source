@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:decoy_wallet_app/app_state.dart';
@@ -52,6 +53,7 @@ void main() {
   final alerts = <Map<String, dynamic>>[];
   final paths = <String>[];
   var consent = 'confirmed';
+  Completer<void>? consentHold;
   final client = MockClient((request) async {
     final path = request.url.path;
     paths.add(path);
@@ -69,6 +71,7 @@ void main() {
         'isAccount': pin == '1234'
       };
     } else if (path.endsWith('/getConsentStatuses')) {
+      await consentHold?.future;
       // Outlast route transitions so a disposed initiating PIN cannot pass.
       await Future<void>.delayed(const Duration(milliseconds: 650));
       response = {
@@ -124,6 +127,7 @@ void main() {
     paths.clear();
     alerts.clear();
     consent = 'confirmed';
+    consentHold = null;
     FlutterSecureStorage.setMockInitialValues({'decoy_data_key_b64': key});
     FFAppState.reset();
     await FFAppState().initializePersistedState();
@@ -145,7 +149,8 @@ void main() {
     };
   });
 
-  Future<void> enter(WidgetTester tester, String pin) async {
+  Future<void> enter(WidgetTester tester, String pin,
+      {Future<void> Function()? whilePreparing}) async {
     if (const bool.fromEnvironment('DECOY_TEST_ACCOUNT_BALANCE')) {
       // Create async balance state in the widget test's fake-async zone.
       final remote = MemoryRemote()..users.add(user.id);
@@ -210,10 +215,21 @@ void main() {
       }
       final strings =
           AppLocalizations.of(tester.element(find.byType(PINPageWidget)))!;
+      final originalPin = tester.state(find.byType(PINPageWidget));
       router.routeInformationProvider.routerReportsNewRouteInformation(
           router.routeInformationParser.restoreRouteInformation(
               router.routerDelegate.currentConfiguration)!);
       await tester.tap(find.text(strings.msgEnter));
+      if (whilePreparing != null) {
+        for (var frame = 0;
+            frame < 100 && !paths.any((p) => p.endsWith('/getConsentStatuses'));
+            frame++) {
+          await tester.pump(const Duration(milliseconds: 16));
+        }
+        expect(paths.any((p) => p.endsWith('/getConsentStatuses')), isTrue);
+        expect(tester.state(find.byType(PINPageWidget)), same(originalPin));
+        await whilePreparing();
+      }
       for (var frame = 0; frame < 100; frame++) {
         await tester.pump(const Duration(milliseconds: 16));
       }
@@ -221,6 +237,54 @@ void main() {
       expect(tester.takeException(), isNull);
     }, () => client);
   }
+
+  testWidgets('slow preparation keeps a stable, untappable loading view',
+      (tester) async {
+    consentHold = Completer<void>();
+    await enter(tester, '9876', whilePreparing: () async {
+      expect(find.byKey(const ValueKey('pin-unlock-progress')), findsOneWidget);
+      expect(
+          tester.widget<AbsorbPointer>(
+              find.byKey(const ValueKey('pin-input-presentation'))).absorbing,
+          isTrue);
+      expect(find.text('1').hitTestable(), findsNothing);
+      expect(alerts, isEmpty);
+      final originalPin = tester.state(find.byType(PINPageWidget));
+      await tester.pump(const Duration(seconds: 2));
+      expect(tester.state(find.byType(PINPageWidget)), same(originalPin));
+      expect(find.byKey(const ValueKey('pin-unlock-progress')), findsOneWidget);
+      expect(paths.where((p) => p.endsWith('/verifyPin')), hasLength(1));
+      consentHold!.complete();
+    });
+    expect(find.text('DECOY DESTINATION'), findsOneWidget);
+    expect(find.byKey(const ValueKey('pin-unlock-progress')), findsNothing);
+    expect(alerts, isEmpty);
+  });
+
+  testWidgets('failed preparation restores the same visible PIN input',
+      (tester) async {
+    consentHold = Completer<void>();
+    await enter(tester, '9876', whilePreparing: () async {
+      final unlock = AppStateNotifier.instance.unlock;
+      final originalPin = tester.state(find.byType(PINPageWidget));
+      await expectLater(
+          unlock.runDecoyPreparation(unlock.attempt!,
+              () async => throw StateError('synthetic preparation failure')),
+          throwsStateError);
+      await tester.pump();
+      expect(tester.state(find.byType(PINPageWidget)), same(originalPin));
+      expect(find.byKey(const ValueKey('pin-unlock-progress')), findsNothing);
+      expect(find.text('1').hitTestable(), findsOneWidget);
+      expect(
+          tester.widget<AbsorbPointer>(
+              find.byKey(const ValueKey('pin-input-presentation'))).absorbing,
+          isFalse);
+      consentHold!.complete();
+    });
+    expect(find.text('DECOY DESTINATION'), findsNothing);
+    expect(find.text('ACCOUNT DESTINATION'), findsNothing);
+    expect(alerts, isEmpty);
+  });
 
   for (final code in AppLanguageController.supportedLanguageCodes) {
     group(code, () {

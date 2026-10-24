@@ -34,6 +34,18 @@ class _PinProbeState extends State<_PinProbe> {
   Widget build(BuildContext context) => const Text('PIN');
 }
 
+class _DecoyProbe extends StatefulWidget {
+  const _DecoyProbe();
+
+  @override
+  State<_DecoyProbe> createState() => _DecoyProbeState();
+}
+
+class _DecoyProbeState extends State<_DecoyProbe> {
+  @override
+  Widget build(BuildContext context) => const Text('DECOY');
+}
+
 void main() {
   final app = AppStateNotifier.instance;
   late GoRouter router;
@@ -51,7 +63,7 @@ void main() {
   tearDown(() => router.dispose());
 
   Future<void> launch(WidgetTester tester, TargetPlatform platform,
-      {bool animatedEntry = true}) async {
+      {bool animatedEntry = true, bool reducedMotion = false}) async {
     router = GoRouter(
       initialLocation: '/PINPage',
       initialExtra: animatedEntry
@@ -69,7 +81,7 @@ void main() {
         FFRoute(
             name: 'DuressHomePage',
             path: '/duressHomePage',
-            builder: (_, __) => const Text('DECOY')).toRoute(app),
+            builder: (_, __) => const _DecoyProbe()).toRoute(app),
         FFRoute(
             name: 'AuthRouter',
             path: '/authRouter',
@@ -84,6 +96,10 @@ void main() {
       ],
     );
     await tester.pumpWidget(MaterialApp.router(
+        builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(disableAnimations: reducedMotion),
+            child: child!),
         theme: ThemeData(platform: platform), routerConfig: router));
     await tester.pumpAndSettle();
     originalPin = tester.state(find.byType(_PinProbe));
@@ -92,6 +108,45 @@ void main() {
     router.routeInformationProvider.routerReportsNewRouteInformation(router
         .routeInformationParser
         .restoreRouteInformation(router.routerDelegate.currentConfiguration)!);
+  }
+
+  for (final reducedMotion in [false, true]) {
+    testWidgets('decoy entry fades without a slide and survives route refresh: '
+        'reducedMotion=$reducedMotion', (tester) async {
+      await launch(tester, TargetPlatform.iOS, reducedMotion: reducedMotion);
+      final attempt = app.unlock.attempt;
+      app.unlock.beginDecoy(attempt);
+      await tester.pump();
+      app.unlock.finishDecoy(attempt);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 32));
+      final route = ModalRoute.of(tester.element(find.byType(_DecoyProbe)))!;
+      expect(route.settings, isA<CustomTransitionPage<void>>());
+      expect(route.transitionDuration,
+          reducedMotion ? Duration.zero : const Duration(milliseconds: 160));
+      expect(
+          find.ancestor(
+              of: find.byType(_DecoyProbe),
+              matching: find.byType(SlideTransition)),
+          findsNothing);
+      expect(
+          find.ancestor(
+              of: find.byType(_DecoyProbe),
+              matching: find.byType(FadeTransition)),
+          findsWidgets);
+      await tester.pumpAndSettle();
+      final originalDecoy = tester.state(find.byType(_DecoyProbe));
+      router.routeInformationProvider.routerReportsNewRouteInformation(router
+          .routeInformationParser
+          .restoreRouteInformation(router.routerDelegate.currentConfiguration)!);
+      app.notifyListeners();
+      await tester.pumpAndSettle();
+      expect(tester.state(find.byType(_DecoyProbe)), same(originalDecoy));
+      router.go('/settings');
+      await tester.pumpAndSettle();
+      expect(find.text('DECOY'), findsOneWidget);
+      expect(privateBuilds, 0);
+    });
   }
 
   for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {

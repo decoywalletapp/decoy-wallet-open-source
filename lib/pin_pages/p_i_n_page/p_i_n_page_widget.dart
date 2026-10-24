@@ -208,7 +208,42 @@ class _PINPageWidgetState extends State<PINPageWidget> {
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Colors.black,
-          body: SafeArea(
+          body: ListenableBuilder(
+            listenable: AppStateNotifier.instance.unlock,
+            builder: (context, child) {
+              final preparing = AppStateNotifier.instance.unlock.mode ==
+                  AppUnlockMode.enteringDecoy;
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Keep the initiating PIN widget mounted during preparation.
+                  AbsorbPointer(
+                    key: const ValueKey('pin-input-presentation'),
+                    absorbing: preparing,
+                    child: ExcludeSemantics(
+                      excluding: preparing,
+                      child: Opacity(
+                        opacity: preparing ? 0 : 1,
+                        child: child,
+                      ),
+                    ),
+                  ),
+                  if (preparing)
+                    const Center(
+                      child: SizedBox(
+                        key: ValueKey('pin-unlock-progress'),
+                        width: 28,
+                        height: 28,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+            child: SafeArea(
             top: true,
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -1822,20 +1857,6 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         context.goNamed(
                                                           DuressHomePageWidget
                                                               .routeName,
-                                                          extra: <String,
-                                                              dynamic>{
-                                                            '__transition_info__':
-                                                                TransitionInfo(
-                                                              hasTransition:
-                                                                  true,
-                                                              transitionType:
-                                                                  PageTransitionType
-                                                                      .rightToLeft,
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      300),
-                                                            ),
-                                                          },
                                                         );
                                                       } else {
                                                         if (FFAppState()
@@ -1932,20 +1953,6 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         context.goNamed(
                                                           DuressHomePageWidget
                                                               .routeName,
-                                                          extra: <String,
-                                                              dynamic>{
-                                                            '__transition_info__':
-                                                                TransitionInfo(
-                                                              hasTransition:
-                                                                  true,
-                                                              transitionType:
-                                                                  PageTransitionType
-                                                                      .rightToLeft,
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      300),
-                                                            ),
-                                                          },
                                                         );
                                                       }
                                                       });
@@ -2100,6 +2107,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                   ],
                 ),
               ].addToStart(SizedBox(height: 12.0)),
+            ),
             ),
           ),
         ),
