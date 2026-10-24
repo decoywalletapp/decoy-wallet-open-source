@@ -1,5 +1,6 @@
 import '/l10n/app_localizations.dart';
 import '/components/pin_keypad_grid.dart';
+import '/components/wallet_title_splash.dart';
 import '/auth/unlock_diagnostics.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
@@ -229,15 +230,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                     ),
                   ),
                   if (preparing)
-                    const Center(
-                      child: SizedBox(
-                        key: ValueKey('pin-unlock-progress'),
-                        width: 28,
-                        height: 28,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
+                    const SafeArea(
+                      child: WalletTitleSplash(
+                        key: ValueKey('pin-unlock-title'),
                       ),
                     ),
                 ],

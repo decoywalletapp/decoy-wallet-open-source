@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:decoy_wallet_app/app_state.dart';
+import 'package:decoy_wallet_app/components/wallet_title_splash.dart';
 import 'package:decoy_wallet_app/backend/public_config.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/l10n/app_language_controller.dart';
@@ -238,11 +239,23 @@ void main() {
     }, () => client);
   }
 
-  testWidgets('slow preparation keeps a stable, untappable loading view',
+  testWidgets('slow preparation keeps a stable wallet title without a spinner',
       (tester) async {
     consentHold = Completer<void>();
     await enter(tester, '9876', whilePreparing: () async {
-      expect(find.byKey(const ValueKey('pin-unlock-progress')), findsOneWidget);
+      expect(find.byKey(const ValueKey('pin-unlock-title')), findsOneWidget);
+      expect(find.byType(WalletTitleSplash), findsOneWidget);
+      final strings =
+          AppLocalizations.of(tester.element(find.byType(PINPageWidget)))!;
+      expect(find.text(strings.msgItcoinWallet), findsOneWidget);
+      // The hidden Enter button retains its own spinner while awaiting work.
+      for (final spinner in find.byType(CircularProgressIndicator).evaluate()) {
+        final opacity = tester.widgetList<Opacity>(find.ancestor(
+          of: find.byWidget(spinner.widget),
+          matching: find.byType(Opacity),
+        ));
+        expect(opacity.any((widget) => widget.opacity == 0), isTrue);
+      }
       expect(
           tester.widget<AbsorbPointer>(
               find.byKey(const ValueKey('pin-input-presentation'))).absorbing,
@@ -252,12 +265,18 @@ void main() {
       final originalPin = tester.state(find.byType(PINPageWidget));
       await tester.pump(const Duration(seconds: 2));
       expect(tester.state(find.byType(PINPageWidget)), same(originalPin));
-      expect(find.byKey(const ValueKey('pin-unlock-progress')), findsOneWidget);
+      expect(find.byKey(const ValueKey('pin-unlock-title')), findsOneWidget);
+      expect(
+          find.descendant(
+            of: find.byType(WalletTitleSplash),
+            matching: find.byType(CircularProgressIndicator),
+          ),
+          findsNothing);
       expect(paths.where((p) => p.endsWith('/verifyPin')), hasLength(1));
       consentHold!.complete();
     });
     expect(find.text('DECOY DESTINATION'), findsOneWidget);
-    expect(find.byKey(const ValueKey('pin-unlock-progress')), findsNothing);
+    expect(find.byKey(const ValueKey('pin-unlock-title')), findsNothing);
     expect(alerts, isEmpty);
   });
 
@@ -273,7 +292,7 @@ void main() {
           throwsStateError);
       await tester.pump();
       expect(tester.state(find.byType(PINPageWidget)), same(originalPin));
-      expect(find.byKey(const ValueKey('pin-unlock-progress')), findsNothing);
+      expect(find.byKey(const ValueKey('pin-unlock-title')), findsNothing);
       expect(find.text('1').hitTestable(), findsOneWidget);
       expect(
           tester.widget<AbsorbPointer>(

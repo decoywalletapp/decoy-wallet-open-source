@@ -1,4 +1,5 @@
 import '/l10n/app_localizations.dart';
+import '/components/wallet_title_splash.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/auth/supabase_auth/supabase_user_provider.dart';
 import '/backend/api_requests/api_calls.dart';
@@ -518,44 +519,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
               opacity: _hideContentForPinHandoff ? 0.0 : 1.0,
               duration: _pinHandoffFadeOutDuration,
               curve: Curves.easeOut,
-              child: Align(
-                alignment: AlignmentDirectional(0.0, 0.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 40.0),
-                        child: Container(
-                          width: double.infinity,
-                          height: 80.0,
-                          decoration: BoxDecoration(
-                            color: Color(0x001D2428),
-                          ),
-                          child: Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Text(
-                              AppLocalizations.of(context)!.msgItcoinWallet,
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .displayMedium
-                                  .override(
-                                    fontFamily: 'InterTight',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              child: const WalletTitleSplash(),
             ),
           ),
         ),
