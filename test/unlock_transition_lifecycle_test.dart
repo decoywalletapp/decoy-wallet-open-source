@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:decoy_wallet_app/auth/base_auth_user_provider.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
+import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -96,6 +97,8 @@ void main() {
       ],
     );
     await tester.pumpWidget(MaterialApp.router(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => MediaQuery(
             data: MediaQuery.of(context)
                 .copyWith(disableAnimations: reducedMotion),
@@ -110,6 +113,34 @@ void main() {
         .restoreRouteInformation(router.routerDelegate.currentConfiguration)!);
   }
 
+  testWidgets('completed PIN keeps a branded backdrop during wallet entry',
+      (tester) async {
+    await launch(tester, TargetPlatform.iOS);
+    final attempt = app.unlock.attempt;
+    app.unlock.beginDecoy(attempt);
+    await tester.pump();
+    app.unlock.finishDecoy(attempt);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 32));
+    expect(app.unlock.allows(AppRouteAccess.pin), isFalse);
+    expect(find.byType(_PinProbe), findsNothing);
+    expect(find.byKey(const ValueKey('decoy-transition-backdrop')),
+        findsOneWidget);
+    expect(find.text('DECOY'), findsOneWidget);
+    expect(privateBuilds, 0);
+    final fade = find.byKey(const ValueKey('decoy-wallet-fade'));
+    final earlyOpacity = tester.widget<FadeTransition>(fade).opacity.value;
+    expect(earlyOpacity, inExclusiveRange(0, 1));
+    await tester.pump(const Duration(milliseconds: 128));
+    final middleOpacity = tester.widget<FadeTransition>(fade).opacity.value;
+    expect(middleOpacity, greaterThan(earlyOpacity));
+    expect(middleOpacity, lessThan(1));
+    expect(find.byKey(const ValueKey('decoy-transition-backdrop')),
+        findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+  });
+
   for (final reducedMotion in [false, true]) {
     testWidgets('decoy entry fades without a slide and survives route refresh: '
         'reducedMotion=$reducedMotion', (tester) async {
@@ -123,7 +154,7 @@ void main() {
       final route = ModalRoute.of(tester.element(find.byType(_DecoyProbe)))!;
       expect(route.settings, isA<CustomTransitionPage<void>>());
       expect(route.transitionDuration,
-          reducedMotion ? Duration.zero : const Duration(milliseconds: 160));
+          reducedMotion ? Duration.zero : const Duration(milliseconds: 320));
       expect(
           find.ancestor(
               of: find.byType(_DecoyProbe),

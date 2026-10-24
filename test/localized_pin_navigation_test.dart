@@ -248,6 +248,11 @@ void main() {
       final strings =
           AppLocalizations.of(tester.element(find.byType(PINPageWidget)))!;
       expect(find.text(strings.msgItcoinWallet), findsOneWidget);
+      expect(
+          tester.widget<AbsorbPointer>(
+              find.byKey(const ValueKey('pin-input-presentation'))).absorbing,
+          isTrue);
+      await tester.pump(const Duration(milliseconds: 320));
       // The hidden Enter button retains its own spinner while awaiting work.
       for (final spinner in find.byType(CircularProgressIndicator).evaluate()) {
         final opacity = tester.widgetList<Opacity>(find.ancestor(

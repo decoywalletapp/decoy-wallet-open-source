@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '/auth/base_auth_user_provider.dart';
 import '/auth/app_unlock_state.dart';
 import '/auth/unlock_diagnostics.dart';
+import '/components/wallet_title_splash.dart';
 export '/auth/app_unlock_state.dart';
 
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -748,7 +749,7 @@ class FFRoute {
                       hasTransition: true,
                       duration: MediaQuery.disableAnimationsOf(context)
                           ? Duration.zero
-                          : const Duration(milliseconds: 160),
+                          : const Duration(milliseconds: 320),
                     )
                   : state.transitionInfo;
           return transitionInfo.hasTransition
@@ -758,19 +759,45 @@ class FFRoute {
                   child: child,
                   transitionDuration: transitionInfo.duration,
                   transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) =>
-                          PageTransition(
-                    type: transitionInfo.transitionType,
-                    duration: transitionInfo.duration,
-                    reverseDuration: transitionInfo.duration,
-                    alignment: transitionInfo.alignment,
-                    child: child,
-                  ).buildTransitions(
-                    context,
-                    animation,
-                    secondaryAnimation,
-                    child,
-                  ),
+                      (context, animation, secondaryAnimation, child) {
+                    if (name == DuressHomePageWidget.routeName) {
+                      // The guard removes the old PIN page immediately. Keep
+                      // only this non-interactive branding behind the fade.
+                      return Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          const IgnorePointer(
+                            child: ExcludeSemantics(
+                              child: Material(
+                                key: ValueKey('decoy-transition-backdrop'),
+                                color: Colors.black,
+                                child: SafeArea(child: WalletTitleSplash()),
+                              ),
+                            ),
+                          ),
+                          FadeTransition(
+                            key: const ValueKey('decoy-wallet-fade'),
+                            opacity: animation.drive(
+                              CurveTween(curve: Curves.easeInOutCubic),
+                            ),
+                            child: child,
+                          ),
+                        ],
+                      );
+                    }
+                    return PageTransition(
+                      type: transitionInfo.transitionType,
+                      duration: transitionInfo.duration,
+                      reverseDuration: transitionInfo.duration,
+                      alignment: transitionInfo.alignment,
+                      child: child,
+                    ).buildTransitions(
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    );
+                  },
                 )
               : MaterialPage(
                   key: state.pageKey, name: state.name, child: child);

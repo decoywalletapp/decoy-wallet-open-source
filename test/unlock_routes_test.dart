@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:decoy_wallet_app/auth/base_auth_user_provider.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
+import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -56,7 +57,11 @@ void main() {
                   return Text(r.$1, textDirection: TextDirection.ltr);
                 }).toRoute(app))
             .toList());
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(MaterialApp.router(
+      routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+    ));
     await tester.pumpAndSettle();
   }
 

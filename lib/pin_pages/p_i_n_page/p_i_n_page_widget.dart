@@ -1,6 +1,6 @@
 import '/l10n/app_localizations.dart';
 import '/components/pin_keypad_grid.dart';
-import '/components/wallet_title_splash.dart';
+import '/components/pin_unlock_handoff.dart';
 import '/auth/unlock_diagnostics.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
@@ -212,30 +212,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
           body: ListenableBuilder(
             listenable: AppStateNotifier.instance.unlock,
             builder: (context, child) {
-              final preparing = AppStateNotifier.instance.unlock.mode ==
-                  AppUnlockMode.enteringDecoy;
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Keep the initiating PIN widget mounted during preparation.
-                  AbsorbPointer(
-                    key: const ValueKey('pin-input-presentation'),
-                    absorbing: preparing,
-                    child: ExcludeSemantics(
-                      excluding: preparing,
-                      child: Opacity(
-                        opacity: preparing ? 0 : 1,
-                        child: child,
-                      ),
-                    ),
-                  ),
-                  if (preparing)
-                    const SafeArea(
-                      child: WalletTitleSplash(
-                        key: ValueKey('pin-unlock-title'),
-                      ),
-                    ),
-                ],
+              return PinUnlockHandoff(
+                active: AppStateNotifier.instance.unlock.inDecoy,
+                child: child!,
               );
             },
             child: SafeArea(
