@@ -763,6 +763,8 @@ class FFRoute {
 
           // Router serialization drops non-JSON extras. Keep authentication
           // and PIN pages stable so refreshes cannot restart an in-flight unlock.
+          final isWalletEntry = name == HomePageWidget.routeName ||
+              name == DuressHomePageWidget.routeName;
           final transitionInfo = access == AppRouteAccess.pin
               ? const TransitionInfo(
                   hasTransition: true,
@@ -773,7 +775,7 @@ class FFRoute {
                       hasTransition: true,
                       duration: Duration(milliseconds: 1),
                     )
-              : name == DuressHomePageWidget.routeName
+              : isWalletEntry
                   ? TransitionInfo(
                       hasTransition: true,
                       duration: MediaQuery.disableAnimationsOf(context)
@@ -789,29 +791,34 @@ class FFRoute {
                   transitionDuration: transitionInfo.duration,
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
-                    if (name == DuressHomePageWidget.routeName) {
+                    if (isWalletEntry) {
                       // The guard removes the old PIN page immediately. Keep
-                      // only this non-interactive branding behind the fade.
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          const IgnorePointer(
-                            child: ExcludeSemantics(
-                              child: Material(
-                                key: ValueKey('decoy-transition-backdrop'),
-                                color: Colors.black,
-                                child: SafeArea(child: WalletTitleSplash()),
+                      // only neutral branding behind either wallet's entrance.
+                      return ClipRect(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            const IgnorePointer(
+                              child: ExcludeSemantics(
+                                child: Material(
+                                  key: ValueKey('wallet-transition-backdrop'),
+                                  color: Colors.black,
+                                  child: SafeArea(child: WalletTitleSplash()),
+                                ),
                               ),
                             ),
-                          ),
-                          FadeTransition(
-                            key: const ValueKey('decoy-wallet-fade'),
-                            opacity: animation.drive(
-                              CurveTween(curve: Curves.easeInOutCubic),
+                            SlideTransition(
+                              key: const ValueKey('wallet-entry-slide'),
+                              position: animation.drive(
+                                Tween<Offset>(
+                                  begin: const Offset(1, 0),
+                                  end: Offset.zero,
+                                ).chain(CurveTween(curve: Curves.easeInOutCubic)),
+                              ),
+                              child: child,
                             ),
-                            child: child,
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     }
                     return PageTransition(

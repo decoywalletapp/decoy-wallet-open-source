@@ -47,6 +47,18 @@ class _DecoyProbeState extends State<_DecoyProbe> {
   Widget build(BuildContext context) => const Text('DECOY');
 }
 
+class _HomeProbe extends StatefulWidget {
+  const _HomeProbe();
+
+  @override
+  State<_HomeProbe> createState() => _HomeProbeState();
+}
+
+class _HomeProbeState extends State<_HomeProbe> {
+  @override
+  Widget build(BuildContext context) => const Text('HOME');
+}
+
 void main() {
   final app = AppStateNotifier.instance;
   late GoRouter router;
@@ -84,6 +96,10 @@ void main() {
             path: '/duressHomePage',
             builder: (_, __) => const _DecoyProbe()).toRoute(app),
         FFRoute(
+            name: 'HomePage',
+            path: '/homePage',
+            builder: (_, __) => const _HomeProbe()).toRoute(app),
+        FFRoute(
             name: 'AuthRouter',
             path: '/authRouter',
             builder: (_, __) => const Text('AUTH')).toRoute(app),
@@ -103,7 +119,8 @@ void main() {
             data: MediaQuery.of(context)
                 .copyWith(disableAnimations: reducedMotion),
             child: child!),
-        theme: ThemeData(platform: platform), routerConfig: router));
+        theme: ThemeData(platform: platform),
+        routerConfig: router));
     await tester.pumpAndSettle();
     originalPin = tester.state(find.byType(_PinProbe));
     // Match the native Router's serialized route report before a later refresh.
@@ -113,72 +130,142 @@ void main() {
         .restoreRouteInformation(router.routerDelegate.currentConfiguration)!);
   }
 
-  testWidgets('completed PIN keeps a branded backdrop during wallet entry',
+  Future<void> enterWallet(WidgetTester tester, bool decoy) async {
+    final attempt = app.unlock.attempt;
+    if (decoy) {
+      expect(app.unlock.beginDecoy(attempt), isTrue);
+      await tester.pump();
+      expect(app.unlock.finishDecoy(attempt), isTrue);
+    } else {
+      expect(app.unlock.unlockOwner(attempt), isTrue);
+    }
+    await tester.pump();
+  }
+
+  for (final decoy in [false, true]) {
+    final destination = decoy ? 'decoy wallet' : 'normal home';
+    final probe = find.byType(decoy ? _DecoyProbe : _HomeProbe);
+    final slide = find.byKey(const ValueKey('wallet-entry-slide'));
+    final backdrop = find.byKey(const ValueKey('wallet-transition-backdrop'));
+
+    for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
+      for (final reducedMotion in [false, true]) {
+        testWidgets(
+            '$destination enters from the right over neutral branding: '
+            '$platform, reducedMotion=$reducedMotion', (tester) async {
+          await launch(tester, platform, reducedMotion: reducedMotion);
+          await enterWallet(tester, decoy);
+          await tester.pump(const Duration(milliseconds: 32));
+          expect(app.unlock.allows(AppRouteAccess.pin), isFalse);
+          expect(originalPin.mounted, isFalse);
+          expect(find.byType(_PinProbe), findsNothing);
+          expect(backdrop, findsOneWidget);
+          expect(probe, findsOneWidget);
+          expect(privateBuilds, 0);
+          final route = ModalRoute.of(tester.element(probe))!;
+          expect(route.settings, isA<CustomTransitionPage<void>>());
+          expect(
+              route.transitionDuration,
+              reducedMotion
+                  ? Duration.zero
+                  : const Duration(milliseconds: 320));
+
+          final originalWallet = tester.state(probe);
+          final earlyOffset =
+              tester.widget<SlideTransition>(slide).position.value;
+          expect(earlyOffset.dy, 0);
+          expect(earlyOffset.dx, reducedMotion ? 0 : inExclusiveRange(0, 1));
+          expect(
+              find.ancestor(of: probe, matching: find.byType(FadeTransition)),
+              findsNothing);
+          // A native report must not replace the page or restart its animation.
+          router.routeInformationProvider.routerReportsNewRouteInformation(
+              router.routeInformationParser.restoreRouteInformation(
+                  router.routerDelegate.currentConfiguration)!);
+          app.notifyListeners();
+          await tester.pump();
+          expect(tester.state(probe), same(originalWallet));
+          expect(tester.widget<SlideTransition>(slide).position.value,
+              earlyOffset);
+          await tester.pump(const Duration(milliseconds: 128));
+          final middleOffset =
+              tester.widget<SlideTransition>(slide).position.value;
+          expect(middleOffset.dy, 0);
+          expect(middleOffset.dx, reducedMotion ? 0 : lessThan(earlyOffset.dx));
+          expect(backdrop, findsOneWidget);
+          await tester.pumpAndSettle();
+          expect(tester.widget<SlideTransition>(slide).position.value,
+              Offset.zero);
+          expect(tester.state(probe), same(originalWallet));
+
+          router.go('/settings');
+          await tester.pumpAndSettle();
+          expect(find.text('PRIVATE'), decoy ? findsNothing : findsOneWidget);
+          if (decoy) {
+            expect(probe, findsOneWidget);
+            expect(privateBuilds, 0);
+          }
+          expect(tester.takeException(), isNull);
+        });
+      }
+    }
+
+    testWidgets('$destination is still inaccessible before PIN verification',
+        (tester) async {
+      await launch(tester, TargetPlatform.iOS);
+      router.go(decoy ? '/duressHomePage' : '/homePage');
+      await tester.pumpAndSettle();
+      expect(tester.state(find.byType(_PinProbe)), same(originalPin));
+      expect(probe, findsNothing);
+      expect(privateBuilds, 0);
+    });
+
+    testWidgets(
+        '$destination disappears immediately if locked during its slide',
+        (tester) async {
+      await launch(tester, TargetPlatform.iOS);
+      await enterWallet(tester, decoy);
+      await tester.pump(const Duration(milliseconds: 32));
+      final wallet = tester.state(probe);
+      expect(tester.widget<SlideTransition>(slide).position.value.dx,
+          inExclusiveRange(0, 1));
+      app.unlock.lock();
+      await tester.pump();
+      expect(wallet.mounted, isFalse);
+      expect(probe, findsNothing);
+      expect(find.byType(_PinProbe), findsNothing);
+      await tester.pumpAndSettle();
+      expect(find.text('AUTH'), findsOneWidget);
+      expect(privateBuilds, 0);
+    });
+  }
+
+  testWidgets('normal home is removed before entering decoy mode',
       (tester) async {
     await launch(tester, TargetPlatform.iOS);
+    await enterWallet(tester, false);
+    await tester.pumpAndSettle();
+    final home = tester.state(find.byType(_HomeProbe));
+    app.unlock.lock();
+    app.unlock.preparePin(app.unlock.attempt, paidDecoyAllowed: true);
+    await tester.pumpAndSettle();
+    expect(home.mounted, isFalse);
+    expect(find.byType(_HomeProbe), findsNothing);
     final attempt = app.unlock.attempt;
     app.unlock.beginDecoy(attempt);
     await tester.pump();
     app.unlock.finishDecoy(attempt);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 32));
-    expect(app.unlock.allows(AppRouteAccess.pin), isFalse);
-    expect(find.byType(_PinProbe), findsNothing);
-    expect(find.byKey(const ValueKey('decoy-transition-backdrop')),
+    expect(find.byType(_HomeProbe), findsNothing);
+    expect(find.byKey(const ValueKey('wallet-transition-backdrop')),
         findsOneWidget);
-    expect(find.text('DECOY'), findsOneWidget);
-    expect(privateBuilds, 0);
-    final fade = find.byKey(const ValueKey('decoy-wallet-fade'));
-    final earlyOpacity = tester.widget<FadeTransition>(fade).opacity.value;
-    expect(earlyOpacity, inExclusiveRange(0, 1));
-    await tester.pump(const Duration(milliseconds: 128));
-    final middleOpacity = tester.widget<FadeTransition>(fade).opacity.value;
-    expect(middleOpacity, greaterThan(earlyOpacity));
-    expect(middleOpacity, lessThan(1));
-    expect(find.byKey(const ValueKey('decoy-transition-backdrop')),
-        findsOneWidget);
+    router.go('/homePage');
     await tester.pumpAndSettle();
-    expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+    expect(find.text('DECOY'), findsOneWidget);
+    expect(find.byType(_HomeProbe), findsNothing);
+    expect(privateBuilds, 0);
   });
-
-  for (final reducedMotion in [false, true]) {
-    testWidgets('decoy entry fades without a slide and survives route refresh: '
-        'reducedMotion=$reducedMotion', (tester) async {
-      await launch(tester, TargetPlatform.iOS, reducedMotion: reducedMotion);
-      final attempt = app.unlock.attempt;
-      app.unlock.beginDecoy(attempt);
-      await tester.pump();
-      app.unlock.finishDecoy(attempt);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 32));
-      final route = ModalRoute.of(tester.element(find.byType(_DecoyProbe)))!;
-      expect(route.settings, isA<CustomTransitionPage<void>>());
-      expect(route.transitionDuration,
-          reducedMotion ? Duration.zero : const Duration(milliseconds: 320));
-      expect(
-          find.ancestor(
-              of: find.byType(_DecoyProbe),
-              matching: find.byType(SlideTransition)),
-          findsNothing);
-      expect(
-          find.ancestor(
-              of: find.byType(_DecoyProbe),
-              matching: find.byType(FadeTransition)),
-          findsWidgets);
-      await tester.pumpAndSettle();
-      final originalDecoy = tester.state(find.byType(_DecoyProbe));
-      router.routeInformationProvider.routerReportsNewRouteInformation(router
-          .routeInformationParser
-          .restoreRouteInformation(router.routerDelegate.currentConfiguration)!);
-      app.notifyListeners();
-      await tester.pumpAndSettle();
-      expect(tester.state(find.byType(_DecoyProbe)), same(originalDecoy));
-      router.go('/settings');
-      await tester.pumpAndSettle();
-      expect(find.text('DECOY'), findsOneWidget);
-      expect(privateBuilds, 0);
-    });
-  }
 
   for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
     for (final animatedEntry in [false, true]) {
