@@ -736,7 +736,14 @@ class FFRoute {
             },
           );
 
-          final transitionInfo = state.transitionInfo;
+          // Router serialization drops non-JSON extras. Keep the PIN page type
+          // stable across refreshes so an in-flight unlock is not disposed.
+          final transitionInfo = access == AppRouteAccess.pin
+              ? const TransitionInfo(
+                  hasTransition: true,
+                  duration: Duration(milliseconds: 220),
+                )
+              : state.transitionInfo;
           return transitionInfo.hasTransition
               ? CustomTransitionPage(
                   key: state.pageKey,

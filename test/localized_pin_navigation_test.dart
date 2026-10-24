@@ -5,7 +5,8 @@ import 'package:decoy_wallet_app/backend/public_config.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/l10n/app_language_controller.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
-import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart' show AppStateNotifier;
+import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart'
+    show AppStateNotifier, FFRoute, TransitionInfo, kTransitionInfoKey;
 import 'package:decoy_wallet_app/custom_code/actions/aes_gcm_encrypt_string.dart';
 import 'package:decoy_wallet_app/pin_pages/p_i_n_page/p_i_n_page_widget.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,8 @@ void main() {
         'isAccount': pin == '1234'
       };
     } else if (path.endsWith('/getConsentStatuses')) {
+      // Outlast route transitions so a disposed initiating PIN cannot pass.
+      await Future<void>.delayed(const Duration(milliseconds: 650));
       response = {
         'slot1Status': row['contacts_ciphertext'] != null ? consent : 'not_sent'
       };
@@ -130,6 +133,7 @@ void main() {
     FFAppState().fakeBtcBalance = 1;
     final app = AppStateNotifier.instance;
     app.update(currentUser!);
+    app.stopShowingSplashImage();
     app.unlock.lock();
     app.clearRedirectLocation();
     app.unlock.preparePin(app.unlock.attempt, paidDecoyAllowed: true);
@@ -157,18 +161,31 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    final router = GoRouter(routes: [
-      GoRoute(path: '/', builder: (_, __) => const PINPageWidget()),
-      GoRoute(
-          name: 'DuressHomePage',
-          path: '/duressHomePage',
-          builder: (_, __) => const Scaffold(body: Text('DECOY DESTINATION'))),
-      GoRoute(
-          name: 'AuthRouter',
-          path: '/homePage',
-          builder: (_, __) =>
-              const Scaffold(body: Text('ACCOUNT DESTINATION'))),
-    ]);
+    final app = AppStateNotifier.instance;
+    final router = GoRouter(
+        initialLocation: '/PINPage',
+        initialExtra: {
+          kTransitionInfoKey: const TransitionInfo(
+              hasTransition: true, duration: Duration(milliseconds: 220)),
+        },
+        refreshListenable: app,
+        routes: [
+          FFRoute(
+              name: 'PINPage',
+              path: '/PINPage',
+              builder: (_, __) => const PINPageWidget()).toRoute(app),
+          FFRoute(
+              name: 'DuressHomePage',
+              path: '/duressHomePage',
+              builder: (_, __) =>
+                  const Scaffold(body: Text('DECOY DESTINATION'))).toRoute(app),
+          FFRoute(
+                  name: 'AuthRouter',
+                  path: '/authRouter',
+                  builder: (_, __) =>
+                      const Scaffold(body: Text('ACCOUNT DESTINATION')))
+              .toRoute(app),
+        ]);
     addTearDown(router.dispose);
     await http.runWithClient(() async {
       await tester.pumpWidget(ChangeNotifierProvider.value(
@@ -193,7 +210,13 @@ void main() {
       }
       final strings =
           AppLocalizations.of(tester.element(find.byType(PINPageWidget)))!;
+      router.routeInformationProvider.routerReportsNewRouteInformation(
+          router.routeInformationParser.restoreRouteInformation(
+              router.routerDelegate.currentConfiguration)!);
       await tester.tap(find.text(strings.msgEnter));
+      for (var frame = 0; frame < 100; frame++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     }, () => client);
@@ -270,6 +293,36 @@ void main() {
       });
 
       for (final enabled in [false, true]) {
+        testWidgets(
+            'confirmed contact preference is preserved: enabled=$enabled',
+            (tester) async {
+          FFAppState().decoyPinContactsEnabled = enabled;
+          await tester.runAsync(() async {
+            final enc = await aesGcmEncryptString(
+                jsonEncode({
+                  'contacts': [
+                    {
+                      'slot': 1,
+                      'first': 'Test',
+                      'last': 'Contact',
+                      'phone': '+12025550123',
+                      'consent_status': 'confirmed',
+                    }
+                  ],
+                }),
+                key);
+            row.addAll({
+              'contacts_ciphertext': enc['ciphertextB64'],
+              'contacts_nonce': enc['nonceB64'],
+              'contacts_complete': true,
+              'wrapped_datakey': 'wrapped',
+            });
+          });
+          await enter(tester, '9876');
+          expect(find.text('DECOY DESTINATION'), findsOneWidget);
+          expect(alerts, hasLength(enabled ? 1 : 0));
+        });
+
         testWidgets('unconfirmed contacts never cause alert: enabled=$enabled',
             (tester) async {
           consent = 'pending';
