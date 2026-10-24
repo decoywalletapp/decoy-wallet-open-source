@@ -101,8 +101,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: '_initialize',
         path: '/',
-        builder: (context, _) =>
-            appStateNotifier.loggedIn ? AuthRouterWidget() : LoginPageWidget(),
+        builder: (context, _) => const SizedBox.shrink(),
       ),
       FFRoute(
         name: LoginPageWidget.routeName,
@@ -334,6 +333,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
         name: AuthRouterWidget.routeName,
         path: AuthRouterWidget.routePath,
         builder: (context, params) => AuthRouterWidget(
+          key: _AuthRouterParametersKey((
+            params.getParam<String>('type', ParamType.String),
+            params.getParam<String>('accessToken', ParamType.String),
+            params.getParam<String>('refreshToken', ParamType.String),
+          )),
           type: params.getParam(
             'type',
             ParamType.String,
@@ -642,6 +646,15 @@ class FFParameters {
   }
 }
 
+// Restart only for a changed authentication request, never a route refresh.
+// Keep callback credentials out of framework key diagnostics.
+class _AuthRouterParametersKey extends ValueKey<(String?, String?, String?)> {
+  const _AuthRouterParametersKey(super.value);
+
+  @override
+  String toString() => '[AuthRouter parameters]';
+}
+
 class FFRoute {
   const FFRoute({
     required this.name,
@@ -704,6 +717,17 @@ class FFRoute {
             return redirectLocation;
           }
 
+          // Use a named entry route rather than swapping login/auth widgets
+          // in place when the sign-in event arrives during a button handoff.
+          if (name == '_initialize' && !appStateNotifier.loading) {
+            return Uri(
+              path: appStateNotifier.loggedIn
+                  ? AuthRouterWidget.routePath : LoginPageWidget.routePath,
+              query: state.uri.hasQuery ? state.uri.query : null,
+              fragment: state.uri.hasFragment ? state.uri.fragment : null,
+            ).toString();
+          }
+
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
             return '/loginPage';
@@ -737,13 +761,18 @@ class FFRoute {
             },
           );
 
-          // Router serialization drops non-JSON extras. Keep the PIN page type
-          // stable across refreshes so an in-flight unlock is not disposed.
+          // Router serialization drops non-JSON extras. Keep authentication
+          // and PIN pages stable so refreshes cannot restart an in-flight unlock.
           final transitionInfo = access == AppRouteAccess.pin
               ? const TransitionInfo(
                   hasTransition: true,
                   duration: Duration(milliseconds: 220),
                 )
+              : name == AuthRouterWidget.routeName
+                  ? const TransitionInfo(
+                      hasTransition: true,
+                      duration: Duration(milliseconds: 1),
+                    )
               : name == DuressHomePageWidget.routeName
                   ? TransitionInfo(
                       hasTransition: true,

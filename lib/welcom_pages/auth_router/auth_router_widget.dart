@@ -99,14 +99,14 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (AppStateNotifier.instance.unlock.inDecoy) return;
+      if (!mounted || AppStateNotifier.instance.unlock.inDecoy) return;
       if (widget.type == 'recovery') {
         _model.refreshingOuuu = await actions.refreshSupabaseSession2(
           widget.accessToken ?? '',
           widget.refreshToken ?? '',
         );
-        if (_model.refreshingOuuu == true && mounted &&
-            !AppStateNotifier.instance.unlock.inDecoy) {
+        if (!mounted || AppStateNotifier.instance.unlock.inDecoy) return;
+        if (_model.refreshingOuuu == true) {
           AppStateNotifier.instance.update(
             DecoyWalletAppSupabaseUser(SupaFlow.client.auth.currentUser));
           final unlock = AppStateNotifier.instance.unlock;

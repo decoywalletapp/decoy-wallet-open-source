@@ -242,7 +242,7 @@ workflows:
       - name: Test account balance pilot PIN routes
         script: |
           set -eu
-          flutter test test/localized_pin_navigation_test.dart \
+          flutter test test/localized_pin_navigation_test.dart test/login_biometric_lifecycle_test.dart \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
             --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid \
@@ -254,7 +254,7 @@ workflows:
           flutter test test/unlock_diagnostics_test.dart test/unlock_state_test.dart \
             test/unlock_routes_test.dart test/unlock_recovery_test.dart test/unlock_baseline_test.dart \
             --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true
-          flutter test test/localized_pin_navigation_test.dart \
+          flutter test test/localized_pin_navigation_test.dart test/login_biometric_lifecycle_test.dart \
             --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
@@ -561,6 +561,12 @@ workflows:
         script: |
           set -eu
           flutter test --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
+      - name: Test login biometric lifecycle
+        script: |
+          set -eu
+          flutter test test/login_biometric_lifecycle_test.dart \
+            --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
+            --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid
       - name: Build App Store IPA with source provenance
         script: |
           set -eu

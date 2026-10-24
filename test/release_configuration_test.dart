@@ -114,6 +114,20 @@ void main() {
   });
 
   for (final id in ['ios-testflight-rehearsal', 'ios-app-store-release']) {
+    test('$id runs the login lifecycle regression with isolated endpoints', () {
+      final scripts = (workflows[id]['scripts'] as YamlList)
+          .cast<YamlMap>()
+          .map((step) => step['script'] as String)
+          .toList();
+      final index = scripts.indexWhere(
+          (script) => script.contains('test/login_biometric_lifecycle_test.dart'));
+      expect(index, greaterThanOrEqualTo(0));
+      expect(index,
+          lessThan(scripts.indexWhere((script) => script.contains('flutter build'))));
+      expect(scripts[index],
+          contains('--dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid'));
+    });
+
     group('$id Apple upload target', () {
       late Directory temporary;
       late File calls;

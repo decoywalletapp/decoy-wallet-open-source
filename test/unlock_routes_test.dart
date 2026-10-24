@@ -37,7 +37,8 @@ void main() {
   });
   tearDown(() => router.dispose());
 
-  Future<void> launch(WidgetTester tester, String location) async {
+  Future<void> launch(WidgetTester tester, String location,
+      {bool settle = true}) async {
     final production = createRouter(app);
     final routes = production.configuration.routes
         .cast<GoRoute>()
@@ -62,8 +63,50 @@ void main() {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ));
-    await tester.pumpAndSettle();
+    if (settle) {
+      await tester.pumpAndSettle();
+    } else {
+      await tester.pump(const Duration(milliseconds: 300));
+    }
   }
+
+  for (final signedIn in [false, true]) {
+    testWidgets('startup preserves callback parameters: signedIn=$signedIn',
+        (tester) async {
+      app.update(SyntheticUser(signedIn ? 'synthetic-owner' : null));
+      await launch(tester,
+          '/?type=recovery&accessToken=synthetic-access#refresh_token=synthetic-refresh');
+      final destination = router.routeInformationProvider.value.uri;
+      expect(destination.path, signedIn ? '/authRouter' : '/loginPage');
+      expect(destination.queryParameters,
+          {'type': 'recovery', 'accessToken': 'synthetic-access'});
+      expect(destination.fragment, 'refresh_token=synthetic-refresh');
+      expect(constructed, isNot(contains('_initialize')));
+      expect(app.unlock.ownerUnlocked, isFalse);
+      expect(app.unlock.recoveryAllowed, isFalse);
+    });
+  }
+
+  testWidgets('startup waits for initial session and splash completion',
+      (tester) async {
+    app.showSplashImage = true;
+    await launch(tester, '/', settle: false);
+    expect(constructed, isEmpty);
+    app.stopShowingSplashImage();
+    await tester.pumpAndSettle();
+    // The outgoing startup page is an empty placeholder, not another auth flow.
+    expect(constructed.where((name) => name != '_initialize').toSet(),
+        {'AuthRouter'});
+    expect(router.routeInformationProvider.value.uri.path, '/authRouter');
+  });
+
+  testWidgets('startup cannot escape an active recovery session',
+      (tester) async {
+    app.unlock.allowRecovery(app.unlock.attempt);
+    await launch(tester, '/');
+    expect(constructed.toSet(), {'UpdatePasswordPage'});
+    expect(app.unlock.ownerUnlocked, isFalse);
+  });
 
   for (final uri in [
     '/settings',
