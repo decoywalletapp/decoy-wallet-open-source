@@ -124,8 +124,13 @@ void main() {
       expect(index, greaterThanOrEqualTo(0));
       expect(index,
           lessThan(scripts.indexWhere((script) => script.contains('flutter build'))));
-      expect(scripts[index],
-          contains('--dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid'));
+      for (final script in scripts.where((script) =>
+          script.contains('test/login_biometric_lifecycle_test.dart'))) {
+        expect(script,
+            contains('--dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid'));
+        expect(script,
+            contains('--dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon'));
+      }
     });
 
     group('$id Apple upload target', () {
