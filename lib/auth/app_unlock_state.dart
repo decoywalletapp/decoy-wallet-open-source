@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'unlock_diagnostics.dart';
 
 enum AppUnlockMode { locked, owner, enteringDecoy, decoy }
 
@@ -42,11 +43,13 @@ class AppUnlockState extends ChangeNotifier {
   void bindUser(String? userId) {
     final next = userId == null || userId.isEmpty ? null : userId;
     if (_userId == next) return;
+    unlockDiagnostics.record(UnlockTraceEvent.userChanged);
     _userId = next;
     lock();
   }
 
   void lock() {
+    unlockDiagnostics.record(UnlockTraceEvent.locked);
     _generation++;
     _mode = AppUnlockMode.locked;
     _setupAllowed = false;
@@ -76,6 +79,7 @@ class AppUnlockState extends ChangeNotifier {
     if (!isCurrent(value) || inDecoy || recoveryAllowed) return false;
     _pinReady = true;
     _decoyAllowed = paidDecoyAllowed;
+    unlockDiagnostics.record(UnlockTraceEvent.pinPrepared);
     notifyListeners();
     return true;
   }
@@ -95,9 +99,11 @@ class AppUnlockState extends ChangeNotifier {
 
   bool beginDecoy(UnlockAttempt? value) {
     if (!isCurrent(value) || !_pinReady || !_decoyAllowed || inDecoy) {
+      unlockDiagnostics.record(UnlockTraceEvent.decoyRejected);
       return false;
     }
     _mode = AppUnlockMode.enteringDecoy;
+    unlockDiagnostics.record(UnlockTraceEvent.decoyStarted);
     _setupAllowed = false;
     _pinReady = false;
     notifyListeners();
@@ -105,8 +111,12 @@ class AppUnlockState extends ChangeNotifier {
   }
 
   bool finishDecoy(UnlockAttempt? value) {
-    if (!isCurrent(value) || _mode != AppUnlockMode.enteringDecoy) return false;
+    if (!isCurrent(value) || _mode != AppUnlockMode.enteringDecoy) {
+      unlockDiagnostics.record(UnlockTraceEvent.decoyFinishRejected);
+      return false;
+    }
     _mode = AppUnlockMode.decoy;
+    unlockDiagnostics.record(UnlockTraceEvent.decoyFinished);
     _generation++;
     notifyListeners();
     return true;
@@ -117,7 +127,9 @@ class AppUnlockState extends ChangeNotifier {
     if (!isCurrent(value) || _mode != AppUnlockMode.enteringDecoy) return;
     try {
       await prepare();
-    } catch (_) {
+    } catch (error, stack) {
+      unlockDiagnostics.record(UnlockTraceEvent.preparationFailed,
+          error: error, stack: stack);
       if (isCurrent(value) && _mode == AppUnlockMode.enteringDecoy) {
         _mode = AppUnlockMode.locked;
         _pinReady = true;

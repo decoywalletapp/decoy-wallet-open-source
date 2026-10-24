@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '/auth/base_auth_user_provider.dart';
 import '/auth/app_unlock_state.dart';
+import '/auth/unlock_diagnostics.dart';
 export '/auth/app_unlock_state.dart';
 
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -690,6 +691,7 @@ class FFRoute {
           final unlock = appStateNotifier.unlock;
           if (unlock.inDecoy) appStateNotifier.clearRedirectLocation();
           if (!unlock.allows(access)) {
+            unlockDiagnostics.record(UnlockTraceEvent.routeBlocked);
             if (access == AppRouteAccess.owner && !unlock.inDecoy) {
               appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
             }
@@ -769,6 +771,7 @@ class _UnlockFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    unlockDiagnostics.record(UnlockTraceEvent.routeError);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (context.mounted) context.go(state.unlock.safeLocation);
     });

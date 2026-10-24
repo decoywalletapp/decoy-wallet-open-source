@@ -1,6 +1,6 @@
 workflows:
   ios-testflight-rehearsal:
-    name: iOS PIN Security Internal TestFlight
+    name: iOS PIN Diagnostics Internal TestFlight
     instance_type: mac_mini_m2
     max_build_duration: 120
     integrations:
@@ -17,7 +17,7 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
-        DECOY_BUILD_VERIFICATION: "pin-security-private-test"
+        DECOY_BUILD_VERIFICATION: "pin-diagnostics-private-test"
         DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
       xcode: "26.5"
@@ -248,6 +248,19 @@ workflows:
             --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid \
             --dart-define=DECOY_ALERT_BASE_URL=https://test.invalid \
             --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap
+      - name: Test temporary PIN diagnostics
+        script: |
+          set -eu
+          flutter test test/unlock_diagnostics_test.dart test/unlock_state_test.dart \
+            test/unlock_routes_test.dart test/unlock_recovery_test.dart test/unlock_baseline_test.dart \
+            --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true
+          flutter test test/localized_pin_navigation_test.dart \
+            --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true \
+            --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
+            --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
+            --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid \
+            --dart-define=DECOY_ALERT_BASE_URL=https://test.invalid \
+            --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap
       - name: Build TestFlight IPA with source provenance
         script: |
           set -eu
@@ -255,6 +268,7 @@ workflows:
             --build-name="$APP_VERSION" \
             --build-number="$APP_BUILD_NUMBER" \
             --export-options-plist=/Users/builder/export_options.plist \
+            --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true \
             --dart-define=DECOY_ACCOUNT_BALANCE_PILOT="$DECOY_ACCOUNT_BALANCE_PILOT" \
             --dart-define=DECOY_SUPABASE_URL="$DECOY_SUPABASE_URL" \
             --dart-define=DECOY_SUPABASE_ANON_KEY="$DECOY_SUPABASE_ANON_KEY" \

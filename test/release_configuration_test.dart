@@ -33,9 +33,18 @@ void main() {
     });
   }
 
-  test('iOS release and TestFlight use the same Dart build settings', () {
-    expect(dartDefines(buildScript('ios-app-store-release')),
-        dartDefines(buildScript('ios-testflight-rehearsal')));
+  test('iOS builds differ only by the temporary internal recorder', () {
+    final internal = dartDefines(buildScript('ios-testflight-rehearsal'));
+    expect(internal.remove('DECOY_UNLOCK_DIAGNOSTICS'), 'true');
+    expect(dartDefines(buildScript('ios-app-store-release')), internal);
+  });
+
+  test('no other workflow enables the temporary PIN recorder', () {
+    for (final id in workflows.keys.cast<String>()) {
+      if (id == 'ios-testflight-rehearsal') continue;
+      expect(dartDefines(buildScript(id)),
+          isNot(contains('DECOY_UNLOCK_DIAGNOSTICS')));
+    }
   });
 
   for (final id in [

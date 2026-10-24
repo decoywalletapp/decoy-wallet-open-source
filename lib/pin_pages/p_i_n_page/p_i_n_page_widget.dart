@@ -1,5 +1,6 @@
 import '/l10n/app_localizations.dart';
 import '/components/pin_keypad_grid.dart';
+import '/auth/unlock_diagnostics.dart';
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
@@ -149,6 +150,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
   @override
   void initState() {
     super.initState();
+    unlockDiagnostics.record(UnlockTraceEvent.pinCreated);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.black,
@@ -177,6 +179,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
   @override
   void dispose() {
+    unlockDiagnostics.record(UnlockTraceEvent.pinDisposed);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -1579,12 +1582,14 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                             return FFButtonWidget(
                                               onPressed: () async {
                                                 final unlock = AppStateNotifier.instance.unlock;
+                                                unlockDiagnostics.record(UnlockTraceEvent.pinPressed);
                                                 final attempt = unlock.attempt;
                                                 if (!unlock.pinReady || attempt == null) return;
                                                 currentUserLocationValue =
                                                     await getCurrentUserLocation(
                                                         defaultLocation:
                                                             LatLng(0.0, 0.0));
+                                                unlockDiagnostics.record(UnlockTraceEvent.locationFinished);
                                                 if (!mounted || !unlock.isCurrent(attempt) ||
                                                     !unlock.pinReady) return;
                                                 if (_model.pinInput.length >=
@@ -1597,12 +1602,13 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                   final jwt = await _jwtForApi();
                                                   if (!mounted || !unlock.isCurrent(attempt) ||
                                                       !unlock.pinReady) return;
+                                                  unlockDiagnostics.record(UnlockTraceEvent.verificationStarted);
                                                   _model.verifyResp =
                                                       await VerifyPINCall.call(
                                                     pin: _model.joinedPin,
                                                     jwt: jwt,
                                                   );
-
+                                                  unlockDiagnostics.record(UnlockTraceEvent.verificationFinished);
                                                   if (!mounted || !unlock.isCurrent(attempt) ||
                                                       !unlock.pinReady) return;
                                                   if (VerifyPINCall.ok(
@@ -1638,6 +1644,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           .toList()
                                                           .cast<String>();
                                                       safeSetState(() {});
+                                                      unlockDiagnostics.record(UnlockTraceEvent.profileStarted);
                                                       _model.walletRow =
                                                           await DecoyWalletTable()
                                                               .queryRows(
@@ -1653,7 +1660,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                       final walletRow = _model
                                                           .walletRow
                                                           ?.elementAtOrNull(0);
+                                                      unlockDiagnostics.record(UnlockTraceEvent.profileFinished);
                                                       if (!unlock.isCurrent(attempt)) return;
+                                                      unlockDiagnostics.record(UnlockTraceEvent.keyStarted);
                                                       _model.dataKeyB64 =
                                                           await _dataKeyForWrappedRow(
                                                                 walletRow
@@ -1663,6 +1672,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                   .generateDataKeyIfMissing();
                                                       _model.keyOut =
                                                           _model.dataKeyB64;
+                                                      unlockDiagnostics.record(UnlockTraceEvent.keyFinished);
                                                       safeSetState(() {});
                                                       _model.contactObj =
                                                           await decryptOptionalPinPayload(
@@ -1675,6 +1685,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           'contacts': <dynamic>[],
                                                         },
                                                       );
+                                                      unlockDiagnostics.record(UnlockTraceEvent.contactsDecrypted);
                                                       _model.personalObj =
                                                           await decryptOptionalPinPayload(
                                                         ciphertext: walletRow
@@ -1687,17 +1698,20 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           'lastName': '',
                                                         },
                                                       );
+                                                      unlockDiagnostics.record(UnlockTraceEvent.personalDecrypted);
                                                       var liveContactsComplete = _model
                                                               .walletRow
                                                               ?.elementAtOrNull(
                                                                   0)
                                                               ?.contactsComplete ==
                                                           true;
+                                                      unlockDiagnostics.record(UnlockTraceEvent.consentStarted);
                                                       final liveConsentStatusesResp =
                                                           await GetConsentStatusesCall
                                                               .call(
                                                         jwt: await _jwtForApi(),
                                                       );
+                                                      unlockDiagnostics.record(UnlockTraceEvent.consentFinished);
                                                       if (!unlock.isCurrent(attempt)) return;
                                                       if (liveConsentStatusesResp
                                                           .succeeded) {
@@ -1768,6 +1782,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                           ),
                                                         );
                                                       }
+                                                      unlockDiagnostics.record(UnlockTraceEvent.consentHandled);
                                                       if (FFAppState()
                                                               .hasActiveSubscription ==
                                                           false) {
@@ -1792,12 +1807,18 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                     .secondary,
                                                           ),
                                                         );
+                                                        unlockDiagnostics.record(UnlockTraceEvent.balanceStarted);
                                                         await FFAppState()
                                                             .ensureSimulatedBalance();
-                                                        if (!mounted) return;
+                                                        unlockDiagnostics.record(UnlockTraceEvent.balanceFinished);
+                                                        if (!mounted) {
+                                                          unlockDiagnostics.record(UnlockTraceEvent.pageDetached);
+                                                          return;
+                                                        }
                                                         safeSetState(() {});
 
                                                         if (!unlock.finishDecoy(attempt)) return;
+                                                        unlockDiagnostics.record(UnlockTraceEvent.navigationRequested);
                                                         context.goNamed(
                                                           DuressHomePageWidget
                                                               .routeName,
@@ -1896,12 +1917,18 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                             );
                                                           }
                                                         }
+                                                        unlockDiagnostics.record(UnlockTraceEvent.balanceStarted);
                                                         await FFAppState()
                                                             .ensureSimulatedBalance();
-                                                        if (!mounted) return;
+                                                        unlockDiagnostics.record(UnlockTraceEvent.balanceFinished);
+                                                        if (!mounted) {
+                                                          unlockDiagnostics.record(UnlockTraceEvent.pageDetached);
+                                                          return;
+                                                        }
                                                         safeSetState(() {});
 
                                                         if (!unlock.finishDecoy(attempt)) return;
+                                                        unlockDiagnostics.record(UnlockTraceEvent.navigationRequested);
                                                         context.goNamed(
                                                           DuressHomePageWidget
                                                               .routeName,
