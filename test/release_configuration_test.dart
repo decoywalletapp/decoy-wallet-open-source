@@ -128,6 +128,7 @@ void main() {
     final tests = scripts[index];
     expect(tests, contains('test/membership_redemption_test.dart'));
     expect(tests, contains('test/release_configuration_test.dart'));
+    expect(tests, contains('test/control_center_saved_choices_test.dart'));
     final defines = dartDefines(tests);
     expect(defines['DECOY_TEST_ACCOUNT_BALANCE'], 'true');
     expect(defines['DECOY_SUPABASE_URL'], 'https://test.invalid');
@@ -136,6 +137,27 @@ void main() {
     expect(defines['DECOY_ALERT_BASE_URL'], 'https://test.invalid');
     expect(defines['DECOY_DATA_KEY_BASE_URL'], 'https://test.invalid/unwrap');
     expect(defines['DECOY_PAYMENT_BASE_URL'], 'https://test.invalid');
+  });
+
+  test('App Store release runs saved-choice and paid-access regressions', () {
+    final scripts = (workflows['ios-app-store-release']['scripts'] as YamlList)
+        .cast<YamlMap>()
+        .map((step) => step['script'] as String)
+        .toList();
+    final tests = scripts.singleWhere((script) =>
+        script.contains('test/control_center_saved_choices_test.dart'));
+    for (final path in [
+      'test/localized_pin_navigation_test.dart',
+      'test/login_biometric_lifecycle_test.dart',
+      'test/unlock_state_test.dart',
+      'test/unlock_routes_test.dart',
+      'test/membership_redemption_test.dart',
+      'test/release_configuration_test.dart',
+    ]) {
+      expect(tests, contains(path));
+    }
+    expect(scripts.indexOf(tests),
+        lessThan(scripts.indexWhere((script) => script.contains('flutter build'))));
   });
 
   test('PIN security test upload stays internal and restricted to the fix branch', () {
