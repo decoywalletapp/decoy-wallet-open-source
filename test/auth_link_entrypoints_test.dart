@@ -345,6 +345,34 @@ void main() {
         expect(app.unlock.recoveryAllowed, isTrue);
         expect(app.unlock.ownerUnlocked, isFalse);
         expect(calls, ['POST /auth/v1/token', 'GET /auth/v1/user']);
+        final recoveryForm =
+            tester.state(find.byType(UpdatePasswordPageWidget));
+        final recoverySession = SupaFlow.client.auth.currentSession;
+        final passwordFields = find.descendant(
+            of: find.byType(UpdatePasswordPageWidget),
+            matching: find.byType(TextFormField));
+        await tester.enterText(
+            passwordFields.first, 'synthetic-unsaved-password');
+        FocusManager.instance.primaryFocus?.unfocus();
+        await tester.pumpAndSettle();
+        for (final repeat in [plugin, platform, plugin, platform]) {
+          await repeat();
+          await tester.pumpAndSettle();
+          expect(tester.state(find.byType(UpdatePasswordPageWidget)),
+              same(recoveryForm));
+          expect(
+              tester
+                  .widget<TextFormField>(passwordFields.first)
+                  .controller!
+                  .text,
+              'synthetic-unsaved-password');
+          expect(find.byKey(const ValueKey('auth-link-email')), findsNothing);
+          expect(SupaFlow.client.auth.currentSession, same(recoverySession));
+          expect(app.unlock.recoveryAllowed, isTrue);
+          expect(app.unlock.ownerUnlocked, isFalse);
+          expect(calls, ['POST /auth/v1/token', 'GET /auth/v1/user'],
+              reason: 'A repeated native callback must not exchange again.');
+        }
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox.shrink());
         await tester.pump(const Duration(seconds: 1));
@@ -352,6 +380,89 @@ void main() {
         language.dispose();
       });
     }
+  }
+
+  for (final delivery in [
+    'plugin',
+    'platform',
+    'plugin then platform',
+    'platform then plugin',
+  ]) {
+    testWidgets('cancel native email confirmation keeps signed out: $delivery',
+        (tester) async {
+      final language = AppLanguageController();
+      await tester.runAsync(() async {
+        await SupaFlow.client.auth.signOut();
+        await language.initialize();
+      });
+      app.update(DecoyWalletAppSupabaseUser(null));
+      tester.view.physicalSize = const Size(1200, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider.value(value: language),
+        ChangeNotifierProvider.value(value: FFAppState()),
+      ], child: MyApp()));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      final router = GoRouter.of(tester.element(find.byType(LoginPageWidget)));
+      calls.clear();
+      final payload = linkSession('recipient');
+      final uri =
+          Uri(scheme: 'decoywalletapp', host: 'authRouter', queryParameters: {
+        'type': 'recovery',
+        'accessToken': payload['access_token'] as String,
+        'refreshToken': 'cancel-$sequence',
+      });
+      Future<void> deliver(Uri callback) async {
+        for (final method in delivery.split(' then ')) {
+          if (method == 'plugin') {
+            await tester.runAsync(() async {
+              links.events.add(callback);
+              await Future<void>.delayed(Duration.zero);
+            });
+          } else {
+            await tester.binding.handlePushRoute(callback.toString());
+          }
+        }
+        await tester.pumpAndSettle();
+      }
+
+      await deliver(uri);
+      expect(find.byKey(const ValueKey('auth-link-email')), findsOneWidget);
+      expect(calls, isEmpty);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('auth-link-email')), findsNothing);
+      expect(find.byType(LoginPageWidget), findsOneWidget);
+      expect(find.byType(UpdatePasswordPageWidget), findsNothing);
+      expect(SupaFlow.client.auth.currentSession, isNull);
+      expect(app.unlock.recoveryAllowed, isFalse);
+      expect(app.unlock.ownerUnlocked, isFalse);
+      expect(calls, isEmpty,
+          reason: 'Cancel must not exchange credentials or create a session.');
+
+      await deliver(uri.replace(queryParameters: {
+        ...uri.queryParameters,
+        'refreshToken': 'after-cancel-$sequence',
+      }));
+      expect(find.byKey(const ValueKey('auth-link-email')), findsOneWidget);
+      expect(calls, isEmpty);
+      await tester.enterText(find.byKey(const ValueKey('auth-link-email')),
+          'recipient@example.invalid');
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+      expect(find.byType(UpdatePasswordPageWidget), findsOneWidget);
+      expect(SupaFlow.client.auth.currentUser!.id, 'recipient');
+      expect(app.unlock.recoveryAllowed, isTrue);
+      expect(app.unlock.ownerUnlocked, isFalse);
+      expect(calls, ['POST /auth/v1/token', 'GET /auth/v1/user']);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(seconds: 1));
+      router.dispose();
+      language.dispose();
+    });
   }
 
   testWidgets('root listener routes a fresh link from a page with no receiver',
