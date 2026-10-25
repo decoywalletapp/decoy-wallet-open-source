@@ -80,6 +80,7 @@ void main() {
         'main',
         'codex/wallet-terminology-20261002',
         'codex/account-balance-pilot-20261003',
+        'codex/qr-send-address-fix-20261011',
         ''
       ]) {
         expect(
@@ -92,9 +93,7 @@ void main() {
             '-c',
             guard
           ], environment: {
-            'CM_BRANCH': id == 'ios-testflight-rehearsal'
-                ? 'codex/pin-unlock-security-20261023'
-                : 'codex/qr-send-address-fix-20261011'
+            'CM_BRANCH': 'codex/pin-unlock-security-20261023'
           }).exitCode,
           0);
     });
@@ -108,6 +107,35 @@ void main() {
     expect(workflows['android-signed-release-rehearsal']['publishing'], isNull);
     expect(dartDefines(buildScript('android-debug-rehearsal')),
         isNot(contains('DECOY_ACCOUNT_BALANCE_PILOT')));
+  });
+
+  test('Android PIN release keeps package inputs and runs isolated access tests', () {
+    final workflow = workflows['android-signed-release-rehearsal'];
+    final environment = workflow['environment'] as YamlMap;
+    expect(environment['groups'], ['decoy_public_runtime', 'android_signing']);
+    expect(environment['vars']['ANDROID_PACKAGE_NAME'], 'com.decoywalletapp.app');
+    expect(environment['vars']['DECOY_BUILD_VERIFICATION'], 'pin-security-release');
+    expect(environment['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'true');
+    expect(workflow['publishing'], isNull);
+    final scripts = (workflow['scripts'] as YamlList)
+        .cast<YamlMap>()
+        .map((step) => step['script'] as String)
+        .toList();
+    final index = scripts.indexWhere(
+        (script) => script.contains('test/login_biometric_lifecycle_test.dart'));
+    expect(index, greaterThanOrEqualTo(0));
+    expect(index, lessThan(scripts.indexWhere((s) => s.contains('flutter build'))));
+    final tests = scripts[index];
+    expect(tests, contains('test/membership_redemption_test.dart'));
+    expect(tests, contains('test/release_configuration_test.dart'));
+    final defines = dartDefines(tests);
+    expect(defines['DECOY_TEST_ACCOUNT_BALANCE'], 'true');
+    expect(defines['DECOY_SUPABASE_URL'], 'https://test.invalid');
+    expect(defines['DECOY_SUPABASE_ANON_KEY'], 'synthetic-anon');
+    expect(defines['DECOY_FIREBASE_FUNCTIONS_BASE_URL'], 'https://test.invalid');
+    expect(defines['DECOY_ALERT_BASE_URL'], 'https://test.invalid');
+    expect(defines['DECOY_DATA_KEY_BASE_URL'], 'https://test.invalid/unwrap');
+    expect(defines['DECOY_PAYMENT_BASE_URL'], 'https://test.invalid');
   });
 
   test('PIN security test upload stays internal and restricted to the fix branch', () {
