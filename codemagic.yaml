@@ -243,6 +243,7 @@ workflows:
         script: |
           set -eu
           flutter test test/localized_pin_navigation_test.dart test/login_biometric_lifecycle_test.dart \
+            test/auth_link_service_test.dart test/auth_link_entrypoints_test.dart \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
             --dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon \
@@ -257,6 +258,7 @@ workflows:
             test/unlock_routes_test.dart test/unlock_recovery_test.dart test/unlock_baseline_test.dart \
             --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true
           flutter test test/localized_pin_navigation_test.dart test/login_biometric_lifecycle_test.dart \
+            test/auth_link_service_test.dart test/auth_link_entrypoints_test.dart \
             --dart-define=DECOY_UNLOCK_DIAGNOSTICS=true \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
@@ -568,6 +570,7 @@ workflows:
         script: |
           set -eu
           flutter test test/localized_pin_navigation_test.dart test/login_biometric_lifecycle_test.dart \
+            test/auth_link_service_test.dart test/auth_link_entrypoints_test.dart \
             test/unlock_state_test.dart test/unlock_routes_test.dart test/membership_redemption_test.dart \
             test/release_configuration_test.dart test/control_center_saved_choices_test.dart \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
@@ -1202,6 +1205,7 @@ workflows:
         script: |
           set -eu
           flutter test test/localized_pin_navigation_test.dart test/login_biometric_lifecycle_test.dart \
+            test/auth_link_service_test.dart test/auth_link_entrypoints_test.dart \
             test/unlock_state_test.dart test/unlock_routes_test.dart test/membership_redemption_test.dart \
             test/release_configuration_test.dart test/control_center_saved_choices_test.dart \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \

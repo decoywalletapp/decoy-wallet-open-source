@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 
 import '/custom_code/actions/index.dart';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<dynamic> supaRecoveryUpdatePassword(
   String accessToken,
@@ -31,8 +30,16 @@ Future<dynamic> supaRecoveryUpdatePassword(
       return {'ok': false, 'error': 'Password must be at least 10 characters'};
     }
 
-    // 1) Set the recovery session in this app instance
-    await client.auth.setSession(rt);
+    final accepted = await SupaFlow.authLinks.accept(
+      Uri(path: '/authRouter', queryParameters: {
+        'type': 'recovery', 'accessToken': accessToken, 'refreshToken': rt,
+      }),
+      requestEmail: () async => null,
+      mayContinue: () => !AppStateNotifier.instance.unlock.inDecoy,
+    );
+    if (accepted == null || !SupaFlow.authLinks.isCurrent(accepted)) {
+      return {'ok': false, 'error': 'Open a new recovery link to continue'};
+    }
 
     // 2) Now the password update is authorized
     await client.auth.updateUser(

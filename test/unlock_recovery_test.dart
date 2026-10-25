@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:decoy_wallet_app/app_state.dart';
+import 'package:decoy_wallet_app/backend/supabase/supabase.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/auth_util.dart';
@@ -16,7 +17,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +58,14 @@ void main() {
         .setMockMethodCallHandler(
             const MethodChannel('com.llfbandit.app_links/events'),
             (_) async => null);
+    final client = MockClient((request) async {
+      if (request.url.host != 'synthetic.invalid')
+        throw StateError('unexpected host');
+      requests++;
+      if (responseGate != null) await responseGate!.future;
+      return http.Response(response, 200,
+          headers: {'content-type': 'application/json'});
+    });
     await Supabase.initialize(
         url: 'https://synthetic.invalid',
         anonKey: 'synthetic-anon',
@@ -67,14 +75,9 @@ void main() {
             autoRefreshToken: false,
             detectSessionInUri: false,
             localStorage: EmptyLocalStorage()),
-        httpClient: MockClient((request) async {
-          if (request.url.host != 'synthetic.invalid')
-            throw StateError('unexpected host');
-          requests++;
-          if (responseGate != null) await responseGate!.future;
-          return http.Response(response, 200,
-              headers: {'content-type': 'application/json'});
-        }));
+        httpClient: client);
+    SupaFlow.configureAuthLinks(url: 'https://synthetic.invalid',
+        anonKey: 'synthetic-anon', clientFactory: () => client);
     await Supabase.instance.client.auth
         .setSession('synthetic-retained-session');
   });

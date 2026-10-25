@@ -12,12 +12,13 @@ import 'package:flutter/material.dart';
 import '/custom_code/actions/index.dart';
 import '/flutter_flow/custom_functions.dart';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '/auth/auth_link_flow.dart';
 
 Future<bool> refreshSupabaseSession2(
   String accessToken,
-  String refreshToken,
-) async {
+  String refreshToken, {
+  BuildContext? context,
+}) async {
   try {
     final at = accessToken.trim();
     final rt = refreshToken.trim();
@@ -26,12 +27,17 @@ Future<bool> refreshSupabaseSession2(
       return false;
     }
 
-    // This is the critical part: establish the session in-app
-    await Supabase.instance.client.auth.setSession(rt);
-
-    // Extra sanity check
-    final s = Supabase.instance.client.auth.currentSession;
-    return s != null && (s.accessToken.isNotEmpty);
+    final uri = Uri(path: '/authRouter', queryParameters: {
+      'type': 'recovery',
+      'accessToken': at,
+      'refreshToken': rt,
+    });
+    final accepted = context == null
+        ? await SupaFlow.authLinks.accept(uri,
+            requestEmail: () async => null,
+            mayContinue: () => !AppStateNotifier.instance.unlock.inDecoy)
+        : await acceptAuthLink(context, uri);
+    return accepted != null && SupaFlow.authLinks.isCurrent(accepted);
   } catch (_) {
     return false;
   }

@@ -7,6 +7,8 @@ import '/auth/base_auth_user_provider.dart';
 import '/auth/app_unlock_state.dart';
 import '/auth/unlock_diagnostics.dart';
 import '/components/wallet_title_splash.dart';
+import '/auth/auth_link_service.dart';
+import '/backend/supabase/supabase.dart';
 export '/auth/app_unlock_state.dart';
 
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
@@ -86,6 +88,7 @@ class AppStateNotifier extends ChangeNotifier {
 }
 
 GoRouter createRouter(AppStateNotifier appStateNotifier) {
+  Object? lastAuthCallback;
   $cartesian_chart_library_syxakz.initializeRoutes(
     homePageWidgetName: 'cartesian_chart_library_syxakz.HomePage',
     homePageWidgetPath: '/DuressHomePage',
@@ -96,6 +99,34 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
     debugLogDiagnostics: false,
     refreshListenable: appStateNotifier,
     navigatorKey: appNavigatorKey,
+    redirect: (context, state) {
+      if (!appStateNotifier.unlock.inDecoy &&
+          AuthLinkRequest.hasPayload(state.uri)) {
+        if (SupaFlow.hasCompletedAuthLink(state.uri)) {
+          return appStateNotifier.unlock.safeLocation;
+        }
+        Object callbackIdentity;
+        try {
+          callbackIdentity = AuthLinkRequest.parse(state.uri).fingerprint;
+        } catch (_) {
+          callbackIdentity = (state.uri.query, state.uri.fragment);
+        }
+        if (lastAuthCallback != callbackIdentity) {
+          lastAuthCallback = callbackIdentity;
+          // Invalidate older Face ID/PIN work before processing a new request.
+          appStateNotifier.unlock.lock();
+          appStateNotifier.clearRedirectLocation();
+        }
+        if (state.uri.path != LoginPageWidget.routePath &&
+            state.uri.path != ConfirmEmailPageWidget.routePath) {
+          final redirected = Uri(path: LoginPageWidget.routePath,
+            query: state.uri.hasQuery ? state.uri.query : null,
+            fragment: state.uri.hasFragment ? state.uri.fragment : null);
+          return redirected.toString();
+        }
+      }
+      return null;
+    },
     errorBuilder: (context, state) => _UnlockFallback(appStateNotifier),
     routes: [
       FFRoute(

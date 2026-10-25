@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '/services/account_balance.dart';
 
 Future<void> supaSignUpWithRedirect(String email, String password) async {
+  SupaFlow.cancelPendingAuthLinks();
   final client = Supabase.instance.client;
 
   final redirect = requiredPublicConfig(

@@ -129,6 +129,8 @@ void main() {
     expect(tests, contains('test/membership_redemption_test.dart'));
     expect(tests, contains('test/release_configuration_test.dart'));
     expect(tests, contains('test/control_center_saved_choices_test.dart'));
+    expect(tests, contains('test/auth_link_service_test.dart'));
+    expect(tests, contains('test/auth_link_entrypoints_test.dart'));
     final defines = dartDefines(tests);
     expect(defines['DECOY_TEST_ACCOUNT_BALANCE'], 'true');
     expect(defines['DECOY_SUPABASE_URL'], 'https://test.invalid');
@@ -149,6 +151,8 @@ void main() {
     for (final path in [
       'test/localized_pin_navigation_test.dart',
       'test/login_biometric_lifecycle_test.dart',
+      'test/auth_link_service_test.dart',
+      'test/auth_link_entrypoints_test.dart',
       'test/unlock_state_test.dart',
       'test/unlock_routes_test.dart',
       'test/membership_redemption_test.dart',
@@ -194,6 +198,8 @@ void main() {
           lessThan(scripts.indexWhere((script) => script.contains('flutter build'))));
       for (final script in scripts.where((script) =>
           script.contains('test/login_biometric_lifecycle_test.dart'))) {
+        expect(script, contains('test/auth_link_service_test.dart'));
+        expect(script, contains('test/auth_link_entrypoints_test.dart'));
         expect(script,
             contains('--dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid'));
         expect(script,

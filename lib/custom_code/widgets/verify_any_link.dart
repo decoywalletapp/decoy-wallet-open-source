@@ -20,13 +20,18 @@ import 'package:go_router/go_router.dart';
 import 'dart:async';
 import '/auth/supabase_auth/auth_util.dart';
 import '/auth/supabase_auth/supabase_user_provider.dart';
+import '/auth/auth_link_flow.dart';
+import '/auth/auth_link_service.dart';
 
 class VerifyAnyLink extends StatefulWidget {
+  static int _listeners = 0;
+  static bool get hasListener => _listeners > 0;
   final double? width;
   final double? height;
+  final Uri? routedUri;
   final void Function(bool hasAuthPayload)? onInitialLinkChecked;
   const VerifyAnyLink({Key? key, this.width, this.height,
-    this.onInitialLinkChecked}) : super(key: key);
+    this.onInitialLinkChecked, this.routedUri}) : super(key: key);
 
   static Map<String, String> authParameters(Uri uri) {
     final params = <String, String>{...uri.queryParameters};
@@ -41,10 +46,7 @@ class VerifyAnyLink extends StatefulWidget {
   }
 
   static bool hasAuthPayload(Uri uri) {
-    final params = authParameters(uri);
-    return const ['token_hash', 'tokenHash', 'token', 'refresh_token',
-      'refreshToken', 'access_token', 'accessToken']
-        .any((key) => params[key]?.isNotEmpty ?? false);
+    return AuthLinkRequest.hasPayload(uri);
   }
 
   @override
@@ -56,8 +58,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   StreamSubscription<Uri>? _sub;
   bool _navigated = false;
   int _authLinksPending = 0;
-  static final Set<String> _linksInFlight = <String>{};
-  static final Set<String> _linksCompleted = <String>{};
+  final Set<String> _linksInFlight = <String>{};
 
   void _debugLog(String message) {
     if (kDebugMode) {
@@ -68,7 +69,18 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   @override
   void initState() {
     super.initState();
+    VerifyAnyLink._listeners++;
     _init();
+  }
+
+  @override
+  void didUpdateWidget(covariant VerifyAnyLink oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.routedUri != null && widget.routedUri != oldWidget.routedUri) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _handleUri(widget.routedUri!);
+      });
+    }
   }
 
   Future<void> _init() async {
@@ -93,7 +105,7 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
       final uri = VerifyAnyLink.hasAuthPayload(routed)
           ? routed
           : authManager.mayUseLaunchAuthLink ? initial : null;
-      if (kDebugMode) _debugLog('[VerifyAnyLink] initial link: $uri');
+      if (kDebugMode) _debugLog('[VerifyAnyLink] initial link checked');
       if (uri != null) {
         hasAuthPayload = VerifyAnyLink.hasAuthPayload(uri);
         await _handleUri(uri);
@@ -113,59 +125,22 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
     if (AppStateNotifier.instance.unlock.inDecoy ||
         !VerifyAnyLink.hasAuthPayload(uri)) return;
     final linkKey = uri.toString();
-    if (_linksCompleted.contains(linkKey) || !_linksInFlight.add(linkKey)) {
-      if (kDebugMode) _debugLog('[VerifyAnyLink] duplicate link skipped: $uri');
+    if (SupaFlow.authLinks.hasCompleted(uri) || !_linksInFlight.add(linkKey)) {
+      if (kDebugMode) _debugLog('[VerifyAnyLink] duplicate link skipped');
       return;
     }
 
-    var completed = false;
     _authLinksPending++;
-    final p = VerifyAnyLink.authParameters(uri);
-    final tokenHash = p['token_hash'] ?? p['tokenHash'] ?? p['token'];
-    final refreshToken = p['refresh_token'] ?? p['refreshToken'];
-    final accessToken = p['access_token'] ?? p['accessToken'];
-    final t = (p['type'] ?? 'signup').toLowerCase();
-    final isRecoveryLink = t == 'recovery';
-
-    final typeMap = <String, OtpType>{
-      'signup': OtpType.signup,
-      'magiclink': OtpType.magiclink,
-      'recovery': OtpType.recovery,
-      'invite': OtpType.invite,
-      'email_change': OtpType.emailChange,
-    };
-    final otpType = typeMap[t] ?? OtpType.signup;
     final client = Supabase.instance.client;
 
     try {
-      AuthResponse? res;
-
-      if (tokenHash != null && tokenHash.isNotEmpty) {
-        res = await client.auth.verifyOTP(
-          type: otpType,
-          tokenHash: tokenHash,
-        );
-      } else if (refreshToken != null && refreshToken.isNotEmpty) {
-        await client.auth.setSession(refreshToken);
-      } else if (accessToken != null && accessToken.isNotEmpty) {
-        await client.auth.getSessionFromUrl(uri);
-      } else {
-        if (kDebugMode) {
-          _debugLog('[VerifyAnyLink] no auth payload in link: $uri');
-        }
-        return;
-      }
-
-      // let session hydrate
-      await Future.delayed(const Duration(milliseconds: 300));
-      final session = client.auth.currentSession ?? res?.session;
-      final ok = session != null || res?.user != null;
-      if (!ok || !mounted || AppStateNotifier.instance.unlock.inDecoy) return;
+      final accepted = await acceptAuthLink(context, uri);
+      if (accepted == null || !SupaFlow.authLinks.isCurrent(accepted) ||
+          !mounted || AppStateNotifier.instance.unlock.inDecoy) return;
       AppStateNotifier.instance.update(
           DecoyWalletAppSupabaseUser(client.auth.currentUser));
-      completed = true;
 
-      if (isRecoveryLink) {
+      if (accepted.request.isRecovery) {
         final unlock = AppStateNotifier.instance.unlock;
         if (!unlock.allowRecovery(unlock.attempt)) return;
         if (!_navigated && mounted) {
@@ -201,7 +176,8 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
             pending = val.trim().toLowerCase();
           }
 
-          if (pending.isNotEmpty && pending == nowEmail) {
+          if (pending.isNotEmpty && pending == nowEmail &&
+              SupaFlow.authLinks.isCurrent(accepted)) {
             await client.from('profiles').update({
               'email': nowEmail,
               'pending_email': null,
@@ -214,40 +190,33 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
           _debugLog('[VerifyAnyLink] profile promote err: $e\n$st');
       }
 
-      if (!_navigated && mounted) {
+      if (!_navigated && mounted && SupaFlow.authLinks.isCurrent(accepted) &&
+          !AppStateNotifier.instance.unlock.inDecoy) {
         _navigated = true;
         if (kDebugMode) {
           _debugLog('[VerifyAnyLink] verified link; routing authentication');
         }
         context.goNamed(AuthRouterWidget.routeName);
       }
-    } on AuthApiException catch (e, st) {
-      if (e.code == 'otp_expired' || e.statusCode == 403) {
-        completed = true;
-        if (kDebugMode) _debugLog('[VerifyAnyLink] expired/403: $e\n$st');
-        return;
-      }
+    } on AuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.message}')),
       );
-    } catch (e, st) {
+    } catch (_) {
       if (!mounted) return;
-      if (kDebugMode) _debugLog('[VerifyAnyLink] ERROR: $e\n$st');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        const SnackBar(content: Text('This sign-in link could not be verified. Request a new link.')),
       );
     } finally {
       _authLinksPending--;
       _linksInFlight.remove(linkKey);
-      if (completed) {
-        _linksCompleted.add(linkKey);
-      }
     }
   }
 
   @override
   void dispose() {
+    VerifyAnyLink._listeners--;
     _sub?.cancel();
     super.dispose();
   }

@@ -18,6 +18,7 @@ class SupabaseAuthManager extends AuthManager
 
   @override
   Future signOut() {
+    SupaFlow.cancelPendingAuthLinks();
     // The platform retains its launch link after logout; it is not a new login.
     _mayUseLaunchAuthLink = false;
     AppStateNotifier.instance.unlock.lock();
@@ -145,6 +146,7 @@ class SupabaseAuthManager extends AuthManager
     BuildContext context,
     Future<User?> Function() signInFunc,
   ) async {
+    SupaFlow.cancelPendingAuthLinks();
     try {
       final user = await signInFunc();
       final authUser = user == null ? null : DecoyWalletAppSupabaseUser(user);

@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import '/custom_code/actions/index.dart'; // other actions
 
 // You also need the Supabase Flutter singleton
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '/services/account_balance.dart';
 
 Future<String> supaEmailSignUp(
@@ -20,6 +19,7 @@ Future<String> supaEmailSignUp(
   String password,
   String redirectUrl,
 ) async {
+  SupaFlow.cancelPendingAuthLinks();
   try {
     final client = Supabase.instance.client;
 

@@ -648,6 +648,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                 height: 1.0,
                                                 child: custom_widgets
                                                     .VerifyAnyLink(
+                                                  routedUri: GoRouterState.of(context).uri,
                                                   width: 1.0,
                                                   height: 1.0,
                                                   onInitialLinkChecked: (hasAuthPayload) {

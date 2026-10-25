@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:app_links/app_links.dart';
 import 'package:app_links_platform_interface/app_links_platform_interface.dart';
 import 'package:decoy_wallet_app/app_state.dart';
+import 'package:decoy_wallet_app/backend/supabase/supabase.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/auth_util.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
@@ -18,7 +19,6 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'localization_fonts.dart';
 
@@ -86,6 +86,31 @@ void main() {
         'created_at': '2026-01-01T00:00:00Z',
       },
     };
+    final client = MockClient((request) async {
+      if (request.url.host != 'test.invalid') {
+        throw StateError('Only fake authentication is permitted');
+      }
+      requests.add('${request.method} ${request.url.path}');
+      if (request.url.path == '/auth/v1/logout') {
+        return http.Response('', 204, request: request);
+      }
+      if (request.url.path == '/auth/v1/token') {
+        final token = jsonDecode(request.body)['refresh_token'] as String;
+        tokenRequests.add(token);
+        if (token.startsWith('synthetic-new-recovery')) {
+          return http.Response(jsonEncode(session), 200,
+              headers: {'content-type': 'application/json'});
+        }
+        return http.Response(
+            jsonEncode({
+              'code': 'refresh_token_not_found',
+              'msg': 'Invalid Refresh Token: Refresh Token Not Found',
+            }),
+            400,
+            headers: {'content-type': 'application/json'});
+      }
+      throw StateError('Unexpected fake request: ${request.url.path}');
+    });
     await Supabase.initialize(
       url: 'https://test.invalid',
       anonKey: 'synthetic-anon',
@@ -97,32 +122,10 @@ void main() {
         pkceAsyncStorage: _AuthStorage(),
         localStorage: const EmptyLocalStorage(),
       ),
-      httpClient: MockClient((request) async {
-        if (request.url.host != 'test.invalid') {
-          throw StateError('Only fake authentication is permitted');
-        }
-        requests.add('${request.method} ${request.url.path}');
-        if (request.url.path == '/auth/v1/logout') {
-          return http.Response('', 204, request: request);
-        }
-        if (request.url.path == '/auth/v1/token') {
-          final token = jsonDecode(request.body)['refresh_token'] as String;
-          tokenRequests.add(token);
-          if (token.startsWith('synthetic-new-recovery')) {
-            return http.Response(jsonEncode(session), 200,
-                headers: {'content-type': 'application/json'});
-          }
-          return http.Response(
-              jsonEncode({
-                'code': 'refresh_token_not_found',
-                'msg': 'Invalid Refresh Token: Refresh Token Not Found',
-              }),
-              400,
-              headers: {'content-type': 'application/json'});
-        }
-        throw StateError('Unexpected fake request: ${request.url.path}');
-      }),
+      httpClient: client,
     );
+    SupaFlow.configureAuthLinks(url: 'https://test.invalid',
+        anonKey: 'synthetic-anon', clientFactory: () => client);
   });
   tearDownAll(() async {
     await Supabase.instance.dispose();
@@ -130,6 +133,15 @@ void main() {
 
   testWidgets('Settings logout never replays the consumed launch recovery link',
       (tester) async {
+    Future<void> confirmRecipient() async {
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('auth-link-email')), findsOneWidget);
+      await tester.enterText(find.byKey(const ValueKey('auth-link-email')),
+          'owner@example.invalid');
+      final context = tester.element(find.byKey(const ValueKey('auth-link-email')));
+      await tester.tap(find.text(AppLocalizations.of(context)!.msgContinue));
+      await tester.pumpAndSettle();
+    }
     final links = _Links();
     AppLinksPlatform.instance = links;
     // Production's SDK listener keeps the platform stream alive across pages.
@@ -226,6 +238,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
     }
     await tester.pumpAndSettle();
+    await confirmRecipient();
     expect(find.text('verified-recovery-only'), findsOneWidget);
     expect(app.unlock.recoveryAllowed, isTrue);
     expect(app.unlock.ownerUnlocked, isFalse);
@@ -243,6 +256,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
     }
     await tester.pumpAndSettle();
+    await confirmRecipient();
     expect(find.text('verified-recovery-only'), findsOneWidget);
     expect(app.unlock.recoveryAllowed, isTrue);
     expect(app.unlock.ownerUnlocked, isFalse);
@@ -256,8 +270,9 @@ void main() {
     links.events.add(Uri.parse(
         'decoywallet://loginPage?type=recovery&refresh_token=synthetic-new-invalid'));
     await tester.pumpAndSettle();
+    await confirmRecipient();
     expect(find.byType(LoginPageWidget), findsOneWidget);
-    expect(find.text('Error: Invalid Refresh Token: Refresh Token Not Found'),
+    expect(find.text('Error: This sign-in link could not be verified. Request a new link.'),
         findsOneWidget);
     expect(Supabase.instance.client.auth.currentSession, isNull);
     expect(app.unlock.recoveryAllowed, isFalse);

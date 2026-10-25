@@ -104,6 +104,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
         _model.refreshingOuuu = await actions.refreshSupabaseSession2(
           widget.accessToken ?? '',
           widget.refreshToken ?? '',
+          context: context,
         );
         if (!mounted || AppStateNotifier.instance.unlock.inDecoy) return;
         if (_model.refreshingOuuu == true) {

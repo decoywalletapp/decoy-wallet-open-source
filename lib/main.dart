@@ -20,6 +20,8 @@ import 'l10n/app_localizations.dart';
 import 'dart:async';
 import 'services/account_balance.dart';
 import 'services/account_balance_storage.dart';
+import 'package:app_links/app_links.dart';
+import 'custom_code/widgets/verify_any_link.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,6 +103,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           .map((e) => getRoute(e))
           .toList();
   late Stream<BaseAuthUser> userStream;
+  StreamSubscription<Uri>? _authLinks;
 
   @override
   void initState() {
@@ -109,6 +112,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
+    _authLinks = AppLinks().uriLinkStream.listen((uri) {
+      if (_appStateNotifier.unlock.inDecoy || VerifyAnyLink.hasListener ||
+          !VerifyAnyLink.hasAuthPayload(uri)) return;
+      if (SupaFlow.authLinks.hasCompleted(uri)) return;
+      if (_appStateNotifier.unlock.recoveryAllowed) {
+        _appStateNotifier.unlock.lock();
+      }
+      _router.go(Uri(path: '/loginPage',
+          query: uri.hasQuery ? uri.query : null,
+          fragment: uri.hasFragment ? uri.fragment : null).toString());
+    }, onError: (Object error) {});
     userStream = decoyWalletAppSupabaseUserStream()
       ..listen((user) {
         unawaited(FFAppState().selectBalanceUser(user.uid));
@@ -130,6 +144,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _authLinks?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

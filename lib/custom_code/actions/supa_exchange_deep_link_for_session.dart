@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 
 // No FlutterFlow imports needed for this action.
 
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Exchanges a Supabase email confirmation deep link for a session.
 /// Returns true when a session is present after verification.
@@ -19,26 +18,10 @@ Future<bool> supaExchangeDeepLinkForSession(String link) async {
   try {
     final uri = Uri.parse(link);
 
-    // token_hash is present in Supabase confirmation links
-    final tokenHash = uri.queryParameters['token_hash'];
-    if (tokenHash == null || tokenHash.isEmpty) return false;
-
-    // Map Supabase link type -> OtpType
-    final typeParam = (uri.queryParameters['type'] ?? 'signup').toLowerCase();
-    final otpType = const {
-          'signup': OtpType.signup,
-          'magiclink': OtpType.signup,
-          'recovery': OtpType.recovery,
-          'invite': OtpType.invite,
-          'email_change': OtpType.emailChange,
-        }[typeParam] ??
-        OtpType.signup;
-
-    // Verify and hydrate session
-    final supa = Supabase.instance.client;
-    await supa.auth.verifyOTP(token: tokenHash, type: otpType);
-
-    return supa.auth.currentSession != null;
+    final accepted = await SupaFlow.authLinks.accept(uri,
+        requestEmail: () async => null,
+        mayContinue: () => !AppStateNotifier.instance.unlock.inDecoy);
+    return accepted != null && SupaFlow.authLinks.isCurrent(accepted);
   } catch (_) {
     return false;
   }

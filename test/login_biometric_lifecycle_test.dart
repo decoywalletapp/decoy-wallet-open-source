@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:decoy_wallet_app/app_state.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
 import 'package:decoy_wallet_app/backend/public_config.dart';
+import 'package:decoy_wallet_app/backend/supabase/supabase.dart';
 import 'package:decoy_wallet_app/custom_code/actions/aes_gcm_encrypt_string.dart';
 import 'package:decoy_wallet_app/duress_mode/duress_home_page/duress_home_page_widget.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/pin_pages/p_i_n_page/p_i_n_page_widget.dart';
 import 'package:decoy_wallet_app/services/account_balance.dart';
-import 'package:decoy_wallet_app/welcom_pages/auth_router/auth_router_widget.dart';
 import 'package:decoy_wallet_app/welcom_pages/login_page/login_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +23,6 @@ import 'package:http/testing.dart';
 import 'package:local_auth_platform_interface/local_auth_platform_interface.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'localization_fonts.dart';
 import 'support/account_balance_fakes.dart';
 
@@ -263,6 +262,8 @@ void main() {
   tearDownAll(() async => Supabase.instance.dispose());
 
   setUp(() {
+    SupaFlow.configureAuthLinks(url: 'https://test.invalid',
+        anonKey: 'synthetic-anon', clientFactory: () => client);
     entitlementOverride = null;
     entitlementMissing = false;
     acceptedDecoyPins = 0;
@@ -610,25 +611,29 @@ void main() {
               supportedLocales: AppLocalizations.supportedLocales,
             )));
         await tester.pump(const Duration(milliseconds: 100));
-        final firstState = tester.state(find.byType(AuthRouterWidget));
-        final firstKey = tester.widget(find.byType(AuthRouterWidget)).key!;
-        expect(firstKey.toString(), isNot(contains('synthetic-first')));
+        final firstState = tester.state(find.byType(LoginPageWidget));
         router.routeInformationProvider.routerReportsNewRouteInformation(
             router.routeInformationParser.restoreRouteInformation(
                 router.routerDelegate.currentConfiguration)!);
         app.notifyListeners();
         await tester.pump(const Duration(milliseconds: 100));
-        expect(tester.state(find.byType(AuthRouterWidget)), same(firstState));
+        expect(tester.state(find.byType(LoginPageWidget)), same(firstState));
         expect(requests.where((path) => path.endsWith('/auth/v1/token')).length,
             1);
+        final pendingUnlock = app.unlock.attempt;
+        router.go(Uri(path: '/authRouter', queryParameters: parameters).toString());
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(app.unlock.isCurrent(pendingUnlock), isTrue,
+            reason: 'Duplicate platform/router delivery must not cancel pending recovery.');
+        expect(requests.where((path) => path.endsWith('/auth/v1/token')).length, 1);
         parameters[changedParameter] = 'synthetic-second-credential';
         router.go(
             Uri(path: '/authRouter', queryParameters: parameters).toString());
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 100));
-        expect(firstState.mounted, isFalse);
-        expect(tester.widget(find.byType(AuthRouterWidget)).key,
-            isNot(equals(firstKey)));
+        expect(tester.state(find.byType(LoginPageWidget)), same(firstState));
+        expect(requests.where((path) => path.endsWith('/auth/v1/token')).length,
+            2, reason: 'A new callback must supersede the pending request.');
         expect(app.unlock.recoveryAllowed, isFalse);
         recoveryGate!.complete();
         for (var tick = 0; tick < 20; tick++) {
