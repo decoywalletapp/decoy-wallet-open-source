@@ -108,6 +108,12 @@ class AcceptedAuthLink {
   String get userId => session.user.id;
 }
 
+class _RecoveryIntent {
+  const _RecoveryIntent(this.email, this.createdAt);
+  final String email;
+  final DateTime createdAt;
+}
+
 /// Verifies in an isolated HTTP exchange, then commits only an intended account.
 /// A second GoTrue client is not isolated on web: it can broadcast auth events.
 class AuthLinkService {
@@ -116,17 +122,49 @@ class AuthLinkService {
     required this.authUrl,
     required this.anonKey,
     http.Client Function()? clientFactory,
-  }) : _clientFactory = clientFactory ?? http.Client.new;
+    DateTime Function()? now,
+  })  : _clientFactory = clientFactory ?? http.Client.new,
+        _now = now ?? DateTime.now;
 
   final GoTrueClient auth;
   final String authUrl;
   final String anonKey;
   final http.Client Function() _clientFactory;
+  final DateTime Function() _now;
   final _inFlight = <String, Future<AcceptedAuthLink?>>{};
   final _completed = <String>{};
   int _generation = 0;
+  _RecoveryIntent? _recoveryIntent;
 
-  void cancelPending() => _generation++;
+  void cancelPending() {
+    _generation++;
+    _recoveryIntent = null;
+  }
+
+  /// Keep only successful, locally initiated recovery intent, never link data.
+  /// Memory-only state falls back to confirmation after an app restart.
+  Future<void> sendPasswordResetEmail(String email,
+      {String? redirectTo}) async {
+    cancelPending();
+    final generation = _generation;
+    final startingSession = auth.currentSession;
+    final submittedEmail = email.trim();
+    if (submittedEmail.isEmpty) {
+      throw const AuthException('Missing email');
+    }
+    await auth.resetPasswordForEmail(submittedEmail, redirectTo: redirectTo);
+    if (generation == _generation &&
+        startingSession == null &&
+        identical(auth.currentSession, startingSession)) {
+      _recoveryIntent = _RecoveryIntent(submittedEmail.toLowerCase(), _now());
+    }
+  }
+
+  bool _isCurrentRecoveryIntent(_RecoveryIntent? intent) {
+    if (intent == null || !identical(intent, _recoveryIntent)) return false;
+    final age = _now().difference(intent.createdAt);
+    return !age.isNegative && age < const Duration(minutes: 15);
+  }
 
   bool hasCompleted(Uri uri) {
     try {
@@ -167,13 +205,19 @@ class AuthLinkService {
   }) async {
     final startingSession = auth.currentSession;
     final startingUser = startingSession?.user.id;
+    final recoveryIntent = startingUser == null &&
+            request.isRecovery &&
+            _isCurrentRecoveryIntent(_recoveryIntent)
+        ? _recoveryIntent
+        : null;
     bool current() =>
         generation == _generation &&
         mayContinue() &&
-        identical(auth.currentSession, startingSession);
+        identical(auth.currentSession, startingSession) &&
+        (recoveryIntent == null || _isCurrentRecoveryIntent(recoveryIntent));
     if (!current()) return null;
     final expectedEmail = startingUser == null
-        ? (await requestEmail())?.trim().toLowerCase()
+        ? recoveryIntent?.email ?? (await requestEmail())?.trim().toLowerCase()
         : null;
     if (!current() ||
         (startingUser == null &&
@@ -238,6 +282,7 @@ class AuthLinkService {
             'This link does not match your account. Sign in normally or request a new link.');
       }
       if (!current()) return null;
+      _recoveryIntent = null;
       // setInitialSession publishes synchronously, with no second network wait
       // between the final identity/lifecycle check and the shared-session write.
       final commit = auth.setInitialSession(jsonEncode(session.toJson()));

@@ -100,8 +100,8 @@ class SupabaseAuthManager extends AuthManager
     String? redirectTo,
   }) async {
     try {
-      await SupaFlow.client.auth
-          .resetPasswordForEmail(email, redirectTo: redirectTo);
+      await SupaFlow.authLinks
+          .sendPasswordResetEmail(email, redirectTo: redirectTo);
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(

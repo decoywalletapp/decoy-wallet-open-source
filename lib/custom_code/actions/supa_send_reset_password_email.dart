@@ -11,20 +11,15 @@ import 'package:flutter/material.dart';
 
 import '/custom_code/actions/index.dart';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 Future<String> supaSendResetPasswordEmail(
   String email,
   String redirectToUrl,
 ) async {
   try {
-    final client = Supabase.instance.client;
-
     final e = email.trim();
-    if (e.isEmpty) return 'ERR: missing email';
 
     // Example redirectToUrl should point at your own password reset verifier.
-    await client.auth.resetPasswordForEmail(
+    await SupaFlow.authLinks.sendPasswordResetEmail(
       e,
       redirectTo: redirectToUrl.trim().isEmpty ? null : redirectToUrl.trim(),
     );
