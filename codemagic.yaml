@@ -248,7 +248,8 @@ workflows:
             --dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon \
             --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid \
             --dart-define=DECOY_ALERT_BASE_URL=https://test.invalid \
-            --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap
+            --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap \
+            --dart-define=DECOY_PAYMENT_BASE_URL=https://test.invalid
       - name: Test temporary PIN diagnostics
         script: |
           set -eu
@@ -262,7 +263,8 @@ workflows:
             --dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon \
             --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid \
             --dart-define=DECOY_ALERT_BASE_URL=https://test.invalid \
-            --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap
+            --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap \
+            --dart-define=DECOY_PAYMENT_BASE_URL=https://test.invalid
       - name: Build TestFlight IPA with source provenance
         script: |
           set -eu
@@ -566,9 +568,13 @@ workflows:
         script: |
           set -eu
           flutter test test/login_biometric_lifecycle_test.dart \
+            --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
             --dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon \
-            --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid
+            --dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid \
+            --dart-define=DECOY_ALERT_BASE_URL=https://test.invalid \
+            --dart-define=DECOY_DATA_KEY_BASE_URL=https://test.invalid/unwrap \
+            --dart-define=DECOY_PAYMENT_BASE_URL=https://test.invalid
       - name: Build App Store IPA with source provenance
         script: |
           set -eu

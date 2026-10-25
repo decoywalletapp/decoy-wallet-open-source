@@ -148,6 +148,14 @@ void main() {
             contains('--dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid'));
         expect(script,
             contains('--dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon'));
+        for (final endpoint in {
+          'DECOY_ALERT_BASE_URL': 'https://test.invalid',
+          'DECOY_DATA_KEY_BASE_URL': 'https://test.invalid/unwrap',
+          'DECOY_PAYMENT_BASE_URL': 'https://test.invalid',
+        }.entries) {
+          expect(script, contains('--dart-define=${endpoint.key}=${endpoint.value}'));
+        }
+        expect(script, contains('--dart-define=DECOY_TEST_ACCOUNT_BALANCE=true'));
       }
     });
 

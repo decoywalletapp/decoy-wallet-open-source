@@ -312,6 +312,19 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                         'decoy_wallet',
                       ),
                 );
+                if (!_currentUnlock) return;
+                // A billing repair failure must not discard a valid promotion.
+                _paidDecoyAllowed =
+                    (_model.entitlementRow1?.isNotEmpty ?? false) &&
+                        functions.isEntitlementUsableForProtection(
+                          _model.entitlementRow1?.first.isActive,
+                          _model.entitlementRow1?.first.currentPeriodEnd,
+                          _model.entitlementRow1?.first.pendingProvider,
+                          _model.entitlementRow1?.first.pendingStartsAt,
+                          _model.entitlementRow1
+                              ?.first.pendingProviderSubscriptionId,
+                          _model.entitlementRow1?.first.promotionalAccessUntil,
+                        );
                 if ((_model.entitlementRow1?.elementAtOrNull(0)?.provider ==
                         'stripe') &&
                     (_model.entitlementRow1?.elementAtOrNull(0)?.isActive ==
@@ -320,6 +333,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                     userId: _unlockAttempt!.userId,
                     jwt: currentJwtToken,
                   );
+                  if (!_currentUnlock) return;
 
                   if ((_model.apiResultRSE?.succeeded ?? true)) {
                     _model.secondEntitlementQue =
@@ -334,6 +348,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                             'decoy_wallet',
                           ),
                     );
+                    if (!_currentUnlock) return;
                     _paidDecoyAllowed =
                         (_model.secondEntitlementQue != null &&
                                 (_model.secondEntitlementQue)!.isNotEmpty) &&
@@ -359,31 +374,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                             );
                     safeSetState(() {});
                   }
-                } else {
-                  _paidDecoyAllowed =
-                      (_model.entitlementRow1 != null &&
-                              (_model.entitlementRow1)!.isNotEmpty) &&
-                          functions.isEntitlementUsableForProtection(
-                            _model.entitlementRow1
-                                ?.elementAtOrNull(0)
-                                ?.isActive,
-                            _model.entitlementRow1
-                                ?.elementAtOrNull(0)
-                                ?.currentPeriodEnd,
-                            _model.entitlementRow1
-                                ?.elementAtOrNull(0)
-                                ?.pendingProvider,
-                            _model.entitlementRow1
-                                ?.elementAtOrNull(0)
-                                ?.pendingStartsAt,
-                            _model.entitlementRow1
-                                ?.elementAtOrNull(0)
-                                ?.pendingProviderSubscriptionId,
-                            _model.entitlementRow1
-                                ?.elementAtOrNull(0)
-                                ?.promotionalAccessUntil,
-                          );
-                  safeSetState(() {});
                 }
 
                 await _routeAfterAuthentication();
@@ -410,6 +400,19 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                       'decoy_wallet',
                     ),
               );
+              if (!_currentUnlock) return;
+              // Use the fresh entitlement even if its billing repair is unavailable.
+              _paidDecoyAllowed =
+                  (_model.entitlementRow2?.isNotEmpty ?? false) &&
+                      functions.isEntitlementUsableForProtection(
+                        _model.entitlementRow2?.first.isActive,
+                        _model.entitlementRow2?.first.currentPeriodEnd,
+                        _model.entitlementRow2?.first.pendingProvider,
+                        _model.entitlementRow2?.first.pendingStartsAt,
+                        _model.entitlementRow2
+                            ?.first.pendingProviderSubscriptionId,
+                        _model.entitlementRow2?.first.promotionalAccessUntil,
+                      );
               if ((_model.entitlementRow2?.elementAtOrNull(0)?.provider ==
                       'stripe') &&
                   (_model.entitlementRow2?.elementAtOrNull(0)?.isActive ==
@@ -418,6 +421,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                   userId: _unlockAttempt!.userId,
                   jwt: currentJwtToken,
                 );
+                if (!_currentUnlock) return;
 
                 if ((_model.api2Result2RSE?.succeeded ?? true)) {
                   _model.thirdEntitlementQue =
@@ -432,6 +436,7 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           'decoy_wallet',
                         ),
                   );
+                  if (!_currentUnlock) return;
                   _paidDecoyAllowed =
                       (_model.thirdEntitlementQue != null &&
                               (_model.thirdEntitlementQue)!.isNotEmpty) &&
@@ -457,29 +462,6 @@ class _AuthRouterWidgetState extends State<AuthRouterWidget> {
                           );
                   safeSetState(() {});
                 }
-              } else {
-                _paidDecoyAllowed =
-                    (_model.entitlementRow2 != null &&
-                            (_model.entitlementRow2)!.isNotEmpty) &&
-                        functions.isEntitlementUsableForProtection(
-                          _model.entitlementRow2?.elementAtOrNull(0)?.isActive,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.currentPeriodEnd,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.pendingProvider,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.pendingStartsAt,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.pendingProviderSubscriptionId,
-                          _model.entitlementRow2
-                              ?.elementAtOrNull(0)
-                              ?.promotionalAccessUntil,
-                        );
-                safeSetState(() {});
               }
 
               await _routeAfterAuthentication();
