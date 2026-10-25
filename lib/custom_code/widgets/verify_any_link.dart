@@ -122,8 +122,26 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
   }
 
   Future<void> _handleUri(Uri uri) async {
-    if (AppStateNotifier.instance.unlock.inDecoy ||
+    if (!mounted || AppStateNotifier.instance.unlock.inDecoy ||
         !VerifyAnyLink.hasAuthPayload(uri)) return;
+    if (SupaFlow.authLinks.hasCompleted(uri)) return;
+
+    // A retained login page can receive the plugin event before iOS routes the
+    // same link. Route first so that navigation cannot dismiss its confirmation.
+    final routed = GoRouterState.of(context).uri;
+    bool sameRequest;
+    try {
+      sameRequest = AuthLinkRequest.parse(routed).fingerprint ==
+          AuthLinkRequest.parse(uri).fingerprint;
+    } catch (_) {
+      sameRequest = routed.query == uri.query && routed.fragment == uri.fragment;
+    }
+    if (!sameRequest) {
+      context.go(Uri(path: LoginPageWidget.routePath,
+        query: uri.hasQuery ? uri.query : null,
+        fragment: uri.hasFragment ? uri.fragment : null).toString());
+      return;
+    }
     final linkKey = uri.toString();
     if (SupaFlow.authLinks.hasCompleted(uri) || !_linksInFlight.add(linkKey)) {
       if (kDebugMode) _debugLog('[VerifyAnyLink] duplicate link skipped');

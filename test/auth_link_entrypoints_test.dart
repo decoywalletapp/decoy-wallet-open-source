@@ -248,6 +248,89 @@ void main() {
     router.dispose();
   });
 
+  for (final delivery in [
+    'plugin only',
+    'platform only',
+    'plugin then platform',
+    'platform then plugin',
+    'plugin prompt then platform',
+  ]) {
+    testWidgets('browser recovery from retained login: $delivery',
+        (tester) async {
+      final language = AppLanguageController();
+      await tester.runAsync(() async {
+        await SupaFlow.client.auth.signOut();
+        await language.initialize();
+      });
+      app.update(DecoyWalletAppSupabaseUser(null));
+      tester.view.physicalSize = const Size(1200, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(MultiProvider(providers: [
+        ChangeNotifierProvider.value(value: language),
+        ChangeNotifierProvider.value(value: FFAppState()),
+      ], child: MyApp()));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      final router = GoRouter.of(tester.element(find.byType(LoginPageWidget)));
+      unawaited(router.push('/forgotPasswordPage'));
+      await tester.pumpAndSettle();
+      expect(VerifyAnyLink.hasListener, isTrue);
+      calls.clear();
+      final payload = linkSession('recipient');
+      final uri = Uri(
+        scheme: 'decoywalletapp',
+        host: 'authRouter',
+        queryParameters: {
+          'type': 'recovery',
+          'accessToken': payload['access_token'] as String,
+          'refreshToken': 'browser-$sequence',
+        },
+      );
+      Future<void> plugin() => tester.runAsync(() async {
+            links.events.add(uri);
+            await Future<void>.delayed(Duration.zero);
+          });
+      Future<void> platform() async {
+        await tester.binding.handlePushRoute(uri.toString());
+      }
+      switch (delivery) {
+        case 'plugin only':
+          await plugin();
+        case 'platform only':
+          await platform();
+        case 'plugin then platform':
+          await plugin();
+          await platform();
+        case 'platform then plugin':
+          await platform();
+          await plugin();
+        case 'plugin prompt then platform':
+          await plugin();
+          await tester.pumpAndSettle();
+          expect(find.byKey(const ValueKey('auth-link-email')), findsOneWidget);
+          await platform();
+      }
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('auth-link-email')), findsOneWidget,
+          reason: 'The browser handoff must retain recipient confirmation.');
+      expect(calls, isEmpty);
+      await tester.enterText(find.byKey(const ValueKey('auth-link-email')),
+          'recipient@example.invalid');
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+      expect(find.byType(UpdatePasswordPageWidget), findsOneWidget);
+      expect(app.unlock.recoveryAllowed, isTrue);
+      expect(app.unlock.ownerUnlocked, isFalse);
+      expect(calls, ['POST /auth/v1/token', 'GET /auth/v1/user']);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(seconds: 1));
+      router.dispose();
+      language.dispose();
+    });
+  }
+
   testWidgets('root listener routes a fresh link from a page with no receiver',
       (tester) async {
     final language = AppLanguageController();
