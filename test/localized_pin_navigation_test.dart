@@ -144,6 +144,7 @@ void main() {
     app.unlock.preparePin(app.unlock.attempt, paidDecoyAllowed: true);
     row = {
       'user_id': user.id,
+      'decoy_pin_contacts_enabled': true,
       'use_current_location': false,
       'contacts_complete': false,
       'personal_complete': false
@@ -249,8 +250,10 @@ void main() {
           AppLocalizations.of(tester.element(find.byType(PINPageWidget)))!;
       expect(find.text(strings.msgItcoinWallet), findsOneWidget);
       expect(
-          tester.widget<AbsorbPointer>(
-              find.byKey(const ValueKey('pin-input-presentation'))).absorbing,
+          tester
+              .widget<AbsorbPointer>(
+                  find.byKey(const ValueKey('pin-input-presentation')))
+              .absorbing,
           isTrue);
       await tester.pump(const Duration(milliseconds: 320));
       // The hidden Enter button retains its own spinner while awaiting work.
@@ -262,8 +265,10 @@ void main() {
         expect(opacity.any((widget) => widget.opacity == 0), isTrue);
       }
       expect(
-          tester.widget<AbsorbPointer>(
-              find.byKey(const ValueKey('pin-input-presentation'))).absorbing,
+          tester
+              .widget<AbsorbPointer>(
+                  find.byKey(const ValueKey('pin-input-presentation')))
+              .absorbing,
           isTrue);
       expect(find.text('1').hitTestable(), findsNothing);
       expect(alerts, isEmpty);
@@ -300,8 +305,10 @@ void main() {
       expect(find.byKey(const ValueKey('pin-unlock-title')), findsNothing);
       expect(find.text('1').hitTestable(), findsOneWidget);
       expect(
-          tester.widget<AbsorbPointer>(
-              find.byKey(const ValueKey('pin-input-presentation'))).absorbing,
+          tester
+              .widget<AbsorbPointer>(
+                  find.byKey(const ValueKey('pin-input-presentation')))
+              .absorbing,
           isFalse);
       consentHold!.complete();
     });
@@ -309,6 +316,45 @@ void main() {
     expect(find.text('ACCOUNT DESTINATION'), findsNothing);
     expect(alerts, isEmpty);
   });
+
+  for (final saved in <bool?>[true, false, null]) {
+    for (final cached in [false, true]) {
+      testWidgets(
+          'saved contact choice wins over device cache: '
+          'saved=$saved cached=$cached', (tester) async {
+        FFAppState().decoyPinContactsEnabled = cached;
+        if (saved == null) {
+          row.remove('decoy_pin_contacts_enabled');
+        } else {
+          row['decoy_pin_contacts_enabled'] = saved;
+        }
+        await tester.runAsync(() async {
+          final enc = await aesGcmEncryptString(
+              jsonEncode({
+                'contacts': [
+                  {
+                    'slot': 1,
+                    'first': 'Test',
+                    'last': 'Contact',
+                    'phone': '+12025550123',
+                    'consent_status': 'confirmed',
+                  }
+                ],
+              }),
+              key);
+          row.addAll({
+            'contacts_ciphertext': enc['ciphertextB64'],
+            'contacts_nonce': enc['nonceB64'],
+            'contacts_complete': true,
+            'wrapped_datakey': 'wrapped',
+          });
+        });
+        await enter(tester, '9876');
+        expect(find.text('DECOY DESTINATION'), findsOneWidget);
+        expect(alerts, hasLength(saved == true ? 1 : 0));
+      });
+    }
+  }
 
   for (final code in AppLanguageController.supportedLanguageCodes) {
     group(code, () {
@@ -385,6 +431,7 @@ void main() {
             'confirmed contact preference is preserved: enabled=$enabled',
             (tester) async {
           FFAppState().decoyPinContactsEnabled = enabled;
+          row['decoy_pin_contacts_enabled'] = enabled;
           await tester.runAsync(() async {
             final enc = await aesGcmEncryptString(
                 jsonEncode({
@@ -415,6 +462,7 @@ void main() {
             (tester) async {
           consent = 'pending';
           FFAppState().decoyPinContactsEnabled = enabled;
+          row['decoy_pin_contacts_enabled'] = enabled;
           await tester.runAsync(() async {
             final enc = await aesGcmEncryptString(
                 jsonEncode({

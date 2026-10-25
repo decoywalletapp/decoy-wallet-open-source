@@ -1833,8 +1833,9 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                               .routeName,
                                                         );
                                                       } else {
-                                                        if (FFAppState()
-                                                                .decoyPinContactsEnabled ==
+                                                        if (!unlock.isCurrent(attempt)) return;
+                                                        if (walletRow
+                                                                ?.decoyPinContactsEnabled ==
                                                             true) {
                                                           if (FFAppState()
                                                                   .hasActiveSubscription ==

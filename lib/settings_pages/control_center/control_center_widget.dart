@@ -53,50 +53,245 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng? currentUserLocationValue;
 
-  dynamic _decoySeedArmedAtForSave() {
-    final currentRow = _model.decoyWalletRow?.elementAtOrNull(0);
+  late final String _settingsUserId;
+  bool _loadingSettings = true;
+  bool _settingsLoadFailed = false;
+  bool _savingSettings = false;
+  bool _initialBiometrics = false;
+  bool _initialPush = false;
+  bool _initialLocation = false;
 
-    if (!FFAppState().decoySeedArmed) {
-      return null;
-    }
+  bool get _sameAccount =>
+      mounted &&
+      _settingsUserId.isNotEmpty &&
+      currentUserUid == _settingsUserId;
 
-    final existingArmedAt = currentRow?.decoySeedArmedAt;
-    if (currentRow?.decoySeedArmed == true && existingArmedAt != null) {
-      return supaSerialize<DateTime>(existingArmedAt);
-    }
-
-    return supaSerialize<DateTime>(getCurrentTimestamp);
+  void _applyWalletChoices(DecoyWalletRow row) {
+    _model.pINPoliceTileValue = row.decoyPin911Enabled == true;
+    _model.pINEContactsTileValue = row.decoyPinContactsEnabled == true;
+    _model.seedMonitorArmTileValue = row.decoySeedArmed == true;
+    _model.locationSwitchTileValue = row.useCurrentLocation == true;
+    FFAppState().decoyPin911Enabled = row.decoyPin911Enabled == true;
+    FFAppState().decoyPinContactsEnabled = row.decoyPinContactsEnabled == true;
+    FFAppState().decoySeedArmed = row.decoySeedArmed == true;
+    FFAppState().locationEnabled = row.useCurrentLocation == true;
   }
 
-  Future<void> _syncPushPreferenceBeforeSave() async {
+  Future<void> _loadSettings() async {
+    if (!_sameAccount) {
+      safeSetState(() => _loadingSettings = false);
+      return;
+    }
+    safeSetState(() {
+      _loadingSettings = true;
+      _settingsLoadFailed = false;
+    });
+    try {
+      final wallets = await DecoyWalletTable().queryRows(
+        queryFn: (q) => q.eq('user_id', _settingsUserId).order('created_at'),
+      );
+      if (!_sameAccount) return;
+      final row = wallets.elementAtOrNull(0);
+      if (row == null ||
+          row.id == null ||
+          row.id!.isEmpty ||
+          row.userId != _settingsUserId) {
+        throw StateError('Account settings unavailable');
+      }
+      final entitlements = await UserEntitlementsTable().queryRows(
+        queryFn: (q) =>
+            q.eq('user_id', _settingsUserId).eq('entitlement', 'decoy_wallet'),
+      );
+      if (!_sameAccount) return;
+      final bio = await actions.getBiometricPermissionStatus();
+      if (!_sameAccount) return;
+      final push = await actions.getPushPermissionStatus();
+      if (!_sameAccount) return;
+      final location = await actions.getLocationPermissionStatus();
+      if (!_sameAccount) return;
+      final entitlement = entitlements.elementAtOrNull(0);
+      _model.decoyWalletRow = wallets;
+      _model.ctrlOutputEntitlements = entitlements;
+      _model.entIsActive = entitlement?.isActive;
+      _model.biometricPermissionGranted = bio;
+      _model.pushPermissionGranted = push;
+      _model.locationPermissionGranted = location;
+      _initialBiometrics = FFAppState().biometricsEnabled;
+      _initialPush = FFAppState().pushEnabled;
+      _initialLocation = row.useCurrentLocation == true;
+      _model.bioSwitchTileValue = _initialBiometrics;
+      _model.pushNotifTileValue = _initialPush;
+      _applyWalletChoices(row);
+      FFAppState().hasActiveSubscription =
+          functions.isEntitlementUsableForProtection(
+        entitlement?.isActive,
+        entitlement?.currentPeriodEnd,
+        entitlement?.pendingProvider,
+        entitlement?.pendingStartsAt,
+        entitlement?.pendingProviderSubscriptionId,
+        entitlement?.promotionalAccessUntil,
+      );
+      FFAppState().entitlementCheckCompleted = true;
+    } catch (_) {
+      if (_sameAccount) _settingsLoadFailed = true;
+    } finally {
+      if (mounted) safeSetState(() => _loadingSettings = false);
+    }
+  }
+
+  Widget _settingsStatus() {
+    return Column(children: [
+      Align(
+          alignment: Alignment.centerLeft,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.safePop(),
+          )),
+      Expanded(
+          child: Center(
+              child: _loadingSettings
+                  ? const CircularProgressIndicator()
+                  : TextButton.icon(
+                      onPressed: _sameAccount
+                          ? _loadSettings
+                          : () => context.safePop(),
+                      icon: const Icon(Icons.refresh),
+                      label: Text(AppLocalizations.of(context)!.msgRetry),
+                    ))),
+    ]);
+  }
+
+  Future<void> _saveSettings() async {
+    final original = _model.decoyWalletRow?.elementAtOrNull(0);
+    if (!_sameAccount ||
+        _loadingSettings ||
+        _settingsLoadFailed ||
+        _savingSettings ||
+        original?.id == null ||
+        original!.id!.isEmpty ||
+        original.userId != _settingsUserId) return;
+    if (!FFAppState().hasActiveSubscription ||
+        !FFAppState().entitlementCheckCompleted) return;
+
+    // Only explicit edits belong in a save. An untouched switch must not
+    // overwrite a newer choice saved from another device.
+    final walletChanges = <String, dynamic>{};
+    if (_model.pINEContactsTileValue !=
+        (original.decoyPinContactsEnabled == true)) {
+      walletChanges['decoy_pin_contacts_enabled'] =
+          _model.pINEContactsTileValue == true;
+    }
+    if (_model.seedMonitorArmTileValue != (original.decoySeedArmed == true)) {
+      final armed = _model.seedMonitorArmTileValue == true;
+      walletChanges.addAll({
+        'decoy_seed_armed': armed,
+        'decoy_seed_contacts_enabled': armed,
+        'decoy_seed_armed_at':
+            armed ? supaSerialize<DateTime>(getCurrentTimestamp) : null,
+      });
+    }
+    final locationChanged =
+        _model.locationSwitchTileValue != (original.useCurrentLocation == true);
+    if (locationChanged) {
+      walletChanges['use_current_location'] =
+          _model.locationSwitchTileValue == true;
+    }
+    final wantsBio = _model.bioSwitchTileValue == true;
     final wantsPush = _model.pushNotifTileValue == true;
-    FFAppState().pushEnabled = wantsPush;
-
-    if (wantsPush) {
-      _model.pushTokenSyncResult =
-          await actions.requestPushPermissionAndGetToken();
-      _model.pushPermissionRefreshResult =
-          await actions.getPushPermissionStatus();
-      _model.pushPermissionGranted = _model.pushPermissionRefreshResult == true;
-    } else {
-      _model.pushPermissionRefreshResult =
-          await actions.getPushPermissionStatus();
-      _model.pushPermissionGranted = _model.pushPermissionRefreshResult == true;
+    final userChanges = <String, dynamic>{};
+    safeSetState(() => _savingSettings = true);
+    try {
+      currentUserLocationValue =
+          await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
+      if (!_sameAccount) return;
+      if (wantsBio != _initialBiometrics) {
+        var allowChange = !wantsBio;
+        if (wantsBio) {
+          final localAuth = LocalAuthentication();
+          final supported = await localAuth.isDeviceSupported();
+          if (!_sameAccount) return;
+          if (supported) {
+            try {
+              allowChange = await localAuth.authenticate(
+                localizedReason: AppLocalizations.of(context)!
+                    .msgPleaseAuthenticateToEnableBiometricUnlockForDecoy,
+              );
+            } on PlatformException {
+              allowChange = false;
+            }
+            if (!_sameAccount) return;
+          }
+        }
+        if (allowChange) {
+          userChanges['biometrics_enabled'] = wantsBio;
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!
+                  .msgError021PleaseScreenshotContactDecoySupport)));
+        }
+      }
+      if (wantsPush != _initialPush) {
+        if (wantsPush) await actions.requestPushPermissionAndGetToken();
+        if (!_sameAccount) return;
+        _model.pushPermissionGranted = await actions.getPushPermissionStatus();
+        if (!_sameAccount) return;
+        userChanges['push_enabled'] = wantsPush;
+      }
+      if ((_model.locationSwitchTileValue == true) != _initialLocation) {
+        userChanges['location_enabled'] =
+            _model.locationSwitchTileValue == true;
+      }
+      if (!_sameAccount ||
+          !FFAppState().hasActiveSubscription ||
+          !FFAppState().entitlementCheckCompleted) return;
+      if (walletChanges.isNotEmpty) {
+        walletChanges['updated_at'] =
+            supaSerialize<DateTime>(getCurrentTimestamp);
+        final saved = await DecoyWalletTable().update(
+          data: walletChanges,
+          matchingRows: (q) =>
+              q.eq('id', original.id!).eq('user_id', _settingsUserId),
+          returnRows: true,
+        );
+        if (!_sameAccount) return;
+        if (saved.length != 1 ||
+            saved.single.id != original.id ||
+            saved.single.userId != _settingsUserId) {
+          throw StateError('Account settings were not saved');
+        }
+        _model.decoyWalletRow = saved;
+        _applyWalletChoices(saved.single);
+      }
+      if (!_sameAccount) return;
+      if (userChanges.isNotEmpty) {
+        await UserSettingsTable().update(
+            data: userChanges,
+            matchingRows: (q) => q.eq('user_id', _settingsUserId));
+        if (!_sameAccount) return;
+        if (userChanges.containsKey('biometrics_enabled')) {
+          FFAppState().biometricsEnabled = wantsBio;
+          _initialBiometrics = wantsBio;
+        }
+        if (userChanges.containsKey('push_enabled')) {
+          FFAppState().pushEnabled = wantsPush;
+          _initialPush = wantsPush;
+        }
+        if (userChanges.containsKey('location_enabled')) {
+          _initialLocation = userChanges['location_enabled'] == true;
+        }
+      }
+      FFAppState().lastKnownLocation = currentUserLocationValue;
+      await Future<void>.delayed(const Duration(seconds: 1));
+      if (_sameAccount) context.safePop();
+    } catch (_) {
+      if (_sameAccount) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)!
+                .msgError021PleaseScreenshotContactDecoySupport)));
+      }
+    } finally {
+      if (mounted) safeSetState(() => _savingSettings = false);
     }
-
-    safeSetState(() {});
-  }
-
-  Future<bool> _finishControlCenterSave() async {
-    await Future.delayed(
-      Duration(
-        milliseconds: 1000,
-      ),
-    );
-    if (mounted) {
-      context.safePop();
-    }
-    return true;
   }
 
   String get _seedMonitorSectionTitle => AppLocalizations.of(context)!.msgDecoyKeysTriggers;
@@ -117,71 +312,8 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
     super.initState();
     _model = createModel(context, () => ControlCenterModel());
 
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.decoyWalletRow = await DecoyWalletTable().queryRows(
-        queryFn: (q) => q
-            .eqOrNull(
-              'user_id',
-              currentUserUid,
-            )
-            .order('created_at'),
-      );
-      FFAppState().decoySeedArmed =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.decoySeedArmed!;
-      FFAppState().decoyPin911Enabled =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPin911Enabled!;
-      FFAppState().decoyPinContactsEnabled =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.decoyPinContactsEnabled!;
-      FFAppState().locationEnabled =
-          _model.decoyWalletRow!.elementAtOrNull(0)!.useCurrentLocation!;
-      safeSetState(() {});
-      _model.ctrlOutputEntitlements = await UserEntitlementsTable().queryRows(
-        queryFn: (q) => q
-            .eqOrNull(
-              'user_id',
-              currentUserUid,
-            )
-            .eqOrNull(
-              'entitlement',
-              'decoy_wallet',
-            ),
-      );
-      _model.entIsActive =
-          _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.isActive;
-      safeSetState(() {});
-      _model.getBioPermissionResult =
-          await actions.getBiometricPermissionStatus();
-      _model.pushStatusResult = await actions.getPushPermissionStatus();
-      _model.getLocationPremissionResults =
-          await actions.getLocationPermissionStatus();
-      _model.pushPermissionGranted = _model.pushStatusResult;
-      _model.biometricPermissionGranted = _model.getBioPermissionResult;
-      _model.locationPermissionGranted = _model.getLocationPremissionResults;
-      safeSetState(() {});
-      if ((_model.ctrlOutputEntitlements != null &&
-              (_model.ctrlOutputEntitlements)!.isNotEmpty) &&
-          functions.isEntitlementUsableForProtection(
-            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.isActive,
-            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.currentPeriodEnd,
-            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.pendingProvider,
-            _model.ctrlOutputEntitlements?.elementAtOrNull(0)?.pendingStartsAt,
-            _model.ctrlOutputEntitlements
-                ?.elementAtOrNull(0)
-                ?.pendingProviderSubscriptionId,
-            _model.ctrlOutputEntitlements
-                ?.elementAtOrNull(0)
-                ?.promotionalAccessUntil,
-          )) {
-        FFAppState().hasActiveSubscription = true;
-        safeSetState(() {});
-      } else {
-        FFAppState().hasActiveSubscription = false;
-        safeSetState(() {});
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    _settingsUserId = currentUserUid;
+    SchedulerBinding.instance.addPostFrameCallback((_) => _loadSettings());
   }
 
   @override
@@ -209,7 +341,11 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
           backgroundColor: Colors.white,
           body: SafeArea(
             top: true,
-            child: Column(
+            child: _loadingSettings || _settingsLoadFailed || !_sameAccount
+                ? _settingsStatus()
+                : AbsorbPointer(
+                    absorbing: _savingSettings,
+                    child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
@@ -2389,6 +2525,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                     Material(
                                       color: Colors.transparent,
                                       child: SwitchListTile(
+                                        key: const ValueKey('control-location'),
                                         value:
                                             _model.locationSwitchTileValue ??=
                                                 FFAppState().locationEnabled,
@@ -2830,376 +2967,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       20.0, 0.0, 20.0, 0.0),
                                   child: FFButtonWidget(
-                                    onPressed: ((FFAppState()
-                                                    .entitlementCheckCompleted !=
-                                                true) ||
-                                            (FFAppState()
-                                                    .hasActiveSubscription !=
-                                                true))
-                                        ? null
-                                        : () async {
-                                            currentUserLocationValue =
-                                                await getCurrentUserLocation(
-                                                    defaultLocation:
-                                                        LatLng(0.0, 0.0));
-                                            if ((FFAppState()
-                                                        .hasActiveSubscription ==
-                                                    true) &&
-                                                (FFAppState()
-                                                        .entitlementCheckCompleted ==
-                                                    true)) {
-                                              if (_model.bioSwitchTileValue ==
-                                                  FFAppState()
-                                                      .biometricsEnabled) {
-                                                FFAppState()
-                                                        .decoyPin911Enabled =
-                                                    _model.pINPoliceTileValue!;
-                                                FFAppState()
-                                                        .decoyPinContactsEnabled =
-                                                    _model
-                                                        .pINEContactsTileValue!;
-                                                FFAppState().decoySeedArmed =
-                                                    _model
-                                                        .seedMonitorArmTileValue!;
-                                                FFAppState().locationEnabled =
-                                                    _model
-                                                        .locationSwitchTileValue!;
-                                                FFAppState().lastKnownLocation =
-                                                    currentUserLocationValue;
-                                                FFAppState().biometricsEnabled =
-                                                    _model.bioSwitchTileValue!;
-                                                await _syncPushPreferenceBeforeSave();
-                                                await DecoyWalletTable().update(
-                                                  data: {
-                                                    'decoy_seed_armed':
-                                                        FFAppState()
-                                                            .decoySeedArmed,
-                                                    'decoy_seed_contacts_enabled':
-                                                        FFAppState()
-                                                            .decoySeedArmed,
-                                                    'decoy_seed_armed_at':
-                                                        _decoySeedArmedAtForSave(),
-                                                    'updated_at': supaSerialize<
-                                                            DateTime>(
-                                                        getCurrentTimestamp),
-                                                    'decoy_pin_911_enabled':
-                                                        FFAppState()
-                                                            .decoyPin911Enabled,
-                                                    'decoy_pin_contacts_enabled':
-                                                        FFAppState()
-                                                            .decoyPinContactsEnabled,
-                                                    'use_current_location':
-                                                        FFAppState()
-                                                            .locationEnabled,
-                                                  },
-                                                  matchingRows: (rows) =>
-                                                      rows.eqOrNull(
-                                                    'id',
-                                                    _model.decoyWalletRow
-                                                        ?.elementAtOrNull(0)
-                                                        ?.id,
-                                                  ),
-                                                );
-                                                await UserSettingsTable()
-                                                    .update(
-                                                  data: {
-                                                    'biometrics_enabled':
-                                                        FFAppState()
-                                                            .biometricsEnabled,
-                                                    'location_enabled':
-                                                        FFAppState()
-                                                            .locationEnabled,
-                                                    'push_enabled': FFAppState()
-                                                        .pushEnabled,
-                                                  },
-                                                  matchingRows: (rows) =>
-                                                      rows.eqOrNull(
-                                                    'user_id',
-                                                    currentUserUid,
-                                                  ),
-                                                );
-                                                await _finishControlCenterSave();
-                                              } else {
-                                                if (_model.bioSwitchTileValue ==
-                                                    true) {
-                                                  final _localAuth =
-                                                      LocalAuthentication();
-                                                  bool _isBiometricSupported =
-                                                      await _localAuth
-                                                          .isDeviceSupported();
-
-                                                  if (_isBiometricSupported) {
-                                                    try {
-                                                      _model.settingsBioResult =
-                                                          await _localAuth
-                                                              .authenticate(
-                                                                  localizedReason:
-                                                                      AppLocalizations.of(context)!.msgPleaseAuthenticateToEnableBiometricUnlockForDecoy);
-                                                    } on PlatformException {
-                                                      _model.settingsBioResult =
-                                                          false;
-                                                    }
-                                                    safeSetState(() {});
-                                                  }
-
-                                                  if (_model
-                                                          .settingsBioResult ==
-                                                      true) {
-                                                    FFAppState()
-                                                            .biometricsEnabled =
-                                                        true;
-                                                    safeSetState(() {});
-                                                    FFAppState()
-                                                            .decoyPin911Enabled =
-                                                        _model
-                                                            .pINPoliceTileValue!;
-                                                    FFAppState()
-                                                            .decoyPinContactsEnabled =
-                                                        _model
-                                                            .pINEContactsTileValue!;
-                                                    FFAppState()
-                                                            .decoySeedArmed =
-                                                        _model
-                                                            .seedMonitorArmTileValue!;
-                                                    FFAppState()
-                                                            .locationEnabled =
-                                                        _model
-                                                            .locationSwitchTileValue!;
-                                                    FFAppState()
-                                                            .lastKnownLocation =
-                                                        currentUserLocationValue;
-                                                    await _syncPushPreferenceBeforeSave();
-                                                    await DecoyWalletTable()
-                                                        .update(
-                                                      data: {
-                                                        'decoy_seed_armed':
-                                                            FFAppState()
-                                                                .decoySeedArmed,
-                                                        'decoy_seed_contacts_enabled':
-                                                            FFAppState()
-                                                                .decoySeedArmed,
-                                                        'decoy_seed_armed_at':
-                                                            _decoySeedArmedAtForSave(),
-                                                        'updated_at': supaSerialize<
-                                                                DateTime>(
-                                                            getCurrentTimestamp),
-                                                        'decoy_pin_911_enabled':
-                                                            FFAppState()
-                                                                .decoyPin911Enabled,
-                                                        'decoy_pin_contacts_enabled':
-                                                            FFAppState()
-                                                                .decoyPinContactsEnabled,
-                                                        'use_current_location':
-                                                            FFAppState()
-                                                                .locationEnabled,
-                                                      },
-                                                      matchingRows: (rows) =>
-                                                          rows.eqOrNull(
-                                                        'id',
-                                                        _model.decoyWalletRow
-                                                            ?.elementAtOrNull(0)
-                                                            ?.id,
-                                                      ),
-                                                    );
-                                                    await UserSettingsTable()
-                                                        .update(
-                                                      data: {
-                                                        'biometrics_enabled':
-                                                            FFAppState()
-                                                                .biometricsEnabled,
-                                                        'location_enabled':
-                                                            FFAppState()
-                                                                .locationEnabled,
-                                                        'push_enabled':
-                                                            FFAppState()
-                                                                .pushEnabled,
-                                                      },
-                                                      matchingRows: (rows) =>
-                                                          rows.eqOrNull(
-                                                        'user_id',
-                                                        currentUserUid,
-                                                      ),
-                                                    );
-                                                    await _finishControlCenterSave();
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          AppLocalizations.of(context)!.msgError021PleaseScreenshotContactDecoySupport,
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
-                                                    );
-                                                    FFAppState()
-                                                            .decoyPin911Enabled =
-                                                        _model
-                                                            .pINPoliceTileValue!;
-                                                    FFAppState()
-                                                            .decoyPinContactsEnabled =
-                                                        _model
-                                                            .pINEContactsTileValue!;
-                                                    FFAppState()
-                                                            .decoySeedArmed =
-                                                        _model
-                                                            .seedMonitorArmTileValue!;
-                                                    FFAppState()
-                                                            .locationEnabled =
-                                                        _model
-                                                            .locationSwitchTileValue!;
-                                                    FFAppState()
-                                                            .lastKnownLocation =
-                                                        currentUserLocationValue;
-                                                    await _syncPushPreferenceBeforeSave();
-                                                    await DecoyWalletTable()
-                                                        .update(
-                                                      data: {
-                                                        'decoy_seed_armed':
-                                                            FFAppState()
-                                                                .decoySeedArmed,
-                                                        'decoy_seed_contacts_enabled':
-                                                            FFAppState()
-                                                                .decoySeedArmed,
-                                                        'decoy_seed_armed_at':
-                                                            _decoySeedArmedAtForSave(),
-                                                        'updated_at': supaSerialize<
-                                                                DateTime>(
-                                                            getCurrentTimestamp),
-                                                        'decoy_pin_911_enabled':
-                                                            FFAppState()
-                                                                .decoyPin911Enabled,
-                                                        'decoy_pin_contacts_enabled':
-                                                            FFAppState()
-                                                                .decoyPinContactsEnabled,
-                                                        'use_current_location':
-                                                            FFAppState()
-                                                                .locationEnabled,
-                                                      },
-                                                      matchingRows: (rows) =>
-                                                          rows.eqOrNull(
-                                                        'id',
-                                                        _model.decoyWalletRow
-                                                            ?.elementAtOrNull(0)
-                                                            ?.id,
-                                                      ),
-                                                    );
-                                                    await UserSettingsTable()
-                                                        .update(
-                                                      data: {
-                                                        'biometrics_enabled':
-                                                            FFAppState()
-                                                                .biometricsEnabled,
-                                                        'location_enabled':
-                                                            FFAppState()
-                                                                .locationEnabled,
-                                                        'push_enabled':
-                                                            FFAppState()
-                                                                .pushEnabled,
-                                                      },
-                                                      matchingRows: (rows) =>
-                                                          rows.eqOrNull(
-                                                        'user_id',
-                                                        currentUserUid,
-                                                      ),
-                                                    );
-                                                    await _finishControlCenterSave();
-                                                  }
-                                                } else {
-                                                  FFAppState()
-                                                          .biometricsEnabled =
-                                                      false;
-                                                  safeSetState(() {});
-                                                  FFAppState()
-                                                          .decoyPin911Enabled =
-                                                      _model
-                                                          .pINPoliceTileValue!;
-                                                  FFAppState()
-                                                          .decoyPinContactsEnabled =
-                                                      _model
-                                                          .pINEContactsTileValue!;
-                                                  FFAppState().decoySeedArmed =
-                                                      _model
-                                                          .seedMonitorArmTileValue!;
-                                                  FFAppState().locationEnabled =
-                                                      _model
-                                                          .locationSwitchTileValue!;
-                                                  FFAppState()
-                                                          .lastKnownLocation =
-                                                      currentUserLocationValue;
-                                                  await _syncPushPreferenceBeforeSave();
-                                                  await DecoyWalletTable()
-                                                      .update(
-                                                    data: {
-                                                      'decoy_seed_armed':
-                                                          FFAppState()
-                                                              .decoySeedArmed,
-                                                      'decoy_seed_contacts_enabled':
-                                                          FFAppState()
-                                                              .decoySeedArmed,
-                                                      'decoy_seed_armed_at':
-                                                          _decoySeedArmedAtForSave(),
-                                                      'updated_at': supaSerialize<
-                                                              DateTime>(
-                                                          getCurrentTimestamp),
-                                                      'decoy_pin_911_enabled':
-                                                          FFAppState()
-                                                              .decoyPin911Enabled,
-                                                      'decoy_pin_contacts_enabled':
-                                                          FFAppState()
-                                                              .decoyPinContactsEnabled,
-                                                      'use_current_location':
-                                                          FFAppState()
-                                                              .locationEnabled,
-                                                    },
-                                                    matchingRows: (rows) =>
-                                                        rows.eqOrNull(
-                                                      'id',
-                                                      _model.decoyWalletRow
-                                                          ?.elementAtOrNull(0)
-                                                          ?.id,
-                                                    ),
-                                                  );
-                                                  await UserSettingsTable()
-                                                      .update(
-                                                    data: {
-                                                      'biometrics_enabled':
-                                                          FFAppState()
-                                                              .biometricsEnabled,
-                                                      'location_enabled':
-                                                          FFAppState()
-                                                              .locationEnabled,
-                                                      'push_enabled':
-                                                          FFAppState()
-                                                              .pushEnabled,
-                                                    },
-                                                    matchingRows: (rows) =>
-                                                        rows.eqOrNull(
-                                                      'user_id',
-                                                      currentUserUid,
-                                                    ),
-                                                  );
-                                                  await _finishControlCenterSave();
-                                                }
-                                              }
-                                            } else {
-                                              context.goNamed(
-                                                  SubscriptionOptionsWidget
-                                                      .routeName);
-                                            }
-
-                                            safeSetState(() {});
-                                          },
+                                    onPressed: _savingSettings ? null : _saveSettings,
                                     text: AppLocalizations.of(context)!.msgSaveExit,
                                     options: FFButtonOptions(
                                       width: 400.0,
@@ -3288,6 +3056,7 @@ class _ControlCenterWidgetState extends State<ControlCenterWidget> {
                   ),
                 ),
               ],
+            ),
             ),
           ),
         ),
