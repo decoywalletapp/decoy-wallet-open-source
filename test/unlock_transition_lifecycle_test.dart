@@ -151,7 +151,7 @@ void main() {
     for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
       for (final reducedMotion in [false, true]) {
         testWidgets(
-            '$destination appears directly without an intermediate title: '
+            '$destination fades in without an intermediate title: '
             '$platform, reducedMotion=$reducedMotion', (tester) async {
           await launch(tester, platform, reducedMotion: reducedMotion);
           await enterWallet(tester, decoy);
@@ -164,13 +164,25 @@ void main() {
           expect(probe, findsOneWidget);
           expect(privateBuilds, 0);
           final route = ModalRoute.of(tester.element(probe))!;
-          expect(route.settings, isA<NoTransitionPage<void>>());
-          expect(route.transitionDuration, Duration.zero);
+          expect(route.settings, isA<CustomTransitionPage<void>>());
+          expect(
+              route.transitionDuration,
+              reducedMotion
+                  ? Duration.zero
+                  : const Duration(milliseconds: 280));
+          expect(route.reverseTransitionDuration, Duration.zero);
 
           final originalWallet = tester.state(probe);
-          expect(
-              find.ancestor(of: probe, matching: find.byType(FadeTransition)),
-              findsNothing);
+          final fade = find.byKey(const ValueKey('wallet-entry-fade'));
+          expect(fade, findsOneWidget);
+          final initialOpacity =
+              tester.widget<FadeTransition>(fade).opacity.value;
+          if (reducedMotion) {
+            expect(initialOpacity, 1);
+          } else {
+            expect(initialOpacity, greaterThanOrEqualTo(0));
+            expect(initialOpacity, lessThan(1));
+          }
           // A native report must not replace the page or restart its animation.
           router.routeInformationProvider.routerReportsNewRouteInformation(
               router.routeInformationParser.restoreRouteInformation(
@@ -178,12 +190,15 @@ void main() {
           app.notifyListeners();
           await tester.pump();
           expect(tester.state(probe), same(originalWallet));
+          expect(tester.widget<FadeTransition>(fade).opacity.value,
+              greaterThanOrEqualTo(initialOpacity));
           expect(slide, findsNothing);
           await tester.pump(const Duration(milliseconds: 128));
           expect(slide, findsNothing);
           expect(backdrop, findsNothing);
           await tester.pumpAndSettle();
           expect(slide, findsNothing);
+          expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
           expect(tester.state(probe), same(originalWallet));
 
           router.go('/settings');

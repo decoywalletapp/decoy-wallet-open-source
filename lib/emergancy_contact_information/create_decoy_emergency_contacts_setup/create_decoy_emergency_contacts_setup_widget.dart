@@ -968,204 +968,55 @@ class _CreateDecoyEmergencyContactsSetupWidgetState
                                                         SizedBox(width: 12.0)),
                                                   ),
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   width: 325.0,
                                                   height: 25.0,
-                                                  decoration: BoxDecoration(),
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    0.0, 0.0),
-                                                            child: Stack(
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      LinearPercentIndicator(
-                                                                    percent: functions.computeEmergencyProgress(
-                                                                        personalComplete,
-                                                                        addressComplete,
-                                                                        contactsComplete),
-                                                                    lineHeight:
-                                                                        25.0,
-                                                                    animation:
-                                                                        true,
-                                                                    animateFromLastPercent:
-                                                                        true,
-                                                                    progressColor: functions.computeEmergencyPercent(
-                                                                                personalComplete,
-                                                                                addressComplete,
-                                                                                contactsComplete) ==
-                                                                            100
-                                                                        ? Color(
-                                                                            0xFF0CD40B)
-                                                                        : FlutterFlowTheme.of(context)
-                                                                            .primary,
-                                                                    backgroundColor:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .accent4,
-                                                                    barRadius: Radius
-                                                                        .circular(
-                                                                            12.0),
-                                                                    padding:
-                                                                        EdgeInsets
-                                                                            .zero,
-                                                                  ),
-                                                                ),
-                                                                Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Container(
-                                                                    width:
-                                                                        325.0,
-                                                                    height:
-                                                                        25.0,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              12.0),
-                                                                      border:
-                                                                          Border
-                                                                              .all(
-                                                                        color: valueOrDefault<
-                                                                            Color>(
-                                                                          (personalComplete == true) && (contactsComplete == true)
-                                                                              ? Color(0xFF0CD40B)
-                                                                              : FlutterFlowTheme.of(context).primary,
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .primary,
-                                                                        ),
-                                                                        width:
-                                                                            2.0,
-                                                                      ),
-                                                                    ),
-                                                                    alignment:
-                                                                        AlignmentDirectional(
-                                                                            0.0,
-                                                                            0.0),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
+                                                  child: Center(
+                                                    child: Semantics(
+                                                      key: const ValueKey('emergency-setup-progress'),
+                                                      label: AppLocalizations.of(context)!.msgProgress,
+                                                      value: '${functions.computeEmergencyPercent(personalComplete, addressComplete, contactsComplete)}%',
+                                                      excludeSemantics: true,
+                                                      child: LinearPercentIndicator(
+                                                        key: ValueKey(MediaQuery.disableAnimationsOf(context)),
+                                                        percent: functions.computeEmergencyProgress(
+                                                            personalComplete,
+                                                            addressComplete,
+                                                            contactsComplete),
+                                                        lineHeight: 14.0,
+                                                        animation: !MediaQuery.disableAnimationsOf(context),
+                                                        animationDuration: 350,
+                                                        curve: Curves.easeOutCubic,
+                                                        animateFromLastPercent: true,
+                                                        progressColor: functions.computeEmergencyPercent(
+                                                                    personalComplete,
+                                                                    addressComplete,
+                                                                    contactsComplete) == 100
+                                                            ? const Color(0xFF0CD40B)
+                                                            : FlutterFlowTheme.of(context).primary,
+                                                        backgroundColor: FlutterFlowTheme.of(context)
+                                                            .primary.withValues(alpha: 0.12),
+                                                        barRadius: const Radius.circular(7),
+                                                        padding: EdgeInsets.zero,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                                 Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Text(
-                                                          functions
-                                                              .computeEmergencyPercent(
-                                                                  personalComplete,
-                                                                  addressComplete,
-                                                                  contactsComplete)
-                                                              .toString(),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                                color:
-                                                                    valueOrDefault<
-                                                                        Color>(
-                                                                  (personalComplete ==
-                                                                              true) &&
-                                                                          (contactsComplete ==
-                                                                              true)
-                                                                      ? Color(
-                                                                          0xFF0CD40B)
-                                                                      : FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryText,
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primary,
-                                                                ),
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMediumIsCustom,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Text(
-                                                          AppLocalizations.of(context)!.msgComplete,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                                color:
-                                                                    valueOrDefault<
-                                                                        Color>(
-                                                                  (personalComplete ==
-                                                                              true) &&
-                                                                          (contactsComplete ==
-                                                                              true)
-                                                                      ? Color(
-                                                                          0xFF0CD40B)
-                                                                      : FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryText,
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primary,
-                                                                ),
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMediumIsCustom,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  alignment: AlignmentDirectional.center,
+                                                  child: Text(
+                                                    '${functions.computeEmergencyPercent(personalComplete, addressComplete, contactsComplete)}${AppLocalizations.of(context)!.msgComplete}',
+                                                    key: const ValueKey('emergency-setup-percent'),
+                                                    textAlign: TextAlign.center,
+                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                      fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                      color: (personalComplete == true) && (contactsComplete == true)
+                                                          ? const Color(0xFF0CD40B)
+                                                          : FlutterFlowTheme.of(context).primaryText,
+                                                      fontSize: 16.0,
+                                                      letterSpacing: 0.0,
+                                                      useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                    ),
                                                   ),
                                                 ),
                                               ].divide(SizedBox(height: 18.0)),

@@ -1,9 +1,12 @@
+import 'dart:ui' as ui;
+
 import 'package:decoy_wallet_app/auth/base_auth_user_provider.dart';
 import 'package:decoy_wallet_app/components/pin_unlock_handoff.dart';
 import 'package:decoy_wallet_app/components/wallet_title_splash.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _User extends BaseAuthUser {
@@ -24,6 +27,21 @@ class _User extends BaseAuthUser {
 }
 
 void main() {
+  Future<int> cornerPixel(WidgetTester tester, GlobalKey key) async {
+    final boundary =
+        key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    return (await tester.runAsync(() async {
+      final image = await boundary.toImage();
+      try {
+        final bytes =
+            (await image.toByteData(format: ui.ImageByteFormat.rawRgba))!;
+        return bytes.getUint8((image.width + 1) * 4);
+      } finally {
+        image.dispose();
+      }
+    }))!;
+  }
+
   testWidgets('pending PIN keeps input visible without a title interstitial',
       (tester) async {
     final active = ValueNotifier(false);
@@ -60,7 +78,7 @@ void main() {
 
   for (final decoy in [false, true]) {
     testWidgets(
-        'verified PIN enters destination without branding: decoy=$decoy',
+        'verified PIN fades only destination pixels without branding: decoy=$decoy',
         (tester) async {
       final app = AppStateNotifier.instance;
       app.update(_User());
@@ -68,6 +86,7 @@ void main() {
       app.clearRedirectLocation();
       app.unlock.lock();
       app.unlock.preparePin(app.unlock.attempt, paidDecoyAllowed: true);
+      final frame = GlobalKey();
       final router = GoRouter(
         initialLocation: '/PINPage',
         refreshListenable: app,
@@ -75,23 +94,31 @@ void main() {
           FFRoute(
               name: 'PINPage',
               path: '/PINPage',
-              builder: (_, __) => const Text('PIN')).toRoute(app),
+              builder: (_, __) => const ColoredBox(
+                  color: Colors.black,
+                  child: Center(child: Text('PIN')))).toRoute(app),
           FFRoute(
               name: 'HomePage',
               path: '/homePage',
-              builder: (_, __) => const Text('HOME')).toRoute(app),
+              builder: (_, __) => const ColoredBox(
+                  color: Colors.white,
+                  child: Center(child: Text('HOME')))).toRoute(app),
           FFRoute(
               name: 'DuressHomePage',
               path: '/duressHomePage',
-              builder: (_, __) => const Text('DECOY')).toRoute(app),
+              builder: (_, __) => const ColoredBox(
+                  color: Colors.white,
+                  child: Center(child: Text('DECOY')))).toRoute(app),
         ],
       );
       addTearDown(router.dispose);
-      await tester.pumpWidget(MaterialApp.router(
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-      ));
+      await tester.pumpWidget(RepaintBoundary(
+          key: frame,
+          child: MaterialApp.router(
+            routerConfig: router,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          )));
       await tester.pumpAndSettle();
       final attempt = app.unlock.attempt;
       if (decoy) {
@@ -106,8 +133,22 @@ void main() {
       expect(destination, findsOneWidget);
       expect(find.text('PIN'), findsNothing);
       expect(find.byType(WalletTitleSplash), findsNothing);
-      expect(ModalRoute.of(tester.element(destination))!.transitionDuration,
-          Duration.zero);
+      final route = ModalRoute.of(tester.element(destination))!;
+      expect(route.transitionDuration, const Duration(milliseconds: 280));
+      expect(route.reverseTransitionDuration, Duration.zero);
+      final fade = find.byKey(const ValueKey('wallet-entry-fade'));
+      expect(fade, findsOneWidget);
+      expect(tester.widget<FadeTransition>(fade).opacity.value, 0);
+      expect(await cornerPixel(tester, frame), 0);
+      await tester.pump(const Duration(milliseconds: 80));
+      final partial = tester.widget<FadeTransition>(fade).opacity.value;
+      expect(partial, greaterThan(0));
+      expect(partial, lessThan(1));
+      expect(await cornerPixel(tester, frame), inInclusiveRange(1, 254));
+      expect(find.byType(WalletTitleSplash), findsNothing);
+      await tester.pumpAndSettle();
+      expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+      expect(await cornerPixel(tester, frame), 255);
     });
   }
 }

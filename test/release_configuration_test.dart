@@ -169,6 +169,7 @@ void main() {
       'test/unlock_routes_test.dart',
       'test/membership_redemption_test.dart',
       'test/release_configuration_test.dart',
+      'test/emergency_setup_progress_test.dart',
     ]) {
       expect(tests, contains(path));
     }
