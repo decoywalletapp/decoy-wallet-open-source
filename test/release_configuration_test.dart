@@ -109,6 +109,18 @@ void main() {
         isNot(contains('DECOY_ACCOUNT_BALANCE_PILOT')));
   });
 
+  test('signup verification upload does not submit to external or store review',
+      () {
+    final workflow = workflows['ios-app-store-release'];
+    final publishing = workflow['publishing']['app_store_connect'];
+    expect(publishing['submit_to_testflight'], isFalse);
+    expect(publishing['submit_to_app_store'], isFalse);
+    expect(publishing['beta_groups'], isNull);
+    expect(publishing['cancel_previous_submissions'], isNull);
+    expect(publishing['expire_build_submitted_for_review'], isNull);
+    expect(workflow['triggering'], isNull);
+  });
+
   test('Android PIN release keeps package inputs and runs isolated access tests', () {
     final workflow = workflows['android-signed-release-rehearsal'];
     final environment = workflow['environment'] as YamlMap;
