@@ -14,14 +14,12 @@ import '/services/account_balance.dart';
 
 Future<void> supaSignUpWithRedirect(String email, String password) async {
   SupaFlow.cancelPendingAuthLinks();
-  final client = Supabase.instance.client;
-
   final redirect = requiredPublicConfig(
     'DECOY_EMAIL_CONFIRM_DEEP_LINK',
     kEmailConfirmDeepLink,
   );
 
-  await client.auth.signUp(
+  await SupaFlow.authLinks.signUp(
     email: email,
     password: password,
     emailRedirectTo: redirect,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:decoy_wallet_app/auth/supabase_auth/email_auth.dart';
 import 'package:decoy_wallet_app/backend/public_config.dart';
+import 'package:decoy_wallet_app/backend/supabase/supabase.dart';
 import 'package:decoy_wallet_app/custom_code/actions/supa_email_sign_up.dart';
 import 'package:decoy_wallet_app/custom_code/actions/supa_sign_up_with_redirect.dart';
 import 'package:decoy_wallet_app/services/account_balance.dart';
@@ -10,11 +11,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final requests = <http.Request>[];
+  late MockClient client;
   var rejectSignup = false;
   const id = '33333333-3333-4333-8333-333333333333';
   const email = 'balance-test@example.invalid';
@@ -23,32 +24,31 @@ void main() {
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
+    client = MockClient((request) async {
+      requests.add(request);
+      expect(request.url.path, '/auth/v1/signup');
+      expect(request.method, 'POST');
+      if (rejectSignup) {
+        return http.Response(jsonEncode({'msg': 'signup rejected'}), 400);
+      }
+      return http.Response(
+          jsonEncode({
+            'id': id,
+            'aud': 'authenticated',
+            'role': 'authenticated',
+            'email': email,
+            'created_at': '2026-10-04T00:00:00Z',
+            'app_metadata': <String, dynamic>{},
+            'user_metadata': (jsonDecode(request.body) as Map)['data'],
+          }),
+          200,
+          headers: {'content-type': 'application/json'});
+    });
     await Supabase.initialize(
       url: 'https://test.invalid',
       anonKey: 'test-key',
       debug: false,
-      httpClient: MockClient((request) async {
-        requests.add(request);
-        expect(request.url.path, '/auth/v1/signup');
-        expect(request.method, 'POST');
-        if (rejectSignup) {
-          return http.Response(jsonEncode({'msg': 'signup rejected'}), 400);
-        }
-        return http.Response(
-            jsonEncode({
-              'user': {
-                'id': id,
-                'aud': 'authenticated',
-                'role': 'authenticated',
-                'email': email,
-                'created_at': '2026-10-04T00:00:00Z',
-                'app_metadata': <String, dynamic>{},
-                'user_metadata': (jsonDecode(request.body) as Map)['data'],
-              },
-            }),
-            200,
-            headers: {'content-type': 'application/json'});
-      }),
+      httpClient: client,
       authOptions: const FlutterAuthClientOptions(
         authFlowType: AuthFlowType.implicit,
         autoRefreshToken: false,
@@ -59,6 +59,11 @@ void main() {
   });
   tearDownAll(() => Supabase.instance.dispose());
   setUp(() {
+    SupaFlow.configureAuthLinks(
+      url: 'https://test.invalid',
+      anonKey: 'test-key',
+      clientFactory: () => client,
+    );
     requests.clear();
     rejectSignup = false;
   });

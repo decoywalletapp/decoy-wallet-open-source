@@ -21,8 +21,6 @@ Future<String> supaEmailSignUp(
 ) async {
   SupaFlow.cancelPendingAuthLinks();
   try {
-    final client = Supabase.instance.client;
-
     final e = email.trim();
     final p = password.trim();
 
@@ -34,7 +32,7 @@ Future<String> supaEmailSignUp(
       return 'ERR: password too short';
     }
 
-    final res = await client.auth.signUp(
+    final res = await SupaFlow.authLinks.signUp(
       email: e,
       password: p,
       emailRedirectTo: redirectUrl,

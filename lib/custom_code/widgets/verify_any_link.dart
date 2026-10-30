@@ -216,6 +216,11 @@ class _VerifyAnyLinkState extends State<VerifyAnyLink> {
         }
         context.goNamed(AuthRouterWidget.routeName);
       }
+    } on AuthLinkSignInRequired catch (e) {
+      if (!mounted || AppStateNotifier.instance.unlock.inDecoy) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
     } on AuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

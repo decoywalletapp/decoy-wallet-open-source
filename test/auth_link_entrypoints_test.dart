@@ -11,6 +11,7 @@ import 'package:decoy_wallet_app/custom_code/actions/refresh_supabase_session2.d
 import 'package:decoy_wallet_app/custom_code/actions/supa_exchange_deep_link_for_session.dart';
 import 'package:decoy_wallet_app/custom_code/actions/supa_recovery_update_password.dart';
 import 'package:decoy_wallet_app/custom_code/actions/supa_send_reset_password_email.dart';
+import 'package:decoy_wallet_app/custom_code/actions/supa_email_sign_up.dart';
 import 'package:decoy_wallet_app/custom_code/widgets/verify_any_link.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
 import 'package:decoy_wallet_app/l10n/app_language_controller.dart';
@@ -66,6 +67,16 @@ void main() {
       expect(request.url.host, 'test.invalid');
       calls.add('${request.method} ${request.url.path}');
       if (request.url.path == '/auth/v1/logout') return http.Response('', 204);
+      if (request.url.path == '/auth/v1/signup') {
+        return http.Response(jsonEncode({
+          ...linkSession('recipient')['user'] as Map,
+          'email_confirmed_at': null,
+        }), 200, headers: {'content-type': 'application/json'});
+      }
+      if (request.url.path == '/rest/v1/profiles') {
+        return http.Response('null', 200,
+            headers: {'content-type': 'application/json'});
+      }
       if (request.url.path == '/auth/v1/recover') {
         expect(jsonDecode(request.body)['email'], 'recipient@example.invalid');
         return http.Response('{}', 200);
@@ -107,6 +118,74 @@ void main() {
     await platformListener?.cancel();
     await links.events.close();
   });
+
+  for (final mode in ['local signup', 'restart', 'other account']) {
+    for (final delivery in ['routed', 'platform launch', 'plugin stream']) {
+      testWidgets('signup return $delivery with $mode has no email dialog',
+          (tester) async {
+        await tester.runAsync(() async {
+          await SupaFlow.client.auth.signOut();
+          expect(await supaEmailSignUp('recipient@example.invalid',
+              'synthetic-password', 'https://test.invalid/verify'), 'ok');
+        });
+        app.update(DecoyWalletAppSupabaseUser(null));
+        if (mode == 'restart') {
+          SupaFlow.configureAuthLinks(url: 'https://test.invalid',
+              anonKey: 'synthetic-anon', clientFactory: () => client);
+        }
+        if (mode == 'other account') target = 'other';
+        calls.clear();
+        final uri = Uri.parse(
+            '/loginPage?type=signup&token_hash=signup-$sequence');
+        if (delivery == 'platform launch') links.initial = uri;
+        final router = GoRouter(
+          initialLocation: delivery == 'routed' ? uri.toString() : '/loginPage',
+          routes: [
+            GoRoute(path: '/loginPage', builder: (_, state) => Scaffold(
+                body: Column(children: [
+                  const Text('normal login available'),
+                  VerifyAnyLink(routedUri: state.uri),
+                ]))),
+            GoRoute(name: 'AuthRouter', path: '/authRouter',
+                builder: (_, __) => const Text('continue signup')),
+          ],
+        );
+        await tester.pumpWidget(MaterialApp.router(
+            routerConfig: router,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales));
+        await tester.pumpAndSettle();
+        if (delivery == 'plugin stream') {
+          await tester.runAsync(() async {
+            links.events.add(uri);
+            await Future<void>.delayed(Duration.zero);
+          });
+          await tester.pumpAndSettle();
+        }
+        expect(find.byType(AlertDialog, skipOffstage: false), findsNothing);
+        expect(find.byKey(const ValueKey('auth-link-email')), findsNothing);
+        expect(app.unlock.ownerUnlocked, isFalse);
+        expect(app.unlock.recoveryAllowed, isFalse);
+        if (mode == 'local signup') {
+          expect(find.text('continue signup'), findsOneWidget);
+          expect(SupaFlow.client.auth.currentUser?.id, 'recipient');
+        } else {
+          expect(find.text('normal login available'), findsOneWidget);
+          expect(SupaFlow.client.auth.currentSession, isNull);
+          expect(find.byType(SnackBar), findsOneWidget);
+          if (mode == 'restart') {
+            expect(find.text('Email confirmed. Log in to continue.'),
+                findsOneWidget);
+          }
+        }
+        expect(calls.where((call) => call == 'POST /auth/v1/verify'),
+            hasLength(1));
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        router.dispose();
+      });
+    }
+  }
 
   test('production SDK listener cannot adopt an implicit link by itself',
       () async {

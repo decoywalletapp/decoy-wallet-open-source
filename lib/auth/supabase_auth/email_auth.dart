@@ -14,7 +14,7 @@ Future<User?> emailCreateAccountFunc(
   String email,
   String password,
 ) async {
-  final AuthResponse res = await SupaFlow.client.auth
+  final AuthResponse res = await SupaFlow.authLinks
       .signUp(email: email, password: password, data: accountBalanceSignupData);
 
   // If the Supabase project is configured to not let users sign in until the

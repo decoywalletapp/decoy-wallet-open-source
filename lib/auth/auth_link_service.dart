@@ -108,8 +108,13 @@ class AcceptedAuthLink {
   String get userId => session.user.id;
 }
 
-class _RecoveryIntent {
-  const _RecoveryIntent(this.email, this.createdAt);
+class AuthLinkSignInRequired extends AuthException {
+  const AuthLinkSignInRequired()
+      : super('Email confirmed. Log in to continue.');
+}
+
+class _EmailIntent {
+  const _EmailIntent(this.email, this.createdAt);
   final String email;
   final DateTime createdAt;
 }
@@ -134,11 +139,40 @@ class AuthLinkService {
   final _inFlight = <String, Future<AcceptedAuthLink?>>{};
   final _completed = <String>{};
   int _generation = 0;
-  _RecoveryIntent? _recoveryIntent;
+  _EmailIntent? _recoveryIntent;
+  _EmailIntent? _signupIntent;
 
   void cancelPending() {
     _generation++;
     _recoveryIntent = null;
+    _signupIntent = null;
+  }
+
+  /// Bind the return to submitted signup input, never to callback parameters.
+  /// A restart loses this intent and requires normal sign-in, not email re-entry.
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+    String? emailRedirectTo,
+    Map<String, dynamic>? data,
+  }) async {
+    cancelPending();
+    final generation = _generation;
+    final startingSession = auth.currentSession;
+    final response = await auth.signUp(
+      email: email,
+      password: password,
+      emailRedirectTo: emailRedirectTo,
+      data: data,
+    );
+    if (generation == _generation &&
+        startingSession == null &&
+        identical(auth.currentSession, startingSession) &&
+        response.user != null &&
+        email.trim().isNotEmpty) {
+      _signupIntent = _EmailIntent(email.trim().toLowerCase(), _now());
+    }
+    return response;
   }
 
   /// Keep only successful, locally initiated recovery intent, never link data.
@@ -156,12 +190,18 @@ class AuthLinkService {
     if (generation == _generation &&
         startingSession == null &&
         identical(auth.currentSession, startingSession)) {
-      _recoveryIntent = _RecoveryIntent(submittedEmail.toLowerCase(), _now());
+      _recoveryIntent = _EmailIntent(submittedEmail.toLowerCase(), _now());
     }
   }
 
-  bool _isCurrentRecoveryIntent(_RecoveryIntent? intent) {
+  bool _isCurrentRecoveryIntent(_EmailIntent? intent) {
     if (intent == null || !identical(intent, _recoveryIntent)) return false;
+    final age = _now().difference(intent.createdAt);
+    return !age.isNegative && age < const Duration(minutes: 15);
+  }
+
+  bool _isCurrentSignupIntent(_EmailIntent? intent) {
+    if (intent == null || !identical(intent, _signupIntent)) return false;
     final age = _now().difference(intent.createdAt);
     return !age.isNegative && age < const Duration(minutes: 15);
   }
@@ -205,6 +245,12 @@ class AuthLinkService {
   }) async {
     final startingSession = auth.currentSession;
     final startingUser = startingSession?.user.id;
+    final isSignup = request.type == OtpType.signup;
+    final signupIntent = startingUser == null &&
+            isSignup &&
+            _isCurrentSignupIntent(_signupIntent)
+        ? _signupIntent
+        : null;
     final recoveryIntent = startingUser == null &&
             request.isRecovery &&
             _isCurrentRecoveryIntent(_recoveryIntent)
@@ -217,10 +263,14 @@ class AuthLinkService {
         (recoveryIntent == null || _isCurrentRecoveryIntent(recoveryIntent));
     if (!current()) return null;
     final expectedEmail = startingUser == null
-        ? recoveryIntent?.email ?? (await requestEmail())?.trim().toLowerCase()
+        ? isSignup
+            ? signupIntent?.email
+            : recoveryIntent?.email ??
+                (await requestEmail())?.trim().toLowerCase()
         : null;
     if (!current() ||
         (startingUser == null &&
+            !isSignup &&
             (expectedEmail == null || expectedEmail.isEmpty))) return null;
 
     final client = _clientFactory();
@@ -275,6 +325,19 @@ class AuthLinkService {
               'This sign-in link contains conflicting accounts.');
         }
       }
+      if (isSignup && session.user.emailConfirmedAt == null) {
+        throw const AuthException(
+            'This email could not be confirmed. Request a new link.');
+      }
+      if (isSignup &&
+          startingUser == null &&
+          !_isCurrentSignupIntent(signupIntent)) {
+        // Verification can complete without granting this device a session.
+        // Normal password login remains available, including after a restart.
+        if (!current()) return null;
+        _completed.add(request.fingerprint);
+        throw const AuthLinkSignInRequired();
+      }
       if (startingUser != null
           ? session.user.id != startingUser
           : session.user.email?.trim().toLowerCase() != expectedEmail) {
@@ -283,6 +346,7 @@ class AuthLinkService {
       }
       if (!current()) return null;
       _recoveryIntent = null;
+      _signupIntent = null;
       // setInitialSession publishes synchronously, with no second network wait
       // between the final identity/lifecycle check and the shared-session write.
       final commit = auth.setInitialSession(jsonEncode(session.toJson()));

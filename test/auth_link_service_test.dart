@@ -159,6 +159,14 @@ void main() {
   ]) {
     test('cross-device $type requires matching recipient-entered email',
         () async {
+      if (type == 'signup') {
+        await expectLater(
+            accept('/loginPage?type=$type&token_hash=synthetic'),
+            throwsA(isA<AuthLinkSignInRequired>()));
+        expect(prompts, 0);
+        expect(auth.currentSession, isNull);
+        return;
+      }
       final result = await accept('/loginPage?type=$type&token_hash=synthetic',
           email: '  RECIPIENT@example.invalid  ');
       expect(result!.userId, 'recipient');
@@ -366,6 +374,15 @@ void main() {
     test('remembered recovery email cannot replace $type confirmation',
         () async {
       await links.sendPasswordResetEmail('recipient@example.invalid');
+      if (type == 'signup') {
+        await expectLater(
+            accept('/loginPage?type=$type&token_hash=other-type', email: null),
+            throwsA(isA<AuthLinkSignInRequired>()));
+        expect(prompts, 0);
+        expect(auth.currentSession, isNull);
+        expect(requests, hasLength(2));
+        return;
+      }
       expect(
           await accept('/loginPage?type=$type&token_hash=other-type',
               email: null),
