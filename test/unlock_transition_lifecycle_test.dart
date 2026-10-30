@@ -151,7 +151,7 @@ void main() {
     for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
       for (final reducedMotion in [false, true]) {
         testWidgets(
-            '$destination enters from the right over neutral branding: '
+            '$destination appears directly without an intermediate title: '
             '$platform, reducedMotion=$reducedMotion', (tester) async {
           await launch(tester, platform, reducedMotion: reducedMotion);
           await enterWallet(tester, decoy);
@@ -159,22 +159,15 @@ void main() {
           expect(app.unlock.allows(AppRouteAccess.pin), isFalse);
           expect(originalPin.mounted, isFalse);
           expect(find.byType(_PinProbe), findsNothing);
-          expect(backdrop, findsOneWidget);
+          expect(backdrop, findsNothing);
+          expect(slide, findsNothing);
           expect(probe, findsOneWidget);
           expect(privateBuilds, 0);
           final route = ModalRoute.of(tester.element(probe))!;
-          expect(route.settings, isA<CustomTransitionPage<void>>());
-          expect(
-              route.transitionDuration,
-              reducedMotion
-                  ? Duration.zero
-                  : const Duration(milliseconds: 320));
+          expect(route.settings, isA<NoTransitionPage<void>>());
+          expect(route.transitionDuration, Duration.zero);
 
           final originalWallet = tester.state(probe);
-          final earlyOffset =
-              tester.widget<SlideTransition>(slide).position.value;
-          expect(earlyOffset.dy, 0);
-          expect(earlyOffset.dx, reducedMotion ? 0 : inExclusiveRange(0, 1));
           expect(
               find.ancestor(of: probe, matching: find.byType(FadeTransition)),
               findsNothing);
@@ -185,17 +178,12 @@ void main() {
           app.notifyListeners();
           await tester.pump();
           expect(tester.state(probe), same(originalWallet));
-          expect(tester.widget<SlideTransition>(slide).position.value,
-              earlyOffset);
+          expect(slide, findsNothing);
           await tester.pump(const Duration(milliseconds: 128));
-          final middleOffset =
-              tester.widget<SlideTransition>(slide).position.value;
-          expect(middleOffset.dy, 0);
-          expect(middleOffset.dx, reducedMotion ? 0 : lessThan(earlyOffset.dx));
-          expect(backdrop, findsOneWidget);
+          expect(slide, findsNothing);
+          expect(backdrop, findsNothing);
           await tester.pumpAndSettle();
-          expect(tester.widget<SlideTransition>(slide).position.value,
-              Offset.zero);
+          expect(slide, findsNothing);
           expect(tester.state(probe), same(originalWallet));
 
           router.go('/settings');
@@ -220,15 +208,13 @@ void main() {
       expect(privateBuilds, 0);
     });
 
-    testWidgets(
-        '$destination disappears immediately if locked during its slide',
+    testWidgets('$destination disappears immediately if locked after entry',
         (tester) async {
       await launch(tester, TargetPlatform.iOS);
       await enterWallet(tester, decoy);
       await tester.pump(const Duration(milliseconds: 32));
       final wallet = tester.state(probe);
-      expect(tester.widget<SlideTransition>(slide).position.value.dx,
-          inExclusiveRange(0, 1));
+      expect(slide, findsNothing);
       app.unlock.lock();
       await tester.pump();
       expect(wallet.mounted, isFalse);
@@ -258,8 +244,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 32));
     expect(find.byType(_HomeProbe), findsNothing);
-    expect(find.byKey(const ValueKey('wallet-transition-backdrop')),
-        findsOneWidget);
+    expect(
+        find.byKey(const ValueKey('wallet-transition-backdrop')), findsNothing);
     router.go('/homePage');
     await tester.pumpAndSettle();
     expect(find.text('DECOY'), findsOneWidget);

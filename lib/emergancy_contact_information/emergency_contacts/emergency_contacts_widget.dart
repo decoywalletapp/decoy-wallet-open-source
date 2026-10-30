@@ -51,6 +51,13 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _contactsListController = ScrollController();
+  bool _initialLoadComplete = false;
+  bool _loadingContacts = true;
+  bool _loadFailed = false;
+  int _contactLoadGeneration = 0;
+  ApiCallResponse? _statusPreview;
+  String? _statusPreviewUser;
+  final Set<int> _sendingConsentInviteSlots = <int>{};
   static const _dataKeyStorage = FlutterSecureStorage();
   static const _dataKeyName = 'decoy_data_key_b64';
   static const _contactsCipherCacheName = 'decoy_contacts_cipher_b64';
@@ -83,7 +90,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
         : Icons.send_rounded;
   }
 
-  Widget _buildConsentInviteLabel(int slot, String status) {
+  Future<void> _withConsentInviteProgress(
+      int slot, Future<void> Function() action) async {
+    if (_sendingConsentInviteSlots.contains(slot)) return;
+    safeSetState(() => _sendingConsentInviteSlots.add(slot));
+    try {
+      await action();
+    } finally {
+      if (mounted) {
+        safeSetState(() => _sendingConsentInviteSlots.remove(slot));
+      }
+    }
+  }
+
+Widget _buildConsentInviteLabel(int slot, String status) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
@@ -108,8 +128,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             ),
           ),
           const SizedBox(width: 12),
-          Icon(_consentInviteButtonIcon(slot),
-              color: FlutterFlowTheme.of(context).info, size: 24),
+          if (_sendingConsentInviteSlots.contains(slot))
+            SizedBox(
+              key: ValueKey('invite-progress-$slot'),
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: FlutterFlowTheme.of(context).info,
+              ),
+            )
+          else
+            Icon(_consentInviteButtonIcon(slot),
+                color: FlutterFlowTheme.of(context).info, size: 24),
         ],
       ),
     );
@@ -1124,7 +1155,24 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     _model = createModel(context, () => EmergencyContactsModel());
 
     // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
+    SchedulerBinding.instance.addPostFrameCallback((_) => _loadContacts());
+
+    _initializeContactControllers();
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+  }
+
+Future<void> _loadContacts() async {
+    if (!mounted) return;
+    final loadUserId = currentUserUid;
+    final loadGeneration = ++_contactLoadGeneration;
+    safeSetState(() {
+      _loadingContacts = true;
+      _loadFailed = false;
+      _initialLoadComplete = false;
+      _statusPreview = null;
+      _statusPreviewUser = null;
+    });
+    try {
       final hydratedFromSession = _hydrateSessionContactsCache();
       if (hydratedFromSession) {
         safeSetState(() {});
@@ -1137,7 +1185,17 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       final Future<ApiCallResponse?> consentStatusFuture =
           GetConsentStatusesCall.call(
         jwt: apiJwt,
-      ).then<ApiCallResponse?>((response) => response).catchError((error) {
+      ).then<ApiCallResponse?>((response) {
+        if (mounted &&
+            currentUserUid == loadUserId &&
+            loadGeneration == _contactLoadGeneration) {
+          safeSetState(() {
+            _statusPreview = response;
+            _statusPreviewUser = loadUserId;
+          });
+        }
+        return response;
+      }).catchError((error) {
         _debugLog('[EmergencyContacts] consent status load threw: $error');
         return null;
       });
@@ -1199,7 +1257,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  AppLocalizations.of(context)!.msgError008PleaseScreenshotContactDecoySupport,
+                  AppLocalizations.of(context)!
+                      .msgError008PleaseScreenshotContactDecoySupport,
                   style: TextStyle(
                     color: FlutterFlowTheme.of(context).primaryText,
                   ),
@@ -1658,9 +1717,22 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
       _applyConsentDetailsFallbacks();
       _syncContactsCountToLoadedFields();
       _rememberSessionContactsCache();
+      _initialLoadComplete = true;
       safeSetState(() {});
-    });
+    } catch (_) {
+      // Leave the loaded fields read-only if their refresh did not finish.
+      _loadFailed = true;
+    } finally {
+      if (mounted && currentUserUid == loadUserId) {
+        safeSetState(() {
+          _loadingContacts = false;
+          _loadFailed = !_initialLoadComplete;
+        });
+      }
+    }
+  }
 
+void _initializeContactControllers() {
     _model.c1FirstTFTextController ??=
         TextEditingController(text: _model.c1First);
     _model.c1FirstTFFocusNode ??= FocusNode();
@@ -1726,7 +1798,27 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
     _model.c5PhoneTFFocusNode ??= FocusNode();
 
     _model.c5PhoneTFMask = MaskTextInputFormatter(mask: '(###) ###-####');
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+  }
+
+String? _visibleStatus(int slot) {
+    final contact = _contactSnapshot(slot);
+    if (_initialLoadComplete) {
+      if (!(_model.topConsentResp?.succeeded ?? false) &&
+          !_showingConsentInviteSent(slot)) return null;
+      return functions.emergencyContactStatusLabel(contact['status']);
+    }
+    // Presentation only: never apply a slot's early result to a different
+    // number, or use this preview for saving contacts or sending invitations.
+    final body = _statusPreview?.jsonBody;
+    if (_statusPreviewUser != currentUserUid ||
+        _statusPreview?.succeeded != true ||
+        body is! Map) return null;
+    final phone = functions.normalizePhoneToE164(contact['phone'] ?? '');
+    final responsePhone = functions
+        .normalizePhoneToE164(body['slot${slot}Phone']?.toString() ?? '');
+    final status = body['slot${slot}Status'];
+    if (phone.isEmpty || phone != responsePhone || status == null) return null;
+    return functions.emergencyContactStatusLabel(status.toString());
   }
 
   @override
@@ -1778,7 +1870,16 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                         ),
                       ),
                     ),
-                  ],
+                      const Spacer(),
+    if (_loadingContacts)
+      const Padding(padding: EdgeInsets.only(right: 20),
+        child: SizedBox(width:18,height:18,child:CircularProgressIndicator(strokeWidth:2)))
+    else if (_loadFailed)
+      IconButton(key:const ValueKey('retry-contact-load'),
+        tooltip:AppLocalizations.of(context)!.msgRetry,
+        onPressed:_loadContacts, icon:const Icon(Icons.refresh_rounded),
+        constraints:const BoxConstraints.tightFor(width:40,height:40)),
+  ],
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
@@ -1801,7 +1902,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                   ),
                 ),
                 Expanded(
-                  child: ListView(
+                  child: ListView(key: const ValueKey('emergency-contact-list'),
                     controller: _contactsListController,
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
@@ -1810,7 +1911,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Form(
+                          AbsorbPointer(absorbing: !_initialLoadComplete, child: Form(
                             key: _model.formKey,
                             autovalidateMode: AutovalidateMode.disabled,
                             child: Align(
@@ -1844,29 +1945,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               border: Border.all(
                                                 color: valueOrDefault<Color>(
                                                   () {
-                                                    if (_model.c1Status ==
+                                                    if ((_visibleStatus(1) ?? '') ==
                                                         'Confirmed') {
                                                       return Color(0xFF0CD40B);
-                                                    } else if (_model
-                                                            .c1Status ==
+                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                         'Pending') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .primary;
-                                                    } else if (_model
-                                                            .c1Status ==
+                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                         'Denied') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c1Status ==
+                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                         'Opted out') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c1Status ==
+                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                         'Not sent') {
                                                       return FlutterFlowTheme
                                                               .of(context)
@@ -1916,7 +2013,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           .titleMediumIsCustom,
                                                                 ),
                                                       ),
-                                                      FlutterFlowIconButton(
+                                                      FlutterFlowIconButton(key: const ValueKey('delete-contact-1'),
                                                         borderRadius: 16.0,
                                                         buttonSize: 32.0,
                                                         fillColor:
@@ -1940,7 +2037,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       1))
                                                     _buildContactEntryChoice(1)
                                                   else ...[
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-1-firstName'),
                                                       controller: _model
                                                           .c1FirstTFTextController,
                                                       focusNode: _model
@@ -1978,31 +2075,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c1Status ==
+                                                                if ((_visibleStatus(1) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -2110,7 +2202,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-1-lastName'),
                                                       controller: _model
                                                           .c1LastTFTextController,
                                                       focusNode: _model
@@ -2148,31 +2240,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c1Status ==
+                                                                if ((_visibleStatus(1) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -2280,7 +2367,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-1-phone'),
                                                       controller: _model
                                                           .c1PhoneTFTextController,
                                                       focusNode: _model
@@ -2360,31 +2447,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c1Status ==
+                                                                if ((_visibleStatus(1) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c1Status ==
+                                                                } else if ((_visibleStatus(1) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -2494,7 +2576,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             alignment:
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
-                                                            child: Row(
+                                                            child: Row(key: const ValueKey('contact-status-1'),
                                                               mainAxisSize:
                                                                   MainAxisSize
                                                                       .max,
@@ -2525,25 +2607,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   ),
                                                                 ),
                                                                 Text(
-                                                                  () {
-                                                                    if (_model
-                                                                            .c1Status ==
+                                                                  () {if (_visibleStatus(1)==null) return _loadingContacts ? '...' : '--';
+                                                                    if ((_visibleStatus(1) ?? '') ==
                                                                         'Not sent') {
                                                                       return AppLocalizations.of(context)!.msgNotSent;
-                                                                    } else if (_model
-                                                                            .c1Status ==
+                                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                                         'Pending') {
                                                                       return AppLocalizations.of(context)!.msgPending;
-                                                                    } else if (_model
-                                                                            .c1Status ==
+                                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                                         'Confirmed') {
                                                                       return AppLocalizations.of(context)!.msgConfirmed;
-                                                                    } else if (_model
-                                                                            .c1Status ==
+                                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                                         'Denied') {
                                                                       return AppLocalizations.of(context)!.msgDenied;
-                                                                    } else if (_model
-                                                                            .c1Status ==
+                                                                    } else if ((_visibleStatus(1) ?? '') ==
                                                                         'Opted out') {
                                                                       return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
@@ -2559,19 +2636,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         color: valueOrDefault<
                                                                             Color>(
                                                                           () {
-                                                                            if (_model.c1Status ==
+                                                                            if ((_visibleStatus(1) ?? '') ==
                                                                                 'Confirmed') {
                                                                               return Color(0xFF0CD40B);
-                                                                            } else if (_model.c1Status ==
+                                                                            } else if ((_visibleStatus(1) ?? '') ==
                                                                                 'Pending') {
                                                                               return FlutterFlowTheme.of(context).primary;
-                                                                            } else if (_model.c1Status ==
+                                                                            } else if ((_visibleStatus(1) ?? '') ==
                                                                                 'Denied') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c1Status ==
+                                                                            } else if ((_visibleStatus(1) ?? '') ==
                                                                                 'Opted out') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c1Status ==
+                                                                            } else if ((_visibleStatus(1) ?? '') ==
                                                                                 'Not sent') {
                                                                               return FlutterFlowTheme.of(context).primaryText;
                                                                             } else {
@@ -2621,14 +2698,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       .circular(
                                                                           8.0),
                                                             ),
-                                                            child: _buildConsentInviteLabel(1, _model.c1Status),
+                                                            child: _buildConsentInviteLabel(1, (_visibleStatus(1) ?? '')),
                                                           ),
                                                         ),
                                                         Opacity(
                                                           opacity: 0.0,
-                                                          child: FFButtonWidget(
+                                                          child: FFButtonWidget(key: const ValueKey('invite-contact-1'),
                                                             onPressed:
-                                                                () async {
+                                                                () => _withConsentInviteProgress(1, () async {
                                                               if (_showingConsentInviteSent(
                                                                   1)) {
                                                                 return;
@@ -3083,8 +3160,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                               safeSetState(
                                                                   () {});
-                                                            },
-                                                            text: _model.c1Status ==
+                                                            }),
+                                                            text: (_visibleStatus(1) ?? '') ==
                                                                     'Not sent'
                                                                 ? AppLocalizations.of(context)!.msgSendConfirmationLink
                                                                 : AppLocalizations.of(context)!.msgResendConfirmationLink,
@@ -3170,30 +3247,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                 border: Border.all(
                                                   color: valueOrDefault<Color>(
                                                     () {
-                                                      if (_model.c2Status ==
+                                                      if ((_visibleStatus(2) ?? '') ==
                                                           'Confirmed') {
                                                         return Color(
                                                             0xFF0CD40B);
-                                                      } else if (_model
-                                                              .c2Status ==
+                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                           'Pending') {
                                                         return FlutterFlowTheme
                                                                 .of(context)
                                                             .primary;
-                                                      } else if (_model
-                                                              .c2Status ==
+                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                           'Denied') {
                                                         return FlutterFlowTheme
                                                                 .of(context)
                                                             .error;
-                                                      } else if (_model
-                                                              .c2Status ==
+                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                           'Opted out') {
                                                         return FlutterFlowTheme
                                                                 .of(context)
                                                             .error;
-                                                      } else if (_model
-                                                              .c2Status ==
+                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                           'Not sent') {
                                                         return FlutterFlowTheme
                                                                 .of(context)
@@ -3243,7 +3316,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         .titleMediumIsCustom,
                                                               ),
                                                         ),
-                                                        FlutterFlowIconButton(
+                                                        FlutterFlowIconButton(key: const ValueKey('delete-contact-2'),
                                                           borderRadius: 16.0,
                                                           buttonSize: 32.0,
                                                           fillColor:
@@ -3270,7 +3343,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       _buildContactEntryChoice(
                                                           2)
                                                     else ...[
-                                                      TextFormField(
+                                                      TextFormField(key: const ValueKey('contact-2-firstName'),
                                                         controller: _model
                                                             .c2FirstTFTextController,
                                                         focusNode: _model
@@ -3309,31 +3382,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   valueOrDefault<
                                                                       Color>(
                                                                 () {
-                                                                  if (_model
-                                                                          .c2Status ==
+                                                                  if ((_visibleStatus(2) ?? '') ==
                                                                       'Confirmed') {
                                                                     return Color(
                                                                         0xFF0CD40B);
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Pending') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .primary;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Denied') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .error;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Opted out') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .error;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Not sent') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
@@ -3444,7 +3512,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             }),
                                                         ],
                                                       ),
-                                                      TextFormField(
+                                                      TextFormField(key: const ValueKey('contact-2-lastName'),
                                                         controller: _model
                                                             .c2LastTFTextController,
                                                         focusNode: _model
@@ -3482,31 +3550,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   valueOrDefault<
                                                                       Color>(
                                                                 () {
-                                                                  if (_model
-                                                                          .c2Status ==
+                                                                  if ((_visibleStatus(2) ?? '') ==
                                                                       'Confirmed') {
                                                                     return Color(
                                                                         0xFF0CD40B);
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Pending') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .primary;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Denied') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .error;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Opted out') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .error;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Not sent') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
@@ -3617,7 +3680,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             }),
                                                         ],
                                                       ),
-                                                      TextFormField(
+                                                      TextFormField(key: const ValueKey('contact-2-phone'),
                                                         controller: _model
                                                             .c2PhoneTFTextController,
                                                         focusNode: _model
@@ -3698,31 +3761,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   valueOrDefault<
                                                                       Color>(
                                                                 () {
-                                                                  if (_model
-                                                                          .c2Status ==
+                                                                  if ((_visibleStatus(2) ?? '') ==
                                                                       'Confirmed') {
                                                                     return Color(
                                                                         0xFF0CD40B);
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Pending') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .primary;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Denied') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .error;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Opted out') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
                                                                         .error;
-                                                                  } else if (_model
-                                                                          .c2Status ==
+                                                                  } else if ((_visibleStatus(2) ?? '') ==
                                                                       'Not sent') {
                                                                     return FlutterFlowTheme.of(
                                                                             context)
@@ -3835,7 +3893,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                               alignment:
                                                                   AlignmentDirectional(
                                                                       0.0, 0.0),
-                                                              child: Row(
+                                                              child: Row(key: const ValueKey('contact-status-2'),
                                                                 mainAxisSize:
                                                                     MainAxisSize
                                                                         .max,
@@ -3866,25 +3924,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                     ),
                                                                   ),
                                                                   Text(
-                                                                    () {
-                                                                      if (_model
-                                                                              .c2Status ==
+                                                                    () {if (_visibleStatus(2)==null) return _loadingContacts ? '...' : '--';
+                                                                      if ((_visibleStatus(2) ?? '') ==
                                                                           'Not sent') {
                                                                         return AppLocalizations.of(context)!.msgNotSent;
-                                                                      } else if (_model
-                                                                              .c2Status ==
+                                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                                           'Pending') {
                                                                         return AppLocalizations.of(context)!.msgPending;
-                                                                      } else if (_model
-                                                                              .c2Status ==
+                                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                                           'Confirmed') {
                                                                         return AppLocalizations.of(context)!.msgConfirmed;
-                                                                      } else if (_model
-                                                                              .c2Status ==
+                                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                                           'Denied') {
                                                                         return AppLocalizations.of(context)!.msgDenied;
-                                                                      } else if (_model
-                                                                              .c2Status ==
+                                                                      } else if ((_visibleStatus(2) ?? '') ==
                                                                           'Opted out') {
                                                                         return AppLocalizations.of(context)!.msgOptedOut;
                                                                       } else {
@@ -3900,15 +3953,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           color:
                                                                               valueOrDefault<Color>(
                                                                             () {
-                                                                              if (_model.c2Status == 'Confirmed') {
+                                                                              if ((_visibleStatus(2) ?? '') == 'Confirmed') {
                                                                                 return Color(0xFF0CD40B);
-                                                                              } else if (_model.c2Status == 'Pending') {
+                                                                              } else if ((_visibleStatus(2) ?? '') == 'Pending') {
                                                                                 return FlutterFlowTheme.of(context).primary;
-                                                                              } else if (_model.c2Status == 'Denied') {
+                                                                              } else if ((_visibleStatus(2) ?? '') == 'Denied') {
                                                                                 return FlutterFlowTheme.of(context).error;
-                                                                              } else if (_model.c2Status == 'Opted out') {
+                                                                              } else if ((_visibleStatus(2) ?? '') == 'Opted out') {
                                                                                 return FlutterFlowTheme.of(context).error;
-                                                                              } else if (_model.c2Status == 'Not sent') {
+                                                                              } else if ((_visibleStatus(2) ?? '') == 'Not sent') {
                                                                                 return FlutterFlowTheme.of(context).primaryText;
                                                                               } else {
                                                                                 return FlutterFlowTheme.of(context).primary;
@@ -3959,7 +4012,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         .circular(
                                                                             8.0),
                                                               ),
-                                                              child: _buildConsentInviteLabel(2, _model.c2Status),
+                                                              child: _buildConsentInviteLabel(2, (_visibleStatus(2) ?? '')),
                                                             ),
                                                           ),
                                                           Opacity(
@@ -3969,9 +4022,9 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   AlignmentDirectional(
                                                                       0.0, 0.0),
                                                               child:
-                                                                  FFButtonWidget(
+                                                                  FFButtonWidget(key: const ValueKey('invite-contact-2'),
                                                                 onPressed:
-                                                                    () async {
+                                                                    () => _withConsentInviteProgress(2, () async {
                                                                   if (_showingConsentInviteSent(
                                                                       2)) {
                                                                     return;
@@ -4319,8 +4372,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                                   safeSetState(
                                                                       () {});
-                                                                },
-                                                                text: _model.c2Status ==
+                                                                }),
+                                                                text: (_visibleStatus(2) ?? '') ==
                                                                         'Not sent'
                                                                     ? AppLocalizations.of(context)!.msgSendConfirmationLink
                                                                     : AppLocalizations.of(context)!.msgResendConfirmationLink,
@@ -4398,29 +4451,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               border: Border.all(
                                                 color: valueOrDefault<Color>(
                                                   () {
-                                                    if (_model.c3Status ==
+                                                    if ((_visibleStatus(3) ?? '') ==
                                                         'Confirmed') {
                                                       return Color(0xFF0CD40B);
-                                                    } else if (_model
-                                                            .c3Status ==
+                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                         'Pending') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .primary;
-                                                    } else if (_model
-                                                            .c3Status ==
+                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                         'Denied') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c3Status ==
+                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                         'Opted out') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c3Status ==
+                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                         'Not sent') {
                                                       return FlutterFlowTheme
                                                               .of(context)
@@ -4470,7 +4519,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           .titleMediumIsCustom,
                                                                 ),
                                                       ),
-                                                      FlutterFlowIconButton(
+                                                      FlutterFlowIconButton(key: const ValueKey('delete-contact-3'),
                                                         borderRadius: 16.0,
                                                         buttonSize: 32.0,
                                                         fillColor:
@@ -4494,7 +4543,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       3))
                                                     _buildContactEntryChoice(3)
                                                   else ...[
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-3-firstName'),
                                                       controller: _model
                                                           .c3FirstTFTextController,
                                                       focusNode: _model
@@ -4532,31 +4581,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c3Status ==
+                                                                if ((_visibleStatus(3) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -4664,7 +4708,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-3-lastName'),
                                                       controller: _model
                                                           .c3LastTFTextController,
                                                       focusNode: _model
@@ -4702,31 +4746,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c3Status ==
+                                                                if ((_visibleStatus(3) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -4834,7 +4873,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-3-phone'),
                                                       controller: _model
                                                           .c3PhoneTFTextController,
                                                       focusNode: _model
@@ -4913,31 +4952,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c3Status ==
+                                                                if ((_visibleStatus(3) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c3Status ==
+                                                                } else if ((_visibleStatus(3) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -5047,7 +5081,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             alignment:
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
-                                                            child: Row(
+                                                            child: Row(key: const ValueKey('contact-status-3'),
                                                               mainAxisSize:
                                                                   MainAxisSize
                                                                       .max,
@@ -5078,25 +5112,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   ),
                                                                 ),
                                                                 Text(
-                                                                  () {
-                                                                    if (_model
-                                                                            .c3Status ==
+                                                                  () {if (_visibleStatus(3)==null) return _loadingContacts ? '...' : '--';
+                                                                    if ((_visibleStatus(3) ?? '') ==
                                                                         'Not sent') {
                                                                       return AppLocalizations.of(context)!.msgNotSent;
-                                                                    } else if (_model
-                                                                            .c3Status ==
+                                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                                         'Pending') {
                                                                       return AppLocalizations.of(context)!.msgPending;
-                                                                    } else if (_model
-                                                                            .c3Status ==
+                                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                                         'Confirmed') {
                                                                       return AppLocalizations.of(context)!.msgConfirmed;
-                                                                    } else if (_model
-                                                                            .c3Status ==
+                                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                                         'Denied') {
                                                                       return AppLocalizations.of(context)!.msgDenied;
-                                                                    } else if (_model
-                                                                            .c3Status ==
+                                                                    } else if ((_visibleStatus(3) ?? '') ==
                                                                         'Opted out') {
                                                                       return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
@@ -5112,19 +5141,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         color: valueOrDefault<
                                                                             Color>(
                                                                           () {
-                                                                            if (_model.c3Status ==
+                                                                            if ((_visibleStatus(3) ?? '') ==
                                                                                 'Confirmed') {
                                                                               return Color(0xFF0CD40B);
-                                                                            } else if (_model.c3Status ==
+                                                                            } else if ((_visibleStatus(3) ?? '') ==
                                                                                 'Pending') {
                                                                               return FlutterFlowTheme.of(context).primary;
-                                                                            } else if (_model.c3Status ==
+                                                                            } else if ((_visibleStatus(3) ?? '') ==
                                                                                 'Denied') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c3Status ==
+                                                                            } else if ((_visibleStatus(3) ?? '') ==
                                                                                 'Opted out') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c3Status ==
+                                                                            } else if ((_visibleStatus(3) ?? '') ==
                                                                                 'Not sent') {
                                                                               return FlutterFlowTheme.of(context).primaryText;
                                                                             } else {
@@ -5177,15 +5206,15 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         .circular(
                                                                             8.0),
                                                               ),
-                                                              child: _buildConsentInviteLabel(3, _model.c3Status),
+                                                              child: _buildConsentInviteLabel(3, (_visibleStatus(3) ?? '')),
                                                             ),
                                                           ),
                                                           Opacity(
                                                             opacity: 0.0,
                                                             child:
-                                                                FFButtonWidget(
+                                                                FFButtonWidget(key: const ValueKey('invite-contact-3'),
                                                               onPressed:
-                                                                  () async {
+                                                                  () => _withConsentInviteProgress(3, () async {
                                                                 if (_showingConsentInviteSent(
                                                                     3)) {
                                                                   return;
@@ -5596,8 +5625,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                                 safeSetState(
                                                                     () {});
-                                                              },
-                                                              text: _model.c3Status ==
+                                                              }),
+                                                              text: (_visibleStatus(3) ?? '') ==
                                                                       'Not sent'
                                                                   ? AppLocalizations.of(context)!.msgSendConfirmationLink
                                                                   : AppLocalizations.of(context)!.msgResendConfirmationLink,
@@ -5678,29 +5707,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               border: Border.all(
                                                 color: valueOrDefault<Color>(
                                                   () {
-                                                    if (_model.c4Status ==
+                                                    if ((_visibleStatus(4) ?? '') ==
                                                         'Confirmed') {
                                                       return Color(0xFF0CD40B);
-                                                    } else if (_model
-                                                            .c4Status ==
+                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                         'Pending') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .primary;
-                                                    } else if (_model
-                                                            .c4Status ==
+                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                         'Denied') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c4Status ==
+                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                         'Opted out') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c4Status ==
+                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                         'Not sent') {
                                                       return FlutterFlowTheme
                                                               .of(context)
@@ -5750,7 +5775,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           .titleMediumIsCustom,
                                                                 ),
                                                       ),
-                                                      FlutterFlowIconButton(
+                                                      FlutterFlowIconButton(key: const ValueKey('delete-contact-4'),
                                                         borderRadius: 16.0,
                                                         buttonSize: 32.0,
                                                         fillColor:
@@ -5774,7 +5799,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       4))
                                                     _buildContactEntryChoice(4)
                                                   else ...[
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-4-firstName'),
                                                       controller: _model
                                                           .c4FirstTFTextController,
                                                       focusNode: _model
@@ -5812,31 +5837,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c4Status ==
+                                                                if ((_visibleStatus(4) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -5944,7 +5964,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-4-lastName'),
                                                       controller: _model
                                                           .c4LastTFTextController,
                                                       focusNode: _model
@@ -5982,31 +6002,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c4Status ==
+                                                                if ((_visibleStatus(4) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -6114,7 +6129,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-4-phone'),
                                                       controller: _model
                                                           .c4PhoneTFTextController,
                                                       focusNode: _model
@@ -6193,31 +6208,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c4Status ==
+                                                                if ((_visibleStatus(4) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c4Status ==
+                                                                } else if ((_visibleStatus(4) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -6327,7 +6337,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             alignment:
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
-                                                            child: Row(
+                                                            child: Row(key: const ValueKey('contact-status-4'),
                                                               mainAxisSize:
                                                                   MainAxisSize
                                                                       .max,
@@ -6358,25 +6368,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   ),
                                                                 ),
                                                                 Text(
-                                                                  () {
-                                                                    if (_model
-                                                                            .c4Status ==
+                                                                  () {if (_visibleStatus(4)==null) return _loadingContacts ? '...' : '--';
+                                                                    if ((_visibleStatus(4) ?? '') ==
                                                                         'Not sent') {
                                                                       return AppLocalizations.of(context)!.msgNotSent;
-                                                                    } else if (_model
-                                                                            .c4Status ==
+                                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                                         'Pending') {
                                                                       return AppLocalizations.of(context)!.msgPending;
-                                                                    } else if (_model
-                                                                            .c4Status ==
+                                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                                         'Confirmed') {
                                                                       return AppLocalizations.of(context)!.msgConfirmed;
-                                                                    } else if (_model
-                                                                            .c4Status ==
+                                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                                         'Denied') {
                                                                       return AppLocalizations.of(context)!.msgDenied;
-                                                                    } else if (_model
-                                                                            .c4Status ==
+                                                                    } else if ((_visibleStatus(4) ?? '') ==
                                                                         'Opted out') {
                                                                       return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
@@ -6392,19 +6397,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         color: valueOrDefault<
                                                                             Color>(
                                                                           () {
-                                                                            if (_model.c4Status ==
+                                                                            if ((_visibleStatus(4) ?? '') ==
                                                                                 'Confirmed') {
                                                                               return Color(0xFF0CD40B);
-                                                                            } else if (_model.c4Status ==
+                                                                            } else if ((_visibleStatus(4) ?? '') ==
                                                                                 'Pending') {
                                                                               return FlutterFlowTheme.of(context).primary;
-                                                                            } else if (_model.c4Status ==
+                                                                            } else if ((_visibleStatus(4) ?? '') ==
                                                                                 'Denied') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c4Status ==
+                                                                            } else if ((_visibleStatus(4) ?? '') ==
                                                                                 'Opted out') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c4Status ==
+                                                                            } else if ((_visibleStatus(4) ?? '') ==
                                                                                 'Not sent') {
                                                                               return FlutterFlowTheme.of(context).primaryText;
                                                                             } else {
@@ -6457,14 +6462,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             alignment:
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
-                                                            child: _buildConsentInviteLabel(4, _model.c4Status),
+                                                            child: _buildConsentInviteLabel(4, (_visibleStatus(4) ?? '')),
                                                           ),
                                                         ),
                                                         Opacity(
                                                           opacity: 0.0,
-                                                          child: FFButtonWidget(
+                                                          child: FFButtonWidget(key: const ValueKey('invite-contact-4'),
                                                             onPressed:
-                                                                () async {
+                                                                () => _withConsentInviteProgress(4, () async {
                                                               if (_showingConsentInviteSent(
                                                                   4)) {
                                                                 return;
@@ -6919,8 +6924,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                               safeSetState(
                                                                   () {});
-                                                            },
-                                                            text: _model.c4Status ==
+                                                            }),
+                                                            text: (_visibleStatus(4) ?? '') ==
                                                                     'Not sent'
                                                                 ? AppLocalizations.of(context)!.msgSendConfirmationLink
                                                                 : AppLocalizations.of(context)!.msgResendConfirmationLink,
@@ -6999,29 +7004,25 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                               border: Border.all(
                                                 color: valueOrDefault<Color>(
                                                   () {
-                                                    if (_model.c5Status ==
+                                                    if ((_visibleStatus(5) ?? '') ==
                                                         'Confirmed') {
                                                       return Color(0xFF0CD40B);
-                                                    } else if (_model
-                                                            .c5Status ==
+                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                         'Pending') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .primary;
-                                                    } else if (_model
-                                                            .c5Status ==
+                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                         'Denied') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c5Status ==
+                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                         'Opted out') {
                                                       return FlutterFlowTheme
                                                               .of(context)
                                                           .error;
-                                                    } else if (_model
-                                                            .c5Status ==
+                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                         'Not sent') {
                                                       return FlutterFlowTheme
                                                               .of(context)
@@ -7071,7 +7072,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                           .titleMediumIsCustom,
                                                                 ),
                                                       ),
-                                                      FlutterFlowIconButton(
+                                                      FlutterFlowIconButton(key: const ValueKey('delete-contact-5'),
                                                         borderRadius: 16.0,
                                                         buttonSize: 32.0,
                                                         fillColor:
@@ -7095,7 +7096,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                       5))
                                                     _buildContactEntryChoice(5)
                                                   else ...[
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-5-firstName'),
                                                       controller: _model
                                                           .c5FirstTFTextController,
                                                       focusNode: _model
@@ -7133,31 +7134,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c5Status ==
+                                                                if ((_visibleStatus(5) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -7265,7 +7261,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-5-lastName'),
                                                       controller: _model
                                                           .c5LastTFTextController,
                                                       focusNode: _model
@@ -7303,31 +7299,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c5Status ==
+                                                                if ((_visibleStatus(5) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -7435,7 +7426,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                           }),
                                                       ],
                                                     ),
-                                                    TextFormField(
+                                                    TextFormField(key: const ValueKey('contact-5-phone'),
                                                       controller: _model
                                                           .c5PhoneTFTextController,
                                                       focusNode: _model
@@ -7514,31 +7505,26 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                 valueOrDefault<
                                                                     Color>(
                                                               () {
-                                                                if (_model
-                                                                        .c5Status ==
+                                                                if ((_visibleStatus(5) ?? '') ==
                                                                     'Confirmed') {
                                                                   return Color(
                                                                       0xFF0CD40B);
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Pending') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .primary;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Denied') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Opted out') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
                                                                       .error;
-                                                                } else if (_model
-                                                                        .c5Status ==
+                                                                } else if ((_visibleStatus(5) ?? '') ==
                                                                     'Not sent') {
                                                                   return FlutterFlowTheme.of(
                                                                           context)
@@ -7648,7 +7634,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                             alignment:
                                                                 AlignmentDirectional(
                                                                     0.0, 0.0),
-                                                            child: Row(
+                                                            child: Row(key: const ValueKey('contact-status-5'),
                                                               mainAxisSize:
                                                                   MainAxisSize
                                                                       .max,
@@ -7679,25 +7665,20 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                   ),
                                                                 ),
                                                                 Text(
-                                                                  () {
-                                                                    if (_model
-                                                                            .c5Status ==
+                                                                  () {if (_visibleStatus(5)==null) return _loadingContacts ? '...' : '--';
+                                                                    if ((_visibleStatus(5) ?? '') ==
                                                                         'Not sent') {
                                                                       return AppLocalizations.of(context)!.msgNotSent;
-                                                                    } else if (_model
-                                                                            .c5Status ==
+                                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                                         'Pending') {
                                                                       return AppLocalizations.of(context)!.msgPending;
-                                                                    } else if (_model
-                                                                            .c5Status ==
+                                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                                         'Confirmed') {
                                                                       return AppLocalizations.of(context)!.msgConfirmed;
-                                                                    } else if (_model
-                                                                            .c5Status ==
+                                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                                         'Denied') {
                                                                       return AppLocalizations.of(context)!.msgDenied;
-                                                                    } else if (_model
-                                                                            .c5Status ==
+                                                                    } else if ((_visibleStatus(5) ?? '') ==
                                                                         'Opted out') {
                                                                       return AppLocalizations.of(context)!.msgOptedOut;
                                                                     } else {
@@ -7713,19 +7694,19 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                         color: valueOrDefault<
                                                                             Color>(
                                                                           () {
-                                                                            if (_model.c5Status ==
+                                                                            if ((_visibleStatus(5) ?? '') ==
                                                                                 'Confirmed') {
                                                                               return Color(0xFF0CD40B);
-                                                                            } else if (_model.c5Status ==
+                                                                            } else if ((_visibleStatus(5) ?? '') ==
                                                                                 'Pending') {
                                                                               return FlutterFlowTheme.of(context).primary;
-                                                                            } else if (_model.c5Status ==
+                                                                            } else if ((_visibleStatus(5) ?? '') ==
                                                                                 'Denied') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c5Status ==
+                                                                            } else if ((_visibleStatus(5) ?? '') ==
                                                                                 'Opted out') {
                                                                               return FlutterFlowTheme.of(context).error;
-                                                                            } else if (_model.c5Status ==
+                                                                            } else if ((_visibleStatus(5) ?? '') ==
                                                                                 'Not sent') {
                                                                               return FlutterFlowTheme.of(context).primaryText;
                                                                             } else {
@@ -7775,14 +7756,14 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                                                       .circular(
                                                                           8.0),
                                                             ),
-                                                            child: _buildConsentInviteLabel(5, _model.c5Status),
+                                                            child: _buildConsentInviteLabel(5, (_visibleStatus(5) ?? '')),
                                                           ),
                                                         ),
                                                         Opacity(
                                                           opacity: 0.0,
-                                                          child: FFButtonWidget(
+                                                          child: FFButtonWidget(key: const ValueKey('invite-contact-5'),
                                                             onPressed:
-                                                                () async {
+                                                                () => _withConsentInviteProgress(5, () async {
                                                               if (_showingConsentInviteSent(
                                                                   5)) {
                                                                 return;
@@ -8237,8 +8218,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
 
                                                               safeSetState(
                                                                   () {});
-                                                            },
-                                                            text: _model.c5Status ==
+                                                            }),
+                                                            text: (_visibleStatus(5) ?? '') ==
                                                                     'Not sent'
                                                                 ? AppLocalizations.of(context)!.msgSendConfirmationLink
                                                                 : AppLocalizations.of(context)!.msgResendConfirmationLink,
@@ -8296,7 +8277,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                         ),
                                       ),
                                     if (_model.contactsCount <= 4)
-                                      FlutterFlowIconButton(
+                                      FlutterFlowIconButton(key: const ValueKey('add-emergency-contact'),
                                         borderRadius: 0.0,
                                         fillColor: Colors.white,
                                         icon: Icon(
@@ -8316,8 +8297,8 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                       ),
                                     Align(
                                       alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: FFButtonWidget(
-                                        onPressed: () async {
+                                      child: FFButtonWidget(key: const ValueKey('save-emergency-contacts'),
+                                        onPressed: _initialLoadComplete ? () async {
                                           await actions.dismissKeyboard(
                                             context,
                                           );
@@ -8594,7 +8575,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                           }
 
                                           safeSetState(() {});
-                                        },
+                                        } : null,
                                         text: AppLocalizations.of(context)!.msgSaveExit,
                                         options: FFButtonOptions(
                                           width: 200.0,
@@ -8647,7 +8628,7 @@ class _EmergencyContactsWidgetState extends State<EmergencyContactsWidget> {
                                 ),
                               ),
                             ),
-                          ),
+                          )),
                         ],
                       ),
                     ],

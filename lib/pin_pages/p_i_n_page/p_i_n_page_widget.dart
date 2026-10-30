@@ -1948,9 +1948,17 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                             .cast<String>();
                                                         safeSetState(() {});
 
-                                                        context.goNamed(
-                                                            AuthRouterWidget
-                                                                .routeName);
+                                                        // Complete accounts already passed AuthRouter
+                                                        // before PIN. Preserve its setup fallback for
+                                                        // older or incomplete profiles.
+                                                        final readyForHome =
+                                                            buttonDecoyWalletRow?.userId == attempt.userId &&
+                                                            buttonDecoyWalletRow?.emailVerified == true &&
+                                                            buttonDecoyWalletRow?.setupComplete == true &&
+                                                            buttonDecoyWalletRow?.agreementsComplete == true;
+                                                        context.goNamed(readyForHome
+                                                            ? HomePageWidget.routeName
+                                                            : AuthRouterWidget.routeName);
                                                       } else {
                                                         _model.joinedPin = "";
                                                         safeSetState(() {});

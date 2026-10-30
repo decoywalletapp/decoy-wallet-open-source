@@ -14,7 +14,7 @@ void main() {
 
   for (final reducedMotion in [false, true]) {
     testWidgets(
-        'PIN and title fade through without remounting: '
+        'PIN remains visible and blocks input without remounting: '
         'reducedMotion=$reducedMotion', (tester) async {
       final active = ValueNotifier(false);
       addTearDown(active.dispose);
@@ -40,9 +40,7 @@ void main() {
         ),
       ));
       final inputElement = tester.element(find.byType(TextButton));
-      double opacity(String key) =>
-          tester.widget<Opacity>(find.byKey(ValueKey(key))).opacity;
-      expect(opacity('pin-input-opacity'), 1);
+      expect(find.byType(Opacity), findsNothing);
       active.value = true;
       await tester.pump();
       expect(
@@ -52,19 +50,9 @@ void main() {
               .absorbing,
           isTrue);
       expect(find.text('PIN INPUT').hitTestable(), findsNothing);
-      if (!reducedMotion) {
-        expect(opacity('pin-input-opacity'), 1);
-        expect(opacity('pin-title-opacity'), 0);
-        await tester.pump(const Duration(milliseconds: 40));
-        expect(opacity('pin-input-opacity'), inExclusiveRange(0, 1));
-        expect(opacity('pin-title-opacity'), 0);
-        await tester.pump(const Duration(milliseconds: 140));
-        expect(opacity('pin-input-opacity'), 0);
-        expect(opacity('pin-title-opacity'), inExclusiveRange(0, 1));
-        await tester.pump(const Duration(milliseconds: 140));
-      }
-      expect(opacity('pin-input-opacity'), 0);
-      expect(opacity('pin-title-opacity'), 1);
+      await tester.pump(const Duration(milliseconds: 320));
+      expect(find.byType(Opacity), findsNothing);
+      expect(find.byKey(const ValueKey('pin-unlock-title')), findsNothing);
       expect(tester.element(find.byType(TextButton)), same(inputElement));
       expect(find.byType(CircularProgressIndicator), findsNothing);
       expect(taps, 0);
@@ -72,7 +60,7 @@ void main() {
       // A failed preparation restores input immediately, with no animation wait.
       active.value = false;
       await tester.pump();
-      expect(opacity('pin-input-opacity'), 1);
+      expect(find.byType(Opacity), findsNothing);
       expect(find.byKey(const ValueKey('pin-unlock-title')), findsNothing);
       expect(tester.element(find.byType(TextButton)), same(inputElement));
       await tester.tap(find.text('PIN INPUT'));

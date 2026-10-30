@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '/auth/base_auth_user_provider.dart';
 import '/auth/app_unlock_state.dart';
 import '/auth/unlock_diagnostics.dart';
-import '/components/wallet_title_splash.dart';
 import '/auth/auth_link_service.dart';
 import '/backend/supabase/supabase.dart';
 export '/auth/app_unlock_state.dart';
@@ -796,6 +795,12 @@ class FFRoute {
           // and PIN pages stable so refreshes cannot restart an in-flight unlock.
           final isWalletEntry = name == HomePageWidget.routeName ||
               name == DuressHomePageWidget.routeName;
+          // PIN proof already selected the permitted destination. Do not add
+          // another branded interstitial or animate over a removed PIN page.
+          if (isWalletEntry) {
+            return NoTransitionPage(
+                key: state.pageKey, name: state.name, child: child);
+          }
           final transitionInfo = access == AppRouteAccess.pin
               ? const TransitionInfo(
                   hasTransition: true,
@@ -806,14 +811,7 @@ class FFRoute {
                       hasTransition: true,
                       duration: Duration(milliseconds: 1),
                     )
-              : isWalletEntry
-                  ? TransitionInfo(
-                      hasTransition: true,
-                      duration: MediaQuery.disableAnimationsOf(context)
-                          ? Duration.zero
-                          : const Duration(milliseconds: 320),
-                    )
-                  : state.transitionInfo;
+              : state.transitionInfo;
           return transitionInfo.hasTransition
               ? CustomTransitionPage(
                   key: state.pageKey,
@@ -822,36 +820,6 @@ class FFRoute {
                   transitionDuration: transitionInfo.duration,
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
-                    if (isWalletEntry) {
-                      // The guard removes the old PIN page immediately. Keep
-                      // only neutral branding behind either wallet's entrance.
-                      return ClipRect(
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            const IgnorePointer(
-                              child: ExcludeSemantics(
-                                child: Material(
-                                  key: ValueKey('wallet-transition-backdrop'),
-                                  color: Colors.black,
-                                  child: SafeArea(child: WalletTitleSplash()),
-                                ),
-                              ),
-                            ),
-                            SlideTransition(
-                              key: const ValueKey('wallet-entry-slide'),
-                              position: animation.drive(
-                                Tween<Offset>(
-                                  begin: const Offset(1, 0),
-                                  end: Offset.zero,
-                                ).chain(CurveTween(curve: Curves.easeInOutCubic)),
-                              ),
-                              child: child,
-                            ),
-                          ],
-                        ),
-                      );
-                    }
                     return PageTransition(
                       type: transitionInfo.transitionType,
                       duration: transitionInfo.duration,

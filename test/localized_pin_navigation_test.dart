@@ -144,6 +144,9 @@ void main() {
     app.unlock.preparePin(app.unlock.attempt, paidDecoyAllowed: true);
     row = {
       'user_id': user.id,
+      'email_verified': true,
+      'setup_complete': true,
+      'agreements_complete': true,
       'decoy_pin_contacts_enabled': true,
       'use_current_location': false,
       'contacts_complete': false,
@@ -187,11 +190,16 @@ void main() {
               builder: (_, __) =>
                   const Scaffold(body: Text('DECOY DESTINATION'))).toRoute(app),
           FFRoute(
-                  name: 'AuthRouter',
-                  path: '/authRouter',
+                  name: 'HomePage',
+                  path: '/homePage',
                   builder: (_, __) =>
                       const Scaffold(body: Text('ACCOUNT DESTINATION')))
               .toRoute(app),
+          FFRoute(
+              name: 'AuthRouter',
+              path: '/authRouter',
+              builder: (_, __) =>
+                  const Scaffold(body: Text('SETUP CHECKS'))).toRoute(app),
         ]);
     addTearDown(router.dispose);
     await http.runWithClient(() async {
@@ -240,15 +248,11 @@ void main() {
     }, () => client);
   }
 
-  testWidgets('slow preparation keeps a stable wallet title without a spinner',
+  testWidgets('slow preparation keeps PIN visible without a wallet title',
       (tester) async {
     consentHold = Completer<void>();
     await enter(tester, '9876', whilePreparing: () async {
-      expect(find.byKey(const ValueKey('pin-unlock-title')), findsOneWidget);
-      expect(find.byType(WalletTitleSplash), findsOneWidget);
-      final strings =
-          AppLocalizations.of(tester.element(find.byType(PINPageWidget)))!;
-      expect(find.text(strings.msgItcoinWallet), findsOneWidget);
+      expect(find.byType(WalletTitleSplash), findsNothing);
       expect(
           tester
               .widget<AbsorbPointer>(
@@ -256,14 +260,7 @@ void main() {
               .absorbing,
           isTrue);
       await tester.pump(const Duration(milliseconds: 320));
-      // The hidden Enter button retains its own spinner while awaiting work.
-      for (final spinner in find.byType(CircularProgressIndicator).evaluate()) {
-        final opacity = tester.widgetList<Opacity>(find.ancestor(
-          of: find.byWidget(spinner.widget),
-          matching: find.byType(Opacity),
-        ));
-        expect(opacity.any((widget) => widget.opacity == 0), isTrue);
-      }
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
       expect(
           tester
               .widget<AbsorbPointer>(
@@ -275,7 +272,7 @@ void main() {
       final originalPin = tester.state(find.byType(PINPageWidget));
       await tester.pump(const Duration(seconds: 2));
       expect(tester.state(find.byType(PINPageWidget)), same(originalPin));
-      expect(find.byKey(const ValueKey('pin-unlock-title')), findsOneWidget);
+      expect(find.byKey(const ValueKey('pin-unlock-title')), findsNothing);
       expect(
           find.descendant(
             of: find.byType(WalletTitleSplash),
@@ -289,6 +286,23 @@ void main() {
     expect(find.byKey(const ValueKey('pin-unlock-title')), findsNothing);
     expect(alerts, isEmpty);
   });
+
+  for (final field in [
+    'email_verified',
+    'setup_complete',
+    'agreements_complete'
+  ]) {
+    for (final value in [false, null]) {
+      testWidgets('account PIN keeps setup checks: $field=$value',
+          (tester) async {
+        row[field] = value;
+        await enter(tester, '1234');
+        expect(find.text('SETUP CHECKS'), findsOneWidget);
+        expect(find.text('ACCOUNT DESTINATION'), findsNothing);
+        expect(alerts, isEmpty);
+      });
+    }
+  }
 
   testWidgets('failed preparation restores the same visible PIN input',
       (tester) async {
