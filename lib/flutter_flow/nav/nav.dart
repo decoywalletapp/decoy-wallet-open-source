@@ -795,9 +795,9 @@ class FFRoute {
           // and PIN pages stable so refreshes cannot restart an in-flight unlock.
           final isWalletEntry = name == HomePageWidget.routeName ||
               name == DuressHomePageWidget.routeName;
-          // The PIN guard removes the previous page immediately. Fade only the
-          // permitted destination over the PIN's neutral background, never a
-          // retained wallet or a second branded screen.
+          // Account PIN fades out for 100 ms before unlock; its Home finishes
+          // the same 280 ms handoff. Keep the accepted Decoy entry unchanged.
+          // Protected pages are still removed immediately when access changes.
           if (isWalletEntry) {
             return CustomTransitionPage(
               key: state.pageKey,
@@ -805,14 +805,19 @@ class FFRoute {
               child: child,
               transitionDuration: MediaQuery.disableAnimationsOf(context)
                   ? Duration.zero
-                  : const Duration(milliseconds: 280),
+                  : Duration(milliseconds:
+                      name == HomePageWidget.routeName ? 180 : 280),
               reverseTransitionDuration: Duration.zero,
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) => ColoredBox(
                 color: Colors.black,
                 child: FadeTransition(
                   key: const ValueKey('wallet-entry-fade'),
-                  opacity: animation.drive(CurveTween(curve: Curves.easeOutCubic)),
+                  opacity: animation.drive(CurveTween(
+                    curve: name == HomePageWidget.routeName
+                        ? Curves.easeInOutCubic
+                        : Curves.easeOutCubic,
+                  )),
                   child: child,
                 ),
               ),

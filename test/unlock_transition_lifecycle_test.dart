@@ -169,7 +169,7 @@ void main() {
               route.transitionDuration,
               reducedMotion
                   ? Duration.zero
-                  : const Duration(milliseconds: 280));
+                  : Duration(milliseconds: decoy ? 280 : 180));
           expect(route.reverseTransitionDuration, Duration.zero);
 
           final originalWallet = tester.state(probe);

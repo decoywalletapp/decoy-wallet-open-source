@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:decoy_wallet_app/app_state.dart';
 import 'package:decoy_wallet_app/auth/supabase_auth/supabase_user_provider.dart';
@@ -8,11 +10,13 @@ import 'package:decoy_wallet_app/backend/supabase/supabase.dart';
 import 'package:decoy_wallet_app/custom_code/actions/aes_gcm_encrypt_string.dart';
 import 'package:decoy_wallet_app/duress_mode/duress_home_page/duress_home_page_widget.dart';
 import 'package:decoy_wallet_app/flutter_flow/nav/nav.dart';
+import 'package:decoy_wallet_app/home_pages/home_page/home_page_widget.dart';
 import 'package:decoy_wallet_app/l10n/app_localizations.dart';
 import 'package:decoy_wallet_app/pin_pages/p_i_n_page/p_i_n_page_widget.dart';
 import 'package:decoy_wallet_app/services/account_balance.dart';
 import 'package:decoy_wallet_app/welcom_pages/login_page/login_page_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -272,6 +276,161 @@ void main() {
     entitlementMissingAfterRepair = false;
     alerts.clear();
   });
+
+  for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
+    for (final reducedMotion in [false, true]) {
+      for (final interrupt in [false, true]) {
+        testWidgets(
+            'actual account PIN handoff: $platform, reducedMotion=$reducedMotion, interrupt=$interrupt',
+            (tester) async {
+          responseDelay = const Duration(milliseconds: 10);
+          final previousLocation = GeolocatorPlatform.instance;
+          GeolocatorPlatform.instance = _NoLocation();
+          addTearDown(() => GeolocatorPlatform.instance = previousLocation);
+          await tester.runAsync(() async {
+            await Supabase.instance.client.auth.signOut();
+            await Supabase.instance.client.auth
+                .setInitialSession(jsonEncode(session));
+            FFAppState.reset();
+            await FFAppState().initializePersistedState();
+          });
+          currentUser = DecoyWalletAppSupabaseUser(
+              Supabase.instance.client.auth.currentUser);
+          app.update(currentUser!);
+          app.stopShowingSplashImage();
+          app.clearRedirectLocation();
+          app.unlock.lock();
+          app.unlock.preparePin(app.unlock.attempt, paidDecoyAllowed: true);
+          FFAppState().biometricsEnabled = false;
+          requests.clear();
+          tester.view.physicalSize = const Size(402, 874);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.resetPhysicalSize);
+          addTearDown(tester.view.resetDevicePixelRatio);
+          final router = createRouter(app);
+          addTearDown(router.dispose);
+          router.go('/PINPage');
+          final previewPath = !reducedMotion && !interrupt &&
+                  platform == TargetPlatform.iOS
+              ? Platform.environment['DECOY_ACCOUNT_TRANSITION_PREVIEW'] : null;
+          final frame = GlobalKey();
+          var frameNumber = 0;
+          Future<void> captureFrame() async {
+            if (previewPath == null) return;
+            await tester.runAsync(() async {
+              final boundary = frame.currentContext!.findRenderObject()!
+                  as RenderRepaintBoundary;
+              final image = await boundary.toImage();
+              try {
+                final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+                final output = File('$previewPath/frame-${frameNumber.toString().padLeft(3, '0')}.png');
+                await output.parent.create(recursive: true);
+                await output.writeAsBytes(bytes!.buffer.asUint8List());
+                frameNumber++;
+              } finally {
+                image.dispose();
+              }
+            });
+          }
+          Future<void> pumpFrames(int milliseconds) async {
+            for (var elapsed = 0; elapsed < milliseconds; elapsed++) {
+              await tester.pump(const Duration(milliseconds: 1));
+              if (elapsed % 10 == 9) await captureFrame();
+            }
+          }
+          await http.runWithClient(() async {
+            await tester.pumpWidget(ChangeNotifierProvider.value(
+              value: FFAppState(),
+              child: MaterialApp.router(
+                routerConfig: router,
+                theme: ThemeData(platform: platform),
+                builder: (context, child) => RepaintBoundary(
+                  key: frame,
+                  child: MediaQuery(
+                  data: MediaQuery.of(context)
+                      .copyWith(disableAnimations: reducedMotion),
+                  child: child!,
+                  ),
+                ),
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
+              ),
+            ));
+            await tester.pumpAndSettle();
+            for (final digit in '1234'.split('')) {
+              await tester.tap(find.text(digit));
+              await tester.pumpAndSettle();
+            }
+            final strings = AppLocalizations.of(
+                tester.element(find.byType(PINPageWidget)))!;
+            await captureFrame();
+            await tester.tap(find.text(strings.msgEnter));
+            final exit = find.byKey(const ValueKey('account-pin-exit'));
+            for (var tick = 0; tick < 100; tick++) {
+              await tester.pump(const Duration(milliseconds: 1));
+              if (app.unlock.ownerUnlocked ||
+                  (exit.evaluate().isNotEmpty &&
+                      tester.widget<FadeTransition>(exit).opacity.status ==
+                          AnimationStatus.forward)) break;
+            }
+            await tester.pump();
+            await captureFrame();
+            if (!reducedMotion) {
+              expect(app.unlock.ownerUnlocked, isFalse);
+              expect(find.byType(HomePageWidget), findsNothing);
+              expect(exit, findsOneWidget);
+              await pumpFrames(50);
+              final opacity = tester.widget<FadeTransition>(exit).opacity.value;
+              expect(opacity, greaterThan(0));
+              expect(opacity, lessThan(1));
+              expect(find.text(strings.msgEnter).hitTestable(), findsNothing);
+            }
+            if (interrupt) {
+              app.unlock.lock();
+              await tester.pump();
+              expect(find.byType(HomePageWidget), findsNothing);
+              await tester.pumpAndSettle();
+              expect(app.unlock.ownerUnlocked, isFalse);
+              expect(find.byType(HomePageWidget), findsNothing);
+            } else {
+              if (!reducedMotion) {
+                await pumpFrames(51);
+                await tester.pump();
+              }
+              expect(app.unlock.ownerUnlocked, isTrue);
+              expect(find.byType(PINPageWidget), findsNothing);
+              expect(find.byType(HomePageWidget), findsOneWidget);
+              final home = tester.state(find.byType(HomePageWidget));
+              final route = ModalRoute.of(
+                  tester.element(find.byType(HomePageWidget)))!;
+              expect(route.transitionDuration, reducedMotion
+                  ? Duration.zero : const Duration(milliseconds: 180));
+              final fade = find.byKey(const ValueKey('wallet-entry-fade'));
+              if (!reducedMotion) {
+                await pumpFrames(90);
+                expect(tester.widget<FadeTransition>(fade).opacity.value,
+                    closeTo(0.5, 0.03));
+              }
+              if (!reducedMotion) await pumpFrames(90);
+              await tester.pumpAndSettle();
+              await captureFrame();
+              expect(tester.state(find.byType(HomePageWidget)), same(home));
+              expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+              app.unlock.lock();
+              await tester.pump();
+              expect(find.byType(HomePageWidget), findsNothing);
+            }
+            expect(alerts, isEmpty);
+            expect(requests.where((path) =>
+                path == 'POST /functions/v1/verifyPin'), hasLength(1));
+            expect(tester.takeException(), isNull);
+            await tester.pumpWidget(const SizedBox());
+            await tester.pumpAndSettle();
+          }, () => client);
+        });
+      }
+    }
+  }
 
   const usableAccessCases = {
     'paid Stripe',

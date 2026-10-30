@@ -45,11 +45,33 @@ class PINPageWidget extends StatefulWidget {
   State<PINPageWidget> createState() => _PINPageWidgetState();
 }
 
-class _PINPageWidgetState extends State<PINPageWidget> {
+class _PINPageWidgetState extends State<PINPageWidget>
+    with SingleTickerProviderStateMixin {
   late PINPageModel _model;
+  late final AnimationController _accountExitController;
+  late final Animation<double> _accountExitOpacity;
+  bool _leavingAccountPin = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng? currentUserLocationValue;
+
+  Future<bool> _finishAccountPinPresentation(UnlockAttempt attempt) async {
+    if (MediaQuery.disableAnimationsOf(context)) return true;
+    setState(() => _leavingAccountPin = true);
+    try {
+      await _accountExitController.forward().orCancel;
+    } on TickerCanceled {
+      return false;
+    }
+    final current = mounted &&
+        AppStateNotifier.instance.unlock.isCurrent(attempt) &&
+        AppStateNotifier.instance.unlock.pinReady;
+    if (!current && mounted) {
+      _accountExitController.reset();
+      setState(() => _leavingAccountPin = false);
+    }
+    return current;
+  }
 
   String? _normalizeDataKeyB64(String? value) {
     final text = value?.trim() ?? '';
@@ -151,6 +173,12 @@ class _PINPageWidgetState extends State<PINPageWidget> {
   @override
   void initState() {
     super.initState();
+    // Share the existing 280 ms handoff between keypad exit and Home entry.
+    _accountExitController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 100));
+    _accountExitOpacity = _accountExitController
+        .drive(CurveTween(curve: Curves.easeInCubic))
+        .drive(Tween<double>(begin: 1, end: 0));
     unlockDiagnostics.record(UnlockTraceEvent.pinCreated);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -180,6 +208,7 @@ class _PINPageWidgetState extends State<PINPageWidget> {
 
   @override
   void dispose() {
+    _accountExitController.dispose();
     unlockDiagnostics.record(UnlockTraceEvent.pinDisposed);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -212,9 +241,14 @@ class _PINPageWidgetState extends State<PINPageWidget> {
           body: ListenableBuilder(
             listenable: AppStateNotifier.instance.unlock,
             builder: (context, child) {
-              return PinUnlockHandoff(
-                active: AppStateNotifier.instance.unlock.inDecoy,
-                child: child!,
+              return FadeTransition(
+                key: const ValueKey('account-pin-exit'),
+                opacity: _accountExitOpacity,
+                child: PinUnlockHandoff(
+                  active: _leavingAccountPin ||
+                      AppStateNotifier.instance.unlock.inDecoy,
+                  child: child!,
+                ),
               );
             },
             child: SafeArea(
@@ -1939,6 +1973,13 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                                 ''),
                                                           ) ==
                                                           true) {
+                                                        final readyForHome =
+                                                            buttonDecoyWalletRow?.userId == attempt.userId &&
+                                                            buttonDecoyWalletRow?.emailVerified == true &&
+                                                            buttonDecoyWalletRow?.setupComplete == true &&
+                                                            buttonDecoyWalletRow?.agreementsComplete == true;
+                                                        if (readyForHome &&
+                                                            !await _finishAccountPinPresentation(attempt)) return;
                                                         if (!unlock.unlockOwner(attempt)) return;
                                                         FFAppState().isLocked = false;
                                                         _model.joinedPin = "";
@@ -1951,11 +1992,6 @@ class _PINPageWidgetState extends State<PINPageWidget> {
                                                         // Complete accounts already passed AuthRouter
                                                         // before PIN. Preserve its setup fallback for
                                                         // older or incomplete profiles.
-                                                        final readyForHome =
-                                                            buttonDecoyWalletRow?.userId == attempt.userId &&
-                                                            buttonDecoyWalletRow?.emailVerified == true &&
-                                                            buttonDecoyWalletRow?.setupComplete == true &&
-                                                            buttonDecoyWalletRow?.agreementsComplete == true;
                                                         context.goNamed(readyForHome
                                                             ? HomePageWidget.routeName
                                                             : AuthRouterWidget.routeName);

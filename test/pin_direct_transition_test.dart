@@ -134,7 +134,8 @@ void main() {
       expect(find.text('PIN'), findsNothing);
       expect(find.byType(WalletTitleSplash), findsNothing);
       final route = ModalRoute.of(tester.element(destination))!;
-      expect(route.transitionDuration, const Duration(milliseconds: 280));
+      expect(route.transitionDuration,
+          Duration(milliseconds: decoy ? 280 : 180));
       expect(route.reverseTransitionDuration, Duration.zero);
       final fade = find.byKey(const ValueKey('wallet-entry-fade'));
       expect(fade, findsOneWidget);
