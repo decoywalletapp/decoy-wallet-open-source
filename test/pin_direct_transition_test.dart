@@ -27,7 +27,8 @@ class _User extends BaseAuthUser {
 }
 
 void main() {
-  Future<int> cornerPixel(WidgetTester tester, GlobalKey key) async {
+  Future<int> pixel(WidgetTester tester, GlobalKey key,
+      {double horizontal = 0}) async {
     final boundary =
         key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
     return (await tester.runAsync(() async {
@@ -35,7 +36,8 @@ void main() {
       try {
         final bytes =
             (await image.toByteData(format: ui.ImageByteFormat.rawRgba))!;
-        return bytes.getUint8((image.width + 1) * 4);
+        final x = (horizontal * (image.width - 1)).round();
+        return bytes.getUint8((image.width + x) * 4);
       } finally {
         image.dispose();
       }
@@ -78,7 +80,7 @@ void main() {
 
   for (final decoy in [false, true]) {
     testWidgets(
-        'verified PIN fades only destination pixels without branding: decoy=$decoy',
+        'verified PIN uses opaque account slide or unchanged Decoy fade: decoy=$decoy',
         (tester) async {
       final app = AppStateNotifier.instance;
       app.update(_User());
@@ -134,22 +136,39 @@ void main() {
       expect(find.text('PIN'), findsNothing);
       expect(find.byType(WalletTitleSplash), findsNothing);
       final route = ModalRoute.of(tester.element(destination))!;
-      expect(route.transitionDuration,
-          Duration(milliseconds: decoy ? 280 : 180));
+      expect(route.transitionDuration, const Duration(milliseconds: 280));
       expect(route.reverseTransitionDuration, Duration.zero);
       final fade = find.byKey(const ValueKey('wallet-entry-fade'));
-      expect(fade, findsOneWidget);
-      expect(tester.widget<FadeTransition>(fade).opacity.value, 0);
-      expect(await cornerPixel(tester, frame), 0);
+      final slide = find.byKey(const ValueKey('account-home-entry-slide'));
+      expect(fade, decoy ? findsOneWidget : findsNothing);
+      expect(slide, decoy ? findsNothing : findsOneWidget);
+      if (decoy) {
+        expect(tester.widget<FadeTransition>(fade).opacity.value, 0);
+      } else {
+        expect(tester.widget<SlideTransition>(slide).position.value,
+            const Offset(1, 0));
+      }
+      expect(await pixel(tester, frame), 0);
       await tester.pump(const Duration(milliseconds: 80));
-      final partial = tester.widget<FadeTransition>(fade).opacity.value;
+      final partial = decoy
+          ? tester.widget<FadeTransition>(fade).opacity.value
+          : 1 - tester.widget<SlideTransition>(slide).position.value.dx;
       expect(partial, greaterThan(0));
       expect(partial, lessThan(1));
-      expect(await cornerPixel(tester, frame), inInclusiveRange(1, 254));
+      if (decoy) {
+        expect(await pixel(tester, frame), inInclusiveRange(1, 254));
+      } else {
+        expect(await pixel(tester, frame), 0);
+        expect(await pixel(tester, frame, horizontal: 0.99), 255);
+      }
       expect(find.byType(WalletTitleSplash), findsNothing);
       await tester.pumpAndSettle();
-      expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
-      expect(await cornerPixel(tester, frame), 255);
+      if (decoy) {
+        expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+      } else {
+        expect(tester.widget<SlideTransition>(slide).position.value, Offset.zero);
+      }
+      expect(await pixel(tester, frame), 255);
     });
   }
 }

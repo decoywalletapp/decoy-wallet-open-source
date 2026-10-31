@@ -365,25 +365,33 @@ void main() {
                 tester.element(find.byType(PINPageWidget)))!;
             await captureFrame();
             await tester.tap(find.text(strings.msgEnter));
-            final exit = find.byKey(const ValueKey('account-pin-exit'));
             for (var tick = 0; tick < 100; tick++) {
               await tester.pump(const Duration(milliseconds: 1));
-              if (app.unlock.ownerUnlocked ||
-                  (exit.evaluate().isNotEmpty &&
-                      tester.widget<FadeTransition>(exit).opacity.status ==
-                          AnimationStatus.forward)) break;
+              if (app.unlock.ownerUnlocked) break;
             }
             await tester.pump();
             await captureFrame();
+            expect(app.unlock.ownerUnlocked, isTrue);
+            expect(find.byType(PINPageWidget), findsNothing);
+            expect(find.byType(HomePageWidget), findsOneWidget);
+            expect(find.byKey(const ValueKey('account-pin-exit')), findsNothing);
+            expect(find.byKey(const ValueKey('wallet-entry-fade')), findsNothing);
+            final slide = find.byKey(const ValueKey('account-home-entry-slide'));
+            expect(slide, findsOneWidget);
+            final home = tester.state(find.byType(HomePageWidget));
+            final route = ModalRoute.of(tester.element(find.byType(HomePageWidget)))!;
+            expect(route.transitionDuration, reducedMotion
+                ? Duration.zero : const Duration(milliseconds: 280));
+            final position = tester.widget<SlideTransition>(slide).position;
             if (!reducedMotion) {
-              expect(app.unlock.ownerUnlocked, isFalse);
-              expect(find.byType(HomePageWidget), findsNothing);
-              expect(exit, findsOneWidget);
-              await pumpFrames(50);
-              final opacity = tester.widget<FadeTransition>(exit).opacity.value;
-              expect(opacity, greaterThan(0));
-              expect(opacity, lessThan(1));
-              expect(find.text(strings.msgEnter).hitTestable(), findsNothing);
+              expect(position.value.dx, greaterThan(0.95));
+              expect(position.value.dy, 0);
+              await pumpFrames(140);
+              expect(position.value.dx, closeTo(0.5, 0.03));
+              expect(tester.getTopLeft(find.byType(HomePageWidget)).dx,
+                  closeTo(201, 13));
+            } else {
+              expect(position.value, Offset.zero);
             }
             if (interrupt) {
               app.unlock.lock();
@@ -393,29 +401,12 @@ void main() {
               expect(app.unlock.ownerUnlocked, isFalse);
               expect(find.byType(HomePageWidget), findsNothing);
             } else {
-              if (!reducedMotion) {
-                await pumpFrames(51);
-                await tester.pump();
-              }
-              expect(app.unlock.ownerUnlocked, isTrue);
-              expect(find.byType(PINPageWidget), findsNothing);
-              expect(find.byType(HomePageWidget), findsOneWidget);
-              final home = tester.state(find.byType(HomePageWidget));
-              final route = ModalRoute.of(
-                  tester.element(find.byType(HomePageWidget)))!;
-              expect(route.transitionDuration, reducedMotion
-                  ? Duration.zero : const Duration(milliseconds: 180));
-              final fade = find.byKey(const ValueKey('wallet-entry-fade'));
-              if (!reducedMotion) {
-                await pumpFrames(90);
-                expect(tester.widget<FadeTransition>(fade).opacity.value,
-                    closeTo(0.5, 0.03));
-              }
-              if (!reducedMotion) await pumpFrames(90);
+              if (!reducedMotion) await pumpFrames(140);
               await tester.pumpAndSettle();
               await captureFrame();
               expect(tester.state(find.byType(HomePageWidget)), same(home));
-              expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+              expect(position.value, Offset.zero);
+              expect(tester.getTopLeft(find.byType(HomePageWidget)).dx, 0);
               app.unlock.lock();
               await tester.pump();
               expect(find.byType(HomePageWidget), findsNothing);

@@ -145,13 +145,13 @@ void main() {
   for (final decoy in [false, true]) {
     final destination = decoy ? 'decoy wallet' : 'normal home';
     final probe = find.byType(decoy ? _DecoyProbe : _HomeProbe);
-    final slide = find.byKey(const ValueKey('wallet-entry-slide'));
+    final slide = find.byKey(const ValueKey('account-home-entry-slide'));
     final backdrop = find.byKey(const ValueKey('wallet-transition-backdrop'));
 
     for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
       for (final reducedMotion in [false, true]) {
         testWidgets(
-            '$destination fades in without an intermediate title: '
+            '$destination uses its own entry motion without an intermediate title: '
             '$platform, reducedMotion=$reducedMotion', (tester) async {
           await launch(tester, platform, reducedMotion: reducedMotion);
           await enterWallet(tester, decoy);
@@ -160,7 +160,7 @@ void main() {
           expect(originalPin.mounted, isFalse);
           expect(find.byType(_PinProbe), findsNothing);
           expect(backdrop, findsNothing);
-          expect(slide, findsNothing);
+          expect(slide, decoy ? findsNothing : findsOneWidget);
           expect(probe, findsOneWidget);
           expect(privateBuilds, 0);
           final route = ModalRoute.of(tester.element(probe))!;
@@ -169,19 +169,21 @@ void main() {
               route.transitionDuration,
               reducedMotion
                   ? Duration.zero
-                  : Duration(milliseconds: decoy ? 280 : 180));
+                  : const Duration(milliseconds: 280));
           expect(route.reverseTransitionDuration, Duration.zero);
 
           final originalWallet = tester.state(probe);
           final fade = find.byKey(const ValueKey('wallet-entry-fade'));
-          expect(fade, findsOneWidget);
-          final initialOpacity =
-              tester.widget<FadeTransition>(fade).opacity.value;
+          expect(fade, decoy ? findsOneWidget : findsNothing);
+          double progress() => decoy
+              ? tester.widget<FadeTransition>(fade).opacity.value
+              : 1 - tester.widget<SlideTransition>(slide).position.value.dx;
+          final initialProgress = progress();
           if (reducedMotion) {
-            expect(initialOpacity, 1);
+            expect(initialProgress, 1);
           } else {
-            expect(initialOpacity, greaterThanOrEqualTo(0));
-            expect(initialOpacity, lessThan(1));
+            expect(initialProgress, greaterThanOrEqualTo(0));
+            expect(initialProgress, lessThan(1));
           }
           // A native report must not replace the page or restart its animation.
           router.routeInformationProvider.routerReportsNewRouteInformation(
@@ -190,15 +192,14 @@ void main() {
           app.notifyListeners();
           await tester.pump();
           expect(tester.state(probe), same(originalWallet));
-          expect(tester.widget<FadeTransition>(fade).opacity.value,
-              greaterThanOrEqualTo(initialOpacity));
-          expect(slide, findsNothing);
+          expect(progress(), greaterThanOrEqualTo(initialProgress));
+          expect(slide, decoy ? findsNothing : findsOneWidget);
           await tester.pump(const Duration(milliseconds: 128));
-          expect(slide, findsNothing);
+          expect(slide, decoy ? findsNothing : findsOneWidget);
           expect(backdrop, findsNothing);
           await tester.pumpAndSettle();
-          expect(slide, findsNothing);
-          expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+          expect(slide, decoy ? findsNothing : findsOneWidget);
+          expect(progress(), 1);
           expect(tester.state(probe), same(originalWallet));
 
           router.go('/settings');
@@ -229,7 +230,7 @@ void main() {
       await enterWallet(tester, decoy);
       await tester.pump(const Duration(milliseconds: 32));
       final wallet = tester.state(probe);
-      expect(slide, findsNothing);
+      expect(slide, decoy ? findsNothing : findsOneWidget);
       app.unlock.lock();
       await tester.pump();
       expect(wallet.mounted, isFalse);

@@ -795,9 +795,8 @@ class FFRoute {
           // and PIN pages stable so refreshes cannot restart an in-flight unlock.
           final isWalletEntry = name == HomePageWidget.routeName ||
               name == DuressHomePageWidget.routeName;
-          // Account PIN fades out for 100 ms before unlock; its Home finishes
-          // the same 280 ms handoff. Keep the accepted Decoy entry unchanged.
-          // Protected pages are still removed immediately when access changes.
+          // Only account Home slides in. Keep the accepted Decoy fade and the
+          // immediate removal of protected pages when access changes.
           if (isWalletEntry) {
             return CustomTransitionPage(
               key: state.pageKey,
@@ -805,18 +804,28 @@ class FFRoute {
               child: child,
               transitionDuration: MediaQuery.disableAnimationsOf(context)
                   ? Duration.zero
-                  : Duration(milliseconds:
-                      name == HomePageWidget.routeName ? 180 : 280),
+                  : const Duration(milliseconds: 280),
               reverseTransitionDuration: Duration.zero,
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) => ColoredBox(
                 color: Colors.black,
-                child: FadeTransition(
+                child: name == HomePageWidget.routeName
+                    ? ClipRect(
+                        child: SlideTransition(
+                          key: const ValueKey('account-home-entry-slide'),
+                          position: animation.drive(CurveTween(
+                            curve: Curves.easeInOutCubic,
+                          )).drive(Tween<Offset>(
+                            begin: const Offset(1, 0),
+                            end: Offset.zero,
+                          )),
+                          child: child,
+                        ),
+                      )
+                    : FadeTransition(
                   key: const ValueKey('wallet-entry-fade'),
                   opacity: animation.drive(CurveTween(
-                    curve: name == HomePageWidget.routeName
-                        ? Curves.easeInOutCubic
-                        : Curves.easeOutCubic,
+                    curve: Curves.easeOutCubic,
                   )),
                   child: child,
                 ),
