@@ -65,10 +65,7 @@ void main() {
     expect(internal, release);
   });
 
-  for (final id in [
-    'ios-testflight-rehearsal',
-    'android-signed-release-rehearsal'
-  ]) {
+  for (final id in ['ios-testflight-rehearsal']) {
     test('$id preserves enabled balances and restricts its test branch', () {
       expect(
           workflows[id]['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'],
@@ -105,6 +102,10 @@ void main() {
             ['DECOY_ACCOUNT_BALANCE_PILOT'],
         'false');
     expect(workflows['android-signed-release-rehearsal']['publishing'], isNull);
+    expect(
+        workflows['android-signed-release-rehearsal']['environment']['vars']
+            ['DECOY_ACCOUNT_BALANCE_PILOT'],
+        'false');
     expect(dartDefines(buildScript('android-debug-rehearsal')),
         isNot(contains('DECOY_ACCOUNT_BALANCE_PILOT')));
   });
@@ -126,9 +127,22 @@ void main() {
     final environment = workflow['environment'] as YamlMap;
     expect(environment['groups'], ['decoy_public_runtime', 'android_signing']);
     expect(environment['vars']['ANDROID_PACKAGE_NAME'], 'com.decoywalletapp.app');
-    expect(environment['vars']['DECOY_BUILD_VERIFICATION'], 'pin-security-release');
-    expect(environment['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'true');
+    expect(environment['vars']['DECOY_BUILD_VERIFICATION'], 'store-release');
+    expect(environment['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'false');
     expect(workflow['publishing'], isNull);
+    expect(workflow['triggering'], isNull);
+    final guard = (workflow['scripts'] as YamlList).first['script'] as String;
+    for (final branch in ['main', 'codex/pin-unlock-security-20261023', '']) {
+      expect(
+          Process.runSync('/bin/sh', ['-c', guard],
+              environment: {'CM_BRANCH': branch}).exitCode,
+          isNot(0));
+    }
+    expect(
+        Process.runSync('/bin/sh', ['-c', guard], environment: {
+          'CM_BRANCH': 'codex/signup-confirmation-20261030'
+        }).exitCode,
+        0);
     final scripts = (workflow['scripts'] as YamlList)
         .cast<YamlMap>()
         .map((step) => step['script'] as String)
@@ -143,6 +157,15 @@ void main() {
     expect(tests, contains('test/control_center_saved_choices_test.dart'));
     expect(tests, contains('test/auth_link_service_test.dart'));
     expect(tests, contains('test/auth_link_entrypoints_test.dart'));
+    for (final path in [
+      'test/pin_direct_transition_test.dart',
+      'test/pin_unlock_handoff_test.dart',
+      'test/unlock_transition_lifecycle_test.dart',
+      'test/emergency_contacts_responsiveness_test.dart',
+      'test/emergency_setup_progress_test.dart',
+    ]) {
+      expect(tests, contains(path));
+    }
     final defines = dartDefines(tests);
     expect(defines['DECOY_TEST_ACCOUNT_BALANCE'], 'true');
     expect(defines['DECOY_SUPABASE_URL'], 'https://test.invalid');
