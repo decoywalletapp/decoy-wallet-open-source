@@ -961,7 +961,7 @@ workflows:
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "android"
         DECOY_BUILD_VERIFICATION: "store-release"
-        DECOY_ACCOUNT_BALANCE_PILOT: "false"
+        DECOY_ACCOUNT_BALANCE_PILOT: "true"
       flutter: "3.41.6"
       xcode: "26.5"
     cache:

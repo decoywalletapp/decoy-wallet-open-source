@@ -96,7 +96,7 @@ void main() {
     });
   }
 
-  test('public release workflow does not enable the balance pilot', () {
+  test('release workflows preserve each platform balance configuration', () {
     expect(
         workflows['ios-app-store-release']['environment']['vars']
             ['DECOY_ACCOUNT_BALANCE_PILOT'],
@@ -105,7 +105,7 @@ void main() {
     expect(
         workflows['android-signed-release-rehearsal']['environment']['vars']
             ['DECOY_ACCOUNT_BALANCE_PILOT'],
-        'false');
+        'true');
     expect(dartDefines(buildScript('android-debug-rehearsal')),
         isNot(contains('DECOY_ACCOUNT_BALANCE_PILOT')));
   });
@@ -128,7 +128,7 @@ void main() {
     expect(environment['groups'], ['decoy_public_runtime', 'android_signing']);
     expect(environment['vars']['ANDROID_PACKAGE_NAME'], 'com.decoywalletapp.app');
     expect(environment['vars']['DECOY_BUILD_VERIFICATION'], 'store-release');
-    expect(environment['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'false');
+    expect(environment['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'true');
     expect(workflow['publishing'], isNull);
     expect(workflow['triggering'], isNull);
     final guard = (workflow['scripts'] as YamlList).first['script'] as String;
