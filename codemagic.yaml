@@ -361,7 +361,7 @@ workflows:
       - name: Confirm public source checkout
         script: |
           set -eu
-          if [ "${CM_WORKFLOW_ID:-}" = "ios-workshop-qr-internal" ]; then
+          if [ "${DECOY_WORKSHOP_INTERNAL_BUILD:-false}" = "true" ]; then
             test "${CM_BRANCH:-}" = "codex/workshop-qr-20261102"
           fi
           if [ "${CM_REPO_SLUG:-}" != "decoywalletapp/decoy-wallet-open-source" ]; then
@@ -589,8 +589,9 @@ workflows:
       - name: Build App Store IPA with source provenance
         script: |
           set -eu
-          if [ "${CM_WORKFLOW_ID:-}" = "ios-workshop-qr-internal" ]; then
-            /usr/libexec/PlistBuddy -c "Add :testFlightInternalTestingOnly bool true" /Users/builder/export_options.plist
+          if [ "${DECOY_WORKSHOP_INTERNAL_BUILD:-false}" = "true" ]; then
+            test "$(/usr/libexec/PlistBuddy -c 'Print :testFlightInternalTestingOnly' /Users/builder/export_options.plist)" = "true"
+            echo "Confirmed internal-only TestFlight export; live workshop claims are not configured."
           fi
           flutter build ipa --release \
             --build-name="$APP_VERSION" \
@@ -670,6 +671,8 @@ workflows:
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
         DECOY_BUILD_VERIFICATION: "workshop-qr-scanner-preview"
+        DECOY_WORKSHOP_INTERNAL_BUILD: "true"
+        XCODE_PROJECT_CUSTOM_EXPORT_OPTIONS: '{"testFlightInternalTestingOnly": true}'
         DECOY_ACCOUNT_BALANCE_PILOT: "false"
       flutter: "3.41.6"
       xcode: latest

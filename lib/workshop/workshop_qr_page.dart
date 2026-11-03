@@ -96,6 +96,7 @@ class _WorkshopQrPageState extends State<WorkshopQrPage> {
   }
 
   Future<void> _claim(String qr) async {
+    if (_stage == _Stage.claiming) return;
     setState(() {
       _stage = _Stage.claiming;
       _retryQr = qr;

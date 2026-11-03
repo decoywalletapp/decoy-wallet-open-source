@@ -133,20 +133,23 @@ void main() {
     expect(workflow['environment']['vars']['DECOY_BUILD_VERIFICATION'],
         'workshop-qr-scanner-preview');
     expect(buildScript('ios-workshop-qr-internal'),
-        contains('testFlightInternalTestingOnly bool true'));
+        contains('Print :testFlightInternalTestingOnly'));
+    expect(workflow['environment']['vars']['DECOY_WORKSHOP_INTERNAL_BUILD'], 'true');
+    expect(workflow['environment']['vars']['XCODE_PROJECT_CUSTOM_EXPORT_OPTIONS'],
+        '{"testFlightInternalTestingOnly": true}');
     expect(dartDefines(buildScript('ios-workshop-qr-internal')),
         isNot(contains('DECOY_WORKSHOP_CLAIM_BASE_URL')));
     final guard = (workflow['scripts'] as YamlList).first['script'] as String;
     for (final branch in ['main', '', 'codex/signup-confirmation-20261030']) {
       expect(Process.runSync('/bin/sh', ['-c', guard], environment: {
-        'CM_WORKFLOW_ID': 'ios-workshop-qr-internal',
+        'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
         'CM_BRANCH': branch,
         'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
         'CM_COMMIT': 'test-commit',
       }).exitCode, isNot(0));
     }
     expect(Process.runSync('/bin/sh', ['-c', guard], environment: {
-      'CM_WORKFLOW_ID': 'ios-workshop-qr-internal',
+      'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
       'CM_BRANCH': 'codex/workshop-qr-20261102',
       'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
       'CM_COMMIT': 'test-commit',
