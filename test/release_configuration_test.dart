@@ -122,6 +122,37 @@ void main() {
     expect(workflow['triggering'], isNull);
   });
 
+  test('workshop scanner preview stays internal without a live claim endpoint', () {
+    final workflow = workflows['ios-workshop-qr-internal'];
+    final publishing = workflow['publishing']['app_store_connect'];
+    expect(workflow['triggering'], isNull);
+    expect(publishing['submit_to_testflight'], isFalse);
+    expect(publishing['submit_to_app_store'], isFalse);
+    expect(publishing['beta_groups'], isNull);
+    expect(workflow['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'false');
+    expect(workflow['environment']['vars']['DECOY_BUILD_VERIFICATION'],
+        'workshop-qr-scanner-preview');
+    expect(buildScript('ios-workshop-qr-internal'),
+        contains('testFlightInternalTestingOnly bool true'));
+    expect(dartDefines(buildScript('ios-workshop-qr-internal')),
+        isNot(contains('DECOY_WORKSHOP_CLAIM_BASE_URL')));
+    final guard = (workflow['scripts'] as YamlList).first['script'] as String;
+    for (final branch in ['main', '', 'codex/signup-confirmation-20261030']) {
+      expect(Process.runSync('/bin/sh', ['-c', guard], environment: {
+        'CM_WORKFLOW_ID': 'ios-workshop-qr-internal',
+        'CM_BRANCH': branch,
+        'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+        'CM_COMMIT': 'test-commit',
+      }).exitCode, isNot(0));
+    }
+    expect(Process.runSync('/bin/sh', ['-c', guard], environment: {
+      'CM_WORKFLOW_ID': 'ios-workshop-qr-internal',
+      'CM_BRANCH': 'codex/workshop-qr-20261102',
+      'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+      'CM_COMMIT': 'test-commit',
+    }).exitCode, 0);
+  });
+
   test('Android PIN release keeps package inputs and runs isolated access tests', () {
     final workflow = workflows['android-signed-release-rehearsal'];
     final environment = workflow['environment'] as YamlMap;

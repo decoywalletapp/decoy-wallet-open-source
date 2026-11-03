@@ -6,6 +6,11 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/components/redemption_option_card.dart';
+import '/components/workshop_qr_option_card.dart';
+import '/backend/public_config.dart';
+import '/workshop/workshop_claim_client.dart';
+import '/workshop/workshop_qr_page.dart';
+import 'package:http/http.dart' as http;
 import '/index.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +47,41 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String _billingInterval = 'monthly';
+  bool _workshopOpen = false;
+
+  Future<void> _openWorkshop() async {
+    if (_workshopOpen) return;
+    _workshopOpen = true;
+    final accountId = currentUserUid;
+    final client = http.Client();
+    try {
+      final activated = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(
+          builder: (_) => WorkshopQrPage(claim: (qr) async {
+            if (accountId.isEmpty || currentUserUid != accountId) {
+              throw const WorkshopClaimException(WorkshopClaimFailure.signedOut);
+            }
+            final service = WorkshopClaimClient(
+              endpoint: Uri.parse('${requiredPublicConfig(
+                'DECOY_WORKSHOP_CLAIM_BASE_URL', kWorkshopClaimBaseUrl)}/claim-workshop-access'),
+              client: client,
+            );
+            final receipt = await service.claim(qr: qr, jwt: currentJwtToken);
+            if (currentUserUid != accountId) {
+              throw const WorkshopClaimException(WorkshopClaimFailure.signedOut);
+            }
+            return receipt;
+          }),
+        ),
+      );
+      if (mounted && activated == true && currentUserUid == accountId) {
+        context.goNamed(AuthRouterWidget.routeName);
+      }
+    } finally {
+      client.close();
+      _workshopOpen = false;
+    }
+  }
 
   bool get _isYearly => _billingInterval == 'yearly';
 
@@ -1061,6 +1101,10 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
                                     }
                                     safeSetState(() {});
                                   },
+                                ),
+                                WorkshopQrOptionCard(
+                                  height: 260.0,
+                                  onPressed: _openWorkshop,
                                 ),
                               ].divide(SizedBox(height: 16.0)),
                             ),

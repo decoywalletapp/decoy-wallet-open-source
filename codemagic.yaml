@@ -357,10 +357,13 @@ workflows:
       cache_paths:
         - ~/.pub-cache
         - ~/Library/Caches/CocoaPods
-    scripts:
+    scripts: &ios_release_scripts
       - name: Confirm public source checkout
         script: |
           set -eu
+          if [ "${CM_WORKFLOW_ID:-}" = "ios-workshop-qr-internal" ]; then
+            test "${CM_BRANCH:-}" = "codex/workshop-qr-20261102"
+          fi
           if [ "${CM_REPO_SLUG:-}" != "decoywalletapp/decoy-wallet-open-source" ]; then
             echo "This App Store release must run from decoywalletapp/decoy-wallet-open-source."
             exit 1
@@ -586,6 +589,9 @@ workflows:
       - name: Build App Store IPA with source provenance
         script: |
           set -eu
+          if [ "${CM_WORKFLOW_ID:-}" = "ios-workshop-qr-internal" ]; then
+            /usr/libexec/PlistBuddy -c "Add :testFlightInternalTestingOnly bool true" /Users/builder/export_options.plist
+          fi
           flutter build ipa --release \
             --build-name="$APP_VERSION" \
             --build-number="$APP_BUILD_NUMBER" \
@@ -634,6 +640,45 @@ workflows:
           build=${APP_BUILD_NUMBER}
           verification=${DECOY_BUILD_VERIFICATION}
           EOF
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/provenance/*.txt
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+
+  ios-workshop-qr-internal:
+    name: Workshop QR Scanner Internal TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    integrations:
+      app_store_connect: "DecoyWallet Codemagic"
+    environment:
+      groups:
+        - decoy_public_runtime
+        - decoy_ios_testflight
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.decoywalletapp.app
+      vars:
+        BUNDLE_ID: "com.decoywalletapp.app"
+        DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
+        DECOY_BUILD_CHANNEL: "codemagic"
+        DECOY_BUILD_PLATFORM: "ios"
+        DECOY_BUILD_VERIFICATION: "workshop-qr-scanner-preview"
+        DECOY_ACCOUNT_BALANCE_PILOT: "false"
+      flutter: "3.41.6"
+      xcode: latest
+      cocoapods: default
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+        - ~/Library/Caches/CocoaPods
+    scripts: *ios_release_scripts
     artifacts:
       - build/ios/ipa/*.ipa
       - build/provenance/*.txt

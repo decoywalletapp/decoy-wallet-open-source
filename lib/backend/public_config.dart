@@ -6,6 +6,7 @@ const kFirebaseFunctionsBaseUrl = String.fromEnvironment(
 const kDecoyAlertBaseUrl = String.fromEnvironment('DECOY_ALERT_BASE_URL');
 const kDataKeyBaseUrl = String.fromEnvironment('DECOY_DATA_KEY_BASE_URL');
 const kPaymentBaseUrl = String.fromEnvironment('DECOY_PAYMENT_BASE_URL');
+const kWorkshopClaimBaseUrl = String.fromEnvironment('DECOY_WORKSHOP_CLAIM_BASE_URL');
 const kVerifyBaseUrl = String.fromEnvironment('DECOY_VERIFY_BASE_URL');
 const kEmailConfirmUrl = String.fromEnvironment('DECOY_EMAIL_CONFIRM_URL');
 const kEmailConfirmDeepLink = String.fromEnvironment(
