@@ -83,16 +83,16 @@ void main() {
       ]) {
         expect(
             Process.runSync('/bin/sh', ['-c', guard],
+                includeParentEnvironment: false,
                 environment: {'CM_BRANCH': branch}).exitCode,
             isNot(0));
       }
       expect(
-          Process.runSync('/bin/sh', [
-            '-c',
-            guard
-          ], environment: {
-            'CM_BRANCH': 'codex/pin-unlock-security-20261023'
-          }).exitCode,
+          Process.runSync('/bin/sh', ['-c', guard],
+              includeParentEnvironment: false,
+              environment: {
+                'CM_BRANCH': 'codex/pin-unlock-security-20261023'
+              }).exitCode,
           0);
     });
   }
@@ -153,53 +153,49 @@ void main() {
     final guard = (workflow['scripts'] as YamlList).first['script'] as String;
     for (final branch in ['main', '', 'codex/signup-confirmation-20261030']) {
       expect(
-          Process.runSync('/bin/sh', [
-            '-c',
-            guard
-          ], environment: {
-            'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
-            'CM_BRANCH': branch,
-            'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
-            'CM_COMMIT': 'test-commit',
-          }).exitCode,
+          Process.runSync('/bin/sh', ['-c', guard],
+              includeParentEnvironment: false,
+              environment: {
+                'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
+                'CM_BRANCH': branch,
+                'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+                'CM_COMMIT': 'test-commit',
+              }).exitCode,
           isNot(0));
     }
     expect(
-        Process.runSync('/bin/sh', [
-          '-c',
-          guard
-        ], environment: {
-          'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
-          'CM_BRANCH': 'codex/workshop-qr-20261102',
-          'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
-          'CM_COMMIT': 'test-commit',
-          'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
-        }).exitCode,
+        Process.runSync('/bin/sh', ['-c', guard],
+            includeParentEnvironment: false,
+            environment: {
+              'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
+              'CM_BRANCH': 'codex/workshop-qr-20261102',
+              'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+              'CM_COMMIT': 'test-commit',
+              'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
+            }).exitCode,
         0);
     for (final url in ['', 'https://unverified.invalid']) {
       expect(
-          Process.runSync('/bin/sh', [
-            '-c',
-            guard
-          ], environment: {
-            'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
-            'CM_BRANCH': 'codex/workshop-qr-20261102',
-            'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
-            'CM_COMMIT': 'test-commit',
-            'DECOY_WORKSHOP_CLAIM_BASE_URL': url,
-          }).exitCode,
+          Process.runSync('/bin/sh', ['-c', guard],
+              includeParentEnvironment: false,
+              environment: {
+                'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
+                'CM_BRANCH': 'codex/workshop-qr-20261102',
+                'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+                'CM_COMMIT': 'test-commit',
+                'DECOY_WORKSHOP_CLAIM_BASE_URL': url,
+              }).exitCode,
           isNot(0));
     }
     expect(
-        Process.runSync('/bin/sh', [
-          '-c',
-          guard
-        ], environment: {
-          'CM_BRANCH': 'main',
-          'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
-          'CM_COMMIT': 'test-commit',
-          'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
-        }).exitCode,
+        Process.runSync('/bin/sh', ['-c', guard],
+            includeParentEnvironment: false,
+            environment: {
+              'CM_BRANCH': 'main',
+              'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+              'CM_COMMIT': 'test-commit',
+              'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
+            }).exitCode,
         isNot(0));
     for (final id in workflows.keys.cast<String>().where((id) => ![
           'ios-workshop-qr-internal',
@@ -248,7 +244,8 @@ void main() {
         'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
       };
       expect(
-          Process.runSync('/bin/sh', ['-c', guard], environment: valid)
+          Process.runSync('/bin/sh', ['-c', guard],
+                  includeParentEnvironment: false, environment: valid)
               .exitCode,
           0);
       for (final override in [
@@ -260,6 +257,7 @@ void main() {
       ]) {
         expect(
             Process.runSync('/bin/sh', ['-c', guard],
+                includeParentEnvironment: false,
                 environment: {...valid, ...override}).exitCode,
             isNot(0));
       }
@@ -282,16 +280,16 @@ void main() {
     for (final branch in ['main', 'codex/pin-unlock-security-20261023', '']) {
       expect(
           Process.runSync('/bin/sh', ['-c', guard],
+              includeParentEnvironment: false,
               environment: {'CM_BRANCH': branch}).exitCode,
           isNot(0));
     }
     expect(
-        Process.runSync('/bin/sh', [
-          '-c',
-          guard
-        ], environment: {
-          'CM_BRANCH': 'codex/signup-confirmation-20261030'
-        }).exitCode,
+        Process.runSync('/bin/sh', ['-c', guard],
+            includeParentEnvironment: false,
+            environment: {
+              'CM_BRANCH': 'codex/signup-confirmation-20261030'
+            }).exitCode,
         0);
     final scripts = (workflow['scripts'] as YamlList)
         .cast<YamlMap>()
@@ -367,16 +365,16 @@ void main() {
     for (final branch in ['main', 'codex/account-balance-pilot-20261003', '']) {
       expect(
           Process.runSync('/bin/sh', ['-c', guard],
+              includeParentEnvironment: false,
               environment: {'CM_BRANCH': branch}).exitCode,
           isNot(0));
     }
     expect(
-        Process.runSync('/bin/sh', [
-          '-c',
-          guard
-        ], environment: {
-          'CM_BRANCH': 'codex/pin-unlock-security-20261023'
-        }).exitCode,
+        Process.runSync('/bin/sh', ['-c', guard],
+            includeParentEnvironment: false,
+            environment: {
+              'CM_BRANCH': 'codex/pin-unlock-security-20261023'
+            }).exitCode,
         0);
   });
 
