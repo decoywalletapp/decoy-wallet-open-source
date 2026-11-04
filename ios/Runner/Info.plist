@@ -77,7 +77,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Decoy uses your location only when you enable emergency alert location sharing or trigger an emergency alert. For example, your trusted emergency contacts may receive your current location in the alert message so they can help respond.</string>
 	<key>NSCameraUsageDescription</key>
-    <string>Needed to scan Bitcoin QR codes.</string>
+    <string>Decoy uses your camera to scan Bitcoin addresses, wallet imports, and Workshop Access QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
     <string>Decoy uses Face ID or Touch ID to securely unlock your account and confirm it is really you.</string>
 	<key>NSContactsUsageDescription</key>

@@ -33,8 +33,10 @@ void main() {
     final podfile = File('ios/Podfile').readAsStringSync();
     expect(podfile, contains("target.name == 'permission_handler_apple'"));
     expect(podfile, contains("<< 'PERMISSION_CAMERA=1'"));
-    expect(File('ios/Runner/Info.plist').readAsStringSync(),
-        contains('NSCameraUsageDescription'));
+    final info = File('ios/Runner/Info.plist').readAsStringSync();
+    expect(info, contains('NSCameraUsageDescription'));
+    expect(info,
+        contains('scan Bitcoin addresses, wallet imports, and Workshop Access QR codes.'));
   });
   if (!DecoyBuildProvenance.watchOnlyImportEnabled) {
     test('QR import tests require the existing watch-only build flag', () {},
