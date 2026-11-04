@@ -33,7 +33,8 @@ void main() {
     });
   }
 
-  test('iOS packages use the same configuration inputs without diagnostics', () {
+  test('iOS packages use the same configuration inputs without diagnostics',
+      () {
     expect(dartDefines(buildScript('ios-app-store-release')),
         dartDefines(buildScript('ios-testflight-rehearsal')));
   });
@@ -200,20 +201,79 @@ void main() {
           'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
         }).exitCode,
         isNot(0));
-    for (final id in workflows.keys
-        .cast<String>()
-        .where((id) => id != 'ios-workshop-qr-internal')) {
+    for (final id in workflows.keys.cast<String>().where((id) => ![
+          'ios-workshop-qr-internal',
+          'ios-workshop-access-review',
+          'android-workshop-access-review',
+        ].contains(id))) {
       expect(
           workflows[id]['environment']['vars']['DECOY_WORKSHOP_CLAIM_BASE_URL'],
           isNull);
     }
   });
 
-  test('Android PIN release keeps package inputs and runs isolated access tests', () {
+  for (final id in [
+    'ios-workshop-access-review',
+    'android-workshop-access-review',
+  ]) {
+    test('$id explicitly connects claims without automatic public rollout', () {
+      final workflow = workflows[id];
+      final variables = workflow['environment']['vars'];
+      const endpoint =
+          'https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app';
+      expect(variables['DECOY_WORKSHOP_STORE_BUILD'], 'true');
+      expect(variables['DECOY_WORKSHOP_INTERNAL_BUILD'], 'false');
+      expect(variables['DECOY_WORKSHOP_CLAIM_BASE_URL'], endpoint);
+      expect(workflow['triggering'], isNull);
+      expect(buildScript(id),
+          contains('--dart-define-from-file=build/workshop-runtime.json'));
+      if (id.startsWith('ios')) {
+        expect(variables['XCODE_PROJECT_CUSTOM_EXPORT_OPTIONS'],
+            '{"testFlightInternalTestingOnly": false}');
+        expect(
+            workflow['publishing']['app_store_connect']['submit_to_app_store'],
+            isFalse);
+        expect(variables['DECOY_ACCOUNT_BALANCE_PILOT'], 'false');
+      } else {
+        expect(workflow['publishing'], isNull);
+        expect(variables['DECOY_ACCOUNT_BALANCE_PILOT'], 'true');
+      }
+      final guard = (workflow['scripts'] as YamlList).first['script'];
+      final valid = {
+        'CM_BRANCH': 'codex/workshop-qr-20261102',
+        'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+        'CM_COMMIT': 'synthetic-commit',
+        'DECOY_WORKSHOP_STORE_BUILD': 'true',
+        'DECOY_WORKSHOP_INTERNAL_BUILD': 'false',
+        'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
+      };
+      expect(
+          Process.runSync('/bin/sh', ['-c', guard], environment: valid)
+              .exitCode,
+          0);
+      for (final override in [
+        {'CM_BRANCH': 'main'},
+        {'DECOY_WORKSHOP_CLAIM_BASE_URL': ''},
+        {'DECOY_WORKSHOP_CLAIM_BASE_URL': 'https://unverified.invalid'},
+        {'DECOY_WORKSHOP_INTERNAL_BUILD': 'true'},
+        {'DECOY_WORKSHOP_STORE_BUILD': 'false'},
+      ]) {
+        expect(
+            Process.runSync('/bin/sh', ['-c', guard],
+                environment: {...valid, ...override}).exitCode,
+            isNot(0));
+      }
+    });
+  }
+
+  test(
+      'Android PIN release keeps package inputs and runs isolated access tests',
+      () {
     final workflow = workflows['android-signed-release-rehearsal'];
     final environment = workflow['environment'] as YamlMap;
     expect(environment['groups'], ['decoy_public_runtime', 'android_signing']);
-    expect(environment['vars']['ANDROID_PACKAGE_NAME'], 'com.decoywalletapp.app');
+    expect(
+        environment['vars']['ANDROID_PACKAGE_NAME'], 'com.decoywalletapp.app');
     expect(environment['vars']['DECOY_BUILD_VERIFICATION'], 'store-release');
     expect(environment['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'true');
     expect(workflow['publishing'], isNull);
@@ -226,7 +286,10 @@ void main() {
           isNot(0));
     }
     expect(
-        Process.runSync('/bin/sh', ['-c', guard], environment: {
+        Process.runSync('/bin/sh', [
+          '-c',
+          guard
+        ], environment: {
           'CM_BRANCH': 'codex/signup-confirmation-20261030'
         }).exitCode,
         0);
@@ -234,10 +297,11 @@ void main() {
         .cast<YamlMap>()
         .map((step) => step['script'] as String)
         .toList();
-    final index = scripts.indexWhere(
-        (script) => script.contains('test/login_biometric_lifecycle_test.dart'));
+    final index = scripts.indexWhere((script) =>
+        script.contains('test/login_biometric_lifecycle_test.dart'));
     expect(index, greaterThanOrEqualTo(0));
-    expect(index, lessThan(scripts.indexWhere((s) => s.contains('flutter build'))));
+    expect(index,
+        lessThan(scripts.indexWhere((s) => s.contains('flutter build'))));
     final tests = scripts[index];
     expect(tests, contains('test/membership_redemption_test.dart'));
     expect(tests, contains('test/release_configuration_test.dart'));
@@ -257,7 +321,8 @@ void main() {
     expect(defines['DECOY_TEST_ACCOUNT_BALANCE'], 'true');
     expect(defines['DECOY_SUPABASE_URL'], 'https://test.invalid');
     expect(defines['DECOY_SUPABASE_ANON_KEY'], 'synthetic-anon');
-    expect(defines['DECOY_FIREBASE_FUNCTIONS_BASE_URL'], 'https://test.invalid');
+    expect(
+        defines['DECOY_FIREBASE_FUNCTIONS_BASE_URL'], 'https://test.invalid');
     expect(defines['DECOY_ALERT_BASE_URL'], 'https://test.invalid');
     expect(defines['DECOY_DATA_KEY_BASE_URL'], 'https://test.invalid/unwrap');
     expect(defines['DECOY_PAYMENT_BASE_URL'], 'https://test.invalid');
@@ -283,14 +348,18 @@ void main() {
     ]) {
       expect(tests, contains(path));
     }
-    expect(scripts.indexOf(tests),
-        lessThan(scripts.indexWhere((script) => script.contains('flutter build'))));
+    expect(
+        scripts.indexOf(tests),
+        lessThan(
+            scripts.indexWhere((script) => script.contains('flutter build'))));
   });
 
-  test('PIN security test upload stays internal and restricted to the fix branch', () {
+  test(
+      'PIN security test upload stays internal and restricted to the fix branch',
+      () {
     final workflow = workflows['ios-testflight-rehearsal'];
-    expect(workflow['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'],
-        'true');
+    expect(
+        workflow['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'true');
     final publishing = workflow['publishing']['app_store_connect'];
     expect(publishing['submit_to_testflight'], isFalse);
     expect(publishing['submit_to_app_store'], isFalse);
@@ -302,7 +371,10 @@ void main() {
           isNot(0));
     }
     expect(
-        Process.runSync('/bin/sh', ['-c', guard], environment: {
+        Process.runSync('/bin/sh', [
+          '-c',
+          guard
+        ], environment: {
           'CM_BRANCH': 'codex/pin-unlock-security-20261023'
         }).exitCode,
         0);
@@ -314,17 +386,21 @@ void main() {
           .cast<YamlMap>()
           .map((step) => step['script'] as String)
           .toList();
-      final index = scripts.indexWhere(
-          (script) => script.contains('test/login_biometric_lifecycle_test.dart'));
+      final index = scripts.indexWhere((script) =>
+          script.contains('test/login_biometric_lifecycle_test.dart'));
       expect(index, greaterThanOrEqualTo(0));
-      expect(index,
-          lessThan(scripts.indexWhere((script) => script.contains('flutter build'))));
+      expect(
+          index,
+          lessThan(scripts
+              .indexWhere((script) => script.contains('flutter build'))));
       for (final script in scripts.where((script) =>
           script.contains('test/login_biometric_lifecycle_test.dart'))) {
         expect(script, contains('test/auth_link_service_test.dart'));
         expect(script, contains('test/auth_link_entrypoints_test.dart'));
-        expect(script,
-            contains('--dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid'));
+        expect(
+            script,
+            contains(
+                '--dart-define=DECOY_FIREBASE_FUNCTIONS_BASE_URL=https://test.invalid'));
         expect(script,
             contains('--dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon'));
         for (final endpoint in {
@@ -332,9 +408,11 @@ void main() {
           'DECOY_DATA_KEY_BASE_URL': 'https://test.invalid/unwrap',
           'DECOY_PAYMENT_BASE_URL': 'https://test.invalid',
         }.entries) {
-          expect(script, contains('--dart-define=${endpoint.key}=${endpoint.value}'));
+          expect(script,
+              contains('--dart-define=${endpoint.key}=${endpoint.value}'));
         }
-        expect(script, contains('--dart-define=DECOY_TEST_ACCOUNT_BALANCE=true'));
+        expect(
+            script, contains('--dart-define=DECOY_TEST_ACCOUNT_BALANCE=true'));
       }
     });
 

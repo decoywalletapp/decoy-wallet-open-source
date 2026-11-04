@@ -362,6 +362,10 @@ workflows:
         script: |
           set -eu
           if [ "${DECOY_WORKSHOP_INTERNAL_BUILD:-false}" = "true" ]; then
+            test "${DECOY_WORKSHOP_STORE_BUILD:-false}" != "true"
+            test "${CM_BRANCH:-}" = "codex/workshop-qr-20261102"
+            test "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" = "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+          elif [ "${DECOY_WORKSHOP_STORE_BUILD:-false}" = "true" ]; then
             test "${CM_BRANCH:-}" = "codex/workshop-qr-20261102"
             test "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" = "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
           elif [ -n "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" ]; then
@@ -603,6 +607,13 @@ workflows:
             printf '{"DECOY_WORKSHOP_CLAIM_BASE_URL":"%s"}\n' "$DECOY_WORKSHOP_CLAIM_BASE_URL" > build/workshop-runtime.json
             set -- --dart-define-from-file=build/workshop-runtime.json
             echo "Confirmed internal-only TestFlight export with the workshop test endpoint."
+          elif [ "${DECOY_WORKSHOP_STORE_BUILD:-false}" = "true" ]; then
+            test "$(/usr/libexec/PlistBuddy -c 'Print :testFlightInternalTestingOnly' /Users/builder/export_options.plist)" = "false"
+            test "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" = "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+            mkdir -p build
+            printf '{"DECOY_WORKSHOP_CLAIM_BASE_URL":"%s"}\n' "$DECOY_WORKSHOP_CLAIM_BASE_URL" > build/workshop-runtime.json
+            set -- --dart-define-from-file=build/workshop-runtime.json
+            echo "Confirmed store-eligible export with the verified Workshop Access backend."
           elif [ -n "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" ]; then
             echo "Workshop claims are restricted to the internal workflow."
             exit 1
@@ -696,6 +707,45 @@ workflows:
       cache_paths:
         - ~/.pub-cache
         - ~/Library/Caches/CocoaPods
+    scripts: *ios_release_scripts
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/provenance/*.txt
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+
+  ios-workshop-access-review:
+    name: Workshop Access App Store Review Candidate
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    integrations:
+      app_store_connect: "DecoyWallet Codemagic"
+    environment:
+      groups:
+        - decoy_public_runtime
+        - decoy_ios_testflight
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.decoywalletapp.app
+      vars:
+        BUNDLE_ID: "com.decoywalletapp.app"
+        DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
+        DECOY_BUILD_CHANNEL: "codemagic"
+        DECOY_BUILD_PLATFORM: "ios"
+        DECOY_BUILD_VERIFICATION: "workshop-access-store-review"
+        DECOY_WORKSHOP_INTERNAL_BUILD: "false"
+        DECOY_WORKSHOP_STORE_BUILD: "true"
+        DECOY_WORKSHOP_CLAIM_BASE_URL: "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+        XCODE_PROJECT_CUSTOM_EXPORT_OPTIONS: '{"testFlightInternalTestingOnly": false}'
+        DECOY_ACCOUNT_BALANCE_PILOT: "false"
+      flutter: "3.41.6"
+      xcode: latest
+      cocoapods: default
     scripts: *ios_release_scripts
     artifacts:
       - build/ios/ipa/*.ipa
@@ -1032,11 +1082,18 @@ workflows:
         - ~/.pub-cache
         - ~/.gradle/caches
         - ~/.gradle/wrapper
-    scripts:
+    scripts: &android_release_scripts
       - name: Restrict approved Android release branch
         script: |
           set -eu
-          test "${CM_BRANCH:-}" = "codex/signup-confirmation-20261030"
+          if [ "${DECOY_WORKSHOP_STORE_BUILD:-false}" = "true" ]; then
+            test "${DECOY_WORKSHOP_INTERNAL_BUILD:-false}" != "true"
+            test "${CM_BRANCH:-}" = "codex/workshop-qr-20261102"
+            test "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" = "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+          else
+            test -z "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}"
+            test "${CM_BRANCH:-}" = "codex/signup-confirmation-20261030"
+          fi
       - name: Confirm public source checkout
         script: |
           set -eu
@@ -1277,6 +1334,8 @@ workflows:
             test/auth_link_service_test.dart test/auth_link_entrypoints_test.dart \
             test/unlock_state_test.dart test/unlock_routes_test.dart test/membership_redemption_test.dart \
             test/release_configuration_test.dart test/control_center_saved_choices_test.dart \
+            test/workshop_claim_client_test.dart test/workshop_qr_test.dart \
+            test/subscription_access_display_test.dart \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
             --dart-define=DECOY_SUPABASE_ANON_KEY=synthetic-anon \
@@ -1287,6 +1346,14 @@ workflows:
       - name: Build signed Android APK and app bundle with source provenance
         script: |
           set -eu
+          set --
+          if [ "${DECOY_WORKSHOP_STORE_BUILD:-false}" = "true" ]; then
+            test "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" = "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+            mkdir -p build
+            printf '{"DECOY_WORKSHOP_CLAIM_BASE_URL":"%s"}\n' "$DECOY_WORKSHOP_CLAIM_BASE_URL" > build/workshop-runtime.json
+            set -- --dart-define-from-file=build/workshop-runtime.json
+            echo "Confirmed Android release with the verified Workshop Access backend."
+          fi
           common_args="
             --release
             --build-name=$APP_VERSION
@@ -1322,8 +1389,8 @@ workflows:
             --dart-define=DECOY_BUILD_VERIFICATION=$DECOY_BUILD_VERIFICATION
             --dart-define=DECOY_ENABLE_WATCH_ONLY_IMPORT=true
           "
-          flutter build apk $common_args
-          flutter build appbundle $common_args
+          flutter build apk "$@" $common_args
+          flutter build appbundle "$@" $common_args
       - name: Verify Android release permissions
         script: |
           set -eu
@@ -1345,6 +1412,34 @@ workflows:
           firebase_app_id=${ANDROID_FIREBASE_APP_ID}
           package=${ANDROID_PACKAGE_NAME}
           EOF
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/bundle/release/app-release.aab
+      - build/provenance/*.txt
+      - flutter_drive.log
+
+  android-workshop-access-review:
+    name: Workshop Access Google Play Review Candidate
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    environment:
+      groups:
+        - decoy_public_runtime
+        - android_signing
+      vars:
+        ANDROID_PACKAGE_NAME: "com.decoywalletapp.app"
+        ANDROID_FIREBASE_APP_ID: "1:866378207353:android:074e76d4b54f11c914c4a8"
+        DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
+        DECOY_BUILD_CHANNEL: "codemagic"
+        DECOY_BUILD_PLATFORM: "android"
+        DECOY_BUILD_VERIFICATION: "workshop-access-store-review"
+        DECOY_WORKSHOP_STORE_BUILD: "true"
+        DECOY_WORKSHOP_INTERNAL_BUILD: "false"
+        DECOY_WORKSHOP_CLAIM_BASE_URL: "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+        DECOY_ACCOUNT_BALANCE_PILOT: "true"
+      flutter: "3.41.6"
+      xcode: "26.5"
+    scripts: *android_release_scripts
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
       - build/app/outputs/bundle/release/app-release.aab
