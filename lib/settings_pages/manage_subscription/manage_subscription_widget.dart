@@ -9,6 +9,8 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/components/redemption_option_card.dart';
+import '/components/workshop_qr_option_card.dart';
+import '/workshop/open_workshop_qr.dart';
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -45,6 +47,23 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String _billingInterval = 'monthly';
+  bool _accessLoadFailed = false;
+  bool _workshopOpen = false;
+
+  Future<void> _openWorkshop() async {
+    if (_workshopOpen) return;
+    _workshopOpen = true;
+    try {
+      final activated = await openWorkshopQr(context);
+      if (mounted && activated) {
+        await _refreshEntitlementFromBackend();
+      }
+    } catch (_) {
+      safeSetState(() => _accessLoadFailed = true);
+    } finally {
+      _workshopOpen = false;
+    }
+  }
 
   bool get _isYearly => _billingInterval == 'yearly';
 
@@ -216,7 +235,8 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
   }
 
   DateTime? _effectiveAccessEnd(UserEntitlementsRow? row) {
-    final paid = row?.currentPeriodEnd;
+    if (row?.isActive == true && row?.currentPeriodEnd == null) return null;
+    final paid = row?.isActive == true ? row?.currentPeriodEnd : null;
     final promotional = row?.promotionalAccessUntil;
     if (paid == null) return promotional;
     if (promotional == null) return paid;
@@ -233,6 +253,61 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
         row.pendingProviderSubscriptionId,
         row.promotionalAccessUntil,
       );
+
+  Widget _buildAccessSummary() {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = FlutterFlowTheme.of(context);
+    final row = _model.manageQue?.elementAtOrNull(0);
+    final active = _hasEffectiveAccess(row);
+    final end = _effectiveAccessEnd(row);
+    final days = active ? functions.daysLeftFromPeriodEnd(end) : 0;
+    final textStyle = theme.bodyMedium.copyWith(letterSpacing: 0);
+    return Column(
+      key: const ValueKey('subscription-access-summary'),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(l10n.msgAccountSubscriptionStatus.trim(),
+            textAlign: TextAlign.center,
+            style: textStyle.copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        if (_accessLoadFailed)
+          TextButton.icon(
+            onPressed: () async {
+              safeSetState(() => _accessLoadFailed = false);
+              try {
+                await _refreshEntitlementFromBackend();
+              } catch (_) {
+                safeSetState(() => _accessLoadFailed = true);
+              }
+            },
+            icon: const Icon(Icons.refresh),
+            label: Text(l10n.msgRetry),
+          )
+        else if (_model.manageQue == null)
+          const SizedBox(width: 20, height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2))
+        else ...[
+          Text(active && end == null ? l10n.msgActive : '$days${l10n.msgDaysLeft}',
+              key: const ValueKey('subscription-days-left'),
+              textAlign: TextAlign.center,
+              style: textStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold,
+                  color: active ? theme.success : theme.error)),
+          if (end != null) ...[
+            const SizedBox(height: 4),
+            Text(MaterialLocalizations.of(context).formatFullDate(end.toLocal()),
+                key: const ValueKey('subscription-access-end'),
+                textAlign: TextAlign.center, style: textStyle),
+          ],
+          if (!active) Text(l10n.msgInactive, style: textStyle),
+          if (_model.pendingSwitchToStripe && _model.pendingStartsAt != null) ...[
+            const SizedBox(height: 8),
+            Text('${l10n.msgStripeWillTakeOverOn} ${dateTimeFormat("yMd", _model.pendingStartsAt!)}',
+                textAlign: TextAlign.center, style: textStyle),
+          ],
+        ],
+      ],
+    );
+  }
 
   int? _stripeSwitchTrialEndSeconds() {
     final paidThrough = _model.currentPeriodEnd;
@@ -252,7 +327,32 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
     );
     _model.manageQue = _model.stripeCheckoutRefreshQuery;
     _applyEntitlementRow(_model.stripeCheckoutRefreshQuery?.elementAtOrNull(0));
+    _accessLoadFailed = false;
     safeSetState(() {});
+  }
+
+  Future<void> _startCardCheckout() async {
+    _model.apiResult5g4 = await CreateCheckoutSessionCall.call(
+      currentUserUid: currentUserUid,
+      billingInterval: _billingInterval,
+      trialEnd: _stripeSwitchTrialEndSeconds(),
+      jwt: currentJwtToken,
+    );
+    final response = _model.apiResult5g4;
+    if (!(response?.succeeded ?? false)) {
+      _showPaymentError('ERROR #028');
+      return;
+    }
+    final sessionId = CreateCheckoutSessionCall.sessionId(response!.jsonBody);
+    _model.stripeCheckoutSessionId = sessionId;
+    FFAppState().pendingStripeCheckoutSessionId = sessionId ?? '';
+    final opened = await _openPaymentUrl(
+      CreateCheckoutSessionCall.url(response.jsonBody),
+      'ERROR #028',
+    );
+    if (!opened) return;
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (mounted) await _refreshEntitlementFromBackend();
   }
 
   Future<void> _syncStripeCheckoutSessionAndRefresh() async {
@@ -307,47 +407,51 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.manageQue = await UserEntitlementsTable().queryRows(
-        queryFn: (q) => q
-            .eqOrNull('user_id', currentUserUid)
-            .eqOrNull('entitlement', 'decoy_wallet'),
-      );
-      _applyEntitlementRow(_model.manageQue?.elementAtOrNull(0));
-      safeSetState(() {});
-      if ((_model.pendingProvider == 'stripe') &&
-          (_model.pendingStartsAt != null) &&
-          (_model.pendingStartsAt! <= getCurrentTimestamp)) {
-        _model.apiResultlc3 = await FinalizeStripeSwitchCall.call(
-          userId: currentUserUid,
-          jwt: currentJwtToken,
+      try {
+        _model.manageQue = await UserEntitlementsTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull('user_id', currentUserUid)
+              .eqOrNull('entitlement', 'decoy_wallet'),
         );
-      }
-      if ((_model.pendingProvider == 'btcpay') &&
-          (_model.pendingStartsAt != null) &&
-          (_model.pendingStartsAt! <= getCurrentTimestamp)) {
-        _model.btcpayFinalizeResp = await FinalizeBtcpaySwitchCall.call(
-          userId: currentUserUid,
-          jwt: currentJwtToken,
-        );
-
-        if ((_model.btcpayFinalizeResp?.succeeded ?? true)) {
-          _model.btcpayFinalQuery = await UserEntitlementsTable().queryRows(
-            queryFn: (q) => q
-                .eqOrNull('user_id', currentUserUid)
-                .eqOrNull('entitlement', 'decoy_wallet'),
+        _applyEntitlementRow(_model.manageQue?.elementAtOrNull(0));
+        safeSetState(() {});
+        if ((_model.pendingProvider == 'stripe') &&
+            (_model.pendingStartsAt != null) &&
+            (_model.pendingStartsAt! <= getCurrentTimestamp)) {
+          _model.apiResultlc3 = await FinalizeStripeSwitchCall.call(
+            userId: currentUserUid,
+            jwt: currentJwtToken,
           );
-          _applyEntitlementRow(_model.btcpayFinalQuery?.elementAtOrNull(0));
-          safeSetState(() {});
         }
+        if ((_model.pendingProvider == 'btcpay') &&
+            (_model.pendingStartsAt != null) &&
+            (_model.pendingStartsAt! <= getCurrentTimestamp)) {
+          _model.btcpayFinalizeResp = await FinalizeBtcpaySwitchCall.call(
+            userId: currentUserUid,
+            jwt: currentJwtToken,
+          );
+
+          if ((_model.btcpayFinalizeResp?.succeeded ?? true)) {
+            _model.btcpayFinalQuery = await UserEntitlementsTable().queryRows(
+              queryFn: (q) => q
+                  .eqOrNull('user_id', currentUserUid)
+                  .eqOrNull('entitlement', 'decoy_wallet'),
+            );
+            _applyEntitlementRow(_model.btcpayFinalQuery?.elementAtOrNull(0));
+            safeSetState(() {});
+          }
+        }
+        _model.trueBranchQue = await UserEntitlementsTable().queryRows(
+          queryFn: (q) => q
+              .eqOrNull('user_id', currentUserUid)
+              .eqOrNull('entitlement', 'decoy_wallet'),
+        );
+        _model.manageQue = _model.trueBranchQue;
+        _applyEntitlementRow(_model.trueBranchQue?.elementAtOrNull(0));
+        safeSetState(() {});
+      } catch (_) {
+        safeSetState(() => _accessLoadFailed = true);
       }
-      _model.trueBranchQue = await UserEntitlementsTable().queryRows(
-        queryFn: (q) => q
-            .eqOrNull('user_id', currentUserUid)
-            .eqOrNull('entitlement', 'decoy_wallet'),
-      );
-      _model.manageQue = _model.trueBranchQue;
-      _applyEntitlementRow(_model.trueBranchQue?.elementAtOrNull(0));
-      safeSetState(() {});
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -1095,7 +1199,7 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                               q.eqOrNull(
                                                             'user_id',
                                                             currentUserUid,
-                                                          ),
+                                                          ).eqOrNull('entitlement', 'decoy_wallet'),
                                                         );
                                                         _model.manageQue =
                                                             _model.requery3;
@@ -1108,127 +1212,23 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                                         safeSetState(() {});
                                                         safeSetState(() {});
                                                       } else {
-                                                        if ((_model.provider ==
-                                                                'btcpay') &&
-                                                            (_model.currentPeriodEnd !=
-                                                                null)) {
-                                                          _model.apiResult5g4 =
-                                                              await CreateCheckoutSessionCall
-                                                                  .call(
-                                                            currentUserUid:
-                                                                currentUserUid,
-                                                            billingInterval:
-                                                                _billingInterval,
-                                                            trialEnd:
-                                                                _stripeSwitchTrialEndSeconds(),
-                                                            jwt:
-                                                                currentJwtToken,
-                                                          );
-
-                                                          if ((_model
-                                                                  .apiResult5g4
-                                                                  ?.succeeded ??
-                                                              false)) {
-                                                            final checkoutSessionId =
-                                                                CreateCheckoutSessionCall
-                                                                    .sessionId(
-                                                              (_model.apiResult5g4
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            );
-                                                            _model.stripeCheckoutSessionId =
-                                                                checkoutSessionId;
-                                                            FFAppState()
-                                                                    .pendingStripeCheckoutSessionId =
-                                                                checkoutSessionId ??
-                                                                    '';
-                                                            final checkoutOpened =
-                                                                await _openPaymentUrl(
-                                                              CreateCheckoutSessionCall
-                                                                  .url(
-                                                                (_model.apiResult5g4
-                                                                        ?.jsonBody ??
-                                                                    ''),
-                                                              ),
-                                                              'ERROR #028',
-                                                            );
-                                                            if (!checkoutOpened) {
-                                                              safeSetState(
-                                                                  () {});
-                                                              return;
-                                                            }
-                                                            await Future
-                                                                .delayed(
-                                                              Duration(
-                                                                milliseconds:
-                                                                    2000,
-                                                              ),
-                                                            );
-                                                            _model.requery5 =
-                                                                await UserEntitlementsTable()
-                                                                    .queryRows(
-                                                              queryFn: (q) =>
-                                                                  q.eqOrNull(
-                                                                'user_id',
-                                                                currentUserUid,
-                                                              ),
-                                                            );
-                                                            _model.manageQue =
-                                                                _model.requery5;
-                                                            _applyEntitlementRow(
-                                                              _model.requery5
-                                                                  ?.elementAtOrNull(
-                                                                0,
-                                                              ),
-                                                            );
-                                                            safeSetState(() {});
-                                                            safeSetState(() {});
-                                                          } else {
-                                                            _showPaymentError(
-                                                                'ERROR #028');
-                                                          }
-                                                        } else {
-                                                          ScaffoldMessenger.of(
-                                                            context,
-                                                          ).showSnackBar(
-                                                            SnackBar(
-                                                              content: Text(
-                                                                AppLocalizations.of(context)!.msgError029PleaseScreenshotContactDecoySupport,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color:
-                                                                      FlutterFlowTheme
-                                                                          .of(
-                                                                    context,
-                                                                  ).primaryText,
-                                                                ),
-                                                              ),
-                                                              duration:
-                                                                  Duration(
-                                                                milliseconds:
-                                                                    4000,
-                                                              ),
-                                                              backgroundColor:
-                                                                  FlutterFlowTheme
-                                                                      .of(
-                                                                context,
-                                                              ).secondary,
-                                                            ),
-                                                          );
-                                                        }
+                                                        await _startCardCheckout();
                                                       }
 
                                                       safeSetState(() {});
                                                     },
                                                     text: () {
-                                                      if (_model.provider ==
-                                                          'stripe') {
+                                                      if (_model.provider == 'stripe' &&
+                                                          _hasText(_model.providerCustomerId)) {
                                                         return AppLocalizations.of(context)!.msgManageCardPayments;
                                                       } else if (_model
                                                               .pendingProvider ==
                                                           'stripe') {
                                                         return AppLocalizations.of(context)!.msgCardPaymentsScheduled;
                                                       } else {
+                                                        if (_model.provider != 'btcpay') {
+                                                          return AppLocalizations.of(context)!.msgPayWithCard;
+                                                        }
                                                         return AppLocalizations.of(context)!.msgSwitchToCardPayments;
                                                       }
                                                     }(),
@@ -1328,263 +1328,12 @@ class _ManageSubscriptionWidgetState extends State<ManageSubscriptionWidget>
                                         safeSetState(() {});
                                       },
                                     ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!.msgAccountSubscriptionStatus,
-                                          textAlign: TextAlign.start,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: FlutterFlowTheme.of(
-                                                  context,
-                                                ).bodyMediumFamily,
-                                                fontSize: 16.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                  context,
-                                                ).bodyMediumIsCustom,
-                                              ),
-                                        ),
-                                        Stack(
-                                          children: [
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                0.0,
-                                                0.0,
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  if (_hasEffectiveAccess(
-                                                          _model.manageQue
-                                                              ?.elementAtOrNull(
-                                                                  0)) &&
-                                                      (_effectiveAccessEnd(_model
-                                                              .manageQue
-                                                              ?.elementAtOrNull(
-                                                                  0)) !=
-                                                          null) &&
-                                                      (_model.pendingSwitchToStripe ==
-                                                          false))
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                        0.0,
-                                                        0.0,
-                                                      ),
-                                                      child: Text(
-                                                        functions
-                                                            .daysLeftFromPeriodEnd(
-                                                              _effectiveAccessEnd(
-                                                                _model.manageQue
-                                                                    ?.elementAtOrNull(
-                                                                      0,
-                                                                    ),
-                                                              ),
-                                                            )
-                                                            .toString(),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                          context,
-                                                        ).bodyMedium.override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme
-                                                                          .of(
-                                                                    context,
-                                                                  ).bodyMediumFamily,
-                                                                  color:
-                                                                      FlutterFlowTheme
-                                                                          .of(
-                                                                    context,
-                                                                  ).success,
-                                                                  fontSize:
-                                                                      16.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme
-                                                                          .of(
-                                                                    context,
-                                                                  ).bodyMediumIsCustom,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  if (_hasEffectiveAccess(
-                                                          _model.manageQue
-                                                              ?.elementAtOrNull(
-                                                                  0)) &&
-                                                      (_effectiveAccessEnd(_model
-                                                              .manageQue
-                                                              ?.elementAtOrNull(
-                                                                  0)) !=
-                                                          null) &&
-                                                      (_model.pendingSwitchToStripe ==
-                                                          false))
-                                                    Text(
-                                                      AppLocalizations.of(context)!.msgDaysLeft,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                                fontFamily:
-                                                                    FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).bodyMediumFamily,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).bodyMediumIsCustom,
-                                                              ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                if (!_hasEffectiveAccess(_model
-                                                    .manageQue
-                                                    ?.elementAtOrNull(0)))
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                      0.0,
-                                                      0.0,
-                                                    ),
-                                                    child: Text(
-                                                      AppLocalizations.of(context)!.msgInactive,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                                fontFamily:
-                                                                    FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).bodyMediumFamily,
-                                                                color:
-                                                                    FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).error,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).bodyMediumIsCustom,
-                                                              ),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                if (_model
-                                                        .pendingSwitchToStripe ==
-                                                    true)
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                      0.0,
-                                                      0.0,
-                                                    ),
-                                                    child: Text(
-                                                      AppLocalizations.of(context)!.msgStripeWillTakeOverOn,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                        context,
-                                                      ).bodyMedium.override(
-                                                                fontFamily:
-                                                                    FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).bodyMediumFamily,
-                                                                color:
-                                                                    FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).primaryText,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme
-                                                                        .of(
-                                                                  context,
-                                                                ).bodyMediumIsCustom,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                if (_model
-                                                        .pendingSwitchToStripe ==
-                                                    true)
-                                                  Text(
-                                                    dateTimeFormat(
-                                                      "yMd",
-                                                      _model.pendingStartsAt!,
-                                                    ),
-                                                    style: FlutterFlowTheme.of(
-                                                      context,
-                                                    ).bodyMedium.override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme
-                                                                  .of(
-                                                            context,
-                                                          ).bodyMediumFamily,
-                                                          color:
-                                                              FlutterFlowTheme
-                                                                  .of(
-                                                            context,
-                                                          ).success,
-                                                          letterSpacing: 0.0,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                  .of(
-                                                            context,
-                                                          ).bodyMediumIsCustom,
-                                                        ),
-                                                  ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ].divide(SizedBox(height: 8.0)),
+                                    WorkshopQrOptionCard(
+                                      height: 220,
+                                      onPressed: _openWorkshop,
                                     ),
+                                    _buildAccessSummary(),
+                                    if (_hasText(_model.providerCustomerId))
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                         20.0,

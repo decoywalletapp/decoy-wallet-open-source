@@ -583,6 +583,7 @@ workflows:
             test/auth_link_service_test.dart test/auth_link_entrypoints_test.dart \
             test/unlock_state_test.dart test/unlock_routes_test.dart test/membership_redemption_test.dart \
             test/workshop_claim_client_test.dart test/workshop_qr_test.dart \
+            test/subscription_access_display_test.dart \
             test/release_configuration_test.dart test/control_center_saved_choices_test.dart \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \

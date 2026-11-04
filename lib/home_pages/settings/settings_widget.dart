@@ -2,7 +2,6 @@ import '/l10n/app_localizations.dart';
 import '/l10n/language_picker.dart';
 import '/components/localized_banner_label.dart';
 import '/auth/supabase_auth/auth_util.dart';
-import '/backend/supabase/supabase.dart';
 import '/build_provenance.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -265,20 +264,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   }
 
   Future<void> _openSubscription() async {
-    _model.settingsQue = await UserEntitlementsTable().queryRows(
-      queryFn: (q) => q
-          .eqOrNull('user_id', currentUserUid)
-          .eqOrNull('entitlement', 'decoy_wallet'),
-    );
-    if (!mounted) return;
-
-    final entitlement = _model.settingsQue?.firstOrNull;
-    if (entitlement?.isActive == true) {
-      context.pushNamed(ManageSubscriptionWidget.routeName);
-    } else {
-      context.pushNamed(SubscriptionOptionsWidget.routeName);
-    }
-    safeSetState(() {});
+    context.pushNamed(ManageSubscriptionWidget.routeName);
   }
 
   Widget _buildSocialLinks(BuildContext context) {
