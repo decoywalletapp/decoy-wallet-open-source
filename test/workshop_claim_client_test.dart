@@ -11,6 +11,51 @@ void main() {
   Matcher fails(WorkshopClaimFailure value) => throwsA(
       isA<WorkshopClaimException>().having((e) => e.failure, 'failure', value));
 
+  test('billing confirmation is explicit and never sent with an ordinary scan',
+      () async {
+    var count = 0;
+    final service = WorkshopClaimClient(
+      endpoint: Uri.parse('https://test.invalid/claim-workshop-access'),
+      client: MockClient((request) async {
+        final body = jsonDecode(request.body);
+        if (count++ == 0) {
+          expect(body, {'token': token});
+          return http.Response(
+              '{"error":"billing_confirmation_required"}', 409);
+        }
+        expect(body, {'token': token, 'confirm_cancel_renewal': true});
+        return http.Response(
+            jsonEncode({
+              'ok': true,
+              'grant_id': 'confirmed-grant',
+              'access_ends_at': '2126-11-09T00:00:00Z',
+              'already_claimed': false,
+            }),
+            200);
+      }),
+    );
+    await expectLater(service.claim(qr: qr, jwt: 'synthetic-jwt'),
+        fails(WorkshopClaimFailure.billingConfirmationRequired));
+    expect(
+        (await service.claim(
+          qr: qr,
+          jwt: 'synthetic-jwt',
+          confirmCancelRenewal: true,
+        ))
+            .alreadyClaimed,
+        isFalse);
+  });
+
+  test('billing conflict is distinct from a closed workshop', () async {
+    final service = WorkshopClaimClient(
+      endpoint: Uri.parse('https://test.invalid/claim-workshop-access'),
+      client: MockClient(
+          (_) async => http.Response('{"error":"billing_conflict"}', 409)),
+    );
+    await expectLater(service.claim(qr: qr, jwt: 'synthetic-jwt'),
+        fails(WorkshopClaimFailure.billingConflict));
+  });
+
   test('only accepts the workshop version and fixed token format', () {
     expect(parseWorkshopQr(' $qr\n'), token);
     for (final value in [

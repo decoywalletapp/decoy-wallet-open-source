@@ -24,17 +24,28 @@ Future<String?> scanWorkshopQr() async {
   return value == '-1' || value.trim().isEmpty ? null : value;
 }
 
-enum _Stage { ready, scanning, claiming, granted, preview, error }
+enum _Stage {
+  ready,
+  scanning,
+  claiming,
+  billingConfirmation,
+  granted,
+  preview,
+  error
+}
 
 class WorkshopQrPage extends StatefulWidget {
   const WorkshopQrPage({
     super.key,
     required this.claim,
+    this.claimWithBillingConfirmation,
     this.scan = scanWorkshopQr,
     this.openSettings = openAppSettings,
   });
 
   final Future<WorkshopClaimReceipt> Function(String qr) claim;
+  final Future<WorkshopClaimReceipt> Function(String qr)?
+      claimWithBillingConfirmation;
   final Future<String?> Function() scan;
   final Future<bool> Function() openSettings;
 
@@ -95,7 +106,7 @@ class _WorkshopQrPageState extends State<WorkshopQrPage> {
     }
   }
 
-  Future<void> _claim(String qr) async {
+  Future<void> _claim(String qr, {bool confirmCancelRenewal = false}) async {
     if (_stage == _Stage.claiming) return;
     setState(() {
       _stage = _Stage.claiming;
@@ -103,7 +114,15 @@ class _WorkshopQrPageState extends State<WorkshopQrPage> {
       _error = null;
     });
     try {
-      await widget.claim(qr);
+      if (confirmCancelRenewal) {
+        final confirmedClaim = widget.claimWithBillingConfirmation;
+        if (confirmedClaim == null) {
+          throw const WorkshopClaimException(WorkshopClaimFailure.unavailable);
+        }
+        await confirmedClaim(qr);
+      } else {
+        await widget.claim(qr);
+      }
       if (!mounted) return;
       setState(() {
         _stage = _Stage.granted;
@@ -119,12 +138,22 @@ class _WorkshopQrPageState extends State<WorkshopQrPage> {
 
   void _showClaimError(WorkshopClaimException exception) {
     if (!mounted) return;
+    if (exception.failure == WorkshopClaimFailure.billingConfirmationRequired &&
+        _retryQr != null &&
+        widget.claimWithBillingConfirmation != null) {
+      setState(() => _stage = _Stage.billingConfirmation);
+      return;
+    }
     setState(() {
       _stage = _Stage.error;
       _error = switch (exception.failure) {
         WorkshopClaimFailure.invalidQr => 'This is not a valid workshop QR.',
         WorkshopClaimFailure.signedOut => 'Please sign in again.',
         WorkshopClaimFailure.closed => 'Workshop claims are closed.',
+        WorkshopClaimFailure.billingConfirmationRequired =>
+          'Please update the app to confirm this claim.',
+        WorkshopClaimFailure.billingConflict =>
+          'Please contact support to review your billing before claiming access.',
         WorkshopClaimFailure.rateLimited =>
           'Too many attempts. Try again later.',
         WorkshopClaimFailure.unavailable =>
@@ -145,6 +174,7 @@ class _WorkshopQrPageState extends State<WorkshopQrPage> {
       _Stage.ready => 'Workshop QR',
       _Stage.scanning => 'Camera open',
       _Stage.claiming => 'Confirming access',
+      _Stage.billingConfirmation => 'Stop future card renewals?',
       _Stage.granted => 'Workshop access activated',
       _Stage.preview => 'Test QR recognized',
       _Stage.error => _error!,
@@ -198,6 +228,15 @@ class _WorkshopQrPageState extends State<WorkshopQrPage> {
                           TextStyle(fontSize: 16, color: theme.secondaryText),
                     ),
                   ],
+                  if (_stage == _Stage.billingConfirmation) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      'Claim workshop access and cancel your current card subscription at the end of its billing period. Past payments are not refunded.',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 16, color: theme.secondaryText),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   if (!_busy)
                     FilledButton.icon(
@@ -210,19 +249,31 @@ class _WorkshopQrPageState extends State<WorkshopQrPage> {
                       ),
                       onPressed: success
                           ? () => Navigator.of(context).pop(true)
-                          : _retryQr != null
-                              ? () => _claim(_retryQr!)
-                              : _scan,
+                          : _stage == _Stage.billingConfirmation
+                              ? () =>
+                                  _claim(_retryQr!, confirmCancelRenewal: true)
+                              : _retryQr != null
+                                  ? () => _claim(_retryQr!)
+                                  : _scan,
                       icon: Icon(success
                           ? Icons.check
                           : _retryQr != null
                               ? Icons.refresh
                               : Icons.qr_code_scanner_rounded),
-                      label: Text(success
-                          ? 'Done'
-                          : _retryQr != null
-                              ? 'Retry'
-                              : 'Scan QR'),
+                      label: Text(
+                          success
+                              ? 'Done'
+                              : _stage == _Stage.billingConfirmation
+                                  ? 'Claim access and stop renewals'
+                                  : _retryQr != null
+                                      ? 'Retry'
+                                      : 'Scan QR',
+                          textAlign: TextAlign.center),
+                    ),
+                  if (_stage == _Stage.billingConfirmation)
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Not now'),
                     ),
                   if (_cameraDenied)
                     TextButton(

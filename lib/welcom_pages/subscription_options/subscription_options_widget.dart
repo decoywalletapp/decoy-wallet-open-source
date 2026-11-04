@@ -54,24 +54,36 @@ class _SubscriptionOptionsWidgetState extends State<SubscriptionOptionsWidget> {
     _workshopOpen = true;
     final accountId = currentUserUid;
     final client = http.Client();
+    Future<WorkshopClaimReceipt> claim(
+      String qr, {
+      bool confirmCancelRenewal = false,
+    }) async {
+      if (accountId.isEmpty || currentUserUid != accountId) {
+        throw const WorkshopClaimException(WorkshopClaimFailure.signedOut);
+      }
+      final service = WorkshopClaimClient(
+        endpoint: Uri.parse('${requiredPublicConfig(
+          'DECOY_WORKSHOP_CLAIM_BASE_URL', kWorkshopClaimBaseUrl)}/claim-workshop-access'),
+        client: client,
+      );
+      final receipt = await service.claim(
+        qr: qr,
+        jwt: currentJwtToken,
+        confirmCancelRenewal: confirmCancelRenewal,
+      );
+      if (currentUserUid != accountId) {
+        throw const WorkshopClaimException(WorkshopClaimFailure.signedOut);
+      }
+      return receipt;
+    }
     try {
       final activated = await Navigator.of(context).push<bool>(
         MaterialPageRoute(
-          builder: (_) => WorkshopQrPage(claim: (qr) async {
-            if (accountId.isEmpty || currentUserUid != accountId) {
-              throw const WorkshopClaimException(WorkshopClaimFailure.signedOut);
-            }
-            final service = WorkshopClaimClient(
-              endpoint: Uri.parse('${requiredPublicConfig(
-                'DECOY_WORKSHOP_CLAIM_BASE_URL', kWorkshopClaimBaseUrl)}/claim-workshop-access'),
-              client: client,
-            );
-            final receipt = await service.claim(qr: qr, jwt: currentJwtToken);
-            if (currentUserUid != accountId) {
-              throw const WorkshopClaimException(WorkshopClaimFailure.signedOut);
-            }
-            return receipt;
-          }),
+          builder: (_) => WorkshopQrPage(
+            claim: claim,
+            claimWithBillingConfirmation: (qr) =>
+                claim(qr, confirmCancelRenewal: true),
+          ),
         ),
       );
       if (mounted && activated == true && currentUserUid == accountId) {

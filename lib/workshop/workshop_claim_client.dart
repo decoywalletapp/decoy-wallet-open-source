@@ -9,6 +9,8 @@ enum WorkshopClaimFailure {
   invalidQr,
   signedOut,
   closed,
+  billingConfirmationRequired,
+  billingConflict,
   rateLimited,
   unavailable,
 }
@@ -46,6 +48,7 @@ class WorkshopClaimClient {
   Future<WorkshopClaimReceipt> claim({
     required String qr,
     required String jwt,
+    bool confirmCancelRenewal = false,
   }) async {
     final token = parseWorkshopQr(qr);
     if (jwt.trim().isEmpty) {
@@ -65,12 +68,34 @@ class WorkshopClaimClient {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $jwt',
         })
-        ..body = jsonEncode({'token': token});
+        ..body = jsonEncode({
+          'token': token,
+          if (confirmCancelRenewal) 'confirm_cancel_renewal': true,
+        });
       final response = await (() async {
         final streamed = await client.send(request);
         return http.Response.fromStream(streamed);
       })()
           .timeout(const Duration(seconds: 20));
+      if (response.statusCode == 409) {
+        try {
+          final body = jsonDecode(response.body);
+          if (body is Map<String, dynamic>) {
+            if (body['error'] == 'billing_confirmation_required') {
+              throw const WorkshopClaimException(
+                  WorkshopClaimFailure.billingConfirmationRequired);
+            }
+            if (body['error'] == 'billing_conflict') {
+              throw const WorkshopClaimException(
+                  WorkshopClaimFailure.billingConflict);
+            }
+          }
+        } on WorkshopClaimException {
+          rethrow;
+        } catch (_) {
+          // Only recognized response codes can change the confirmation state.
+        }
+      }
       switch (response.statusCode) {
         case 401:
           throw const WorkshopClaimException(WorkshopClaimFailure.signedOut);

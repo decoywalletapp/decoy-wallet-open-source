@@ -91,6 +91,60 @@ void main() {
     expect(claims, 0);
   });
 
+  for (final width in [320.0, 402.0]) {
+    testWidgets('billing confirmation needs a deliberate tap at $width',
+        (tester) async {
+      tester.view.physicalSize = Size(width, 740);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      var confirmed = 0;
+      final key = GlobalKey();
+      await tester.pumpWidget(shell(RepaintBoundary(
+        key: key,
+        child: WorkshopQrPage(
+          scan: () async => qr,
+          claim: (_) async => throw const WorkshopClaimException(
+              WorkshopClaimFailure.billingConfirmationRequired),
+          claimWithBillingConfirmation: (value) async {
+            expect(value, qr);
+            confirmed++;
+            return WorkshopClaimReceipt(
+                accessEndsAt: DateTime.utc(2126), alreadyClaimed: false);
+          },
+        ),
+      )));
+      await tester.pumpAndSettle();
+      expect(find.text('Stop future card renewals?'), findsOneWidget);
+      expect(find.text('Not now'), findsOneWidget);
+      expect(confirmed, 0);
+      expect(tester.takeException(), isNull);
+      await capture(tester, key, 'workshop-billing-${width.toInt()}');
+      await tester.tap(find.text('Claim access and stop renewals'));
+      await tester.pumpAndSettle();
+      expect(confirmed, 1);
+      expect(find.text('Workshop access activated'), findsOneWidget);
+    });
+  }
+
+  testWidgets('dismissing billing confirmation never cancels renewals',
+      (tester) async {
+    var confirmed = 0;
+    await tester.pumpWidget(shell(WorkshopQrPage(
+      scan: () async => qr,
+      claim: (_) async => throw const WorkshopClaimException(
+          WorkshopClaimFailure.billingConfirmationRequired),
+      claimWithBillingConfirmation: (_) async {
+        confirmed++;
+        throw StateError('must not be called');
+      },
+    )));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Not now'));
+    await tester.pumpAndSettle();
+    expect(confirmed, 0);
+  });
+
   testWidgets('invalid code and cancel never call claim', (tester) async {
     var claims = 0;
     var scans = 0;

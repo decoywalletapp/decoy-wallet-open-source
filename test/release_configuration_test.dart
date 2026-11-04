@@ -122,38 +122,91 @@ void main() {
     expect(workflow['triggering'], isNull);
   });
 
-  test('workshop scanner preview stays internal without a live claim endpoint', () {
+  test('workshop claims use the verified internal endpoint and export only',
+      () {
     final workflow = workflows['ios-workshop-qr-internal'];
     final publishing = workflow['publishing']['app_store_connect'];
     expect(workflow['triggering'], isNull);
     expect(publishing['submit_to_testflight'], isFalse);
     expect(publishing['submit_to_app_store'], isFalse);
     expect(publishing['beta_groups'], isNull);
-    expect(workflow['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'], 'false');
+    expect(workflow['environment']['vars']['DECOY_ACCOUNT_BALANCE_PILOT'],
+        'false');
     expect(workflow['environment']['vars']['DECOY_BUILD_VERIFICATION'],
-        'workshop-qr-scanner-preview');
+        'workshop-access-internal-test');
     expect(buildScript('ios-workshop-qr-internal'),
         contains('Print :testFlightInternalTestingOnly'));
-    expect(workflow['environment']['vars']['DECOY_WORKSHOP_INTERNAL_BUILD'], 'true');
-    expect(workflow['environment']['vars']['XCODE_PROJECT_CUSTOM_EXPORT_OPTIONS'],
+    expect(workflow['environment']['vars']['DECOY_WORKSHOP_INTERNAL_BUILD'],
+        'true');
+    expect(
+        workflow['environment']['vars']['XCODE_PROJECT_CUSTOM_EXPORT_OPTIONS'],
         '{"testFlightInternalTestingOnly": true}');
     expect(dartDefines(buildScript('ios-workshop-qr-internal')),
         isNot(contains('DECOY_WORKSHOP_CLAIM_BASE_URL')));
+    const endpoint =
+        'https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app';
+    expect(workflow['environment']['vars']['DECOY_WORKSHOP_CLAIM_BASE_URL'],
+        endpoint);
+    expect(buildScript('ios-workshop-qr-internal'),
+        contains('--dart-define-from-file=build/workshop-runtime.json'));
     final guard = (workflow['scripts'] as YamlList).first['script'] as String;
     for (final branch in ['main', '', 'codex/signup-confirmation-20261030']) {
-      expect(Process.runSync('/bin/sh', ['-c', guard], environment: {
-        'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
-        'CM_BRANCH': branch,
-        'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
-        'CM_COMMIT': 'test-commit',
-      }).exitCode, isNot(0));
+      expect(
+          Process.runSync('/bin/sh', [
+            '-c',
+            guard
+          ], environment: {
+            'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
+            'CM_BRANCH': branch,
+            'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+            'CM_COMMIT': 'test-commit',
+          }).exitCode,
+          isNot(0));
     }
-    expect(Process.runSync('/bin/sh', ['-c', guard], environment: {
-      'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
-      'CM_BRANCH': 'codex/workshop-qr-20261102',
-      'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
-      'CM_COMMIT': 'test-commit',
-    }).exitCode, 0);
+    expect(
+        Process.runSync('/bin/sh', [
+          '-c',
+          guard
+        ], environment: {
+          'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
+          'CM_BRANCH': 'codex/workshop-qr-20261102',
+          'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+          'CM_COMMIT': 'test-commit',
+          'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
+        }).exitCode,
+        0);
+    for (final url in ['', 'https://unverified.invalid']) {
+      expect(
+          Process.runSync('/bin/sh', [
+            '-c',
+            guard
+          ], environment: {
+            'DECOY_WORKSHOP_INTERNAL_BUILD': 'true',
+            'CM_BRANCH': 'codex/workshop-qr-20261102',
+            'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+            'CM_COMMIT': 'test-commit',
+            'DECOY_WORKSHOP_CLAIM_BASE_URL': url,
+          }).exitCode,
+          isNot(0));
+    }
+    expect(
+        Process.runSync('/bin/sh', [
+          '-c',
+          guard
+        ], environment: {
+          'CM_BRANCH': 'main',
+          'CM_REPO_SLUG': 'decoywalletapp/decoy-wallet-open-source',
+          'CM_COMMIT': 'test-commit',
+          'DECOY_WORKSHOP_CLAIM_BASE_URL': endpoint,
+        }).exitCode,
+        isNot(0));
+    for (final id in workflows.keys
+        .cast<String>()
+        .where((id) => id != 'ios-workshop-qr-internal')) {
+      expect(
+          workflows[id]['environment']['vars']['DECOY_WORKSHOP_CLAIM_BASE_URL'],
+          isNull);
+    }
   });
 
   test('Android PIN release keeps package inputs and runs isolated access tests', () {

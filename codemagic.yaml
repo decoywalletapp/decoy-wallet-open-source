@@ -363,6 +363,10 @@ workflows:
           set -eu
           if [ "${DECOY_WORKSHOP_INTERNAL_BUILD:-false}" = "true" ]; then
             test "${CM_BRANCH:-}" = "codex/workshop-qr-20261102"
+            test "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" = "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+          elif [ -n "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" ]; then
+            echo "Workshop claims are restricted to the internal workflow."
+            exit 1
           fi
           if [ "${CM_REPO_SLUG:-}" != "decoywalletapp/decoy-wallet-open-source" ]; then
             echo "This App Store release must run from decoywalletapp/decoy-wallet-open-source."
@@ -578,6 +582,7 @@ workflows:
             test/emergency_setup_progress_test.dart \
             test/auth_link_service_test.dart test/auth_link_entrypoints_test.dart \
             test/unlock_state_test.dart test/unlock_routes_test.dart test/membership_redemption_test.dart \
+            test/workshop_claim_client_test.dart test/workshop_qr_test.dart \
             test/release_configuration_test.dart test/control_center_saved_choices_test.dart \
             --dart-define=DECOY_TEST_ACCOUNT_BALANCE=true \
             --dart-define=DECOY_SUPABASE_URL=https://test.invalid \
@@ -589,11 +594,19 @@ workflows:
       - name: Build App Store IPA with source provenance
         script: |
           set -eu
+          set --
           if [ "${DECOY_WORKSHOP_INTERNAL_BUILD:-false}" = "true" ]; then
             test "$(/usr/libexec/PlistBuddy -c 'Print :testFlightInternalTestingOnly' /Users/builder/export_options.plist)" = "true"
-            echo "Confirmed internal-only TestFlight export; live workshop claims are not configured."
+            test "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" = "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
+            mkdir -p build
+            printf '{"DECOY_WORKSHOP_CLAIM_BASE_URL":"%s"}\n' "$DECOY_WORKSHOP_CLAIM_BASE_URL" > build/workshop-runtime.json
+            set -- --dart-define-from-file=build/workshop-runtime.json
+            echo "Confirmed internal-only TestFlight export with the workshop test endpoint."
+          elif [ -n "${DECOY_WORKSHOP_CLAIM_BASE_URL:-}" ]; then
+            echo "Workshop claims are restricted to the internal workflow."
+            exit 1
           fi
-          flutter build ipa --release \
+          flutter build ipa --release "$@" \
             --build-name="$APP_VERSION" \
             --build-number="$APP_BUILD_NUMBER" \
             --export-options-plist=/Users/builder/export_options.plist \
@@ -653,7 +666,7 @@ workflows:
         submit_to_app_store: false
 
   ios-workshop-qr-internal:
-    name: Workshop QR Scanner Internal TestFlight
+    name: Workshop Access Internal TestFlight
     instance_type: mac_mini_m2
     max_build_duration: 120
     integrations:
@@ -670,8 +683,9 @@ workflows:
         DECOY_SOURCE_REPOSITORY: "https://github.com/decoywalletapp/decoy-wallet-open-source"
         DECOY_BUILD_CHANNEL: "codemagic"
         DECOY_BUILD_PLATFORM: "ios"
-        DECOY_BUILD_VERIFICATION: "workshop-qr-scanner-preview"
+        DECOY_BUILD_VERIFICATION: "workshop-access-internal-test"
         DECOY_WORKSHOP_INTERNAL_BUILD: "true"
+        DECOY_WORKSHOP_CLAIM_BASE_URL: "https://workshop-preview---decoy-stripe-webhook-live-ckmmk4rl6q-uc.a.run.app"
         XCODE_PROJECT_CUSTOM_EXPORT_OPTIONS: '{"testFlightInternalTestingOnly": true}'
         DECOY_ACCOUNT_BALANCE_PILOT: "false"
       flutter: "3.41.6"
