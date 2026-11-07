@@ -11,28 +11,38 @@ on:
       - ios-v*
   workflow_dispatch:
 
+concurrency:
+  group: public-verification-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  # Only superseded PR runs are cancelled. Every push to main and every tag
+  # finishes, so each commit gets its debug APK and provenance attestation.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
-  id-token: write
-  attestations: write
 
 jobs:
   flutter-android-debug:
     name: Test and build Android debug artifact
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
 
     steps:
       - name: Check out public source
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           distribution: temurin
           java-version: '17'
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@e938fdf56512cc96ef2f93601a5a40bde3801046 # v2.19.0
         with:
           flutter-version: '3.41.6'
           cache: true
@@ -58,21 +68,27 @@ jobs:
         run: flutter test
 
       - name: Build debug APK with source metadata
+        env:
+          BUILD_NAME: ${{ steps.version.outputs.build_name }}
+          BUILD_NUMBER: ${{ steps.version.outputs.build_number }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_REF: ${{ github.ref_name }}
+          SOURCE_COMMIT: ${{ github.sha }}
         run: >
           flutter build apk --debug
-          --build-name "${{ steps.version.outputs.build_name }}"
-          --build-number "${{ steps.version.outputs.build_number }}"
-          --dart-define=DECOY_SOURCE_REPOSITORY=https://github.com/${{ github.repository }}
-          --dart-define=DECOY_SOURCE_REF=${{ github.ref_name }}
-          --dart-define=DECOY_SOURCE_COMMIT=${{ github.sha }}
+          --build-name "${BUILD_NAME}"
+          --build-number "${BUILD_NUMBER}"
+          --dart-define=DECOY_SOURCE_REPOSITORY=https://github.com/${SOURCE_REPOSITORY}
+          --dart-define=DECOY_SOURCE_REF=${SOURCE_REF}
+          --dart-define=DECOY_SOURCE_COMMIT=${SOURCE_COMMIT}
           --dart-define=DECOY_BUILD_CHANNEL=github-actions
           --dart-define=DECOY_BUILD_PLATFORM=android
-          --dart-define=DECOY_BUILD_VERSION=${{ steps.version.outputs.build_name }}
-          --dart-define=DECOY_BUILD_NUMBER=${{ steps.version.outputs.build_number }}
+          --dart-define=DECOY_BUILD_VERSION=${BUILD_NAME}
+          --dart-define=DECOY_BUILD_NUMBER=${BUILD_NUMBER}
           --dart-define=DECOY_BUILD_VERIFICATION=public-debug-build
 
       - name: Upload debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: decoy-wallet-public-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
@@ -80,6 +96,6 @@ jobs:
 
       - name: Attest debug APK provenance
         if: github.event_name != 'pull_request'
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
         with:
           subject-path: build/app/outputs/flutter-apk/app-debug.apk
