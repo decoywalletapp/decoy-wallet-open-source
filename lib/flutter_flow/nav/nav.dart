@@ -12,6 +12,7 @@ export '/auth/app_unlock_state.dart';
 
 import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/create_decoy_seed/seed_handoff.dart';
 
 import '/index.dart';
 import 'package:cartesian_chart_library_syxakz/index.dart'
@@ -261,16 +262,18 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: ShowDecoySeedPhraseWidget.routeName,
         path: ShowDecoySeedPhraseWidget.routePath,
-        builder: (context, params) => ShowDecoySeedPhraseWidget(
-          mnemonic: params.getParam(
-            'mnemonic',
-            ParamType.String,
-          ),
-          decoyId: params.getParam(
+        builder: (context, params) {
+          final String? decoyId = params.getParam(
             'decoyId',
             ParamType.String,
-          ),
-        ),
+          );
+          // The mnemonic is read from in-memory SeedHandoff, never from the
+          // URL; a 'mnemonic' query param (e.g. a crafted deep link) is ignored.
+          return ShowDecoySeedPhraseWidget(
+            mnemonic: SeedHandoff.mnemonicFor(decoyId),
+            decoyId: decoyId,
+          );
+        },
       ),
       FFRoute(
         name: DecoySeedAcknowledgementsWidget.routeName,
@@ -328,16 +331,18 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       FFRoute(
         name: SeedPhraseVerificationWidget.routeName,
         path: SeedPhraseVerificationWidget.routePath,
-        builder: (context, params) => SeedPhraseVerificationWidget(
-          decoyId: params.getParam(
+        builder: (context, params) {
+          final String? decoyId = params.getParam(
             'decoyId',
             ParamType.String,
-          ),
-          mnemonic: params.getParam(
-            'mnemonic',
-            ParamType.String,
-          ),
-        ),
+          );
+          // The mnemonic is read from in-memory SeedHandoff, never from the
+          // URL; a 'mnemonic' query param (e.g. a crafted deep link) is ignored.
+          return SeedPhraseVerificationWidget(
+            mnemonic: SeedHandoff.mnemonicFor(decoyId),
+            decoyId: decoyId,
+          );
+        },
       ),
       FFRoute(
         name: CreateDecoyEmergencyContactsSetupWidget.routeName,

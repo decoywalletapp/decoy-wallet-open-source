@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'seed_phrase_verification_model.dart';
+import '/create_decoy_seed/seed_handoff.dart';
 export 'seed_phrase_verification_model.dart';
 
 /// Create a “Seed Phrase Quiz” page that verifies 3 random words from a
@@ -56,6 +57,12 @@ class _SeedPhraseVerificationWidgetState
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // No in-memory mnemonic (cold deep link, process restart, or already
+      // verified): restart generation instead of crashing on a null seed.
+      if (widget.mnemonic == null) {
+        if (mounted) context.goNamed(GenerateDecoySeedPhraseWidget.routeName);
+        return;
+      }
       _model.notificationState = 0;
       safeSetState(() {});
       _model.splitOut = await actions.splitMnemonicAction(
@@ -484,6 +491,8 @@ class _SeedPhraseVerificationWidgetState
                                                                 if (_model
                                                                         .verifyResult ==
                                                                     true) {
+                                                                  // Verified: drop the in-memory mnemonic.
+                                                                  SeedHandoff.clear();
                                                                   context.goNamed(
                                                                       DecoySeedSystemValuesWidget
                                                                           .routeName);
@@ -575,13 +584,6 @@ class _SeedPhraseVerificationWidgetState
                                                                           .routeName,
                                                                       queryParameters:
                                                                           {
-                                                                        'mnemonic':
-                                                                            serializeParam(
-                                                                          widget
-                                                                              .mnemonic,
-                                                                          ParamType
-                                                                              .String,
-                                                                        ),
                                                                         'decoyId':
                                                                             serializeParam(
                                                                           widget
@@ -610,7 +612,8 @@ class _SeedPhraseVerificationWidgetState
                                                             },
                                                             text: _model.options
                                                                 .elementAtOrNull(
-                                                                    0)!,
+                                                                    0) ??
+                                                                '',
                                                             options:
                                                                 FFButtonOptions(
                                                               width: double
@@ -740,6 +743,8 @@ class _SeedPhraseVerificationWidgetState
                                                                 if (_model
                                                                         .verifyResultMid ==
                                                                     true) {
+                                                                  // Verified: drop the in-memory mnemonic.
+                                                                  SeedHandoff.clear();
                                                                   context.goNamed(
                                                                       DecoySeedSystemValuesWidget
                                                                           .routeName);
@@ -831,13 +836,6 @@ class _SeedPhraseVerificationWidgetState
                                                                           .routeName,
                                                                       queryParameters:
                                                                           {
-                                                                        'mnemonic':
-                                                                            serializeParam(
-                                                                          widget
-                                                                              .mnemonic,
-                                                                          ParamType
-                                                                              .String,
-                                                                        ),
                                                                         'decoyId':
                                                                             serializeParam(
                                                                           widget
@@ -866,7 +864,8 @@ class _SeedPhraseVerificationWidgetState
                                                             },
                                                             text: _model.options
                                                                 .elementAtOrNull(
-                                                                    1)!,
+                                                                    1) ??
+                                                                '',
                                                             options:
                                                                 FFButtonOptions(
                                                               width: double
@@ -996,6 +995,8 @@ class _SeedPhraseVerificationWidgetState
                                                                 if (_model
                                                                         .verifyResultBot ==
                                                                     true) {
+                                                                  // Verified: drop the in-memory mnemonic.
+                                                                  SeedHandoff.clear();
                                                                   context.goNamed(
                                                                       DecoySeedSystemValuesWidget
                                                                           .routeName);
@@ -1087,13 +1088,6 @@ class _SeedPhraseVerificationWidgetState
                                                                           .routeName,
                                                                       queryParameters:
                                                                           {
-                                                                        'mnemonic':
-                                                                            serializeParam(
-                                                                          widget
-                                                                              .mnemonic,
-                                                                          ParamType
-                                                                              .String,
-                                                                        ),
                                                                         'decoyId':
                                                                             serializeParam(
                                                                           widget
@@ -1122,7 +1116,8 @@ class _SeedPhraseVerificationWidgetState
                                                             },
                                                             text: _model.options
                                                                 .elementAtOrNull(
-                                                                    2)!,
+                                                                    2) ??
+                                                                '',
                                                             options:
                                                                 FFButtonOptions(
                                                               width: double
