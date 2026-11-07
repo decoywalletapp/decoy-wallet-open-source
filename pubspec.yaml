@@ -82,7 +82,7 @@ dependencies:
   hive: 2.2.3
   html: 0.15.6
   http: 1.4.0
-  intl: 0.20.2
+  intl: ^0.20.2
   json_path: 0.7.2
   local_auth: 2.3.0
   local_auth_android: 1.0.49
