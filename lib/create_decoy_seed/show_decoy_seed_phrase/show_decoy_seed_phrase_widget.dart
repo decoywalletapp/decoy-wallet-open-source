@@ -49,6 +49,12 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // No in-memory mnemonic (cold deep link, process restart, or already
+      // verified): restart generation instead of crashing on a null seed.
+      if (widget.mnemonic == null) {
+        if (mounted) context.goNamed(GenerateDecoySeedPhraseWidget.routeName);
+        return;
+      }
       _model.splitOut = await actions.splitMnemonicAction(
         widget.mnemonic!,
       );
@@ -1093,10 +1099,6 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                               queryParameters: {
                                 'decoyId': serializeParam(
                                   widget.decoyId,
-                                  ParamType.String,
-                                ),
-                                'mnemonic': serializeParam(
-                                  widget.mnemonic,
                                   ParamType.String,
                                 ),
                               }.withoutNulls,
