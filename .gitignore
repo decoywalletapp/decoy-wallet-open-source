@@ -74,3 +74,6 @@ supabase/.temp/
 .idea/
 .vscode/
 *.log
+
+# Local golden failure dumps
+test/failures/

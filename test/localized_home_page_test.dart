@@ -20,6 +20,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'localization_fonts.dart';
 
+// The English goldens were captured on macOS (the capture helper below writes
+// to /private/tmp). Glyph anti-aliasing differs by OS: on Linux every text and
+// icon edge differs (0.6-2% of pixels) while layout and colours match. Compare
+// pixels only on macOS; set DECOY_RUN_GOLDENS=1 to force it elsewhere.
+final _compareGoldens =
+    Platform.isMacOS || Platform.environment['DECOY_RUN_GOLDENS'] == '1';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final client = MockClient((request) async {
@@ -100,11 +107,17 @@ void main() {
 
           if (locale == 'en') {
             expect(find.byType(LocalizedHomeTileLabel), findsNothing);
-            // Captured from the unchanged home screen at commit 2787252.
-            await expectLater(
-              find.byKey(boundaryKey),
-              matchesGoldenFile('goldens/home-en-${size.width.toInt()}.png'),
-            );
+            if (_compareGoldens) {
+              // Captured from the unchanged home screen at commit 2787252.
+              await expectLater(
+                find.byKey(boundaryKey),
+                matchesGoldenFile('goldens/home-en-${size.width.toInt()}.png'),
+              );
+            } else {
+              // The layout checks above still ran; only the pixel diff is skipped.
+              markTestSkipped('English home golden is compared on macOS only '
+                  '(set DECOY_RUN_GOLDENS=1 to force)');
+            }
           } else {
             expect(find.byType(LocalizedHomeTileLabel), findsNWidgets(3));
             for (final key in [

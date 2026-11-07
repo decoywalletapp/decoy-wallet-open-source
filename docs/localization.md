@@ -129,7 +129,9 @@ device screenshots and do not replace device testing.
 languages at 320, 402, and 768 logical-pixel widths. Translated labels fit within
 the existing tiles, use centered lines, and remain fully visible. English keeps
 its original widget layout and is compared pixel-for-pixel with golden images
-captured from commit `2787252`, before the translated home-label fix. These tests
+captured on macOS from commit `2787252`, before the translated home-label fix.
+Font anti-aliasing differs between operating systems, so the pixel comparison
+runs only on macOS (set `DECOY_RUN_GOLDENS=1` to force it elsewhere). These tests
 use a mocked subscription response and never access production services.
 
 ```sh
