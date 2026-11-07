@@ -8,6 +8,13 @@ This repository contains the Flutter mobile app source. Production deployment
 scripts, live backend operations, signing material, and service credentials are
 not part of this public source tree.
 
+## Status
+
+Public sanitized source tree for review and independent builds. Not a turnkey
+production deployment. CI runs the Flutter tests and an Android debug APK build
+on pull requests and on pushes to `main` (see
+`.github/workflows/public-verification.yml`).
+
 ## What is included
 
 - Flutter app UI and app logic
@@ -109,6 +116,22 @@ that domain, bundle IDs, app names, support contacts, legal URLs, billing return
 URLs, and deep-link schemes with values they control before shipping their own
 builds.
 
+## Verify locally
+
+Use Flutter **3.41.6** (see `.fvmrc` and the public verification workflow):
+
+```sh
+flutter pub get
+flutter analyze --no-fatal-infos
+flutter test
+```
+
+Backend helper unit tests:
+
+```sh
+node --test backend/membership_redemption/*.test.mjs
+```
+
 ## Security note
 
 The public app source is only one part of the Decoy system. Backend alert
@@ -128,3 +151,8 @@ Use `docs/RELEASE_REHEARSAL_DEVICE_TESTS.md` for real-device release
 rehearsal sign-off.
 Do not make the private development repository public, fork it, or import it
 into a public repository.
+
+## License
+
+Source code is MIT (`LICENSE`). Brand materials are covered by `TRADEMARKS.md`.
+Security reports: `SECURITY.md`.
