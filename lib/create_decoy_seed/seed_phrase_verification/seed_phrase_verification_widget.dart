@@ -612,7 +612,8 @@ class _SeedPhraseVerificationWidgetState
                                                             },
                                                             text: _model.options
                                                                 .elementAtOrNull(
-                                                                    0)!,
+                                                                    0) ??
+                                                                '',
                                                             options:
                                                                 FFButtonOptions(
                                                               width: double
@@ -863,7 +864,8 @@ class _SeedPhraseVerificationWidgetState
                                                             },
                                                             text: _model.options
                                                                 .elementAtOrNull(
-                                                                    1)!,
+                                                                    1) ??
+                                                                '',
                                                             options:
                                                                 FFButtonOptions(
                                                               width: double
@@ -1114,7 +1116,8 @@ class _SeedPhraseVerificationWidgetState
                                                             },
                                                             text: _model.options
                                                                 .elementAtOrNull(
-                                                                    2)!,
+                                                                    2) ??
+                                                                '',
                                                             options:
                                                                 FFButtonOptions(
                                                               width: double
