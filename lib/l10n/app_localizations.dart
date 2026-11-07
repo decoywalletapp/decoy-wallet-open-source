@@ -734,7 +734,7 @@ abstract class AppLocalizations {
   /// No description provided for @msgCreateADecoyPinForEmergencyServices.
   ///
   /// In en, this message translates to:
-  /// **'Create a DECOY PIN for Emergency Services'**
+  /// **'Create a DECOY PIN for Emergency Alerts'**
   String get msgCreateADecoyPinForEmergencyServices;
 
   /// No description provided for @msgCreateAnAccount.

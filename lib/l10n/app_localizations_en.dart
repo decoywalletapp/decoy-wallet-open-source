@@ -329,7 +329,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msgCreateADecoyPinForEmergencyServices =>
-      'Create a DECOY PIN for Emergency Services';
+      'Create a DECOY PIN for Emergency Alerts';
 
   @override
   String get msgCreateAnAccount => 'Create an account';
