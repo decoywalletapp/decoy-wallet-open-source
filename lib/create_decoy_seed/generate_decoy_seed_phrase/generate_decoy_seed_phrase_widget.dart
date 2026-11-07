@@ -10,6 +10,7 @@ import 'package:ff_theme/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'generate_decoy_seed_phrase_model.dart';
+import '/create_decoy_seed/seed_handoff.dart';
 export 'generate_decoy_seed_phrase_model.dart';
 
 /// Create a page that prompts the user to generate a decoy seed phrase.
@@ -38,6 +39,8 @@ class _GenerateDecoySeedPhraseWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => GenerateDecoySeedPhraseModel());
+    // Entering generation fresh drops any abandoned in-memory mnemonic.
+    SeedHandoff.clear();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -186,13 +189,19 @@ class _GenerateDecoySeedPhraseWidgetState
                               ).toString();
                               safeSetState(() {});
 
+                              // Hand the mnemonic over in memory only; never
+                              // via route/query params (would leak into URLs).
+                              SeedHandoff.put(
+                                mnemonic: _model.tempMnemonic,
+                                decoyId: _model.tempDecoyId,
+                              );
+                              // SeedHandoff is now the only holder; drop this
+                              // page's copies while it stays under the stack.
+                              _model.tempMnemonic = null;
+                              _model.decoyDraftOut = null;
                               context.pushNamed(
                                 ShowDecoySeedPhraseWidget.routeName,
                                 queryParameters: {
-                                  'mnemonic': serializeParam(
-                                    _model.tempMnemonic,
-                                    ParamType.String,
-                                  ),
                                   'decoyId': serializeParam(
                                     _model.tempDecoyId,
                                     ParamType.String,

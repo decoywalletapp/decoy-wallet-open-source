@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '/create_decoy_seed/seed_handoff.dart';
 import 'unlock_diagnostics.dart';
 
 enum AppUnlockMode { locked, owner, enteringDecoy, decoy }
@@ -44,6 +45,8 @@ class AppUnlockState extends ChangeNotifier {
     final next = userId == null || userId.isEmpty ? null : userId;
     if (_userId == next) return;
     unlockDiagnostics.record(UnlockTraceEvent.userChanged);
+    // Sign-out or account switch: a pending decoy mnemonic must not survive.
+    SeedHandoff.clear();
     _userId = next;
     lock();
   }
@@ -103,6 +106,8 @@ class AppUnlockState extends ChangeNotifier {
       return false;
     }
     _mode = AppUnlockMode.enteringDecoy;
+    // Duress PIN: drop any pending decoy mnemonic from the owner's seed flow.
+    SeedHandoff.clear();
     unlockDiagnostics.record(UnlockTraceEvent.decoyStarted);
     _setupAllowed = false;
     _pinReady = false;

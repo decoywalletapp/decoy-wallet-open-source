@@ -10,6 +10,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'show_decoy_seed_phrase_model.dart';
+import '/create_decoy_seed/secure_screen.dart';
 export 'show_decoy_seed_phrase_model.dart';
 
 /// Create a page that displays and generates a 12-word seed phrase generated
@@ -45,10 +46,18 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
   @override
   void initState() {
     super.initState();
+    // OS capture protection while the seed is on screen (see SecureScreen).
+    SecureScreen.enable();
     _model = createModel(context, () => ShowDecoySeedPhraseModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // No in-memory mnemonic (cold deep link, process restart, or already
+      // verified): restart generation instead of crashing on a null seed.
+      if (widget.mnemonic == null) {
+        if (mounted) context.goNamed(GenerateDecoySeedPhraseWidget.routeName);
+        return;
+      }
       _model.splitOut = await actions.splitMnemonicAction(
         widget.mnemonic!,
       );
@@ -61,6 +70,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
 
   @override
   void dispose() {
+    SecureScreen.disable();
     _model.dispose();
 
     super.dispose();
@@ -1093,10 +1103,6 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
                               queryParameters: {
                                 'decoyId': serializeParam(
                                   widget.decoyId,
-                                  ParamType.String,
-                                ),
-                                'mnemonic': serializeParam(
-                                  widget.mnemonic,
                                   ParamType.String,
                                 ),
                               }.withoutNulls,
