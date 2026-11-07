@@ -10,6 +10,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'show_decoy_seed_phrase_model.dart';
+import '/create_decoy_seed/secure_screen.dart';
 export 'show_decoy_seed_phrase_model.dart';
 
 /// Create a page that displays and generates a 12-word seed phrase generated
@@ -45,6 +46,8 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
   @override
   void initState() {
     super.initState();
+    // OS capture protection while the seed is on screen (see SecureScreen).
+    SecureScreen.enable();
     _model = createModel(context, () => ShowDecoySeedPhraseModel());
 
     // On page load action.
@@ -67,6 +70,7 @@ class _ShowDecoySeedPhraseWidgetState extends State<ShowDecoySeedPhraseWidget> {
 
   @override
   void dispose() {
+    SecureScreen.disable();
     _model.dispose();
 
     super.dispose();

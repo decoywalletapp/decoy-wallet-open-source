@@ -10,6 +10,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'seed_phrase_verification_model.dart';
 import '/create_decoy_seed/seed_handoff.dart';
+import '/create_decoy_seed/secure_screen.dart';
 export 'seed_phrase_verification_model.dart';
 
 /// Create a “Seed Phrase Quiz” page that verifies 3 random words from a
@@ -53,6 +54,8 @@ class _SeedPhraseVerificationWidgetState
   @override
   void initState() {
     super.initState();
+    // OS capture protection while the seed is on screen (see SecureScreen).
+    SecureScreen.enable();
     _model = createModel(context, () => SeedPhraseVerificationModel());
 
     // On page load action.
@@ -112,6 +115,7 @@ class _SeedPhraseVerificationWidgetState
 
   @override
   void dispose() {
+    SecureScreen.disable();
     _model.dispose();
 
     super.dispose();
