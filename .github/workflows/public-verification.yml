@@ -52,7 +52,7 @@ jobs:
           echo "build_number=${version_line##*+}" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
-        run: flutter pub get
+        run: flutter pub get --enforce-lockfile
 
       - name: Run tests
         run: flutter test

@@ -28,7 +28,13 @@ build/
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
-pubspec.lock
+# The root pubspec.lock is committed; path packages keep theirs local.
+/dependencies/**/pubspec.lock
+# Local dependency overrides (do not commit)
+pubspec_overrides.yaml
+# FVM local SDK checkout
+.fvm/flutter_sdk
+.fvm/flutter_sdk/
 
 # Android
 android/.gradle/
